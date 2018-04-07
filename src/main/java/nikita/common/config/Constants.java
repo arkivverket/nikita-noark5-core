@@ -292,6 +292,13 @@ public final class Constants {
     public static final String TEMPLATE_REGISTRY_ENTRY_STATUS = "Journalført";
     public static final String TEMPLATE_REGISTRY_ENTRY_TYPE = "Journalført";
 
+    public static final String TEMPLATE_SCREENING_METADATA_CODE = "H";
+    public static final String TEMPLATE_SCREENING_METADATA_DESCRIPTION =
+            "Skjerming av hele dokumentet";
+    public static final String TEMPLATE_SCREENING_DOCUMENT_CODE = "D";
+    public static final String TEMPLATE_SCREENING_DOCUMENT_DESCRIPTION =
+            "Skjerming av deler av dokumentet";
+
 
     public static final int UUIDLength = 32;
 
@@ -568,6 +575,13 @@ public final class Constants {
 
     public static final String REL_ADMIN_ADMINISTRATIVE_UNIT =
             REL_ADMINISTRATION + NEW_ADMINISTRATIVE_UNIT + SLASH;
+
+
+    public static final String REL_METADATA_SCREENING_DOCUMENT =
+            REL_METADATA + SCREENING_DOCUMENT + SLASH;
+
+    public static final String REL_METADATA_SCREENING_METADATA =
+            REL_METADATA + SCREENING_METADATA + SLASH;
 
 
     // Database Constants
