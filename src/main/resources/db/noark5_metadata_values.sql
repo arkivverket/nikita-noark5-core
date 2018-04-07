@@ -477,3 +477,89 @@ INSERT INTO case_status (
 VALUES (7, '6cc5cca6-8ae5-4a6d-a7d6-9383067a38a1', 'F',
         'Ferdig fra saksbehandler', FALSE, 0);
 
+/* screening_document / skjermingdokument*/
+INSERT INTO screening_document (
+  pk_screening_document_id, system_id, code,
+  description, deleted, version)
+VALUES (1, 'bef2f7ea-c0ec-4e66-8344-79c47f08a83d', 'H',
+        'Skjerming av hele dokumentet', FALSE, 0);
+
+INSERT INTO screening_document (
+  pk_screening_document_id, system_id, code,
+  description, deleted, version)
+VALUES (2, 'ebb87206-7bc9-45c4-8903-bff19f7f814e', 'D',
+        'Skjerming av deler av dokumentet', FALSE, 0);
+
+/* screening_metadata / skjermingmetadata*/
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (1, 'd09621ac-3ae7-470b-93c5-c02f22c52124', 'KID',
+        'Skjerming klasseID', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (2, 'faff8507-edf9-464f-b539-080c3504e4bb', 'TKL',
+        'Skjerming tittel klasse', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (3, '3d24337c-e7d0-4b42-a153-115c59e0ec75', 'TM1',
+        'Skjerming tittel mappe - unntatt første linje', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (4, 'a524d3bd-8da0-423d-acb2-e2870d959724', 'TMO',
+        'Skjerming tittel mappe - utvalgte ord', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (5, 'f9a1cd40-2175-44ac-8262-bae0c3543e04', 'NPS',
+        'Skjerming navn part i sak', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (6, 'a0c2a727-dbd6-4197-b928-82698eeadbeb', 'TR1',
+        'Skjerming tittel registrering - unntatt første linje', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (7, '2197150e-0566-42a6-9838-687605e40b9b', 'TRO',
+        'Skjerming tittel registrering - utvalgte ord', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (8, 'f5d9452b-2acb-40e6-84bd-422796f01008', 'NA',
+        'Skjerming navn avsender', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (9, '0c688727-5b5d-4f59-be91-58850a869e9f', 'NM',
+        'Skjerming navn mottaker', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (10, 'b720d937-e512-49a8-a02e-a540ed57f72e', 'TD',
+        'Skjerming tittel dokumentbeskrivelse', FALSE, 0);
+
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (11, '06706ffe-acd9-46c6-a67f-0a8733b2de06', 'MT',
+        'Skjerming merknadstekst', FALSE, 0);
+
+INSERT INTO screening_metadata (
+  pk_screening_metadata_id, system_id, code,
+  description, deleted, version)
+VALUES (12, '2f68901a-a60a-4212-8b6a-7505c02d7104', 'M',
+        'Midlertidig skjerming', FALSE, 0);
