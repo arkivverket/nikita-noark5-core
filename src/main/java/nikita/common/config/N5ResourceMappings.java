@@ -1,6 +1,9 @@
 package nikita.common.config;
 
 
+import static nikita.common.config.Constants.DASH;
+import static nikita.common.config.Constants.NEW;
+
 public final class N5ResourceMappings {
 
     // Commonly used entities for REST request mappings
@@ -33,7 +36,7 @@ public final class N5ResourceMappings {
     public static final String EVENT_TYPE = "hendelsetype";
     // Might be confusion if it's land or lankode
     public static final String COUNTRY = "land";
-    public static final String NEW_COUNTRY = Constants.NEW + Constants.DASH + COUNTRY;
+    public static final String NEW_COUNTRY = NEW + Constants.DASH + COUNTRY;
 
     public static final String COUNTRY_CODE = "landkode";
     public static final String CLASSIFIED_CODE = "graderingskode";
@@ -55,7 +58,7 @@ public final class N5ResourceMappings {
     public static final String FINALISED_DATE = "avsluttetDato";
     public static final String FINALISED_BY = "avsluttetAv";
     public static final String DOCUMENT_MEDIUM = "dokumentmedium";
-    public static final String NEW_DOCUMENT_MEDIUM = Constants.NEW + Constants.DASH + DOCUMENT_MEDIUM;
+    public static final String NEW_DOCUMENT_MEDIUM = NEW + Constants.DASH + DOCUMENT_MEDIUM;
 
     // Fonds
     public static final String FONDS_STATUS = "arkivstatus";
@@ -132,7 +135,7 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_TYPE = "korrespondanseparttype";
     public static final String CORRESPONDENCE_PART_NAME = "navn";
     public static final String POST_CODE = "postnummer";
-    public static final String NEW_POST_CODE = Constants.NEW + Constants.DASH + POST_CODE;
+    public static final String NEW_POST_CODE = NEW + Constants.DASH + POST_CODE;
 
     public static final String SOCIAL_SECURITY_NUMBER = "foedselsnummer";
     public static final String D_NUMBER = "dnummer";
@@ -205,6 +208,11 @@ public final class N5ResourceMappings {
     public static final String SCREENING_AUTHORITY = "skjermingshjemmel";
     public static final String SCREENING_METADATA = "skjermingMetadata";
     public static final String SCREENING_DOCUMENT = "skjermingDokument";
+    public static final String NEW_SCREENING_METADATA = NEW + DASH +
+            SCREENING_METADATA;
+    public static final String NEW_SCREENING_DOCUMENT = NEW + DASH +
+            SCREENING_DOCUMENT;
+
     public static final String SCREENING_EXPIRES_DATE = "skjermingOpphoererDato";
     public static final String SCREENING_DURATION = "skjermingsvarighet";
 
@@ -322,13 +330,13 @@ public final class N5ResourceMappings {
 
     public static final String USER = "bruker";
     public static final String USER_NAME = "brukerNavn";
-    public static final String NEW_USER = Constants.NEW + Constants.DASH + USER;
+    public static final String NEW_USER = NEW + Constants.DASH + USER;
 
     public static final String RIGHT = "rettighet";
-    public static final String NEW_RIGHT = Constants.NEW + Constants.DASH + RIGHT;
+    public static final String NEW_RIGHT = NEW + Constants.DASH + RIGHT;
 
     public static final String ADMINISTRATIVE_UNIT = "administrativEnhet";
-    public static final String NEW_ADMINISTRATIVE_UNIT = Constants.NEW + Constants.DASH + "administrativEnhet";
+    public static final String NEW_ADMINISTRATIVE_UNIT = NEW + Constants.DASH + "administrativEnhet";
 
     public static final String ADMINISTRATIVE_UNIT_STATUS = "administrativEnhetsstatus";
     public static final String ADMINISTRATIVE_UNIT_NAME = "administrativEnhetNavn";
