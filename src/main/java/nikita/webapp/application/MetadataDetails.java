@@ -381,5 +381,22 @@ public class MetadataDetails extends APIDetails {
                         NEW_SCREENING_METADATA + SLASH,
                 true
         ));
+
+        // Add support for ScreeningDocument
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH +
+                        NOARK_METADATA_PATH + SLASH + SCREENING_DOCUMENT,
+                REL_METADATA_SCREENING_DOCUMENT,
+                true
+        ));
+
+        // Add support for new ScreeningDocument
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH +
+                        NOARK_METADATA_PATH + SLASH + NEW_SCREENING_DOCUMENT,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH +
+                        NEW_SCREENING_DOCUMENT + SLASH,
+                true
+        ));
     }
 }
