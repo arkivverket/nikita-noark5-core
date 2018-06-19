@@ -11,7 +11,7 @@ RUN git -C $SRC_DIR checkout $BRANCH
 # Build the application
 RUN mvn -f $SRC_DIR/pom.xml -Dmaven.test.skip=true clean install
 RUN mvn -f $SRC_DIR/pom.xml -Dmaven.test.skip=true package spring-boot:repackage
-RUN cp $SRC_DIR/core-webapp/target/core-webapp-0.1.0-spring-boot.jar app.jar
+RUN cp $SRC_DIR/core-webapp/target/nikita-noark5-core-0.1.0.jar app.jar
 
 # Make the jar available
 RUN bash -c 'touch /app.jar'
