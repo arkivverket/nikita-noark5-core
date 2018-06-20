@@ -1,4 +1,4 @@
-package nikita.webapp.spring.security;
+package nikita.webapp.spring.security.configs.authentication.form;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;

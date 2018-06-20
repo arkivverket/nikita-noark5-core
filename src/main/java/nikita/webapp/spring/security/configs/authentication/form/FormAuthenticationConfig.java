@@ -1,4 +1,4 @@
-package nikita.webapp.spring.security.configs;
+package nikita.webapp.spring.security.configs.authentication.form;
 
 import nikita.webapp.spring.security.NikitaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,13 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 import static nikita.common.config.Constants.ROLE_RECORDS_MANAGER;
 import static nikita.common.config.Constants.SLASH;
@@ -21,22 +23,65 @@ import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
 import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
 
 /**
- * Testing a http-basic-authentication SecurityConfig with a single account
- * and a BCyrpt encoded password.
+ * Testing a form based SecurityConfig using the pre-provided users/authorities
+ * defined in a sql file in the resources directory
  * <p>
  * This can be tested using:
- * curl -i --user admin:password http://localhost:8092/noark5v4/
+ * <p>
+ * curl -i -X POST -d username=admin -d password=password -c /tmp/cookies.txt
+ * http://localhost:8092/noark5v4/login
+ * <p>
+ * <p>
+ * curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5-v4+json
+ * -X GET http://localhost:8092/noark5v4/
  */
 
-@Profile("security-http-basic-authentication")
+@Profile("security-form-authentication")
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true,
         jsr250Enabled = true)
-public class BasicAuthenticationConfig
+public class FormAuthenticationConfig
         extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    NikitaUserDetailsService userDetailsService;
+    private NikitaUserDetailsService userDetailsService;
+
+    @Autowired
+    private NikitaAuthenticationSuccessHandler authenticationSuccessHandler;
+
+    /**
+     * Create the AuthenticationProvider.
+     * <p>
+     * DaoAuthenticationProvider used to be able to retrieve details from a
+     * UserDetailsService object.
+     * <p>
+     * Here we set the userDetailsService and password encoder for the
+     * userDetailsService
+     *
+     * @return the newly created AuthenticationProvider
+     */
+    @Bean
+    public AuthenticationProvider authProvider() {
+        final DaoAuthenticationProvider authenticationProvider =
+                new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(encoder());
+        return authenticationProvider;
+    }
+
+    /**
+     * Create the password encoder.
+     * <p>
+     * We are using a BCrypt Password Encoder. This is standard for Spring5
+     * from what I can tell.
+     *
+     * @return new BCryptPasswordEncoder()
+     */
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
@@ -44,14 +89,29 @@ public class BasicAuthenticationConfig
         auth.userDetailsService(userDetailsService);
     }
 
+    /*
     @Override
     protected void configure(HttpSecurity http)
             throws Exception { // @formatter:off
         http
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("*").permitAll()
+                .antMatchers("/login").permitAll()
+                .and()
+                .csrf().disable()
+                .formLogin()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
+        ;
+    }// @formatter:of
+*/
+
+    @Override
+    protected void configure(HttpSecurity httpSecurity)
+            throws Exception { // @formatter:off
+
+        httpSecurity
+                .authorizeRequests()
+                .antMatchers("/login").permitAll()
                 // GET [api]/metadata/**, public to read basic structure
                 .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH).permitAll()
                 // Allow OPTIONS command on everything root
@@ -91,18 +151,19 @@ public class BasicAuthenticationConfig
                 .antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
                 .csrf().disable()
-                .httpBasic()
-                .realmName("nikita-noark5")
-                .and()
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .formLogin()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
         ;
-    }// @formatter:off
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        // For h2-console
+        httpSecurity.headers().frameOptions().sameOrigin();
+
+        // disable page caching
+        httpSecurity.headers().cacheControl();
+    } // @formatter:on
+
+
 }

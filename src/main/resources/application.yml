@@ -33,7 +33,11 @@ spring:
     console:
       enabled: true
       path: /console
-
+security:
+  oauth2:
+    client:
+      client-id: nikita-client
+      client-secret: $2a$10$52VgSTgNvk4ROc8YNYdTUesHhQTm2r5oeH1aiCtIgu3rfPQZQzswa
 management:
   server:
     servlet:
