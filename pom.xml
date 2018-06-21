@@ -18,8 +18,8 @@
     <name>nikita-noark5</name>
 
     <issueManagement>
-        <url>https://github.com/HiOA-ABI/nikita-noark5-core/issues</url>
-        <system>GitHub Issues</system>
+        <url>https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues</url>
+        <system>GitLab Issues</system>
     </issueManagement>
 
     <licenses>
@@ -34,7 +34,7 @@
         <developer>
             <email>tsodring@oslomet.no</email>
             <name>Thomas Sødring</name>
-            <url>https://github.com/tsodring</url>
+            <url>https://gitlab.com/tsodring</url>
             <id>tsodring</id>
         </developer>
         <developer>
@@ -78,20 +78,11 @@
             <version>${spring-security-oauth2.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>
+      <!-- Security etc ..-->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+      </dependency>
 
         <!-- Used for CompareToBuilder etc -->
         <dependency>

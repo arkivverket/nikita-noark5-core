@@ -7,4 +7,4 @@ You can start the application by running
     make run
     # Should be running at http://localhost:3000/
 
-[n]: https://github.com/HiOA-ABI/nikita-noark5-core
+[n]: https://gitlab.com/OsloMet-ABI/nikita-noark5-core

@@ -129,7 +129,7 @@ public class DocumentDescriptionService
     @Override
     public void deleteEntity(@NotNull String documentDescriptionSystemId) {
         // See issue for a description of why this code was written this way
-        // https://github.com/HiOA-ABI/nikita-noark5-core/issues/82
+        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
         DocumentDescription documentDescription = getDocumentDescriptionOrThrow(documentDescriptionSystemId);
         Query q = entityManager.createNativeQuery("DELETE FROM record_document_description WHERE F_PK_DOCUMENT_DESCRIPTION_ID  = :id ;");
         q.setParameter("id", documentDescription.getId());

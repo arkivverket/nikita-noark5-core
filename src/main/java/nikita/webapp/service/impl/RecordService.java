@@ -122,7 +122,7 @@ public class RecordService implements IRecordService {
         Record record = getRecordOrThrow(systemID);
 
         // See issue for a description of why this code was written this way
-        // https://github.com/HiOA-ABI/nikita-noark5-core/issues/82
+        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
         //Query q = entityManager.createNativeQuery("DELETE FROM fonds_fonds_creator WHERE pk_fonds_creator_id  = :id ;");
         //q.setParameter("id", record.getId());
         //q.executeUpdate();

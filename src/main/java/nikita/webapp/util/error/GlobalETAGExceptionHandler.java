@@ -19,7 +19,7 @@ class GlobalETAGExceptionHandler {
     /**
      * The point of this class is to capture exceptions that occur outside a controller.
      * <p>
-     * This is related to https://github.com/HiOA-ABI/nikita-noark5-core/issues/76
+     * This is related to https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/76
      **/
 
     @ExceptionHandler(value = NikitaETAGMalformedHeaderException.class)

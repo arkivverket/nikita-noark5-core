@@ -50,7 +50,7 @@ public class SimpleCORSFilter implements Filter {
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", stringJoin(allowMethods, ","));
             response.setHeader("Access-Control-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, Authorization, Origin, ETAG");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, Authorization, Origin, ETAG, grant_type");
             response.setHeader("Access-Control-Expose-Headers", "Allow, ETAG");
         }
         chain.doFilter(req, res);

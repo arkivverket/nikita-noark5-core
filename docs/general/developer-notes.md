@@ -240,7 +240,7 @@ The project also has a lot of warnings reported in Idea. Once the coverity
 issues are dealt with, we should work at removing warnings and perhaps run Ideas
  own bug testing. 
  
-An important [issue](https://github.com/HiOA-ABI/nikita-noark5-core/issues/105) 
+An important [issue](https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/105) 
 added this week is to do a rework of the hateoas handler. I think there is an
 extra comma appearing in output at the end that makes the JSON not valid and
 there may be a mismatch between collection types so that we are copying data 

@@ -465,8 +465,8 @@ public class FondsService implements IFondsService {
      * column names changing, constants are used to define relevant column
      * and table names.
      * <p>
-     * The approach is is discussed in a nikita github issue
-     * https://github.com/HiOA-ABI/nikita-noark5-core/issues/82
+     * The approach is is discussed in a nikita gitlab issue
+     * https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
      *
      * @param fondsSystemId The systemId of the fonds object to retrieve
      */

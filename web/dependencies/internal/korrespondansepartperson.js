@@ -2,7 +2,7 @@
  *  We want to use ng-model instead of brackets, but mdl seems to have problems showing values correctly
  *  when a page loads.
  *
- *  This is briefly discussed in https://github.com/HiOA-ABI/nikita-noark5-core/issues/91
+ *  This is briefly discussed in https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/91
  *
  *  So that has to be fixed. But I'd like to be able to disable the button "Oppdater korrespondansepart" until
  *  someone actually changes a value in one of the fields. ngChange can do this, but is reliant on using ng-model,

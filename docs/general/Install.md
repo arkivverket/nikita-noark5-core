@@ -18,10 +18,10 @@ attempt to run the project. You can verify your versions with:
 ## Getting the code
 
 The latest version of the code is available on Github at
-[HiOA-ABI/nikita-noark5-core](https://github.com/HiOA-ABI/nikita-noark5-core).
+[HiOA-ABI/nikita-noark5-core](https://gitlab.com/OsloMet-ABI/nikita-noark5-core).
 If you haven't cloned the project then:
 
-    git clone https://github.com/HiOA-ABI/nikita-noark5-core.git
+    git clone https://gitlab.com/OsloMet-ABI/nikita-noark5-core.git
 
 If you already have the code consider synchronizing your local copy:
     

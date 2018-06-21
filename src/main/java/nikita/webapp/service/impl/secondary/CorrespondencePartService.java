@@ -157,7 +157,7 @@ public class CorrespondencePartService implements ICorrespondencePartService {
 
 /*
         // Disassociate the link between Fonds and FondsCreator
-        // https://github.com/HiOA-ABI/nikita-noark5-core/issues/82
+        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
         Query q = entityManager.createNativeQuery("DELETE FROM fonds_fonds_creator WHERE f_pk_fonds_id  = :id ;");
         q.setParameter("id", fonds.getId());
         q.executeUpdate();
