@@ -6,11 +6,13 @@ repo_tester ?=https://github.com/petterreinholdtsen/noark5-tester
 all: run
 
 build:
-	mvn -Dmaven.test.skip=true clean install
+	mvn -Dmaven.test.skip=true clean validate install
 run: build
 	mvn -f pom.xml spring-boot:run
 clean:
 	mvn -Dmaven.test.skip=true clean
+webjars:
+    mvn validate
 
 # This target should be run after spinning up elasticsearch and the application.
 # The tester might have more dependencies but you should at least have installed
