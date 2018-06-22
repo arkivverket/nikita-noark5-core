@@ -12,7 +12,7 @@ run: build
 clean:
 	mvn -Dmaven.test.skip=true clean
 webjars:
-    mvn validate
+	mvn validate
 
 # This target should be run after spinning up elasticsearch and the application.
 # The tester might have more dependencies but you should at least have installed
