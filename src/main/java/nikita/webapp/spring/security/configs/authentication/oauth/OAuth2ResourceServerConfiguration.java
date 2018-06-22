@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
  * configure(HttpSecurity http) method.
  *
  */
-@Profile("security-oauth2-authentication")
 @EnableResourceServer
 @EnableWebSecurity
 @Configuration
