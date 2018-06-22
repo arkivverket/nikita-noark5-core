@@ -48,14 +48,11 @@ info:
 hateoas:
     publicAddress: http://localhost:8092/noark5v4/
 
-jwt:
-  header: Authorization
-  secret: mySecret
-  expiration: 604800
-  route:
-    authentication:
-      path: auth
-      refresh: refresh
+nikita:
+  security:
+    jwt:
+      signkey: nikitasignkey
+      expiration: 604800
 
 # Application properties
 application:

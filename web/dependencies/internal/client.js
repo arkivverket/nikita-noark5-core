@@ -79,14 +79,20 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
         console.log($scope.password);
         console.log($scope.username);
         selectedLoginOption = document.getElementById("login_type").value;
+
+      login_url_to_use = login_url + '?grant_type=password&client_id=nikita-client&username=admin&password=password';
+      console.log("Attempting to login using [" + login_url_to_use + "]");
+
         $http({
-            url: login_url,
+            url: login_url_to_use,
             method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            data: {username: $scope.username, password: $scope.password},
+            headers: {'Content-Type': 'application/json',
+                      'Authorization': 'Basic ' + btoa('nikita-client:secret')
+            }
         }).then(function (data, status, headers, config) {
-            SetUserToken(data.data.token);
-            console.log("Logging in.token is " + data.data.token);
+            SetUserToken("Bearer " + data.data.access_token);
+            console.log("Logging in.token is " + JSON.stringify(data));
+            console.log("Logging in.token is " + JSON.stringify(data.data));
             console.log("Logging in. redirecting to page for " + $scope.selectedLoginOption);
             if (selectedLoginOption == 'arkivar') {
                 changeLocation($scope, fondsListPageName, true);
@@ -96,7 +102,7 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
                 changeLocation($scope, "./saksbehandler-dashboard.html", true);
             }
         }, function (data, status, headers, config) {
-            alert(data.data);
+            alert(/*JSON.stringify(data) +*/ JSON.stringify(data));
         });
     };
 }]);

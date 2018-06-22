@@ -24,12 +24,20 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
  *     oauth/token
  *
  * You can test that the authorization server is working by attempting to
- * login via curl:
+ * login to nikita with oauth2 support via curl:
+ * <p>
+ * curl -v -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ='
+ * -X POST  'http://127.0.1.1:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password'
+ * <p>
+ * bmlraXRhLWNsaWVudDpzZWNyZXQ= is 'nikita-client:secret' base64 encoded.
+ * You will need to make sure this matches with the *.yml files where the
+ * following are defined:
  *
- * curl -v  grouse-client:secret@localhost:9294/grouse/oauth/token
- * -d grant_type=password
- * -d username=admin@kdrs.no
- * -d password=password
+ * @Value("${security.oauth2.client.client-id}")
+ * @Value("${security.oauth2.client.client-secret}")
+ * <p>
+
+ *
  *
  * Obviously everything should be on one line.
  *
@@ -40,25 +48,12 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
  * that {bcrypt} should not be there. Leaving this comment here in case this
  * becomes an issue later.
  * 
- * An example on how to login to nikita with oauth2 support
- * <p>
- * curl -v -X POST  -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ='
- * http://127.0.1.1:8092/noark5v4/oauth/token -d grant_type=password -d
- * username=admin -d password=password
- * <p>
- * bmlraXRhLWNsaWVudDpzZWNyZXQ= is 'nikita-client:secret' base64 encoded.
- * You will need to make sure this matches with the *.yml files where the
- * following are defined:
- *
- * @Value("${security.oauth2.client.client-id}")
- * @Value("${security.oauth2.client.client-secret}")
- * <p>
  *
  */
 @Profile("security-oauth2-authentication")
 @EnableAuthorizationServer
 @Configuration
-public class AuthorizationServerConfiguration
+public class OAuth2AuthorizationServerConfiguration
         extends AuthorizationServerConfigurerAdapter {
 
     private AuthenticationManager authenticationManager;
@@ -69,7 +64,7 @@ public class AuthorizationServerConfiguration
     @Value("${security.oauth2.client.client-secret}")
     private String oauth2Secret;
 
-    public AuthorizationServerConfiguration(
+    public OAuth2AuthorizationServerConfiguration(
             AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
@@ -88,6 +83,7 @@ public class AuthorizationServerConfiguration
     @Override
     public void configure(ClientDetailsServiceConfigurer clients)
             throws Exception {
+
         clients.inMemory()
                 .withClient(oauth2ClientId)
                 .authorizedGrantTypes(

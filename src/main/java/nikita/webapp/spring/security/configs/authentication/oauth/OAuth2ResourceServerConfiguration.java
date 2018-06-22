@@ -27,16 +27,15 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EnableResourceServer
 @EnableWebSecurity
 @Configuration
-public class ResourceServerConfiguration
+public class OAuth2ResourceServerConfiguration
         extends ResourceServerConfigurerAdapter {
 
     private NikitaUserDetailsService userDetailsService;
 
-    public ResourceServerConfiguration(
+    public OAuth2ResourceServerConfiguration(
             NikitaUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-
     /**
      * Create the AuthenticationProvider.
      * <p>
@@ -60,36 +59,11 @@ public class ResourceServerConfiguration
     /**
      * Create the password encoder.
      * <p>
-     * We are using a BCrypt Password Encoder. This is standard for Spring5
-     * from what I can tell.
-     *
+     * We are using a BCrypt Password Encoder.
      * @return new BCryptPasswordEncoder()
      */
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    /**
-     * Setup the security for the application.
-     * <p>
-     * The following is a description of the security profile for the
-     * application:
-     * - All requests to the application must be authenticated
-     * - Stateless session
-     * - Disable csrf as the token is deemed safe
-     *
-     * @param http
-     * @throws Exception
-     */
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().
-                antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll().
-                anyRequest().authenticated().
-                and().
-                sessionManagement().sessionCreationPolicy
-                (SessionCreationPolicy.STATELESS).and().
-                csrf().disable();
     }
 }

@@ -1,21 +1,26 @@
-package nikita.webapp.spring.security.configs.authentication.form;
+package nikita.webapp.spring.security.configs.authentication;
 
-import nikita.webapp.spring.security.NikitaUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
 
 import static nikita.common.config.Constants.ROLE_RECORDS_MANAGER;
 import static nikita.common.config.Constants.SLASH;
@@ -23,70 +28,43 @@ import static nikita.common.config.N5ResourceMappings.FONDS;
 import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
 import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
 
-/**
- * Testing a form based SecurityConfig using the pre-provided users/authorities
- * defined in a sql file in the resources directory
- * <p>
- * This can be tested using:
- * <p>
- * curl -i -X POST -d username=admin -d password=password -c /tmp/cookies.txt
- * http://localhost:8092/noark5v4/login
- * <p>
- * <p>
- * curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5-v4+json
- * -X GET http://localhost:8092/noark5v4/
- */
-
-@Profile("security-form-authentication")
-@Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true,
-        jsr250Enabled = true)
-public class FormAuthenticationConfig
+//@EnableWebSecurity
+@Component
+@Profile("!security-form-authentication")
+public class NikitaWebSecurityConfig
         extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private NikitaUserDetailsService userDetailsService;
-
-    @Autowired
-    private NikitaAuthenticationSuccessHandler authenticationSuccessHandler;
-
-    /**
-     * Create the AuthenticationProvider.
-     * <p>
-     * DaoAuthenticationProvider used to be able to retrieve details from a
-     * UserDetailsService object.
-     * <p>
-     * Here we set the userDetailsService and password encoder for the
-     * userDetailsService
-     *
-     * @return the newly created AuthenticationProvider
-     */
     @Bean
-    public AuthenticationProvider authProvider() {
-        final DaoAuthenticationProvider authenticationProvider =
-                new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(encoder());
-        return authenticationProvider;
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public FilterRegistrationBean corsFilterRegistrationBean() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.setAllowedMethods(Arrays.asList("OPTIONS", "POST", "GET", "PUT", "PATCH", "DELETE"));
+        config.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization"));
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
 
     /**
-     * Create the password encoder.
+     * Setup the security for the application.
+     * <p>
+     * The following is a description of the security profile for the
+     * application:
+     * - All requests to the application must be authenticated
+     * - Stateless session
+     * - Disable csrf as the token is deemed safe
      *
-     * @return new BCryptPasswordEncoder()
+     * @param httpSecurity
+     * @throws Exception
      */
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.userDetailsService(userDetailsService);
-    }
-
     @Override
     protected void configure(HttpSecurity httpSecurity)
             throws Exception { // @formatter:off
@@ -94,7 +72,7 @@ public class FormAuthenticationConfig
         httpSecurity
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
                 // GET [api]/metadata/**, public to read basic structure
                 .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH).permitAll()
                 // POST GET [api]/arkivstruktur/ny-*, need role of record keeper
@@ -112,9 +90,11 @@ public class FormAuthenticationConfig
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
-                .formLogin()
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ;
+
+        // disable page caching
+        httpSecurity.headers().cacheControl();
     } // @formatter:on
+
 }

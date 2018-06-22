@@ -107,6 +107,18 @@ public class AfterApplicationStartup {
             }
         }
 
+
+        // This has to be a temporary addition. This approach to cors is silly!!
+        // Cors should just work, we should not have to do this work!!
+        Set<HttpMethod> httpMethods = new TreeSet<>();
+        httpMethods.add(HttpMethod.GET);
+        httpMethods.add(HttpMethod.OPTIONS);
+        httpMethods.add(HttpMethod.POST);
+        String servletPath = "/oauth/token/";
+        out.println("Adding " + servletPath + " methods " + httpMethods);
+        CommonUtils.WebUtils.addRequestToMethodMap(servletPath, httpMethods);
+
+
         populateTranslatedNames();
     }
 
