@@ -2,235 +2,350 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>nikita</groupId>
-    <artifactId>nikita-noark5-core</artifactId>
-    <packaging>jar</packaging>
-    <version>0.1.0</version>
+  <groupId>nikita</groupId>
+  <artifactId>nikita-noark5-core</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1.0</version>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.0.RELEASE</version>
-    </parent>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.3.RELEASE</version>
+  </parent>
 
-    <name>nikita-noark5</name>
+  <name>nikita-noark5</name>
 
-    <issueManagement>
-        <url>https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues</url>
-        <system>GitLab Issues</system>
-    </issueManagement>
+  <issueManagement>
+    <url>https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues</url>
+    <system>GitLab Issues</system>
+  </issueManagement>
 
-    <licenses>
-        <license>
-            <name>AGPLv3 - GNU Affero General Public License</name>
-            <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+  <licenses>
+    <license>
+      <name>AGPLv3 - GNU Affero General Public License</name>
+      <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-    <developers>
-        <developer>
-            <email>tsodring@oslomet.no</email>
-            <name>Thomas Sødring</name>
-            <url>https://gitlab.com/tsodring</url>
-            <id>tsodring</id>
-        </developer>
-        <developer>
-            <email>pere@hungry.com</email>
-            <name>Petter Reinholdsten</name>
-            <url>https://gitlab.com/petterreinholdtsen</url>
-            <id>petterreinholdtsen</id>
-        </developer>
-    </developers>
+  <developers>
+    <developer>
+      <email>tsodring@oslomet.no</email>
+      <name>Thomas Sødring</name>
+      <url>https://gitlab.com/tsodring</url>
+      <id>tsodring</id>
+    </developer>
+    <developer>
+      <email>pere@hungry.com</email>
+      <name>Petter Reinholdsten</name>
+      <url>https://gitlab.com/petterreinholdtsen</url>
+      <id>petterreinholdtsen</id>
+    </developer>
+  </developers>
 
-    <properties>
-        <start-class>nikita.N5CoreApp</start-class>
+  <properties>
+    <start-class>nikita.N5CoreApp</start-class>
 
-        <!-- dependency versions -->
-        <spring-security.version>5.0.3.RELEASE</spring-security.version>
-        <spring-security-oauth2.version>2.3.0.RELEASE
-        </spring-security-oauth2.version>
-        <spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
-        <commons-lang3.version>3.4</commons-lang3.version>
-        <springfox-swagger2.version>2.7.0</springfox-swagger2.version>
-        <springfox-swagger-ui.version>2.7.0</springfox-swagger-ui.version>
-        <antlr.version>4.7.1</antlr.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
-    </properties>
+    <!-- dependency versions -->
+    <spring-security.version>5.0.3.RELEASE</spring-security.version>
+    <spring-security-oauth2.version>2.3.0.RELEASE
+    </spring-security-oauth2.version>
+    <spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
+    <commons-lang3.version>3.4</commons-lang3.version>
+    <springfox-swagger2.version>2.7.0</springfox-swagger2.version>
+    <springfox-swagger-ui.version>2.7.0</springfox-swagger-ui.version>
+    <antlr.version>4.7.1</antlr.version>
+    <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 
-    <dependencies>
+    <!-- JS / GUI -->
+    <jquery.version>3.2.1</jquery.version>
+    <bootstrap.version>4.0.0-2</bootstrap.version>
+    <angularjs.version>1.6.6</angularjs.version>
+    <font-awesome.version>5.0.9</font-awesome.version>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+  </properties>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+  <dependencies>
 
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-            <version>${spring-security-oauth2.version}</version>
-        </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
 
-      <!-- Security etc ..-->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-security</artifactId>
-      </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
 
-        <!-- Used for CompareToBuilder etc -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
+    <dependency>
+      <groupId>org.springframework.security.oauth</groupId>
+      <artifactId>spring-security-oauth2</artifactId>
+      <version>${spring-security-oauth2.version}</version>
+    </dependency>
 
-        <!-- Used for the @Audited annotation-->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-envers</artifactId>
-        </dependency>
+    <!-- Security etc ..-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
 
-        <!-- antlr dependency for parsing OData syntax -->
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>${antlr.version}</version>
-        </dependency>
+    <!-- Used for CompareToBuilder etc -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
+    <!-- Used for the @Audited annotation-->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-envers</artifactId>
+    </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <!-- antlr dependency for parsing OData syntax -->
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>${antlr.version}</version>
+    </dependency>
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-jwt</artifactId>
-            <version>${spring-security-jwt.version}</version>
-        </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
 
-        <!-- In memory database, used for demo mode only -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-jwt</artifactId>
+      <version>${spring-security-jwt.version}</version>
+    </dependency>
 
-        <!-- Postgres database. Toggled using profiles. -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
+    <!-- In memory database, used for demo mode only -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+    </dependency>
 
-        <!-- MySQL database. Toggled using profiles. -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
+    <!-- Postgres database. Toggled using profiles. -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
 
-        <!-- swagger dependency -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox-swagger-ui.version}</version>
-        </dependency>
+    <!-- MySQL database. Toggled using profiles. -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox-swagger2.version}</version>
-        </dependency>
+    <!-- swagger dependency -->
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <version>${springfox-swagger-ui.version}</version>
+    </dependency>
 
-        <dependency>
-            <groupId>com.ryantenney.metrics</groupId>
-            <artifactId>metrics-spring</artifactId>
-            <version>3.1.3</version>
-        </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+      <version>${springfox-swagger2.version}</version>
+    </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
+    <dependency>
+      <groupId>com.ryantenney.metrics</groupId>
+      <artifactId>metrics-spring</artifactId>
+      <version>3.1.3</version>
+    </dependency>
 
-        <!-- Used for OData, Elasticsearch query generation and in tests -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180130</version>
-        </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-        <!--
-        We are experiencing this issue
-        https://stackoverflow.com/questions/27808734/jdk8-error-class-file-for-javax-interceptor-interceptorbinding-not-found-whe
-        The following dependency resolves the issue.
-        -->
-        <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <version>1.2</version>
-        </dependency>
-    </dependencies>
+    <!-- Used for OData, Elasticsearch query generation and in tests -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20180130</version>
+    </dependency>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <exclude>**/*IntegrationTest.java</exclude>
-                        </excludes>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>integration-test</id>
-                            <goals>
-                                <goal>test</goal>
-                            </goals>
-                            <phase>integration-test</phase>
-                            <configuration>
-                                <excludes>
-                                    <exclude>none</exclude>
-                                </excludes>
-                                <includes>
-                                    <include>**/*IT.java</include>
-                                </includes>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <configuration>
-                        <mainClass>nikita.N5CoreApp</mainClass>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+    <!--
+    We are experiencing this issue
+    https://stackoverflow.com/questions/27808734/jdk8-error-class-file-for-javax-interceptor-interceptorbinding-not-found-whe
+    The following dependency resolves the issue.
+    -->
+    <dependency>
+      <groupId>javax.interceptor</groupId>
+      <artifactId>javax.interceptor-api</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jquery</artifactId>
+      <version>${jquery.version}</version>
+    </dependency>
+
+    <!-- WebJar dependencies to download js stuff for GUI -->
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>angularjs</artifactId>
+      <version>${angularjs.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>bootstrap</artifactId>
+      <version>${bootstrap.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>font-awesome</artifactId>
+      <version>${font-awesome.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>unpack</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>unpack</goal>
+              </goals>
+              <configuration>
+                <artifactItems>
+                  <artifactItem>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>angularjs</artifactId>
+                    <version>${angularjs.version}</version>
+                    <type>jar</type>
+                    <includes>**/*.js</includes>
+                    <outputDirectory>
+                      ${project.basedir}/web/dependencies/vendor/
+                    </outputDirectory>
+                  </artifactItem>
+                  <artifactItem>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>bootstrap</artifactId>
+                    <version>${bootstrap.version}</version>
+                    <type>jar</type>
+                    <includes>**/*.js</includes>
+                    <outputDirectory>
+                      ${project.basedir}/web/dependencies/vendor/
+                    </outputDirectory>
+                  </artifactItem>
+                  <artifactItem>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>bootstrap</artifactId>
+                    <version>${bootstrap.version}</version>
+                    <type>jar</type>
+                    <includes>**/*.css</includes>
+                    <outputDirectory>
+                      ${project.basedir}/web/dependencies/vendor/
+                    </outputDirectory>
+                  </artifactItem>
+                  <artifactItem>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>font-awesome</artifactId>
+                    <version>${font-awesome.version}</version>
+                    <type>jar</type>
+                    <includes>**/*.css</includes>
+                    <outputDirectory>
+                      ${project.basedir}/web/dependencies/vendor/
+                    </outputDirectory>
+                  </artifactItem>
+                  <!-- 3.3.7-1 version left in temp until
+                  GUI is updated to 4.0 -->
+                  <artifactItem>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>bootstrap</artifactId>
+                    <version>3.3.7-1</version>
+                    <type>jar</type>
+                    <includes>**/*.js</includes>
+                    <outputDirectory>
+                      ${project.basedir}/web/dependencies/vendor/
+                    </outputDirectory>
+                  </artifactItem>
+                  <artifactItem>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>bootstrap</artifactId>
+                    <version>3.3.7-1</version>
+                    <type>jar</type>
+                    <includes>**/*.css</includes>
+                    <outputDirectory>
+                      ${project.basedir}/web/dependencies/vendor/
+                    </outputDirectory>
+                  </artifactItem>
+                  <artifactItem>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>jquery</artifactId>
+                    <version>${jquery.version}</version>
+                    <type>jar</type>
+                    <includes>**/*.js</includes>
+                    <outputDirectory>
+                      ${project.basedir}/web/dependencies/vendor/
+                    </outputDirectory>
+                  </artifactItem>
+                </artifactItems>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <excludes>
+              <exclude>**/*IntegrationTest.java</exclude>
+            </excludes>
+          </configuration>
+          <executions>
+            <execution>
+              <id>integration-test</id>
+              <goals>
+                <goal>test</goal>
+              </goals>
+              <phase>integration-test</phase>
+              <configuration>
+                <excludes>
+                  <exclude>none</exclude>
+                </excludes>
+                <includes>
+                  <include>**/*IT.java</include>
+                </includes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <mainClass>nikita.N5CoreApp</mainClass>
+          </configuration>
+        </plugin>
+      </plugins>
+  </build>
 </project>
