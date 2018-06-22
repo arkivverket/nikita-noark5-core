@@ -18,7 +18,7 @@ attempt to run the project. You can verify your versions with:
 ## Getting the code
 
 The latest version of the code is available on Github at
-[HiOA-ABI/nikita-noark5-core](https://gitlab.com/OsloMet-ABI/nikita-noark5-core).
+[OsloMet-ABI/nikita-noark5-core](https://gitlab.com/OsloMet-ABI/nikita-noark5-core).
 If you haven't cloned the project then:
 
     git clone https://gitlab.com/OsloMet-ABI/nikita-noark5-core.git
