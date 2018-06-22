@@ -16,7 +16,7 @@ setup-debian:
 	mkdir -pv node_modules/material-design-lite
 	cd node_modules/material-design-lite
 	wget https://code.getmdl.io/1.3.0/material.min.css
-	wget https://code.getmdl.io/1.3.0/material.min.js
+	wget dependencies/vendor/META-INF/resources/webjars/material-design-lite/1.3.0/material.min.js
 
 
 run:
