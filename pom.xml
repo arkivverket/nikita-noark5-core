@@ -264,6 +264,16 @@
                   </artifactItem>
                   <artifactItem>
                     <groupId>org.webjars</groupId>
+                    <artifactId>material-design-lite</artifactId>
+                    <version>${material-design-lite.version}</version>
+                    <type>jar</type>
+                    <includes>**/*.css</includes>
+                    <outputDirectory>
+                      ${project.basedir}/web/dependencies/vendor/
+                    </outputDirectory>
+                  </artifactItem>
+                  <artifactItem>
+                    <groupId>org.webjars</groupId>
                     <artifactId>ng-file-upload</artifactId>
                     <version>${ng-file-upload.version}</version>
                     <type>jar</type>
