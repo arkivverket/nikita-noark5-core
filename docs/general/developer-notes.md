@@ -158,7 +158,7 @@ job.
  - Architectural issues
 
 ### Architectural issues
-We continued work on[issue](https://github
+We continued work on[issue](https://gitlab
 .com/OsloMet-ABI/nikita-noark5-core/issues/105) and met some design issues. 
 Should HTTPRequest be forward to the Service layer* Ideally it should not, but
 the way we are dealing with Hateaos links (being generated on a per user, 
@@ -199,7 +199,7 @@ The codebase has shrunk a little as a result of this work.
   
 ### Clean codebase
 Hateaos handling was looked at and there were a number of approaches that were
-attempted. This work is described in [issue](https://github
+attempted. This work is described in [issue](https://gitlab
 .com/OsloMet-ABI/nikita-noark5-core/issues/105) and consumed most of the time. As
 a result nikita should be a little faster and use less memory. 
 
