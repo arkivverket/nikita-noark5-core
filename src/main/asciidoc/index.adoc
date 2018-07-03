@@ -1,0 +1,31 @@
+= nikita-noark5-core API documentation
+
+== Introduction
+This is a Spring REST Docs generated documentation for the
+nikita-noark5-core (Noark 5v4). Noark 5v4 is a Hateoas level 3
+API and makes active use of "links" within the API.
+
+
+== Application root
+
+The root of the application should contain the following information.
+
+===
+|Key|Address
+
+|`+self+`
+|A self-link to the resource
+|`+login+`
+|A link to login to the application.
+|===
+
+=== Get application root
+
+==== Sample Request
+include::{snippets}/home/http-request.adoc[]
+
+.response
+include::{snippets}/home/http-response.adoc[]
+
+.headers
+include::{snippets}/home/response-headers.adoc[]
