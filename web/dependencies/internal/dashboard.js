@@ -30,17 +30,19 @@ app.controller('CaseFileDashboardController', ['$scope', '$http', function ($sco
 
     var urlApplicationRoot = base_url;
     console.log("Attempting connection with " + urlApplicationRoot);
+    console.log("Using token" + $scope.token);
     $http({
         method: 'GET',
         url: urlApplicationRoot,
-        headers: {'Authorization': $scope.token},
+        headers: {'Authorization': $scope.token,
+        'Accept': 'application/vnd.noark5-v4+json'}
     }).then(function successCallback(response) {
         var functionality = response.data;
         console.log("Root found. value is " + JSON.stringify(functionality));
-        for (var rel in functionality._links) {
-            var relation = functionality._links[rel].rel;
+        for (var rel in functionality.links) {
+            var relation = functionality.links[rel].rel;
             if (relation === REL_FONDS_STRUCTURE) {
-                var urlListNoarkObjectParents = functionality._links[rel].href;
+                var urlListNoarkObjectParents = functionality.links[rel].href;
                 $http({
                     method: 'GET',
                     url: urlListNoarkObjectParents,
@@ -48,10 +50,10 @@ app.controller('CaseFileDashboardController', ['$scope', '$http', function ($sco
                 }).then(function successCallback(response) {
                     var noarkObjectParents = response.data;
                     //console.log("noarkObjectParents found. value is " + JSON.stringify(noarkObjectParents));
-                    for (var rel in noarkObjectParents._links) {
-                        var relation = noarkObjectParents._links[rel].rel;
+                    for (var rel in noarkObjectParents.links) {
+                        var relation = noarkObjectParents.links[rel].rel;
                         if (relation === REL_SERIES) {
-                            var urlListSeries = noarkObjectParents._links[rel].href;
+                            var urlListSeries = noarkObjectParents.links[rel].href;
                             $http({
                                 method: 'GET',
                                 url: urlListSeries,
@@ -91,12 +93,12 @@ app.controller('CaseFileDashboardController', ['$scope', '$http', function ($sco
         if (!GetChosenSeries()) {
             SetChosenSeries(series);
         }
-        for (var rel in series._links) {
-            //console.log("Checking all REL found : " + series._links[rel].rel + " Looking for " + REL_CASE_FILE);
-            var relation = series._links[rel].rel;
+        for (var rel in series.links) {
+            //console.log("Checking all REL found : " + series.links[rel].rel + " Looking for " + REL_CASE_FILE);
+            var relation = series.links[rel].rel;
             if (relation === REL_CASE_FILE) {
-                series._links[rel].href;
-                $scope.linkToFindAllCaseFiles = series._links[rel].href;
+                series.links[rel].href;
+                $scope.linkToFindAllCaseFiles = series.links[rel].href;
                 //console.log("Setting linkToFindAllCaseFiles to " + $scope.linkToFindAllCaseFiles);
                 $http({
                     method: 'GET',
@@ -120,11 +122,11 @@ app.controller('CaseFileDashboardController', ['$scope', '$http', function ($sco
         $scope.text = "doubleClick calls saksbehandler.html";
         SetChosenCaseFile(casefile);
 
-        for (var rel in casefile._links) {
-            //console.log("Checking all REL found : " + series._links[rel].rel + " Looking for " + REL_CASE_FILE);
-            var relation = casefile._links[rel].rel;
+        for (var rel in casefile.links) {
+            //console.log("Checking all REL found : " + series.links[rel].rel + " Looking for " + REL_CASE_FILE);
+            var relation = casefile.links[rel].rel;
             if (relation === REL_SELF) {
-                SetLinkToChosenCaseFile(casefile._links[rel].href);
+                SetLinkToChosenCaseFile(casefile.links[rel].href);
             }
         }
         changeLocation($scope, caseFilePageName, false);

@@ -32,10 +32,10 @@ var updateIndexView = function (url, $scope, $http) {
         headers: {'Authorization': token},
     }).then(function successCallback(response) {
         $scope.allow = response.headers('Allow');
-        $scope.links = response.data._links;
+        $scope.links = response.data.links;
         $scope.data = response.data;
         $scope.results = response.data.results;
-        delete $scope.data._links;
+        delete $scope.data.links;
         delete $scope.data.results;
     }, function errorCallback(response) {
         // TODO: what should we do when it fails?
@@ -130,9 +130,9 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
     $scope.fondsUpdate = function (fonds) {
         console.log('fonds selected ' + fonds.tittel);
         $scope.casefiles = '';
-        for (rel in fonds._links) {
-            href = fonds._links[rel].href;
-            relation = fonds._links[rel].rel;
+        for (rel in fonds.links) {
+            href = fonds.links[rel].href;
+            relation = fonds.links[rel].rel;
             if (relation == 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivdel/') {
                 console.log("fetching " + href);
                 $http({
@@ -152,9 +152,9 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
         if (!series) {
             return
         }
-        for (rel in series._links) {
-            href = series._links[rel].href;
-            relation = series._links[rel].rel;
+        for (rel in series.links) {
+            href = series.links[rel].href;
+            relation = series.links[rel].rel;
             if (relation == 'http://rel.kxml.no/noark5/v4/api/sakarkiv/saksmappe/') {
                 console.log("fetching " + href);
                 $http({
@@ -175,10 +175,10 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
             file.records = '';
             return;
         }
-        for (rel in file._links) {
-            relation = file._links[rel].rel;
+        for (rel in file.links) {
+            relation = file.links[rel].rel;
             if (relation == 'http://rel.kxml.no/noark5/v4/api/sakarkiv/journalpost/') {
-                href = file._links[rel].href;
+                href = file.links[rel].href;
                 console.log("fetching " + href);
                 $http({
                     method: 'GET',
@@ -187,11 +187,11 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
                 }).then(function successCallback(response) {
                     response.data.results.forEach(function (record) {
                         console.log("record " + record);
-                        for (rel in record._links) {
-                            relation = record._links[rel].rel;
+                        for (rel in record.links) {
+                            relation = record.links[rel].rel;
                             console.log("found " + relation);
                             if (relation == 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/dokumentbeskrivelse/') {
-                                href = record._links[rel].href;
+                                href = record.links[rel].href;
                                 console.log("fetching " + href);
                                 $http({
                                     method: 'GET',

@@ -33,10 +33,10 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
         // Using the current casefile object, go and find the
         // REL_NEW_REGISTRY_ENTRY href and issue a GET to get any default
         // values defined in the core
-        for (var rel in $scope.caseFile._links) {
-            var relation = $scope.caseFile._links[rel].rel;
+        for (var rel in $scope.caseFile.links) {
+            var relation = $scope.caseFile.links[rel].rel;
             if (relation == REL_NEW_REGISTRY_ENTRY) {
-                var urlGetNewRegistryEntry = $scope.caseFile._links[rel].href;
+                var urlGetNewRegistryEntry = $scope.caseFile.links[rel].href;
                 console.log("Doing a GET on " + urlGetNewRegistryEntry);
                 $http({
                     method: 'GET',
@@ -58,15 +58,15 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
         $scope.createNewRegistryEntry = false;
         $scope.registryEntryETag = -1;
 
-        console.log("registryEntryController. RegistryEntry _links is " + $scope.registryEntry._links);
+        console.log("registryEntryController. RegistryEntry links is " + $scope.registryEntry.links);
 
         // You need to do a GET because you need an ETAG!
         // So you get the SELF REL of the current registryEntry
         // and retrieve it again so you have an ETAG
-        for (var rel in $scope.registryEntry._links) {
-            var relation = $scope.registryEntry._links[rel].rel;
+        for (var rel in $scope.registryEntry.links) {
+            var relation = $scope.registryEntry.links[rel].rel;
             if (relation == REL_SELF) {
-                var urlRegistryEntry = $scope.registryEntry._links[rel].href;
+                var urlRegistryEntry = $scope.registryEntry.links[rel].href;
                 console.log("Attempting GET on registryEntry : " + urlRegistryEntry);
                 $http({
                     method: 'GET',
@@ -84,11 +84,11 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
                         " results " + JSON.stringify(response.data));
 
                     // Now go through each rel and find the one linking to documentDescription
-                    for (var rel in $scope.registryEntry._links) {
-                        var relation = $scope.registryEntry._links[rel].rel;
+                    for (var rel in $scope.registryEntry.links) {
+                        var relation = $scope.registryEntry.links[rel].rel;
                         if (relation === REL_DOCUMENT_DESCRIPTION) {
                             // here we have a link to the documentDescription
-                            var documentDescriptionHref = $scope.registryEntry._links[rel].href;
+                            var documentDescriptionHref = $scope.registryEntry.links[rel].href;
                             console.log("Found HREF " + documentDescriptionHref);
                             (function () {
                                 $http({
@@ -101,10 +101,10 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
 
                                     // Now go through each rel and find the one linking to documentObject
                                     response.data.results.forEach(function (documentdescription) {
-                                        for (var rel in documentdescription._links) {
-                                            var relation = documentdescription._links[rel].rel;
+                                        for (var rel in documentdescription.links) {
+                                            var relation = documentdescription.links[rel].rel;
                                             if (relation === REL_DOCUMENT_OBJECT) {
-                                                var documentObjectHref = documentdescription._links[rel].href;
+                                                var documentObjectHref = documentdescription.links[rel].href;
                                                 (function () {
                                                     // here we have a link to the documentObject
                                                     // Fetch the documentObject
@@ -136,7 +136,7 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
                         if (relation === REL_CORRESPONDENCE_PART_PERSON) {
                             // here we have a link to correpondencepartperson
                             console.log("Found RED REL_CORRESPONDENCE_PART_PERSON " + REL_CORRESPONDENCE_PART_PERSON);
-                            var correspondencePartPersonHref = $scope.registryEntry._links[rel].href;
+                            var correspondencePartPersonHref = $scope.registryEntry.links[rel].href;
                             console.log("Found HREF " + correspondencePartPersonHref);
                             (function () {
                                 $http({
@@ -159,11 +159,11 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
         }
 
         // Next go and get any registryEntires associated with the registryEntry
-        for (var rel in $scope.registryEntry._links) {
-            var relation = $scope.registryEntry._links[rel].rel;
+        for (var rel in $scope.registryEntry.links) {
+            var relation = $scope.registryEntry.links[rel].rel;
             if (relation == REL_REGISTRY_ENTRY) {
-                SetLinkToGetRegistryEntry($scope.registryEntry._links[rel].href);
-                var urlAllRegistryEntries = $scope.registryEntry._links[rel].href;
+                SetLinkToGetRegistryEntry($scope.registryEntry.links[rel].href);
+                var urlAllRegistryEntries = $scope.registryEntry.links[rel].href;
                 $http({
                     method: 'GET',
                     url: urlAllRegistryEntries,
@@ -195,10 +195,10 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
 
          */
         console.log("Current registryEntry is " + JSON.stringify($scope.registryEntry));
-        for (var rel in registryEntry._links) {
-            relation = registryEntry._links[rel].rel;
+        for (var rel in registryEntry.links) {
+            relation = registryEntry.links[rel].rel;
             if (relation == REL_NEW_DOCUMENT_DESCRIPTION) {
-                var href = registryEntry._links[rel].href;
+                var href = registryEntry.links[rel].href;
                 SetLinkToCreateDocumentDescription(href);
             }
         }
@@ -218,12 +218,12 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
     $scope.documentSelected = function (documentDescription) {
         console.log("documentDescription" + JSON.stringify(documentDescription));
         SetChosenDocumentDescription(documentDescription);
-        for (var rel in documentDescription._links) {
-            var relation = documentDescription._links[rel].rel;
+        for (var rel in documentDescription.links) {
+            var relation = documentDescription.links[rel].rel;
             if (relation === 'self') {
                 console.log("documentDescription" + JSON.stringify(documentDescription) + " href = " +
-                    documentDescription._links[rel].href);
-                SetLinkToDocumentDescription(documentDescription._links[rel].href);
+                    documentDescription.links[rel].href);
+                SetLinkToDocumentDescription(documentDescription.links[rel].href);
             }
         }
         window.location = gui_base_url + documentPageName;
@@ -231,12 +231,12 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
 
     $scope.correspondencePartPersonSelected = function (correspondansepartperson) {
         console.log("correspondansepartperson" + JSON.stringify(correspondansepartperson));
-        for (var rel in correspondansepartperson._links) {
-            var relation = correspondansepartperson._links[rel].rel;
+        for (var rel in correspondansepartperson.links) {
+            var relation = correspondansepartperson.links[rel].rel;
             if (relation === 'self') {
                 console.log("correspondansepartperson" + JSON.stringify(correspondansepartperson) + " href = " +
-                    correspondansepartperson._links[rel].href);
-                SetLinkToCurrentCorrespondencePartPerson(correspondansepartperson._links[rel].href);
+                    correspondansepartperson.links[rel].href);
+                SetLinkToCurrentCorrespondencePartPerson(correspondansepartperson.links[rel].href);
             }
         }
         console.log("registry entry redirect to " + gui_base_url + correspondencePartPersonPageName +
@@ -261,20 +261,20 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
         if ($scope.createNewRegistryEntry) {
             method = "POST";
 
-            for (var rel in $scope.caseFile._links) {
-                var relation = $scope.caseFile._links[rel].rel;
+            for (var rel in $scope.caseFile.links) {
+                var relation = $scope.caseFile.links[rel].rel;
                 if (relation == REL_NEW_REGISTRY_ENTRY) {
-                    urlRegistryEntry = $scope.caseFile._links[rel].href;
+                    urlRegistryEntry = $scope.caseFile.links[rel].href;
                     console.log("URL for POST operation on RegistryEntry is " + urlRegistryEntry);
                 }
             }
         } else {
             method = "PUT";
             // Find the url to self object
-            for (var rel in $scope.registryEntry._links) {
-                var relation = $scope.registryEntry._links[rel].rel;
+            for (var rel in $scope.registryEntry.links) {
+                var relation = $scope.registryEntry.links[rel].rel;
                 if (relation == REL_SELF) {
-                    urlRegistryEntry = $scope.registryEntry._links[rel].href;
+                    urlRegistryEntry = $scope.registryEntry.links[rel].href;
                     console.log("URL for PUT operation on RegistryEntry is " + urlRegistryEntry);
                 }
             }
@@ -333,10 +333,10 @@ $scope.send_form = function () {
             var registryEntry = response.data;
             $scope.registryEntry = response.data;
             SetCurrentRegistryEntry(response.data);
-            for (rel in registryEntry._links) {
-                relation = registryEntry._links[rel].rel;
+            for (rel in registryEntry.links) {
+                relation = registryEntry.links[rel].rel;
                 if (relation == 'self') {
-                    href = registryEntry._links[rel].href;
+                    href = registryEntry.links[rel].href;
                     SetLinkToChosenRecord(href);
                     window.location = gui_base_url + registryEntryPageName;
                 }

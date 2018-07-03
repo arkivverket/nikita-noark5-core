@@ -37,10 +37,10 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
             var documentDescription = response.data;
        //     console.log("XXXXXXXXXX Curent document description object is" + JSON.stringify(response.data));
             $scope.documentDescription = response.data;
-            for (var rel in documentDescription._links) {
-                var relation = documentDescription._links[rel].rel;
+            for (var rel in documentDescription.links) {
+                var relation = documentDescription.links[rel].rel;
                 if (relation === REL_DOCUMENT_OBJECT) {
-                    var urlDocumentObject = documentDescription._links[rel].href;
+                    var urlDocumentObject = documentDescription.links[rel].href;
                     $http({
                         method: 'GET',
                         url: urlDocumentObject,
@@ -192,14 +192,14 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
             $scope.documentDescription = response.data;
             var documentDescription = response.data;
             console.log("POST new documentdescription data returned=" + JSON.stringify(response.data));
-            for (rel in documentDescription._links) {
-                relation = documentDescription._links[rel].rel;
+            for (rel in documentDescription.links) {
+                relation = documentDescription.links[rel].rel;
                 if (relation == 'self') {
-                    href = documentDescription._links[rel].href;
+                    href = documentDescription.links[rel].href;
                     SetLinkToCurrentDocumentDescription(href);
                 }
                 if (relation === REL_NEW_DOCUMENT_OBJECT) {
-                    href = documentDescription._links[rel].href;
+                    href = documentDescription.links[rel].href;
                     SetLinkToCreateDocumentObject(href);
                     urlCreateDocumentObject = href;
                 }
@@ -221,10 +221,10 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
                 console.log("POST to new documentobject returned=" + JSON.stringify(response.data));
                 $scope.documentObject = response.data;
                 var documentObject = response.data;
-                for (rel in documentObject._links) {
-                    relation = documentObject._links[rel].rel;
+                for (rel in documentObject.links) {
+                    relation = documentObject.links[rel].rel;
                     if (relation == 'self') {
-                        href = documentObject._links[rel].href;
+                        href = documentObject.links[rel].href;
                         SetLinkToCurrentDocumentObject(href);
                     }
                 }

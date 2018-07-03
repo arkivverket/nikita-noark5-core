@@ -39,10 +39,10 @@ var fondsController = app.controller('FondsController', ['$scope', '$http',
             // Retrieve the latest copy of the data and pull out the ETAG
             // Find the self link of the current fonds and issue a GET
 
-            for (var rel in $scope.fonds._links) {
-                var relation = $scope.fonds._links[rel].rel;
+            for (var rel in $scope.fonds.links) {
+                var relation = $scope.fonds.links[rel].rel;
                 if (relation == REL_SELF) {
-                    var urlToFonds = $scope.fonds._links[rel].href;
+                    var urlToFonds = $scope.fonds.links[rel].href;
                     var token = GetUserToken();
                     $http({
                         method: 'GET',
@@ -65,10 +65,10 @@ var fondsController = app.controller('FondsController', ['$scope', '$http',
             console.log("scope.selectedFondsStatus is set to [" + $scope.selectedFondsStatus + "]");
 
             // If we are loading the data from a fonds, check to see if it has any related fondsCreator data
-            for (var rel in $scope.fonds._links) {
-                var relation = $scope.fonds._links[rel].rel;
+            for (var rel in $scope.fonds.links) {
+                var relation = $scope.fonds.links[rel].rel;
                 if (relation == REL_FONDS_CREATOR) {
-                    var urlFondsCreators = $scope.fonds._links[rel].href;
+                    var urlFondsCreators = $scope.fonds.links[rel].href;
                     var token = GetUserToken();
                     $http({
                         method: 'GET',
@@ -88,11 +88,11 @@ var fondsController = app.controller('FondsController', ['$scope', '$http',
                                 if ($scope.fondsCreator.arkivskaperID != null) {
                                     $scope.createFondsCreator = false;
                                     console.log("$scope.fondsCreator.arkivskaperID " + $scope.fondsCreator.arkivskaperID);
-                                    for (var rel in $scope.fondsCreator._links) {
-                                        var relation = $scope.fondsCreator._links[rel].rel;
+                                    for (var rel in $scope.fondsCreator.links) {
+                                        var relation = $scope.fondsCreator.links[rel].rel;
                                         console.log("relation " + relation);
                                         if (relation == REL_SELF) {
-                                            var urlFondsCreator = $scope.fondsCreator._links[rel].href;
+                                            var urlFondsCreator = $scope.fondsCreator.links[rel].href;
                                             console.log("Getting urlFondsCreator" + urlFondsCreator);
                                             var token = GetUserToken();
                                             $http({
@@ -194,12 +194,12 @@ var fondsController = app.controller('FondsController', ['$scope', '$http',
                 method = "PUT";
                 var currentFonds = GetChosenFonds();
                 if (currentFonds != null) {
-                    // Check that currentFonds._links exists??
+                    // Check that currentFonds.links exists??
                     // Find the self link
-                    for (var rel in currentFonds._links) {
-                        var relation = currentFonds._links[rel].rel;
+                    for (var rel in currentFonds.links) {
+                        var relation = currentFonds.links[rel].rel;
                         if (relation === REL_SELF) {
-                            urlFonds = currentFonds._links[rel].href;
+                            urlFonds = currentFonds.links[rel].href;
                             console.log(method + " Attempting to update arkiv with following address = " + urlFonds);
                             console.log(method + " Current ETAG is = [" + $scope.fondsETag + "]");
                             $http({
@@ -251,14 +251,14 @@ var fondsController = app.controller('FondsController', ['$scope', '$http',
                 method = "POST";
                 var currentFonds = GetChosenFonds();
                 if (currentFonds != null) {
-                    // Check that currentFonds._links exists??
+                    // Check that currentFonds.links exists??
                     // Find the self link
-                    for (var rel in currentFonds._links) {
-                        var relation = currentFonds._links[rel].rel;
+                    for (var rel in currentFonds.links) {
+                        var relation = currentFonds.links[rel].rel;
                         if (relation === REL_NEW_FONDS_CREATOR) {
-                            urlFondsCreator = currentFonds._links[rel].href;
+                            urlFondsCreator = currentFonds.links[rel].href;
                             console.log("relation is " + relation);
-                            console.log("href is " + currentFonds._links[rel].href);
+                            console.log("href is " + currentFonds.links[rel].href);
 
                             $http({
                                 url: urlFondsCreator,
@@ -297,12 +297,12 @@ var fondsController = app.controller('FondsController', ['$scope', '$http',
                 method = "PUT";
                 var currentFondsCreator = $scope.fondsCreator;
                 if (currentFondsCreator != null) {
-                    // Check that currentFondsCreator._links exists??
+                    // Check that currentFondsCreator.links exists??
                     // Find the self link
-                    for (var rel in currentFondsCreator._links) {
-                        var relation = currentFondsCreator._links[rel].rel;
+                    for (var rel in currentFondsCreator.links) {
+                        var relation = currentFondsCreator.links[rel].rel;
                         if (relation === REL_SELF) {
-                            urlFondsCreator = currentFondsCreator._links[rel].href;
+                            urlFondsCreator = currentFondsCreator.links[rel].href;
                             console.log(method + " Attempting to update forndscreator with following address = " + urlFondsCreator);
                             console.log(method + " Attempting to update forndscreator with following ETAG = " + $scope.fondsCreatorETag);
                             $http({

@@ -16,10 +16,10 @@ var seriesListController = app.controller('SeriesListController', ['$scope', '$h
 
 
     if ($scope.fonds != null) {
-        for (var rel in $scope.fonds._links) {
-            var relation = $scope.fonds._links[rel].rel;
+        for (var rel in $scope.fonds.links) {
+            var relation = $scope.fonds.links[rel].rel;
             if (relation == REL_SERIES) {
-                var urlSeriesList = $scope.fonds._links[rel].href;
+                var urlSeriesList = $scope.fonds.links[rel].href;
                 var token = GetUserToken();
                 $http({
                     method: 'GET',

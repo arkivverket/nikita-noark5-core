@@ -26,7 +26,7 @@ var fileController = app.controller('FileController', ['$scope', '$http', functi
         headers: {'Authorization': $scope.token },
     }).then(function successCallback(response) {
         for (var key of Object.keys(response.data)) {
-            if ("_links" === key) {
+            if ("links" === key) {
             } else {
                 //console.log(key,response.data[key]);
                 $scope[key] = response.data[key];
@@ -41,10 +41,10 @@ var fileController = app.controller('FileController', ['$scope', '$http', functi
     $scope.fileSelected = function (file) {
         console.log('file selected link clicked ' + JSON.stringify(file));
 
-        for (rel in file._links) {
-            relation = file._links[rel].rel;
+        for (rel in file.links) {
+            relation = file.links[rel].rel;
             if (relation == 'self') {
-                href = file._links[rel].href;
+                href = file.links[rel].href;
                 SetLinkToChosenFile(href);
                 console.log("fetching " + href);
                 window.location = gui_base_url + "/saksmappe.html";

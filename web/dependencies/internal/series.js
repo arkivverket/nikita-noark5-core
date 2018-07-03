@@ -27,10 +27,10 @@ var seriesController = app.controller('SeriesController', ['$scope', '$http',
 
         // Retrieve the latest copy of the data and pull out the ETAG
         // Find the self link of the current series and issue a GET
-        for (var rel in $scope.series._links) {
-            var relation = $scope.series._links[rel].rel;
+        for (var rel in $scope.series.links) {
+            var relation = $scope.series.links[rel].rel;
             if (relation == REL_SELF) {
-                var urlToFonds = $scope.series._links[rel].href;
+                var urlToFonds = $scope.series.links[rel].href;
                 var token = GetUserToken();
                 $http({
                     method: 'GET',
@@ -62,12 +62,12 @@ var seriesController = app.controller('SeriesController', ['$scope', '$http',
             method = "POST";
             var currentFonds = GetChosenFonds();
             if (currentFonds != null) {
-                // Check that currentFonds._links exists??
+                // Check that currentFonds.links exists??
                 // Find the self link
-                for (var rel in currentFonds._links) {
-                    var relation = currentFonds._links[rel].rel;
+                for (var rel in currentFonds.links) {
+                    var relation = currentFonds.links[rel].rel;
                     if (relation === REL_NEW_SERIES) {
-                        urlSeries = currentFonds._links[rel].href;
+                        urlSeries = currentFonds.links[rel].href;
                         console.log(method + " Attempting to create series with following address = " + urlSeries);
                     }
                 }
@@ -76,12 +76,12 @@ var seriesController = app.controller('SeriesController', ['$scope', '$http',
             method = "PUT";
             var currentSeries = GetChosenSeries();
             if (currentSeries != null) {
-                // Check that currentSeries._links exists??
+                // Check that currentSeries.links exists??
                 // Find the self link
-                for (var rel in currentSeries._links) {
-                    var relation = currentSeries._links[rel].rel;
+                for (var rel in currentSeries.links) {
+                    var relation = currentSeries.links[rel].rel;
                     if (relation === REL_SELF) {
-                        urlSeries = currentSeries._links[rel].href;
+                        urlSeries = currentSeries.links[rel].href;
                         console.log(method + " Attempting to update series with following address = " + urlSeries);
                     }
                 }

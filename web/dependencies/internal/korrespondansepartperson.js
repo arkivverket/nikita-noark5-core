@@ -53,12 +53,12 @@ var app = angular.module('nikita', [])
             $scope.label_correspondansepart = "Ny Korrespondansepartperson";
             $scope.buttonLabel = "Lagre korrespondansepartperson";
             // Go through each rel of the registryentry
-            for (var rel in $scope.registryEntry._links) {
-                var relation = $scope.registryEntry._links[rel].rel;
+            for (var rel in $scope.registryEntry.links) {
+                var relation = $scope.registryEntry.links[rel].rel;
                 // find one that contains a link to a  ny-korrespondansepartperson
                 if (relation === REL_NEW_CORRESPONDENCE_PART_PERSON) {
-                    var correspondencePartPersonHref = $scope.registryEntry._links[rel].href;
-                    SetLinkToCreateCorrespondencePartPerson($scope.registryEntry._links[rel].href);
+                    var correspondencePartPersonHref = $scope.registryEntry.links[rel].href;
+                    SetLinkToCreateCorrespondencePartPerson($scope.registryEntry.links[rel].href);
                     // Issue a GET for the ny-korrespondansepartperson
                     $http({
                         method: 'GET',
@@ -80,11 +80,11 @@ var app = angular.module('nikita', [])
 
         var setCurrentCorrepsondencePartPersonFromRels = function (correspondencepartPerson) {
             // Find the self link, need it when updating
-            for (var rel in correspondencepartPerson._links) {
-                var relation = correspondencepartPerson._links[rel].rel;
+            for (var rel in correspondencepartPerson.links) {
+                var relation = correspondencepartPerson.links[rel].rel;
                 // find one that contains a link to a  ny-korrespondansepartperson
                 if (relation === REL_SELF) {
-                    SetLinkToCurrentCorrespondencePartPerson(correspondencepartPerson._links[rel].href);
+                    SetLinkToCurrentCorrespondencePartPerson(correspondencepartPerson.links[rel].href);
                 }
             }
         };

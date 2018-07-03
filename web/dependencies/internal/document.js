@@ -42,15 +42,15 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
             var documentDescription = response.data;
             $scope.documentDescriptionETag = response.headers('eTag');
             $scope.documentDescription = response.data;
-            for (var rel in documentDescription._links) {
-                var relation = documentDescription._links[rel].rel;
+            for (var rel in documentDescription.links) {
+                var relation = documentDescription.links[rel].rel;
                 $scope.selectedDocumentType = documentDescription.dokumenttype;
                 $scope.selectedTilknyttetRegistreringSom = documentDescription.tilknyttetRegistreringSom;
                 $scope.selectedDocumentStatus = documentDescription.dokumentstatus;
                 console.log("selectedDocumentStatus" + JSON.stringify($scope.selectedDocumentStatus));
 
                 if (relation === REL_DOCUMENT_OBJECT) {
-                    var urlDocumentObject = documentDescription._links[rel].href;
+                    var urlDocumentObject = documentDescription.links[rel].href;
                     $http({
                         method: 'GET',
                         url: urlDocumentObject,
@@ -67,10 +67,10 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
                             var  documentObject = response.data.results[i];
                             $scope.documentObjectETag = response.headers('eTag');
                             // make a note of the link to upload a file if a user want to upload file
-                            for (rel in documentObject._links) {
-                                relation = documentObject._links[rel].rel;
+                            for (rel in documentObject.links) {
+                                relation = documentObject.links[rel].rel;
                                 if (relation == 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/fil/') {
-                                    SetLinkToDocumentFile(documentObject._links[rel].href);
+                                    SetLinkToDocumentFile(documentObject.links[rel].href);
                                 }
                             }
                         }
@@ -90,10 +90,10 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
         // Using the current registryentry object, go and find the
         // REL_NEW_DOCUMENT_DESCRIPTION href and issue a GET to get any default
         // values defined in the core
-        for (var rel in $scope.registryEntry._links) {
-            var relation = $scope.registryEntry._links[rel].rel;
+        for (var rel in $scope.registryEntry.links) {
+            var relation = $scope.registryEntry.links[rel].rel;
             if (relation == REL_NEW_DOCUMENT_DESCRIPTION) {
-                var urlGetNewDocumentDescription = $scope.registryEntry._links[rel].href;
+                var urlGetNewDocumentDescription = $scope.registryEntry.links[rel].href;
                 console.log("Doing a GET on " + urlGetNewDocumentDescription);
                 $http({
                     method: 'GET',
@@ -117,10 +117,10 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
     $scope.uploadFiles = function (file, errFiles) {
         $scope.f = file;
 
-        for (rel in $scope.documentObject._links) {
-            relation = $scope.documentObject._links[rel].rel;
+        for (rel in $scope.documentObject.links) {
+            relation = $scope.documentObject.links[rel].rel;
             if (relation == 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/fil/') {
-                var url = $scope.documentObject._links[rel].href;
+                var url = $scope.documentObject.links[rel].href;
                 var mimeType = $scope.selectedMimeType;
                 $scope.errFile = errFiles && errFiles[0];
                 if (file) {
@@ -173,20 +173,20 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
         if($scope.createNewDocument) {
             method = "POST";
             // Check the current series for a link to create a new casefile
-            for (var rel in $scope.registryEntry._links) {
-                var relation = $scope.registryEntry._links[rel].rel;
+            for (var rel in $scope.registryEntry.links) {
+                var relation = $scope.registryEntry.links[rel].rel;
                 if (relation == REL_NEW_DOCUMENT_DESCRIPTION) {
-                    urlDocumentDescription = $scope.registryEntry._links[rel].href;
+                    urlDocumentDescription = $scope.registryEntry.links[rel].href;
                     console.log("URL for POST operation on registryEntry is " + urlDocumentDescription);
                 }
             }
         } else {
             method = "PUT";
 
-            for (var rel in $scope.documentDescription._links) {
-                var relation = $scope.documentDescription._links[rel].rel;
+            for (var rel in $scope.documentDescription.links) {
+                var relation = $scope.documentDescription.links[rel].rel;
                 if (relation == REL_SELF) {
-                    urlDocumentDescription = $scope.documentDescription._links[rel].href;
+                    urlDocumentDescription = $scope.documentDescription.links[rel].href;
                     console.log("URL for PUT operation on registryEntry is " + urlDocumentDescription);
                 }
             }
@@ -214,20 +214,20 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
             console.log(method + " documentdescription data returned=" + JSON.stringify(response.data));
             $scope.documentDescription = response.data;
             var documentDescription = response.data;
-            for (rel in documentDescription._links) {
-                relation = documentDescription._links[rel].rel;
+            for (rel in documentDescription.links) {
+                relation = documentDescription.links[rel].rel;
                 if (relation == 'self') {
-                    href = documentDescription._links[rel].href;
+                    href = documentDescription.links[rel].href;
                     SetLinkToDocumentDescription(href);
                 }
                 if (method === "POST") {
                     if (relation === REL_NEW_DOCUMENT_OBJECT) {
-                        urlDocumentObject = documentDescription._links[rel].href;
+                        urlDocumentObject = documentDescription.links[rel].href;
                     }
                 }
                 else {
                     if (relation === REL_DOCUMENT_OBJECT) {
-                        urlDocumentObject = documentDescription._links[rel].href;
+                        urlDocumentObject = documentDescription.links[rel].href;
                     }
                 }
             }
@@ -252,10 +252,10 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
                 console.log(method + " documentobject returned=" + JSON.stringify(response.data));
                 $scope.documentObject = response.data;
                 var documentObject = response.data;
-                for (rel in documentObject._links) {
-                    relation = documentObject._links[rel].rel;
+                for (rel in documentObject.links) {
+                    relation = documentObject.links[rel].rel;
                     if (relation == 'self') {
-                        href = documentObject._links[rel].href;
+                        href = documentObject.links[rel].href;
                         SetLinkToDocumentObject(href);
                     }
                 }

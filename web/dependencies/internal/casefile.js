@@ -22,10 +22,10 @@ var caseFileController = app.controller('CaseFileController', ['$scope', '$http'
         // values defined in the core
         $scope.series = GetChosenSeries();
 
-        for (var rel in $scope.series._links) {
-            var relation = $scope.series._links[rel].rel;
+        for (var rel in $scope.series.links) {
+            var relation = $scope.series.links[rel].rel;
             if (relation == REL_NEW_CASE_FILE) {
-                var urlGetNewCaseFile = $scope.series._links[rel].href;
+                var urlGetNewCaseFile = $scope.series.links[rel].href;
                 console.log("Doing a GET on " + urlGetNewCaseFile);
                 $http({
                     method: 'GET',
@@ -49,15 +49,15 @@ var caseFileController = app.controller('CaseFileController', ['$scope', '$http'
         $scope.createNewCaseFile = false;
         $scope.caseFileETag = -1;
 
-        console.log("caseFileController. CaseFile _links is " + $scope.caseFile._links);
+        console.log("caseFileController. CaseFile links is " + $scope.caseFile.links);
 
         // You need to do a GET because you need an ETAG!
         // So you get the SELF REL of the current caseFile
         // and retrieve it again so you have an ETAG
-        for (var rel in $scope.caseFile._links) {
-            var relation = $scope.caseFile._links[rel].rel;
+        for (var rel in $scope.caseFile.links) {
+            var relation = $scope.caseFile.links[rel].rel;
             if (relation == REL_SELF) {
-                var urlCaseFile = $scope.caseFile._links[rel].href;
+                var urlCaseFile = $scope.caseFile.links[rel].href;
                 console.log("Attempting GET on caseFile : " + urlCaseFile);
                 $http({
                     method: 'GET',
@@ -78,11 +78,11 @@ var caseFileController = app.controller('CaseFileController', ['$scope', '$http'
         }
 
         // Next go and get any registryEntires associated with the casefile
-        for (var rel in $scope.caseFile._links) {
-            var relation = $scope.caseFile._links[rel].rel;
+        for (var rel in $scope.caseFile.links) {
+            var relation = $scope.caseFile.links[rel].rel;
             if (relation == REL_REGISTRY_ENTRY) {
-                SetLinkToGetRegistryEntry($scope.caseFile._links[rel].href);
-                var urlAllRegistryEntries = $scope.caseFile._links[rel].href;
+                SetLinkToGetRegistryEntry($scope.caseFile.links[rel].href);
+                var urlAllRegistryEntries = $scope.caseFile.links[rel].href;
                 $http({
                     method: 'GET',
                     url: urlAllRegistryEntries,
@@ -124,14 +124,14 @@ var caseFileController = app.controller('CaseFileController', ['$scope', '$http'
         SetCurrentRegistryEntry('');
         SetChosenRegistryEntryObject('');
         console.log("Current casefile is " + $scope.caseFile);
-        for (var rel in $scope.caseFile._links) {
-            var relation = $scope.caseFile._links[rel].rel;
+        for (var rel in $scope.caseFile.links) {
+            var relation = $scope.caseFile.links[rel].rel;
             if (relation == REL_NEW_REGISTRY_ENTRY) {
-                SetLinkToCreateRegistryEntry($scope.caseFile._links[rel].href);
+                SetLinkToCreateRegistryEntry($scope.caseFile.links[rel].href);
             }
             // Do we need this here???
             if (relation == REL_REGISTRY_ENTRY) {
-                SetLinkToGetRegistryEntry($scope.caseFile._links[rel].href);
+                SetLinkToGetRegistryEntry($scope.caseFile.links[rel].href);
             }
         }
         changeLocation($scope, registryEntryPageName, true);
@@ -155,20 +155,20 @@ var caseFileController = app.controller('CaseFileController', ['$scope', '$http'
             method = "POST";
             var series = GetChosenSeries();
             // Check the current series for a link to create a new casefile
-            for (var rel in series._links) {
-                var relation = series._links[rel].rel;
+            for (var rel in series.links) {
+                var relation = series.links[rel].rel;
                 if (relation == REL_NEW_CASE_FILE) {
-                    urlCaseFile = series._links[rel].href;
+                    urlCaseFile = series.links[rel].href;
                     console.log("URL for POST operation on casefile is " + urlCaseFile);
                 }
             }
         } else {
             method = "PUT";
             // Find the url to self object
-            for (var rel in $scope.caseFile._links) {
-                var relation = $scope.caseFile._links[rel].rel;
+            for (var rel in $scope.caseFile.links) {
+                var relation = $scope.caseFile.links[rel].rel;
                 if (relation == REL_SELF) {
-                    urlCaseFile = $scope.caseFile._links[rel].href;
+                    urlCaseFile = $scope.caseFile.links[rel].href;
                     console.log("URL for PUT operation on casefile is " + urlCaseFile);
                 }
             }

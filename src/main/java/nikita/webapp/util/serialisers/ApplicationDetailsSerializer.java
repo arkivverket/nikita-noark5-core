@@ -22,7 +22,7 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
     @Override
     public void serialize(ApplicationDetails applicationDetails, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         jgen.writeStartObject();
-        jgen.writeArrayFieldStart("_links");
+        jgen.writeArrayFieldStart("links");
 
         ArrayList<ConformityLevel> conformityLevels = (ArrayList) applicationDetails.getConformityLevels();
         Iterator<ConformityLevel> iterator = conformityLevels.iterator();
