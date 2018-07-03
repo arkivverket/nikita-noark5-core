@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
+import static nikita.common.config.Constants.LOGIN_OAUTH2_PATH;
+
 /**
  * This is the ResourceServerConfiguration for the application. It sets up the
  * AuthenticationProvider and configures the security the the API-endpoints.
@@ -65,4 +67,39 @@ public class OAuth2ResourceServerConfiguration
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /**
+     * Setup the security for the application.
+     * <p>
+     * The following is a description of the security profile for the
+     * application:
+     * - All requests to the application must be authenticated
+     * - Stateless session
+     * - Disable csrf as the token is deemed safe
+     *
+     * This is applicable to the primary security layer or (Basic auth)
+     *
+     * @param httpSecurity
+     * @throws Exception
+     */
+    @Override
+    public void configure(HttpSecurity httpSecurity)
+            throws Exception { // @formatter:off
+
+        httpSecurity
+                // .anonymous() Add a AnonymousAuthenticationFilter to the
+                // filter chain to allow access to the root without
+                // authorization.
+                .anonymous()
+                .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, LOGIN_OAUTH2_PATH).permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS)
+        ;
+    } // @formatter:on
 }

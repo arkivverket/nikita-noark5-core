@@ -204,6 +204,8 @@ public final class Constants {
     public static final String LOGIN_PATH = "auth";
     // Logging using JWT / RFC7519
     public static final String LOGIN_JWT = "rfc7519";
+    public static final String LOGIN_OAUTH = "rfc6749";
+    public static final String LOGIN_OAUTH2_PATH = "/oauth/token";
 
     public static final String NOARK5_V4_CONTENT_TYPE_JSON = "application/vnd.noark5-v4+json";
     public static final String NOARK5_V4_CONTENT_TYPE_JSON_XML = "application/vnd.noark5-v4+xml";

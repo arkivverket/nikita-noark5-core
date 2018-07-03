@@ -28,7 +28,6 @@ import static nikita.common.config.N5ResourceMappings.FONDS;
 import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
 import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
 
-//@EnableWebSecurity
 @Component
 @Profile("!security-form-authentication")
 public class NikitaWebSecurityConfig
@@ -61,6 +60,8 @@ public class NikitaWebSecurityConfig
      * - All requests to the application must be authenticated
      * - Stateless session
      * - Disable csrf as the token is deemed safe
+     * <p>
+     * This is applicable to the second security layer or (Bearer auth)
      *
      * @param httpSecurity
      * @throws Exception
@@ -68,32 +69,44 @@ public class NikitaWebSecurityConfig
     @Override
     protected void configure(HttpSecurity httpSecurity)
             throws Exception { // @formatter:off
-
         httpSecurity
-                .cors().and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
                 // GET [api]/metadata/**, public to read basic structure
-                .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH).permitAll()
+                    .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH)
+                        .permitAll()
                 // POST GET [api]/arkivstruktur/ny-*, need role of record keeper
-                .antMatchers(HttpMethod.POST, PATTERN_NEW_FONDS_STRUCTURE_ALL).hasAuthority(ROLE_RECORDS_MANAGER)
-                .antMatchers(HttpMethod.GET, PATTERN_NEW_FONDS_STRUCTURE_ALL).hasAuthority(ROLE_RECORDS_MANAGER)
-                // POST PUT PATCH [api]/arkivstruktur/**, need role of record keeper
-                .antMatchers(HttpMethod.PUT, FONDS + SLASH + "**").hasAuthority(ROLE_RECORDS_MANAGER)
-                .antMatchers(HttpMethod.PATCH, FONDS + SLASH + "**").hasAuthority(ROLE_RECORDS_MANAGER)
-                .antMatchers(HttpMethod.DELETE, "/**").hasAuthority(ROLE_RECORDS_MANAGER)
-                // POST PUT PATCH DELETE [api]/metadata/**, need role of record keeper
-                .antMatchers(HttpMethod.PATCH, PATTERN_METADATA_PATH).hasAuthority(ROLE_RECORDS_MANAGER)
-                .antMatchers(HttpMethod.PUT, PATTERN_METADATA_PATH).hasAuthority(ROLE_RECORDS_MANAGER)
-                .antMatchers(HttpMethod.POST, PATTERN_METADATA_PATH).hasAuthority(ROLE_RECORDS_MANAGER)
-                .antMatchers(HttpMethod.DELETE, PATTERN_METADATA_PATH).hasAuthority(ROLE_RECORDS_MANAGER)
-                .anyRequest().authenticated()
+                    .antMatchers(HttpMethod.POST, PATTERN_NEW_FONDS_STRUCTURE_ALL)
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    .antMatchers(HttpMethod.GET, PATTERN_NEW_FONDS_STRUCTURE_ALL)
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    // POST PUT PATCH [api]/arkivstruktur/**, need role of record keeper
+                    .antMatchers(HttpMethod.PUT, FONDS + SLASH + "**")
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    .antMatchers(HttpMethod.PATCH, FONDS + SLASH + "**")
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    .antMatchers(HttpMethod.DELETE, "/**")
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    // POST PUT PATCH DELETE [api]/metadata/**, need role of record keeper
+                    .antMatchers(HttpMethod.PATCH, PATTERN_METADATA_PATH)
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    .antMatchers(HttpMethod.PUT, PATTERN_METADATA_PATH)
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    .antMatchers(HttpMethod.POST, PATTERN_METADATA_PATH)
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    .antMatchers(HttpMethod.DELETE, PATTERN_METADATA_PATH)
+                        .hasAuthority(ROLE_RECORDS_MANAGER)
+                    .anyRequest().authenticated()
                 .and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS)
+                .and()
+                    .headers()
+                        .defaultsDisabled()
+                        // disable page caching
+                        .cacheControl();
         ;
 
-        // disable page caching
         httpSecurity.headers().cacheControl();
     } // @formatter:on
 
