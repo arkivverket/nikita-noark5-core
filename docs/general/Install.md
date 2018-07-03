@@ -45,7 +45,7 @@ Please note that maven will automatically download all dependencies (jar files)
 and put them in a directory ~/.m2. If you are uncomfortable with this, please
 check the pom.xml files to find out which jar files will be downloaded.
  
-    mvn -Dmaven.test.skip=true clean install
+    mvn -Dmaven.test.skip=true clean validate install
     mvn spring-boot:run
 
 You will see a lot of different startup messages, but there should be no
@@ -53,11 +53,11 @@ exceptions. (Please let us know if there are any exceptions).
 
  The program should output some thing like the following if everything is successful
 
- 	Application 'HiOA Noark 5 Core (Demo mode)' is running! Access URLs:
+ 	Application 'OsloMet Noark 5 Core (Demo mode)' is running! Access URLs:
  	Local: 			http://localhost:8092
  	External: 		http://127.0.1.1:8092
  	contextPath: 	http://127.0.1.1:8092/noark5v4
- 	Application is running with following profile(s): [prod] 
+ 	Application is running with following profile(s): [security-oauth2-authentication] 
 
 ## Docker
 
