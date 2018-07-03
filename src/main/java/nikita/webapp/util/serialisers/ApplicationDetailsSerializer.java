@@ -12,6 +12,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static nikita.common.config.HATEOASConstants.HREF;
+import static nikita.common.config.HATEOASConstants.LINKS;
+import static nikita.common.config.HATEOASConstants.REL;
+
 public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetails> {
 
     public ApplicationDetailsSerializer() {
@@ -22,7 +26,7 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
     @Override
     public void serialize(ApplicationDetails applicationDetails, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         jgen.writeStartObject();
-        jgen.writeArrayFieldStart("links");
+        jgen.writeArrayFieldStart(LINKS);
 
         ArrayList<ConformityLevel> conformityLevels = (ArrayList) applicationDetails.getConformityLevels();
         Iterator<ConformityLevel> iterator = conformityLevels.iterator();
@@ -30,8 +34,8 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
         while (iterator.hasNext()) {
             ConformityLevel conformityLevel = iterator.next();
             jgen.writeStartObject();
-            jgen.writeStringField("href", conformityLevel.getHref());
-            jgen.writeStringField("rel", conformityLevel.getRel());
+            jgen.writeStringField(HREF, conformityLevel.getHref());
+            jgen.writeStringField(REL, conformityLevel.getRel());
             jgen.writeEndObject();
         }
         jgen.writeEndArray();
