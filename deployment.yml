@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nikita-noark5-core
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nikita-noark5-core
+    spec:
+      containers:
+      - name: actuator-sample
+        image: registry.gitlab.com/nikita-noark5-core
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8092
+      imagePullSecrets:
+        - name: registry.gitlab.com
