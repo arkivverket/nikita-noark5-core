@@ -7,6 +7,7 @@ variables:
 
 stages:
   - build
+  - test
   - package
 
 maven-build:
@@ -25,6 +26,7 @@ docker-build:
   - docker push registry.gitlab.com/oslomet-abi/nikita-noark5-core
 
 dependency_scanning:
+  stage: test
   image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
