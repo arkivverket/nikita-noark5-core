@@ -50,6 +50,7 @@
 
     <!-- dependency versions -->
     <spring-security.version>5.0.3.RELEASE</spring-security.version>
+    <spring-security-saml2-core.version>1.0.3.RELEASE</spring-security-saml2-core.version>
     <spring-security-oauth2.version>2.3.0.RELEASE
     </spring-security-oauth2.version>
     <spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
@@ -85,16 +86,23 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
+
+    <!-- Security etc ..-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.security.oauth</groupId>
       <artifactId>spring-security-oauth2</artifactId>
       <version>${spring-security-oauth2.version}</version>
     </dependency>
 
-    <!-- Security etc ..-->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
+      <groupId>org.springframework.security.extensions</groupId>
+      <artifactId>spring-security-saml2-core</artifactId>
+      <version>${spring-security-saml2-core.version}</version>
     </dependency>
 
     <!-- Used for CompareToBuilder etc -->

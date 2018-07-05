@@ -1,31 +1,188 @@
 = nikita-noark5-core API documentation
+:source-highlighter: coderay
+:toc: left
+:sectnums:
+
+
+
+// The coderay plugin was used to pretty print JSON. See:
+// https://asciidoctor.org/docs/user-manual/
+// if you don't have coderay installed!
+
+Note this document is under active development. This is just an early version
+to test asciidoc.
 
 == Introduction
 This is a Spring REST Docs generated documentation for the
 nikita-noark5-core (Noark 5v4). Noark 5v4 is a Hateoas level 3
 API and makes active use of "links" within the API.
 
+=== About
+nikita is an open source implementation of the Norwegian  recordkeeping / archiving standard
+Noark 5. The source code is hosted on https://gitlab.com/OsloMet-ABI/nikita-noark5-core[gitlab].
+This document refers to two Noark resources. The first is the actual Noark 5 standard, a document
+maintained by the Norwegian National Archive. The second is a the Noark 5 interface standard. This
+is an API description of the Noark 5 standard. Currently the Noark 5 interface standard relates
+to Noark 5 version 4 (Noark 5v4), while the actual Noark standard is working a Noark 5 version 5.
 
-== Application root
+=== Hateoas principles
+Hateoas stands for Hypermedia As The Engine of Application state and is an ...
+It was proposed by .... With the context of the. A level 3 Hateoas is seen as a kind-of
+holy-grail when it comes to API development. The Noark 5v4 interface standard is a Hateoas
+level 3 API.
 
-The root of the application should contain the following information.
 
-===
-|Key|Address
+== Authentication
+Nikita provides a number of authentication techniques that are built in and available
+at startup. Nikita supports the following authentication, that are enabled using spring-profiles.
+
+[square]
+ * Basic
+ * Form based login
+ * OAuth2
+ * JWT via OAuth2
+
+Note: We have not checked whether or not we can support multiple authentication methods at the
+same time. Currently you *have* to start a single authentication profile. If no authentication profile
+is selected, nikita defaults to the OAuth2 approach.
+
+=== Basic
+The simplest authentication method where the username and password are passed
+
+[source,bash]
+----
+$  mvn spring-boot:run -Dspring-boot.run.profiles=http-basic-authentication
+----
+
+[source,bash]
+----
+$ curl --user admin:password 'http://localhost:8092/noark5v4/' -i -X GET \
+    -H 'Accept:application/vnd.noark5-v4+json'
+----
+
+Alternatively, you can add the username and password as a base64-encoded string
+as part of a header field.
+
+[source,bash]
+----
+$ curl -H Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=  \
+    -H 'Accept:application/vnd.noark5-v4+json' -i -X GET 'http://localhost:8092/noark5v4/'
+----
+
+
+=== Form-based
+
+[source,bash]
+----
+$   curl -i -X POST -d username=admin -d password=password -c /tmp/cookies.txt \
+      -H 'Accept:application/vnd.noark5-v4+json' http://localhost:8092/noark5v4/login
+----
+
+[source,bash]
+----
+$  curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5-v4+json \
+    -X GET http://localhost:8092/noark5v4/
+----
+
+[source,bash]
+----
+$  mvn spring-boot:run -Dspring-boot.run.profiles=security-form-authentication
+----
+
+
+=== OAuth2
+nikita uses spring-security OAuth2 implementation as the default authentication method. There is
+no requirement to set it as a profile. OAuth2 can be a bit daunting and complex to explore as ....
+There are plenty of online resources to explore the subject.
+
+
+[source,bash]
+----
+$ curl -v -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=' \
+  -X POST  'http://localhost:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password'
+----
+
+The OAuth2 endpoint is protected with Basic authentication. This is the reason for
+-H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ='. The string bmlraXRhLWNsaWVudDpzZWNyZXQ=
+is 'nikita-client:secret' base64 encoded.
+
+If you wish to change this, take a look at the *.yml in the resources directory where you will
+see the following properties defined:
+
+[square]
+ * security.oauth2.client.client-id
+ * security.oauth2.client.client-secret
+
+:coderay-linenums-mode: inline
+[source,json,linenums]
+----
+{
+    "access_token":"14cedbd1-834d-4a5c-8da1-da554d49a16c",
+    "token_type":"bearer",
+    "refresh_token":"3fa17d60-b81c-4c59-a604-3fa7b6c21c64",
+    "expires_in":43199,
+    "scope":"all"
+}
+----
+
+
+=== JWT via OAuth2
+nikita supports the use of JWT tokens as well. Tokens are issued in the same way as OAuth2
+tokens are issued, but nikita has to be started with the security-oauth2-jwt-authentication
+profile.
+
+
+[source,bash]
+----
+$  mvn spring-boot:run -Dspring-boot.run.profiles=security-form-authentication
+----
+
+
+[source,bash]
+----
+$  mvn spring-boot:run -Dspring-boot.run.profiles=http-basic-authentication
+----
+
+JWT is described in https://tools.ietf.org/rfc/rfc7519.txt[RFC 7519]. More info can be found
+at https://jwt.io/introduction/[jwt.io]
+
+=== Password encoding
+For all the above authentication methods, nikita uses springs built-in BCrypt password encoder.
+
+
+=== Payload encoding and structure
+The Noark 5 standard expects data to ne UTF-8 when extracted to be deposited with an archive institution.
+As such nikita has a requirement that
+
+== The API
+
+=== Application root
+The root of the application should contain the following information:
+
+
+[cols=2*,options="header"]
+|===
+|Key
+|Address
 
 |`+self+`
 |A self-link to the resource
+
 |`+login+`
 |A link to login to the application.
 |===
 
-=== Get application root
+==== Get application root
 
-==== Sample Request
+===== Sample Request
 include::{snippets}/home/http-request.adoc[]
 
-.response
+===== Sample Response
 include::{snippets}/home/http-response.adoc[]
 
-.headers
+===== Sample Headers
+
 include::{snippets}/home/response-headers.adoc[]
+
+===== CURL sample
+include::{snippets}/home/curl-request.adoc[]
