@@ -33,6 +33,8 @@ spring:
     console:
       enabled: true
       path: /console
+  profiles:
+    active: security-oauth2-authentication
 security:
   oauth2:
     client:

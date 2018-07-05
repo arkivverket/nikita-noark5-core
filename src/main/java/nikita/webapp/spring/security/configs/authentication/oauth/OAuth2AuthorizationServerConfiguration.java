@@ -50,6 +50,7 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
  * 
  *
  */
+@Profile("security-oauth2-authentication")
 @EnableAuthorizationServer
 @Configuration
 public class OAuth2AuthorizationServerConfiguration

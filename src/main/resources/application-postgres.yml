@@ -27,6 +27,8 @@ spring:
 #        show_sql: true # Slows things down if this is enabled.
         hbm2ddl.auto: create
     database: postgresql
+  profiles:
+    active: security-oauth2-authentication
 jwt:
   header: Authorization
   secret: mySecret

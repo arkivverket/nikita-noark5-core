@@ -29,7 +29,9 @@ import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
 import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
 
 @Component
-@Profile("!security-form-authentication")
+@Profile({"security-oauth2-jwt-authentication",
+           "security-oauth2-authentication",
+             "security-http-basic-authentication"})
 public class NikitaWebSecurityConfig
         extends WebSecurityConfigurerAdapter {
 

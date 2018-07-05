@@ -25,6 +25,7 @@ import static nikita.common.config.Constants.LOGIN_OAUTH2_PATH;
  * configure(HttpSecurity http) method.
  *
  */
+@Profile("security-oauth2-authentication")
 @EnableResourceServer
 @EnableWebSecurity
 @Configuration
