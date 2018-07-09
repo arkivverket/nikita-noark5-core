@@ -86,6 +86,11 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
+    <!-- required for metrics support -->
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-core</artifactId>
+    </dependency>
 
     <!-- Security etc ..-->
     <dependency>
@@ -103,6 +108,12 @@
       <groupId>org.springframework.security.extensions</groupId>
       <artifactId>spring-security-saml2-core</artifactId>
       <version>${spring-security-saml2-core.version}</version>
+    </dependency>
+
+    <!-- Required for saml, "landing" etc -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
 
     <!-- Used for CompareToBuilder etc -->
