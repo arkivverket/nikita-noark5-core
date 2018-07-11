@@ -186,3 +186,16 @@ include::{snippets}/home/response-headers.adoc[]
 
 ===== CURL sample
 include::{snippets}/home/curl-request.adoc[]
+
+
+== File upload
+
+Note if uploading a file via e.g. curl, you must use a
+that indicates that the file is a binary file.
+-H "Content-Type: application/octet-stream"
+
+You need a test on uploading binary aswell as
+We have tested  that uploading a  document with the proper
+mime type set also works.
+
+ -H "Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document"
