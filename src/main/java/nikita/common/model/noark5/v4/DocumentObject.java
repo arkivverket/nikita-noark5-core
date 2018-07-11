@@ -268,6 +268,10 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
         this.referenceConversion = referenceConversion;
     }
 
+    public void addReferenceConversion(Conversion referenceConversion) {
+        this.referenceConversion.add(referenceConversion);
+    }
+
     public ElectronicSignature getReferenceElectronicSignature() {
         return referenceElectronicSignature;
     }

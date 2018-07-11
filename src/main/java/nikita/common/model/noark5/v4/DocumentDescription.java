@@ -298,6 +298,10 @@ public class DocumentDescription extends NoarkEntity implements INoarkTitleDescr
         this.referenceDocumentObject = referenceDocumentObject;
     }
 
+    public void addReferenceDocumentObject(DocumentObject documentObject) {
+        referenceDocumentObject.add(documentObject);
+    }
+
     @Override
     public String getStorageLocation() {
         return storageLocation;

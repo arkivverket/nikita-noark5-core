@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v4.DocumentObject;
 import org.springframework.core.io.Resource;
 
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
@@ -17,6 +18,18 @@ public interface IDocumentObjectService {
 
     void storeAndCalculateChecksum(InputStream inputStream,
                                    DocumentObject documentObject);
+
+
+    byte[] convertDocumentToPDF(InputStream inputStream) throws Exception;
+
+    /**
+     * Given an systemId for a documentObject, find the documentObject and
+     * create a new documentObject with an archive version of the the
+     * original documentObject
+     *
+     **/
+    DocumentObject convertDocumentToPDF(String documentObjectSystemId)
+            throws Exception;
 
     Path load(String filename);
 
