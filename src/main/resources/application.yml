@@ -3,7 +3,14 @@
 #
 # ===================================================================
 
-#logging.level.org.springframework.web: DEBUG
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+#        security:
+#          saml: DEBUG
+#      opensaml: DEBUG
 
 server:
   application:
