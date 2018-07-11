@@ -24,7 +24,7 @@ else
 fi
 
 # login to the core using the JWT method
-authToken=$(curl -s  --header Accept:application/json --header Content-Type:application/json -X POST  --data '{"username" : "admin", "password" : "password"}' http://localhost:8092/noark5v4/auth | jq '.token' | sed 's/\"//g');
+authToken=$(curl -s   -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=' --header Accept:application/json --header Content-Type:application/json -X POST  --data '{"username" : "admin", "password" : "password"}' "http://localhost:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password" | jq '.access_token' | sed 's/\"//g');
 
 # Note It seems to returning the word "null" if empty
 if [ $authToken = "null" ]; then
@@ -32,9 +32,12 @@ if [ $authToken = "null" ]; then
     exit;
 fi
 
+echo "Token is " $authToken;
+
+
 # Setup common curl options
 contentTypeForPost+=(--header "Content-Type:application/vnd.noark5-v4+json");
-curlOpts+=( -s --header "Accept:application/vnd.noark5-v4+json" --header Authorization:$authToken);
+curlOpts+=( -s --header "Accept:application/vnd.noark5-v4+json" --header "Authorization:Bearer $authToken");
 curlPostOpts+=("${curlOpts[@]}" "${contentTypeForPost[@]}" -X POST );
 curlPutOpts+=("${curlOpts[@]}" "${contentTypeForPost[@]}" -X PUT );
 
@@ -83,7 +86,7 @@ curloptsCreateSeries+=( --data @"$curl_files_dir"series-data.json  'http://local
 # Create a series object and capture the systemId
 systemIDCreatedSeries=$(curl "${curloptsCreateSeries[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created  Series 1            ($systemIDCreatedSeries) \n";
-#echo ${curloptsCreateSeries[@]};
+echo ${curloptsCreateSeries[@]};
 
 # Setup curl options for file
 curloptsCreateFile+=("${curlPostOpts[@]}");
@@ -102,7 +105,6 @@ printf "created   File 1              ($systemIDCreatedFile) \n";
 curloptsCreateRecord+=("${curlPostOpts[@]}");
 curloptsCreateRecord+=( --data @"$curl_files_dir"record-data.json 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-registrering' )
 echo  ${curloptsCreateRecord[@]};
-exit;
 
 # Create record 1 associated with a file 1 and capture systemId
 systemIDCreatedRecord=$(curl "${curloptsCreateRecord[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -130,7 +132,7 @@ printf "created      DocumentObject      ($systemIDCreatedDocumentObject) associ
 # Setup curl options for uploading file associated with documentObject
 # Note /dev/null means this won't work on windows, probably want to pipe the output with >> or similar approach
 # For windows, just remove  -o /dev/null and ignore output on screen
-curlPostFileOpts+=( -s  -X POST --header "Accept:application/vnd.noark5-v4+json" --header Authorization:$authToken --header CONTENT-Length:21774 --header Content-Type:application/pdf -o /dev/null  --data-binary "@"$curl_files_dir"test_upload_document.pdf");
+curlPostFileOpts+=( -s  -X POST --header "Accept:application/vnd.noark5-v4+json" --header "Authorization:Bearer $authToken" --header CONTENT-Length:21774 --header Content-Type:application/pdf -o /dev/null  --data-binary "@"$curl_files_dir"test_upload_document.pdf");
 curloptsUploadFile+=("${curlPostFileOpts[@]}");
 curloptsUploadFile+=( -w "%{http_code}" 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
 #echo "${curloptsUploadFile[@]} ";
@@ -140,7 +142,7 @@ curloptsUploadFile+=( -w "%{http_code}" 'http://localhost:8092/noark5v4/hateoas-
 resultFileUpload=$(curl "${curloptsUploadFile[@]}");
 printf "uploaded file to DocumentObject  ($systemIDCreatedDocumentObject) Result $resultFileUpload\n";
 
-curlGetFileOpts+=( -s --header Authorization:$authToken -X GET -o downloaded.pdf -w "%{http_code}");
+curlGetFileOpts+=( -s --header "Authorization:Bearer $authToken" -X GET -o downloaded.pdf -w "%{http_code}");
 curloptsDownloadFile+=("${curlGetFileOpts[@]}");
 curloptsDownloadFile+=( 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
 
@@ -216,7 +218,7 @@ printf "created    RegistryEntry 1     ($systemIDCreatedRegistryEntry) associate
 systemIDCreatedDocumentDescription=$(curl "${curloptsCreateDocumentDescription[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created     DocumentDescription ($systemIDCreatedDocumentDescription) associated with ($systemIDCreatedRegistryEntry) \n";
 #echo "${curloptsCreateDocumentDescription[@]}" ;
-exit;
+
 # Create documentObject 1 associated with caseFile 2 / registryEntry 1 / documentDescription 1 /  and capture systemId
 systemIDCreatedDocumentObject=$(curl "${curloptsCreateDocumentObject[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created      DocumentObject      ($systemIDCreatedDocumentObject) associated with ($systemIDCreatedDocumentDescription) \n";
