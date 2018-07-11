@@ -1,5 +1,6 @@
 package nikita.webapp.spring.security.configs.authentication.form;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * http://www.baeldung.com/securing-a-restful-web-service-with-spring-security
  */
 @Component
+@Profile("security-form-authentication")
 public class NikitaAuthenticationSuccessHandler
         extends SimpleUrlAuthenticationSuccessHandler {
 
