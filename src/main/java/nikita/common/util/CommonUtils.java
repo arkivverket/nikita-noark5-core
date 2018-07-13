@@ -1659,7 +1659,7 @@ public final class CommonUtils {
                     for (Conversion conversion : conversions) {
 
                         if (conversion != null) {
-                            jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
+                            jgen.writeObjectFieldStart(CONVERSION);
                             if (conversion.getConvertedDate() != null) {
                                 jgen.writeStringField(CONVERTED_DATE,
                                         formatDate(conversion.getConvertedDate()));
