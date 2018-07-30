@@ -201,8 +201,7 @@ public class DocumentObjectService implements IDocumentObjectService {
             // if there is a problem
             try {
                 convertDocumentToPDF(documentObject);
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 logger.error("Problem when tryin to convert to archive format"
                         + e.toString());
             }
@@ -336,7 +335,7 @@ public class DocumentObjectService implements IDocumentObjectService {
     // Related metadata is a one:one. So we either overwrite that the
     // original conversion happened or throw an Exception
     public DocumentObject convertDocumentToPDF(String documentObjectSystemId)
-            throws IOException, InterruptedException{
+            throws IOException, InterruptedException {
         DocumentObject originalDocumentObject =
                 getDocumentObjectOrThrow(documentObjectSystemId);
         return originalDocumentObject;
@@ -424,7 +423,7 @@ public class DocumentObjectService implements IDocumentObjectService {
         documentDescription.addReferenceDocumentObject(archiveDocumentObject);
 
         documentObjectRepository.save(archiveDocumentObject);
-        return  archiveDocumentObject;
+        return archiveDocumentObject;
     }
 
     @Override
@@ -533,7 +532,7 @@ public class DocumentObjectService implements IDocumentObjectService {
      */
 
     private String getMimeType(String fileLocation)
-            throws IOException{
+            throws IOException {
 
         Path file = Paths.get(fileLocation);
         TikaConfig config = TikaConfig.getDefaultConfig();
@@ -556,13 +555,17 @@ public class DocumentObjectService implements IDocumentObjectService {
     private String calculateChecksum(String fileLocation) throws IOException {
         FileInputStream inputStream =
                 new FileInputStream(new File(fileLocation));
-        byte [] digest =  DigestUtils.sha256(inputStream);
-
         StringBuilder sb = new StringBuilder();
-        for (byte b : digest) {
-            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+
+        try {
+            byte[] digest = DigestUtils.sha256(inputStream);
+            inputStream.close();
+            for (byte b : digest) {
+                sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+            }
+        } finally {
+            inputStream.close();
         }
-        inputStream.close();
         return sb.toString();
     }
 
@@ -580,12 +583,12 @@ public class DocumentObjectService implements IDocumentObjectService {
 
     /**
      * copy the contents of an input stream to an output stream.
-     *
+     * <p>
      * Note we are currently using copyLarge as there may be large files being
      * uploaded. Perhaps we should consider only using copyLarge if the
      * length is known in advance.
      *
-     * @param inputStream The input file
+     * @param inputStream  The input file
      * @param outputStream The output file
      * @return The number of bytes that were copied from input to output
      * @throws IOException if something goes wrong
