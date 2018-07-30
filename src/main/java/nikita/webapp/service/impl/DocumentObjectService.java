@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import com.google.common.hash.Hashing;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.secondary.Conversion;
@@ -8,6 +9,11 @@ import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import nikita.webapp.util.NoarkUtils;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.io.TikaInputStream;
+import org.apache.tika.mime.MediaType;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +24,8 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.apache.tika.metadata.Metadata;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -41,7 +49,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
-import static org.apache.commons.codec.digest.DigestUtils.sha256;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT_FILE_NAME;
 
@@ -103,7 +110,8 @@ public class DocumentObjectService implements IDocumentObjectService {
      *
      * inputStream.read calculates the checksum while reading the input file as it is a DigestInputStream
      */
-    public void storeAndCalculateChecksum(InputStream inputStream, DocumentObject documentObject) {
+    public void storeAndCalculateChecksum(InputStream inputStream,
+                                          DocumentObject documentObject) {
         String checksumAlgorithm = documentObject.getChecksumAlgorithm();
         if (null == checksumAlgorithm) {
             checksumAlgorithm = defaultChecksumAlgorithm;
@@ -188,6 +196,16 @@ public class DocumentObjectService implements IDocumentObjectService {
                 throw new StorageException(msg);
             }
             documentObject.setReferenceDocumentFile(file.toString());
+
+            // Try to convert the file upon upload. Silently ignore
+            // if there is a problem
+            try {
+                convertDocumentToPDF(documentObject);
+            }
+            catch (InterruptedException e) {
+                logger.error("Problem when tryin to convert to archive format"
+                        + e.toString());
+            }
 
         } catch (IOException e) {
             logger.error("When associating an uploaded file with " + documentObject + " an exception occurred." +
@@ -318,9 +336,17 @@ public class DocumentObjectService implements IDocumentObjectService {
     // Related metadata is a one:one. So we either overwrite that the
     // original conversion happened or throw an Exception
     public DocumentObject convertDocumentToPDF(String documentObjectSystemId)
-            throws Exception {
+            throws IOException, InterruptedException{
         DocumentObject originalDocumentObject =
                 getDocumentObjectOrThrow(documentObjectSystemId);
+        return originalDocumentObject;
+    }
+
+
+    public DocumentObject convertDocumentToPDF(DocumentObject
+                                                       originalDocumentObject)
+            throws IOException, InterruptedException {
+
 
         Path originalProductionFile = Paths.get(originalDocumentObject
                 .getReferenceDocumentFile());
@@ -370,7 +396,7 @@ public class DocumentObjectService implements IDocumentObjectService {
         String originalFilename = originalDocumentObject.getOriginalFilename();
         int index = originalFilename.lastIndexOf(".");
         archiveDocumentObject.setOriginalFilename(originalFilename.substring
-                (0, index) + "pdf");
+                (0, index) + ".pdf");
 
         archiveDocumentObject.setFileSize(
                 getFileSize(archiveDocumentObject.getReferenceDocumentFile()));
@@ -396,6 +422,8 @@ public class DocumentObjectService implements IDocumentObjectService {
         archiveDocumentObject.setReferenceDocumentDescription
                 (documentDescription);
         documentDescription.addReferenceDocumentObject(archiveDocumentObject);
+
+        documentObjectRepository.save(archiveDocumentObject);
         return  archiveDocumentObject;
     }
 
@@ -426,7 +454,7 @@ public class DocumentObjectService implements IDocumentObjectService {
     }
 
     protected Path convertFileFromStorage(Path originalFile)
-            throws Exception {
+            throws IOException, InterruptedException {
 
         Path directory = Paths.get(rootLocation + File.separator);
         Path file = Paths.get(rootLocation + File.separator +
@@ -493,7 +521,30 @@ public class DocumentObjectService implements IDocumentObjectService {
 
         return file;
     }
+
     // All HELPER operations
+
+    /**
+     * Retrieve mime-type of a file
+     *
+     * @param fileLocation The location on disk of the file
+     * @return the actual mime-type
+     * @throws IOException if there is a problem with the file
+     */
+
+    private String getMimeType(String fileLocation)
+            throws IOException{
+
+        Path file = Paths.get(fileLocation);
+        TikaConfig config = TikaConfig.getDefaultConfig();
+        Detector detector = config.getDetector();
+
+        TikaInputStream stream = TikaInputStream.get(file);
+        Metadata metadata = new Metadata();
+        MediaType mediaType = detector.detect(stream, metadata);
+
+        return mediaType.toString();
+    }
 
     /**
      * Calculate the sha256 checksum of an identified file
@@ -505,9 +556,14 @@ public class DocumentObjectService implements IDocumentObjectService {
     private String calculateChecksum(String fileLocation) throws IOException {
         FileInputStream inputStream =
                 new FileInputStream(new File(fileLocation));
-        String checksum = sha256(inputStream).toString();
+        byte [] digest =  DigestUtils.sha256(inputStream);
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : digest) {
+            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        }
         inputStream.close();
-        return checksum;
+        return sb.toString();
     }
 
     /**
