@@ -59,7 +59,7 @@
     <springfox-swagger-ui.version>2.7.0</springfox-swagger-ui.version>
     <antlr.version>4.7.1</antlr.version>
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
-
+    <tika-parsers.version>1.18</tika-parsers.version>
 
     <!-- JS / GUI -->
     <jquery.version>3.3.1-1</jquery.version>
@@ -114,6 +114,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+    <!-- Required for detecting mime-types and retrieving metadata -->
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-parsers</artifactId>
+      <version>${tika-parsers.version}</version>
     </dependency>
 
     <!-- Used for CompareToBuilder etc -->
@@ -244,6 +251,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>mdbootstrap-bootstrap-material-design</artifactId>
+      <version>4.5.3</version>
+    </dependency>
+
     <!-- WebJar dependencies to download js stuff for GUI -->
     <dependency>
       <groupId>org.webjars</groupId>
@@ -300,6 +313,36 @@
                   <version>${angularjs.version}</version>
                   <type>jar</type>
                   <includes>**/*.js</includes>
+                  <outputDirectory>
+                    ${project.basedir}/web/dependencies/vendor/
+                  </outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.webjars</groupId>
+                  <artifactId>mdbootstrap-bootstrap-material-design</artifactId>
+                  <version>4.5.3</version>
+                  <type>jar</type>
+                  <includes>**/*.js</includes>
+                  <outputDirectory>
+                    ${project.basedir}/web/dependencies/vendor/
+                  </outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.webjars</groupId>
+                  <artifactId>mdbootstrap-bootstrap-material-design</artifactId>
+                  <version>4.5.3</version>
+                  <type>jar</type>
+                  <includes>**/*.css</includes>
+                  <outputDirectory>
+                    ${project.basedir}/web/dependencies/vendor/
+                  </outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.webjars</groupId>
+                  <artifactId>popper.js</artifactId>
+                  <version>${popper.version}</version>
+                  <type>jar</type>
+                  <includes>**/*.css</includes>
                   <outputDirectory>
                     ${project.basedir}/web/dependencies/vendor/
                   </outputDirectory>
