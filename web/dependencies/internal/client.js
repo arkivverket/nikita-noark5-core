@@ -71,7 +71,7 @@ var controller = app.controller('MainController', ['$scope', '$http', function (
 
 var login = app.controller('LoginController', ['$scope', '$http', function ($scope, $http) {
 
-    $scope.selectedLoginOption = "arkivar";
+    $scope.selectedLoginRole = "arkivar";
 
     console.log("LoginController");
     console.log("LoginOptions " + JSON.stringify(loginOptions));
