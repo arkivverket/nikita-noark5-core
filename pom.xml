@@ -251,12 +251,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>mdbootstrap-bootstrap-material-design</artifactId>
-      <version>4.5.3</version>
-    </dependency>
-
     <!-- WebJar dependencies to download js stuff for GUI -->
     <dependency>
       <groupId>org.webjars</groupId>
@@ -313,26 +307,6 @@
                   <version>${angularjs.version}</version>
                   <type>jar</type>
                   <includes>**/*.js</includes>
-                  <outputDirectory>
-                    ${project.basedir}/web/dependencies/vendor/
-                  </outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars</groupId>
-                  <artifactId>mdbootstrap-bootstrap-material-design</artifactId>
-                  <version>4.5.3</version>
-                  <type>jar</type>
-                  <includes>**/*.js</includes>
-                  <outputDirectory>
-                    ${project.basedir}/web/dependencies/vendor/
-                  </outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars</groupId>
-                  <artifactId>mdbootstrap-bootstrap-material-design</artifactId>
-                  <version>4.5.3</version>
-                  <type>jar</type>
-                  <includes>**/*.css</includes>
                   <outputDirectory>
                     ${project.basedir}/web/dependencies/vendor/
                   </outputDirectory>
