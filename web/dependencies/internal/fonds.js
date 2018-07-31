@@ -25,7 +25,8 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
     $scope.showFondsCreatorList = false;
     $scope.showSeriesList = false;
 
-    $scope.selectedDocumentMedium = "";
+    $scope.selectedFondsStatus= "Opprettet";
+    $scope.selectedDocumentMedium = "Elektronisk arkiv";
 
     // Used to show or hide a text message
     $scope.createFonds = false;
@@ -37,98 +38,148 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
     $scope.fondsStatusList = fondsStatusList;
     $scope.oppbevaringsStedDisabled = false;
 
-    $scope.fonds = GetChosenFonds();
-    console.log("current fonds is " + $scope.fonds);
 
-    // We are either creating a new fonds or retrieving an existing one
-    if ($scope.fonds != null) {
+    $scope.token = GetUserToken();
+    $scope.show_create_fonds = true;
 
-      // Retrieve the latest copy of the data and pull out the ETAG
-      // Find the self link of the current fonds and issue a GET
+    $http({
+      method: 'GET',
+      url: app_url + '/arkivstruktur/arkiv',
+      headers: {'Authorization': $scope.token},
+    }).then(function successCallback(response) {
+      $scope.fondsList = response.data.results;
 
-      for (var rel in $scope.fonds.links) {
-        var relation = $scope.fonds.links[rel].rel;
-        if (relation == REL_SELF) {
-          var urlToFonds = $scope.fonds.links[rel].href;
-          var token = GetUserToken();
-          $http({
-            method: 'GET',
-            url: urlToFonds,
-            headers: {'Authorization': token}
-          }).then(function successCallback(response) {
-            // This returns a list and later we will handle a list properly in GUI, but right now I just
-            // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
-            // retrieve (again) the object I am actually out after
-            $scope.fonds = response.data;
-            $scope.fondsETag = response.headers('eTag');
-            console.log("Retrieved the following fonds " + JSON.stringify($scope.fonds));
-            console.log("The ETAG header for the fonds is " + $scope.fondsETag);
-          });
-        }
+      SetChosenFonds(null);
+      console.log("data is : " + JSON.stringify(response.data));
+    }, function errorCallback(response) {
+      console.log("Something failed. All  know is : " + JSON.stringify(response));
+    });
+
+    /**
+     *  fonds_selected
+     *
+     *  When a user presses "Opprett nytt arkiv" or clicks on a individual row of a fonds item from
+     *  the list of fonds, this function calls a change location to the page arkiv.html
+     *
+     * @param fonds Note: Can be null if creating a new fonds
+     */
+    $scope.fonds_selected = function (fonds) {
+
+      console.log('fonds_selected clicked ' + JSON.stringify(fonds));
+
+      disableAllViews();
+      $scope.showFonds = true;
+      $scope.fonds = fonds;
+
+      $scope.selectedDocumentMedium = fonds.dokumentmedium;
+      $scope.selectedFondsStatus = fonds.arkivstatus;
+
+      if (fonds == null) {
+        // Important as business logic requires this to be null if we are creating a top-level fonds
+        SetChosenFonds(null);
       }
+      else {
+        SetChosenFonds(fonds);
+      }
+    };
 
-      $scope.selectedDocumentMedium = $scope.fonds.dokumentmedium;
-      $scope.selectedFondsStatus = $scope.fonds.arkivstatus;
-      console.log("scope.selectedFondsStatus is set to [" + $scope.selectedFondsStatus + "]");
+    $scope.getFonds = function () {
 
-      // If we are loading the data from a fonds, check to see if it has any related fondsCreator data
-      for (var rel in $scope.fonds.links) {
-        var relation = $scope.fonds.links[rel].rel;
-        if (relation == REL_FONDS_CREATOR) {
-          var urlFondsCreators = $scope.fonds.links[rel].href;
-          var token = GetUserToken();
-          $http({
-            method: 'GET',
-            url: urlFondsCreators,
-            headers: {'Authorization': token}
-          }).then(function successCallback(response) {
+
+      $scope.fonds = GetChosenFonds();
+      console.log("current fonds is " + $scope.fonds);
+
+      // We are either creating a new fonds or retrieving an existing one
+      if ($scope.fonds != null) {
+
+        // Retrieve the latest copy of the data and pull out the ETAG
+        // Find the self link of the current fonds and issue a GET
+
+        for (var rel in $scope.fonds.links) {
+          var relation = $scope.fonds.links[rel].rel;
+          if (relation == REL_SELF) {
+            var urlToFonds = $scope.fonds.links[rel].href;
+            var token = GetUserToken();
+            $http({
+              method: 'GET',
+              url: urlToFonds,
+              headers: {'Authorization': token}
+            }).then(function successCallback(response) {
               // This returns a list and later we will handle a list properly in GUI, but right now I just
               // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
               // retrieve (again) the object I am actually out after
-              $scope.fondsCreator = response.data;
-              console.log("Found following fondsCreators " + JSON.stringify(response.data.results));
-              console.log("[0] Found following fondsCreators " + JSON.stringify(response.data.results[0]));
+              $scope.fonds = response.data;
+              $scope.fondsETag = response.headers('eTag');
+              console.log("Retrieved the following fonds " + JSON.stringify($scope.fonds));
+              console.log("The ETAG header for the fonds is " + $scope.fondsETag);
+            });
+          }
+        }
 
-              // We got the list and picked out the first. Now we need to retrieve a ETAG
-              if (response.data.results) {
-                $scope.fondsCreator = response.data.results[0];
-                if ($scope.fondsCreator.arkivskaperID != null) {
-                  $scope.createFondsCreator = false;
-                  console.log("$scope.fondsCreator.arkivskaperID " + $scope.fondsCreator.arkivskaperID);
-                  for (var rel in $scope.fondsCreator.links) {
-                    var relation = $scope.fondsCreator.links[rel].rel;
-                    console.log("relation " + relation);
-                    if (relation == REL_SELF) {
-                      var urlFondsCreator = $scope.fondsCreator.links[rel].href;
-                      console.log("Getting urlFondsCreator" + urlFondsCreator);
-                      var token = GetUserToken();
-                      $http({
-                        method: 'GET',
-                        url: urlFondsCreator,
-                        headers: {'Authorization': token}
-                      }).then(function successCallback(response) {
-                        // This returns a list and later we will handle a list properly in GUI, but right now I just
-                        // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
-                        // retrieve (again) the object I am actually out after
-                        $scope.fondsCreator = response.data;
-                        $scope.fondsCreatorETag = response.headers('eTag');
-                      });
+        $scope.selectedDocumentMedium = $scope.fonds.dokumentmedium;
+        $scope.selectedFondsStatus = $scope.fonds.arkivstatus;
+        console.log("scope.selectedFondsStatus is set to [" + $scope.selectedFondsStatus + "]");
+
+        // If we are loading the data from a fonds, check to see if it has any related fondsCreator data
+        for (var rel in $scope.fonds.links) {
+          var relation = $scope.fonds.links[rel].rel;
+          if (relation == REL_FONDS_CREATOR) {
+            var urlFondsCreators = $scope.fonds.links[rel].href;
+            var token = GetUserToken();
+            $http({
+              method: 'GET',
+              url: urlFondsCreators,
+              headers: {'Authorization': token}
+            }).then(function successCallback(response) {
+                // This returns a list and later we will handle a list properly in GUI, but right now I just
+                // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
+                // retrieve (again) the object I am actually out after
+                $scope.fondsCreator = response.data;
+                console.log("Found following fondsCreators " + JSON.stringify(response.data.results));
+                console.log("[0] Found following fondsCreators " + JSON.stringify(response.data.results[0]));
+
+                // We got the list and picked out the first. Now we need to retrieve a ETAG
+                if (response.data.results) {
+                  $scope.fondsCreator = response.data.results[0];
+                  if ($scope.fondsCreator.arkivskaperID != null) {
+                    $scope.createFondsCreator = false;
+                    console.log("$scope.fondsCreator.arkivskaperID " + $scope.fondsCreator.arkivskaperID);
+                    for (var rel in $scope.fondsCreator.links) {
+                      var relation = $scope.fondsCreator.links[rel].rel;
+                      console.log("relation " + relation);
+                      if (relation == REL_SELF) {
+                        var urlFondsCreator = $scope.fondsCreator.links[rel].href;
+                        console.log("Getting urlFondsCreator" + urlFondsCreator);
+                        var token = GetUserToken();
+                        $http({
+                          method: 'GET',
+                          url: urlFondsCreator,
+                          headers: {'Authorization': token}
+                        }).then(function successCallback(response) {
+                          // This returns a list and later we will handle a list properly in GUI, but right now I just
+                          // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
+                          // retrieve (again) the object I am actually out after
+                          $scope.fondsCreator = response.data;
+                          $scope.fondsCreatorETag = response.headers('eTag');
+                        });
+                      }
                     }
+
                   }
 
                 }
-
               }
-            }
-          );
+            );
+          }
         }
       }
-    }
-    else {
-      $scope.createFonds = true;
-    }
+      else {
+        $scope.createFonds = true;
+      }
 
-    console.log("createFonds is set to " + $scope.createFonds);
+      console.log("createFonds is set to " + $scope.createFonds);
+
+    };
 
     // Probably don't need this!!
     $scope.documentMedium_selected = function () {
@@ -350,5 +401,14 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
       }
 
     };
+
+    function disableAllViews() {
+      $scope.showFondsList = false;
+      $scope.showFonds = false;
+      $scope.showFondsCreatorList = false;
+      $scope.showFondsCreator = false;
+      $scope.showSeriesList = false;
+      $scope.showSeries = false;
+    }
   }]);
 

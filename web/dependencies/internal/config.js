@@ -43,7 +43,7 @@ var login_url = nikitaOptions.loginUrl;
 var display_footer_note = nikitaOptions.displayFooterNote;
 var display_breadcrumb = nikitaOptions.displayBreadcrumb;
 
-var fondsListPageName = 'arkivliste.html';
+var fondsListPageName = 'arkivar.html';
 var fondsPageName = 'arkiv.html';
 var seriesPageName = 'arkivdel.html';
 var seriesListPageName = 'arkivdeliste.html';
@@ -160,7 +160,6 @@ var emptyList = [{id: '', value: ''},
 var loginOptions = [
     {id: 'SA', value: "saksbehandler"},
     {id: 'AR', value: "arkivar"}];
-
 
 console.log("Setting nikita gui_base_url: " + gui_base_url);
 console.log("Setting nikita app_url: " + app_url);
