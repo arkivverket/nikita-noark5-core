@@ -1,4 +1,4 @@
-var app = angular.module('nikita-fonds', []);
+var app = angular.module('nikita-arkivar', []);
 
 /**
  * Enables the following functionality:
@@ -17,331 +17,338 @@ var app = angular.module('nikita-fonds', []);
  *
  */
 
-var fondsController = app.controller('FondsController', ['$scope', '$http',
-    function ($scope, $http) {
+var fondsController = app.controller('ArkivarController', ['$scope', '$http',
+  function ($scope, $http) {
 
-        // Used to show or hide a text message
-        $scope.createFonds = false;
-        $scope.createFondsCreator = true;
+    $scope.showFondsList = true;
+    $scope.showFonds = false;
+    $scope.showFondsCreatorList = false;
+    $scope.showSeriesList = false;
 
-        console.log("User token is set to " + GetUserToken());
+    $scope.selectedDocumentMedium = "";
 
-        $scope.documentMediumList = documentMediumList;
-        $scope.fondsStatusList = fondsStatusList;
-        $scope.oppbevaringsStedDisabled = false;
+    // Used to show or hide a text message
+    $scope.createFonds = false;
+    $scope.createFondsCreator = true;
 
-        $scope.fonds = GetChosenFonds();
-        console.log("current fonds is " + $scope.fonds);
+    console.log("User token is set to " + GetUserToken());
 
-        // We are either creating a new fonds or retrieving an existing one
-        if ($scope.fonds != null) {
+    $scope.documentMediumList = documentMediumList;
+    $scope.fondsStatusList = fondsStatusList;
+    $scope.oppbevaringsStedDisabled = false;
 
-            // Retrieve the latest copy of the data and pull out the ETAG
-            // Find the self link of the current fonds and issue a GET
+    $scope.fonds = GetChosenFonds();
+    console.log("current fonds is " + $scope.fonds);
 
-            for (var rel in $scope.fonds.links) {
-                var relation = $scope.fonds.links[rel].rel;
-                if (relation == REL_SELF) {
-                    var urlToFonds = $scope.fonds.links[rel].href;
-                    var token = GetUserToken();
-                    $http({
+    // We are either creating a new fonds or retrieving an existing one
+    if ($scope.fonds != null) {
+
+      // Retrieve the latest copy of the data and pull out the ETAG
+      // Find the self link of the current fonds and issue a GET
+
+      for (var rel in $scope.fonds.links) {
+        var relation = $scope.fonds.links[rel].rel;
+        if (relation == REL_SELF) {
+          var urlToFonds = $scope.fonds.links[rel].href;
+          var token = GetUserToken();
+          $http({
+            method: 'GET',
+            url: urlToFonds,
+            headers: {'Authorization': token}
+          }).then(function successCallback(response) {
+            // This returns a list and later we will handle a list properly in GUI, but right now I just
+            // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
+            // retrieve (again) the object I am actually out after
+            $scope.fonds = response.data;
+            $scope.fondsETag = response.headers('eTag');
+            console.log("Retrieved the following fonds " + JSON.stringify($scope.fonds));
+            console.log("The ETAG header for the fonds is " + $scope.fondsETag);
+          });
+        }
+      }
+
+      $scope.selectedDocumentMedium = $scope.fonds.dokumentmedium;
+      $scope.selectedFondsStatus = $scope.fonds.arkivstatus;
+      console.log("scope.selectedFondsStatus is set to [" + $scope.selectedFondsStatus + "]");
+
+      // If we are loading the data from a fonds, check to see if it has any related fondsCreator data
+      for (var rel in $scope.fonds.links) {
+        var relation = $scope.fonds.links[rel].rel;
+        if (relation == REL_FONDS_CREATOR) {
+          var urlFondsCreators = $scope.fonds.links[rel].href;
+          var token = GetUserToken();
+          $http({
+            method: 'GET',
+            url: urlFondsCreators,
+            headers: {'Authorization': token}
+          }).then(function successCallback(response) {
+              // This returns a list and later we will handle a list properly in GUI, but right now I just
+              // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
+              // retrieve (again) the object I am actually out after
+              $scope.fondsCreator = response.data;
+              console.log("Found following fondsCreators " + JSON.stringify(response.data.results));
+              console.log("[0] Found following fondsCreators " + JSON.stringify(response.data.results[0]));
+
+              // We got the list and picked out the first. Now we need to retrieve a ETAG
+              if (response.data.results) {
+                $scope.fondsCreator = response.data.results[0];
+                if ($scope.fondsCreator.arkivskaperID != null) {
+                  $scope.createFondsCreator = false;
+                  console.log("$scope.fondsCreator.arkivskaperID " + $scope.fondsCreator.arkivskaperID);
+                  for (var rel in $scope.fondsCreator.links) {
+                    var relation = $scope.fondsCreator.links[rel].rel;
+                    console.log("relation " + relation);
+                    if (relation == REL_SELF) {
+                      var urlFondsCreator = $scope.fondsCreator.links[rel].href;
+                      console.log("Getting urlFondsCreator" + urlFondsCreator);
+                      var token = GetUserToken();
+                      $http({
                         method: 'GET',
-                        url: urlToFonds,
+                        url: urlFondsCreator,
                         headers: {'Authorization': token}
-                    }).then(function successCallback(response) {
+                      }).then(function successCallback(response) {
                         // This returns a list and later we will handle a list properly in GUI, but right now I just
                         // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
                         // retrieve (again) the object I am actually out after
-                        $scope.fonds = response.data;
-                        $scope.fondsETag = response.headers('eTag');
-                        console.log("Retrieved the following fonds " + JSON.stringify($scope.fonds));
-                        console.log("The ETAG header for the fonds is " + $scope.fondsETag);
-                    });
+                        $scope.fondsCreator = response.data;
+                        $scope.fondsCreatorETag = response.headers('eTag');
+                      });
+                    }
+                  }
+
                 }
+
+              }
             }
+          );
+        }
+      }
+    }
+    else {
+      $scope.createFonds = true;
+    }
 
-            $scope.selectedDocumentMedium = $scope.fonds.dokumentmedium;
-            $scope.selectedFondsStatus = $scope.fonds.arkivstatus;
-            console.log("scope.selectedFondsStatus is set to [" + $scope.selectedFondsStatus + "]");
+    console.log("createFonds is set to " + $scope.createFonds);
 
-            // If we are loading the data from a fonds, check to see if it has any related fondsCreator data
-            for (var rel in $scope.fonds.links) {
-                var relation = $scope.fonds.links[rel].rel;
-                if (relation == REL_FONDS_CREATOR) {
-                    var urlFondsCreators = $scope.fonds.links[rel].href;
-                    var token = GetUserToken();
-                    $http({
-                        method: 'GET',
-                        url: urlFondsCreators,
-                        headers: {'Authorization': token}
-                    }).then(function successCallback(response) {
-                            // This returns a list and later we will handle a list properly in GUI, but right now I just
-                            // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
-                            // retrieve (again) the object I am actually out after
-                            $scope.fondsCreator = response.data;
-                            console.log("Found following fondsCreators " + JSON.stringify(response.data.results));
-                            console.log("[0] Found following fondsCreators " + JSON.stringify(response.data.results[0]));
+    // Probably don't need this!!
+    $scope.documentMedium_selected = function () {
 
-                            // We got the list and picked out the first. Now we need to retrieve a ETAG
-                            if (response.data.results) {
-                                $scope.fondsCreator = response.data.results[0];
-                                if ($scope.fondsCreator.arkivskaperID != null) {
-                                    $scope.createFondsCreator = false;
-                                    console.log("$scope.fondsCreator.arkivskaperID " + $scope.fondsCreator.arkivskaperID);
-                                    for (var rel in $scope.fondsCreator.links) {
-                                        var relation = $scope.fondsCreator.links[rel].rel;
-                                        console.log("relation " + relation);
-                                        if (relation == REL_SELF) {
-                                            var urlFondsCreator = $scope.fondsCreator.links[rel].href;
-                                            console.log("Getting urlFondsCreator" + urlFondsCreator);
-                                            var token = GetUserToken();
-                                            $http({
-                                                method: 'GET',
-                                                url: urlFondsCreator,
-                                                headers: {'Authorization': token}
-                                            }).then(function successCallback(response) {
-                                                // This returns a list and later we will handle a list properly in GUI, but right now I just
-                                                // need to fetch the first one. I also need an ETAG in case it is to be edited, so I have to
-                                                // retrieve (again) the object I am actually out after
-                                                $scope.fondsCreator = response.data;
-                                                $scope.fondsCreatorETag = response.headers('eTag');
-                                            });
-                                        }
-                                    }
+      if ($scope.selectedDocumentMedium == 'Elektronisk arkiv ') {
+        $scope.oppbevaringsStedDisabled = true;
+      }
+      else {
+        $scope.oppbevaringsStedDisabled = false;
+      }
+      console.log("oppbevaringsStedDisabled value [" + $scope.oppbevaringsStedDisabled +
+        "] val is [" + $scope.selectedDocumentMedium + "], [Elektronisk arkiv]");
+    };
 
-                                }
+    /**
+     * series_list_selected
+     *
+     * Assumes the current fonds is set. Simply calls arkivdeliste.html
+     */
+    $scope.series_list_selected = function () {
+      changeLocation($scope, seriesListPageName, false);
+    };
 
-                            }
-                        }
-                    );
-                }
+    /**
+     * post_or_put_fonds
+     *
+     * Undertakes either a PUT or a POST request to the core with data fields from the webpage
+     *
+     * The action is decided by whether or not $scope.createFonds == true. If it's true then we will
+     * create a fonds. If it's false, we are updating a fonds.
+     *
+     */
+
+    $scope.post_or_put_fonds = function () {
+      var urlFonds = '';
+
+      console.log("User token is set to " + GetUserToken());
+      // check that it's not null, create a popup here if it is
+      var method = '';
+      if ($scope.createFonds) {
+        method = "POST";
+        urlFonds = create_fonds_address;
+        $http({
+          url: urlFonds,
+          method: method,
+          headers: {
+            'Content-Type': 'application/vnd.noark5-v4+json',
+            'Authorization': GetUserToken(),
+          },
+          data: {
+            tittel: $.trim(document.getElementById("tittel").value),
+            beskrivelse: $.trim(document.getElementById("beskrivelse").value),
+            dokumentmedium: $.trim($scope.selectedDocumentMedium),
+            arkivstatus: $.trim($scope.selectedFondsStatus)
+          },
+        }).then(function successCallback(response) {
+          console.log(method + " put/post on fonds data returned= " + JSON.stringify(response.data));
+          // Update the fonds object so fields in GUI are changed
+          $scope.fonds = response.data;
+          // Pick up and make a note of the ETAG so we can update the object
+          $scope.fondsETag = response.headers('eTag');
+          // TODO : This needs to be tided up. Find out why etag is missing ""!!
+          $scope.fondsETag = '"' + $scope.fondsETag + '"';
+
+          // Now we can edit the fonds object, add fondsCreator
+          $scope.createFonds = false;
+          SetChosenFonds($scope.fonds);
+        });
+      } else {
+        method = "PUT";
+        var currentFonds = GetChosenFonds();
+        if (currentFonds != null) {
+          // Check that currentFonds.links exists??
+          // Find the self link
+          for (var rel in currentFonds.links) {
+            var relation = currentFonds.links[rel].rel;
+            if (relation === REL_SELF) {
+              urlFonds = currentFonds.links[rel].href;
+              console.log(method + " Attempting to update arkiv with following address = " + urlFonds);
+              console.log(method + " Current ETAG is = [" + $scope.fondsETag + "]");
+              $http({
+                url: urlFonds,
+                method: method,
+                headers: {
+                  'Content-Type': 'application/vnd.noark5-v4+json',
+                  'Authorization': GetUserToken(),
+                  'ETAG': $scope.fondsETag
+                },
+                data: {
+                  tittel: $.trim(document.getElementById("tittel").value),
+                  beskrivelse: $.trim(document.getElementById("beskrivelse").value),
+                  dokumentmedium: $.trim($scope.selectedDocumentMedium),
+                  arkivstatus: $.trim($scope.selectedFondsStatus)
+                },
+              }).then(function successCallback(response) {
+                console.log(method + " put/post on fonds data returned= " + JSON.stringify(response.data));
+                // Pick up and make a note of the ETAG so we can update the object
+                $scope.fondsETag = response.headers('eTag');
+                $scope.fonds = response.data;
+                SetChosenFonds($scope.fonds);
+              });
             }
+          }
         }
         else {
-            $scope.createFonds = true;
+          alert("Something went wrong. Attempt to update a fonds object that is not registered as existing yet!");
         }
+      }
 
-        console.log("createFonds is set to " + $scope.createFonds);
+    };
+    /**
+     * post_or_put_fonds
+     *
+     * Undertakes either a PUT or a POST request to the core with data fields from the webpage
+     *
+     * The action is decided by whether or not $scope.createFonds == true. If it's true then we will
+     * create a fonds. If it's false, we are updating a fonds.
+     *
+     */
 
-        // Probably don't need this!!
-        $scope.documentMedium_selected = function () {
+    $scope.post_or_put_fonds_creator = function () {
+      var urlFondsCreator = '';
 
-            if ($scope.selectedDocumentMedium == 'Elektronisk arkiv ') {
-                $scope.oppbevaringsStedDisabled = true;
+      // check that it's not null, create a popup here if it is
+      var method = '';
+      if ($scope.createFondsCreator) {
+        method = "POST";
+        var currentFonds = GetChosenFonds();
+        if (currentFonds != null) {
+          // Check that currentFonds.links exists??
+          // Find the self link
+          for (var rel in currentFonds.links) {
+            var relation = currentFonds.links[rel].rel;
+            if (relation === REL_NEW_FONDS_CREATOR) {
+              urlFondsCreator = currentFonds.links[rel].href;
+              console.log("relation is " + relation);
+              console.log("href is " + currentFonds.links[rel].href);
+
+              $http({
+                url: urlFondsCreator,
+                method: method,
+                headers: {
+                  'Content-Type': 'application/vnd.noark5-v4+json',
+                  'Authorization': GetUserToken(),
+                },
+                data: {
+                  arkivskaperID: $.trim(document.getElementById("arkivskaperID").value),
+                  beskrivelse: $.trim(document.getElementById("fondsCreatorBeskrivelse").value),
+                  arkivskaperNavn: $.trim(document.getElementById("arkivskaperNavn").value)
+                },
+              }).then(function successCallback(response) {
+                console.log(method + " post on fondsCreator data returned= " + JSON.stringify(response.data));
+
+                // Update the fondsCreator object so fields in GUI are changed
+                $scope.fondsCreator = response.data;
+                // Pick up and make a note of the ETAG so we can update the object
+                $scope.fondsCreatorETag = response.headers('eTag');
+
+                // TODO: Figure out what's happening here!
+                // For some reason, the returned ETAG on fondscreators/arkivskaper is missing "".
+                // Debugging shows it's there server side, but client side it's missing. I don't have
+                // time to figure out why, but we have avoid doing the following!
+                $scope.fondsCreatorETag = '"' + $scope.fondsCreatorETag + '"';
+                console.log("Etag after post on fondsCreator is = " + $scope.fondsCreatorETag);
+
+                // Now we can edit the fonds object, add fondsCreator
+                $scope.createFondsCreator = false;
+              });
             }
-            else {
-                $scope.oppbevaringsStedDisabled = false;
+          }
+        }
+      } else {
+        method = "PUT";
+        var currentFondsCreator = $scope.fondsCreator;
+        if (currentFondsCreator != null) {
+          // Check that currentFondsCreator.links exists??
+          // Find the self link
+          for (var rel in currentFondsCreator.links) {
+            var relation = currentFondsCreator.links[rel].rel;
+            if (relation === REL_SELF) {
+              urlFondsCreator = currentFondsCreator.links[rel].href;
+              console.log(method + " Attempting to update forndscreator with following address = " + urlFondsCreator);
+              console.log(method + " Attempting to update forndscreator with following ETAG = " + $scope.fondsCreatorETag);
+              $http({
+                url: urlFondsCreator,
+                method: method,
+                headers: {
+                  'Content-Type': 'application/vnd.noark5-v4+json',
+                  'Authorization': GetUserToken(),
+                  'ETAG': $scope.fondsCreatorETag
+                },
+                data: {
+                  arkivskaperID: $.trim(document.getElementById("arkivskaperID").value),
+                  beskrivelse: $.trim(document.getElementById("fondsCreatorBeskrivelse").value),
+                  arkivskaperNavn: $.trim(document.getElementById("arkivskaperNavn").value)
+                },
+              }).then(function successCallback(response) {
+
+                console.log(method + " PUT on fondsCreator data returned= " + JSON.stringify(response.data));
+                // Update the fondsCreator object so fields in GUI are changed
+                $scope.fondsCreator = response.data;
+                // Pick up and make a note of the ETAG so we can update the object
+                // For some reason, the returned ETAG on fondscreators/arkivskaper is missing "".
+                // Debugging shows it's there server side, but client side it's missing. I don't have
+                // time to figure out why, but we have avoid doing the following!
+                $scope.fondsCreatorETag = '"' + $scope.fondsCreatorETag + '"';
+                console.log("Etag after PUT on fondsCreator is = " + $scope.fondsCreatorETag);
+                // Now we can edit the fonds object, add fondsCreator
+                $scope.createFondsCreator = false;
+              }, function errorCallback(request, response) {
+                console.log(method + " PUT request = " + JSON.stringify(request));
+              });
             }
-            console.log("oppbevaringsStedDisabled value [" + $scope.oppbevaringsStedDisabled +
-                "] val is [" + $scope.selectedDocumentMedium + "], [Elektronisk arkiv]");
-        };
+          }
+        }
+        else {
+          alert("Something went wrong. Attempt to update a fonds object that is not registered as existing yet!");
+        }
+      }
 
-        /**
-         * series_list_selected
-         *
-         * Assumes the current fonds is set. Simply calls arkivdeliste.html
-         */
-        $scope.series_list_selected = function () {
-            changeLocation($scope, seriesListPageName, false);
-        };
-
-        /**
-         * post_or_put_fonds
-         *
-         * Undertakes either a PUT or a POST request to the core with data fields from the webpage
-         *
-         * The action is decided by whether or not $scope.createFonds == true. If it's true then we will
-         * create a fonds. If it's false, we are updating a fonds.
-         *
-         */
-
-        $scope.post_or_put_fonds = function () {
-            var urlFonds = '';
-
-            console.log("User token is set to " + GetUserToken());
-            // check that it's not null, create a popup here if it is
-            var method = '';
-            if ($scope.createFonds) {
-                method = "POST";
-                urlFonds = create_fonds_address;
-                $http({
-                    url: urlFonds,
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/vnd.noark5-v4+json',
-                        'Authorization': GetUserToken(),
-                    },
-                    data: {
-                        tittel: $.trim(document.getElementById("tittel").value),
-                        beskrivelse: $.trim(document.getElementById("beskrivelse").value),
-                        dokumentmedium: $.trim($scope.selectedDocumentMedium),
-                        arkivstatus: $.trim($scope.selectedFondsStatus)
-                    },
-                }).then(function successCallback(response) {
-                    console.log(method + " put/post on fonds data returned= " + JSON.stringify(response.data));
-                    // Update the fonds object so fields in GUI are changed
-                    $scope.fonds = response.data;
-                    // Pick up and make a note of the ETAG so we can update the object
-                    $scope.fondsETag = response.headers('eTag');
-                    // TODO : This needs to be tided up. Find out why etag is missing ""!!
-                    $scope.fondsETag = '"' + $scope.fondsETag + '"';
-
-                    // Now we can edit the fonds object, add fondsCreator
-                    $scope.createFonds = false;
-                    SetChosenFonds($scope.fonds);
-                });
-            } else {
-                method = "PUT";
-                var currentFonds = GetChosenFonds();
-                if (currentFonds != null) {
-                    // Check that currentFonds.links exists??
-                    // Find the self link
-                    for (var rel in currentFonds.links) {
-                        var relation = currentFonds.links[rel].rel;
-                        if (relation === REL_SELF) {
-                            urlFonds = currentFonds.links[rel].href;
-                            console.log(method + " Attempting to update arkiv with following address = " + urlFonds);
-                            console.log(method + " Current ETAG is = [" + $scope.fondsETag + "]");
-                            $http({
-                                url: urlFonds,
-                                method: method,
-                                headers: {
-                                    'Content-Type': 'application/vnd.noark5-v4+json',
-                                    'Authorization': GetUserToken(),
-                                    'ETAG': $scope.fondsETag
-                                },
-                                data: {
-                                    tittel: $.trim(document.getElementById("tittel").value),
-                                    beskrivelse: $.trim(document.getElementById("beskrivelse").value),
-                                    dokumentmedium: $.trim($scope.selectedDocumentMedium),
-                                    arkivstatus: $.trim($scope.selectedFondsStatus)
-                                },
-                            }).then(function successCallback(response) {
-                                console.log(method + " put/post on fonds data returned= " + JSON.stringify(response.data));
-                                // Pick up and make a note of the ETAG so we can update the object
-                                $scope.fondsETag = response.headers('eTag');
-                                $scope.fonds = response.data;
-                                SetChosenFonds($scope.fonds);
-                            });
-                        }
-                    }
-                }
-                else {
-                    alert("Something went wrong. Attempt to update a fonds object that is not registered as existing yet!");
-                }
-            }
-
-        };
-        /**
-         * post_or_put_fonds
-         *
-         * Undertakes either a PUT or a POST request to the core with data fields from the webpage
-         *
-         * The action is decided by whether or not $scope.createFonds == true. If it's true then we will
-         * create a fonds. If it's false, we are updating a fonds.
-         *
-         */
-
-        $scope.post_or_put_fonds_creator = function () {
-            var urlFondsCreator = '';
-
-            // check that it's not null, create a popup here if it is
-            var method = '';
-            if ($scope.createFondsCreator) {
-                method = "POST";
-                var currentFonds = GetChosenFonds();
-                if (currentFonds != null) {
-                    // Check that currentFonds.links exists??
-                    // Find the self link
-                    for (var rel in currentFonds.links) {
-                        var relation = currentFonds.links[rel].rel;
-                        if (relation === REL_NEW_FONDS_CREATOR) {
-                            urlFondsCreator = currentFonds.links[rel].href;
-                            console.log("relation is " + relation);
-                            console.log("href is " + currentFonds.links[rel].href);
-
-                            $http({
-                                url: urlFondsCreator,
-                                method: method,
-                                headers: {
-                                    'Content-Type': 'application/vnd.noark5-v4+json',
-                                    'Authorization': GetUserToken(),
-                                },
-                                data: {
-                                    arkivskaperID: $.trim(document.getElementById("arkivskaperID").value),
-                                    beskrivelse: $.trim(document.getElementById("fondsCreatorBeskrivelse").value),
-                                    arkivskaperNavn: $.trim(document.getElementById("arkivskaperNavn").value)
-                                },
-                            }).then(function successCallback(response) {
-                                console.log(method + " post on fondsCreator data returned= " + JSON.stringify(response.data));
-
-                                // Update the fondsCreator object so fields in GUI are changed
-                                $scope.fondsCreator = response.data;
-                                // Pick up and make a note of the ETAG so we can update the object
-                                $scope.fondsCreatorETag = response.headers('eTag');
-
-                                // TODO: Figure out what's happening here!
-                                // For some reason, the returned ETAG on fondscreators/arkivskaper is missing "".
-                                // Debugging shows it's there server side, but client side it's missing. I don't have
-                                // time to figure out why, but we have avoid doing the following!
-                                $scope.fondsCreatorETag = '"' + $scope.fondsCreatorETag + '"';
-                                console.log("Etag after post on fondsCreator is = " + $scope.fondsCreatorETag);
-
-                                // Now we can edit the fonds object, add fondsCreator
-                                $scope.createFondsCreator = false;
-                            });
-                        }
-                    }
-                }
-            } else {
-                method = "PUT";
-                var currentFondsCreator = $scope.fondsCreator;
-                if (currentFondsCreator != null) {
-                    // Check that currentFondsCreator.links exists??
-                    // Find the self link
-                    for (var rel in currentFondsCreator.links) {
-                        var relation = currentFondsCreator.links[rel].rel;
-                        if (relation === REL_SELF) {
-                            urlFondsCreator = currentFondsCreator.links[rel].href;
-                            console.log(method + " Attempting to update forndscreator with following address = " + urlFondsCreator);
-                            console.log(method + " Attempting to update forndscreator with following ETAG = " + $scope.fondsCreatorETag);
-                            $http({
-                                url: urlFondsCreator,
-                                method: method,
-                                headers: {
-                                    'Content-Type': 'application/vnd.noark5-v4+json',
-                                    'Authorization': GetUserToken(),
-                                    'ETAG': $scope.fondsCreatorETag
-                                },
-                                data: {
-                                    arkivskaperID: $.trim(document.getElementById("arkivskaperID").value),
-                                    beskrivelse: $.trim(document.getElementById("fondsCreatorBeskrivelse").value),
-                                    arkivskaperNavn: $.trim(document.getElementById("arkivskaperNavn").value)
-                                },
-                            }).then(function successCallback(response) {
-
-                                console.log(method + " PUT on fondsCreator data returned= " + JSON.stringify(response.data));
-                                // Update the fondsCreator object so fields in GUI are changed
-                                $scope.fondsCreator = response.data;
-                                // Pick up and make a note of the ETAG so we can update the object
-                                // For some reason, the returned ETAG on fondscreators/arkivskaper is missing "".
-                                // Debugging shows it's there server side, but client side it's missing. I don't have
-                                // time to figure out why, but we have avoid doing the following!
-                                $scope.fondsCreatorETag = '"' + $scope.fondsCreatorETag + '"';
-                                console.log("Etag after PUT on fondsCreator is = " + $scope.fondsCreatorETag);
-                                // Now we can edit the fonds object, add fondsCreator
-                                $scope.createFondsCreator = false;
-                            }, function errorCallback(request, response) {
-                                console.log(method + " PUT request = " + JSON.stringify(request));
-                            });
-                        }
-                    }
-                }
-                else {
-                    alert("Something went wrong. Attempt to update a fonds object that is not registered as existing yet!");
-                }
-            }
-
-        };
-    }]);
+    };
+  }]);
 
