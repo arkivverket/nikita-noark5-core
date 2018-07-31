@@ -17,7 +17,8 @@ public interface IDocumentObjectService {
     void init();
 
     void storeAndCalculateChecksum(InputStream inputStream,
-                                   DocumentObject documentObject);
+                                   DocumentObject documentObject)
+            throws IOException;
 
 
     byte[] convertDocumentToPDF(InputStream inputStream) throws Exception;
