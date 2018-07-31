@@ -1,12 +1,12 @@
 {
-  "filstoerrelse": 21774,
-  "filnavn": "test_upload_document.pdf",
-  "mimeType": "application/pdf",
+  "filstoerrelse": 19610,
+  "filnavn": "nikita_test_doc.odt",
+  "mimeType": "application/vnd.oasis.opendocument.text",
   "versjonsnummer" : 1,
-  "sjekksum": "efad2f48e831e5ae1528b6cfd13330c9eefdeb3dc53e172236c9ca9ec6c8a92c",
-  "variantformat" : "Arkivformat",
-  "format" : "PDF",
-  "formatDetaljer" : "PDF/A PDFv1.4"
+  "sjekksum": "ff775e38a10b3a0eec650775f72e8ba33e3df7bdace295409b490c6b85f894b0",
+  "variantformat" : "Produksjonsformat",
+  "format" : "ODT",
+  "formatDetaljer" : "OpenDocument Text"
 }
 
 

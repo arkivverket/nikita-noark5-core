@@ -124,6 +124,7 @@ printf "created     DocumentDescription ($systemIDCreatedDocumentDescription) as
 curloptsCreateDocumentObject+=("${curlPostOpts[@]}");
 curloptsCreateDocumentObject+=( --data @"$curl_files_dir"document-object-data.json  'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription'/ny-dokumentobjekt' )
 #echo "${curloptsCreateDocumentObject[@]}" "\n";
+
 # Create documentObject 1 associated with file 1 / record 1 / documentDescription 1 /  and capture systemId
 systemIDCreatedDocumentObject=$(curl "${curloptsCreateDocumentObject[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created      DocumentObject      ($systemIDCreatedDocumentObject) associated with ($systemIDCreatedDocumentDescription) \n";
@@ -132,25 +133,26 @@ printf "created      DocumentObject      ($systemIDCreatedDocumentObject) associ
 # Setup curl options for uploading file associated with documentObject
 # Note /dev/null means this won't work on windows, probably want to pipe the output with >> or similar approach
 # For windows, just remove  -o /dev/null and ignore output on screen
-curlPostFileOpts+=( -s  -X POST --header "Accept:application/vnd.noark5-v4+json" --header "Authorization:Bearer $authToken" --header CONTENT-Length:21774 --header Content-Type:application/pdf -o /dev/null  --data-binary "@"$curl_files_dir"test_upload_document.pdf");
+curlPostFileOpts+=( -s  -X POST --header "Accept:application/vnd.noark5-v4+json" --header "Authorization:Bearer $authToken" --header CONTENT-Length:19610 --header Content-Type:application/vnd.oasis.opendocument.text -o /dev/null  --data-binary "@nikita_test_doc.odt");
 curloptsUploadFile+=("${curlPostFileOpts[@]}");
 curloptsUploadFile+=( -w "%{http_code}" 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
-#echo "${curloptsUploadFile[@]} ";
-
-
+echo "${curloptsUploadFile[@]} ";
 
 resultFileUpload=$(curl "${curloptsUploadFile[@]}");
 printf "uploaded file to DocumentObject  ($systemIDCreatedDocumentObject) Result $resultFileUpload\n";
 
-curlGetFileOpts+=( -s --header "Authorization:Bearer $authToken" -X GET -o downloaded.pdf -w "%{http_code}");
+curlGetFileOpts+=( -s --header "Authorization:Bearer $authToken" -X GET -o downloaded_odt_file.odt -w "%{http_code}");
 curloptsDownloadFile+=("${curlGetFileOpts[@]}");
 curloptsDownloadFile+=( 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
 
+# Convert document to archive format
+curlConvertFileOpts+=( -s --header "Authorization:Bearer $authToken" -X PUT -o downloaded_converted_odt_file.pdf -w "%{http_code}");
+curloptsDownloadFile+=("${curlConvertFileOpts[@]}");
+curloptsDownloadFile+=( 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/konverterFil' )
+
 resultFileDownload=$(curl "${curloptsDownloadFile[@]}");
-#echo "${curloptsDownloadFile[@]}";
+echo "${curloptsDownloadFile[@]}";
 printf "downloaded file from DocumentObject  ($systemIDCreatedDocumentObject) Result $resultFileDownload\n";
-
-
 
 curloptsCreateBasicRecord+=("${curlPostOpts[@]}");
 curloptsCreateBasicRecord+=( --data @"$curl_files_dir"basic-record-data.json 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-basisregistrering' )
