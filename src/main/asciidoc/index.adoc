@@ -199,3 +199,19 @@ We have tested  that uploading a  document with the proper
 mime type set also works.
 
  -H "Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+
+=== HTTP header fields
+nikita is forgiving in terms of having HTTP header fields set. It will try an
+figure out missing information (e.g. mime-type). If it can not figure out
+missing information, it will reject the file upload. If nikita detects incorrect
+information e.g. a docx file with content-type set as application/pdf it will
+reject the upload.
+
+Basically, you should try and give as much information as possible, but we will
+try and fill in the gaps.
+
+
+
+
+===
