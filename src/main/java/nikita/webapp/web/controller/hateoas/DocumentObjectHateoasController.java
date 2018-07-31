@@ -178,7 +178,7 @@ public class DocumentObjectHateoasController extends NoarkController {
         Resource fileResource = documentObjectService.loadAsResource(documentObject);
         String acceptType = request.getHeader(HttpHeaders.ACCEPT);
         if (acceptType != null &&
-	    !acceptType.equalsIgnoreCase(documentObject.getMimeType())) {
+                !acceptType.equalsIgnoreCase(documentObject.getMimeType())) {
             if (!acceptType.equals("*/*")) {
                 throw new NoarkNotAcceptableException("The request [" + request.getRequestURI() + "] is not acceptable. "
                         + "You have issued an Accept: " + acceptType + ", while the mimeType you are trying to retrieve "
@@ -193,15 +193,15 @@ public class DocumentObjectHateoasController extends NoarkController {
         InputStream filestream = fileResource.getInputStream();
         try {
             long bytesTotal = IOUtils.copyLarge(filestream,
-                                                response.getOutputStream());
+                    response.getOutputStream());
             filestream.close();
         } finally {
             try {
-		// Try close without exceptions if copy() threw an
-		// exception.  If close() is called twice, the second
-		// close() should be ignored.
+                // Try close without exceptions if copy() threw an
+                // exception.  If close() is called twice, the second
+                // close() should be ignored.
                 filestream.close();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // swallow any error to expose exceptions from
                 // IOUtil.copy() if the second close() failed.
             }
@@ -293,6 +293,49 @@ public class DocumentObjectHateoasController extends NoarkController {
         }
     }
 
+    // konverterFil
+    // upload a file and associate it with a documentObject
+    // POST [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/konverterFil
+    @ApiOperation(value = "Converts the file associated with the " +
+            "documentObject identified by a systemId",
+            response = DocumentObjectHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "File convertedsuccessfully",
+                    response = DocumentObjectHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+
+    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            RIGHT_PARENTHESIS + SLASH + "konverterFil",
+            method = RequestMethod.PUT, headers = "Accept=*/*", produces =
+            {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+    public ResponseEntity<DocumentObjectHateoas> convertFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the documentObject you wish to " +
+                            "convert the file that is associated with it",
+                    required = true)
+            @PathVariable("systemID") final String documentObjectSystemId)
+            throws Exception {
+
+        DocumentObject documentObject = documentObjectService.
+                convertDocumentToPDF(documentObjectSystemId);
+        DocumentObjectHateoas documentObjectHateoas = new
+
+                DocumentObjectHateoas(documentObject);
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
+                new Authorisation());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(
+                        request.getServletPath()))
+                .eTag(documentObject.getVersion().toString())
+                .body(documentObjectHateoas);
+    }
+
+
     // Delete a DocumentObject identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}/
     @ApiOperation(value = "Deletes a single DocumentObject entity identified by systemID", response = HateoasNoarkObject.class)
@@ -319,12 +362,10 @@ public class DocumentObjectHateoasController extends NoarkController {
         if (parentEntity instanceof DocumentDescription) {
             hateoasNoarkObject = new DocumentDescriptionHateoas(parentEntity);
             documentDescriptionHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else if (parentEntity instanceof Record) {
+        } else if (parentEntity instanceof Record) {
             hateoasNoarkObject = new RecordHateoas(parentEntity);
             recordHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else {
+        } else {
             throw new NikitaException("Internal error. Could process" + request.getRequestURI());
         }
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, documentObject));
