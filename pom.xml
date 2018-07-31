@@ -64,14 +64,10 @@
     <!-- JS / GUI -->
     <jquery.version>3.3.1-1</jquery.version>
     <angularjs.version>1.7.0</angularjs.version>
-    <angular-material.version>1.1.5</angular-material.version>
-    <material-design-lite.version>1.3.0</material-design-lite.version>
-    <material-design-icons.version>3.0.1</material-design-icons.version>
     <font-awesome.version>5.0.9</font-awesome.version>
     <bootstrap.version>4.1.1</bootstrap.version>
     <ng-file-upload.version>12.0.4</ng-file-upload.version>
     <popper.version>1.14.1</popper.version>
-    <bootstrap-material-design.version>4.1.1</bootstrap-material-design.version>
   </properties>
 
   <dependencies>
@@ -257,13 +253,11 @@
       <artifactId>jquery</artifactId>
       <version>${jquery.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>angularjs</artifactId>
       <version>${angularjs.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>font-awesome</artifactId>
@@ -273,11 +267,6 @@
       <groupId>org.webjars</groupId>
       <artifactId>bootstrap</artifactId>
       <version>${bootstrap.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>bootstrap-material-design</artifactId>
-      <version>${bootstrap-material-design.version}</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
@@ -323,46 +312,6 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.webjars</groupId>
-                  <artifactId>angular-material</artifactId>
-                  <version>${angular-material.version}</version>
-                  <type>jar</type>
-                  <includes>**/*.js</includes>
-                  <outputDirectory>
-                    ${project.basedir}/web/dependencies/vendor/
-                  </outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars</groupId>
-                  <artifactId>material-design-lite</artifactId>
-                  <version>${material-design-lite.version}</version>
-                  <type>jar</type>
-                  <includes>**/*.js</includes>
-                  <outputDirectory>
-                    ${project.basedir}/web/dependencies/vendor/
-                  </outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars</groupId>
-                  <artifactId>material-design-lite</artifactId>
-                  <version>${material-design-lite.version}</version>
-                  <type>jar</type>
-                  <includes>**/*.css</includes>
-                  <outputDirectory>
-                    ${project.basedir}/web/dependencies/vendor/
-                  </outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars</groupId>
-                  <artifactId>material-design-icons</artifactId>
-                  <version>${material-design-icons.version}</version>
-                  <type>jar</type>
-                  <includes>**/*.css</includes>
-                  <outputDirectory>
-                    ${project.basedir}/web/dependencies/vendor/
-                  </outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars</groupId>
                   <artifactId>ng-file-upload</artifactId>
                   <version>${ng-file-upload.version}</version>
                   <type>jar</type>
@@ -383,28 +332,18 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.webjars</groupId>
+                  <artifactId>font-awesome</artifactId>
+                  <version>${font-awesome.version}</version>
+                  <type>jar</type>
+                  <includes>**/**fonts/**/*</includes>
+                  <outputDirectory>
+                    ${project.basedir}/web/dependencies/vendor/
+                  </outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.webjars</groupId>
                   <artifactId>jquery</artifactId>
                   <version>${jquery.version}</version>
-                  <type>jar</type>
-                  <includes>**/*.js</includes>
-                  <outputDirectory>
-                    ${project.basedir}/web/dependencies/vendor/
-                  </outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars</groupId>
-                  <artifactId>bootstrap-material-design</artifactId>
-                  <version>${bootstrap-material-design.version}</version>
-                  <type>jar</type>
-                  <includes>**/*.css</includes>
-                  <outputDirectory>
-                    ${project.basedir}/web/dependencies/vendor/
-                  </outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars</groupId>
-                  <artifactId>bootstrap-material-design</artifactId>
-                  <version>${bootstrap-material-design.version}</version>
                   <type>jar</type>
                   <includes>**/*.js</includes>
                   <outputDirectory>
@@ -446,7 +385,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
