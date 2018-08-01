@@ -35,13 +35,13 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
 
     for (var rel in response.data.links) {
       var relation = response.data.links[rel].rel;
-      if (relation == REL_LOGIN_OAUTH2) {
+      if (relation === REL_LOGIN_OAUTH2) {
         $scope.loginHref = response.data.links[rel].href + "?grant_type=password&client_id=nikita-client&username=admin&password=password";
         console.log("Setting login href to " + JSON.stringify($scope.loginHref));
       }
     }
   }, function errorCallback(response) {
-    if (response.status == -1) {
+    if (response.status === -1) {
       console.log("Looks like nikita is down at the moment : " + JSON.stringify(response));
       alert("Problemer med å koble meg opp mot nikita-kjernen. Ser ut som om nikita er nede. Prøv igjen senere eller" +
         " kontakt administrator.");
