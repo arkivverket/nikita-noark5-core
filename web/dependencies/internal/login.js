@@ -1,13 +1,12 @@
 var app = angular.module('nikita', []);
 
-
 /**
  * LoginController
  *
- * This file provides the following functionaliy:
+ * This file provides the following functionality:
  *
  *  1. When the page loads the nikita core is called to retrieve the login URL
- *    - In this case,we look for a OAUTH2 REL (http://nikita.arkivlab.no/noark5/v4/login/rfc6749)
+ *    - In this case, we look for a OAUTH2 REL (http://nikita.arkivlab.no/noark5/v4/login/rfc6749)
  *  2. When a successful login occurs, the user is pushed to the correct html page
  *   - This process will also issue a GET to the root of the application and
  *     retrieve and GET the content behind http://rel.kxml.no/noark5/v4/api/arkivstruktur/.
@@ -21,6 +20,12 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
   // This sets 'arkivar' to be the default choice on the webpage
   $scope.selectedLoginRole = "arkivar";
 
+  // Set values for dropdown in webpage
+  $scope.loginOptions = loginOptions;
+
+  // connect to nikita, do a GET on application root and make a note of the
+  // login REL/HREF. This also serves a a check that nikita is actually running
+  // before a user tries to login.
   $http({
     method: 'GET',
     url: baseUrl,
@@ -46,7 +51,12 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
     }
   });
 
-  $scope.loginOptions = loginOptions;
+  /**
+   * doLogin
+   *
+   * Perform the actual login and redirect the logged in user to the correct page
+   *
+   */
 
   $scope.doLogin = function () {
     console.log("Attempting to login using [" + $scope.loginHref + "]");
@@ -58,20 +68,18 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
         'Content-Type': 'application/json',
         'Authorization': 'Basic ' + btoa('nikita-client:secret')
       }
-    }).then(function (data, status, headers, config) {
+    }).then(function (data) {
       SetUserToken("Bearer " + data.data.access_token);
-      console.log("Logging in.token is " + JSON.stringify(data));
-      console.log("Logging in.token is " + JSON.stringify(data.data));
-      console.log("Logging in. redirecting to page for " + $scope.selectedLoginOption);
+      console.log("Logging in.token is " + JSON.stringify(data.data)  + ". Redirecting to page for " +
+        $scope.selectedLoginRole);
       if ($scope.selectedLoginRole === 'arkivar') {
-        changeLocation($scope, fondsListPageName, true);
+        changeLocation($scope, recordsManagerPage, true);
       }
       else if ($scope.selectedLoginRole === 'saksbehandler') {
-        //caseHandlerDashboardPageName
-        changeLocation($scope, "./saksbehandler-dashboard.html", true);
+        changeLocation($scope, caseHandlerPage, true);
       }
-    }, function (data, status, headers, config) {
-      alert(/*JSON.stringify(data) +*/ JSON.stringify(data));
+    }, function (response) {
+      alert(JSON.stringify(response));
     });
   };
 }]);
