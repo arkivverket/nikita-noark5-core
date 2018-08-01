@@ -38,10 +38,13 @@ jwt:
       path: auth
       refresh: refresh
 management:
-    context-path: /management
+  server:
+    servlet:
+      context-path: /management
 info:
     app.name: OsloMet Noark 5 Core (Demo version)
     build.version: ${project.version}
+# Make sure there is no slash at the end of the address
 hateoas:
     publicAddress: http://localhost:8092/noark5v4/
 
