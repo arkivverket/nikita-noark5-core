@@ -6,8 +6,8 @@
 // Set the base url for application
 var baseUrl = 'http://localhost:8092/noark5v4/';
 console.log("Setting nikita app_url: " + baseUrl);
-var fondsListPageName = 'arkivar.html';
-var caseFilePageName = 'saksmappe.html';
+var recordsManagerPage = 'arkivar.html';
+var caseHandlerPage = 'saksmappe.html';
 
 /*
  These should probably be implemented as a 2D-array where we can easily pull out the required value
