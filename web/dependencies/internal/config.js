@@ -3,56 +3,11 @@
  */
 
 
-nikitaOptions = {
-    //baseUrl: "http://n5test.kxml.no/api",
-    baseUrl: 'http://localhost:8092/noark5v4/',
-    guiBaseUrl: 'http://localhost:3000/',
-    appUrl: 'http://localhost:8092/noark5v4/hateoas-api',
-    // Probably retrieve this value on the fly when required, added as a option
-    // to speed things up!
-    fondsStructureRoot: 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/',
-    createFondsAddress: 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/ny-arkiv',
-    createFondsCreatorAddress: 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/ny-arkivskaper',
-    loginUrl: "http://127.0.1.1:8092/noark5v4/oauth/token",
-    //loginUrl: "https://nikita.hioa.no/noark5v4/oauth/token/",
-    protocol: 'http',
-    appName: 'noark5v4',
-    apiName: 'hateoas-api',
-    authPoint: 'auth',
-    displayFooterNote: true,
-    displayBreadcrumb: true,
-    enabled: true
-};
-
-
-
 // Set the base url for application
-var base_url = nikitaOptions.baseUrl;
-
-// Set the url for the GUI across all web pages
-var gui_base_url = nikitaOptions.guiBaseUrl;
-// Starting point for the application
-var app_url = nikitaOptions.appUrl;
-
-var fonds_structure_root = nikitaOptions.fondsStructureRoot;
-var create_fonds_address = nikitaOptions.createFondsAddress;
-var create_fonds__creator_address = nikitaOptions.createFondsCreatorAddress;
-// Set the url where POST requests with login credentials should be sent
-var login_url = nikitaOptions.loginUrl;
-// Whether or not to dsiplay link to nikita source
-var display_footer_note = nikitaOptions.displayFooterNote;
-var display_breadcrumb = nikitaOptions.displayBreadcrumb;
-
+var baseUrl = 'http://localhost:8092/noark5v4/';
+console.log("Setting nikita app_url: " + baseUrl);
 var fondsListPageName = 'arkivar.html';
-var fondsPageName = 'arkiv.html';
-var seriesPageName = 'arkivdel.html';
-var seriesListPageName = 'arkivdeliste.html';
 var caseFilePageName = 'saksmappe.html';
-var caseHandlerDashboardPageName = 'saksbehandler-dashboard.html';
-var registryEntryPageName = 'journalpost.html';
-var documentPageName = 'dokument.html';
-var correspondencePartPersonPageName = 'korrespondansepartperson.html';
-var correspondencePartUnitPageName = 'korrespondansepartenhet.html';
 
 /*
  These should probably be implemented as a 2D-array where we can easily pull out the required value
@@ -77,6 +32,7 @@ var REL_SERIES = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivdel/";
 var REL_NEW_SERIES = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-arkivdel/";
 var REL_NEW_FONDS_CREATOR = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-arkivskaper/";
 var REL_SELF = 'self';
+var REL_LOGIN_OAUTH2 = 'http://nikita.arkivlab.no/noark5/v4/login/rfc6749/';
 
 
 // These will be picked up from the database
@@ -161,10 +117,6 @@ var loginOptions = [
     {id: 'SA', value: "saksbehandler"},
     {id: 'AR', value: "arkivar"}];
 
-console.log("Setting nikita gui_base_url: " + gui_base_url);
-console.log("Setting nikita app_url: " + app_url);
-console.log("Setting nikita login_url: " + login_url);
-
 var SetUserToken = function (t) {
     localStorage.setItem("token", t);
     console.log("Adding token " + t + " to local storage");
@@ -172,6 +124,15 @@ var SetUserToken = function (t) {
 
 var GetUserToken = function (t) {
     return localStorage.getItem("token");
+};
+
+var setApplicationRoot = function (t) {
+    localStorage.setItem("applicationRoot", t);
+    console.log("Adding applicationRoot " + t + " to local storage");
+};
+
+var getApplicationRoot = function (t) {
+    return localStorage.getItem("applicationRoot");
 };
 
 var GetFileSystemID = function (t) {

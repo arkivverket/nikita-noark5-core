@@ -480,20 +480,43 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h4>Opprett nytt arkiv</h4>
+          <h4>Opprett ny arkivskaper</h4>
           <button type="button" class="close" data-dismiss="modal">×</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <div class="row">
-              <input id="nyTittelArkivsakper" class="form-control" type="text"
-                     ng-model="fonds.tittel"/>
-              <label for="nyTittelArkivsakper">tittel</label>
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="newFondsCreatorId">arkivskaperID</label>
+                <input id="newFondsCreatorId" class="form-control" type="text"
+                       ng-model="fondsCreator.arkivskaperID"
+                       data-toggle="tooltip" data-placement="top"
+                       title=""/>
+              </div>
+              <div class="col-1"></div>
             </div>
             <div class="row">
-              <label for="nyBeskrivelseArkivskaper">beskrivelse</label>
-              <textarea id="nyBeskrivelseArkivskaper" class="form-control" rows="5"
-                        ng-model="fonds.beskrivelse"></textarea>
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="newFondsCreatorName">arkivskaperNavn</label>
+                <input id="newFondsCreatorName" class="form-control" type="text"
+                       ng-model="fondsCreator.arkivskaperNavn"
+                       data-toggle="tooltip" data-placement="top"
+                       title=""/>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="newFondsCreatorDescription">Beskrivelse</label>
+                <input id="newFondsCreatorDescription" class="form-control" type="text"
+                       ng-model="fondsCreator.beskrivelse"
+                       data-toggle="tooltip" data-placement="top"
+                       title=""/>
+              </div>
+              <div class="col-1"></div>
             </div>
           </div>
         </div>
@@ -510,10 +533,10 @@
           <div class="row">
             <div class="col-md-12">
               <div class="float-right">
-                <button type="button" class="btn btn-primary"
-                        ng-click="createProject()">Opprett prosjekt
+                <button type="button" class="btn btn-success"
+                        ng-click="createFondsCreator()">Opprett arkivskaper
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Lukk</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Lukk</button>
               </div>
             </div>
           </div>

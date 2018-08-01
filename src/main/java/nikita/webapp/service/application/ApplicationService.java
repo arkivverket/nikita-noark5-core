@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,27 +18,39 @@ import static nikita.common.config.Constants.*;
 @Transactional
 public class ApplicationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
+    private static final Logger logger = LoggerFactory.getLogger(
+            ApplicationService.class);
 
     @Value("${hateoas.publicAddress}")
     private String publicUrlPath;
+
     /**
      * Creates a list of the supported supported login methods.
-     * These are: JWT
+     * These are: OAUTH2, JWT via OAUTH2, Basic and Form-based
      *
+     * Currently the code only returns OAUTH2. This should detect which
+     * profile is running and set links accordingly
      * @return
      */
-
-    public void addLoginInformation(List<ConformityLevel> conformityLevels) {
-        ConformityLevel loginJWT = new ConformityLevel();
-        loginJWT.setHref(publicUrlPath + SLASH + LOGIN_PATH);
-        loginJWT.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH + LOGIN_JWT + SLASH);
-        conformityLevels.add(loginJWT);
+    public void addLoginInformation(HttpServletRequest request,
+                                    List<ConformityLevel> conformityLevels) {
+        ConformityLevel loginOauth2 = new ConformityLevel();
+        String url = request.getHeader("X-Forwarded-For");
+        if (url == null) {
+            loginOauth2.setHref(publicUrlPath + LOGIN_PATH);
+        }
+        else {
+            loginOauth2.setHref(url + LOGIN_PATH);
+        }
+        loginOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
+                LOGIN_OAUTH + SLASH);
+        conformityLevels.add(loginOauth2);
     }
 
     /**
      * Creates a list of the officially supported resource links.
-     * These are: arkivstruktur, casehandling, metadata, administrasjon and loggingogsporing
+     * These are: arkivstruktur, casehandling, metadata, administrasjon and
+     * loggingogsporing
      *
      * @return
      */
@@ -78,7 +91,7 @@ public class ApplicationService {
         */
     }
 
-    public ApplicationDetails getApplicationDetails() {
+    public ApplicationDetails getApplicationDetails(HttpServletRequest request) {
         ApplicationDetails applicationDetails;
         ArrayList<ConformityLevel> conformityLevels = new ArrayList(10);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -90,7 +103,7 @@ public class ApplicationService {
         /* Show login relation also for logged in users to allow user
          * change also when logged in.
          */
-        addLoginInformation(conformityLevels);
+        addLoginInformation(request, conformityLevels);
 
         applicationDetails = new ApplicationDetails(conformityLevels);
         return applicationDetails;

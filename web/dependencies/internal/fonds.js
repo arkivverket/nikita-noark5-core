@@ -25,7 +25,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
     $scope.showFondsCreatorList = false;
     $scope.showSeriesList = false;
 
-    $scope.selectedFondsStatus= "Opprettet";
+    $scope.selectedFondsStatus = "Opprettet";
     $scope.selectedDocumentMedium = "Elektronisk arkiv";
 
     // Used to show or hide a text message
@@ -38,21 +38,49 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
     $scope.fondsStatusList = fondsStatusList;
     $scope.oppbevaringsStedDisabled = false;
 
-
     $scope.token = GetUserToken();
     $scope.show_create_fonds = true;
 
     $http({
       method: 'GET',
-      url: app_url + '/arkivstruktur/arkiv',
+      url: baseUrl,
       headers: {'Authorization': $scope.token},
     }).then(function successCallback(response) {
-      $scope.fondsList = response.data.results;
-
-      SetChosenFonds(null);
-      console.log("data is : " + JSON.stringify(response.data));
+      $scope.applicationRoot = response.data;
+      for (var rel in $scope.applicationRoot.links) {
+        var relation = $scope.applicationRoot.links[rel].rel;
+        if (relation == REL_FONDS_STRUCTURE) {
+          var fondsStructureHref = $scope.applicationRoot.links[rel].href;
+          console.log("fondsStructureHref is : " + JSON.stringify(fondsStructureHref));
+          $http({
+            method: 'GET',
+            url: fondsStructureHref,
+            headers: {'Authorization': $scope.token},
+          }).then(function successCallback(response) {
+            $scope.fondsStructure = response.data.links;
+            console.log("fondsStructure is : " + JSON.stringify($scope.fondsStructure));
+          }, function errorCallback(response) {
+            if (response.status == -1) {
+              console.log("Looks like nikita is down at the moment : " + JSON.stringify(response));
+              alert("Problemer med å koble meg opp mot nikita-kjernen. Ser ut som om nikita er nede. Prøv igjen senere eller" +
+                " kontakt administrator.");
+            } else {
+              console.log("Unknown error when connecting to nikita. Message is : " + JSON.stringify(response));
+              alert("Ukjent problem med å koble meg opp mot nikita-kjernen. Prøv igjen senere eller kontakt administrator.");
+            }
+          });
+        }
+      }
     }, function errorCallback(response) {
-      console.log("Something failed. All  know is : " + JSON.stringify(response));
+      if (response.status == -1) {
+        console.log("Looks like nikita is down at the moment : " + JSON.stringify(response));
+        alert("Problemer med å koble meg opp mot nikita-kjernen. Ser ut som om nikita er nede. Prøv igjen senere eller" +
+          " kontakt administrator.");
+      } else {
+        console.log("Unknown error when connecting to nikita. Message is : " + JSON.stringify(response));
+        alert("Ukjent problem med å koble meg opp mot nikita-kjernen. Prøv igjen senere eller kontakt administrator.");
+      }
+
     });
 
     /**
@@ -203,95 +231,94 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
       changeLocation($scope, seriesListPageName, false);
     };
 
+
     /**
-     * post_or_put_fonds
+     * updateFonds
      *
-     * Undertakes either a PUT or a POST request to the core with data fields from the webpage
+     * Undertakes a PUT request to the core with data fields from the webpage
      *
-     * The action is decided by whether or not $scope.createFonds == true. If it's true then we will
-     * create a fonds. If it's false, we are updating a fonds.
      *
      */
 
-    $scope.post_or_put_fonds = function () {
-      var urlFonds = '';
+    $scope.updateFonds = function () {
 
-      console.log("User token is set to " + GetUserToken());
-      // check that it's not null, create a popup here if it is
-      var method = '';
-      if ($scope.createFonds) {
-        method = "POST";
-        urlFonds = create_fonds_address;
-        $http({
-          url: urlFonds,
-          method: method,
-          headers: {
-            'Content-Type': 'application/vnd.noark5-v4+json',
-            'Authorization': GetUserToken(),
-          },
-          data: {
-            tittel: $.trim(document.getElementById("tittel").value),
-            beskrivelse: $.trim(document.getElementById("beskrivelse").value),
-            dokumentmedium: $.trim($scope.selectedDocumentMedium),
-            arkivstatus: $.trim($scope.selectedFondsStatus)
-          },
-        }).then(function successCallback(response) {
-          console.log(method + " put/post on fonds data returned= " + JSON.stringify(response.data));
-          // Update the fonds object so fields in GUI are changed
-          $scope.fonds = response.data;
-          // Pick up and make a note of the ETAG so we can update the object
-          $scope.fondsETag = response.headers('eTag');
-          // TODO : This needs to be tided up. Find out why etag is missing ""!!
-          $scope.fondsETag = '"' + $scope.fondsETag + '"';
-
-          // Now we can edit the fonds object, add fondsCreator
-          $scope.createFonds = false;
-          SetChosenFonds($scope.fonds);
-        });
-      } else {
-        method = "PUT";
-        var currentFonds = GetChosenFonds();
-        if (currentFonds != null) {
-          // Check that currentFonds.links exists??
-          // Find the self link
-          for (var rel in currentFonds.links) {
-            var relation = currentFonds.links[rel].rel;
-            if (relation === REL_SELF) {
-              urlFonds = currentFonds.links[rel].href;
-              console.log(method + " Attempting to update arkiv with following address = " + urlFonds);
-              console.log(method + " Current ETAG is = [" + $scope.fondsETag + "]");
-              $http({
-                url: urlFonds,
-                method: method,
-                headers: {
-                  'Content-Type': 'application/vnd.noark5-v4+json',
-                  'Authorization': GetUserToken(),
-                  'ETAG': $scope.fondsETag
-                },
-                data: {
-                  tittel: $.trim(document.getElementById("tittel").value),
-                  beskrivelse: $.trim(document.getElementById("beskrivelse").value),
-                  dokumentmedium: $.trim($scope.selectedDocumentMedium),
-                  arkivstatus: $.trim($scope.selectedFondsStatus)
-                },
-              }).then(function successCallback(response) {
-                console.log(method + " put/post on fonds data returned= " + JSON.stringify(response.data));
-                // Pick up and make a note of the ETAG so we can update the object
-                $scope.fondsETag = response.headers('eTag');
-                $scope.fonds = response.data;
-                SetChosenFonds($scope.fonds);
-              });
-            }
+      if ($scope.fonds != null) {
+        // Check that currentFonds.links exists??
+        // Find the self link
+        for (var rel in $scope.fonds.links) {
+          var relation = $scope.fonds.links[rel].rel;
+          if (relation === REL_SELF) {
+            var urlFonds = $scope.fonds.links[rel].href;
+            console.log(method + " Attempting to update arkiv with following address = " + urlFonds);
+            console.log(method + " Current ETAG is = [" + $scope.fondsETag + "]");
+            $http({
+              url: urlFonds,
+              method: "PUT",
+              headers: {
+                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Authorization': GetUserToken(),
+                'ETAG': $scope.fondsETag
+              },
+              data: {
+                tittel: $.trim(document.getElementById("tittel").value),
+                beskrivelse: $.trim(document.getElementById("beskrivelse").value),
+                dokumentmedium: $.trim($scope.selectedDocumentMedium),
+                arkivstatus: $.trim($scope.selectedFondsStatus)
+              },
+            }).then(function successCallback(response) {
+              console.log(method + " put/post on fonds data returned= " + JSON.stringify(response.data));
+              // Pick up and make a note of the ETAG so we can update the object
+              $scope.fondsETag = response.headers('eTag');
+              $scope.fonds = response.data;
+              SetChosenFonds($scope.fonds);
+            });
           }
         }
-        else {
-          alert("Something went wrong. Attempt to update a fonds object that is not registered as existing yet!");
-        }
       }
-
+      else {
+        alert("Noe gikk galt her! Kan ikke oppdatere en arkiv objekt som ikke finnes!");
+      }
     };
+
     /**
-     * post_or_put_fonds
+     * createFonds
+     *
+     * Undertakes POST request to the core with data fields from the webpage
+     *
+     */
+    $scope.createFonds = function () {
+
+      var urlFonds = create_fonds_address;
+      $http({
+        url: urlFonds,
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/vnd.noark5-v4+json',
+          'Authorization': GetUserToken(),
+        },
+        data: {
+          tittel: $.trim(document.getElementById("tittel").value),
+          beskrivelse: $.trim(document.getElementById("beskrivelse").value),
+          dokumentmedium: $.trim($scope.selectedDocumentMedium),
+          arkivstatus: $.trim($scope.selectedFondsStatus)
+        },
+      }).then(function successCallback(response) {
+        console.log(method + " put/post on fonds data returned= " + JSON.stringify(response.data));
+        // Update the fonds object so fields in GUI are changed
+        $scope.fonds = response.data;
+        // Pick up and make a note of the ETAG so we can update the object
+        $scope.fondsETag = response.headers('eTag');
+        // TODO : This needs to be tided up. Find out why etag is missing ""!!
+        $scope.fondsETag = '"' + $scope.fondsETag + '"';
+
+        // Now we can edit the fonds object, add fondsCreator
+        $scope.createFonds = false;
+        SetChosenFonds($scope.fonds);
+      });
+    };
+
+    /**
+     * createFondsCreator
      *
      * Undertakes either a PUT or a POST request to the core with data fields from the webpage
      *
@@ -410,5 +437,6 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
       $scope.showSeriesList = false;
       $scope.showSeries = false;
     }
-  }]);
+  }
+]);
 

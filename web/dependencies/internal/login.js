@@ -1,88 +1,58 @@
 var app = angular.module('nikita', []);
 
 
-var changeLocation = function ($scope, url, forceReload) {
-  $scope = $scope || angular.element(document).scope();
-  console.log("URL" + url);
-  if (forceReload || $scope.$$phase) {
-    window.location = url;
-  }
-  else {
-    //only use this if you want to replace the history stack
-    //$location.path(url).replace();
-
-    //this this if you want to change the URL and add it to the history stack
-    $location.path(url);
-    $scope.$apply();
-  }
-};
-
-var updateIndexView = function (url, $scope, $http) {
-  $scope.current = url;
-  if (url.lastIndexOf("/") == (url.length - 1)) {
-    parent = "..";
-  } else {
-    parent = ".";
-  }
-  $scope.parent = resolveUrl(url, parent);
-  token = GetUserToken();
-  $http({
-    method: 'GET',
-    url: url,
-    headers: {'Authorization': token},
-  }).then(function successCallback(response) {
-    $scope.allow = response.headers('Allow');
-    $scope.links = response.data.links;
-    $scope.data = response.data;
-    $scope.results = response.data.results;
-    delete $scope.data.links;
-    delete $scope.data.results;
-  }, function errorCallback(response) {
-    // TODO: what should we do when it fails?
-    $scope.allow = '[unknown - GET failed]';
-    $scope.links = '';
-    $scope.data = '';
-    $scope.results = '';
-  });
-};
-
-var controller = app.controller('MainController', ['$scope', '$http', function ($scope, $http) {
-  token = GetUserToken();
-  console.log("token=" + $scope.token);
-  $scope.app_version = "xyz";
-  $http({
-    method: 'GET',
-    url: '/version',
-    headers: {'Authorization': token},
-  }).then(function successCallback(response) {
-    $scope.app_version = response.data;
-  }, function errorCallback(response) {
-    // TODO: what should we do when it fails?
-  });
-
-  updateIndexView(base_url, $scope, $http);
-
-  $scope.hrefSelected = function (href) {
-    console.log('href link clicked ' + href);
-    href = href.split("{")[0];
-    updateIndexView(href, $scope, $http);
-  }
-}]);
+/**
+ * LoginController
+ *
+ * This file provides the following functionaliy:
+ *
+ *  1. When the page loads the nikita core is called to retrieve the login URL
+ *    - In this case,we look for a OAUTH2 REL (http://nikita.arkivlab.no/noark5/v4/login/rfc6749)
+ *  2. When a successful login occurs, the user is pushed to the correct html page
+ *   - This process will also issue a GET to the root of the application and
+ *     retrieve and GET the content behind http://rel.kxml.no/noark5/v4/api/arkivstruktur/.
+ *     This object is then stored in localstorage so the application knows how to retrieve
+ *     fonds objects and create them.
+ *
+ */
 
 var login = app.controller('LoginController', ['$scope', '$http', function ($scope, $http) {
 
+  // This sets 'arkivar' to be the default choice on the webpage
   $scope.selectedLoginRole = "arkivar";
 
-  console.log("LoginController");
-  console.log("LoginOptions " + JSON.stringify(loginOptions));
+  $http({
+    method: 'GET',
+    url: baseUrl,
+  }).then(function successCallback(response) {
+
+    console.log("Application Root data is: " + JSON.stringify(response.data));
+
+    for (var rel in response.data.links) {
+      var relation = response.data.links[rel].rel;
+      if (relation == REL_LOGIN_OAUTH2) {
+        $scope.loginHref = response.data.links[rel].href + "?grant_type=password&client_id=nikita-client&username=admin&password=password";
+        console.log("Setting login href to " + JSON.stringify($scope.loginHref));
+      }
+    }
+  }, function errorCallback(response) {
+    if (response.status == -1) {
+      console.log("Looks like nikita is down at the moment : " + JSON.stringify(response));
+      alert("Problemer med å koble meg opp mot nikita-kjernen. Ser ut som om nikita er nede. Prøv igjen senere eller" +
+        " kontakt administrator.");
+    } else {
+      console.log("Unknown error when connecting to nikita. Message is : " + JSON.stringify(response));
+      alert("Ukjent problem med å koble meg opp mot nikita-kjernen. Prøv igjen senere eller kontakt administrator.");
+    }
+  });
+
   $scope.loginOptions = loginOptions;
 
   $scope.doLogin = function () {
-    login_url_to_use = login_url + '?grant_type=password&client_id=nikita-client&username=admin&password=password';
-    console.log("Attempting to login using [" + login_url_to_use + "]");
+    console.log("Attempting to login using [" + $scope.loginHref + "]");
 
     $http({
-      url: login_url_to_use,
+      url: $scope.loginHref,
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -104,112 +74,4 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
       alert(/*JSON.stringify(data) +*/ JSON.stringify(data));
     });
   };
-}]);
-
-var postliste = app.controller('PostlisteController', ['$scope', '$http', function ($scope, $http) {
-  // FIXME find href for rel
-  // 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkiv/'
-  // dynamically
-  url = base_url + "/hateoas-api/arkivstruktur/arkiv";
-  token = GetUserToken();
-  $http({
-    method: 'GET',
-    url: url,
-    headers: {'Authorization': token},
-  }).then(function successCallback(response) {
-    $scope.status = 'success';
-    $scope.fonds = response.data.results;
-  }, function errorCallback(response) {
-    $scope.status = 'failure';
-    $scope.fonds = '';
-  });
-  $scope.series = '';
-  $scope.casefiles = '';
-
-  $scope.fondsUpdate = function (fonds) {
-    console.log('fonds selected ' + fonds.tittel);
-    $scope.casefiles = '';
-    for (rel in fonds.links) {
-      href = fonds.links[rel].href;
-      relation = fonds.links[rel].rel;
-      if (relation == 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivdel/') {
-        console.log("fetching " + href);
-        $http({
-          method: 'GET',
-          url: href,
-          headers: {'Authorization': GetUserToken()},
-        }).then(function successCallback(response) {
-          $scope.series = response.data.results;
-        }, function errorCallback(response) {
-          $scope.series = '';
-        });
-      }
-    }
-  };
-  $scope.seriesUpdate = function (series) {
-    console.log('series selected ' + series.tittel);
-    if (!series) {
-      return
-    }
-    for (rel in series.links) {
-      href = series.links[rel].href;
-      relation = series.links[rel].rel;
-      if (relation == 'http://rel.kxml.no/noark5/v4/api/sakarkiv/saksmappe/') {
-        console.log("fetching " + href);
-        $http({
-          method: 'GET',
-          url: href,
-          headers: {'Authorization': GetUserToken()},
-        }).then(function successCallback(response) {
-          $scope.casefiles = response.data.results;
-        }, function errorCallback(response) {
-          $scope.casefiles = '';
-        });
-      }
-    }
-  };
-  $scope.fileSelected = function (file) {
-    console.log('file selected ' + file.tittel);
-    if (file.records) {
-      file.records = '';
-      return;
-    }
-    for (rel in file.links) {
-      relation = file.links[rel].rel;
-      if (relation == 'http://rel.kxml.no/noark5/v4/api/sakarkiv/journalpost/') {
-        href = file.links[rel].href;
-        console.log("fetching " + href);
-        $http({
-          method: 'GET',
-          url: href,
-          headers: {'Authorization': GetUserToken()},
-        }).then(function successCallback(response) {
-          response.data.results.forEach(function (record) {
-            console.log("record " + record);
-            for (rel in record.links) {
-              relation = record.links[rel].rel;
-              console.log("found " + relation);
-              if (relation == 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/dokumentbeskrivelse/') {
-                href = record.links[rel].href;
-                console.log("fetching " + href);
-                $http({
-                  method: 'GET',
-                  url: href,
-                  headers: {'Authorization': GetUserToken()},
-                }).then(function successCallback(docdesc) {
-                  record.dokumentbeskrivelse =
-                    docdesc.data.results[0];
-                }, function errorCallback(docdesc) {
-                  record.dokumentbeskrivelse = '';
-                });
-              }
-            }
-          });
-          file.records = response.data.results;
-        }, function errorCallback(response) {
-          file.records = '';
-        });
-      }
-    }
-  }
 }]);
