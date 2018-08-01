@@ -46,7 +46,7 @@ info:
     build.version: ${project.version}
 # Make sure there is no slash at the end of the address
 hateoas:
-    publicAddress: http://localhost:8092/noark5v4/
+    publicAddress: http://localhost:8092/noark5v4
 
 # ===================================================================
 # nikita-noark5-core specific properties
