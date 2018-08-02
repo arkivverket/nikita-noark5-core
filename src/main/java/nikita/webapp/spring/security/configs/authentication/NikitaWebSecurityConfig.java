@@ -40,20 +40,6 @@ public class NikitaWebSecurityConfig
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public FilterRegistrationBean corsFilterRegistrationBean() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.setAllowedMethods(Arrays.asList("OPTIONS", "POST", "GET", "PUT", "PATCH", "DELETE"));
-        config.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization"));
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return bean;
-    }
-
     /**
      * Setup the security for the application.
      * <p>

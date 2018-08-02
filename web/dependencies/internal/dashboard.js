@@ -129,7 +129,7 @@ app.controller('CaseFileDashboardController', ['$scope', '$http', function ($sco
                 SetLinkToChosenCaseFile(casefile.links[rel].href);
             }
         }
-        changeLocation($scope, caseFilePageName, false);
+        changeLocation($scope, caseHandlerPage, false);
     };
 
     $scope.selectedSeriesChanged = function (selectedSeries) {
@@ -151,7 +151,7 @@ app.controller('CaseFileDashboardController', ['$scope', '$http', function ($sco
      */
     $scope.createCaseFileSelected = function () {
         console.log("createCaseFile selected");
-        changeLocation($scope, caseFilePageName, false);
+        changeLocation($scope, caseHandlerPage, false);
     };
 
 }]);

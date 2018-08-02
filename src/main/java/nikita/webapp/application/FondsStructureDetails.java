@@ -12,6 +12,10 @@ public class FondsStructureDetails extends APIDetails {
     public FondsStructureDetails(String publicUrlPath) {
         super();
 
+        if(publicUrlPath.endsWith("/") == true) {
+            publicUrlPath = publicUrlPath.substring(0, publicUrlPath.length()
+                    -1);
+        }
         // Add Fonds
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS,

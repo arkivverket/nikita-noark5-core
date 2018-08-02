@@ -201,7 +201,7 @@ public final class Constants {
     public static final String NOARK_LOGGING_PATH = "loggingogpsoring";
 
     public static final String LOGIN_REL_PATH = "login";
-    public static final String LOGIN_PATH = "/oauth/token";
+    public static final String LOGIN_PATH = "oauth/token";
     // Logging using JWT / RFC7519
     public static final String LOGIN_JWT = "rfc7519";
     public static final String LOGIN_OAUTH = "rfc6749";

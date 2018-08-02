@@ -1,5 +1,180 @@
 # Nikita developer notes
 
+
+## 2018-08-03
+  
+  - GUI improvements
+  - Support for x-forward-for
+  - Login not set correctly in root of application
+  - Something strange about CORS
+ 
+### GUI improvements
+
+### Support for x-forward-for
+We will start to support x-forward-for when generating hateaos links. This
+will make the core less reliant on hard coded addresses in core and should
+make it easier when firing up the core behind a proxy. Updating this will 
+take some time, but we have tested it on the root of the application.
+
+If x-forward-for is not set on an incoming request, nikita will use the value 
+assigned in the application.yml file hateoas.publicAddress
+
+### Login from root of application
+ A GET on the root of the application:
+ 
+    curl  -v   --header Accept:application/vnd.noark5-v4+json  -X GET http://localhost:8092/noark5v4/  
+    
+will return the following js:
+    
+    {
+      "links": [
+       {
+         "href": "http://localhost:8092/noark5v4/oauth",
+         "rel": "http://nikita.arkivlab.no/noark5/v4/login/rfc6749/"
+       }
+      ]
+    }
+
+You can then login in as follows:
+
+    curl -v -H 'Content-Type: application/json' -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=' -X POST "http://localhost:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password"
+
+
+### Something strange about CORS
+  
+We have cleaned up and removed a lot of code over the last while so the
+application should be relying as much as possible on the basic spring
+boot setup. However I see that there are two CorsFilter in the application
+and this is not a good thing. Our orginal CorsFilter:
+  
+    nikita.webapp.spring.SimpleCORSFilter
+ 
+ and 
+ 
+    nikita.webapp.spring.security.configs.authentication.NikitaWebSecurityConfig there 
+    
+contains a bean _corsFilterRegistrationBean_
+
+       
+For some reason the application did not work without both of them. SimpleCorsFilter
+does not run unless corsFilterRegistrationBean also exists. This issue came 
+about as a result of the implementation of OAuth2 and spring security.
+
+Debugging the filter chain showed that the issue was related to priority ordering. 
+I think the securityfilterchain was taking the request and giving a 401. So I 
+had to get the SimpleCorsFilter above the securityfilterchain. With this in place
+the code started working.
+
+So I removed the following and now just have a single SimpleCorsFilter. Leaving this
+here for documentation in case any issues pop up again.
+
+        @Bean
+        public FilterRegistrationBean corsFilterRegistrationBean() {
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowCredentials(true);
+            config.addAllowedOrigin("*");
+            config.setAllowedMethods(Arrays.asList("OPTIONS", "POST", "GET", "PUT",
+                    "PATCH", "DELETE"));
+            config.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin",
+                    "Content-Type", "Accept", "Authorization", "ETAG"));
+            source.registerCorsConfiguration("/**", config);
+            FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+            bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+            return bean;
+        }
+
+The OPTIONS check is now returning before a security check. Is this OK? I 
+believe so. But we do need to write a document discussing how this is
+implemented.  
+  
+  
+## 2018-07-29
+
+  - Conversion process
+ 
+### Conversion process
+
+We've given this a little more thought. There probably needs to be an own 
+application that can handle this. We should take a look at archivematica 
+to see what they have done. A quick check mentioned a service that they
+wanted to look closer at in the future so I think we will have a go at
+this ourselves. I think it could be a RabbitMQ service where we pipeline
+documents to be converted. Once a document reaches the head of the queue
+it is sent to a conversion service. This could be a pixedit server for
+OOXML-based documents and unoconv for ODF-based documents. Further
+audio and video could also be included here. This tool could be further
+developed to check validity of file formats as well.
+
+
+## 2018-07-13
+
+ - Spring security
+ - Testing and documentation
+ - Conversion process
+ - Support for PATCH
+
+### Spring security
+
+We upgraded to the latest spring-security version and introduced support for
+the following Authentication mechanisms:    
+  
+  - Basic authentication 
+  - Form-based authentication
+  - OAuth2
+  - JWT via OAuth2
+
+This is configured via profiles and the default set in the properties yml
+files is to start with OAuth2 authentication. We have also been working on 
+SAML integration but so far have not had any success wth that. Feide is meant
+to be working on OAuth2 support so perhaps this is an issue that may go away.
+We need to support SAML so we can allow students log in via the Feide SSO
+system.  
+
+### Testing and documentation
+
+We have also changed the testing framework that it can produce documentation. 
+This has been achieved by incorporating [spring-rest-docs](https://docs.spring.io/spring-restdocs/docs/current/reference/html5/) 
+in the project and the testing framework we develop will make use of this. As 
+documentation isbased on tests, the documentation should not get stale. Any 
+change that does not meet the test/documentation requirements should result in
+a build failure. 
+
+### Conversion process
+We managed to get a conversion process in place for use in the
+the core. This means that there is now a dependency on libreoffice
+in the core. It only is required if you try to convert a file from a production
+format to an archive format. It uses the [unoconv](https://github.com/dagwieers/unoconv) 
+tool to undertake a conversion.
+
+    unoconv -f pdf -o outputFile.pdf inputFile.odt
+
+We are currently using the following approach in Java
+
+    Process p = Runtime.getRuntime().exec(unoconcCommand);
+    p.waitFor();
+
+We tried using the UNO API with LibreOffice but ran into a number of problems.
+Eventually based on the following [blog](https://technology.amis.nl/2006/07/19/getting-started-with-the-openofficeorg-api-part-ii-starting-openofficeorg-with-jars-not-in-the-ooo-install-dir/)
+we saw that you had to have some LibreOffice jars from the LibreOffice 
+installation on the classpath and we were able to connect to LibreOffice 
+that way. This would have made an install of nikita very messy, having to 
+update the pom file on each download. Therefore we dropped that approach
+for the moment. We foresee that we require a queue system to handle the
+conversion of files where perhaps a user requests the conversion and a 
+conversion tool converts the file as soon as possible. This will have to 
+be non-blocking in order to scale. So for the moment we have a "blocking"
+approach using unoconv, but it's just proof-of-concept. 
+
+### Support for JSON PATCH
+
+We have implemented partial support for the PATCH approach to updates as 
+defined in [RFC 5789](https://tools.ietf.org/html/rfc5789) and JSON PATCH
+as defined in [RFC 6902](https://tools.ietf.org/html/rfc6902). We have
+only implemented the "replace" command in order to test the approach out.
+
+
+ 
 ## 2018-03-20
 
  - Project structure

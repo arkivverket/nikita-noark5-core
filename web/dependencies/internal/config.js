@@ -26,6 +26,7 @@ var REL_NEW_CASE_FILE = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/ny-saksmappe/
 var REL_DOCUMENT_FILE = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/fil/';
 var REL_SERIES = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivdel/";
 var REL_FONDS_STRUCTURE = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/';
+var REL_FONDS_STRUCTURE_FONDS = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkiv/';
 var REL_FONDS_STRUCTURE_NEW_FONDS = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-arkiv/';
 var REL_FONDS_CREATOR = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivskaper/";
 var REL_SERIES = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivdel/";
@@ -34,6 +35,12 @@ var REL_NEW_FONDS_CREATOR = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-a
 var REL_SELF = 'self';
 var REL_LOGIN_OAUTH2 = 'http://nikita.arkivlab.no/noark5/v4/login/rfc6749/';
 
+
+
+var MSG_NIKITA_DOWN = "Problemer med å koble meg opp mot nikita-kjernen. Ser ut som om nikita er nede. Prøv igjen senere eller kontakt administrator.";
+var MSG_NIKITA_DOWN_LOG = "Looks like nikita is down at the moment : ";
+var MSG_NIKITA_UNKNOWN_ERROR = "Ukjent problem med å koble meg opp mot nikita-kjernen. Prøv igjen senere eller kontakt administrator.";
+var MSG_NIKITA_UNKNOWN_ERROR_LOG = "Unknown error when connecting to nikita. Message is : " ;
 
 // These will be picked up from the database
 var mimeTypeList = [
@@ -246,18 +253,6 @@ var SetLinkToCurrentSeries = function (t) {
     console.log("Setting linkToChosenSeries=" + t);
     return localStorage.setItem("linkToChosenSeries", t);
 };
-
-
-var SetChosenFonds = function (fonds) {
-    localStorage.setItem("chosenFonds", JSON.stringify(fonds));
-    console.log("Setting chosenFonds=" + JSON.stringify(fonds));
-};
-
-var GetChosenFonds = function () {
-    console.log("Getting chosenFonds =" + localStorage.getItem("chosenFonds"));
-    return JSON.parse(localStorage.getItem("chosenFonds"));
-};
-
 
 var SetLinkToChosenFile = function (t) {
     localStorage.setItem("linkToChosenFile", t);

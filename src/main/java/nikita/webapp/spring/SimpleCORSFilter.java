@@ -4,6 +4,8 @@ import nikita.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
@@ -16,9 +18,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 @Component
+@Order(Integer.MIN_VALUE)
 public class SimpleCORSFilter implements Filter {
-
-
 
     private final Logger log = LoggerFactory.getLogger(SimpleCORSFilter.class);
 
@@ -59,7 +60,11 @@ public class SimpleCORSFilter implements Filter {
             response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, Authorization, Origin, ETAG, grant_type");
             response.setHeader("Access-Control-Expose-Headers", "Allow, ETAG");
         }
-        chain.doFilter(req, res);
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            chain.doFilter(req, res);
+        }
     }
 
     @Override

@@ -44,9 +44,9 @@ management:
 info:
     app.name: OsloMet Noark 5 Core (Demo version)
     build.version: ${project.version}
-# Make sure there is no slash at the end of the address
+# Make sure there is a slash at the end of the address
 hateoas:
-    publicAddress: http://localhost:8092/noark5v4
+    publicAddress: http://localhost:8092/noark5v4/
 
 # ===================================================================
 # nikita-noark5-core specific properties

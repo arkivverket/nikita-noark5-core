@@ -58,19 +58,19 @@ public class ApplicationService {
     public void addConformityLevels(List<ConformityLevel> conformityLevels) {
         // ConformityLevel : arkivstruktur
         ConformityLevel conformityLevelFondsStructure = new ConformityLevel();
-        conformityLevelFondsStructure.setHref(publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH);
+        conformityLevelFondsStructure.setHref(publicUrlPath + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH);
         conformityLevelFondsStructure.setRel(NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH);
         conformityLevels.add(conformityLevelFondsStructure);
 
         // ConformityLevel : casehandling
         ConformityLevel conformityLevelCaseHandling = new ConformityLevel();
-        conformityLevelCaseHandling.setHref(publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH);
+        conformityLevelCaseHandling.setHref(publicUrlPath + HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH);
         conformityLevelCaseHandling.setRel(NOARK_CONFORMANCE_REL + NOARK_CASE_HANDLING_PATH + SLASH);
         conformityLevels.add(conformityLevelCaseHandling);
 
         // ConformityLevel : metadata
         ConformityLevel conformityLevelMetadata = new ConformityLevel();
-        conformityLevelMetadata.setHref(publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH);
+        conformityLevelMetadata.setHref(publicUrlPath + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH);
         conformityLevelMetadata.setRel(NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH);
         conformityLevels.add(conformityLevelMetadata);
 

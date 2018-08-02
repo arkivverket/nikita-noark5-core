@@ -19,7 +19,7 @@
     rel="stylesheet" type="text/css">
 
   <script src="dependencies/internal/common_functionality.js"></script>
-  <script src="dependencies/internal/fonds.js"></script>
+  <script src="dependencies/internal/arkivar.js"></script>
 
   <!-- Manually setting the size of the modal for creating a new user -->
   <style media="screen" type="text/css">
@@ -51,15 +51,15 @@
 <div>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">Start</a></li>
-      <li class="breadcrumb-item" ng-show="showFonds"><a href="#">Arkiv</a></li>
-      <li class="breadcrumb-item" ng-show="showFondsCreator"><a href="#">Arkivskaper</a></li>
-      <li class="breadcrumb-item" ng-show="showSeries"><a href="#">Arkivdel</a></li>
+      <li class="breadcrumb-item" ng-click="doShowFondsListCard()"><a href="#">Start</a></li>
+      <li class="breadcrumb-item" ng-show="showFondsCard"><a href="#">Arkiv</a></li>
+      <li class="breadcrumb-item" ng-show="showFondsCreatorCard"><a href="#">Arkivskaper</a></li>
+      <li class="breadcrumb-item" ng-show="showSeriesCard"><a href="#">Arkivdel</a></li>
     </ol>
   </nav>
 
   <!-- Card for the Fonds list view -->
-  <div class="card border-light mb-3" ng-show="showFondsList">
+  <div class="card border-light mb-3" ng-show="showFondsListCard">
     <div class="card-header">
       <div class="container-fluid">
         <div class="row">
@@ -109,28 +109,26 @@
   </div>
 
   <!-- Card for an individual Fonds -->
-  <div class="card border-light mb-3" ng-show="showFonds">
+  <div class="card border-light mb-3" ng-show="showFondsCard">
     <div class="card-header">
       <div class="col-lg-12">
         <div class="btn-toolbar float-right">
           <button type="button" class="btn btn-primary "
-                  data-toggle="modal" data-target="#newFondsModal">
+                  data-toggle="modal" data-target="#newSubFondsModal">
             Opprett underarkiv
           </button>
           <button type="button" class="btn btn-primary"
-                  data-toggle="modal" data-target="#newFondsModal">
+                  data-toggle="modal" data-target="#newSeriesModal">
             Opprett arkivdel
           </button>
-          <button type="button" class="btn btn-primary"
-                  data-toggle="modal" data-target="#newFondsModal">
+          <button type="button" class="btn btn-primary">
             Se arkivdeler
           </button>
           <button type="button" class="btn btn-primary"
-                  data-toggle="modal" data-target="#newFondsModal">
+                  data-toggle="modal" data-target="#newFondsCreatorModal">
             Opprett arkivskaper
           </button>
-          <button type="button" class="btn btn-primary"
-                  data-toggle="modal" data-target="#newFondsModal">
+          <button type="button" class="btn btn-primary">
             Se arkivskapere
           </button>
         </div>
@@ -290,13 +288,20 @@
                      disabled/>
             </div>
           </div>
+          <div class="row">
+            <div class="col-lg-12">
+            <button type="button" class="btn btn-primary float-right" ng-click="updateFonds()">
+              Oppdater arkiv
+            </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Card for the FondsCreator list view -->
-  <div class="card border-light mb-3" ng-show="showFondsCreatorList">
+  <div class="card border-light mb-3" ng-show="showFondsCreatorListCard">
     <div class="card-header">
       <div class="container-fluid">
         <div class="row">
@@ -346,7 +351,7 @@
   </div>
 
   <!-- Card for the Seriess list view -->
-  <div class="card border-light mb-3" ng-show="showSeriesList">
+  <div class="card border-light mb-3" ng-show="showSeriesListCard">
     <div class="card-header">
       <div class="container-fluid">
         <div class="row">
@@ -398,7 +403,7 @@
 
   <!--modal to create new fonds -->
   <div id="newFondsModal" class="modal fade" tabindex="-1"
-       role="dialog" aria-hidden="true">
+       role="dialog" aria-hidden="true" new-fonds-modal-dir=>
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -412,8 +417,8 @@
               <div class="col-10">
                 <label class="control-label" for="nyTittelArkiv">Tittel</label>
                 <input id="nyTittelArkiv" class="form-control" type="text"
-                       ng-model="fonds.tittel"
                        data-toggle="tooltip" data-placement="top"
+                       ng-model="newTitleForFonds"
                        title="Navnet på arkivet feks 'Eksempel kommune hovedarkiv'."/>
               </div>
               <div class="col-1"></div>
@@ -423,8 +428,8 @@
               <div class="col-10">
                 <label class="control-label" for="nyBeskrivelseArkiv">Beskrivelse</label>
                 <textarea id="nyBeskrivelseArkiv" class="form-control" rows="5"
-                          ng-model="fonds.beskrivelse"
                           data-toggle="tooltip" data-placement="top"
+                          ng-model="newDescriptionForFonds"
                           title="En beskrivelse av arkivet. Merk at dette er ikke en beskrivelse av organisasjonen.">
               </textarea>
               </div>
@@ -467,7 +472,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-lg btn-primary float-left" data-dismiss="modal">Lukk</button>
+          <button class="btn btn-lg btn-primary float-left" data-dismiss="modal" ng-click="doDismissNewFondsModal()">Lukk</button>
           <button class="btn btn-lg btn-success float-right" ng-click="createFonds()">Opprett arkiv</button>
         </div>
       </div>
