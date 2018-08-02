@@ -290,9 +290,9 @@
           </div>
           <div class="row">
             <div class="col-lg-12">
-            <button type="button" class="btn btn-primary float-right" ng-click="updateFonds()">
-              Oppdater arkiv
-            </button>
+              <button type="button" class="btn btn-primary float-right" ng-click="updateFonds()">
+                Oppdater arkiv
+              </button>
             </div>
           </div>
         </div>
@@ -472,7 +472,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-lg btn-primary float-left" data-dismiss="modal" ng-click="doDismissNewFondsModal()">Lukk</button>
+          <button class="btn btn-lg btn-primary float-left" data-dismiss="modal" ng-click="doDismissNewFondsModal()">
+            Lukk
+          </button>
           <button class="btn btn-lg btn-success float-right" ng-click="createFonds()">Opprett arkiv</button>
         </div>
       </div>
@@ -525,29 +527,28 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <div class="container col-md-12">
-          <div class="row" ng-show="missingValues">
-            <div class="justify-content-center">
-              <div class="alert alert-danger">
-                Både organisasjonsnavn og prosjektnavn må ha en verdi!
+        <div class="modal-footer">
+          <div class="container col-md-12">
+            <div class="row" ng-show="missingValues">
+              <div class="justify-content-center">
+                <div class="alert alert-danger">
+                  Både organisasjonsnavn og prosjektnavn må ha en verdi!
+                </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="float-right">
-                <button type="button" class="btn btn-success"
-                        ng-click="createFondsCreator()">Opprett arkivskaper
-                </button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Lukk</button>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="float-right">
+                  <button type="button" class="btn btn-success"
+                          ng-click="createFondsCreator()">Opprett arkivskaper
+                  </button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Lukk</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
@@ -602,7 +603,6 @@
   </div>
 </div>
 <!-- End modal to create a new Series -->
-
 
 </body>
 </html>
