@@ -1,126 +1,99 @@
-<!DOCTYPE HTML>
-<!--
-
-  This file has been adapted from :
-
-   https://raw.githubusercontent.com/google/material-design-lite/mdl-1.x/templates/text-only/index.html
-
-  Material Design Lite
-  Copyright 2015 Google Inc. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      https://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License
--->
-<html lang="no">
+<!DOCTYPE html>
+<html ng-app="nikita">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="Information about nikita-noark5-core">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <title>nikita-noark5-core</title>
+  <meta charset="UTF-8">
+  <title>nikita-noark5</title>
+  <script src="dependencies/internal/config.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
 
+  <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
+        rel="stylesheet" type="text/css">
+
+  <link
+    href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+    rel="stylesheet" type="text/css">
+
+  <script src="dependencies/internal/common_functionality.js"></script>
   <script src="dependencies/internal/login.js"></script>
-  <link rel="stylesheet"
-        href="dependencies/vendor/META-INF/resources/webjars/material-design-lite/1.3.0/material.min.css">
-  <script defer
-          src="dependencies/vendor/META-INF/resources/webjars/material-design-lite/1.3.0/material.min.js"></script>
+
+  <!-- Manually setting the size of the modal for creating a new user -->
+  <style media="screen" type="text/css">
+    .col-padding-right {
+      padding-right: 15px;
+    }
+  </style>
 </head>
 
-<body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-  <header class="mdl-layout__header">
-    <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">nikita-noark5-core@oslomet</span>
-    </div>
-    <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-      <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Pålogging</a>
-      <a href="#scroll-tab-2" class="mdl-layout__tab">Om</a>
-      <a href="#scroll-tab-3" class="mdl-layout__tab">Kildekode</a>
-    </div>
-  </header>
-  <main class="mdl-layout__content">
-    <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
-      <div class="page-content">
-        <div class="content-grid mdl-grid">
-          <div class="mdl-cell mdl-cell--2-col"></div>
-          <div class="mdl-cell mdl-cell--8-col">
-            <div class="wide-card mdl-card mdl-shadow--2dp">
-              <div class="mdl-card__title">
-                <h2 class="mdl-card__title-text">nikita-noark5-core</h2>
-              </div>
-              <div class="mdl-card__supporting-text">
-                Du må ha et konto for å logge på. Du kan registrere deg for å
-                få en konto eller logge på med <i>gjest:gjest</i>.
-              </div>
-              <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
-                   href="login.html">
-                  Logg på</a>
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
-                   href="register.html">
-                  Registrer deg</a>
-              </div>
-            </div>
-          </div>
-          <div class="mdl-cell mdl-cell--2-col"></div>
-        </div>
-      </div>
-    </section>
+<body ng-controller="LoginController">
 
-    <section class="mdl-layout__tab-panel" id="scroll-tab-2">
-      <div class="page-content">
-        <div class="content-grid mdl-grid">
-          <div class="mdl-cell mdl-cell--2-col"></div>
-          <div class="mdl-cell mdl-cell--8-col">
-            <div class="wide-card mdl-card mdl-shadow--2dp">
-              <div class="mdl-card__title">
-                <h2 class="mdl-card__title-text">nikita-noark5-core</h2>
-              </div>
-              <div class="mdl-card__supporting-text">
-                Dette er et undervisningsverktøy brukt hos OsloMet-ABI for å
-                lære mer om digital arkivdanning og bevaring
-              </div>
-            </div>
-          </div>
-          <div class="mdl-cell mdl-cell--2-col"></div>
-        </div>
-      </div>
-    </section>
+<nav class="navbar  navbar-expand-sm bg-light nav-upper">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">nikita-noark5-core@oslomet</a>
+    </div>
+  </div>
+</nav>
 
-    <section class="mdl-layout__tab-panel" id="scroll-tab-3">
-      <div class="page-content">
-        <div class="content-grid mdl-grid">
-          <div class="mdl-cell mdl-cell--2-col"></div>
-          <div class="mdl-cell mdl-cell--8-col">
-            <div class="wide-card mdl-card mdl-shadow--2dp">
-              <div class="mdl-card__title">
-                <h2 class="mdl-card__title-text">nikita-noark5-core</h2>
-              </div>
-              <div class="mdl-card__supporting-text">
-                Du må ha et konto for å logge på. Du kan registrere deg for å
-                få en konto eller logge på med <i>gjest:gjest</i>.
-              </div>
-              <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
-                   href="https://gitlab.com/OsloMet-ABI/nikita-noark5-core">
-                  Vis kode</a>
-              </div>
-            </div>
-          </div>
-          <div class="mdl-cell mdl-cell--2-col"></div>
-        </div>
+<nav class="navbar  navbar-expand-sm bg-light nav-lower">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link py-1" ng-click="showLoginCard()" href="#">Pålogging</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link py-1" ng-click="showAboutCard()" href="#">Om</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link py-1" ng-click="showSourceCodeCard()" href="#">Kildekode</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="container container-fluid">
+  <div>
+    <div class="col-lg-3"></div>
+    <div class="card col-lg-6" ng-show="showLogin">
+      <div class="card-body">
+        <h4 class="card-title">nikita-noark5-core</h4>
+        <p class="card-text">
+          Du må ha et konto for å logge på. Du kan registrere deg for å få en konto eller logge på med gjest:password.
+          Merk! Data som blir opprettet under gjest kontoen slettes regelmessig.</p>
+        <a href="login.html" class="card-link">Logg på</a>
+        <a href="#" class="card-link">Registrer deg</a>
       </div>
-    </section>
-  </main>
+    </div>
+    <div class="col-lg-3"></div>
+  </div>
+  <div>
+    <div class="col-lg-3"></div>
+    <div class="card col-lg-6" ng-show="showAbout">
+      <div class="card-body">
+        <h4 class="card-title">nikita-noark5-core</h4>
+        <p class="card-text">
+          Dette er et undervisningsverktøy brukt på arkivstudiet ved OsloMet-ABI for å utforske tematikken rundt
+          digital arkivdanning og bevaring. nikita er et fri progrmavare prosjekt. Ansvarlig ved OsloMet er Thomas
+          Sødring</p>
+        <a href="https://www.oslomet.no/tilsatt/tsodring" class="card-link">Kontakt</a>
+      </div>
+    </div>
+    <div class="col-lg-3"></div>
+  </div>
+  <div>
+    <div class="col-lg-3"></div>
+    <div class="card col-lg-6" ng-show="showSourceCode">
+      <div class="card-body">
+        <h4 class="card-title">nikita-noark5-core</h4>
+        <p class="card-text">
+          nikita-noark5-core er utviklet som fri programvare. Mer informasjon om prosjektet finner du på
+          gitlab siden vår.</p>
+        <a href="https://gitlab.com/OsloMet-ABI/nikita-noark5-core" class="card-link">Se kildekoden</a>
+      </div>
+    </div>
+    <div class="col-lg-3"></div>
+  </div>
 </div>
 </body>
 </html>
