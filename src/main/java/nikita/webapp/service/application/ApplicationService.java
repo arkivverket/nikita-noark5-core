@@ -40,7 +40,7 @@ public class ApplicationService {
             loginOauth2.setHref(publicUrlPath + LOGIN_PATH);
         }
         else {
-            loginOauth2.setHref(url + LOGIN_PATH);
+            loginOauth2.setHref(url + SLASH + LOGIN_PATH);
         }
         loginOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
                 LOGIN_OAUTH + SLASH);
