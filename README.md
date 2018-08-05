@@ -24,7 +24,10 @@ setting properties in the various profiles.
 
 The project has chosen the AGPLv3 license.
 
-We are skipping tests as there currently is an issue identifying the logged-in user when running tests. I am assuming the security context will have the default anonymous user, but it is in fact null. This causes the tests to fail. Currently there is no point running tests.
+We are currently skipping tests as we had some issues before getting the test 
+framework to run correctly. The test framework has been combined with 
+spring-rest-docs and hopefully we can start developing a better testing 
+framework. Currently there is no point running tests.
 
 Thanks to IntelliJ for an [idea](https://www.jetbrains.com/idea/) license.
 Thanks to GitLab for including the project in the [GitLab OSS program](https://gitlab.com/gitlab-com/gitlab-oss) and donating [Gold membership](https://about.gitlab.com/pricing/#gitlab-com) to the project.
