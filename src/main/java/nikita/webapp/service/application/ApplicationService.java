@@ -35,12 +35,18 @@ public class ApplicationService {
     public void addLoginInformation(HttpServletRequest request,
                                     List<ConformityLevel> conformityLevels) {
         ConformityLevel loginOauth2 = new ConformityLevel();
-        String url = request.getHeader("X-Forwarded-For");
-        if (url == null) {
+        String address = request.getHeader("X-Forwarded-For");
+        String protocol = request.getHeader("x-forwarded-proto");
+
+        logger.info("Incoming request. PROTO is [" + protocol + "], address " +
+                "is [" +
+                "" + address + "]");
+        if (address == null) {
             loginOauth2.setHref(publicUrlPath + LOGIN_PATH);
         }
         else {
-            loginOauth2.setHref(url + SLASH + LOGIN_PATH);
+            loginOauth2.setHref(protocol + "://" + address + SLASH +
+                    LOGIN_PATH);
         }
         loginOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
                 LOGIN_OAUTH + SLASH);
