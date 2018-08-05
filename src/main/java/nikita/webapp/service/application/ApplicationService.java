@@ -24,6 +24,9 @@ public class ApplicationService {
     @Value("${hateoas.publicAddress}")
     private String publicUrlPath;
 
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
     /**
      * Creates a list of the supported supported login methods.
      * These are: OAUTH2, JWT via OAUTH2, Basic and Form-based
@@ -46,7 +49,7 @@ public class ApplicationService {
         }
         else {
             loginOauth2.setHref(protocol + "://" + address + SLASH +
-                    LOGIN_PATH);
+                            contextPath + LOGIN_PATH);
         }
         loginOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
                 LOGIN_OAUTH + SLASH);
