@@ -35,7 +35,7 @@ public class ApplicationService {
     public void addLoginInformation(HttpServletRequest request,
                                     List<ConformityLevel> conformityLevels) {
         ConformityLevel loginOauth2 = new ConformityLevel();
-        String address = request.getHeader("X-Forwarded-For");
+        String address = request.getHeader("X-Forwarded-Server");
         String protocol = request.getHeader("X-Forwarded-Proto");
 
         logger.info("Incoming request. PROTO is [" + protocol + "], address " +
