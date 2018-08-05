@@ -23,6 +23,16 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
   // Set values for dropdown in webpage
   $scope.loginOptions = loginOptions;
 
+  // index.html, booleans to display cards
+  $scope.showLogin = true;
+  $scope.showAbout = false;
+  $scope.showSourceCode = false;
+
+  // Set account details blank
+  $scope.emailAddressRegister = "";
+  $scope.passwordRegister = "";
+  $scope.repeatPasswordRegister = "";
+
   // connect to nikita, do a GET on application root and make a note of the
   // login REL/HREF. This also serves a a check that nikita is actually running
   // before a user tries to login.
@@ -82,4 +92,60 @@ var login = app.controller('LoginController', ['$scope', '$http', function ($sco
       alert(JSON.stringify(response));
     });
   };
+
+
+  /**
+   * createAccount
+   *
+   * Create an account for nikita
+   *
+   */
+
+  $scope.createAccount = function () {
+    console.log("Attempting to login using [" + $scope.loginHref + "]");
+
+    $http({
+      url: $scope.loginHref,
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa('nikita-client:secret')
+      },
+      data: {
+        username: $scope.emailAddressRegister,
+        password: $scope.passwordRegister
+      }
+    }).then(function (data) {
+      SetUserToken("Bearer " + data.data.access_token);
+      console.log("Logging in.token is " + JSON.stringify(data.data)  + ". Redirecting to page for " +
+        $scope.selectedLoginRole);
+      if ($scope.selectedLoginRole === 'arkivar') {
+        changeLocation($scope, recordsManagerPage, true);
+      }
+      else if ($scope.selectedLoginRole === 'saksbehandler') {
+        changeLocation($scope, caseHandlerPage, true);
+      }
+    }, function (response) {
+      alert(JSON.stringify(response));
+    });
+  };
+
+  $scope.showLoginCard = function () {
+    $scope.showLogin = true;
+    $scope.showAbout = false;
+    $scope.showSourceCode = false;
+  };
+
+  $scope.showAboutCard = function () {
+    $scope.showLogin = false;
+    $scope.showAbout = true;
+    $scope.showSourceCode = false;
+  };
+
+  $scope.showSourceCodeCard = function () {
+    $scope.showLogin = false;
+    $scope.showAbout = false;
+    $scope.showSourceCode = true;
+  };
+
 }]);
