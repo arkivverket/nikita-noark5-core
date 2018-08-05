@@ -41,9 +41,6 @@ public class ApplicationService {
         String address = request.getHeader("X-Forwarded-Host");
         String protocol = request.getHeader("X-Forwarded-Proto");
 
-        logger.info("Incoming request. PROTO is [" + protocol + "], address " +
-                "is [" +
-                "" + address + "]");
         if (address == null) {
             loginOauth2.setHref(publicUrlPath + LOGIN_PATH);
         }
@@ -54,6 +51,33 @@ public class ApplicationService {
         loginOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
                 LOGIN_OAUTH + SLASH);
         conformityLevels.add(loginOauth2);
+    }
+
+    /**
+     * Creates a list of the supported supported logout methods.
+     * These are: OAUTH2, JWT via OAUTH2
+     *
+     * Currently the code only returns OAUTH2. This should detect which
+     * profile is running and set links accordingly
+     * @return
+     */
+    public void addLogoutInformation(HttpServletRequest request,
+                                    List<ConformityLevel> conformityLevels) {
+
+        String address = request.getHeader("X-Forwarded-Host");
+        String protocol = request.getHeader("X-Forwarded-Proto");
+
+        ConformityLevel logoutOauth2 = new ConformityLevel();
+        if (address == null) {
+            logoutOauth2.setHref(publicUrlPath + LOGOUT_PATH);
+        }
+        else {
+            logoutOauth2.setHref(protocol + "://" + address +  contextPath +
+                    SLASH + LOGOUT_PATH);
+        }
+        logoutOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGOUT_REL_PATH + SLASH +
+                LOGIN_OAUTH + SLASH);
+        conformityLevels.add(logoutOauth2);
     }
 
     /**
@@ -83,6 +107,7 @@ public class ApplicationService {
         conformityLevelMetadata.setRel(NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH);
         conformityLevels.add(conformityLevelMetadata);
 
+
         /*
         // These will be added as the development progresses.
         // They are not really specified properly in the interface standard.
@@ -105,8 +130,10 @@ public class ApplicationService {
         ArrayList<ConformityLevel> conformityLevels = new ArrayList(10);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
+        // If you are logged in, add more information
         if (!username.equals("anonymousUser")) {
             addConformityLevels(conformityLevels);
+            addLogoutInformation(request, conformityLevels);
         }
 
         /* Show login relation also for logged in users to allow user

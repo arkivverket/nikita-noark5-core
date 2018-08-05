@@ -49,8 +49,8 @@ app.directive('newSeriesModalDir', function () {
   };
 });
 
-var fondsController = app.controller('ArkivarController', ['$scope', '$http', '$window',
-    function ($scope, $http, $window) {
+var fondsController = app.controller('ArkivarController', ['$scope', '$http',
+    function ($scope, $http) {
 
       // Grab a copy of the authentication token
       $scope.token = GetUserToken();
@@ -108,6 +108,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http', '$
             $scope.applicationRoot = response.data;
             for (var rel in $scope.applicationRoot.links) {
               var relation = $scope.applicationRoot.links[rel].rel;
+
               if (relation == REL_FONDS_STRUCTURE) {
                 var fondsStructureHref = $scope.applicationRoot.links[rel].href;
                 console.log("fondsStructureHref is : " + JSON.stringify(fondsStructureHref));
@@ -137,7 +138,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http', '$
                         }
                       });
                     }
-                    else if (relation == REL_FONDS_STRUCTURE_NEW_FONDS) {
+                    else if (relation === REL_FONDS_STRUCTURE_NEW_FONDS) {
                       $scope.hrefNewFonds = response.data._links[rel].href;
                       console.log("hrefNewFonds (new) is : " + JSON.stringify($scope.hrefNewFonds));
                     }
@@ -151,6 +152,10 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http', '$
                     alert(MSG_NIKITA_UNKNOWN_ERROR);
                   }
                 });
+              }
+              else if (relation === REL_LOGOUT_OAUTH2) {
+                $scope.hrefLogout = $scope.applicationRoot.links[rel].href;
+                console.log("hrefLogout is : " + JSON.stringify($scope.hrefLogout));
               }
             }
           }, function errorCallback(response) {
@@ -297,6 +302,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http', '$
         for (var rel in $scope.fonds.links) {
           var relation = $scope.fonds.links[rel].rel;
           if (relation === REL_NEW_FONDS_CREATOR) {
+            console.log("href for creating a fondsCreator is " + $scope.fonds.links[rel].href);
             console.log("href for creating a fondsCreator is " + $scope.fonds.links[rel].href);
             $http({
               url: $scope.fonds.links[rel].href,
@@ -454,7 +460,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http', '$
 
       $scope.doShowFondsCreatorCard = function () {
         disableAllCards();
-        $scope.showFondsCreatorCard= true;
+        $scope.showFondsCreatorCard = true;
         $scope.showFondsBreadcrumb = true;
         $scope.showFondsCreatorBreadcrumb = true;
         $scope.showSeriesBreadcrumb = false;
@@ -530,7 +536,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http', '$
           }
         }
       };
-      
+
       $scope.seriesSelected = function (series) {
 
         $scope.doShowSeriesCard();
@@ -610,6 +616,24 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http', '$
         }
       };
 
+      $scope.doLogout = function () {
+        console.log("Attempting logout on [" + $scope.hrefLogout + "]. using token [" +
+          $scope.token + "]");
+        $http({
+          method: 'GET',
+          url: $scope.hrefLogout,
+          headers: {'Authorization': $scope.token}
+        }).then(function successCallback(response) {
+          $scope.token = "";
+          console.log(" GET to doLogout [" + $scope.hrefLogout +
+            "] returned " + JSON.stringify(response));
+          changeLocation($scope, "login.html", false);
+        }, function errorCallback(response) {
+          alert("Problemer med å logge ut. Du kan se bort fra denne meldingen!");
+          console.log(" GET urlForLogout[" + $scope.hrefLogout +
+            "] returned " + JSON.stringify(response));
+        });
+      };
     }
   ])
 ;
