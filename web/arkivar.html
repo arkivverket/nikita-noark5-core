@@ -452,6 +452,7 @@
                   <select id="documentMediumForSeries" class="form-control form-control-lg rounded-1"
                           ng-model="selectedDocumentMediumSeries"
                           data-toggle="tooltip" data-placement="top"
+                          ng-change="checkDocumentMediumForSeries()"
                           title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
                     <option ng-selected="{{documentMedium.value == selectedDocumentMediumSeries}}"
                             ng-repeat="documentMedium in documentMediumList"
@@ -825,6 +826,7 @@
                 <select id="nyDokumentmediumArkivdel" class="form-control form-control-lg rounded-1"
                         ng-model="selectedDocumentMediumNewSeries"
                         data-toggle="tooltip" data-placement="top"
+                        ng-change="checkDocumentMediumForSeries()"
                         title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
                   <option ng-selected="{{documentMedium.value == selectedDocumentMediumNewSeries}}"
                           ng-repeat="documentMedium in documentMediumList"

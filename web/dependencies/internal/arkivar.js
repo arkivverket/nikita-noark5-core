@@ -58,8 +58,10 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
       // get values used in drop downs. These will probably be replaced
       // by metadata calls to nikita
       $scope.documentMediumList = documentMediumList;
+      $scope.storageLocationList = storageLocationList;
       $scope.fondsStatusList = fondsStatusList;
       $scope.seriesStatusList = seriesStatusList;
+      $scope.selectedStorageLocation = "Sentralarkivet";
 
       $scope.showFondsBreadcrumb = false;
       $scope.showFondsCreatorBreadcrumb = false;
@@ -512,6 +514,21 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
 
       $scope.fondsCreatorSelected = function (fondsCreator) {
       };
+
+      $scope.checkDocumentMediumForSeries = function () {
+
+        if ($scope.fonds.dokumentmedium !== $scope.selectedDocumentMediumSeries) {
+
+          if ($scope.fonds.dokumentmedium === "Elektronisk arkiv") {
+            $scope.selectedDocumentMediumSeries = $scope.fonds.dokumentmedium;
+          }
+          else if ($scope.fonds.dokumentmedium === "Fysisk arkiv") {
+            $scope.selectedDocumentMediumSeries = $scope.fonds.dokumentmedium;
+          }
+        }
+      };
+
+
 
       $scope.fondsSelected = function (fonds) {
 

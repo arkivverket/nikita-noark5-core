@@ -72,6 +72,11 @@ var documentMediumList = [
     {id: 'E', value: 'Elektronisk arkiv'},
     {id: 'B', value: 'Blandet fysisk og elektronisk arkiv'}];
 
+// This is a fictitious list
+var storageLocationList = [
+  {id: 'S', value: 'Sentralarkivet'},
+  {id: 'F', value: 'Fjernarkivet'}];
+
 var registryEntryTypeList = [
     {id: 'I', value: 'Inngående dokument'},
     {id: 'U', value: 'Utgående dokument'},
