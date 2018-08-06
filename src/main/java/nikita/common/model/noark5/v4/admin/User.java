@@ -37,15 +37,15 @@ public class User
 
     @Column(name = "password", length = 100)
     @NotNull
-    @Size(min = 4, max = 100)
+    @Size(min = 1, max = 100)
     private String password;
 
     @Column(name = "firstname", length = 50)
-    @Size(min = 4, max = 50)
+    @Size(min = 1, max = 50)
     private String firstname;
 
     @Column(name = "lastname", length = 50)
-    @Size(min = 4, max = 50)
+    @Size(min = 1, max = 50)
     private String lastname;
 
     /**
