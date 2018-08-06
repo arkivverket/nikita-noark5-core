@@ -31,9 +31,10 @@ public class ApplicationService {
     /**
      * Creates a list of the supported supported login methods.
      * These are: OAUTH2, JWT via OAUTH2, Basic and Form-based
-     *
+     * <p>
      * Currently the code only returns OAUTH2. This should detect which
      * profile is running and set links accordingly
+     *
      * @return
      */
     public void addLoginInformation(HttpServletRequest request,
@@ -44,9 +45,8 @@ public class ApplicationService {
 
         if (address == null) {
             loginOauth2.setHref(publicUrlPath + LOGIN_PATH);
-        }
-        else {
-            loginOauth2.setHref(protocol + "://" + address +  contextPath +
+        } else {
+            loginOauth2.setHref(protocol + "://" + address + contextPath +
                     SLASH + LOGIN_PATH);
         }
         loginOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
@@ -57,13 +57,14 @@ public class ApplicationService {
     /**
      * Creates a list of the supported supported logout methods.
      * These are: OAUTH2, JWT via OAUTH2
-     *
+     * <p>
      * Currently the code only returns OAUTH2. This should detect which
      * profile is running and set links accordingly
+     *
      * @return
      */
     public void addLogoutInformation(HttpServletRequest request,
-                                    List<ConformityLevel> conformityLevels) {
+                                     List<ConformityLevel> conformityLevels) {
 
         String address = request.getHeader("X-Forwarded-Host");
         String protocol = request.getHeader("X-Forwarded-Proto");
@@ -71,9 +72,8 @@ public class ApplicationService {
         ConformityLevel logoutOauth2 = new ConformityLevel();
         if (address == null) {
             logoutOauth2.setHref(publicUrlPath + LOGOUT_PATH);
-        }
-        else {
-            logoutOauth2.setHref(protocol + "://" + address +  contextPath +
+        } else {
+            logoutOauth2.setHref(protocol + "://" + address + contextPath +
                     SLASH + LOGOUT_PATH);
         }
         logoutOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGOUT_REL_PATH + SLASH +
@@ -98,7 +98,7 @@ public class ApplicationService {
                     NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
         } else {
             accountCreation.setHref(protocol + "://" + address + contextPath +
-                    NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
+                    SLASH + NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
         }
         accountCreation.setRel(REL_ADMIN_NEW_USER);
         conformityLevels.add(accountCreation);
