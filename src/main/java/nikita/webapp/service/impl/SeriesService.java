@@ -142,7 +142,7 @@ public class SeriesService implements ISeriesService {
             existingSeries.setTitle(incomingSeries.getTitle());
         }
         if (null != incomingSeries.getDocumentMedium()) {
-            existingSeries.setDocumentMedium(existingSeries.getDocumentMedium());
+            existingSeries.setDocumentMedium(incomingSeries.getDocumentMedium());
         }
         existingSeries.setVersion(version);
         seriesRepository.save(existingSeries);

@@ -434,7 +434,7 @@ public class FondsService implements IFondsService {
             existingFonds.setTitle(incomingFonds.getTitle());
         }
         if (null != incomingFonds.getDocumentMedium()) {
-            existingFonds.setDocumentMedium(existingFonds.getDocumentMedium());
+            existingFonds.setDocumentMedium(incomingFonds.getDocumentMedium());
         }
 
         // Note this can potentially result in a NoarkConcurrencyException
