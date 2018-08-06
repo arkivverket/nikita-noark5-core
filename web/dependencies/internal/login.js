@@ -131,27 +131,32 @@ var login = app.controller('LoginController',
 
       $scope.createUser = function () {
         console.log("Attempting to create User using [" + $scope.newUserHref + "]");
-
-        $http({
-          url: $scope.newUserHref,
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa('nikita-client:secret')
-          },
-          data: {
-            brukerNavn: $scope.emailAddressRegister,
-            passord: $scope.passwordRegister,
-            fornavn: $scope.firstnameRegister,
-            etternavn: $scope.lastnameRegister
-          }
-        }).then(function (data) {
-          console.log("Created new user. " + JSON.stringify(data.data));
-          $scope.dismissNewUserModal();
-          $scope.emailAddress = $scope.emailAddressRegister;
-        }, function (response) {
-          alert(JSON.stringify(response));
-        });
+        if ($scope.repeatPasswordRegister === $scope.passwordRegister) {
+          $http({
+            url: $scope.newUserHref,
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic ' + btoa('nikita-client:secret')
+            },
+            data: {
+              brukerNavn: $scope.emailAddressRegister,
+              passord: $scope.passwordRegister,
+              fornavn: $scope.firstnameRegister,
+              etternavn: $scope.lastnameRegister
+            }
+          }).then(function (data) {
+            console.log("Created new user. " + JSON.stringify(data.data));
+            $scope.dismissNewUserModal();
+            $scope.emailAddress = $scope.emailAddressRegister;
+          }, function (response) {
+            alert(JSON.stringify(response));
+          });
+        }
+        else {
+          $scope.passwordNotMatching = true;
+          console.log("NO MATCH");
+        }
       };
 
       $scope.showLoginCard = function () {
