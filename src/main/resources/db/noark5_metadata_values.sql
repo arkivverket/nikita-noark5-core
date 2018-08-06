@@ -87,7 +87,7 @@ VALUES (3, '1f4ec7b5-a717-433d-a3dc-d357e6579de0', 'F',
         'Faktura', FALSE, 0);
 INSERT INTO document_type (pk_document_type_id, system_id, code,
                            description, deleted, version)
-VALUES (3, '99281649-0d0c-402f-9494-7df99b7d73f1', 'O',
+VALUES (4, '99281649-0d0c-402f-9494-7df99b7d73f1', 'O',
         'Ordrebekreftelse', FALSE, 0);
 
 /* electronic_signature_security_level / elektronsiksignatursikkerhetsnivaa */
