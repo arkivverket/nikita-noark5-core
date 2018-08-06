@@ -80,7 +80,8 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
 
         // Set default values for drop downs
         $scope.selectedFondsStatus = "Opprettet";
-        $scope.selectedDocumentMedium = "Elektronisk arkiv";
+        $scope.selectedDocumentMediumFonds = "";
+        $scope.selectedDocumentMediumNewFonds = "Elektronisk arkiv";
 
         // Create variables to bind with ng-model and modals so we can blank them out
         // For fonds
@@ -90,8 +91,10 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
         $scope.newIdForFondsCreator = "";
         $scope.newNameForFondsCreator = "";
         $scope.newDescriptionForFondsCreator = "";
+
         // For Series
-        $scope.selectedDocumentMediumForSeries = "";
+        $scope.selectedDocumentMediumSeries = "";
+        $scope.selectedDocumentMediumNewSeries = "";
         $scope.newDescriptionForSeries = "";
         $scope.newTitleForSeries = "";
 
@@ -160,7 +163,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
             }
           }, function errorCallback(response) {
             if (response.status == -1) {
-              consol
+              consol;
               e.log(MSG_NIKITA_DOWN_LOG + JSON.stringify(response));
               alert(MSG_NIKITA_DOWN);
             } else {
@@ -169,8 +172,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
             }
           }
         );
-      };
-
+      }
       /**
        * updateFonds
        *
@@ -196,7 +198,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               data: {
                 tittel: $scope.fonds.tittel,
                 beskrivelse: $scope.fonds.beskrivelse,
-                dokumentmedium: $scope.selectedDocumentMedium,
+                dokumentmedium: $scope.selectedDocumentMediumFonds,
                 arkivstatus: $scope.selectedFondsStatus
               },
             }).then(function successCallback(response) {
@@ -354,7 +356,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               data: {
                 tittel: $scope.newTitleForSeries,
                 beskrivelse: $scope.newDescriptionForSeries,
-                dokumentmedium: $scope.selectedDocumentMedium,
+                dokumentmedium: $scope.selectedDocumentMediumNewSeries,
                 arkivdelstatus: "Opprettet"
               },
             }).then(function successCallback(response) {
@@ -385,9 +387,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
         $scope.showFondsCreatorCard = false;
         $scope.showSeriesListCard = false;
         $scope.showSeriesCard = false;
-      };
-
-
+      }
       /**
        * createFonds
        *
@@ -407,7 +407,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
           data: {
             tittel: $.trim(document.getElementById("nyTittelArkiv").value),
             beskrivelse: $.trim(document.getElementById("nyBeskrivelseArkiv").value),
-            dokumentmedium: $.trim($scope.selectedDocumentMedium),
+            dokumentmedium: $.trim($scope.selectedDocumentMediumNewFonds),
             arkivstatus: $.trim($scope.selectedFondsStatus)
           }
         }).then(function successCallback(response) {
@@ -502,6 +502,9 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
         $scope.newTitleForSeries = "";
       };
 
+      $scope.doLoadSeriesModal = function () {
+        $scope.selectedDocumentMediumNewSeries = $scope.fonds.dokumentmedium;
+      };
       /**
        *  fonds_selected
        *
@@ -530,7 +533,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               $scope.fondsETag = response.headers('eTag');
               console.log("Retrieved the following fonds " + JSON.stringify($scope.fonds));
               console.log("The ETAG header for the fonds is " + $scope.fondsETag);
-              $scope.selectedDocumentMedium = $scope.fonds.dokumentmedium;
+              $scope.selectedDocumentMediumFonds = $scope.fonds.dokumentmedium;
               $scope.selectedFondsStatus = $scope.fonds.arkivstatus;
             });
           }
@@ -554,7 +557,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               $scope.seriesETag = response.headers('eTag');
               console.log("Retrieved the following series " + JSON.stringify($scope.series));
               console.log("The ETAG header for the series is " + $scope.seriesETag);
-              $scope.selectedDocumentMedium = $scope.series.dokumentmedium;
+              $scope.selectedDocumentMediumSeries = $scope.series.dokumentmedium;
               $scope.selectedSeriesStatus = $scope.series.arkivdelstatus;
             });
           }
@@ -577,8 +580,6 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               $scope.fondsCreatorETag = response.headers('eTag');
               console.log("Retrieved the following fondsCreator " + JSON.stringify($scope.fondsCreator));
               console.log("The ETAG header for the fondsCreator is " + $scope.fondsCreatorETag);
-              $scope.selectedDocumentMedium = $scope.fondsCreator.dokumentmedium;
-              $scope.selectedFondsCreatorStatus = $scope.fondsCreator.arkivdelstatus;
             });
           }
         }

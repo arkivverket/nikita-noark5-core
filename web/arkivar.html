@@ -207,7 +207,7 @@
       <div class="col-lg-12">
         <div class="btn-toolbar float-right">
           <button type="button" class="btn btn-primary"
-                  data-toggle="modal" data-target="#newSeriesModal">
+                  data-toggle="modal" data-target="#newSeriesModal" ng-click="doLoadSeriesModal()">
             Opprett arkivdel
           </button>
           <button type="button" class="btn btn-primary" ng-click="doShowSeriesListCard()">
@@ -275,10 +275,10 @@
                 <div class="col-lg-12">
                   <label class="control-label" for="dokumentmediumArkiv">Dokumentmedium:</label>
                   <select id="dokumentmediumArkiv" class="form-control form-control-lg rounded-1"
-                          ng-model="selectedDocumentMedium"
+                          ng-model="selectedDocumentMediumFonds"
                           data-toggle="tooltip" data-placement="top"
                           title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
-                    <option ng-selected="{{documentMedium.value == selectedDocumentMedium}}"
+                    <option ng-selected="{{documentMedium.value == selectedDocumentMediumFonds}}"
                             ng-repeat="documentMedium in documentMediumList"
                             value="{{documentMedium.value}}">{{documentMedium.value}}
                     </option>
@@ -288,7 +288,7 @@
 
               <!-- oppbevaringsted. Note this fields is only shown if documentMedium is not electronic. This will
                    have to be editable later. -->
-              <div class="row" ng-show="selectedDocumentMedium != 'Elektronisk arkiv'">
+              <div class="row" ng-show="selectedDocumentMediumFonds != 'Elektronisk arkiv'">
                 <div class="col-lg-12">
                   <label class="control-label" for="oppbevaringsStedArkiv">Oppbevarings sted:</label>
                   <select id="oppbevaringsStedArkiv" class="form-control form-control-lg rounded-1"
@@ -450,10 +450,10 @@
                 <div class="col-lg-12">
                   <label class="control-label" for="documentMediumForSeries">Dokumentmedium:</label>
                   <select id="documentMediumForSeries" class="form-control form-control-lg rounded-1"
-                          ng-model="selectedDocumentMedium"
+                          ng-model="selectedDocumentMediumSeries"
                           data-toggle="tooltip" data-placement="top"
                           title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
-                    <option ng-selected="{{documentMedium.value == selectedDocumentMedium}}"
+                    <option ng-selected="{{documentMedium.value == selectedDocumentMediumSeries}}"
                             ng-repeat="documentMedium in documentMediumList"
                             value="{{documentMedium.value}}">{{documentMedium.value}}
                     </option>
@@ -463,7 +463,7 @@
 
               <!-- oppbevaringsted. Note this fields is only shown if documentMedium is not electronic. This will
                    have to be editable later. -->
-              <div class="row" ng-show="selectedDocumentMedium != 'Elektronisk arkiv'">
+              <div class="row" ng-show="selectedDocumentMediumSeries != 'Elektronisk arkiv'">
                 <div class="col-lg-12">
                   <label class="control-label" for="storageLocationForSeries">Oppbevarings sted:</label>
                   <select id="storageLocationForSeries" class="form-control form-control-lg rounded-1"
@@ -669,10 +669,10 @@
               <div class="col-10">
                 <label class="control-label" for="nyDokumentmedium">Dokumentmedium:</label>
                 <select id="nyDokumentmedium" class="form-control form-control-lg rounded-1"
-                        ng-model="selectedDocumentMedium"
+                        ng-model="selectedDocumentMediumNewFonds"
                         data-toggle="tooltip" data-placement="top"
                         title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
-                  <option ng-selected="{{documentMedium.value == selectedDocumentMedium}}"
+                  <option ng-selected="{{documentMedium.value == selectedDocumentMediumNewFonds}}"
                           ng-repeat="documentMedium in documentMediumList"
                           value="{{documentMedium.value}}">{{documentMedium.value}}
                   </option>
@@ -683,7 +683,7 @@
             <div class="row">
               <div class="col-1"></div>
               <div class="col-10">
-                <div class="control-label" ng-show="selectedDocumentMedium != 'Elektronisk arkiv'">
+                <div class="control-label" ng-show="selectedDocumentMediumNewFonds != 'Elektronisk arkiv'">
                   <label class="control-label" for="nyOppbevaringsStedArkiv">Oppbevarings sted:</label>
                   <select id="nyOppbevaringsStedArkiv" class="form-control form-control-lg rounded-1"
                           ng-model="selectedStorageLocation"
@@ -823,11 +823,10 @@
               <div class="col-10">
                 <label class="control-label" for="nyDokumentmediumArkivdel">Dokumentmedium:</label>
                 <select id="nyDokumentmediumArkivdel" class="form-control form-control-lg rounded-1"
-                        ng-model="selectedDocumentMediumForSeries"
+                        ng-model="selectedDocumentMediumNewSeries"
                         data-toggle="tooltip" data-placement="top"
-                        ng-disabled="fonds.dokumentmedium == 'Elektronisk arkiv'"
                         title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
-                  <option ng-selected="{{documentMedium.value == selectedDocumentMedium}}"
+                  <option ng-selected="{{documentMedium.value == selectedDocumentMediumNewSeries}}"
                           ng-repeat="documentMedium in documentMediumList"
                           value="{{documentMedium.value}}">{{documentMedium.value}}
                   </option>
@@ -838,7 +837,7 @@
             <div class="row">
               <div class="col-1"></div>
               <div class="col-10">
-                <div class="control-label" ng-show="selectedDocumentMedium != 'Elektronisk arkiv'">
+                <div class="control-label" ng-show="selectedDocumentMediumNewSeries != 'Elektronisk arkiv'">
                   <label class="control-label" for="nyOppbevaringsStedArkivdel">Oppbevarings sted:</label>
                   <select id="nyOppbevaringsStedArkivdel" class="form-control form-control-lg rounded-1"
                           ng-model="selectedStorageLocation"
