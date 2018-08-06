@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
 import static nikita.common.config.Constants.LOGIN_OAUTH2_PATH;
+import static nikita.common.config.PATHPatterns.PATTERN_ADMIN_NEW_USER;
+import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
 
 /**
  * This is the ResourceServerConfiguration for the application. It sets up the
@@ -23,7 +25,6 @@ import static nikita.common.config.Constants.LOGIN_OAUTH2_PATH;
  * <p>
  * The security of the API-endpoints are defined in the
  * configure(HttpSecurity http) method.
- *
  */
 @Profile("security-oauth2-authentication")
 @EnableResourceServer
@@ -62,6 +63,7 @@ public class OAuth2ResourceServerConfiguration
      * Create the password encoder.
      * <p>
      * We are using a BCrypt Password Encoder.
+     *
      * @return new BCryptPasswordEncoder()
      */
     @Bean
@@ -77,7 +79,7 @@ public class OAuth2ResourceServerConfiguration
      * - All requests to the application must be authenticated
      * - Stateless session
      * - Disable csrf as the token is deemed safe
-     *
+     * <p>
      * This is applicable to the primary security layer or (Basic auth)
      *
      * @param httpSecurity
@@ -96,6 +98,15 @@ public class OAuth2ResourceServerConfiguration
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, LOGIN_OAUTH2_PATH).permitAll()
+                // GET [api]/admin/ny-bruker, public to read basic structure
+                .antMatchers(HttpMethod.POST, PATTERN_ADMIN_NEW_USER)
+                    .permitAll()
+                // POST [api]/admin/ny-bruker, public to read basic structure
+                .antMatchers(HttpMethod.GET, PATTERN_ADMIN_NEW_USER)
+                    .permitAll()
+                // GET [api]/metadata/**, public to read basic structure
+                .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH)
+                    .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
