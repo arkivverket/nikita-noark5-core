@@ -200,8 +200,8 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               data: {
                 tittel: $scope.fonds.tittel,
                 beskrivelse: $scope.fonds.beskrivelse,
-                dokumentmedium: $scope.selectedDocumentMediumSeries,
-                arkivstatus: $scope.selectedSeriesStatus
+                dokumentmedium: $scope.selectedDocumentMediumFonds,
+                arkivstatus: $scope.selectedFondsStatus
               },
             }).then(function successCallback(response) {
               console.log(" put/post on fonds data returned= " + JSON.stringify(response.data));
@@ -238,7 +238,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               data: {
                 tittel: $scope.series.tittel,
                 beskrivelse: $scope.series.beskrivelse,
-                dokumentmedium: $scope.selectedDocumentMedium,
+                dokumentmedium: $scope.selectedDocumentMediumSeries,
                 arkivdelstatus: $scope.selectedSeriesStatus
               },
             }).then(function successCallback(response) {
