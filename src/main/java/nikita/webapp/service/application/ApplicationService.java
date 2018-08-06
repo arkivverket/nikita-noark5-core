@@ -98,7 +98,8 @@ public class ApplicationService {
                     NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
         } else {
             accountCreation.setHref(protocol + "://" + address + contextPath +
-                    SLASH + NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
+                    HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH +
+                    SLASH + NEW_USER);
         }
         accountCreation.setRel(REL_ADMIN_NEW_USER);
         conformityLevels.add(accountCreation);
