@@ -200,8 +200,8 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               data: {
                 tittel: $scope.fonds.tittel,
                 beskrivelse: $scope.fonds.beskrivelse,
-                dokumentmedium: $scope.selectedDocumentMediumFonds,
-                arkivstatus: $scope.selectedFondsStatus
+                dokumentmedium: $scope.selectedDocumentMediumSeries,
+                arkivstatus: $scope.selectedSeriesStatus
               },
             }).then(function successCallback(response) {
               console.log(" put/post on fonds data returned= " + JSON.stringify(response.data));
@@ -517,6 +517,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
 
       $scope.checkDocumentMediumForSeries = function () {
 
+        console.log("Change detected " + $scope.fonds.dokumentmedium + " " + $scope.selectedDocumentMediumSeries);
         if ($scope.fonds.dokumentmedium !== $scope.selectedDocumentMediumSeries) {
 
           if ($scope.fonds.dokumentmedium === "Elektronisk arkiv") {
