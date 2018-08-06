@@ -29,14 +29,9 @@ public interface IUserEntity extends INikitaEntity, INoarkCreateEntity, INoarkFi
 
     void setLastname(String lastname);
 
-    String getEmail();
-
-    void setEmail(String email);
-
     Boolean getEnabled();
 
     void setEnabled(Boolean enabled);
-
 
     boolean isAccountNonExpired();
 

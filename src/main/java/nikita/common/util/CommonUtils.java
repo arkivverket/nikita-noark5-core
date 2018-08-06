@@ -432,7 +432,7 @@ public final class CommonUtils {
             }
 
             public static String checkNodeObjectEmpty(JsonNode objectNode) {
-                StringBuffer result = new StringBuffer("");
+                StringBuffer result = new StringBuffer();
                 if (objectNode.size() != 0) {
                     Iterator<Map.Entry<String, JsonNode>> nodes = objectNode.fields();
                     while (nodes.hasNext()) {
@@ -943,7 +943,9 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     AdministrativeUnit administrativeUnit = new AdministrativeUnit();
                     deserialiseAdministrativeUnitEntity(administrativeUnit, currentNode.deepCopy(), errors);
-                    correspondencePartInternal.setReferenceAdministrativeUnit(administrativeUnit);
+                    //correspondencePartInternal
+                    //      .setReferenceAdministrativeUnit
+                    //    (administrativeUnit);
                     objectNode.remove(REFERENCE_ADMINISTRATIVE_UNIT);
                 }
 
@@ -952,7 +954,7 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     User user = new User();
                     deserialiseUserEntity(user, currentNode.deepCopy(), errors);
-                    correspondencePartInternal.setReferenceCaseHandler(user);
+                    //correspondencePartInternal.setReferenceUser(user);
                     objectNode.remove(REFERENCE_CASE_HANDLER);
                 }
             }
@@ -1394,21 +1396,22 @@ public final class CommonUtils {
                     if (null != correspondencePartInternal.getAdministrativeUnit()) {
                         jgen.writeStringField(ADMINISTRATIVE_UNIT, correspondencePartInternal.getAdministrativeUnit());
                     }
-                    if (null != correspondencePartInternal.getReferenceAdministrativeUnit()) {
-                        String systemID = correspondencePartInternal.getReferenceAdministrativeUnit().getSystemId();
-                        if (null != systemID) {
-                            jgen.writeStringField(REFERENCE_ADMINISTRATIVE_UNIT, systemID);
-                        }
-                    }
+//                    if (null != correspondencePartInternal.getReferenceAdministrativeUnit()) {
+//                        String systemID = correspondencePartInternal.getReferenceAdministrativeUnit().getSystemId();
+//                        if (null != systemID) {
+//                            jgen.writeStringField(REFERENCE_ADMINISTRATIVE_UNIT, systemID);
+//                        }
+//                    }
                     if (null != correspondencePartInternal.getCaseHandler()) {
                         jgen.writeStringField(CASE_HANDLER, correspondencePartInternal.getCaseHandler());
                     }
-                    if (null != correspondencePartInternal.getReferenceCaseHandler()) {
-                        String systemID = correspondencePartInternal.getReferenceCaseHandler().getSystemId();
-                        if (null != systemID) {
-                            jgen.writeStringField(REFERENCE_CASE_HANDLER, systemID);
-                        }
-                    }
+//                    if (null != correspondencePartInternal.getReferenceUser()) {
+//                        String systemID = correspondencePartInternal
+//                                .getReferenceUser().getSystemId();
+//                        if (null != systemID) {
+//                            jgen.writeStringField(REFERENCE_CASE_HANDLER, systemID);
+//                        }
+//                    }
                 }
             }
 

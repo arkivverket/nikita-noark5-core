@@ -1,171 +1,210 @@
 package nikita.webapp.web.controller.hateoas.admin;
 
+import com.codahale.metrics.annotation.Counted;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
+import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
+import nikita.common.util.CommonUtils;
+import nikita.common.util.exceptions.NikitaException;
+import nikita.webapp.service.IUserService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
+import static com.google.common.net.HttpHeaders.ETAG;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
-public class UserController extends NoarkController {
-/*
-    private IUserService userService;
-    private IUserHateoasHandler userHateoasHandler;
+@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH +
+        NOARK_ADMINISTRATION_PATH + SLASH,
+        produces = {NOARK5_V4_CONTENT_TYPE_JSON})
+public class UserController
+        extends NoarkController {
 
-    public UserController(IUserService userService,
-                          IUserHateoasHandler userHateoasHandler) {
+    private IUserService userService;
+
+    public UserController(IUserService userService) {
         this.userService = userService;
-        this.userHateoasHandler = userHateoasHandler;
     }
 
     // API - All POST Requests (CRUD - CREATE)
-    // Creates a new administrativtenhet
-    // POST [contextPath][api]/admin/ny-administrativtenhet
-    @ApiOperation(value = "Persists a new User object", notes = "Returns the newly" +
-            " created User object after it is persisted to the database",
+    // Creates a new bruker
+    // POST [contextPath][api]/admin/ny-bruker
+    @ApiOperation(value = "Persists a new User object",
+            notes = "Returns the newly created User object after it is " +
+                    "persisted to the database",
             response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+            @ApiResponse(code = 200,
+                    message = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
                     response = User.class),
-            @ApiResponse(code = 201, message = "User " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+            @ApiResponse(code = 201,
+                    message = "User " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
                     response = User.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
-            @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR),
+            @ApiResponse(code = 501,
+                    message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = NEW_ADMINISTRATIVE_UNIT)
+    @RequestMapping(method = RequestMethod.POST, value = NEW_USER)
     public ResponseEntity<UserHateoas> createUser(
             HttpServletRequest request,
             @RequestBody User user)
             throws NikitaException {
-        userService.createNewUser(user);
-        UserHateoas userHateoas = new UserHateoas(user);
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
+        UserHateoas userHateoas = userService.createNewUser(user);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(CommonUtils.WebUtils.
+                        getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(user.getVersion().toString())
                 .body(userHateoas);
     }
 
     // API - All GET Requests (CRUD - READ)
     // Retrieves all user
-    // GET [contextPath][api]/admin/administrativtenhet/
-    @ApiOperation(value = "Retrieves all User ", response = User.class)
+    // GET [contextPath][api]/admin/bruker/
+    @ApiOperation(value = "Retrieves all Users ", response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User found",
+            @ApiResponse(code = 200,
+                    message = "User found",
                     response = User.class),
-            @ApiResponse(code = 404, message = "No User found"),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 404,
+                    message = "No User found"),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = ADMINISTRATIVE_UNIT)
+    @RequestMapping(method = RequestMethod.GET, value = USER)
     public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
-        UserHateoas userHateoas = new UserHateoas(
-                (List<INikitaEntity>) (List) userService.findAll());
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
-
+        UserHateoas userHateoas = userService.findAll();
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(CommonUtils.WebUtils.
+                        getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(userHateoas);
     }
 
     // Retrieves a given user identified by a systemId
-    // GET [contextPath][api]/admin/administrativtenhet/{systemId}/
-    @ApiOperation(value = "Gets user identified by its systemId", notes = "Returns the requested " +
-            " user object", response = User.class)
+    // GET [contextPath][api]/admin/bruker/{systemID}/
+    @ApiOperation(value = "Gets user identified by its systemID",
+            notes = "Returns the requested user object", response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+            @ApiResponse(code = 200, message = "User found",
                     response = User.class),
-            @ApiResponse(code = 201, message = "User " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = User.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
-            @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)
+    })
     @Counted
-
-    @RequestMapping(value = ADMINISTRATIVE_UNIT + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH,
+    @RequestMapping(value = USER + SLASH + LEFT_PARENTHESIS +
+            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET)
-    public ResponseEntity<UserHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
-                                                                                   HttpServletRequest request) {
-        User user = userService.findBySystemId(systemId);
-        UserHateoas userHateoas = new UserHateoas(user);
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
+    public ResponseEntity<UserHateoas>
+    findBySystemId(@PathVariable("systemID") final String systemId,
+                   HttpServletRequest request) {
+        UserHateoas userHateoas = userService.findBySystemId(systemId);
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(user.getVersion().toString())
+                .allow(CommonUtils.WebUtils.
+                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(userHateoas.getEntityVersion().toString())
                 .body(userHateoas);
     }
 
-    // Create a suggested user(like a template) with default values (nothing persisted)
-    // GET [contextPath][api]/admin/ny-administrativtenhet
+    // Create a suggested user(like a template) with default values
+    // (nothing persisted)
+    // GET [contextPath][api]/admin/ny-bruker
     @ApiOperation(value = "Creates a suggested User", response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User codes found",
+            @ApiResponse(code = 200,
+                    message = "User codes found",
                     response = User.class),
-            @ApiResponse(code = 404, message = "No User found"),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 404,
+                    message = "No User found"),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.GET, value = NEW_ADMINISTRATIVE_UNIT)
-    public ResponseEntity<UserHateoas> getUserTemplate(HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.GET, value = NEW_USER)
+    public ResponseEntity<UserHateoas>
+    getUserTemplate(HttpServletRequest request) {
         User user = new User();
-        user.setShortName("kortnavn på administrativtenhet");
-        user.setUserName("Formell navn på administrativtenhet");
+        user.setUsername("example@example.com");
+        user.setFirstname("Hans");
+        user.setLastname("Hansen");
         UserHateoas userHateoas = new UserHateoas(user);
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(CommonUtils.WebUtils.
+                        getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(userHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
-    // Update a administrativtenhet
-    // PUT [contextPath][api]/metatdata/administrativtenhet/{systemID}
+    // Update a bruker
+    // PUT [contextPath][api]/admin/bruker/{systemID}
     @ApiOperation(value = "Updates a User object", notes = "Returns the newly" +
             " updated User object after it is persisted to the database",
             response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+            @ApiResponse(code = 200, message = "User " +
+                    API_MESSAGE_OBJECT_ALREADY_PERSISTED,
                     response = User.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.PUT, value = ADMINISTRATIVE_UNIT + SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS)
-    public ResponseEntity<UserHateoas> updateUser(HttpServletRequest request,
-                                                                              @ApiParam(name = "systemID",
-                                                                                      value = "systemID of documentDescription to update.",
-                                                                                      required = true)
-                                                                              @PathVariable("systemID") String systemID,
-                                                                              @ApiParam(name = "user",
-                                                                                      value = "Incoming user object",
-                                                                                      required = true)
-                                                                              @RequestBody User user)
+    @RequestMapping(method = RequestMethod.PUT, value = USER +
+            SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS)
+    public ResponseEntity<UserHateoas>
+    updateUser(HttpServletRequest request,
+               @ApiParam(name = "systemID",
+                       value = "systemID of documentDescription to update.",
+                       required = true)
+               @PathVariable("systemID") String systemID,
+               @ApiParam(name = "user",
+                       value = "Incoming user object",
+                       required = true)
+               @RequestBody User user)
             throws NikitaException {
-        User newUser = userService.update(systemID,
+        UserHateoas userHateoas = userService.handleUpdate(systemID,
                 parseETAG(request.getHeader(ETAG)), user);
-        UserHateoas userHateoas = new UserHateoas(user);
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(CommonUtils.WebUtils.
+                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(userHateoas.getEntityVersion().toString())
                 .body(userHateoas);
     }
-    */
 }

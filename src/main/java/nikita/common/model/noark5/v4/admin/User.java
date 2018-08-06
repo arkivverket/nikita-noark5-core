@@ -1,7 +1,10 @@
 package nikita.common.model.noark5.v4.admin;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.interfaces.entities.admin.IUserEntity;
+import nikita.common.util.deserialisers.admin.UserDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -12,53 +15,24 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
+import static nikita.common.config.Constants.*;
+
 @Entity
 @Table(name = "nikita_user")
-public class User extends NoarkEntity implements IUserEntity {
+@AttributeOverride(name = "id",
+        column = @Column(
+                name = PRIMARY_KEY_USER))
+@JsonDeserialize(using = UserDeserializer.class)
+public class User
+        extends NoarkEntity
+        implements IUserEntity {
 
+    @Column(name = "system_id", unique = true)
     @NotNull
-    @Column(name = "account_non_expired", nullable = false)
-    boolean accountNonExpired;
+    private String systemId;
+
+    @Column(unique = true)
     @NotNull
-    @Column(name = "credentials_non_expired", nullable = false)
-    boolean credentialsNonExpired;
-    @NotNull
-    @Column(name = "account_non_locked", nullable = false)
-    boolean accountNonLocked;
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
-    private Long id;
-    /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @Column(name = "account_created_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Audited
-    private Date createdDate;
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @Column(name = "created_by")
-    @Audited
-    private String createdBy;
-    /**
-     * M602 - avsluttetDato (xs:dateTime)
-     */
-    @Column(name = "finalised_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Audited
-    private Date finalisedDate;
-    /**
-     * M603 - avsluttetAv (xs:string)
-     */
-    @Column(name = "finalised_by")
-    @Audited
-    private String finalisedBy;
-    @Column(name = "username", length = 50, unique = true)
-    @NotNull
-    @Size(min = 4, max = 50)
     private String username;
 
     @Column(name = "password", length = 100)
@@ -74,10 +48,47 @@ public class User extends NoarkEntity implements IUserEntity {
     @Size(min = 4, max = 50)
     private String lastname;
 
-    @Column(name = "EMAIL", length = 50)
+    /**
+     * M600 - opprettetDato (xs:dateTime)
+     */
+    @Column(name = "account_created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Audited
+    private Date createdDate;
+
+    /**
+     * M601 - opprettetAv (xs:string)
+     */
+    @Column(name = "created_by")
+    @Audited
+    private String createdBy;
+
+    /**
+     * M602 - avsluttetDato (xs:dateTime)
+     */
+    @Column(name = "finalised_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Audited
+    private Date finalisedDate;
+
+    /**
+     * M603 - avsluttetAv (xs:string)
+     */
+    @Column(name = "finalised_by")
+    @Audited
+    private String finalisedBy;
+
     @NotNull
-    @Size(min = 4, max = 50)
-    private String email;
+    @Column(name = "account_non_expired", nullable = false)
+    private boolean accountNonExpired;
+
+    @NotNull
+    @Column(name = "credentials_non_expired", nullable = false)
+    private boolean credentialsNonExpired;
+
+    @NotNull
+    @Column(name = "account_non_locked", nullable = false)
+    private boolean accountNonLocked;
 
     @Column(name = "enabled")
     @NotNull
@@ -87,15 +98,30 @@ public class User extends NoarkEntity implements IUserEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastPasswordResetDate;
 
-    @Column(name = "lang_key", length = 5)
-    private String langKey;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "nikita_user_authority",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
+                    referencedColumnName = PRIMARY_KEY_USER)},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id",
+                    referencedColumnName = "id")})
     private List<Authority> authorities;
+
+//
+//    @OneToMany(mappedBy = "referenceUser", fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private List<CorrespondencePartInternal>
+//            referenceCorrespondencePartInternal = new ArrayList<>();
+
+    @Override
+    public String getSystemId() {
+        return systemId;
+    }
+
+    @Override
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
     @Override
     public String getCreatedBy() {
@@ -125,14 +151,6 @@ public class User extends NoarkEntity implements IUserEntity {
     @Override
     public void setFinalisedBy(String finalisedBy) {
         this.finalisedBy = finalisedBy;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -165,14 +183,6 @@ public class User extends NoarkEntity implements IUserEntity {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Boolean getEnabled() {
@@ -222,6 +232,15 @@ public class User extends NoarkEntity implements IUserEntity {
     public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
     }
+//
+//    public List<CorrespondencePartInternal> getReferenceCorrespondencePartInternal() {
+//        return referenceCorrespondencePartInternal;
+//    }
+//
+//    public void setReferenceCorrespondencePartInternal(
+//            List<CorrespondencePartInternal> referenceCorrespondencePartInternal) {
+//        this.referenceCorrespondencePartInternal = referenceCorrespondencePartInternal;
+//    }
 
     public Date getLastPasswordResetDate() {
         return lastPasswordResetDate;
@@ -232,9 +251,19 @@ public class User extends NoarkEntity implements IUserEntity {
     }
 
     @Override
+    public String getFunctionalTypeName() {
+        return NOARK_ADMINISTRATION_PATH;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return N5ResourceMappings.USER;
+    }
+
+    @Override
     public String toString() {
         return "User{" + super.toString() +
-                "id=" + id +
+                "username='" + username + '\'' +
                 ", createdDate=" + createdDate +
                 ", createdBy='" + createdBy + '\'' +
                 ", finalisedDate=" + finalisedDate +
@@ -242,14 +271,11 @@ public class User extends NoarkEntity implements IUserEntity {
                 ", accountNonExpired=" + accountNonExpired +
                 ", credentialsNonExpired=" + credentialsNonExpired +
                 ", accountNonLocked=" + accountNonLocked +
-                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
                 ", enabled=" + enabled +
                 ", lastPasswordResetDate=" + lastPasswordResetDate +
-                ", langKey='" + langKey + '\'' +
                 '}';
     }
 
@@ -277,10 +303,8 @@ public class User extends NoarkEntity implements IUserEntity {
                 .append(password, rhs.password)
                 .append(firstname, rhs.firstname)
                 .append(lastname, rhs.lastname)
-                .append(email, rhs.email)
                 .append(enabled, rhs.enabled)
                 .append(lastPasswordResetDate, rhs.lastPasswordResetDate)
-                .append(langKey, rhs.langKey)
                 .isEquals();
     }
 
@@ -298,10 +322,8 @@ public class User extends NoarkEntity implements IUserEntity {
                 .append(password)
                 .append(firstname)
                 .append(lastname)
-                .append(email)
                 .append(enabled)
                 .append(lastPasswordResetDate)
-                .append(langKey)
                 .toHashCode();
     }
 }

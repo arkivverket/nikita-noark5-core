@@ -6,5 +6,5 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
  * Created by tsodring on 5/18/17.
  */
 public interface IUserHateoasHandler extends IHateoasHandler {
-    // Think it just has a slef link
+    // Think it just has a self link
 }

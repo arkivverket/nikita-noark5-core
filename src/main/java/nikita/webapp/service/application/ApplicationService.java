@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.NEW_USER;
 
 @Service
 @Transactional
@@ -81,6 +82,29 @@ public class ApplicationService {
     }
 
     /**
+     * Creates a method to create an account
+     *
+     * @return
+     */
+    public void addAccountCreationInformation(HttpServletRequest request,
+                                              List<ConformityLevel> conformityLevels) {
+
+        String address = request.getHeader("X-Forwarded-Host");
+        String protocol = request.getHeader("X-Forwarded-Proto");
+
+        ConformityLevel accountCreation = new ConformityLevel();
+        if (address == null) {
+            accountCreation.setHref(publicUrlPath + HATEOAS_API_PATH + SLASH +
+                    NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
+        } else {
+            accountCreation.setHref(protocol + "://" + address + contextPath +
+                    NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
+        }
+        accountCreation.setRel(REL_ADMIN_NEW_USER);
+        conformityLevels.add(accountCreation);
+    }
+
+    /**
      * Creates a list of the officially supported resource links.
      * These are: arkivstruktur, casehandling, metadata, administrasjon and
      * loggingogsporing
@@ -136,10 +160,12 @@ public class ApplicationService {
             addLogoutInformation(request, conformityLevels);
         }
 
-        /* Show login relation also for logged in users to allow user
-         * change also when logged in.
-         */
+        // Show login relation also for logged in users to allow user
+        // change also when logged in.
         addLoginInformation(request, conformityLevels);
+
+        // Show accoount creation relation 
+        addAccountCreationInformation(request, conformityLevels);
 
         applicationDetails = new ApplicationDetails(conformityLevels);
         return applicationDetails;

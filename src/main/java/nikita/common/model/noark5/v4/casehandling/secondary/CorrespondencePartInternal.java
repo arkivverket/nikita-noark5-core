@@ -1,14 +1,15 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.model.noark5.v4.interfaces.entities.casehandling.ICorrespondencePartInternalEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "correspondence_part_internal")
@@ -27,8 +28,9 @@ public class CorrespondencePartInternal
     @Audited
     private String administrativeUnit;
 
-    @ManyToOne
-    private AdministrativeUnit referenceAdministrativeUnit;
+
+    //@ManyToOne
+    //private AdministrativeUnit referenceAdministrativeUnit;
 
     /**
      * M307 - saksbehandler (xs:string)
@@ -37,8 +39,6 @@ public class CorrespondencePartInternal
     @Audited
     private String caseHandler;
 
-    @ManyToOne
-    private User referenceCaseHandler;
 
     /*
   TODO: Temp disabled!
@@ -53,14 +53,14 @@ public class CorrespondencePartInternal
     public void setAdministrativeUnit(String administrativeUnit) {
         this.administrativeUnit = administrativeUnit;
     }
-
-    public AdministrativeUnit getReferenceAdministrativeUnit() {
-        return referenceAdministrativeUnit;
-    }
-
-    public void setReferenceAdministrativeUnit(AdministrativeUnit referenceAdministrativeUnit) {
-        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
-    }
+//
+//    public AdministrativeUnit getReferenceAdministrativeUnit() {
+//        return referenceAdministrativeUnit;
+//    }
+//
+//    public void setReferenceAdministrativeUnit(AdministrativeUnit referenceAdministrativeUnit) {
+//        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
+//    }
 
     public String getCaseHandler() {
         return caseHandler;
@@ -68,14 +68,6 @@ public class CorrespondencePartInternal
 
     public void setCaseHandler(String caseHandler) {
         this.caseHandler = caseHandler;
-    }
-
-    public User getReferenceCaseHandler() {
-        return referenceCaseHandler;
-    }
-
-    public void setReferenceCaseHandler(User referenceCaseHandler) {
-        this.referenceCaseHandler = referenceCaseHandler;
     }
 
     @Override

@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <title>nikita-noark5</title>
   <script src="dependencies/internal/config.js"></script>
-  <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
   <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
   <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
   <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
 
   <script src="dependencies/internal/login.js"></script>
 
@@ -68,8 +68,10 @@
     </div>
   </div>
 </div>
+
 <!-- modal to create a new user -->
-<div class="modal fade" my-modal id="newAccountModal">
+<div id="newAccountModal" class="modal fade" tabindex="-1"
+     role="dialog" aria-hidden="true" new-user-modal-dir>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -86,6 +88,26 @@
                 <input type="text" name="emailAddress" id="emailAddressReg"
                        ng-model="emailAddressRegister" class="form-control form-control-lg rounded-1"
                        placeholder="Epostadresse"/>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="firstname">Fornavn:</label>
+                <input class="form-control form-control-lg rounded-1" placeholder="Fornavn"
+                       name="firstname" type="text" value=""
+                       ng-model="firstnameRegister" id="firstname">
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="lastname">Etternavn:</label>
+                <input class="form-control form-control-lg rounded-1" placeholder="Etternavn"
+                       name="lastname" type="text" value=""
+                       ng-model="lastnameRegister" id="lastname">
               </div>
               <div class="col-1"></div>
             </div>
@@ -118,7 +140,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-lg btn-primary float-left" data-dismiss="modal">Lukk</button>
-          <button class="btn btn-lg btn-success float-right" ng-click="createAccount()">Opprett konto
+          <button class="btn btn-lg btn-success float-right" ng-click="createUser()">Opprett konto
           </button>
         </div>
       </div>

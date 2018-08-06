@@ -1,8 +1,5 @@
 package nikita.common.model.noark5.v4.interfaces.entities.casehandling;
 
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.User;
-
 /**
  * Created by tsodring on 5/22/17.
  */
@@ -12,17 +9,18 @@ public interface ICorrespondencePartInternalEntity extends ICorrespondencePartEn
 
     void setAdministrativeUnit(String administrativeUnit);
 
-    AdministrativeUnit getReferenceAdministrativeUnit();
+//    AdministrativeUnit getReferenceAdministrativeUnit();
 
-    void setReferenceAdministrativeUnit(AdministrativeUnit referenceAdministrativeUnit);
+    ////  void setReferenceAdministrativeUnit(AdministrativeUnit
+    //                                           referenceAdministrativeUnit);
 
     String getCaseHandler();
 
     void setCaseHandler(String caseHandler);
 
-    User getReferenceCaseHandler();
+//    User getReferenceUser();
 
-    void setReferenceCaseHandler(User referenceCaseHandler);
+    //void setReferenceUser(User user);
 /*
   TODO: Temp disabled!
     List<RegistryEntry> getReferenceRegistryEntry();

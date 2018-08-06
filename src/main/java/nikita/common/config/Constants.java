@@ -196,7 +196,7 @@ public final class Constants {
 
     public static final String NOARK_FONDS_STRUCTURE_PATH = "arkivstruktur";
     public static final String NOARK_METADATA_PATH = "metadata";
-    public static final String NOARK_ADMINISTRATION_PATH = "administration";
+    public static final String NOARK_ADMINISTRATION_PATH = "admin";
     public static final String NOARK_CASE_HANDLING_PATH = "sakarkiv";
     public static final String NOARK_LOGGING_PATH = "loggingogpsoring";
 
@@ -577,8 +577,17 @@ public final class Constants {
     public static final String REL_METADATA_CLASSIFICATION_SYSTEM_TYPE =
             REL_METADATA + CLASSIFICATION_SYSTEM_TYPE + SLASH;
 
-    public static final String REL_ADMIN_ADMINISTRATIVE_UNIT =
+    public static final String REL_ADMIN_NEW_ADMINISTRATIVE_UNIT =
             REL_ADMINISTRATION + NEW_ADMINISTRATIVE_UNIT + SLASH;
+
+    public static final String REL_ADMIN_ADMINISTRATIVE_UNIT =
+            REL_ADMINISTRATION + ADMINISTRATIVE_UNIT + SLASH;
+
+    public static final String REL_ADMIN_NEW_USER =
+            REL_ADMINISTRATION + NEW_USER + SLASH;
+
+    public static final String REL_ADMIN_USER =
+            REL_ADMINISTRATION + USER + SLASH;
 
 
     public static final String REL_METADATA_SCREENING_DOCUMENT =
@@ -586,6 +595,14 @@ public final class Constants {
 
     public static final String REL_METADATA_SCREENING_METADATA =
             REL_METADATA + SCREENING_METADATA + SLASH;
+
+    public static final String REL_LOGIN_OAUTH2 =
+            NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
+                    LOGIN_OAUTH + SLASH;
+
+    public static final String REL_LOGOUT_OAUTH2 =
+            NIKITA_CONFORMANCE_REL + LOGOUT_REL_PATH + SLASH +
+                    LOGIN_OAUTH + SLASH;
 
 
     // Database Constants
@@ -609,10 +626,14 @@ public final class Constants {
             "f_pk_fonds_creator_id";
     public static final String FOREIGN_KEY_STORAGE_LOCATION_PK = "f_pk_fonds_id";
 
+    public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
+
     // Primary key names
     public static final String PRIMARY_KEY_FONDS = "pk_fonds_id";
     public static final String PRIMARY_KEY_FONDS_CREATOR =
             "pk_fonds_creator_id";
+
+    public static final String PRIMARY_KEY_USER = "pk_user_id";
 
     public static final String DM_OWNED_BY = "ownedBy";
 

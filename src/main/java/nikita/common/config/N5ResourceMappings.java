@@ -332,6 +332,10 @@ public final class N5ResourceMappings {
     public static final String USER_NAME = "brukerNavn";
     public static final String NEW_USER = NEW + Constants.DASH + USER;
 
+    public static final String FIRST_NAME = "fornavn";
+    public static final String SECOND_NAME = "etternavn";
+    public static final String PASSWORD = "passord";
+
     public static final String RIGHT = "rettighet";
     public static final String NEW_RIGHT = NEW + Constants.DASH + RIGHT;
 

@@ -1,9 +1,13 @@
 package nikita.webapp.util.exceptions;
 
-public class UsernameExistsException extends Throwable {
+import nikita.common.util.exceptions.NikitaException;
 
-    public UsernameExistsException(final String message) {
-        super(message);
+public class UsernameExistsException extends NikitaException {
+    public UsernameExistsException() {
+        super();
     }
 
+    public UsernameExistsException(String message) {
+        super(message);
+    }
 }

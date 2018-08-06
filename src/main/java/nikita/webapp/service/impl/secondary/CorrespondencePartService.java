@@ -63,8 +63,10 @@ public class CorrespondencePartService implements ICorrespondencePartService {
 
         existingCorrespondencePart.setAdministrativeUnit(incomingCorrespondencePart.getAdministrativeUnit());
         existingCorrespondencePart.setCaseHandler(incomingCorrespondencePart.getCaseHandler());
-        existingCorrespondencePart.setReferenceAdministrativeUnit(incomingCorrespondencePart.getReferenceAdministrativeUnit());
-        existingCorrespondencePart.setReferenceCaseHandler(incomingCorrespondencePart.getReferenceCaseHandler());
+        //existingCorrespondencePart.setReferenceAdministrativeUnit
+        //      (incomingCorrespondencePart.getReferenceAdministrativeUnit());
+//        existingCorrespondencePart.setReferenceUser(incomingCorrespondencePart
+//                .getReferenceUser());
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
         return existingCorrespondencePart;

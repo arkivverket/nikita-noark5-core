@@ -1,10 +1,17 @@
 package nikita.webapp.service;
 
 import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
 import nikita.webapp.util.exceptions.UsernameExistsException;
 
 public interface IUserService {
 
-    User registerNewUser(User user) throws UsernameExistsException;
+    UserHateoas createNewUser(User user) throws UsernameExistsException;
 
+    UserHateoas findAll();
+
+    UserHateoas findBySystemId(String systemId);
+
+    UserHateoas handleUpdate(String userSystemId, Long version, User
+            incomingUser);
 }
