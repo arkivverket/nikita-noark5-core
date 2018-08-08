@@ -108,6 +108,7 @@ var login = app.controller('LoginController',
           })
         }).then(function (data) {
           SetUserToken("Bearer " + data.data.access_token);
+          SetUsername($scope.emailAddress);
           console.log("Logging in.token is " + JSON.stringify(data.data) + ". Redirecting to page for " +
             $scope.selectedLoginRole);
           if ($scope.selectedLoginRole === 'arkivar') {

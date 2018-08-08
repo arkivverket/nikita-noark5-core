@@ -611,6 +611,7 @@ public final class Constants {
     public static final String TABLE_FONDS = "fonds";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
+    public static final String TABLE_CASE_FILE_SEQUENCE = "sequence_generator";
 
 
     // Join table names

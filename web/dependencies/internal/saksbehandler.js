@@ -67,6 +67,11 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       $scope.showDocumentBreadcrumb = false;
       $scope.showRegistryEntryBreadcrumb = false;
 
+      $scope.newCaseResponsibleForCaseFile = GetUsername();
+      $scope.newCaseStatusForCaseFile = "Opprettet av saksbehandler";
+
+
+      $scope.disableAllButtons = false;
       pageLoad();
 
 
@@ -135,7 +140,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
                       }).then(function successCallback(response) {
                         $scope.fondsList = response.data.results;
                         for (var fondsrel in $scope.fondsList) {
-                          //console.log("Checking  " + JSON.stringify($scope.fondsList[fondsrel]));
+                          console.log("Checking  " + JSON.stringify($scope.fondsList[fondsrel]));
                           for (var rel in $scope.fondsList[fondsrel]._links) {
                             var relation = $scope.fondsList[fondsrel]._links[rel].rel;
                             if (relation === REL_SERIES) {
@@ -147,12 +152,35 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
                                 $scope.seriesList = response.data.results;
                                 console.log("Retrieved the following seriesList " + JSON.stringify($scope.seriesList));
 
+                                if (typeof $scope.seriesList === 'undefined' || $scope.seriesList < 1) {
+                                  alert("Kan ikke koble til en arkivdel. Kan ikke gjøre noe uten en arkivdel! Du må først opprette en arkivdel med arkivar rollen");
+                                  $scope.disableAllButtons = true;
+                                  return;
+                                }
                                 for (var seriesRel in $scope.seriesList) {
-                                  //console.log("Checking  " + JSON.stringify($scope.fondsList[fondsrel]));
                                   for (var rel in $scope.seriesList[seriesRel]._links) {
                                     var relation = $scope.seriesList[seriesRel]._links[rel].rel;
+                                    //console.log("REL " + relation + ", " + JSON.stringify($scope.seriesList[seriesRel]._links[rel].href));
                                     if (relation === REL_CASE_FILE) {
+                                      console.log("GET " + relation + ", " + JSON.stringify($scope.seriesList[seriesRel]._links[rel].href));
                                       $scope.hrefCaseFile = $scope.seriesList[seriesRel]._links[rel].href;
+                                      $http({
+                                        method: 'GET',
+                                        url: $scope.seriesList[seriesRel]._links[rel].href,
+                                        headers: {'Authorization': $scope.token}
+                                      }).then(function successCallback(response) {
+                                          $scope.caseFileList = response.data.results;
+                                          console.log("Retrieved " + JSON.stringify($scope.caseFileList));
+                                        }, function errorCallback(response) {
+                                          if (response.status == -1) {
+                                            console.log(MSG_NIKITA_DOWN_LOG + JSON.stringify(response));
+                                            alert(MSG_NIKITA_DOWN);
+                                          } else {
+                                            console.log(MSG_NIKITA_UNKNOWN_ERROR_LOG + JSON.stringify(response));
+                                            alert(MSG_NIKITA_UNKNOWN_ERROR);
+                                          }
+                                        }
+                                      );
                                     }
                                     else if (relation === REL_NEW_CASE_FILE) {
                                       $scope.hrefNewCaseFile = $scope.seriesList[seriesRel]._links[rel].href;
@@ -438,7 +466,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
        * updated so the newly returned caseFile is shown.
        */
       $scope.createCaseFile = function () {
-
+        console.log("Calling createCaseFile with " + $scope.hrefNewCaseFile);
         $http({
           url: $scope.hrefNewCaseFile,
           method: "POST",
@@ -447,10 +475,16 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
             'Authorization': $scope.token,
           },
           data: {
-            tittel: $.trim(document.getElementById("nyTittelSaksmappe").value),
-            beskrivelse: $.trim(document.getElementById("nyBeskrivelseSaksmappe").value),
-            dokumentmedium: $.trim($scope.selectedDocumentMediumNewCaseFile),
-            saksmappestatus: $.trim($scope.selectedCaseFileStatus)
+            tittel: $.trim($scope.newTitleForCaseFile),
+            offentligTittel: $.trim($scope.newPublicTitleForCaseFile),
+            beskrivelse: $.trim($scope.newDescriptionForCaseFile),
+            dokumentmedium: $scope.selectedDocumentMediumNewCaseFile,
+            // Temporary removed. Will add in administrativeunit functionality and this will have values
+            // Same with keyword. Waiting to check implementation
+            // noekkelord: $.trim($scope.newKeywordForCaseFile),
+            // administrativEnhet: $.trim($scope.newAdministrativeUnitForCaseFile),
+            saksansvarlig: $.trim($scope.newCaseResponsibleForCaseFile),
+            saksstatus: $.trim($scope.newCaseStatusForCaseFile),
           }
         }).then(function successCallback(response) {
             console.log("POST to create new caseFile data returned= " + JSON.stringify(response.data));

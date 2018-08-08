@@ -68,7 +68,9 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col col-12">
-            <button class="btn btn-primary dropdown-toggle float-left" type="button" data-toggle="dropdown">Velg
+            <button class="btn btn-primary dropdown-toggle float-left"
+                    type="button" data-toggle="dropdown"
+                    ng-disabled="disableAllButtons" disableAllButtons>Velg
               arkivdel
               <span class="caret"></span></button>
             <ul class="dropdown-menu" ng-repeat="series in seriesList" ng-click="seriesSelected(series)">
@@ -76,7 +78,8 @@
             </ul>
             </button>
             <button type="button" class="btn btn-primary float-right"
-                    data-toggle="modal" data-target="#newCaseFileModal">
+                    data-toggle="modal" data-target="#newCaseFileModal"
+                    ng-disabled="disableAllButtons">
               Opprett saksmappe
             </button>
           </div>
@@ -90,20 +93,20 @@
             <table class="table table-hover">
               <thead>
               <tr>
-                <th style="width: 50%">tittel</th>
-                <th style="width: 10%">saksnr</th>
-                <th style="width: 10%">status</th>
-                <th style="width: 15%">opprettetDato</th>
-                <th style="width: 15%">avsluttetDato</th>
+                <th style="width: 40%">tittel</th>
+                <th style="width: 20%">saksnr</th>
+                <th style="width: 20%">status</th>
+                <th style="width: 10%">opprettetDato</th>
+                <th style="width: 10%">avsluttetDato</th>
               </tr>
               </thead>
               <tbody>
-              <tr ng-repeat="caseFile in caseFileList" ng-click="caseFileSelected(caseFile)">
+              <tr ng-repeat="caseFile in caseFileList track by $index" ng-click="caseFileSelected(caseFile)">
                 <td>
                   {{caseFile.tittel}}
                 </td>
                 <td>
-                  {{caseFile.saksnr}}
+                  {{caseFile.mappeID}}
                 </td>
                 <td>
                   {{caseFile.saksstatus}}
@@ -639,7 +642,7 @@
 
   <!--modal to create new caseFile -->
   <div id="newCaseFileModal" class="modal fade" tabindex="-1"
-       role="dialog" aria-hidden="true" new-casefile-modal-dir>
+       role="dialog" aria-hidden="true" new-case-file-modal-dir>
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -652,10 +655,21 @@
               <div class="col-1"></div>
               <div class="col-10">
                 <label class="control-label" for="nyTittelSaksmappe">Tittel</label>
-                <input id="nyTittelSaksmappe" class="form-control" type="text"
+                <input id="nyTittelSaksmappe" class="form-control form-control-lg rounded-1" type="text"
                        data-toggle="tooltip" data-placement="top"
                        ng-model="newTitleForCaseFile"
-                       title="Besrkivende tittel for saksmappe 'Søknad om barnehageplass'."/>
+                       title="Beskrivende tittel for saksmappe 'Søknad om barnehageplass'. Merk denne kan inneholde sensitiv informasjon"/>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="nyOffentligTittelSaksmappe">Offentligtittel</label>
+                <input id="nyOffentligTittelSaksmappe" class="form-control form-control-lg rounded-1" type="text"
+                       data-toggle="tooltip" data-placement="top"
+                       ng-model="newPublicTitleForCaseFile"
+                       title="Hvis tittel inneholder sensitiv informasjon, kan en annen versjon av tittel brukes"/>
               </div>
               <div class="col-1"></div>
             </div>
@@ -663,7 +677,7 @@
               <div class="col-1"></div>
               <div class="col-10">
                 <label class="control-label" for="nyBeskrivelseSaksmappe">Beskrivelse</label>
-                <textarea id="nyBeskrivelseSaksmappe" class="form-control" rows="5"
+                <textarea id="nyBeskrivelseSaksmappe" class="form-control form-control-lg rounded-1" rows="5"
                           data-toggle="tooltip" data-placement="top"
                           ng-model="newDescriptionForCaseFile"
                           title="En beskrivelse av saksmappeet. Merk at dette er ikke en beskrivelse av organisasjonen.">
@@ -690,7 +704,7 @@
             <div class="row">
               <div class="col-1"></div>
               <div class="col-10">
-                <div class="control-label" ng-show="selectedDocumentMediumNewCaseFile != 'Elektronisk saksmappe'">
+                <div class="control-label" ng-show="selectedDocumentMediumNewCaseFile != 'Elektronisk arkiv'">
                   <label class="control-label" for="nyOppbevaringsStedSaksmappe">Oppbevarings sted:</label>
                   <select id="nyOppbevaringsStedSaksmappe" class="form-control form-control-lg rounded-1"
                           ng-model="selectedStorageLocation"
@@ -702,6 +716,34 @@
                     </option>
                   </select>
                 </div>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="nySaksstatus">Saksstatus:</label>
+                <select id="nySaksstatus" class="form-control form-control-lg rounded-1"
+                        ng-model="newCaseStatusForCaseFile"
+                        data-toggle="tooltip" data-placement="top"
+                        title="Status på saken.">
+                  <option ng-selected="{{caseFileStatus.value == newCaseStatusForCaseFile}}"
+                          ng-repeat="caseFileStatus in caseFileStatusList"
+                          value="{{caseFileStatus.value}}">{{caseFileStatus.value}}
+                  </option>
+                </select>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="nySaksansvarlig">Saksansvarlig</label>
+                <input id="nySaksansvarlig" class="form-control form-control-lg rounded-1"
+                       data-toggle="tooltip" data-placement="top"
+                       ng-model="newCaseResponsibleForCaseFile"
+                       title="Hvem som er ansvarlig for saken.">
+                </textarea>
               </div>
               <div class="col-1"></div>
             </div>

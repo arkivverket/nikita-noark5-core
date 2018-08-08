@@ -1,3 +1,15 @@
+INSERT INTO sequence_generator (id, administrative_unit, year,
+                                sequence_number)
+VALUES (1, 'default', 2018, 1);
+
+INSERT INTO sequence_generator (id, administrative_unit, year,
+                                sequence_number)
+VALUES (2, 'default', 2019, 1);
+
+INSERT INTO sequence_generator (id, administrative_unit, year,
+                                sequence_number)
+VALUES (3, 'default', 2019, 1);
+
 /* document_medium / dokumentmedium  */
 INSERT INTO document_medium (pk_document_medium_id, system_id, code,
                              description, deleted, version)

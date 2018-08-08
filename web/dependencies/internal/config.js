@@ -97,6 +97,8 @@ var fondsStatusList = [
     {id: 'A', value: 'Avsluttet'}];
 
 var caseFileStatusList = [
+  {id: 'OS', value: 'Opprettet av saksbehandler'},
+  {id: 'OA', value: 'Opprettet av arkivtjenesten'},
     {id: 'UB', value: 'Under behandling'},
     {id: 'U', value: 'Utgår'},
     {id: 'A', value: 'Avsluttet'}];
@@ -139,6 +141,15 @@ var SetUserToken = function (t) {
 
 var GetUserToken = function (t) {
     return localStorage.getItem("token");
+};
+
+var SetUsername = function (t) {
+  localStorage.setItem("username", t);
+  console.log("Adding username " + t + " to local storage");
+};
+
+var GetUsername = function (t) {
+  return localStorage.getItem("username");
 };
 
 var setApplicationRoot = function (t) {

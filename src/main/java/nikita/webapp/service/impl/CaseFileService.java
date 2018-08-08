@@ -3,7 +3,10 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
 import nikita.common.repository.n5v4.ICaseFileRepository;
+import nikita.common.repository.n5v4.casehandling.ISequenceNumberGeneratorRepository;
+import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
@@ -20,22 +23,30 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.*;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 
 @Service
 @Transactional
 public class CaseFileService implements ICaseFileService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CaseFileService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(CaseFileService.class);
+
     private IRegistryEntryService registryEntryService;
     private ICaseFileRepository caseFileRepository;
+    private ISequenceNumberGeneratorRepository numberGeneratorRepository;
     private EntityManager entityManager;
 
-    public CaseFileService(IRegistryEntryService registryEntryService, ICaseFileRepository caseFileRepository, EntityManager entityManager) {
+    public CaseFileService(IRegistryEntryService registryEntryService,
+                           ICaseFileRepository caseFileRepository,
+                           ISequenceNumberGeneratorRepository numberGeneratorRepository,
+                           EntityManager entityManager) {
         this.registryEntryService = registryEntryService;
         this.caseFileRepository = caseFileRepository;
+        this.numberGeneratorRepository = numberGeneratorRepository;
         this.entityManager = entityManager;
     }
 
@@ -46,6 +57,33 @@ public class CaseFileService implements ICaseFileService {
     public CaseFile save(CaseFile caseFile) {
         NoarkUtils.NoarkEntity.Create.setNoarkEntityValues(caseFile);
         NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid(caseFile);
+
+        // If caseStatus is not set, set it to "Opprettet"
+        if (null == caseFile.getCaseStatus()) {
+            caseFile.setCaseStatus(STATUS_OPEN);
+        }
+
+        // If the caseResponsible isn't set, set it to the owner of
+        // this object
+        if (null == caseFile.getCaseResponsible()) {
+            caseFile.setCaseResponsible(caseFile.getOwnedBy());
+        }
+
+        // Set case year
+        Calendar date = new GregorianCalendar();
+        Integer currentYear = date.get(Calendar.YEAR);
+        caseFile.setCaseYear(currentYear);
+
+        // Set case year
+        caseFile.setCaseDate(new Date());
+
+        caseFile.setCaseSequenceNumber(getNextSequenceNumber(
+                caseFile.getAdministrativeUnit()));
+
+        caseFile.setFileId(currentYear.toString() + "/" +
+                caseFile.getCaseSequenceNumber());
+
+
         return caseFileRepository.save(caseFile);
     }
 
@@ -90,6 +128,7 @@ public class CaseFileService implements ICaseFileService {
     public List<CaseFile> findAllCaseFileBySeries(Series series) {
         return caseFileRepository.findByReferenceSeries(series);
     }
+
     // All UPDATE operations
     @Override
     public CaseFile handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull CaseFile incomingCaseFile) {
@@ -127,6 +166,7 @@ public class CaseFileService implements ICaseFileService {
     }
 
     // All HELPER operations
+
     /**
      * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
      * If you call this, be aware that you will only ever get a valid CaseFile back. If there is no valid
@@ -145,5 +185,49 @@ public class CaseFileService implements ICaseFileService {
         return caseFile;
     }
 
-    
+    /**
+     * Gets the next sequence number for the given administrativeUnit and
+     * increments it by one before persisting it back to the database.
+     * <p>
+     * If no administrativeUnit is present (==null), it uses a default
+     * administrativeUnit value. Note this should probably be removed once
+     * we have proper support for administrativeUnit in place
+     * <p>
+     * TODO: Recheck this issue.
+     *
+     * @param administrativeUnit The administrativeUnit
+     * @return the sequence number
+     */
+    protected Integer getNextSequenceNumber(String administrativeUnit) {
+
+        Calendar date = new GregorianCalendar();
+        Integer currentYear = date.get(Calendar.YEAR);
+        Integer sequenceNumber = -1;
+
+        // Get to next sequence number
+        if (administrativeUnit == null) {
+            administrativeUnit = "default";
+        }
+        Optional<SequenceNumberGenerator> nextSequenceOptional =
+                numberGeneratorRepository.
+                        findByAdministrativeUnitAndYear(
+                                administrativeUnit, currentYear);
+
+        if (nextSequenceOptional.isPresent()) {
+            SequenceNumberGenerator nextSequence =
+                    nextSequenceOptional.get();
+
+            sequenceNumber = nextSequence.getSequenceNumber();
+            // increment and save the value
+            nextSequence.incrementByOne();
+            numberGeneratorRepository.save(nextSequence);
+        } else {
+            throw new NikitaException("Error missing sequencenumber " +
+                    "generator for " + administrativeUnit);
+        }
+
+        return sequenceNumber;
+    }
+
+
 }
