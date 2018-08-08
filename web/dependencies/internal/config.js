@@ -7,7 +7,7 @@
 var baseUrl = 'http://localhost:8092/noark5v4/';
 console.log("Setting nikita app_url: " + baseUrl);
 var recordsManagerPage = 'arkivar.html';
-var caseHandlerPage = 'saksmappe.html';
+var caseHandlerPage = 'saksbehandler.html';
 var oauthClientId = "nikita-client";
 
 /*
@@ -96,7 +96,7 @@ var fondsStatusList = [
     {id: 'O', value: 'Opprettet'},
     {id: 'A', value: 'Avsluttet'}];
 
-var caseStatusList = [
+var caseFileStatusList = [
     {id: 'UB', value: 'Under behandling'},
     {id: 'U', value: 'Utgår'},
     {id: 'A', value: 'Avsluttet'}];
@@ -104,7 +104,6 @@ var caseStatusList = [
 var seriesStatusList = [
     {id: 'O', value: 'Opprettet'},
     {id: 'A', value: 'Avsluttet'}];
-
 
 var tilknyttetRegistreringSomList = [
     {id: 'H', value: 'Hoveddokument'},

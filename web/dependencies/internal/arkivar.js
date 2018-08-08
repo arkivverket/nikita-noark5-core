@@ -111,11 +111,11 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
           headers: {'Authorization': $scope.token}
         }).then(function successCallback(response) {
             $scope.applicationRoot = response.data;
-            for (var rel in $scope.applicationRoot.links) {
-              var relation = $scope.applicationRoot.links[rel].rel;
+          for (var rel in $scope.applicationRoot._links) {
+            var relation = $scope.applicationRoot._links[rel].rel;
 
               if (relation == REL_FONDS_STRUCTURE) {
-                var fondsStructureHref = $scope.applicationRoot.links[rel].href;
+                var fondsStructureHref = $scope.applicationRoot._links[rel].href;
                 console.log("fondsStructureHref is : " + JSON.stringify(fondsStructureHref));
                 $http({
                   method: 'GET',
@@ -159,7 +159,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
                 });
               }
               else if (relation === REL_LOGOUT_OAUTH2) {
-                $scope.hrefLogout = $scope.applicationRoot.links[rel].href;
+                $scope.hrefLogout = $scope.applicationRoot._links[rel].href;
                 console.log("hrefLogout is : " + JSON.stringify($scope.hrefLogout));
               }
             }
@@ -183,10 +183,10 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
        */
       $scope.updateFonds = function () {
 
-        for (var rel in $scope.fonds.links) {
-          var relation = $scope.fonds.links[rel].rel;
+        for (var rel in $scope.fonds._links) {
+          var relation = $scope.fonds._links[rel].rel;
           if (relation === REL_SELF) {
-            var urlFonds = $scope.fonds.links[rel].href;
+            var urlFonds = $scope.fonds._links[rel].href;
             console.log(" Attempting to update arkiv with following address = " + urlFonds);
             console.log(" Current ETAG is = [" + $scope.fondsETag + "]");
             $http({
@@ -221,10 +221,10 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
        */
       $scope.updateSeries = function () {
 
-        for (var rel in $scope.series.links) {
-          var relation = $scope.series.links[rel].rel;
+        for (var rel in $scope.series._links) {
+          var relation = $scope.series._links[rel].rel;
           if (relation === REL_SELF) {
-            var urlSeries = $scope.series.links[rel].href;
+            var urlSeries = $scope.series._links[rel].href;
             console.log(" Attempting to update series with following address = " + urlSeries);
             console.log(" Current ETAG is = [" + $scope.seriesETag + "]");
             $http({
@@ -264,13 +264,13 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
 
       $scope.updateFondsCreator = function () {
 
-        for (var rel in $scope.fondsCreator.links) {
-          var relation = $scope.fondsCreator.links[rel].rel;
+        for (var rel in $scope.fondsCreator._links) {
+          var relation = $scope.fondsCreator._links[rel].rel;
           if (relation === REL_SELF) {
-            console.log("href for updating a fondsCreator is " + $scope.fondsCreator.links[rel].href);
+            console.log("href for updating a fondsCreator is " + $scope.fondsCreator._links[rel].href);
             console.log(" Attempting to update fondsCreator with following ETAG = " + $scope.fondsCreatorETag);
             $http({
-              url: $scope.fondsCreator.links[rel].href,
+              url: $scope.fondsCreator._links[rel].href,
               method: "PUT",
               headers: {
                 'Content-Type': 'application/vnd.noark5-v4+json',
@@ -303,13 +303,13 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
        */
       $scope.createFondsCreator = function () {
 
-        for (var rel in $scope.fonds.links) {
-          var relation = $scope.fonds.links[rel].rel;
+        for (var rel in $scope.fonds._links) {
+          var relation = $scope.fonds._links[rel].rel;
           if (relation === REL_NEW_FONDS_CREATOR) {
-            console.log("href for creating a fondsCreator is " + $scope.fonds.links[rel].href);
-            console.log("href for creating a fondsCreator is " + $scope.fonds.links[rel].href);
+            console.log("href for creating a fondsCreator is " + $scope.fonds._links[rel].href);
+            console.log("href for creating a fondsCreator is " + $scope.fonds._links[rel].href);
             $http({
-              url: $scope.fonds.links[rel].href,
+              url: $scope.fonds._links[rel].href,
               method: "POST",
               headers: {
                 'Content-Type': 'application/vnd.noark5-v4+json',
@@ -344,12 +344,12 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
        */
       $scope.createSeries = function () {
 
-        for (var rel in $scope.fonds.links) {
-          var relation = $scope.fonds.links[rel].rel;
+        for (var rel in $scope.fonds._links) {
+          var relation = $scope.fonds._links[rel].rel;
           if (relation === REL_NEW_SERIES) {
-            console.log("href for creating a fondsCreator is " + $scope.fonds.links[rel].href);
+            console.log("href for creating a fondsCreator is " + $scope.fonds._links[rel].href);
             $http({
-              url: $scope.fonds.links[rel].href,
+              url: $scope.fonds._links[rel].href,
               method: "POST",
               headers: {
                 'Content-Type': 'application/vnd.noark5-v4+json',
@@ -537,10 +537,10 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
         // Retrieve the latest copy of the data and pull out the ETAG
         // Find the self link of the current fonds and issue a GET
 
-        for (var rel in fonds.links) {
-          var relation = fonds.links[rel].rel;
+        for (var rel in fonds._links) {
+          var relation = fonds._links[rel].rel;
           if (relation == REL_SELF) {
-            var urlToFonds = fonds.links[rel].href;
+            var urlToFonds = fonds._links[rel].href;
             var token = $scope.token;
             $http({
               method: 'GET',
@@ -563,12 +563,12 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
         $scope.doShowSeriesCard();
         // Retrieve the latest copy of the data and pull out the ETAG
         // Find the self link of the current series and issue a GET
-        for (var rel in series.links) {
-          var relation = series.links[rel].rel;
+        for (var rel in series._links) {
+          var relation = series._links[rel].rel;
           if (relation == REL_SELF) {
             $http({
               method: 'GET',
-              url: series.links[rel].href,
+              url: series._links[rel].href,
               headers: {'Authorization': $scope.token}
             }).then(function successCallback(response) {
               $scope.series = response.data;
@@ -586,12 +586,12 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
         $scope.doShowFondsCreatorCard();
         // Retrieve the latest copy of the data and pull out the ETAG
         // Find the self link of the current fondsCreator and issue a GET
-        for (var rel in fondsCreator.links) {
-          var relation = fondsCreator.links[rel].rel;
+        for (var rel in fondsCreator._links) {
+          var relation = fondsCreator._links[rel].rel;
           if (relation == REL_SELF) {
             $http({
               method: 'GET',
-              url: fondsCreator.links[rel].href,
+              url: fondsCreator._links[rel].href,
               headers: {'Authorization': $scope.token}
             }).then(function successCallback(response) {
               $scope.fondsCreator = response.data;
@@ -604,12 +604,12 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
       };
 
       $scope.getListFondsCreator = function () {
-        for (var rel in $scope.fonds.links) {
-          var relation = $scope.fonds.links[rel].rel;
+        for (var rel in $scope.fonds._links) {
+          var relation = $scope.fonds._links[rel].rel;
           if (relation == REL_FONDS_CREATOR) {
             $http({
               method: 'GET',
-              url: $scope.fonds.links[rel].href,
+              url: $scope.fonds._links[rel].href,
               headers: {'Authorization': $scope.token}
             }).then(function successCallback(response) {
               $scope.fondsCreatorList = response.data.results;
@@ -620,12 +620,12 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
       };
 
       $scope.getSeriesCreator = function () {
-        for (var rel in $scope.fonds.links) {
-          var relation = $scope.fonds.links[rel].rel;
+        for (var rel in $scope.fonds._links) {
+          var relation = $scope.fonds._links[rel].rel;
           if (relation == REL_SERIES) {
             $http({
               method: 'GET',
-              url: $scope.fonds.links[rel].href,
+              url: $scope.fonds._links[rel].href,
               headers: {'Authorization': $scope.token}
             }).then(function successCallback(response) {
               $scope.seriesList = response.data.results;

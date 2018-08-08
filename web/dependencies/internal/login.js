@@ -59,14 +59,14 @@ var login = app.controller('LoginController',
 
         console.log("Application Root data is: " + JSON.stringify(response.data));
 
-        for (var rel in response.data.links) {
-          var relation = response.data.links[rel].rel;
+        for (var rel in response.data._links) {
+          var relation = response.data._links[rel].rel;
           if (relation === REL_LOGIN_OAUTH2) {
-            $scope.loginHref = response.data.links[rel].href;
+            $scope.loginHref = response.data._links[rel].href;
             console.log("Setting login href to " + JSON.stringify($scope.loginHref));
           }
           if (relation === REL_ADMIN_NEW_USER) {
-            $scope.newUserHref = response.data.links[rel].href;
+            $scope.newUserHref = response.data._links[rel].href;
             console.log("Setting new user href to " + JSON.stringify($scope.newUserHref));
           }
         }
