@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="480.0" prefWidth="823.0" xmlns="http://javafx.com/javafx/10.0.1"
-            fx:controller="nikita.extraction.run.MainController">
+<?import java.lang.String?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="823.0" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="nikita.extraction.run.MainController">
   <top>
     <VBox BorderPane.alignment="CENTER">
       <children>
@@ -49,16 +49,28 @@
             <Label text="password:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-            <Button fx:id="testConnectionButton" mnemonicParsing="false" text="Test kobling" onAction="#handleTestConnection" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <Button fx:id="loginButton" mnemonicParsing="false" text="Logg på" onAction="#handleLogin" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <Label text="Auth metode" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <ChoiceBox value="OAuth2" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="OAuth2"/>
+                  <!-- These should be supported later
+                  <String fx:value="JWT - OAuth2"/>
+                  <String fx:value="Form based"/>
+                  <String fx:value="Basic Authentication"/>
+                  -->
+                </FXCollections>
+              </items>
+            </ChoiceBox>
+            <Button fx:id="testConnectionButton" mnemonicParsing="false" onAction="#handleTestConnection" text="Test kobling" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" text="Logg på" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
 
             <columnConstraints>
               <ColumnConstraints/>
               <ColumnConstraints/>
             </columnConstraints>
             <rowConstraints>
-              <RowConstraints/>
-              <RowConstraints/>
               <RowConstraints/>
               <RowConstraints/>
               <RowConstraints/>
