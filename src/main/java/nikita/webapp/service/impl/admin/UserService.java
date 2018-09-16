@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
-class UserService implements IUserService {
+public class UserService implements IUserService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(UserService.class);

@@ -35,10 +35,10 @@ code_quality:
     - docker:stable-dind
   script:
     - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-    - docker run
+    - docker extraction
         --env SOURCE_CODE="$PWD"
         --volume "$PWD":/code
-        --volume /var/run/docker.sock:/var/run/docker.sock
+        --volume /var/extraction/docker.sock:/var/extraction/docker.sock
         "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
   artifacts:
     paths: [gl-code-quality-report.json]
@@ -66,11 +66,11 @@ sast:
     - docker:stable-dind
   script:
     - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-    - docker run
+    - docker extraction
         --env SAST_CONFIDENCE_LEVEL="${SAST_CONFIDENCE_LEVEL:-3}"
         --volume "$PWD:/code"
-        --volume /var/run/docker.sock:/var/run/docker.sock
-        "registry.gitlab.com/gitlab-org/security-products/sast:$SP_VERSION" /app/bin/run /code
+        --volume /var/extraction/docker.sock:/var/extraction/docker.sock
+        "registry.gitlab.com/gitlab-org/security-products/sast:$SP_VERSION" /app/bin/extraction /code
   artifacts:
     paths: [gl-sast-report.json]
 
@@ -84,10 +84,10 @@ dependency_scanning:
     - docker:stable-dind
   script:
     - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-    - docker run
+    - docker extraction
         --env DEP_SCAN_DISABLE_REMOTE_CHECKS="${DEP_SCAN_DISABLE_REMOTE_CHECKS:-false}"
         --volume "$PWD:/code"
-        --volume /var/run/docker.sock:/var/run/docker.sock
+        --volume /var/extraction/docker.sock:/var/extraction/docker.sock
         "registry.gitlab.com/gitlab-org/security-products/dependency-scanning:$SP_VERSION" /code
   artifacts:
     paths: [gl-dependency-scanning-report.json]
@@ -104,8 +104,8 @@ container_scanning:
   services:
     - docker:stable-dind
   script:
-    - docker run -d --name db arminc/clair-db:latest
-    - docker run -p 6060:6060 --link db:postgres -d --name clair --restart on-failure arminc/clair-local-scan:v2.0.1
+    - docker extraction -d --name db arminc/clair-db:latest
+    - docker extraction -p 6060:6060 --link db:postgres -d --name clair --restart on-failure arminc/clair-local-scan:v2.0.1
     - apk add -U wget ca-certificates
     - docker pull ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}
     - wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64

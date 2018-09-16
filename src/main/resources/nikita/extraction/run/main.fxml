@@ -62,6 +62,8 @@
                 </FXCollections>
               </items>
             </ChoiceBox>
+
+
             <Button fx:id="testConnectionButton" mnemonicParsing="false" onAction="#handleTestConnection" text="Test kobling" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
             <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" text="Logg på" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
@@ -80,7 +82,42 @@
           </GridPane>
         </content>
       </TitledPane>
-      <TitledPane animated="false" prefHeight="93.0" prefWidth="293.0" text="Uttrekk info" GridPane.rowIndex="1">
+
+      <TitledPane animated="false" prefHeight="93.0" prefWidth="293.0" text="OAuth info" GridPane.rowIndex="1">
+        <content>
+          <GridPane hgap="5" prefHeight="192.0" prefWidth="323.0" vgap="5">
+            <padding>
+              <Insets bottom="10" left="10" right="10" top="10"/>
+            </padding>
+
+            <!-- Grant type -->
+            <Label text="Grant type:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="grantType" value="password" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <!-- Client Id -->
+            <Label text="Client id:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="clientId" value="nikita-client" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <!-- (OAuth2) username -->
+            <Label text="(OAuth2) username:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <TextField fx:id="oAuth2Username" value="admin" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+            <!-- (OAuth2) password -->
+            <Label text="(OAuth2) password:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <TextField fx:id="oAuth2Password" value="password" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+            <columnConstraints>
+              <ColumnConstraints/>
+              <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+              <RowConstraints/>
+              <RowConstraints/>
+            </rowConstraints>
+          </GridPane>
+        </content>
+      </TitledPane>
+      <TitledPane animated="false" prefHeight="93.0" prefWidth="293.0" text="Uttrekk info" GridPane.rowIndex="2">
         <content>
           <GridPane hgap="5" prefHeight="192.0" prefWidth="323.0" vgap="5">
             <padding>

@@ -1,6 +1,10 @@
 package nikita.webapp.run;
 
+import nikita.common.model.noark5.v4.admin.Authority;
+import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
+import nikita.webapp.service.impl.admin.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +22,9 @@ import java.util.TreeSet;
 import static java.lang.System.out;
 import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.CASE_HANDLER;
+import static nikita.common.model.noark5.v4.admin.AuthorityName.*;
+
 
 /**
  * Create som basic data if application is in demo mode
@@ -27,11 +34,17 @@ public class AfterApplicationStartup {
 
     private static final Logger logger = LoggerFactory.getLogger(AfterApplicationStartup.class);
     private final RequestMappingHandlerMapping handlerMapping;
+    private UserService userService;
+    private AuthorityRepository authorityRepository;
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping
-                                           handlerMapping) {
+                                           handlerMapping,
+                                   UserService userService,
+                                   AuthorityRepository authorityRepository) {
         this.handlerMapping = handlerMapping;
+        this.userService = userService;
+        this.authorityRepository = authorityRepository;
     }
 
     /**
@@ -949,5 +962,70 @@ public class AfterApplicationStartup {
                 (VARIANT_FORMAT,
                         VARIANT_FORMAT_ENG,
                         VARIANT_FORMAT_ENG_OBJECT);
+
+        // Create some users.
+
+
+        //RECORDS_MANAGER, RECORDS_KEEPER, CASE_HANDLER, LEADER, GUEST
+        Authority adminAuthority = new Authority();
+        adminAuthority.setName(RECORDS_MANAGER);
+        authorityRepository.save(adminAuthority);
+
+        Authority recordsKeeperAuthority = new Authority();
+        recordsKeeperAuthority.setName(RECORDS_KEEPER);
+        authorityRepository.save(recordsKeeperAuthority);
+
+        Authority caseHandlerAuthority = new Authority();
+        caseHandlerAuthority.setName(
+                nikita.common.model.noark5.v4.admin.AuthorityName.CASE_HANDLER);
+        authorityRepository.save(caseHandlerAuthority);
+
+        Authority leaderAuthority = new Authority();
+        leaderAuthority.setName(LEADER);
+        authorityRepository.save(leaderAuthority);
+
+        Authority guestAuthority = new Authority();
+        guestAuthority.setName(GUEST);
+        authorityRepository.save(guestAuthority);
+
+        User admin = new User();
+        admin.setPassword("password");
+        admin.setFirstname("Frank");
+        admin.setLastname("Grimes");
+        admin.setUsername("admin@example.com");
+        admin.addAuthority(adminAuthority);
+        userService.createNewUser(admin);
+
+        User recordKeeper = new User();
+        recordKeeper.setPassword("password");
+        recordKeeper.setFirstname("Moe");
+        recordKeeper.setLastname("Szyslak");
+        recordKeeper.setUsername("recordkeeper@example.com");
+        recordKeeper.addAuthority(recordsKeeperAuthority);
+        userService.createNewUser(recordKeeper);
+
+        User caseHandler = new User();
+        caseHandler.setPassword("password");
+        caseHandler.setFirstname("Rainier");
+        caseHandler.setLastname("Wolfcastle");
+        caseHandler.setUsername("casehandler@example.com");
+        caseHandler.addAuthority(caseHandlerAuthority);
+        userService.createNewUser(caseHandler);
+
+        User leader = new User();
+        leader.setPassword("password");
+        leader.setFirstname("Johnny");
+        leader.setLastname("Tightlips");
+        leader.setUsername("leader@example.com");
+        leader.addAuthority(leaderAuthority);
+        userService.createNewUser(leader);
+
+        User guest = new User();
+        guest.setPassword("password");
+        guest.setFirstname("Cletus");
+        guest.setLastname("'Spuckler'");
+        guest.setUsername("Cletus@example.com");
+        guest.addAuthority(guestAuthority);
+        userService.createNewUser(guest);
     }
 }

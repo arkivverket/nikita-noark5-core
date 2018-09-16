@@ -21,9 +21,13 @@ public class TestODataApp {
                 "resources folder.");
         try {
 
+            /*
+            Temp disabling this so that main code compiles ...
+
             AfterApplicationStartup afterApplicationStartup =
                     new AfterApplicationStartup(null);
             afterApplicationStartup.populateTranslatedNames();
+            */
             TestODataApp app = new TestODataApp();
 
             ODataLexer lexer = new ODataLexer(

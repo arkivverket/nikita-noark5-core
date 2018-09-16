@@ -12,6 +12,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -105,7 +106,7 @@ public class User
                     referencedColumnName = PRIMARY_KEY_USER)},
             inverseJoinColumns = {@JoinColumn(name = "authority_id",
                     referencedColumnName = "id")})
-    private List<Authority> authorities;
+    private List<Authority> authorities = new ArrayList<>();
 
 //
 //    @OneToMany(mappedBy = "referenceUser", fetch = FetchType.LAZY)
@@ -232,6 +233,11 @@ public class User
     public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
     }
+
+    public void addAuthority(Authority authority) {
+        this.authorities.add(authority);
+    }
+
 //
 //    public List<CorrespondencePartInternal> getReferenceCorrespondencePartInternal() {
 //        return referenceCorrespondencePartInternal;

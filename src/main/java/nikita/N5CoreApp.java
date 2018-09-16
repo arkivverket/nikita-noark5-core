@@ -1,6 +1,5 @@
 package nikita;
 
-import nikita.webapp.run.AfterApplicationStartup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -31,7 +30,8 @@ public class N5CoreApp {
         ConfigurableApplicationContext context = SpringApplication.run
                 (N5CoreApp.class, args);
 
-        context.getBean(AfterApplicationStartup.class).afterApplicationStarts();
+        //context.getBean(AfterApplicationStartup.class)
+        //      .afterApplicationStarts();
         Environment env = context.getEnvironment();
 
         String[] activeProfiles = env.getActiveProfiles();
