@@ -22,7 +22,7 @@ public class NikitaUserPrincipal implements UserDetails {
         List<Authority> authorities = user.getAuthorities();
         return authorities.stream()
                 .map(authority -> new SimpleGrantedAuthority(
-                        authority.getName().name()))
+                        authority.getAuthorityName().name()))
                 .collect(Collectors.toList());
     }
 

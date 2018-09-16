@@ -1,8 +1,10 @@
 package nikita.webapp.service.impl.admin;
 
+import nikita.common.model.noark5.v4.admin.AuthorityName;
 import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.repository.nikita.UserRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
@@ -32,15 +34,18 @@ public class UserService implements IUserService {
             LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
+    private AuthorityRepository authorityRepository;
     private IUserHateoasHandler userHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
     private PasswordEncoder encoder;
 
     public UserService(UserRepository userRepository,
+                       AuthorityRepository authorityRepository,
                        IUserHateoasHandler userHateoasHandler,
                        ApplicationEventPublisher applicationEventPublisher,
                        PasswordEncoder encoder) {
         this.userRepository = userRepository;
+        this.authorityRepository = authorityRepository;
         this.userHateoasHandler = userHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
         this.encoder = encoder;
@@ -126,8 +131,21 @@ public class UserService implements IUserService {
      * @param username The username/emailaddress to check
      * @return true if the username is registered, false otherwise
      */
+    @Override
     public boolean userExists(String username) {
         return userRepository.findByUsername(username) != null;
+    }
+
+    /**
+     * Check to see is a particular authority already exists
+     * in the system.
+     *
+     * @param authority The authority to check
+     * @return true if the authority exists, false otherwise
+     */
+    @Override
+    public boolean authorityExists(AuthorityName authority) {
+        return authorityRepository.findByAuthorityName(authority) != null;
     }
 
     /**

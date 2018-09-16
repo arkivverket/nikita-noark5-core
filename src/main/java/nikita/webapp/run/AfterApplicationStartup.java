@@ -1,6 +1,7 @@
 package nikita.webapp.run;
 
 import nikita.common.model.noark5.v4.admin.Authority;
+import nikita.common.model.noark5.v4.admin.AuthorityName;
 import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
@@ -963,30 +964,38 @@ public class AfterApplicationStartup {
                         VARIANT_FORMAT_ENG,
                         VARIANT_FORMAT_ENG_OBJECT);
 
-        // Create some users.
+        // Create some authorities and users
 
-
-        //RECORDS_MANAGER, RECORDS_KEEPER, CASE_HANDLER, LEADER, GUEST
         Authority adminAuthority = new Authority();
-        adminAuthority.setName(RECORDS_MANAGER);
-        authorityRepository.save(adminAuthority);
+        if (!userService.authorityExists(RECORDS_MANAGER)) {
+            adminAuthority.setAuthorityName(RECORDS_MANAGER);
+            authorityRepository.save(adminAuthority);
+        }
 
         Authority recordsKeeperAuthority = new Authority();
-        recordsKeeperAuthority.setName(RECORDS_KEEPER);
-        authorityRepository.save(recordsKeeperAuthority);
+        if (!userService.authorityExists(RECORDS_KEEPER)) {
+            recordsKeeperAuthority.setAuthorityName(RECORDS_KEEPER);
+            authorityRepository.save(recordsKeeperAuthority);
+        }
 
         Authority caseHandlerAuthority = new Authority();
-        caseHandlerAuthority.setName(
-                nikita.common.model.noark5.v4.admin.AuthorityName.CASE_HANDLER);
-        authorityRepository.save(caseHandlerAuthority);
+        if (!userService.authorityExists(AuthorityName.CASE_HANDLER)) {
+            caseHandlerAuthority.setAuthorityName(
+                    AuthorityName.CASE_HANDLER);
+            authorityRepository.save(caseHandlerAuthority);
+        }
 
         Authority leaderAuthority = new Authority();
-        leaderAuthority.setName(LEADER);
-        authorityRepository.save(leaderAuthority);
+        if (!userService.authorityExists(LEADER)) {
+            leaderAuthority.setAuthorityName(LEADER);
+            authorityRepository.save(leaderAuthority);
+        }
 
         Authority guestAuthority = new Authority();
-        guestAuthority.setName(GUEST);
-        authorityRepository.save(guestAuthority);
+        if (!userService.authorityExists(GUEST)) {
+            guestAuthority.setAuthorityName(GUEST);
+            authorityRepository.save(guestAuthority);
+        }
 
         if (!userService.userExists("admin@example.com")) {
             User admin = new User();

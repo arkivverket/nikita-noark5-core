@@ -20,7 +20,7 @@ public class Authority implements Serializable {
     @Column(name = "authority_name", length = 50)
     @NotNull
     @Enumerated(EnumType.STRING)
-    private AuthorityName name;
+    private AuthorityName authorityName;
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     private List<User> users;
@@ -33,12 +33,12 @@ public class Authority implements Serializable {
         this.id = id;
     }
 
-    public AuthorityName getName() {
-        return name;
+    public AuthorityName getAuthorityName() {
+        return authorityName;
     }
 
-    public void setName(AuthorityName name) {
-        this.name = name;
+    public void setAuthorityName(AuthorityName authorityName) {
+        this.authorityName = authorityName;
     }
 
     public List<User> getUsers() {
