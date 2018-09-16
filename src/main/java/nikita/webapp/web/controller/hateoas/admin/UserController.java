@@ -122,9 +122,9 @@ public class UserController
             SYSTEM_ID + RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET)
     public ResponseEntity<UserHateoas>
-    findBySystemId(@PathVariable("systemID") final String systemId,
+    findBySystemId(@PathVariable("username") final String username,
                    HttpServletRequest request) {
-        UserHateoas userHateoas = userService.findBySystemId(systemId);
+        UserHateoas userHateoas = userService.findByUsername(username);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))

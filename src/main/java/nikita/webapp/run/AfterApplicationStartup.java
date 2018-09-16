@@ -52,12 +52,12 @@ public class AfterApplicationStartup {
      * endpoints and the HTTP methods they support. Really this should be
      * handled by Spring. I do not know why I couldn't get spring to handle
      * this but we need to get spring to handle these things ... not me!!!
-     *
+     * <p>
      * Also create a list of Norwegian names to english names for handling OData
      */
     public void afterApplicationStarts() {
 
-        for(Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMapping.getHandlerMethods().entrySet()) {
+        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMapping.getHandlerMethods().entrySet()) {
 
             RequestMappingInfo requestMappingInfo = entry.getKey();
             // Assuming there is always a non-null value
@@ -988,44 +988,54 @@ public class AfterApplicationStartup {
         guestAuthority.setName(GUEST);
         authorityRepository.save(guestAuthority);
 
-        User admin = new User();
-        admin.setPassword("password");
-        admin.setFirstname("Frank");
-        admin.setLastname("Grimes");
-        admin.setUsername("admin@example.com");
-        admin.addAuthority(adminAuthority);
-        userService.createNewUser(admin);
+        if (!userService.userExists("admin@example.com")) {
+            User admin = new User();
+            admin.setPassword("password");
+            admin.setFirstname("Frank");
+            admin.setLastname("Grimes");
+            admin.setUsername("admin@example.com");
+            admin.addAuthority(adminAuthority);
+            userService.createNewUser(admin);
+        }
 
-        User recordKeeper = new User();
-        recordKeeper.setPassword("password");
-        recordKeeper.setFirstname("Moe");
-        recordKeeper.setLastname("Szyslak");
-        recordKeeper.setUsername("recordkeeper@example.com");
-        recordKeeper.addAuthority(recordsKeeperAuthority);
-        userService.createNewUser(recordKeeper);
+        if (!userService.userExists("recordkeeper@example.com")) {
+            User recordKeeper = new User();
+            recordKeeper.setPassword("password");
+            recordKeeper.setFirstname("Moe");
+            recordKeeper.setLastname("Szyslak");
+            recordKeeper.setUsername("recordkeeper@example.com");
+            recordKeeper.addAuthority(recordsKeeperAuthority);
+            userService.createNewUser(recordKeeper);
+        }
 
-        User caseHandler = new User();
-        caseHandler.setPassword("password");
-        caseHandler.setFirstname("Rainier");
-        caseHandler.setLastname("Wolfcastle");
-        caseHandler.setUsername("casehandler@example.com");
-        caseHandler.addAuthority(caseHandlerAuthority);
-        userService.createNewUser(caseHandler);
+        if (!userService.userExists("casehandler@example.com")) {
+            User caseHandler = new User();
+            caseHandler.setPassword("password");
+            caseHandler.setFirstname("Rainier");
+            caseHandler.setLastname("Wolfcastle");
+            caseHandler.setUsername("casehandler@example.com");
+            caseHandler.addAuthority(caseHandlerAuthority);
+            userService.createNewUser(caseHandler);
+        }
 
-        User leader = new User();
-        leader.setPassword("password");
-        leader.setFirstname("Johnny");
-        leader.setLastname("Tightlips");
-        leader.setUsername("leader@example.com");
-        leader.addAuthority(leaderAuthority);
-        userService.createNewUser(leader);
+        if (!userService.userExists("leader@example.com")) {
+            User leader = new User();
+            leader.setPassword("password");
+            leader.setFirstname("Johnny");
+            leader.setLastname("Tightlips");
+            leader.setUsername("leader@example.com");
+            leader.addAuthority(leaderAuthority);
+            userService.createNewUser(leader);
+        }
 
-        User guest = new User();
-        guest.setPassword("password");
-        guest.setFirstname("Cletus");
-        guest.setLastname("'Spuckler'");
-        guest.setUsername("Cletus@example.com");
-        guest.addAuthority(guestAuthority);
-        userService.createNewUser(guest);
+        if (!userService.userExists("cletus@example.com")) {
+            User guest = new User();
+            guest.setPassword("password");
+            guest.setFirstname("Cletus");
+            guest.setLastname("'Spuckler'");
+            guest.setUsername("cletus@example.com");
+            guest.addAuthority(guestAuthority);
+            userService.createNewUser(guest);
+        }
     }
 }

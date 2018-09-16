@@ -81,19 +81,19 @@ public class User
 
     @NotNull
     @Column(name = "account_non_expired", nullable = false)
-    private boolean accountNonExpired;
+    private boolean accountNonExpired = true;
 
     @NotNull
     @Column(name = "credentials_non_expired", nullable = false)
-    private boolean credentialsNonExpired;
+    private boolean credentialsNonExpired = true;
 
     @NotNull
     @Column(name = "account_non_locked", nullable = false)
-    private boolean accountNonLocked;
+    private boolean accountNonLocked = true;
 
     @Column(name = "enabled")
     @NotNull
-    private Boolean enabled;
+    private Boolean enabled = true;
 
     @Column(name = "last_password_reset_date")
     @Temporal(TemporalType.TIMESTAMP)

@@ -57,6 +57,7 @@ public class UserService implements IUserService {
         // Encrypt the password. Should be bcrypt!
         user.setPassword(encoder.encode(user.getPassword()));
         user.setEnabled(true);
+        user.setDeleted(false);
         user.setCreatedBy("web");
         user.setCreatedDate(new Date());
         user.setAccountNonExpired(true);
@@ -70,7 +71,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserHateoas findBySystemId(String username) {
+    public UserHateoas findByUsername(String username) {
         User user = getUserOrThrow(username);
         UserHateoas userHateoas = new UserHateoas(user);
         userHateoasHandler.addLinks(userHateoas, new Authorisation());
@@ -125,7 +126,7 @@ public class UserService implements IUserService {
      * @param username The username/emailaddress to check
      * @return true if the username is registered, false otherwise
      */
-    private boolean userExists(String username) {
+    public boolean userExists(String username) {
         return userRepository.findByUsername(username) != null;
     }
 

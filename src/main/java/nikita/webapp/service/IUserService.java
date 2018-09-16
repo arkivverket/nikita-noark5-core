@@ -10,8 +10,10 @@ public interface IUserService {
 
     UserHateoas findAll();
 
-    UserHateoas findBySystemId(String systemId);
+    UserHateoas findByUsername(String username);
 
     UserHateoas handleUpdate(String userSystemId, Long version, User
             incomingUser);
+
+    boolean userExists(String username);
 }
