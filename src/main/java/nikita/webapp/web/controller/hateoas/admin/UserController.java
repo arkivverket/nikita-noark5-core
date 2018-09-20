@@ -68,6 +68,7 @@ public class UserController
             @RequestBody User user)
             throws NikitaException {
         UserHateoas userHateoas = userService.createNewUser(user);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))

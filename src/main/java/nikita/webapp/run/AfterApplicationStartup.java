@@ -1,10 +1,13 @@
 package nikita.webapp.run;
 
+import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.admin.Authority;
 import nikita.common.model.noark5.v4.admin.AuthorityName;
 import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.repository.n5v4.casehandling.ISequenceNumberGeneratorRepository;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
+import nikita.webapp.service.impl.admin.AdministrativeUnitService;
 import nikita.webapp.service.impl.admin.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +24,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.lang.System.out;
-import static nikita.common.config.Constants.SLASH;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.config.N5ResourceMappings.CASE_HANDLER;
 import static nikita.common.model.noark5.v4.admin.AuthorityName.*;
@@ -37,15 +40,21 @@ public class AfterApplicationStartup {
     private final RequestMappingHandlerMapping handlerMapping;
     private UserService userService;
     private AuthorityRepository authorityRepository;
+    private AdministrativeUnitService administrativeUnitService;
+    private ISequenceNumberGeneratorRepository sequenceNumberGeneratorRepository;
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
-                                           RequestMappingHandlerMapping
-                                           handlerMapping,
+                                           RequestMappingHandlerMapping handlerMapping,
                                    UserService userService,
-                                   AuthorityRepository authorityRepository) {
+                                   AuthorityRepository authorityRepository,
+                                   AdministrativeUnitService administrativeUnitService,
+                                   ISequenceNumberGeneratorRepository sequenceNumberGeneratorRepository) {
+
         this.handlerMapping = handlerMapping;
         this.userService = userService;
         this.authorityRepository = authorityRepository;
+        this.administrativeUnitService = administrativeUnitService;
+        this.sequenceNumberGeneratorRepository = sequenceNumberGeneratorRepository;
     }
 
     /**
@@ -964,6 +973,17 @@ public class AfterApplicationStartup {
                         VARIANT_FORMAT_ENG,
                         VARIANT_FORMAT_ENG_OBJECT);
 
+
+        // Create an administrative unit
+        AdministrativeUnit administrativeUnit = new AdministrativeUnit();
+
+        administrativeUnit.setAdministrativeUnitName(TEST_ADMINISTRATIVE_UNIT);
+        administrativeUnit.setShortName("test");
+        administrativeUnit.setCreatedBy(SYSTEM);
+        administrativeUnit.setOwnedBy(SYSTEM);
+        administrativeUnitService.createNewAdministrativeUnitBySystem(
+                administrativeUnit);
+
         // Create some authorities and users
 
         Authority adminAuthority = new Authority();
@@ -1004,6 +1024,8 @@ public class AfterApplicationStartup {
             admin.setLastname("Grimes");
             admin.setUsername("admin@example.com");
             admin.addAuthority(adminAuthority);
+            administrativeUnit.addUser(admin);
+            admin.addAdministrativeUnit(administrativeUnit);
             userService.createNewUser(admin);
         }
 
@@ -1014,6 +1036,8 @@ public class AfterApplicationStartup {
             recordKeeper.setLastname("Szyslak");
             recordKeeper.setUsername("recordkeeper@example.com");
             recordKeeper.addAuthority(recordsKeeperAuthority);
+            administrativeUnit.addUser(recordKeeper);
+            recordKeeper.addAdministrativeUnit(administrativeUnit);
             userService.createNewUser(recordKeeper);
         }
 
@@ -1024,6 +1048,8 @@ public class AfterApplicationStartup {
             caseHandler.setLastname("Wolfcastle");
             caseHandler.setUsername("casehandler@example.com");
             caseHandler.addAuthority(caseHandlerAuthority);
+            administrativeUnit.addUser(caseHandler);
+            caseHandler.addAdministrativeUnit(administrativeUnit);
             userService.createNewUser(caseHandler);
         }
 
@@ -1034,6 +1060,8 @@ public class AfterApplicationStartup {
             leader.setLastname("Tightlips");
             leader.setUsername("leader@example.com");
             leader.addAuthority(leaderAuthority);
+            administrativeUnit.addUser(leader);
+            leader.addAdministrativeUnit(administrativeUnit);
             userService.createNewUser(leader);
         }
 
@@ -1044,6 +1072,8 @@ public class AfterApplicationStartup {
             guest.setLastname("'Spuckler'");
             guest.setUsername("cletus@example.com");
             guest.addAuthority(guestAuthority);
+            administrativeUnit.addUser(guest);
+            guest.addAdministrativeUnit(administrativeUnit);
             userService.createNewUser(guest);
         }
     }

@@ -64,7 +64,7 @@ public class AdministrativeUnitController extends NoarkController {
             HttpServletRequest request,
             @RequestBody AdministrativeUnit administrativeUnit)
             throws NikitaException {
-        administrativeUnitService.createNewAdministrativeUnit(administrativeUnit);
+        administrativeUnitService.createNewAdministrativeUnitBySystem(administrativeUnit);
         AdministrativeUnitHateoas adminHateoas = new AdministrativeUnitHateoas(administrativeUnit);
         administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)

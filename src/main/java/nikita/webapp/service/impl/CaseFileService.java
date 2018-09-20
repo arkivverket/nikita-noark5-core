@@ -210,7 +210,7 @@ public class CaseFileService implements ICaseFileService {
         }
         Optional<SequenceNumberGenerator> nextSequenceOptional =
                 numberGeneratorRepository.
-                        findByAdministrativeUnitAndYear(
+                        findByAdministrativeUnitNameAndYear(
                                 administrativeUnit, currentYear);
 
         if (nextSequenceOptional.isPresent()) {

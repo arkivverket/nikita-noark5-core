@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v4.admin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v4.NoarkEntity;
+import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
 import nikita.common.model.noark5.v4.interfaces.entities.admin.IAdministrativeUnitEntity;
 import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -13,11 +14,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static nikita.common.config.Constants.*;
+
 @Entity
 @Table(name = "nikita_administrative_unit")
 @JsonDeserialize(using = AdministrativeUnitDeserializer.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_administrative_unit_id"))
-public class AdministrativeUnit extends NoarkEntity implements IAdministrativeUnitEntity {
+@AttributeOverride(name = "id",
+        column = @Column(name = PRIMARY_KEY_ADMINISTRATIVE_UNIT))
+public class AdministrativeUnit
+        extends NoarkEntity
+        implements IAdministrativeUnitEntity {
 
     /**
      * M600 - opprettetDato (xs:dateTime)
@@ -70,6 +76,21 @@ public class AdministrativeUnit extends NoarkEntity implements IAdministrativeUn
     @Audited
     private String administrativeUnitStatus;
 
+    @OneToOne(mappedBy = "administrativeUnit", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, optional = false)
+    private SequenceNumberGenerator sequenceNumberGenerator;
+
+
+    @ManyToMany()
+    @JoinTable(
+            name = "administrative_unit_nikita_user",
+            joinColumns = {
+                    @JoinColumn(name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
+                            referencedColumnName = PRIMARY_KEY_ADMINISTRATIVE_UNIT)},
+            inverseJoinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
+                    referencedColumnName = PRIMARY_KEY_USER)})
+    private List<User> users = new ArrayList<>();
+
     /**
      * M585 referanseOverordnetEnhet (xs:string)
      */
@@ -78,8 +99,10 @@ public class AdministrativeUnit extends NoarkEntity implements IAdministrativeUn
     private AdministrativeUnit referenceParentAdministrativeUnit;
 
     // Links to child AdministrativeUnit
-    @OneToMany(mappedBy = "referenceParentAdministrativeUnit", fetch = FetchType.LAZY)
-    private List<AdministrativeUnit> referenceChildAdministrativeUnit = new ArrayList<>();
+    @OneToMany(mappedBy = "referenceParentAdministrativeUnit",
+            fetch = FetchType.LAZY)
+    private List<AdministrativeUnit> referenceChildAdministrativeUnit =
+            new ArrayList<>();
 
     @Override
     public Date getCreatedDate() {
@@ -153,12 +176,48 @@ public class AdministrativeUnit extends NoarkEntity implements IAdministrativeUn
         this.referenceParentAdministrativeUnit = referenceParentAdministrativeUnit;
     }
 
+    public SequenceNumberGenerator getSequenceNumberGenerator() {
+        return sequenceNumberGenerator;
+    }
+
+    public void setSequenceNumberGenerator(SequenceNumberGenerator sequenceNumberGenerator) {
+        this.sequenceNumberGenerator = sequenceNumberGenerator;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     public List<AdministrativeUnit> getReferenceChildAdministrativeUnit() {
         return referenceChildAdministrativeUnit;
     }
 
     public void setReferenceChildAdministrativeUnit(List<AdministrativeUnit> referenceChildAdministrativeUnit) {
         this.referenceChildAdministrativeUnit = referenceChildAdministrativeUnit;
+    }
+
+    public List<User> getUser() {
+        return users;
+    }
+
+    public void setUser(List<User> users) {
+        this.users = users;
+    }
+
+    public void addUser(User users) {
+        this.users.add(users);
+    }
+
+    public AdministrativeUnit getReferenceParentAdministrativeUnit() {
+        return referenceParentAdministrativeUnit;
+    }
+
+    public void setReferenceParentAdministrativeUnit(AdministrativeUnit referenceParentAdministrativeUnit) {
+        this.referenceParentAdministrativeUnit = referenceParentAdministrativeUnit;
     }
 
     @Override

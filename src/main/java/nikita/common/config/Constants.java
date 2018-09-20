@@ -628,6 +628,8 @@ public final class Constants {
     public static final String FOREIGN_KEY_STORAGE_LOCATION_PK = "f_pk_fonds_id";
 
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
+    public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
+            "f_pk_administrative_unit_id";
 
     // Primary key names
     public static final String PRIMARY_KEY_FONDS = "pk_fonds_id";
@@ -635,8 +637,11 @@ public final class Constants {
             "pk_fonds_creator_id";
 
     public static final String PRIMARY_KEY_USER = "pk_user_id";
+    public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
+            "pk_administrative_unit_id";
 
     public static final String DM_OWNED_BY = "ownedBy";
+    public static final String SYSTEM = "system";
 
     private Constants() {
     }

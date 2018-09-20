@@ -1,29 +1,38 @@
 package nikita.webapp.service.impl.admin;
 
 import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
 import nikita.common.repository.n5v4.admin.IAdministrativeUnitRepository;
+import nikita.common.repository.n5v4.casehandling.ISequenceNumberGeneratorRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.Constants.SYSTEM;
 
 @Service
 @Transactional
 public class AdministrativeUnitService implements IAdministrativeUnitService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdministrativeUnitService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(AdministrativeUnitService.class);
     private IAdministrativeUnitRepository administrativeUnitRepository;
+    private ISequenceNumberGeneratorRepository sequenceNumberGeneratorRepository;
 
-    public AdministrativeUnitService(IAdministrativeUnitRepository administrativeUnitRepository) {
+    public AdministrativeUnitService(
+            IAdministrativeUnitRepository administrativeUnitRepository,
+            ISequenceNumberGeneratorRepository sequenceNumberGeneratorRepository) {
         this.administrativeUnitRepository = administrativeUnitRepository;
+        this.sequenceNumberGeneratorRepository = sequenceNumberGeneratorRepository;
     }
 
     // All CREATE operations
@@ -35,9 +44,24 @@ public class AdministrativeUnitService implements IAdministrativeUnitService {
      * @return the newly persisted administrativeUnit object
      */
     @Override
-    public AdministrativeUnit createNewAdministrativeUnit(AdministrativeUnit administrativeUnit) {
+    public AdministrativeUnit
+    createNewAdministrativeUnitBySystem(AdministrativeUnit administrativeUnit) {
+        administrativeUnit.setCreatedBy(SYSTEM);
         administrativeUnit.setDeleted(false);
-        administrativeUnit.setOwnedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+        administrativeUnit.setOwnedBy(SYSTEM);
+        createSequenceNumberGenerator(administrativeUnit);
+        return administrativeUnitRepository.save(administrativeUnit);
+    }
+
+    @Override
+    public AdministrativeUnit
+    createNewAdministrativeUnitByUser(
+            AdministrativeUnit administrativeUnit,
+            User user) {
+        administrativeUnit.setCreatedBy(user.getCreatedBy());
+        administrativeUnit.setDeleted(false);
+        administrativeUnit.setOwnedBy(user.getCreatedBy());
+        createSequenceNumberGenerator(administrativeUnit);
         return administrativeUnitRepository.save(administrativeUnit);
     }
 
@@ -106,5 +130,23 @@ public class AdministrativeUnitService implements IAdministrativeUnitService {
             throw new NoarkEntityNotFoundException(info);
         }
         return administrativeUnit;
+    }
+
+    private void createSequenceNumberGenerator(
+            AdministrativeUnit administrativeUnit) {
+
+        SequenceNumberGenerator sequenceNumberGenerator =
+                new SequenceNumberGenerator();
+        LocalDate currentDate = LocalDate.now();
+        int year = currentDate.getYear();
+
+        administrativeUnit.setSequenceNumberGenerator(sequenceNumberGenerator);
+        sequenceNumberGenerator.setAdministrativeUnitName(
+                administrativeUnit.getAdministrativeUnitName());
+        sequenceNumberGenerator.setReferenceAdministrativeUnit(
+                administrativeUnit);
+        sequenceNumberGenerator.setYear(year);
+        sequenceNumberGenerator.setSequenceNumber(1);
+        sequenceNumberGeneratorRepository.save(sequenceNumberGenerator);
     }
 }

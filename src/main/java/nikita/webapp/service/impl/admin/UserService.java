@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl.admin;
 
+import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.admin.AuthorityName;
 import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
@@ -25,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static nikita.common.config.Constants.SYSTEM;
+
 
 @Service
 @Transactional
@@ -38,17 +41,20 @@ public class UserService implements IUserService {
     private IUserHateoasHandler userHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
     private PasswordEncoder encoder;
+    private AdministrativeUnitService administrativeUnitService;
 
     public UserService(UserRepository userRepository,
                        AuthorityRepository authorityRepository,
                        IUserHateoasHandler userHateoasHandler,
                        ApplicationEventPublisher applicationEventPublisher,
-                       PasswordEncoder encoder) {
+                       PasswordEncoder encoder,
+                       AdministrativeUnitService administrativeUnitService) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.userHateoasHandler = userHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
         this.encoder = encoder;
+        this.administrativeUnitService = administrativeUnitService;
     }
 
     @Override
@@ -63,7 +69,7 @@ public class UserService implements IUserService {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setEnabled(true);
         user.setDeleted(false);
-        user.setCreatedBy("web");
+        user.setCreatedBy(SYSTEM);
         user.setCreatedDate(new Date());
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
@@ -72,6 +78,10 @@ public class UserService implements IUserService {
         userHateoasHandler.addLinks(userHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, user));
+        AdministrativeUnit administrativeUnit = new AdministrativeUnit();
+        administrativeUnit.addUser(user);
+        administrativeUnitService.createNewAdministrativeUnitByUser(
+                administrativeUnit, user);
         return userHateoas;
     }
 

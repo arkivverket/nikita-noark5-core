@@ -108,11 +108,8 @@ public class User
                     referencedColumnName = "id")})
     private List<Authority> authorities = new ArrayList<>();
 
-//
-//    @OneToMany(mappedBy = "referenceUser", fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    private List<CorrespondencePartInternal>
-//            referenceCorrespondencePartInternal = new ArrayList<>();
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private List<AdministrativeUnit> administrativeUnits = new ArrayList<>();
 
     @Override
     public String getSystemId() {
@@ -238,7 +235,20 @@ public class User
         this.authorities.add(authority);
     }
 
-//
+    public List<AdministrativeUnit> getAdministrativeUnits() {
+        return administrativeUnits;
+    }
+
+    public void setAdministrativeUnits(List<AdministrativeUnit> administrativeUnits) {
+        this.administrativeUnits = administrativeUnits;
+    }
+
+    public void addAdministrativeUnit(AdministrativeUnit administrativeUnit) {
+        this.administrativeUnits.add(administrativeUnit);
+    }
+
+
+    //
 //    public List<CorrespondencePartInternal> getReferenceCorrespondencePartInternal() {
 //        return referenceCorrespondencePartInternal;
 //    }

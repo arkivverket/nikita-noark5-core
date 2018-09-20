@@ -11,12 +11,12 @@ public interface ISequenceNumberGeneratorRepository
         extends CrudRepository<SequenceNumberGenerator, Long> {
 
     // -- All SAVE operations
-    SequenceNumberGenerator save(SequenceNumberGenerator caseFile);
+    SequenceNumberGenerator save(SequenceNumberGenerator sequenceNumberGenerator);
 
     // -- All READ operations
     Optional<SequenceNumberGenerator> findById(Long id);
 
     Optional<SequenceNumberGenerator>
-    findByAdministrativeUnitAndYear(String administrativeUnit, Integer
+    findByAdministrativeUnitNameAndYear(String administrativeUnitName, Integer
             year);
 }
