@@ -45,24 +45,6 @@ code_quality:
   artifacts:
     paths: [gl-code-quality-report.json]
 
-#code_quality:
-#  stage: test
-#  image: docker:stable
-#  variables:
-#    DOCKER_DRIVER: overlay2
-#  allow_failure: true
-#  services:
-#  - docker:stable-dind
-#  script:
-#  - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-#  - docker extraction
-#      --env SOURCE_CODE="$PWD"
-#      --volume "$PWD":/code
-#      --volume /var/extraction/docker.sock:/var/extraction/docker.sock
-#      "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
-#  artifacts:
-#    paths: [gl-code-quality-report.json]
-
 dast:
   stage: test
   image: registry.gitlab.com/gitlab-org/security-products/zaproxy
@@ -77,7 +59,6 @@ dast:
     paths: [gl-dast-report.json]
 
 sast:
-  stage: test
   image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
@@ -86,16 +67,15 @@ sast:
   - docker:stable-dind
   script:
   - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-  - docker extraction
+  - docker run
       --env SAST_CONFIDENCE_LEVEL="${SAST_CONFIDENCE_LEVEL:-3}"
       --volume "$PWD:/code"
-      --volume /var/extraction/docker.sock:/var/extraction/docker.sock
-      "registry.gitlab.com/gitlab-org/security-products/sast:$SP_VERSION" /app/bin/extraction /code
+      --volume /var/run/docker.sock:/var/run/docker.sock
+      "registry.gitlab.com/gitlab-org/security-products/sast:$SP_VERSION" /app/bin/run /code
   artifacts:
     paths: [gl-sast-report.json]
 
 dependency_scanning:
-  stage: test
   image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
@@ -104,10 +84,10 @@ dependency_scanning:
   - docker:stable-dind
   script:
   - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-  - docker extraction
+  - docker run
       --env DEP_SCAN_DISABLE_REMOTE_CHECKS="${DEP_SCAN_DISABLE_REMOTE_CHECKS:-false}"
       --volume "$PWD:/code"
-      --volume /var/extraction/docker.sock:/var/extraction/docker.sock
+      --volume /var/run/docker.sock:/var/run/docker.sock
       "registry.gitlab.com/gitlab-org/security-products/dependency-scanning:$SP_VERSION" /code
   artifacts:
     paths: [gl-dependency-scanning-report.json]
@@ -124,8 +104,8 @@ container_scanning:
   services:
   - docker:stable-dind
   script:
-  - docker extraction -d --name db arminc/clair-db:latest
-  - docker extraction -p 6060:6060 --link db:postgres -d --name clair --restart on-failure arminc/clair-local-scan:v2.0.1
+  - docker run -d --name db arminc/clair-db:latest
+  - docker run -p 6060:6060 --link db:postgres -d --name clair --restart on-failure arminc/clair-local-scan:v2.0.1
   - apk add -U wget ca-certificates
   - docker pull ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}
   - wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
