@@ -1,0 +1,53 @@
+#!/bin/sh
+
+set -e
+
+build() {
+    oldcommit=$(git log|head -1|awk '{print $2}')
+    git pull -q
+    newcommit=$(git log|head -1|awk '{print $2}')
+    if [ "$newcommit" = "$oldcommit" ] ; then
+        echo "info: no changes in git, no need for new coverity build."
+        return 1
+    fi
+
+    echo "info: building source"
+    PATH=$PATH:/var/opt/apache-maven-3.0.5/bin \
+        ../cov-analysis-linux64-8.7.0/bin/cov-build \
+	--dir $tmpdir/cov-int make build
+}
+
+submit() {
+    echo "info: wrapping up coverity build artifacts"
+    (cd $tmpdir && tar zcf $tmpfile cov-int)
+
+    echo "info: uploading build artifacts (ver $ver commit $commit)"
+    curl --silent \
+         --form token=$token \
+         --form email=pere@hungry.com \
+         --form file=@$tmpdir/$tmpfile \
+         --form version="$ver" \
+         --form description="build from commit $commit" \
+         https://scan.coverity.com/builds?project=HiOA-ABI%2Fnikita-noark5-core
+}
+
+. ${0}.token # load token
+
+tmpdir=cov-int-$$
+tmpfile=nikita-noark5-core-$$.tgz
+
+ver=0.0.0.$(date --iso-8601=minutes)
+
+logfile=build-run.log
+atexit() {
+    if [ -e $logfile ] ; then
+        cat $logfile
+        rm $logfile
+    fi
+    if [ -e $tmpdir ]; then
+       rm -rf $tmpdir
+    fi
+}
+trap atexit EXIT
+
+(build && submit ) > $logfile
