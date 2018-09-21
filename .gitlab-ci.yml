@@ -62,6 +62,9 @@ dast:
     paths: [gl-dast-report.json]
 
 sast:
+  before_script:
+  - apt-get update
+  - apt-get install -y openjfx
   image: docker:stable
   variables:
     DOCKER_DRIVER: overlay2
