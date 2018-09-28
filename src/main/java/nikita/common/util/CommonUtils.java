@@ -868,7 +868,9 @@ public final class CommonUtils {
                                                                          ObjectNode objectNode, StringBuilder errors) {
 
                 deserialiseCorrespondencePartType(correspondencePartPersonEntity, objectNode, errors);
+/*
 
+ZZXC
                 // Deserialize foedselsnummer
                 JsonNode currentNode = objectNode.get(SOCIAL_SECURITY_NUMBER);
                 if (null != currentNode) {
@@ -917,7 +919,9 @@ public final class CommonUtils {
                     deserialiseContactInformationEntity(contactInformation, currentNode.deepCopy(), errors);
                     correspondencePartPersonEntity.setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
+
                 }
+                */
             }
 
             public static void deserialiseCorrespondencePartInternalEntity(ICorrespondencePartInternalEntity
@@ -991,7 +995,7 @@ public final class CommonUtils {
                     correspondencePartUnit.setContactPerson(currentNode.textValue());
                     objectNode.remove(CONTACT_PERSON);
                 }
-
+/*
                 // Deserialize postadresse
                 currentNode = objectNode.get(N5ResourceMappings.POSTAL_ADDRESS);
                 if (null != currentNode) {
@@ -1002,6 +1006,7 @@ public final class CommonUtils {
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
 
+                ZZXC
                 // Deserialize forretningsadresse
                 currentNode = objectNode.get(BUSINESS_ADDRESS);
                 if (null != currentNode) {
@@ -1011,7 +1016,7 @@ public final class CommonUtils {
                     correspondencePartUnit.setBusinessAddress(businessAddressEntity);
                     objectNode.remove(BUSINESS_ADDRESS);
                 }
-
+*/
                 // Deserialize kontaktinformasjon
                 currentNode = objectNode.get(CONTACT_INFORMATION);
                 if (null != currentNode) {
@@ -1375,6 +1380,7 @@ public final class CommonUtils {
                     if (null != correspondencePartPerson.getName()) {
                         jgen.writeStringField(NAME, correspondencePartPerson.getName());
                     }
+                    /* ZZXC
                     if (null != correspondencePartPerson.getPostalAddress()) {
                         printAddress(jgen, correspondencePartPerson.getPostalAddress());
                     }
@@ -1384,7 +1390,7 @@ public final class CommonUtils {
                     if (null != correspondencePartPerson.getContactInformation()) {
                         printContactInformation(jgen, correspondencePartPerson.getContactInformation());
                     }
-
+*/
                 }
             }
 
@@ -1427,12 +1433,15 @@ public final class CommonUtils {
                     if (null != correspondencePartUnit.getName()) {
                         jgen.writeStringField(NAME, correspondencePartUnit.getName());
                     }
+                    /* ZZXC
                     if (null != correspondencePartUnit.getBusinessAddress()) {
                         printAddress(jgen, correspondencePartUnit.getBusinessAddress());
                     }
+
                     if (null != correspondencePartUnit.getPostalAddress()) {
                         printAddress(jgen, correspondencePartUnit.getPostalAddress());
                     }
+                    */
                     if (null != correspondencePartUnit.getContactInformation()) {
                         printContactInformation(jgen, correspondencePartUnit.getContactInformation());
                     }

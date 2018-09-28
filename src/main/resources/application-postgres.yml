@@ -57,6 +57,10 @@ application:
   pagination:
     max-page-size: 10
 
+nikita:
+  startup:
+    create-demo-users: true
+
 nikita-noark5-core:
     mail:
         from: nikita@example.com

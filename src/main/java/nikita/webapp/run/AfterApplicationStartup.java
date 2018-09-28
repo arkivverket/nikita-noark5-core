@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.admin.Authority;
 import nikita.common.model.noark5.v4.admin.AuthorityName;
 import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.repository.n5v4.casehandling.ISequenceNumberGeneratorRepository;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
@@ -42,23 +41,20 @@ public class AfterApplicationStartup {
     private UserService userService;
     private AuthorityRepository authorityRepository;
     private AdministrativeUnitService administrativeUnitService;
-    private ISequenceNumberGeneratorRepository sequenceNumberGeneratorRepository;
 
     @Value("${nikita.startup.create-demo-users}")
-    private Boolean createUsers = true;
+    private Boolean createUsers = false;
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,
                                    UserService userService,
                                    AuthorityRepository authorityRepository,
-                                   AdministrativeUnitService administrativeUnitService,
-                                   ISequenceNumberGeneratorRepository sequenceNumberGeneratorRepository) {
+                                   AdministrativeUnitService administrativeUnitService) {
 
         this.handlerMapping = handlerMapping;
         this.userService = userService;
         this.authorityRepository = authorityRepository;
         this.administrativeUnitService = administrativeUnitService;
-        this.sequenceNumberGeneratorRepository = sequenceNumberGeneratorRepository;
     }
 
     /**
@@ -104,10 +100,10 @@ public class AfterApplicationStartup {
             // So simplest way to process is split on space and ignore the "||"
             //  ignore is done in false == servletPaths.contains("|") below
             // servletPath starts with "[" and ends with "]". Removing them if they are there
-            if (true == servletPaths.startsWith("[")) {
+            if (servletPaths.startsWith("[")) {
                 servletPaths = servletPaths.substring(1);
             }
-            if (true == servletPaths.endsWith("]")) {
+            if (servletPaths.endsWith("]")) {
                 servletPaths = servletPaths.substring(0, servletPaths.length() - 1);
             }
 
@@ -115,16 +111,16 @@ public class AfterApplicationStartup {
 
             for (String servletPath : servletPathList) {
 
-                if (servletPath != null && false == servletPath.contains("|")) {
+                if (servletPath != null && !servletPath.contains("|")) {
 
                     // Adding a trailing slash as the incoming request may or may not have it
                     // This is done to be consist on a lookup
-                    if (false == servletPath.endsWith("/")) {
+                    if (!servletPath.endsWith("/")) {
                         servletPath += SLASH;
                     }
 
                     Set<RequestMethod> httpMethodRequests = requestMappingInfo.getMethodsCondition().getMethods();
-                    if (null != httpMethodRequests && null != servletPath) {
+                    if (null != httpMethodRequests) {
                         // RequestMethod and HTTPMethod are different types, have to convert them here
                         Set<HttpMethod> httpMethods = new TreeSet<>();
                         for (RequestMethod requestMethod : httpMethodRequests) {
@@ -178,7 +174,7 @@ public class AfterApplicationStartup {
      * Norwegian name to English e.g. tittel -> title
      *
      */
-    public void populateTranslatedNames() {
+    private void populateTranslatedNames() {
 
         // Add entity name mappings
 
