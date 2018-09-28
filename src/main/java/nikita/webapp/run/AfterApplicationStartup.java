@@ -12,6 +12,7 @@ import nikita.webapp.service.impl.admin.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +44,9 @@ public class AfterApplicationStartup {
     private AdministrativeUnitService administrativeUnitService;
     private ISequenceNumberGeneratorRepository sequenceNumberGeneratorRepository;
 
+    @Value("${nikita.startup.create-demo-users}")
+    private Boolean createUsers = true;
+
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,
                                    UserService userService,
@@ -58,16 +62,38 @@ public class AfterApplicationStartup {
     }
 
     /**
-     * afterApplicationStarts, go through list of endpoints and make a list of
-     * endpoints and the HTTP methods they support. Really this should be
-     * handled by Spring. I do not know why I couldn't get spring to handle
-     * this but we need to get spring to handle these things ... not me!!!
-     * <p>
-     * Also create a list of Norwegian names to english names for handling OData
+     * Undertake some business logic after application starts. This is as
+     * follows :
+     *  - mapEndpointsWithHttpMethods()
+     *  - populateTranslatedNames()
+     *  - createDemoUsers()
+     *
      */
     public void afterApplicationStarts() {
+        mapEndpointsWithHttpMethods();
+        populateTranslatedNames();
 
-        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMapping.getHandlerMethods().entrySet()) {
+        if (createUsers) {
+            createDemoUsers();
+        }
+    }
+
+    /**
+     * map endpoints with their HTTP methods
+     * <p>
+     * Go through the list of endpoints and make a list of endpoints and the
+     * HTTP methods they support. We were unable to get CORS implemented
+     * properly and this approach was required to make to work correctly.
+     * <p>
+     * We shouldn't have to d this, it should be handled by spring. Out
+     * application was over annotated and that could be the original cause of
+     * the Cors problems. Eventually this code should be removed and Cors
+     * handled by spring.
+     */
+    private void mapEndpointsWithHttpMethods() {
+
+        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry :
+                handlerMapping.getHandlerMethods().entrySet()) {
 
             RequestMappingInfo requestMappingInfo = entry.getKey();
             // Assuming there is always a non-null value
@@ -138,13 +164,20 @@ public class AfterApplicationStartup {
         httpMethods.add(HttpMethod.OPTIONS);
         httpMethods.add(HttpMethod.POST);
         String servletPath = "/oauth/token/";
-        out.println("Adding " + servletPath + " methods " + httpMethods);
+        logger.info("Adding " + servletPath + " methods " + httpMethods);
         CommonUtils.WebUtils.addRequestToMethodMap(servletPath, httpMethods);
 
-
-        populateTranslatedNames();
     }
 
+    /**
+     * Create a mapping of Norwegian names to english names for handling OData
+     * requests.
+     *
+     * The domain model in nikita is in English and this causes a problem when
+     * a OData request is to be handled. We have to be able to map from a
+     * Norwegian name to English e.g. tittel -> title
+     *
+     */
     public void populateTranslatedNames() {
 
         // Add entity name mappings
@@ -973,6 +1006,13 @@ public class AfterApplicationStartup {
                         VARIANT_FORMAT_ENG,
                         VARIANT_FORMAT_ENG_OBJECT);
 
+    }
+
+    /**
+     * Create users so application has some users out of the box. This would
+     * not be done in production, but as a demo it's fine!
+     */
+    private void createDemoUsers() {
 
         // Create an administrative unit
         AdministrativeUnit administrativeUnit = new AdministrativeUnit();
@@ -985,7 +1025,6 @@ public class AfterApplicationStartup {
                 administrativeUnit);
 
         // Create some authorities and users
-
         Authority adminAuthority = new Authority();
         if (!userService.authorityExists(RECORDS_MANAGER)) {
             adminAuthority.setAuthorityName(RECORDS_MANAGER);
