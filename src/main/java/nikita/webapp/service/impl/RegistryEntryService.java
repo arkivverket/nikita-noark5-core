@@ -15,7 +15,6 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
-import nikita.webapp.util.NoarkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,9 +28,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 @Service
 @Transactional
@@ -40,7 +41,7 @@ public class RegistryEntryService
 
     private static final Logger logger = LoggerFactory.getLogger(RegistryEntryService.class);
     //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    Integer maxPageSize = new Integer(10);
+    Integer maxPageSize = 10;
     private DocumentDescriptionService documentDescriptionService;
     private ICorrespondencePartService correspondencePartService;
     private IPrecedenceService precedenceService;
@@ -64,10 +65,11 @@ public class RegistryEntryService
 
     @Override
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
-        NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(registryEntry);
-        NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(registryEntry);
-        NoarkUtils.NoarkEntity.Create.setCreateEntityValues(registryEntry);
-        NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid(registryEntry);
+        setNikitaEntityValues(registryEntry);
+        setSystemIdEntityValues(registryEntry);
+        setCreateEntityValues(registryEntry);
+        checkDocumentMediumValid(registryEntry);
+        registryEntry.setRecordDate(new Date());
         registryEntryRepository.save(registryEntry);
         return registryEntry;
     }
@@ -135,27 +137,27 @@ public class RegistryEntryService
          ContactInformation contactInformation
                  = correspondencePart.getContactInformation();
          if (null != contactInformation) {
-             NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(contactInformation);
-             NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(contactInformation);
+             setNikitaEntityValues(contactInformation);
+             setSystemIdEntityValues(contactInformation);
          }
          correspondencePart.setContactInformation(contactInformation);
 
          PostalAddress postalAddress = correspondencePart.getPostalAddress();
          if (null != postalAddress) {
-             NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(postalAddress);
-             NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(postalAddress);
+             setNikitaEntityValues(postalAddress);
+             setSystemIdEntityValues(postalAddress);
          }
          correspondencePart.setPostalAddress(postalAddress);
 
          ResidingAddress residingAddress = correspondencePart.getResidingAddress();
          if (null != residingAddress) {
-             NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(residingAddress);
-             NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(residingAddress);
+             setNikitaEntityValues(residingAddress);
+             setSystemIdEntityValues(residingAddress);
          }
          correspondencePart.setResidingAddress(residingAddress);
 
-         NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(correspondencePart);
-         NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(correspondencePart);
+         setNikitaEntityValues(correspondencePart);
+         setSystemIdEntityValues(correspondencePart);
          */
          // bidirectional relationship @ManyToMany, set both sides of relationship
          registryEntry.getReferenceCorrespondencePartPerson().add(correspondencePart);
@@ -170,8 +172,8 @@ public class RegistryEntryService
             String systemID, CorrespondencePartInternal correspondencePart) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
 
-        NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(correspondencePart);
-        NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(correspondencePart);
+        setNikitaEntityValues(correspondencePart);
+        setSystemIdEntityValues(correspondencePart);
         // bidirectional relationship @ManyToMany, set both sides of relationship
         registryEntry.getReferenceCorrespondencePartInternal().add(correspondencePart);
         correspondencePart.getReferenceRegistryEntry().add(registryEntry);
@@ -207,8 +209,8 @@ public class RegistryEntryService
 /*
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {
-            NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(postalAddress);
-            NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(postalAddress);
+            setNikitaEntityValues(postalAddress);
+            setSystemIdEntityValues(postalAddress);
         }
         correspondencePart.setPostalAddress(postalAddress);
 
@@ -216,12 +218,12 @@ ZZXC
 
         SimpleAddress businessAddress = correspondencePart.getBusinessAddress();
         if (null != businessAddress) {
-            NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(businessAddress);
-            NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(businessAddress);
+            setNikitaEntityValues(businessAddress);
+            setSystemIdEntityValues(businessAddress);
         }
 */
-        NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(correspondencePart);
-        NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(correspondencePart);
+        setNikitaEntityValues(correspondencePart);
+        setSystemIdEntityValues(correspondencePart);
         // bidirectional relationship @ManyToMany, set both sides of relationship
         registryEntry.getReferenceCorrespondencePartUnit().add(correspondencePart);
         correspondencePart.getReferenceRegistryEntry().add(registryEntry);
@@ -277,8 +279,8 @@ ZZXC
     public Precedence createPrecedenceAssociatedWithRecord(String registryEntrySystemID, Precedence precedence) {
 
         RegistryEntry registryEntry = getRegistryEntryOrThrow(registryEntrySystemID);
-        NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(precedence);
-        NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(precedence);
+        setNikitaEntityValues(precedence);
+        setSystemIdEntityValues(precedence);
         // bidirectional relationship @ManyToMany, set both sides of relationship
         registryEntry.getReferencePrecedence().add(precedence);
         precedence.getReferenceRegistryEntry().add(registryEntry);
@@ -329,17 +331,21 @@ ZZXC
     }
 
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid RegistryEntry back. If there is no valid
-     * RegistryEntry, an exception is thrown
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid RegistryEntry back. If there is no
+     * valid RegistryEntry, an exception is thrown
      *
-     * @param registryEntrySystemId
-     * @return
+     * @param registryEntrySystemId systemId of the registryEntry to find.
+     * @return the registryEntry
      */
-    protected RegistryEntry getRegistryEntryOrThrow(@NotNull String registryEntrySystemId) {
-        RegistryEntry registryEntry = registryEntryRepository.findBySystemId(registryEntrySystemId);
+    protected RegistryEntry getRegistryEntryOrThrow(
+            @NotNull String registryEntrySystemId) {
+        RegistryEntry registryEntry =
+                registryEntryRepository.findBySystemId(registryEntrySystemId);
         if (registryEntry == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " RegistryEntry, using systemId " + registryEntrySystemId;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " RegistryEntry, using systemId " + registryEntrySystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
