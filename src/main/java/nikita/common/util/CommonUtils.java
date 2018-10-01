@@ -225,7 +225,7 @@ public final class CommonUtils {
                     }
                     objectNode.remove(fieldname);
                 } else if (required) {
-                    errors.append(fieldname + "is missing. ");
+                    errors.append(fieldname + " is missing. ");
                 }
                 return d;
             }
