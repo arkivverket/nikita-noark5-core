@@ -78,8 +78,11 @@ public class CorrespondencePartService implements ICorrespondencePartService {
         CorrespondencePartUnit existingCorrespondencePart =
                 (CorrespondencePartUnit) getCorrespondencePartOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
+        /* ZZXC
         existingCorrespondencePart.setBusinessAddress(incomingCorrespondencePart.getBusinessAddress());
+
         existingCorrespondencePart.setPostalAddress(incomingCorrespondencePart.getPostalAddress());
+        */
         existingCorrespondencePart.setContactInformation(incomingCorrespondencePart.getContactInformation());
         existingCorrespondencePart.setContactPerson(incomingCorrespondencePart.getContactPerson());
         existingCorrespondencePart.setOrganisationNumber(incomingCorrespondencePart.getOrganisationNumber());

@@ -2,19 +2,21 @@ package nikita.webapp.spring.security;
 
 import nikita.common.model.nikita.NikitaUserPrincipal;
 import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.repository.nikita.UserRepository;
+import nikita.common.repository.nikita.IUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class NikitaUserDetailsService
         implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
-    public NikitaUserDetailsService(UserRepository userRepository) {
+    public NikitaUserDetailsService(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -22,11 +24,11 @@ public class NikitaUserDetailsService
     public UserDetails loadUserByUsername(String username) throws
             UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (!user.isPresent()) {
             throw new UsernameNotFoundException("No user found with this " +
                     "username: " + username);
         }
-        return new NikitaUserPrincipal(user);
+        return new NikitaUserPrincipal(user.get());
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
@@ -149,7 +150,7 @@ public class CaseStatusService
     /**
      * Generate a default CaseStatus object
      *
-     * @return the CaseStatus object wrapped as a CaseStatusHateoas object
+     * @return the CaseStatus object
      */
     @Override
     public CaseStatus generateDefaultCaseStatus() {
@@ -223,5 +224,37 @@ public class CaseStatusService
             throw new NoarkEntityNotFoundException(info);
         }
         return caseStatus;
+    }
+
+    /**
+     * Gets the default CaseStatus if a default is set. If multiple defaults
+     * are set, return the first one the database finds. Note default == true
+     * should not be set on multiple CaseStatus.
+     *
+     * @return the default CaseStatus object
+     */
+    @Override
+    public Optional<CaseStatus> getDefaultCaseStatus() {
+        return caseStatusRepository.findByDefaultCaseStatus(true);
+    }
+
+    /**
+     * Gets a CaseStatus by its code.
+     *
+     * @return the CaseStatus object
+     */
+    @Override
+    public Optional<CaseStatus> getCaseStatusByCode() {
+        return Optional.empty();
+    }
+
+    /**
+     * Gets a CaseStatus by its description.
+     *
+     * @return the CaseStatus object
+     */
+    @Override
+    public Optional<CaseStatus> getCaseStatusByDescription() {
+        return Optional.empty();
     }
 }

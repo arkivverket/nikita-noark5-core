@@ -1291,16 +1291,16 @@ ZZXC
 
             public static void printMetadataEntity(JsonGenerator jgen, IMetadataEntity metadataEntity)
                     throws IOException {
-                // TODO:  Looks like the interface standard requires basetype here. Make sure it's implemented
                 // e.g."mappetype" {}
-                jgen.writeFieldName(metadataEntity.getBaseTypeName());
-                jgen.writeStartObject();
-                jgen.writeStringField(SYSTEM_ID, metadataEntity.getSystemId());
-                jgen.writeStringField(CODE, metadataEntity.getCode());
-                jgen.writeStringField(DESCRIPTION, metadataEntity.getDescription());
-                jgen.writeEndObject();
+                if (metadataEntity != null) {
+                    jgen.writeFieldName(metadataEntity.getBaseTypeName());
+                    jgen.writeStartObject();
+                    jgen.writeStringField(SYSTEM_ID, metadataEntity.getSystemId());
+                    jgen.writeStringField(CODE, metadataEntity.getCode());
+                    jgen.writeStringField(DESCRIPTION, metadataEntity.getDescription());
+                    jgen.writeEndObject();
+                }
             }
-
 
             private static void printCorrespondencePart(JsonGenerator jgen, ICorrespondencePartEntity correspondencePart)
                     throws IOException {

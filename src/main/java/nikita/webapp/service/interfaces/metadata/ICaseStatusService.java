@@ -3,6 +3,8 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.CaseStatus;
 
+import java.util.Optional;
+
 /**
  * Created by tsodring on 13/03/18.
  */
@@ -23,4 +25,10 @@ public interface ICaseStatusService {
             caseStatus);
 
     CaseStatus generateDefaultCaseStatus();
+
+    Optional<CaseStatus> getDefaultCaseStatus();
+
+    Optional<CaseStatus> getCaseStatusByCode();
+
+    Optional<CaseStatus> getCaseStatusByDescription();
 }

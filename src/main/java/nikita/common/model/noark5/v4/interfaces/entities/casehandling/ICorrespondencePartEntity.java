@@ -8,7 +8,8 @@ import java.io.Serializable;
 /**
  * Created by tsodring on 1/16/17.
  */
-public interface ICorrespondencePartEntity extends INikitaEntity, Serializable {
+public interface ICorrespondencePartEntity
+        extends INikitaEntity, Serializable {
 
 
     CorrespondencePartType getCorrespondencePartType();

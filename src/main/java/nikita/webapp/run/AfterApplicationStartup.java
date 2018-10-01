@@ -1,5 +1,7 @@
 package nikita.webapp.run;
 
+import nikita.common.model.noark5.v4.Fonds;
+import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.admin.Authority;
 import nikita.common.model.noark5.v4.admin.AuthorityName;
@@ -8,6 +10,8 @@ import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
 import nikita.webapp.service.impl.admin.UserService;
+import nikita.webapp.service.interfaces.IFondsService;
+import nikita.webapp.service.interfaces.ISeriesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,6 +45,8 @@ public class AfterApplicationStartup {
     private UserService userService;
     private AuthorityRepository authorityRepository;
     private AdministrativeUnitService administrativeUnitService;
+    private IFondsService fondsService;
+    private ISeriesService seriesService;
 
     @Value("${nikita.startup.create-demo-users}")
     private Boolean createUsers = false;
@@ -49,21 +55,25 @@ public class AfterApplicationStartup {
                                            RequestMappingHandlerMapping handlerMapping,
                                    UserService userService,
                                    AuthorityRepository authorityRepository,
-                                   AdministrativeUnitService administrativeUnitService) {
+                                   AdministrativeUnitService
+                                           administrativeUnitService,
+                                   IFondsService fondsService,
+                                   ISeriesService seriesService) {
 
         this.handlerMapping = handlerMapping;
         this.userService = userService;
         this.authorityRepository = authorityRepository;
+        this.fondsService = fondsService;
+        this.seriesService = seriesService;
         this.administrativeUnitService = administrativeUnitService;
     }
 
     /**
      * Undertake some business logic after application starts. This is as
      * follows :
-     *  - mapEndpointsWithHttpMethods()
-     *  - populateTranslatedNames()
-     *  - createDemoUsers()
-     *
+     * - mapEndpointsWithHttpMethods()
+     * - populateTranslatedNames()
+     * - createDemoUsers()
      */
     public void afterApplicationStarts() {
         mapEndpointsWithHttpMethods();
@@ -72,6 +82,8 @@ public class AfterApplicationStartup {
         if (createUsers) {
             createDemoUsers();
         }
+
+        createDemoData();
     }
 
     /**
@@ -168,11 +180,10 @@ public class AfterApplicationStartup {
     /**
      * Create a mapping of Norwegian names to english names for handling OData
      * requests.
-     *
+     * <p>
      * The domain model in nikita is in English and this causes a problem when
      * a OData request is to be handled. We have to be able to map from a
      * Norwegian name to English e.g. tittel -> title
-     *
      */
     private void populateTranslatedNames() {
 
@@ -1017,8 +1028,7 @@ public class AfterApplicationStartup {
         administrativeUnit.setShortName("test");
         administrativeUnit.setCreatedBy(SYSTEM);
         administrativeUnit.setOwnedBy(SYSTEM);
-        administrativeUnitService.createNewAdministrativeUnitBySystem(
-                administrativeUnit);
+        administrativeUnit.setDefaultAdministrativeUnit(true);
 
         // Create some authorities and users
         Authority adminAuthority = new Authority();
@@ -1052,8 +1062,8 @@ public class AfterApplicationStartup {
             authorityRepository.save(guestAuthority);
         }
 
+        User admin = new User();
         if (!userService.userExists("admin@example.com")) {
-            User admin = new User();
             admin.setPassword("password");
             admin.setFirstname("Frank");
             admin.setLastname("Grimes");
@@ -1064,8 +1074,8 @@ public class AfterApplicationStartup {
             userService.createNewUser(admin);
         }
 
+        User recordKeeper = new User();
         if (!userService.userExists("recordkeeper@example.com")) {
-            User recordKeeper = new User();
             recordKeeper.setPassword("password");
             recordKeeper.setFirstname("Moe");
             recordKeeper.setLastname("Szyslak");
@@ -1076,8 +1086,8 @@ public class AfterApplicationStartup {
             userService.createNewUser(recordKeeper);
         }
 
+        User caseHandler = new User();
         if (!userService.userExists("casehandler@example.com")) {
-            User caseHandler = new User();
             caseHandler.setPassword("password");
             caseHandler.setFirstname("Rainier");
             caseHandler.setLastname("Wolfcastle");
@@ -1088,8 +1098,8 @@ public class AfterApplicationStartup {
             userService.createNewUser(caseHandler);
         }
 
+        User leader = new User();
         if (!userService.userExists("leader@example.com")) {
-            User leader = new User();
             leader.setPassword("password");
             leader.setFirstname("Johnny");
             leader.setLastname("Tightlips");
@@ -1100,8 +1110,8 @@ public class AfterApplicationStartup {
             userService.createNewUser(leader);
         }
 
+        User guest = new User();
         if (!userService.userExists("cletus@example.com")) {
-            User guest = new User();
             guest.setPassword("password");
             guest.setFirstname("Cletus");
             guest.setLastname("'Spuckler'");
@@ -1111,5 +1121,31 @@ public class AfterApplicationStartup {
             guest.addAdministrativeUnit(administrativeUnit);
             userService.createNewUser(guest);
         }
+
+        administrativeUnitService.createNewAdministrativeUnitBySystem(
+                administrativeUnit);
+    }
+
+    private void createDemoData() {
+
+        Fonds fonds = new Fonds();
+        fonds.setTitle("Test fonds");
+        fondsService.createNewFonds(fonds);
+        fonds.setOwnedBy("admin@example.com");
+        fondsService.handleUpdate(fonds.getSystemId(),
+                fonds.getVersion(), fonds);
+
+        Series series = new Series();
+        series.setTitle("Test series");
+        series.setSeriesStatus("Opprettet");
+        fondsService.createSeriesAssociatedWithFonds(
+                fonds.getSystemId(), series);
+
+        series.setOwnedBy("admin@example.com");
+        seriesService.handleUpdate(series.getSystemId(),
+                fonds.getVersion(), series);
+
+        fondsService.createSeriesAssociatedWithFonds(
+                fonds.getSystemId(), series);
     }
 }

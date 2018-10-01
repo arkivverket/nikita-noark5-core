@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v4.admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v4.NoarkEntity;
+import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
 import nikita.common.model.noark5.v4.interfaces.entities.admin.IAdministrativeUnitEntity;
 import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
@@ -10,9 +12,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static nikita.common.config.Constants.*;
 
@@ -76,12 +76,16 @@ public class AdministrativeUnit
     @Audited
     private String administrativeUnitStatus;
 
+    // Used identify as a default
+    @Column(name = "default_administrative_unit")
+    @Audited
+    private Boolean defaultAdministrativeUnit;
+
     @OneToOne(mappedBy = "administrativeUnit", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, optional = false)
     private SequenceNumberGenerator sequenceNumberGenerator;
 
-
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
             name = "administrative_unit_nikita_user",
             joinColumns = {
@@ -89,7 +93,12 @@ public class AdministrativeUnit
                             referencedColumnName = PRIMARY_KEY_ADMINISTRATIVE_UNIT)},
             inverseJoinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
                     referencedColumnName = PRIMARY_KEY_USER)})
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
+
+    // Links to CaseFile
+    @OneToMany(mappedBy = "referenceAdministrativeUnit")
+    @JsonIgnore
+    private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
     /**
      * M585 referanseOverordnetEnhet (xs:string)
@@ -172,52 +181,59 @@ public class AdministrativeUnit
         return referenceParentAdministrativeUnit;
     }
 
-    public void setParentAdministrativeUnit(AdministrativeUnit referenceParentAdministrativeUnit) {
-        this.referenceParentAdministrativeUnit = referenceParentAdministrativeUnit;
+    public void setParentAdministrativeUnit(
+            AdministrativeUnit referenceParentAdministrativeUnit) {
+        this.referenceParentAdministrativeUnit =
+                referenceParentAdministrativeUnit;
+    }
+
+    public Boolean getDefaultAdministrativeUnit() {
+        return defaultAdministrativeUnit;
+    }
+
+    public void setDefaultAdministrativeUnit(
+            Boolean defaultAdministrativeUnit) {
+        this.defaultAdministrativeUnit = defaultAdministrativeUnit;
     }
 
     public SequenceNumberGenerator getSequenceNumberGenerator() {
         return sequenceNumberGenerator;
     }
 
-    public void setSequenceNumberGenerator(SequenceNumberGenerator sequenceNumberGenerator) {
+    public void setSequenceNumberGenerator(
+            SequenceNumberGenerator sequenceNumberGenerator) {
         this.sequenceNumberGenerator = sequenceNumberGenerator;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 
     public List<AdministrativeUnit> getReferenceChildAdministrativeUnit() {
         return referenceChildAdministrativeUnit;
     }
 
-    public void setReferenceChildAdministrativeUnit(List<AdministrativeUnit> referenceChildAdministrativeUnit) {
+    public void setReferenceChildAdministrativeUnit(
+            List<AdministrativeUnit> referenceChildAdministrativeUnit) {
         this.referenceChildAdministrativeUnit = referenceChildAdministrativeUnit;
     }
 
-    public List<User> getUser() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUser(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 
-    public void addUser(User users) {
-        this.users.add(users);
+    public void addUser(User user) {
+        this.users.add(user);
     }
 
     public AdministrativeUnit getReferenceParentAdministrativeUnit() {
         return referenceParentAdministrativeUnit;
     }
 
-    public void setReferenceParentAdministrativeUnit(AdministrativeUnit referenceParentAdministrativeUnit) {
-        this.referenceParentAdministrativeUnit = referenceParentAdministrativeUnit;
+    public void setReferenceParentAdministrativeUnit(
+            AdministrativeUnit referenceParentAdministrativeUnit) {
+        this.referenceParentAdministrativeUnit =
+                referenceParentAdministrativeUnit;
     }
 
     @Override

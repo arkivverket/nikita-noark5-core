@@ -4,6 +4,11 @@ import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v4.casehandling.secondary.ContactInformation;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v4.interfaces.ICorrespondencePart;
+import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v4.IRegistryEntryRepository;
 import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -30,7 +35,8 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
 @Transactional
-public class RegistryEntryService implements IRegistryEntryService {
+public class RegistryEntryService
+        implements IRegistryEntryService {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistryEntryService.class);
     //@Value("${nikita-noark5-core.pagination.maxPageSize}")
@@ -65,10 +71,11 @@ public class RegistryEntryService implements IRegistryEntryService {
         registryEntryRepository.save(registryEntry);
         return registryEntry;
     }
-/*
-TODO: Temp disabled!
-    private void associateCorrespondencePartTypeWithCorrespondencePart(@NotNull CorrespondencePart correspondencePart) {
-        CorrespondencePartType incomingCorrespondencePartType = correspondencePart.getCorrespondencePartType();
+
+    private void associateCorrespondencePartTypeWithCorrespondencePart(
+            @NotNull ICorrespondencePart correspondencePart) {
+        CorrespondencePartType incomingCorrespondencePartType =
+                correspondencePart.getCorrespondencePartType();
         // It should never get this far with a null value
         // It should be rejected at controller level
         // The incoming CorrespondencePartType will not have @id field set. Therefore, we have to look it up
@@ -82,63 +89,80 @@ TODO: Temp disabled!
         }
     }
 
-
-    TODO: Temp disabled!
     @Override
-    public List<CorrespondencePartPerson> getCorrespondencePartPersonAssociatedWithRegistryEntry(String systemID) {
+    public List<CorrespondencePartPerson>
+    getCorrespondencePartPersonAssociatedWithRegistryEntry(String systemID) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
         return registryEntry.getReferenceCorrespondencePartPerson();
     }
 
+    /*
+        @Override
+        public List<CorrespondencePartInternal> getCorrespondencePartInternalAssociatedWithRegistryEntry(String systemID) {
+            RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
+            return registryEntry.getReferenceCorrespondencePartInternal();
+        }
+    */
     @Override
-    public List<CorrespondencePartInternal> getCorrespondencePartInternalAssociatedWithRegistryEntry(String systemID) {
-        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
-        return registryEntry.getReferenceCorrespondencePartInternal();
-    }
-
-    @Override
-    public List<CorrespondencePartUnit> getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID) {
+    public List<CorrespondencePartUnit>
+    getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
         return registryEntry.getReferenceCorrespondencePartUnit();
     }
-    */
 
-    /* @Override
-     public CorrespondencePartPerson createCorrespondencePartPersonAssociatedWithRegistryEntry(
+    @Override
+    public CorrespondencePartPerson
+    createCorrespondencePartPersonAssociatedWithRegistryEntry(
              String systemID, CorrespondencePartPerson correspondencePart) {
          RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
 
- TODO: Temp disabled!
-         associateCorrespondencePartTypeWithCorrespondencePart(correspondencePart);
+        CorrespondencePartType incomingCorrespondencePartType =
+                correspondencePart.getCorrespondencePartType();
+        // It should never get this far with a null value
+        // It should be rejected at controller level
+        // The incoming CorrespondencePartType will not have @id field set. Therefore, we have to look it up
+        // in the database and make sure the proper CorrespondencePartType is associated with the CorrespondencePart
+        if (incomingCorrespondencePartType != null && incomingCorrespondencePartType.getCode() != null) {
+            CorrespondencePartType actualCorrespondencePartType =
+                    correspondencePartTypeRepository.findByCode(incomingCorrespondencePartType.getCode());
+            if (actualCorrespondencePartType != null) {
+                correspondencePart.setCorrespondencePartType(actualCorrespondencePartType);
+            }
+        }
 
-         ContactInformation contactInformation = correspondencePart.getContactInformation();
+         /*
+         ZZXC
+         ContactInformation contactInformation
+                 = correspondencePart.getContactInformation();
          if (null != contactInformation) {
              NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(contactInformation);
              NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(contactInformation);
          }
+         correspondencePart.setContactInformation(contactInformation);
 
-         SimpleAddress postalAddress = correspondencePart.getPostalAddress();
+         PostalAddress postalAddress = correspondencePart.getPostalAddress();
          if (null != postalAddress) {
              NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(postalAddress);
              NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(postalAddress);
          }
+         correspondencePart.setPostalAddress(postalAddress);
 
-         SimpleAddress residingAddress = correspondencePart.getResidingAddress();
+         ResidingAddress residingAddress = correspondencePart.getResidingAddress();
          if (null != residingAddress) {
              NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(residingAddress);
              NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(residingAddress);
          }
+         correspondencePart.setResidingAddress(residingAddress);
 
          NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(correspondencePart);
          NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(correspondencePart);
+         */
          // bidirectional relationship @ManyToMany, set both sides of relationship
          registryEntry.getReferenceCorrespondencePartPerson().add(correspondencePart);
-         correspondencePart.getReferenceRegistryEntry().add(registryEntry);
+        correspondencePart.addRegistryEntry(registryEntry);
          return correspondencePartService.createNewCorrespondencePartPerson(correspondencePart);
-
-         return null;
      }
- */
+
     /*
   TODO: Temp disabled!
     @Override
@@ -153,32 +177,49 @@ TODO: Temp disabled!
         correspondencePart.getReferenceRegistryEntry().add(registryEntry);
         return correspondencePartService.createNewCorrespondencePartInternal(correspondencePart);
     }
-
+*/
     @Override
-    public CorrespondencePartUnit createCorrespondencePartUnitAssociatedWithRegistryEntry(
+    public CorrespondencePartUnit
+    createCorrespondencePartUnitAssociatedWithRegistryEntry(
             String systemID, CorrespondencePartUnit correspondencePart) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
 
-        associateCorrespondencePartTypeWithCorrespondencePart(correspondencePart);
+
+        CorrespondencePartType incomingCorrespondencePartType =
+                correspondencePart.getCorrespondencePartType();
+        // It should never get this far with a null value
+        // It should be rejected at controller level
+        // The incoming CorrespondencePartType will not have @id field set. Therefore, we have to look it up
+        // in the database and make sure the proper CorrespondencePartType is associated with the CorrespondencePart
+        if (incomingCorrespondencePartType != null && incomingCorrespondencePartType.getCode() != null) {
+            CorrespondencePartType actualCorrespondencePartType =
+                    correspondencePartTypeRepository.findByCode(incomingCorrespondencePartType.getCode());
+            if (actualCorrespondencePartType != null) {
+                correspondencePart.setCorrespondencePartType(actualCorrespondencePartType);
+            }
+        }
 
         ContactInformation contactInformation = correspondencePart.getContactInformation();
         if (null != contactInformation) {
-            NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(contactInformation);
-            NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(contactInformation);
         }
-
-        SimpleAddress postalAddress = correspondencePart.getPostalAddress();
+        correspondencePart.setContactInformation(contactInformation);
+        contactInformation.setCorrespondencePartUnit(correspondencePart);
+/*
+        PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {
             NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(postalAddress);
             NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(postalAddress);
         }
+        correspondencePart.setPostalAddress(postalAddress);
+
+ZZXC
 
         SimpleAddress businessAddress = correspondencePart.getBusinessAddress();
         if (null != businessAddress) {
             NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(businessAddress);
             NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(businessAddress);
         }
-
+*/
         NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(correspondencePart);
         NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(correspondencePart);
         // bidirectional relationship @ManyToMany, set both sides of relationship
@@ -187,7 +228,7 @@ TODO: Temp disabled!
         return correspondencePartService.createNewCorrespondencePartUnit(correspondencePart);
     }
 
-*/
+
     @Override
     public DocumentDescription createDocumentDescriptionAssociatedWithRegistryEntry(
             String systemID, DocumentDescription documentDescription) {

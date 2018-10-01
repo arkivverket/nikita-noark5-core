@@ -19,24 +19,30 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize;
 /**
  * Serialise an outgoing CaseFile object as JSON.
  * <p>
- * Having an own serializer is done to have more fine grained control over the output. We need to be able to especially
- * control the HATEOAS links and the actual format of the HATEOAS links might change over time with the standard. This
- * allows us to be able to easily adapt to any changes
+ * Having an own serializer is done to have more fine grained control over the
+ * output. We need to be able to especially control the HATEOAS links and the
+ * actual format of the HATEOAS links might change over time with the standard.
+ * This allows us to be able to easily adapt to any later changes.
  * <p>
- * Only Norwegian property names are used on the outgoing JSON property names and are in accordance with the Noark
- * standard.
+ * Only Norwegian property names are used on the outgoing JSON property names
+ * and are in accordance with the Noark standard.
  * <p>
- * Note. Only values that are part of the standard are included in the JSON. Properties like 'id' or 'deleted' are not
- * exported
+ * Note. Only values that are part of the standard are included in the JSON.
+ * Properties like 'id' or 'deleted' are not exported
  * <p>
+ * Note! Some functionality is missing. This will be added later!
  * TODO: You are missing M209 referanseSekundaerKlassifikasjon
+ * TODO: Missing FileType!
  */
 
-public class CaseFileHateoasSerializer extends HateoasSerializer implements IHateoasSerializer {
+public class CaseFileHateoasSerializer
+        extends HateoasSerializer
+        implements IHateoasSerializer {
 
     @Override
     public void serializeNoarkEntity(INikitaEntity noarkSystemIdEntity,
-                                     HateoasNoarkObject caseFileHateoas, JsonGenerator jgen) throws IOException {
+                                     HateoasNoarkObject caseFileHateoas,
+                                     JsonGenerator jgen) throws IOException {
 
         CaseFile caseFile = (CaseFile) noarkSystemIdEntity;
 
@@ -51,14 +57,16 @@ public class CaseFileHateoasSerializer extends HateoasSerializer implements IHat
             jgen.writeStringField(TITLE, caseFile.getTitle());
         }
         if (caseFile.getOfficialTitle() != null) {
-            jgen.writeStringField(FILE_PUBLIC_TITLE, caseFile.getOfficialTitle());
+            jgen.writeStringField(FILE_PUBLIC_TITLE,
+                    caseFile.getOfficialTitle());
         }
         if (caseFile.getDescription() != null) {
             jgen.writeStringField(DESCRIPTION, caseFile.getDescription());
         }
         CommonUtils.Hateoas.Serialize.printKeyword(jgen, caseFile);
         if (caseFile.getDocumentMedium() != null) {
-            jgen.writeStringField(DOCUMENT_MEDIUM, caseFile.getDocumentMedium());
+            jgen.writeStringField(DOCUMENT_MEDIUM,
+                    caseFile.getDocumentMedium());
         }
         CommonUtils.Hateoas.Serialize.printStorageLocation(jgen, caseFile);
         if (caseFile.getCreatedDate() != null) {
@@ -75,27 +83,34 @@ public class CaseFileHateoasSerializer extends HateoasSerializer implements IHat
         if (caseFile.getFinalisedBy() != null) {
             jgen.writeStringField(FINALISED_BY, caseFile.getFinalisedBy());
         }
-        if (caseFile.getReferenceSeries() != null && caseFile.getReferenceSeries().getSystemId() != null) {
-            jgen.writeStringField(REFERENCE_SERIES, caseFile.getReferenceSeries().getSystemId());
+        if (caseFile.getReferenceSeries() != null &&
+                caseFile.getReferenceSeries().getSystemId() != null) {
+            jgen.writeStringField(REFERENCE_SERIES,
+                    caseFile.getReferenceSeries().getSystemId());
         }
         if (caseFile.getCaseYear() != null) {
-            jgen.writeNumberField(CASE_YEAR, caseFile.getCaseYear().intValue());
+            jgen.writeNumberField(CASE_YEAR,
+                    caseFile.getCaseYear());
         }
         if (caseFile.getCaseSequenceNumber() != null) {
-            jgen.writeNumberField(CASE_SEQUENCE_NUMBER, caseFile.getCaseSequenceNumber().intValue());
+            jgen.writeNumberField(CASE_SEQUENCE_NUMBER,
+                    caseFile.getCaseSequenceNumber());
         }
         if (caseFile.getCaseDate() != null) {
             jgen.writeStringField(CASE_DATE,
                     Serialize.formatDate(caseFile.getCaseDate()));
         }
         if (caseFile.getAdministrativeUnit() != null) {
-            jgen.writeStringField(ADMINISTRATIVE_UNIT, caseFile.getAdministrativeUnit());
+            jgen.writeStringField(ADMINISTRATIVE_UNIT,
+                    caseFile.getAdministrativeUnit());
         }
         if (caseFile.getCaseResponsible() != null) {
-            jgen.writeStringField(CASE_RESPONSIBLE, caseFile.getCaseResponsible());
+            jgen.writeStringField(CASE_RESPONSIBLE,
+                    caseFile.getCaseResponsible());
         }
         if (caseFile.getRecordsManagementUnit() != null) {
-            jgen.writeStringField(CASE_RECORDS_MANAGEMENT_UNIT, caseFile.getRecordsManagementUnit());
+            jgen.writeStringField(CASE_RECORDS_MANAGEMENT_UNIT,
+                    caseFile.getRecordsManagementUnit());
         }
         if (caseFile.getCaseStatus() != null) {
             jgen.writeStringField(CASE_STATUS, caseFile.getCaseStatus());
@@ -109,10 +124,16 @@ public class CaseFileHateoasSerializer extends HateoasSerializer implements IHat
         }
 
         // TODO: Implement M209 referanseSekundaerKlassifikasjon
-        //CommonCommonUtils.Hateoas.Serialize.printSecondaryClassification(jgen, caseFile);
+        //CommonCommonUtils.Hateoas.Serialize.
+        // printSecondaryClassification(jgen, caseFile);
         CommonUtils.Hateoas.Serialize.printCaseParty(jgen, caseFile);
+        CommonUtils.Hateoas.Serialize.printMetadataEntity(jgen,
+                caseFile.getReferenceCaseFileStatus());
+        //CommonUtils.Hateoas.Serialize.printMetadataEntity(jgen,
+        //        caseFile.getReferenceFileType());
         //CommonUtils.Hateoas.Serialize.printPrecedence(jgen, caseFile);
-        CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, caseFileHateoas.getLinks(caseFile));
+        CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen,
+                caseFileHateoas.getLinks(caseFile));
         jgen.writeEndObject();
     }
 

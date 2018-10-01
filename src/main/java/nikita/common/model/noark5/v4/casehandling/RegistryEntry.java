@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.BasicRecord;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v4.interfaces.IDocumentFlow;
 import nikita.common.model.noark5.v4.interfaces.IElectronicSignature;
 import nikita.common.model.noark5.v4.interfaces.IPrecedence;
@@ -160,17 +162,15 @@ public class RegistryEntry extends BasicRecord implements IElectronicSignature,
 
     private String recordsManagementUnit;
 
-    /*
-    TODO: Temp disabled!
     // Links to CorrespondencePartPerson
     @ManyToMany
     @JoinTable(name = "registry_entry_correspondence_part_person",
             joinColumns = @JoinColumn(name = "f_pk_record_id",
                     referencedColumnName = "pk_record_id"),
             inverseJoinColumns = @JoinColumn(name = "f_pk_correspondence_part_person_id",
-                    referencedColumnName = "pk_correspondence_part_id"))
-    private List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson> referenceCorrespondencePartPerson = new ArrayList<>();
-
+                    referencedColumnName = "pk_correspondence_part_person_id"))
+    private List<CorrespondencePartPerson>
+            referenceCorrespondencePartPerson = new ArrayList<>();
 
     // Links to CorrespondencePartUnit
     @ManyToMany
@@ -179,8 +179,10 @@ public class RegistryEntry extends BasicRecord implements IElectronicSignature,
                     referencedColumnName = "pk_record_id"),
             inverseJoinColumns = @JoinColumn(name = "f_pk_correspondence_part_unit_id",
                     referencedColumnName = "pk_correspondence_part_id"))
-    private List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit> referenceCorrespondencePartUnit = new ArrayList<>();
+    private List<CorrespondencePartUnit>
+            referenceCorrespondencePartUnit = new ArrayList<>();
 
+    /*
 
     // Links to CorrespondencePartInternal
     @ManyToMany
@@ -359,35 +361,46 @@ public class RegistryEntry extends BasicRecord implements IElectronicSignature,
         this.referenceDocumentFlow = referenceDocumentFlow;
     }
 
-    /*
-
-    TODO: Temp disabled!
-
-    public List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson> getReferenceCorrespondencePartPerson() {
+    public List<CorrespondencePartPerson> getReferenceCorrespondencePartPerson() {
         return referenceCorrespondencePartPerson;
     }
 
-    public void setReferenceCorrespondencePartPerson(List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson> referenceCorrespondencePartPerson) {
+    public void setReferenceCorrespondencePartPerson(
+            List<CorrespondencePartPerson> referenceCorrespondencePartPerson) {
         this.referenceCorrespondencePartPerson = referenceCorrespondencePartPerson;
     }
 
-    public List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit> getReferenceCorrespondencePartUnit() {
+    public void addCorrespondencePartPerson(
+            CorrespondencePartPerson correspondencePartPerson) {
+        this.referenceCorrespondencePartPerson.add(
+                correspondencePartPerson);
+    }
+
+    public List<CorrespondencePartUnit> getReferenceCorrespondencePartUnit() {
         return referenceCorrespondencePartUnit;
     }
 
-    public void setReferenceCorrespondencePartUnit(List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit> referenceCorrespondencePartUnit) {
+    public void setReferenceCorrespondencePartUnit(
+            List<CorrespondencePartUnit> referenceCorrespondencePartUnit) {
         this.referenceCorrespondencePartUnit = referenceCorrespondencePartUnit;
     }
 
-    public List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal> getReferenceCorrespondencePartInternal() {
-        return referenceCorrespondencePartInternal;
+    public void addCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePartUnit) {
+        this.referenceCorrespondencePartUnit.add(
+                correspondencePartUnit);
     }
 
-    public void setReferenceCorrespondencePartInternal(List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal> referenceCorrespondencePartInternal) {
-        this.referenceCorrespondencePartInternal = referenceCorrespondencePartInternal;
-    }
+    /*
+        public List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal> getReferenceCorrespondencePartInternal() {
+            return referenceCorrespondencePartInternal;
+        }
 
-*/
+        public void setReferenceCorrespondencePartInternal(List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal> referenceCorrespondencePartInternal) {
+            this.referenceCorrespondencePartInternal = referenceCorrespondencePartInternal;
+        }
+
+    */
     public List<SignOff> getReferenceSignOff() {
         return referenceSignOff;
     }

@@ -1,13 +1,14 @@
 package nikita.common.model.noark5.v4.interfaces.entities.casehandling;
 
-import nikita.common.model.noark5.v4.casehandling.secondary.ContactInformation;
-import nikita.common.model.noark5.v4.casehandling.secondary.PostalAddress;
-import nikita.common.model.noark5.v4.casehandling.secondary.ResidingAddress;
+import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+
+import java.util.List;
 
 /**
  * Created by tsodring on 5/22/17.
  */
-public interface ICorrespondencePartPersonEntity extends ICorrespondencePartEntity {
+public interface ICorrespondencePartPersonEntity
+        extends ICorrespondencePartEntity {
 
     String getSocialSecurityNumber();
 
@@ -21,22 +22,22 @@ public interface ICorrespondencePartPersonEntity extends ICorrespondencePartEnti
 
     void setName(String name);
 
-    PostalAddress getPostalAddress();
+    /*
+        PostalAddress getPostalAddress();
 
-    void setPostalAddress(PostalAddress postalAddress);
+        void setPostalAddress(PostalAddress postalAddress);
 
-    ResidingAddress getResidingAddress();
+        ResidingAddress getResidingAddress();
 
-    void setResidingAddress(ResidingAddress residingAddress);
+        void setResidingAddress(ResidingAddress residingAddress);
 
-    ContactInformation getContactInformation();
+        ContactInformation getContactInformation();
 
-    void setContactInformation(ContactInformation contactInformation);
-/*
-  TODO: Temp disabled!
-
+        void setContactInformation(ContactInformation contactInformation);
+    */
     List<RegistryEntry> getReferenceRegistryEntry();
 
     void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry);
-*/
+
+    void addRegistryEntry(RegistryEntry registryEntry);
 }

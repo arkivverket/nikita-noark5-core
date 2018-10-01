@@ -1,12 +1,15 @@
 package nikita.common.model.noark5.v4.casehandling;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.File;
+import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.interfaces.ICaseParty;
 import nikita.common.model.noark5.v4.interfaces.IPrecedence;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v4.metadata.CaseStatus;
 import nikita.common.util.deserialisers.casehandling.CaseFileDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,6 +21,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static nikita.common.config.Constants.JOIN_CASE_FILE_STATUS;
+import static nikita.common.config.Constants.PRIMARY_KEY_CASE_FILE_STATUS;
 
 
 // TODO: You are missing M209 referanseSekundaerKlassifikasjon
@@ -66,7 +72,6 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
      */
     @Column(name = "administrative_unit")
     @Audited
-
     protected String administrativeUnit;
 
     /**
@@ -113,6 +118,7 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     @Audited
 
     protected String ownedBy;
+
     // Links to CaseParty
     @ManyToMany
     @JoinTable(name = "case_file_case_file_party",
@@ -122,6 +128,7 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
                     referencedColumnName = "pk_case_party_id"))
 
     protected List<CaseParty> referenceCaseParty = new ArrayList<CaseParty>();
+
     // Links to Precedence
     @ManyToMany
     @JoinTable(name = "case_file_precedence",
@@ -131,11 +138,25 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
                     referencedColumnName = "pk_precedence_id"))
 
     protected List<Precedence> referencePrecedence = new ArrayList<Precedence>();
+
     // Used for soft delete.
     @Column(name = "deleted")
     @Audited
-
     private Boolean deleted;
+
+    // Link to AdministrativeUnit
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "case_file_administrative_unit_id",
+            referencedColumnName = Constants.PRIMARY_KEY_ADMINISTRATIVE_UNIT)
+    @JsonIgnore
+    private AdministrativeUnit referenceAdministrativeUnit;
+
+    // Link to CaseFileStatus
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = JOIN_CASE_FILE_STATUS,
+            referencedColumnName = PRIMARY_KEY_CASE_FILE_STATUS)
+    @JsonIgnore
+    private CaseStatus referenceCaseFileStatus;
 
     public Integer getCaseYear() {
         return caseYear;
@@ -249,6 +270,23 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
 
     public void setReferencePrecedence(List<Precedence> referencePrecedence) {
         this.referencePrecedence = referencePrecedence;
+    }
+
+    public AdministrativeUnit getReferenceAdministrativeUnit() {
+        return referenceAdministrativeUnit;
+    }
+
+    public void setReferenceAdministrativeUnit(
+            AdministrativeUnit referenceAdministrativeUnit) {
+        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
+    }
+
+    public CaseStatus getReferenceCaseFileStatus() {
+        return referenceCaseFileStatus;
+    }
+
+    public void setReferenceCaseFileStatus(CaseStatus referenceCaseFileStatus) {
+        this.referenceCaseFileStatus = referenceCaseFileStatus;
     }
 
     @Override

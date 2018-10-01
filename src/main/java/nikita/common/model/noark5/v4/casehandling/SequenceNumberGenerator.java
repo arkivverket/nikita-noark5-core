@@ -17,6 +17,7 @@ public class SequenceNumberGenerator {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     AdministrativeUnit administrativeUnit;
+
     @Id
     @Column(name = "sequence_id", nullable = false, updatable = false)
     private Long id;

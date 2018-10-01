@@ -6,7 +6,7 @@ import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.nikita.AuthorityRepository;
-import nikita.common.repository.nikita.UserRepository;
+import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -36,14 +36,14 @@ public class UserService implements IUserService {
     private static final Logger logger =
             LoggerFactory.getLogger(UserService.class);
 
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
     private AuthorityRepository authorityRepository;
     private IUserHateoasHandler userHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
     private PasswordEncoder encoder;
     private AdministrativeUnitService administrativeUnitService;
 
-    public UserService(UserRepository userRepository,
+    public UserService(IUserRepository userRepository,
                        AuthorityRepository authorityRepository,
                        IUserHateoasHandler userHateoasHandler,
                        ApplicationEventPublisher applicationEventPublisher,
@@ -78,10 +78,19 @@ public class UserService implements IUserService {
         userHateoasHandler.addLinks(userHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, user));
-        AdministrativeUnit administrativeUnit = new AdministrativeUnit();
-        administrativeUnit.addUser(user);
-        administrativeUnitService.createNewAdministrativeUnitByUser(
-                administrativeUnit, user);
+
+        // If no administrativeUnit is associated with this user, create a
+        // default one
+        if (user.getAdministrativeUnits().size() < 1) {
+            AdministrativeUnit administrativeUnit = new AdministrativeUnit();
+            administrativeUnit.setOwnedBy(user.getOwnedBy());
+            administrativeUnit.setAdministrativeUnitName("system opprettet " +
+                    "AdministrativtEnhet for bruker " + user.getUsername());
+            administrativeUnit.setShortName("adminenhet " + user.getUsername());
+            administrativeUnit.addUser(user);
+            administrativeUnitService.createNewAdministrativeUnitByUser(
+                    administrativeUnit, user);
+        }
         return userHateoas;
     }
 
@@ -143,7 +152,7 @@ public class UserService implements IUserService {
      */
     @Override
     public boolean userExists(String username) {
-        return userRepository.findByUsername(username) != null;
+        return userRepository.findByUsername(username).isPresent();
     }
 
     /**

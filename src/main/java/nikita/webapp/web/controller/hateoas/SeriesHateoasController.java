@@ -7,12 +7,14 @@ import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v4.metadata.CaseStatus;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ISeriesService;
+import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -46,6 +48,7 @@ public class SeriesHateoasController extends NoarkController {
     private IRecordHateoasHandler recordHateoasHandler;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
     private IFileHateoasHandler fileHateoasHandler;
+    private ICaseStatusService caseStatusService;
     private ApplicationEventPublisher applicationEventPublisher;
 
     public SeriesHateoasController(ISeriesService seriesService,
@@ -54,6 +57,7 @@ public class SeriesHateoasController extends NoarkController {
                                    IRecordHateoasHandler recordHateoasHandler,
                                    ICaseFileHateoasHandler caseFileHateoasHandler,
                                    IFileHateoasHandler fileHateoasHandler,
+                                   ICaseStatusService caseStatusService,
                                    ApplicationEventPublisher applicationEventPublisher) {
 
         this.seriesService = seriesService;
@@ -62,6 +66,7 @@ public class SeriesHateoasController extends NoarkController {
         this.recordHateoasHandler = recordHateoasHandler;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
+        this.caseStatusService = caseStatusService;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -443,7 +448,12 @@ public class SeriesHateoasController extends NoarkController {
     public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
             HttpServletRequest request, final HttpServletResponse response) {
 
+        CaseStatus caseStatus = caseStatusService.generateDefaultCaseStatus();
         CaseFile defaultCaseFile = new CaseFile();
+        defaultCaseFile.setReferenceCaseFileStatus(caseStatus);
+        // Same for filetype
+        //defaultCaseFile.setReferenceCaseFileStatus(caseStatus);
+
         defaultCaseFile = setCaseFileDefaults(defaultCaseFile);
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(defaultCaseFile);

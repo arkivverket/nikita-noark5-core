@@ -10,7 +10,10 @@ import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.casehandling.DocumentFlow;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.secondary.*;
+import nikita.common.model.noark5.v4.casehandling.secondary.ContactInformation;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v4.hateoas.casehandling.*;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
@@ -24,6 +27,7 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
+import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -98,11 +102,10 @@ public class RegistryEntryHateoasController extends NoarkController {
             @RequestBody CorrespondencePartPerson CorrespondencePartPerson)
             throws NikitaException {
 
-        /*
-
-        TODO: Temp disabled!
         CorrespondencePartPerson createdCorrespondencePartPerson =
-                registryEntryService.createCorrespondencePartPersonAssociatedWithRegistryEntry(systemID, CorrespondencePartPerson);
+                registryEntryService.
+                        createCorrespondencePartPersonAssociatedWithRegistryEntry(
+                                systemID, CorrespondencePartPerson);
         CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
                 new CorrespondencePartPersonHateoas(createdCorrespondencePartPerson);
         correspondencePartHateoasHandler.addLinks(correspondencePartPersonHateoas, new Authorisation());
@@ -111,9 +114,6 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdCorrespondencePartPerson.getVersion().toString())
                 .body(correspondencePartPersonHateoas);
-
-                */
-        return null;
     }
 
     // Create a new CorrespondencePartInternal and associate it with the given journalpost
@@ -197,9 +197,6 @@ public class RegistryEntryHateoasController extends NoarkController {
                     required = true)
             @RequestBody CorrespondencePartUnit CorrespondencePartUnit)
             throws NikitaException {
-/*
-
-  TODO: Temp disabled!
         CorrespondencePartUnit createdCorrespondencePartUnit =
                 registryEntryService.createCorrespondencePartUnitAssociatedWithRegistryEntry(systemID, CorrespondencePartUnit);
         CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
@@ -210,8 +207,6 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdCorrespondencePartUnit.getVersion().toString())
                 .body(correspondencePartUnitHateoas);
-                */
-        return null;
     }
 
     /*
@@ -373,8 +368,6 @@ public class RegistryEntryHateoasController extends NoarkController {
                     value = "systemID of the file to retrieve associated Record",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-/*
-TODO: Temp disabled!
 
         List<CorrespondencePartPerson> correspondencePartPerson =
                 registryEntryService.getCorrespondencePartPersonAssociatedWithRegistryEntry(systemID);
@@ -384,9 +377,6 @@ TODO: Temp disabled!
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(correspondencePartHateoas);
-
-                */
-        return null;
     }
 
     // Retrieve all CorrespondencePartUnit associated with a RegistryEntry identified by systemId
@@ -410,9 +400,6 @@ TODO: Temp disabled!
                     value = "systemID of the file to retrieve associated Record",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-/*
-
-  TODO: Temp disabled!
         List<CorrespondencePartUnit> correspondencePartUnit =
                 registryEntryService.getCorrespondencePartUnitAssociatedWithRegistryEntry(systemID);
         CorrespondencePartUnitHateoas correspondencePartHateoas =
@@ -422,8 +409,6 @@ TODO: Temp disabled!
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(correspondencePartHateoas);
 
-                */
-        return null;
     }
 
     // Retrieve all CorrespondencePartInternal associated with a RegistryEntry identified by systemId
@@ -489,7 +474,8 @@ TODO: Temp disabled!
                     CORRESPONDENCE_PART_CODE_EA + "] returns no value");
         }
         suggestedCorrespondencePart.setCorrespondencePartType(correspondencePartType);
-
+/*
+ZZXC
         PostalAddress postalAddress = new PostalAddress();
         postalAddress.setAddressType(POSTAL_ADDRESS);
         postalAddress.setAddressLine1("ADRL1: 742 Evergreen Terrace");
@@ -518,7 +504,7 @@ TODO: Temp disabled!
         contactInformation.setMobileTelephoneNumber("123456789");
         contactInformation.setTelephoneNumber("987654321");
         suggestedCorrespondencePart.setContactInformation(contactInformation);
-
+*/
         suggestedCorrespondencePart.setName("Frank Grimes");
 
         CorrespondencePartPersonHateoas correspondencePartHateoas =
@@ -556,7 +542,7 @@ TODO: Temp disabled!
                     CORRESPONDENCE_PART_CODE_EA + "] returns no value");
         }
         suggestedCorrespondencePart.setCorrespondencePartType(correspondencePartType);
-
+/*
         PostalAddress postalAddress = new PostalAddress();
         postalAddress.setAddressType(POSTAL_ADDRESS);
         postalAddress.setAddressLine1("ADRL1: 744 Evergreen Terrace");
@@ -567,6 +553,8 @@ TODO: Temp disabled!
         postalAddress.setPostalTown("Springfield");
         suggestedCorrespondencePart.setPostalAddress(postalAddress);
 
+ZZXC
+
         BusinessAddress businessAddress = new BusinessAddress();
         businessAddress.setAddressType(BUSINESS_ADDRESS);
         businessAddress.setAddressLine1("ADRL1: 745 Evergreen Terrace");
@@ -576,7 +564,7 @@ TODO: Temp disabled!
         businessAddress.setPostalNumber(new PostalNumber("12345"));
         businessAddress.setPostalTown("Springfield");
         suggestedCorrespondencePart.setBusinessAddress(businessAddress);
-
+*/
         suggestedCorrespondencePart.setContactPerson("Frank Contact Person Grimes");
 
         ContactInformation contactInformation = new ContactInformation();
