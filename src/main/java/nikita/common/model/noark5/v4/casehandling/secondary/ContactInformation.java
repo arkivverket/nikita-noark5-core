@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
-import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.interfaces.entities.casehandling.IContactInformationEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,31 +12,54 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "contact_information")
-@AttributeOverride(name = "id", column = @Column(name = "pk_contact_information_id"))
-public class ContactInformation extends NoarkEntity implements IContactInformationEntity {
+@AttributeOverride(name = "id",
+        column = @Column(name = "pk_contact_information_id"))
+public class ContactInformation
+        //extends NoarkEntity
+        implements IContactInformationEntity {
 
-    @OneToOne(mappedBy = "contactInformation")
-    CorrespondencePartPerson correspondencePartPerson;
-    @OneToOne(mappedBy = "contactInformation")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "correspondence_part_id")
     CorrespondencePartUnit correspondencePartUnit;
+
     /**
      * M410 - epostadresse (xs:string)
      */
     @Audited
     @Column(name = "email_address")
     private String emailAddress;
+
     /**
      * M??? - mobiltelefon (xs:string)
      */
     @Column(name = "mobile_telephone_number")
     @Audited
     private String mobileTelephoneNumber;
+
     /**
      * M411 - telefonnummer (xs:string)
      */
     @Column(name = "telephone_number")
     @Audited
     private String telephoneNumber;
+
+
+    /*
+    @OneToOne(mappedBy = "contactInformation", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, optional = false)
+    CorrespondencePartPerson correspondencePartPerson;
+*/
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getEmailAddress() {
         return emailAddress;
@@ -63,19 +85,21 @@ public class ContactInformation extends NoarkEntity implements IContactInformati
         this.telephoneNumber = telephoneNumber;
     }
 
-    public CorrespondencePartPerson getCorrespondencePartPerson() {
-        return correspondencePartPerson;
-    }
+    /*
+        public CorrespondencePartPerson getCorrespondencePartPerson() {
+            return correspondencePartPerson;
+        }
 
-    public void setCorrespondencePartPerson(CorrespondencePartPerson correspondencePartPerson) {
-        this.correspondencePartPerson = correspondencePartPerson;
-    }
-
+        public void setCorrespondencePartPerson(CorrespondencePartPerson correspondencePartPerson) {
+            this.correspondencePartPerson = correspondencePartPerson;
+        }
+    */
     public CorrespondencePartUnit getCorrespondencePartUnit() {
         return correspondencePartUnit;
     }
 
-    public void setCorrespondencePartUnit(CorrespondencePartUnit correspondencePartUnit) {
+    public void setCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePartUnit) {
         this.correspondencePartUnit = correspondencePartUnit;
     }
 

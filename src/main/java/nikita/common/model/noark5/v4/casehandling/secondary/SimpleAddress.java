@@ -14,48 +14,62 @@ import javax.persistence.*;
 @Entity
 @Table(name = "simple_address")
 @Inheritance(strategy = InheritanceType.JOINED)
-@AttributeOverride(name = "id", column = @Column(name = "pk_simple_address_id"))
-public class SimpleAddress extends NoarkEntity implements ISimpleAddressEntity {
+@AttributeOverride(name = "id",
+        column = @Column(name = "pk_simple_address_id"))
+@DiscriminatorColumn(name = "object_type",
+        discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue(value = "SimpleAddress")
+public class SimpleAddress
+        extends NoarkEntity
+        implements ISimpleAddressEntity {
 
     /**
      * M407 - postnummer (xs:string)
      */
     @Embedded
     PostalNumber postalNumber;
-    @OneToOne(mappedBy = "contactInformation")
+
+    /*
+    @OneToOne(mappedBy = "postalAddress", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, optional = false)
     CorrespondencePartPerson correspondencePartPerson;
-    @OneToOne(mappedBy = "contactInformation")
-    CorrespondencePartUnit correspondencePartUnit;
+*/
+
     /**
      * M??? - adresselinje1 (xs:string)
      */
     @Column(name = "address_line_1")
     @Audited
     private String addressLine1;
+
     /**
      * M??? - adresselinje2 (xs:string)
      */
     @Column(name = "address_line_2")
     @Audited
     private String addressLine2;
+
     /**
      * M??? - adresselinje3 (xs:string)
      */
     @Column(name = "address_line_3")
     @Audited
     private String addressLine3;
+
     /**
      * M408 - poststed (xs:string)
      */
     @Audited
     @Column(name = "postal_town")
     private String postalTown;
+
     /**
      * M??? - landKode (xs:string)
      */
     @Audited
     @Column(name = "country_code")
     private String countryCode;
+
     // Holds if this is a postAddress / residingAddress etc
     @Column(name = "address_type")
     private String addressType;
