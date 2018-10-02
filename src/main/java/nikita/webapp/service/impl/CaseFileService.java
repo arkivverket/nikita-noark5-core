@@ -125,7 +125,8 @@ public class CaseFileService implements ICaseFileService {
     }
 
     @Override
-    public RegistryEntry createRegistryEntryAssociatedWithCaseFile(@NotNull String fileSystemId, @NotNull RegistryEntry registryEntry) {
+    public RegistryEntry createRegistryEntryAssociatedWithCaseFile(
+            @NotNull String fileSystemId, @NotNull RegistryEntry registryEntry) {
         CaseFile caseFile = getCaseFileOrThrow(fileSystemId);
         // bidirectional relationship @OneToMany and @ManyToOne, set both sides of relationship
         registryEntry.setReferenceFile(caseFile);

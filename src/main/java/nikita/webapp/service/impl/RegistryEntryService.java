@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
+import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
@@ -70,6 +71,13 @@ public class RegistryEntryService
         setCreateEntityValues(registryEntry);
         checkDocumentMediumValid(registryEntry);
         registryEntry.setRecordDate(new Date());
+        File file = registryEntry.getReferenceFile();
+        if (null != file) {
+            Long numberAssociated =
+                    registryEntryRepository.countByReferenceFile(file) + 1;
+            registryEntry.setRegistryEntryNumber(numberAssociated.intValue());
+            registryEntry.setRecordId(file.getFileId() + "-" + numberAssociated);
+        }
         registryEntryRepository.save(registryEntry);
         return registryEntry;
     }
@@ -115,8 +123,8 @@ public class RegistryEntryService
     @Override
     public CorrespondencePartPerson
     createCorrespondencePartPersonAssociatedWithRegistryEntry(
-             String systemID, CorrespondencePartPerson correspondencePart) {
-         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
+            String systemID, CorrespondencePartPerson correspondencePart) {
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
 
         CorrespondencePartType incomingCorrespondencePartType =
                 correspondencePart.getCorrespondencePartType();
@@ -159,11 +167,11 @@ public class RegistryEntryService
          setNikitaEntityValues(correspondencePart);
          setSystemIdEntityValues(correspondencePart);
          */
-         // bidirectional relationship @ManyToMany, set both sides of relationship
-         registryEntry.getReferenceCorrespondencePartPerson().add(correspondencePart);
+        // bidirectional relationship @ManyToMany, set both sides of relationship
+        registryEntry.getReferenceCorrespondencePartPerson().add(correspondencePart);
         correspondencePart.addRegistryEntry(registryEntry);
-         return correspondencePartService.createNewCorrespondencePartPerson(correspondencePart);
-     }
+        return correspondencePartService.createNewCorrespondencePartPerson(correspondencePart);
+    }
 
     /*
   TODO: Temp disabled!
@@ -307,13 +315,13 @@ ZZXC
             existingRegistryEntry.setDocumentDate(incomingRegistryEntry.getDocumentDate());
         }
         if (null != incomingRegistryEntry.getDueDate()) {
-            existingRegistryEntry.setDueDate(incomingRegistryEntry.getDueDate() );
+            existingRegistryEntry.setDueDate(incomingRegistryEntry.getDueDate());
         }
         if (null != incomingRegistryEntry.getFreedomAssessmentDate()) {
             existingRegistryEntry.setFreedomAssessmentDate(incomingRegistryEntry.getFreedomAssessmentDate());
         }
         if (null != incomingRegistryEntry.getLoanedDate()) {
-            existingRegistryEntry.setLoanedDate(incomingRegistryEntry.getLoanedDate() );
+            existingRegistryEntry.setLoanedDate(incomingRegistryEntry.getLoanedDate());
         }
         if (null != incomingRegistryEntry.getLoanedTo()) {
             existingRegistryEntry.setLoanedTo(incomingRegistryEntry.getLoanedTo());
@@ -322,7 +330,7 @@ ZZXC
         registryEntryRepository.save(existingRegistryEntry);
         return existingRegistryEntry;
     }
-    
+
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String registryEntrySystemId) {
