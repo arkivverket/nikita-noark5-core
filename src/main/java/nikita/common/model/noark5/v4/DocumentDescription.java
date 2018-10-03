@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+
 @Entity
 @Table(name = "document_description")
 // Enable soft delete of DocumentDescription
@@ -24,10 +26,14 @@ import java.util.List;
 // @Where(clause="deleted <> true")
 //@Indexed(index = "document_description")
 @JsonDeserialize(using = DocumentDescriptionDeserializer.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_document_description_id"))
-public class DocumentDescription extends NoarkEntity implements INoarkTitleDescriptionEntity,
-        INoarkCreateEntity, IDocumentMedium, ISingleStorageLocation, IDeletion, IScreening, IDisposal, IClassified,
-        IDisposalUndertaken, IComment, IElectronicSignature, IAuthor {
+@AttributeOverride(name = "id",
+        column = @Column(name = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
+public class DocumentDescription
+        extends NoarkEntity
+        implements INoarkTitleDescriptionEntity, INoarkCreateEntity,
+        IDocumentMedium, ISingleStorageLocation, IDeletion, IScreening,
+        IDisposal, IClassified, IDisposalUndertaken, IComment,
+        IElectronicSignature, IAuthor {
 
     private static final long serialVersionUID = 1L;
 
@@ -142,14 +148,14 @@ public class DocumentDescription extends NoarkEntity implements INoarkTitleDescr
     // Links to Comments
     @ManyToMany
     @JoinTable(name = "document_description_comment", joinColumns = @JoinColumn(name = "f_pk_document_description_id",
-            referencedColumnName = "pk_document_description_id"),
+            referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
             inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id", referencedColumnName = "pk_comment_id"))
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Authors
     @ManyToMany
     @JoinTable(name = "document_description_author", joinColumns = @JoinColumn(name = "f_pk_document_description_id",
-            referencedColumnName = "pk_document_description_id"),
+            referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
             inverseJoinColumns = @JoinColumn(name = "f_pk_author_id", referencedColumnName = "pk_author_id"))
     private List<Author> referenceAuthor = new ArrayList<>();
 

@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+
 @Entity
 @Table(name = "record")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -85,7 +87,7 @@ public class Record extends NoarkEntity implements INoarkCreateEntity, IClassifi
     @JoinTable(name = "record_document_description", joinColumns = @JoinColumn(name = "f_pk_record_id",
             referencedColumnName = "pk_record_id"),
             inverseJoinColumns = @JoinColumn(name = "f_pk_document_description_id",
-                    referencedColumnName = "pk_document_description_id"))
+                    referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
     private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
 
     // Links to DocumentObjects

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+
 @Entity
 @Table(name = "document_object")
 // Enable soft delete of DocumentObject ... Temporarily disabled because we can 'delete' things without ref integrity
@@ -125,7 +127,8 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
 
     // Link to DocumentDescription
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "document_object_document_description_id", referencedColumnName = "pk_document_description_id")
+    @JoinColumn(name = "document_object_document_description_id",
+            referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION)
     private DocumentDescription referenceDocumentDescription;
 
     // Link to Record

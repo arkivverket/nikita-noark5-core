@@ -645,6 +645,8 @@ public final class Constants {
 
     public static final String JOIN_CASE_FILE_STATUS =
             "case_file_case_file_status_id";
+    public static final String PRIMARY_KEY_DOCUMENT_DESCRIPTION =
+            "pk_document_description_id";
 
     public static final String DM_OWNED_BY = "ownedBy";
     public static final String SYSTEM = "system";

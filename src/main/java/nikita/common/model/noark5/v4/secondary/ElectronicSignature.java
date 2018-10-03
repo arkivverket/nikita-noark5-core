@@ -12,6 +12,8 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.util.Date;
 
+import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+
 @Entity
 @Table(name = "electronic_signature")
 // Enable soft delete of ElectronicSignature
@@ -60,7 +62,7 @@ public class ElectronicSignature extends NoarkEntity {
 
     // Link to DocumentDescription
     @OneToOne
-    @JoinColumn(name = "pk_document_description_id")
+    @JoinColumn(name = PRIMARY_KEY_DOCUMENT_DESCRIPTION)
     private DocumentDescription referenceDocumentDescription;
 
     public String getElectronicSignatureSecurityLevel() {
