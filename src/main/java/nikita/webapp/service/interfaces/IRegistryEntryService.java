@@ -1,6 +1,5 @@
 package nikita.webapp.service.interfaces;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
@@ -13,10 +12,6 @@ public interface IRegistryEntryService {
 
     // All save methods
     RegistryEntry save(RegistryEntry registryEntry);
-
-    DocumentDescription
-    createDocumentDescriptionAssociatedWithRegistryEntry(
-            String systemID, DocumentDescription documentDescription);
 
     CorrespondencePartPerson
     createCorrespondencePartPersonAssociatedWithRegistryEntry(

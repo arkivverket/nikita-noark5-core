@@ -179,6 +179,11 @@ public class Record extends NoarkEntity implements INoarkCreateEntity, IClassifi
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
+    public void addReferenceDocumentDescription(
+            DocumentDescription referenceDocumentDescription) {
+        this.referenceDocumentDescription.add(referenceDocumentDescription);
+    }
+
     public List<DocumentObject> getReferenceDocumentObject() {
         return referenceDocumentObject;
     }

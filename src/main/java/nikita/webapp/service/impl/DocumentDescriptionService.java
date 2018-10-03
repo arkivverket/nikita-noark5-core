@@ -2,6 +2,7 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v4.Record;
 import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
@@ -47,10 +48,9 @@ public class DocumentDescriptionService
         DocumentDescription documentDescription = documentDescriptionRepository.findBySystemId(documentDescriptionSystemId);
         if (documentDescription == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " DocumentDescription, using documentDescriptionSystemId " + documentDescriptionSystemId;
-            logger.info(info) ;
+            logger.info(info);
             throw new NoarkEntityNotFoundException(info);
-        }
-        else {
+        } else {
             documentObject.setReferenceDocumentDescription(documentDescription);
             List<DocumentObject> documentObjects = documentDescription
                     .getReferenceDocumentObject();
@@ -60,15 +60,45 @@ public class DocumentDescriptionService
         return persistedDocumentObject;
     }
 
-    public DocumentDescription save(DocumentDescription documentDescription){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Date now = new Date();
+    /**
+     * Note:
+     * <p>
+     * Assumes documentDescription.addReferenceRecord() has already been called.
+     *
+     * @param documentDescription
+     * @return
+     */
+
+    public DocumentDescription save(DocumentDescription documentDescription) {
+
+        String username = SecurityContextHolder.getContext().
+                getAuthentication().getName();
         documentDescription.setSystemId(UUID.randomUUID().toString());
-        documentDescription.setCreatedDate(now);
+        documentDescription.setCreatedDate(new Date());
         documentDescription.setOwnedBy(username);
         documentDescription.setCreatedBy(username);
-        documentDescription.setDeleted(false);
-        documentDescription.setAssociationDate(now);
+        documentDescription.setAssociationDate(new Date());
+        documentDescription.setAssociatedBy(username);
+
+
+        // Setting it to 0 as the field is not null. Get's updated to the
+        // correct value straight after
+        documentDescription.setDocumentNumber(0);
+        // Saving and flushing the cache to avoid a transient object save
+        // exception. This has to be revisited, as it will soon become an issue
+        // when all the metadata entities start being implemented properly.
+        documentDescriptionRepository.save(documentDescription);
+        entityManager.flush();
+
+        // upon creating, the record/registryEntry should already have
+        // added.
+        Record record = documentDescription.
+                getReferenceRecord().get(0);
+        Long documentNumber =
+                documentDescriptionRepository.
+                        countByReferenceRecord(record);
+        documentDescription.setDocumentNumber(documentNumber.intValue());
+
         return documentDescriptionRepository.save(documentDescription);
     }
 
@@ -89,12 +119,12 @@ public class DocumentDescriptionService
 
     // ownedBy
     public List<DocumentDescription> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().getAuthentication().getName():ownedBy;
+        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().getAuthentication().getName() : ownedBy;
         return documentDescriptionRepository.findByOwnedBy(ownedBy);
     }
 
     // -- All UPDATE operations
-    public DocumentDescription update(DocumentDescription documentDescription){
+    public DocumentDescription update(DocumentDescription documentDescription) {
         return documentDescriptionRepository.save(documentDescription);
     }
 
@@ -141,21 +171,61 @@ public class DocumentDescriptionService
     }
 
     // All HELPER operations
+
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid DocumentDescription back. If there is no valid
-     * DocumentDescription, an exception is thrown
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid DocumentDescription back. If there
+     * is no valid DocumentDescription, an exception is thrown
      *
      * @param documentDescriptionSystemId
-     * @return
+     * @return The documentDescription
      */
-    protected DocumentDescription getDocumentDescriptionOrThrow(@NotNull String documentDescriptionSystemId) {
-        DocumentDescription documentDescription = documentDescriptionRepository.findBySystemId(documentDescriptionSystemId);
+    protected DocumentDescription getDocumentDescriptionOrThrow(
+            @NotNull String documentDescriptionSystemId) {
+        DocumentDescription documentDescription =
+                documentDescriptionRepository.findBySystemId(
+                        documentDescriptionSystemId);
         if (documentDescription == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " DocumentDescription, using systemId " + documentDescriptionSystemId;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " DocumentDescription, using systemId " +
+                    documentDescriptionSystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
         return documentDescription;
+    }
+
+    /**
+     * Using JPA as SpringData countBy was seeing a transient object exception.
+     * Rather than spend time on that it was easier to just create a query.
+     *
+     * @param record The record containing the required systemId
+     * @return the count
+     */
+
+    private Integer getNumberDocumentsAssociatedWithRecord(Record record) {
+
+        String queryString = "select count(*) from Record" +
+                " r join r.referenceDocumentDescription " +
+                "f where r.id= :recordId";
+
+
+        /*
+
+"select c from Category c join c.fragrances f where c.referencedId = :id"
+                //"DocumentDescription d join where d" +
+               // ".referenceRecord=:recordSystemId";
+
+       // "from Portailuser u join u.portailroles r where r.name=:roleName"
+       "SELECT COUNT(1) FROM " +
+                "from DocumentDescription d join d.referenceRecord r where r.referenceRecord=:recordSystemId";
+
+       */
+        Query query = entityManager.createQuery(queryString);
+        query.setParameter("recordId", record.getId());
+
+        Long result = (Long) query.getSingleResult();
+        return result.intValue();
     }
 }

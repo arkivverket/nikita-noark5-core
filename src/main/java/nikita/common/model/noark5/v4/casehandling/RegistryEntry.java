@@ -31,7 +31,9 @@ import java.util.List;
 // @Where(clause="deleted <> true")
 //@Indexed(index = "registry_entry")
 @JsonDeserialize(using = RegistryEntryDeserializer.class)
-public class RegistryEntry extends BasicRecord implements IElectronicSignature,
+public class RegistryEntry
+        extends BasicRecord implements
+        IElectronicSignature,
         IPrecedence, /*ICorrespondencePart,*/ ISignOff, IDocumentFlow {
 
     /**

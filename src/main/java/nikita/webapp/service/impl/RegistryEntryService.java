@@ -1,8 +1,6 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.casehandling.secondary.ContactInformation;
@@ -13,11 +11,13 @@ import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v4.IRegistryEntryRepository;
 import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,19 +47,30 @@ public class RegistryEntryService
     private IPrecedenceService precedenceService;
     private IRegistryEntryRepository registryEntryRepository;
     private ICorrespondencePartTypeRepository correspondencePartTypeRepository;
+    private IDocumentDescriptionHateoasHandler
+            documentDescriptionHateoasHandler;
+    private ApplicationEventPublisher applicationEventPublisher;
     private EntityManager entityManager;
 
-    public RegistryEntryService(DocumentDescriptionService documentDescriptionService,
-                                ICorrespondencePartService correspondencePartService,
-                                IPrecedenceService precedenceService,
-                                IRegistryEntryRepository registryEntryRepository,
-                                ICorrespondencePartTypeRepository correspondencePartTypeRepository,
-                                EntityManager entityManager) {
+    public RegistryEntryService(
+            DocumentDescriptionService documentDescriptionService,
+            ICorrespondencePartService correspondencePartService,
+            IPrecedenceService precedenceService,
+            IRegistryEntryRepository registryEntryRepository,
+            ICorrespondencePartTypeRepository correspondencePartTypeRepository,
+            IDocumentDescriptionHateoasHandler
+                    documentDescriptionHateoasHandler,
+            ApplicationEventPublisher applicationEventPublisher,
+            EntityManager entityManager) {
+
         this.documentDescriptionService = documentDescriptionService;
         this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
         this.registryEntryRepository = registryEntryRepository;
         this.correspondencePartTypeRepository = correspondencePartTypeRepository;
+        this.documentDescriptionHateoasHandler =
+                documentDescriptionHateoasHandler;
+        this.applicationEventPublisher = applicationEventPublisher;
         this.entityManager = entityManager;
     }
 
@@ -236,22 +246,6 @@ ZZXC
         registryEntry.getReferenceCorrespondencePartUnit().add(correspondencePart);
         correspondencePart.getReferenceRegistryEntry().add(registryEntry);
         return correspondencePartService.createNewCorrespondencePartUnit(correspondencePart);
-    }
-
-
-    @Override
-    public DocumentDescription createDocumentDescriptionAssociatedWithRegistryEntry(
-            String systemID, DocumentDescription documentDescription) {
-        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
-        ArrayList<Record> records = (ArrayList<Record>) documentDescription.getReferenceRecord();
-
-        // It should always be instaniated ... check this ...
-        if (records == null) {
-            records = new ArrayList<>();
-            documentDescription.setReferenceRecord(records);
-        }
-        records.add(registryEntry);
-        return documentDescriptionService.save(documentDescription);
     }
 
     // All READ operations

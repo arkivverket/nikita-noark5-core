@@ -37,7 +37,8 @@ import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 
 @Service
 @Transactional
-public class CaseFileService implements ICaseFileService {
+public class CaseFileService
+        implements ICaseFileService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CaseFileService.class);
@@ -50,13 +51,17 @@ public class CaseFileService implements ICaseFileService {
     private ICaseStatusService caseStatusService;
     private EntityManager entityManager;
 
-    public CaseFileService(IRegistryEntryService registryEntryService,
-                           ICaseFileRepository caseFileRepository,
-                           ISequenceNumberGeneratorRepository numberGeneratorRepository,
-                           IAdministrativeUnitRepository administrativeUnitRepository,
-                           IUserRepository userRepository,
-                           ICaseStatusService caseStatusService,
-                           EntityManager entityManager) {
+    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
+    Integer maxPageSize = 10;
+
+    public CaseFileService(
+            IRegistryEntryService registryEntryService,
+            ICaseFileRepository caseFileRepository,
+            ISequenceNumberGeneratorRepository numberGeneratorRepository,
+            IAdministrativeUnitRepository administrativeUnitRepository,
+            IUserRepository userRepository,
+            ICaseStatusService caseStatusService,
+            EntityManager entityManager) {
         this.registryEntryService = registryEntryService;
         this.caseFileRepository = caseFileRepository;
         this.numberGeneratorRepository = numberGeneratorRepository;
@@ -65,9 +70,6 @@ public class CaseFileService implements ICaseFileService {
         this.caseStatusService = caseStatusService;
         this.entityManager = entityManager;
     }
-
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    Integer maxPageSize = new Integer(10);
 
     @Override
     public CaseFile save(CaseFile caseFile) {
@@ -126,9 +128,11 @@ public class CaseFileService implements ICaseFileService {
 
     @Override
     public RegistryEntry createRegistryEntryAssociatedWithCaseFile(
-            @NotNull String fileSystemId, @NotNull RegistryEntry registryEntry) {
+            @NotNull String fileSystemId,
+            @NotNull RegistryEntry registryEntry) {
         CaseFile caseFile = getCaseFileOrThrow(fileSystemId);
-        // bidirectional relationship @OneToMany and @ManyToOne, set both sides of relationship
+        // bidirectional relationship @OneToMany and @ManyToOne,
+        // set both sides of relationship
         registryEntry.setReferenceFile(caseFile);
         caseFile.getReferenceRecord().add(registryEntry);
         return registryEntryService.save(registryEntry);
@@ -136,7 +140,8 @@ public class CaseFileService implements ICaseFileService {
 
     // All READ operations
     @Override
-    public List<CaseFile> findCaseFileByOwnerPaginated(Integer top, Integer skip) {
+    public List<CaseFile> findCaseFileByOwnerPaginated(
+            Integer top, Integer skip) {
         if (top == null || top > maxPageSize) {
             top = maxPageSize;
         }
@@ -144,13 +149,16 @@ public class CaseFileService implements ICaseFileService {
             skip = 0;
         }
 
-        String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        String loggedInUser = SecurityContextHolder.getContext().
+                getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<CaseFile> criteriaQuery = criteriaBuilder.createQuery(CaseFile.class);
+        CriteriaQuery<CaseFile> criteriaQuery =
+                criteriaBuilder.createQuery(CaseFile.class);
         Root<CaseFile> from = criteriaQuery.from(CaseFile.class);
         CriteriaQuery<CaseFile> select = criteriaQuery.select(from);
 
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), loggedInUser));
+        criteriaQuery.where(criteriaBuilder.
+                equal(from.get("ownedBy"), loggedInUser));
         TypedQuery<CaseFile> typedQuery = entityManager.createQuery(select);
         typedQuery.setFirstResult(skip);
         typedQuery.setMaxResults(top);
@@ -164,7 +172,10 @@ public class CaseFileService implements ICaseFileService {
 
     // All UPDATE operations
     @Override
-    public CaseFile handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull CaseFile incomingCaseFile) {
+    public CaseFile handleUpdate(
+            @NotNull String systemId,
+            @NotNull Long version,
+            @NotNull CaseFile incomingCaseFile) {
         CaseFile existingCaseFile = getCaseFileOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         if (null != incomingCaseFile.getDescription()) {
@@ -174,16 +185,20 @@ public class CaseFileService implements ICaseFileService {
             existingCaseFile.setTitle(incomingCaseFile.getTitle());
         }
         if (null != incomingCaseFile.getAdministrativeUnit()) {
-            existingCaseFile.setAdministrativeUnit(incomingCaseFile.getAdministrativeUnit());
+            existingCaseFile.setAdministrativeUnit(
+                    incomingCaseFile.getAdministrativeUnit());
         }
         if (null != incomingCaseFile.getRecordsManagementUnit()) {
-            existingCaseFile.setRecordsManagementUnit(incomingCaseFile.getRecordsManagementUnit());
+            existingCaseFile.setRecordsManagementUnit(
+                    incomingCaseFile.getRecordsManagementUnit());
         }
         if (null != incomingCaseFile.getCaseResponsible()) {
-            existingCaseFile.setCaseResponsible(incomingCaseFile.getCaseResponsible());
+            existingCaseFile.setCaseResponsible(
+                    incomingCaseFile.getCaseResponsible());
         }
         if (null != incomingCaseFile.getCaseSequenceNumber()) {
-            existingCaseFile.setCaseSequenceNumber(incomingCaseFile.getCaseSequenceNumber());
+            existingCaseFile.setCaseSequenceNumber(
+                    incomingCaseFile.getCaseSequenceNumber());
         }
 
         existingCaseFile.setVersion(version);
@@ -201,17 +216,19 @@ public class CaseFileService implements ICaseFileService {
     // All HELPER operations
 
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid CaseFile back. If there is no valid
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid CaseFile back. If there is no valid
      * CaseFile, an exception is thrown
      *
-     * @param caseFileSystemId
-     * @return
+     * @param caseFileSystemId systemId of caseFile to retrieve
+     * @return the caseFile
      */
     protected CaseFile getCaseFileOrThrow(@NotNull String caseFileSystemId) {
         CaseFile caseFile = caseFileRepository.findBySystemId(caseFileSystemId);
         if (caseFile == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " CaseFile, using systemId " + caseFileSystemId;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " CaseFile, using systemId " + caseFileSystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
@@ -231,11 +248,12 @@ public class CaseFileService implements ICaseFileService {
      * @param administrativeUnit The administrativeUnit
      * @return the sequence number
      */
-    protected Integer getNextSequenceNumber(AdministrativeUnit administrativeUnit) {
+    protected Integer getNextSequenceNumber(AdministrativeUnit
+                                                    administrativeUnit) {
 
         Calendar date = new GregorianCalendar();
         Integer currentYear = date.get(Calendar.YEAR);
-        Integer sequenceNumber = -1;
+        Integer sequenceNumber;
 
 
         Optional<SequenceNumberGenerator> nextSequenceOptional =
@@ -276,18 +294,16 @@ public class CaseFileService implements ICaseFileService {
     private AdministrativeUnit getAdministrativeUnitIfMemberOrThrow(
             CaseFile caseFile) {
 
-        String administrativeUnitSystemId = caseFile.getAdministrativeUnit();
-        String caseResponsibleSystemId = caseFile.getCaseResponsible();
-
         Optional<User> userOptional =
                 userRepository.findByUsername(caseFile.getOwnedBy());
 
-        AdministrativeUnit administrativeUnit = null;
+        AdministrativeUnit administrativeUnit;
+
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
             administrativeUnit = getAdministrativeUnitOrThrow(user,
-                    administrativeUnitSystemId);
+                    caseFile.getAdministrativeUnit());
 
             checkOwnerMemberAdministrativeUnit(user, administrativeUnit);
         } else {

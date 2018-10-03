@@ -21,7 +21,6 @@ import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -101,15 +100,19 @@ public class RecordHateoasController extends NoarkController {
             @RequestBody DocumentDescription documentDescription)
             throws NikitaException {
 
-        DocumentDescription createdDocumentDescription =
-                recordService.createDocumentDescriptionAssociatedWithRecord(systemID, documentDescription);
+
+        validateForCreate(documentDescription);
         DocumentDescriptionHateoas documentDescriptionHateoas =
-                new DocumentDescriptionHateoas(createdDocumentDescription);
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdDocumentDescription));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .eTag(createdDocumentDescription.getVersion().toString())
-                .body(documentDescriptionHateoas);
+                recordService.
+                        createDocumentDescriptionAssociatedWithRecord(
+                                systemID, documentDescription);
+        final ResponseEntity<DocumentDescriptionHateoas> body =
+                ResponseEntity.status(HttpStatus.CREATED)
+                        .allow(CommonUtils.WebUtils.
+                                getMethodsForRequestOrThrow(request.getServletPath()))
+                        .eTag(documentDescriptionHateoas.getEntityVersion().toString())
+                        .body(documentDescriptionHateoas);
+        return body;
     }
 
     // Create a new DocumentObject and associate it with the given Record

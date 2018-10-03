@@ -2,39 +2,60 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
 import nikita.common.repository.n5v4.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
 @Transactional
-public class RecordService implements IRecordService {
+public class RecordService
+        implements IRecordService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RecordService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(RecordService.class);
 
     private DocumentDescriptionService documentDescriptionService;
     private IRecordRepository recordRepository;
     private EntityManager entityManager;
+    private IDocumentDescriptionHateoasHandler
+            documentDescriptionHateoasHandler;
+    private ApplicationEventPublisher applicationEventPublisher;
+
 
     //@Value("${nikita-noark5-core.pagination.maxPageSize}")
     private Integer maxPageSize = 10;
 
     public RecordService(DocumentDescriptionService documentDescriptionService,
                          IRecordRepository recordRepository,
+                         IDocumentDescriptionHateoasHandler
+                                 documentDescriptionHateoasHandler,
+                         ApplicationEventPublisher applicationEventPublisher,
                          EntityManager entityManager) {
+
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
+        this.documentDescriptionHateoasHandler =
+                documentDescriptionHateoasHandler;
+        this.applicationEventPublisher = applicationEventPublisher;
         this.entityManager = entityManager;
     }
 
@@ -52,28 +73,25 @@ public class RecordService implements IRecordService {
         return recordRepository.save(record);
     }
 
-    @Override
-    public DocumentDescription createDocumentDescriptionAssociatedWithRecord(String systemID, DocumentDescription documentDescription) {
-        DocumentDescription persistedDocumentDescription = null;
-        Record record = recordRepository.findBySystemId(systemID);
-        if (record == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Record, using systemID " + systemID;
-            logger.info(info) ;
-            throw new NoarkEntityNotFoundException(info);
-        }
-        else {
-            ArrayList<Record> records = (ArrayList<Record>) documentDescription.getReferenceRecord();
 
-            if (records == null) {
-                records = new ArrayList<>();
-                documentDescription.setReferenceRecord(records);
-            }
-            records.add(record);
-            List<DocumentDescription> documentDescriptions = record.getReferenceDocumentDescription();
-            documentDescriptions.add(documentDescription);
-            persistedDocumentDescription = documentDescriptionService.save(documentDescription);
-        }
-        return persistedDocumentDescription;
+    public DocumentDescriptionHateoas
+    createDocumentDescriptionAssociatedWithRecord(
+            String systemID, DocumentDescription documentDescription) {
+
+        Record record = getRecordOrThrow(systemID);
+
+        record.addReferenceDocumentDescription(documentDescription);
+        documentDescription.addReferenceRecord(record);
+
+        DocumentDescriptionHateoas documentDescriptionHateoas =
+                new DocumentDescriptionHateoas(
+                        documentDescriptionService.save(documentDescription));
+        documentDescriptionHateoasHandler.addLinks(
+                documentDescriptionHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(new
+                AfterNoarkEntityCreatedEvent(this, documentDescription));
+
+        return documentDescriptionHateoas;
     }
 
     // All READ operations
@@ -133,12 +151,13 @@ public class RecordService implements IRecordService {
 
     // All HELPER operations
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid Record back. If there is no valid
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid Record back. If there is no valid
      * Record, an exception is thrown
      *
-     * @param systemID
-     * @return
+     * @param systemID the systemId of the record you want to retrieve
+     * @return the record
      */
     protected Record getRecordOrThrow(@NotNull String systemID) {
         Record record = recordRepository.findBySystemId(systemID);

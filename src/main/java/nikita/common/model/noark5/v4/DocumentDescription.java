@@ -43,16 +43,13 @@ public class DocumentDescription
     @NotNull
     @Column(name = "document_type", nullable = false)
     @Audited
-
     private String documentType;
 
     /**
      * M054 - dokumentstatus (xs:string)
      */
-    @NotNull
-    @Column(name = "document_status", nullable = false)
+    @Column(name = "document_status")
     @Audited
-
     private String documentStatus;
 
     /**
@@ -61,7 +58,6 @@ public class DocumentDescription
     @NotNull
     @Column(name = "title", nullable = false)
     @Audited
-
     private String title;
 
     /**
@@ -69,7 +65,6 @@ public class DocumentDescription
      */
     @Column(name = "description")
     @Audited
-
     private String description;
 
     /**
@@ -78,7 +73,6 @@ public class DocumentDescription
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     @Audited
-
     private Date createdDate;
 
     /**
@@ -86,7 +80,6 @@ public class DocumentDescription
      */
     @Column(name = "created_by")
     @Audited
-
     private String createdBy;
 
     /**
@@ -94,7 +87,6 @@ public class DocumentDescription
      */
     @Column(name = "document_medium")
     @Audited
-
     private String documentMedium;
 
     /**
@@ -103,16 +95,14 @@ public class DocumentDescription
     @NotNull
     @Column(name = "associated_with_record_as", nullable = false)
     @Audited
-
     private String associatedWithRecordAs;
 
     /**
      * M007 - dokumentnummer (xs:integer)
      */
     @NotNull
-    @Column(name = "document_number", nullable = false)
+    @Column(name = "document_number")
     @Audited
-
     private Integer documentNumber;
 
     /**
@@ -122,7 +112,6 @@ public class DocumentDescription
     @Column(name = "association_date", nullable = false)
     @Temporal(TemporalType.DATE)
     @Audited
-
     private Date associationDate;
 
     /**
@@ -130,7 +119,6 @@ public class DocumentDescription
      */
     @Column(name = "associated_by")
     @Audited
-
     private String associatedBy;
 
     @Column(name = "storage_location")
@@ -147,26 +135,32 @@ public class DocumentDescription
 
     // Links to Comments
     @ManyToMany
-    @JoinTable(name = "document_description_comment", joinColumns = @JoinColumn(name = "f_pk_document_description_id",
+    @JoinTable(name = "document_description_comment", joinColumns =
+    @JoinColumn(name = "f_pk_document_description_id",
             referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id", referencedColumnName = "pk_comment_id"))
+            inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id",
+                    referencedColumnName = "pk_comment_id"))
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Authors
     @ManyToMany
-    @JoinTable(name = "document_description_author", joinColumns = @JoinColumn(name = "f_pk_document_description_id",
+    @JoinTable(name = "document_description_author",
+            joinColumns = @JoinColumn(name = "f_pk_document_description_id",
             referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_author_id", referencedColumnName = "pk_author_id"))
+            inverseJoinColumns = @JoinColumn(name = "f_pk_author_id",
+                    referencedColumnName = "pk_author_id"))
     private List<Author> referenceAuthor = new ArrayList<>();
 
     // Link to Classified
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_classified_id", referencedColumnName = "pk_classified_id")
+    @JoinColumn(name = "document_description_classified_id",
+            referencedColumnName = "pk_classified_id")
     private Classified referenceClassified;
 
     // Link to Disposal
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_disposal_id", referencedColumnName = "pk_disposal_id")
+    @JoinColumn(name = "document_description_disposal_id",
+            referencedColumnName = "pk_disposal_id")
     private Disposal referenceDisposal;
 
     // Link to DisposalUndertaken
@@ -177,12 +171,14 @@ public class DocumentDescription
 
     // Link to Deletion
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_deletion_id", referencedColumnName = "pk_deletion_id")
+    @JoinColumn(name = "document_description_deletion_id",
+            referencedColumnName = "pk_deletion_id")
     private Deletion referenceDeletion;
 
     // Link to Screening
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_screening_id", referencedColumnName = "pk_screening_id")
+    @JoinColumn(name = "document_description_screening_id",
+            referencedColumnName = "pk_screening_id")
     private Screening referenceScreening;
 
     // Link to ElectronicSignature
@@ -392,7 +388,8 @@ public class DocumentDescription
     }
 
     @Override
-    public void setReferenceElectronicSignature(ElectronicSignature referenceElectronicSignature) {
+    public void setReferenceElectronicSignature(
+            ElectronicSignature referenceElectronicSignature) {
         this.referenceElectronicSignature = referenceElectronicSignature;
     }
 

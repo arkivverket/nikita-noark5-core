@@ -322,7 +322,8 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
             + SLASH + NEW_DOCUMENT_OBJECT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
-    public ResponseEntity<String> createDocumentObjectAssociatedWithRecord(
+    public ResponseEntity<String>
+    createDocumentObjectAssociatedWithRegistryEntry(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of record to associate the documentObject with.",
