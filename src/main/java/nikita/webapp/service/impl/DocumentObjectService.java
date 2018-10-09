@@ -1,31 +1,33 @@
 package nikita.webapp.service.impl;
 
-import com.google.common.hash.Hashing;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.secondary.Conversion;
 import nikita.common.repository.n5v4.IDocumentObjectRepository;
-import nikita.common.util.exceptions.*;
+import nikita.common.util.CommonUtils;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.common.util.exceptions.StorageException;
+import nikita.common.util.exceptions.StorageFileNotFoundException;
 import nikita.webapp.config.WebappProperties;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
-import nikita.webapp.util.NoarkUtils;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.io.TikaInputStream;
+import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.apache.tika.metadata.Metadata;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -47,213 +49,336 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
+import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF;
+import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
-import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT_FILE_NAME;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 /**
  * The following methods
  * - convertFileFromStorage
  * have been based on code from
  * - https://api.libreoffice.org/examples/java/DocumentHandling/
+ * <p>
+ * Note: document filenames are stored without reference to the root of the file
+ * system. When retrieving a Path to a file associated with a documentObject
+ * you have to add the diretoryStoreName in front of the filename
+ * See: getDocumentFile(documentObject); how this is done
  */
 
 @Service
 @Transactional
 @EnableConfigurationProperties(WebappProperties.class)
-public class DocumentObjectService implements IDocumentObjectService {
+public class DocumentObjectService
+        implements IDocumentObjectService {
 
-    private final Path rootLocation;
-    private final String defaultChecksumAlgorithm;
-    private final Logger logger = LoggerFactory.getLogger(DocumentObjectService.class);
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    private Integer maxPageSize = new Integer(10);
+    private final Logger logger =
+            LoggerFactory.getLogger(DocumentObjectService.class);
+
     private IDocumentObjectRepository documentObjectRepository;
     private EntityManager entityManager;
+    @Value("${nikita.startup.directory-store-name}")
+    private String directoryStoreName = "/data/nikita/storage";
+    @Value("${nikita.startup.incoming-directory}")
+    private String incomingDirectoryName = "/data/nikita/storage/incoming";
+    @Value("${nikita.application.checksum-algorithm}")
+    private String defaultChecksumAlgorithm = "SHA-256";
 
-    @Autowired
-    public DocumentObjectService(IDocumentObjectRepository documentObjectRepository,
-                                 EntityManager entityManager,
-                                 WebappProperties webappProperties)
-            throws Exception {
+    public DocumentObjectService(
+            IDocumentObjectRepository documentObjectRepository,
+            EntityManager entityManager) {
         this.documentObjectRepository = documentObjectRepository;
         this.entityManager = entityManager;
-        this.defaultChecksumAlgorithm = webappProperties.getChecksumProperties().getChecksumAlgorithm();
-        this.rootLocation = Paths.get(webappProperties.getStorageProperties().getLocation());
     }
 
     // All CREATE operations
 
     public DocumentObject save(DocumentObject documentObject) {
-        NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(documentObject);
-        NoarkUtils.NoarkEntity.Create.setCreateEntityValues(documentObject);
-        NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(documentObject);
+        setSystemIdEntityValues(documentObject);
+        setCreateEntityValues(documentObject);
+        setNikitaEntityValues(documentObject);
 
-        // Make sure checksum algoritm is one we understand.  So far
-        // we only understand one algorithm, the default.
-        String currentChecksumAlgorithm = documentObject.getChecksumAlgorithm();
-        if (null != currentChecksumAlgorithm &&
-                !this.defaultChecksumAlgorithm.equals(currentChecksumAlgorithm)) {
-            // TODO figure out proper exception.
-            throw new NikitaMalformedInputDataException("The checksum algorithm " + documentObject.getChecksumAlgorithm() + " is not supported");
-        }
+        Long version =
+                documentObjectRepository.
+                        countByReferenceDocumentDescriptionAndVariantFormat(
+                                documentObject.getReferenceDocumentDescription(),
+                                documentObject.getVariantFormat());
+        documentObject.setVersionNumber(version.intValue());
+
+        checkChecksumAlgorithmSetIfNull(documentObject);
         return documentObjectRepository.save(documentObject);
     }
 
-    @Override
     /**
-     *
-     * Store an incoming file associated with a DocumentObject. When writing the Incoming filestream, calculate
-     * the checksum at the same time and update the DocumentObject with referenceToFile, size (bytes), checksum
+     * Store an incoming file associated with a DocumentObject. When writing the
+     * Incoming filestream, calculate the checksum at the same time and
+     * update the DocumentObject with referenceToFile, size (bytes), checksum
      * and checksum algorithm
-     *
-     * inputStream.read calculates the checksum while reading the input file as it is a DigestInputStream
+     * <p>
+     * inputStream.read calculates the checksum while reading the input file
+     * as it is a DigestInputStream
+     * <p>
+     * The document is first stored in rootLocation/incoming. Once additional
+     * processing e.g. checksum generation is finished, the file is moved to
+     * its proper location.
+     * <p>
+     * Note: You can't overwrite an existing documentObject. If you are updating
+     * the document, you need to create a new version attached to the
+     * documentDescription.
      */
+    @Override
     public void storeAndCalculateChecksum(InputStream inputStream,
                                           DocumentObject documentObject) {
-        String checksumAlgorithm = documentObject.getChecksumAlgorithm();
-        if (null == checksumAlgorithm) {
-            checksumAlgorithm = defaultChecksumAlgorithm;
-            documentObject.setChecksumAlgorithm(checksumAlgorithm);
-        }
+
         if (null != documentObject.getReferenceDocumentFile()) {
-            throw new StorageException("There is already a file associated with " + documentObject);
+            throw new StorageException(
+                    "There is already a file associated with " +
+                            documentObject);
         }
         try {
 
-            MessageDigest md = MessageDigest.getInstance(checksumAlgorithm);
-            String filename = UUID.randomUUID().toString();
+            Path incoming = createIncomingFile(documentObject);
+            copyDocumentContentsToIncomingAndSetValues(inputStream, incoming,
+                    documentObject);
 
-            Path directory = Paths.get(rootLocation + File.separator);
-            Path file = Paths.get(rootLocation + File.separator + filename);
+            setGeneratedDocumentFilename(documentObject);
 
-            // Check if the document storage directory exists, if not try to create it
-            // This should have been done with init!!
-            // TODO perhaps better to raise an error if somehow init failed to create it?
-            if (!Files.exists(directory)) {
-                Files.createDirectory(directory);
+            String mimeType = getMimeType(incoming);
+            if (!mimeType.equals(documentObject.getMimeType())) {
+                logger.warn("Overriding mime-type for documentObject [" +
+                        documentObject.toString() + "]. Original was [" +
+                        documentObject.getMimeType() + "]. Setting to [" +
+                        mimeType);
             }
+            documentObject.setMimeType(mimeType);
 
-            // Check if we actually can create the file
-            Path path = Files.createFile(file);
-
-            // Check if we can write something to the file
-            if (!Files.isWritable(file)) {
-                throw new StorageException("The file (" + file.getFileName() + ") is not writable server-side. This" +
-                        " file is being associated with " + documentObject);
-            }
-
-            // Create a DigestInputStream to be read with the
-            // checksumAlgorithm identified in the properties file
-            DigestInputStream digestInputStream = new DigestInputStream(inputStream, md);
-            FileOutputStream outputStream = new FileOutputStream(path.toFile());
-
-            long bytesTotal = copyFile(digestInputStream, outputStream);
-
-            if (bytesTotal == 0L) {
-                Files.delete(file);
-                logger.warn("The file (" + file.getFileName() + ") has 0 length content and should have been deleted");
-                throw new StorageException("The file (" + file.getFileName() + ") has 0 length content. Rejecting " +
-                        "upload! This file is being associated with " + documentObject);
-            }
-
-            if (!documentObject.getFileSize().equals(bytesTotal)) {
-                Files.delete(file);
-                String logmsg = "The uploaded file (" + file.getFileName() + ") length " +
-                        bytesTotal + " did not match the dokumentobjekt filstoerrelse " +
-                        documentObject.getFileSize() + " and was deleted.";
-                logger.warn(logmsg);
-                String msg = logmsg +
-                        " Rejecting upload! This file is being associated with " +
-                        documentObject;
-                throw new StorageException(msg);
-            }
-
-            // Get the digest
-            byte[] digest = digestInputStream.getMessageDigest().digest();
-
-            // Convert digest to HEX
-            StringBuilder sb = new StringBuilder();
-            for (byte b : digest) {
-                sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-            }
-            // TODO figure what the spec will say about existing
-            // values in documentObject.  For now, only set the values
-            // if they are blank, and reject the file if the checksum
-            // did not match.
-            String olddigest = documentObject.getChecksum();
-            String newdigest = sb.toString();
-            if (null == olddigest) {
-                documentObject.setChecksum(newdigest);
-            } else if (!olddigest.equals(newdigest)) {
-                Files.delete(file);
-                String msg = "The file (" + file.getFileName() + ") checksum " +
-                        newdigest +
-                        " do not match the already stored checksum.  Rejecting " +
-                        "upload! This file is being associated with " +
-                        documentObject;
-                throw new StorageException(msg);
-            }
-            documentObject.setReferenceDocumentFile(file.toString());
+            documentObject.setFileSize(Files.size(incoming));
+            moveIncomingToStorage(incoming, documentObject);
 
             // Try to convert the file upon upload. Silently ignore
             // if there is a problem
-            try {
-                convertDocumentToPDF(documentObject);
-            } catch (InterruptedException e) {
-                logger.error("Problem when tryin to convert to archive format"
-                        + e.toString());
-            }
-
+            convertDocumentToPDF(documentObject);
+            documentObjectRepository.save(documentObject);
         } catch (IOException e) {
-            logger.error("When associating an uploaded file with " + documentObject + " an exception occurred." +
-                    "Exception is " + e);
-            throw new StorageException("Failed to store file to be associated with " + documentObject + " " + e.toString());
-        } catch (NoSuchAlgorithmException e) {
-            logger.error("When associating an uploaded file with " + documentObject + " an exception occurred." +
-                    "Exception is " + e);
-            throw new StorageException("Internal error, could not load checksum algorithm (" + checksumAlgorithm
-                    + ") when attempting to store a file associated with "
-                    + documentObject);
+            String msg = "When associating an uploaded file with " +
+                    documentObject + " the following Exception occurred " +
+                    e.toString();
+            logger.error(msg);
+            throw new StorageException(msg);
         }
     }
 
     @Override
-    public Path load(String filename) {
-        return rootLocation.resolve(filename);
+    public List<DocumentObject> findDocumentObjectByOwner() {
+
+        String loggedInUser = SecurityContextHolder.getContext().
+                getAuthentication().getName();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<DocumentObject> criteriaQuery = criteriaBuilder.
+                createQuery(DocumentObject.class);
+        Root<DocumentObject> from = criteriaQuery.from(DocumentObject.class);
+        CriteriaQuery<DocumentObject> select = criteriaQuery.select(from);
+
+        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"),
+                loggedInUser));
+        TypedQuery<DocumentObject> typedQuery = entityManager.createQuery(select);
+        return typedQuery.getResultList();
     }
+
+
+    private void setGeneratedDocumentFilename(DocumentObject documentObject) {
+
+        String extension = FilenameUtils.getExtension(
+                documentObject.getOriginalFilename());
+        String documentFilename = documentObject.getSystemId();
+        if (extension != null) {
+            documentFilename += "." + extension;
+        }
+        documentObject.setReferenceDocumentFile(documentFilename);
+    }
+
+    protected Path convertFileFromStorage(
+            DocumentObject productionDocumentObject,
+            DocumentObject archiveDocumentObject
+    )
+            throws IOException, InterruptedException {
+
+        Path productionVersion = getToFile(productionDocumentObject);
+
+        // set the filename to the same as the original filename minus
+        // the extension. This needs to be a bit more advanced, an own
+        // method. Consider the scenario where a file called .htaccess
+        // is uploaded, or a file with no file extension
+
+        archiveDocumentObject.setFormat(FILE_EXTENSION_PDF);
+        archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
+        archiveDocumentObject.setFormatDetails(FORMAT_PDF_DETAILS);
+        archiveDocumentObject.setVariantFormat(ARCHIVE_VERSION);
+
+        setFilenameAndExtensionForArchiveDocument(
+                productionDocumentObject, archiveDocumentObject);
+
+        Path archiveVersion = createIncomingFile(archiveDocumentObject);
+
+        String command = "unoconv ";
+        String toFormat = " -f pdf ";
+        String fromFileLocation = productionVersion.
+                toAbsolutePath().toString();
+
+        String toFileLocation = " -o " +
+                archiveVersion.toAbsolutePath().toString();
+
+        String convertCommand = command + toFormat + toFileLocation + " " +
+                fromFileLocation;
+
+        try {
+            Process p = Runtime.getRuntime().exec(convertCommand);
+            p.waitFor();
+        } catch (RuntimeException e) {
+            logger.error("Error converting document in " +
+                    productionDocumentObject + " to archive format");
+            logger.error(e.toString());
+        }
+
+        // Even though this was set earlier, we set it to the actual
+        // detected mime-type
+        archiveDocumentObject.setMimeType(getMimeType(archiveVersion));
+
+        archiveDocumentObject.setFileSize(Files.size(archiveVersion));
+        setGeneratedDocumentFilename(archiveDocumentObject);
+        archiveDocumentObject.setDeleted(false);
+        archiveDocumentObject.setOwnedBy(productionDocumentObject.getOwnedBy());
+
+        return archiveVersion;
+    }
+
+
+    private void setFilenameAndExtensionForArchiveDocument(
+            DocumentObject productionDocumentObject,
+            DocumentObject archiveDocumentObject) {
+
+        String originalFilename = FilenameUtils.
+                removeExtension(productionDocumentObject.
+                        getOriginalFilename());
+
+        if (originalFilename == null) {
+            originalFilename = archiveDocumentObject.getSystemId() + "." +
+                    getArchiveFileExtension(archiveDocumentObject);
+        } else {
+            originalFilename += "." +
+                    getArchiveFileExtension(archiveDocumentObject);
+        }
+
+        archiveDocumentObject.setOriginalFilename(originalFilename);
+    }
+
+    /**
+     * @param documentObject the documentObject you want a archive version
+     *                       mimeType for.
+     * @return
+     */
+
+    private String getArchiveFileExtension(DocumentObject documentObject) {
+        return CommonUtils.FileUtils.getArchiveFileExtension(
+                documentObject.getMimeType());
+    }
+
+    public DocumentObject convertDocumentToPDF(DocumentObject
+                                                       originalDocumentObject) {
+        DocumentObject archiveDocumentObject = new DocumentObject();
+
+        try {
+
+            archiveDocumentObject.setSystemId(UUID.randomUUID().toString());
+
+            Path archiveFile = convertFileFromStorage(originalDocumentObject,
+                    archiveDocumentObject);
+
+            // Parent document description
+            DocumentDescription documentDescription = originalDocumentObject
+                    .getReferenceDocumentDescription();
+
+            // If it's null, throw an exception. You can't create a
+            // related documentObject unless it has a document description
+            if (documentDescription == null) {
+                throw new NoarkEntityNotFoundException(
+                        MISSING_DOCUMENT_DESCRIPTION_ERROR);
+            }
+
+            // TODO: Double check this. Standard says it's only applicable to
+            // archive version, but we increment every time a new document is
+            // uploaded to a document description
+            archiveDocumentObject.setVersionNumber(
+                    originalDocumentObject.getVersionNumber());
+
+
+            // Set creation details. Logged in user is responsible
+            String username = SecurityContextHolder.getContext().
+                    getAuthentication().getName();
+            archiveDocumentObject.setCreatedBy(username);
+            archiveDocumentObject.setCreatedDate(new Date());
+
+            // Handle the conversion details
+            Conversion conversion = new Conversion();
+            // perhaps here capture unoconv --version
+            conversion.setConversionTool("LibreOffice via uconov ");
+            conversion.setConvertedBy(username);
+            conversion.setConvertedDate(new Date());
+            conversion.setConvertedFromFormat(
+                    originalDocumentObject.getFormat());
+            conversion.setConvertedToFormat(archiveDocumentObject.getFormat());
+            conversion.setReferenceDocumentObject(archiveDocumentObject);
+            archiveDocumentObject.addReferenceConversion(conversion);
+
+            // Tie the new document object and document description together
+            archiveDocumentObject.setReferenceDocumentDescription
+                    (documentDescription);
+            documentDescription.addReferenceDocumentObject(archiveDocumentObject);
+
+            archiveDocumentObject.setChecksum(
+                    new DigestUtils(defaultChecksumAlgorithm).
+                            digestAsHex(archiveFile.toFile()));
+            archiveDocumentObject.setChecksumAlgorithm(
+                    defaultChecksumAlgorithm);
+
+            if (archiveDocumentObject.getFileSize() > 0) {
+                moveIncomingToStorage(archiveFile, archiveDocumentObject);
+                documentObjectRepository.save(archiveDocumentObject);
+                return archiveDocumentObject;
+            } else {
+                logger.error("File size of archive version is not > 0. Not " +
+                        "persisting this documentDescription to the database.");
+            }
+            return null;
+
+        } catch (InterruptedException | IOException e) {
+            logger.error("Problem when trying to convert to archive format"
+                    + e.toString());
+        }
+        return archiveDocumentObject;
+    }
+
 
     @Override
     public Resource loadAsResource(DocumentObject documentObject) {
         String filename = documentObject.getReferenceDocumentFile();
         try {
-            Path file = load(filename);
+
+            Path file = getToFile(documentObject);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StorageFileNotFoundException("Could not read file: " + filename);
+                throw new StorageFileNotFoundException(
+                        "Could not read file: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename);
+            throw new StorageFileNotFoundException(
+                    "Could not read file: " + filename);
         }
-    }
-
-    @Override
-    public void init() {
-        try {
-            if (!Files.exists(rootLocation)) {
-                Files.createDirectory(rootLocation);
-            }
-        } catch (IOException e) {
-            throw new StorageException("Could not initialize storage");
-        }
-    }
-
-    // All READ operations
-    public List<DocumentObject> findAll() {
-        return documentObjectRepository.findAll();
     }
 
     // id
@@ -264,12 +389,6 @@ public class DocumentObjectService implements IDocumentObjectService {
     // systemId
     public DocumentObject findBySystemId(String systemId) {
         return getDocumentObjectOrThrow(systemId);
-    }
-
-    // ownedBy
-    public List<DocumentObject> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().getAuthentication().getName() : ownedBy;
-        return documentObjectRepository.findByOwnedBy(ownedBy);
     }
 
     // All UPDATE operations
@@ -299,24 +418,33 @@ public class DocumentObjectService implements IDocumentObjectService {
 
     // All UPDATE operations
     @Override
-    public DocumentObject handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull DocumentObject incomingDocumentObject) {
-        DocumentObject existingDocumentObject = getDocumentObjectOrThrow(systemId);
-        // Here copy all the values you are allowed to copy ....
+    public DocumentObject handleUpdate(
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull DocumentObject incomingDocumentObject) {
+
+        DocumentObject existingDocumentObject =
+                getDocumentObjectOrThrow(systemId);
+
+        // Copy all the values you are allowed to copy ....
         if (null != incomingDocumentObject.getFormat()) {
-            existingDocumentObject.setFormat(incomingDocumentObject.getFormat());
+            existingDocumentObject.setFormat(
+                    incomingDocumentObject.getFormat());
         }
         if (null != incomingDocumentObject.getFormatDetails()) {
-            existingDocumentObject.setFormatDetails(incomingDocumentObject.getFormatDetails());
+            existingDocumentObject.setFormatDetails(
+                    incomingDocumentObject.getFormatDetails());
         }
         if (null != incomingDocumentObject.getOriginalFilename()) {
             existingDocumentObject.setOriginalFilename
                     (incomingDocumentObject.getOriginalFilename());
         }
         if (null != incomingDocumentObject.getVariantFormat()) {
-            existingDocumentObject.setVariantFormat(incomingDocumentObject.getVariantFormat());
+            existingDocumentObject.setVariantFormat(
+                    incomingDocumentObject.getVariantFormat());
         }
         if (null != incomingDocumentObject.getVersionNumber()) {
-            existingDocumentObject.setVersionNumber(incomingDocumentObject.getVersionNumber());
+            existingDocumentObject.setVersionNumber(
+                    incomingDocumentObject.getVersionNumber());
         }
         existingDocumentObject.setVersion(version);
         documentObjectRepository.save(existingDocumentObject);
@@ -326,7 +454,8 @@ public class DocumentObjectService implements IDocumentObjectService {
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String documentObjectSystemId) {
-        DocumentObject documentObject = getDocumentObjectOrThrow(documentObjectSystemId);
+        DocumentObject documentObject =
+                getDocumentObjectOrThrow(documentObjectSystemId);
         documentObjectRepository.delete(documentObject);
     }
 
@@ -334,207 +463,27 @@ public class DocumentObjectService implements IDocumentObjectService {
     //TODO: How do we handle if the document has already been converted?
     // Related metadata is a one:one. So we either overwrite that the
     // original conversion happened or throw an Exception
-    public DocumentObject convertDocumentToPDF(String documentObjectSystemId)
-            throws IOException, InterruptedException {
+    // Probably need administrator rights to reconvert document.
+    public DocumentObject convertDocumentToPDF(String documentObjectSystemId) {
         DocumentObject originalDocumentObject =
                 getDocumentObjectOrThrow(documentObjectSystemId);
-        return originalDocumentObject;
+        return convertDocumentToPDF(originalDocumentObject);
     }
 
-
-    public DocumentObject convertDocumentToPDF(DocumentObject
-                                                       originalDocumentObject)
-            throws IOException, InterruptedException {
-
-
-        Path originalProductionFile = Paths.get(originalDocumentObject
-                .getReferenceDocumentFile());
-
-        Path archiveFile = convertFileFromStorage(originalProductionFile);
-
-        // Parent document description
-        DocumentDescription documentDescription = originalDocumentObject
-                .getReferenceDocumentDescription();
-
-        // If it's null, throw an exception. You can't create a
-        // related documentObject unless it has a document description
-        if (documentDescription == null) {
-            throw new NoarkEntityNotFoundException
-                    (MISSING_DOCUMENT_DESCRIPTION_ERROR);
-        }
-
-        DocumentObject archiveDocumentObject = new DocumentObject();
-
-        archiveDocumentObject.setFormat("PDF");
-        archiveDocumentObject.setVariantFormat(ARCHIVE_VERSION);
-        archiveDocumentObject.setMimeType("application/pdf");
-
-        // TODO: Double check this. Standard says it's only applicable to
-        // archive version, but we increment every time a new document is
-        // uploaded to a document description
-        archiveDocumentObject.setVersionNumber(
-                originalDocumentObject.getVersionNumber());
-
-        // Set the location of file on disk
-        archiveDocumentObject.setReferenceDocumentFile(
-                archiveFile.toAbsolutePath().toString());
-
-        // Set the checksum details
-        String checksum = calculateChecksum(
-                archiveDocumentObject.getReferenceDocumentFile());
-        archiveDocumentObject.setChecksum(checksum);
-        archiveDocumentObject.setChecksumAlgorithm("SHA-256");
-
-
-        archiveDocumentObject.setFormatDetails(FORMAT_PDF_DETAILS);
-
-        // set the filename to the same as the original filename minus
-        // the extension. This needs to be a bit more advanced, an own
-        // method. Consider the scenario where a file called .htaccess
-        // is uploaded, or a file with no file extension
-        String originalFilename = originalDocumentObject.getOriginalFilename();
-        int index = originalFilename.lastIndexOf(".");
-        archiveDocumentObject.setOriginalFilename(originalFilename.substring
-                (0, index) + ".pdf");
-
-        archiveDocumentObject.setFileSize(
-                getFileSize(archiveDocumentObject.getReferenceDocumentFile()));
-
-        // Set creation details. Logged in user is responsible
-        String username = SecurityContextHolder.getContext().
-                getAuthentication().getName();
-        archiveDocumentObject.setCreatedBy(username);
-        archiveDocumentObject.setCreatedDate(new Date());
-
-        // Handle the conversion details
-        Conversion conversion = new Conversion();
-        // perhaps here capture unoconv --version
-        conversion.setConversionTool("LibreOffice via uconov ");
-        conversion.setConvertedBy(username);
-        conversion.setConvertedDate(new Date());
-        conversion.setConvertedFromFormat(originalDocumentObject.getFormat());
-        conversion.setConvertedToFormat(archiveDocumentObject.getFormat());
-        conversion.setReferenceDocumentObject(archiveDocumentObject);
-        archiveDocumentObject.addReferenceConversion(conversion);
-
-        // Tie the new document object and document description together
-        archiveDocumentObject.setReferenceDocumentDescription
-                (documentDescription);
-        documentDescription.addReferenceDocumentObject(archiveDocumentObject);
-
-        documentObjectRepository.save(archiveDocumentObject);
-        return archiveDocumentObject;
-    }
-
-    @Override
-    /**
-     *
-     * Receive a file, and temporarily store it. Convert the document to PDF
-     * and return the document to the caller. This is an additional
-     * useful service nikita can provide.
-     *
-     * See the calling controller for more details on how to use this
-     */
-    public byte[] convertDocumentToPDF(InputStream inputStream)
-            throws Exception {
-
-        Path originalFile = copyFileToStorage(inputStream);
-        Path pdfFile = convertFileFromStorage(originalFile);
-
-        Resource resource = new UrlResource(pdfFile.toUri());
-        byte[] documentBody = new byte[(int) Files.size(pdfFile)];
-        IOUtils.readFully(resource.getInputStream(),
-                documentBody);
-
-        Files.delete(originalFile);
-        Files.delete(pdfFile);
-
-        return documentBody;
-    }
-
-    protected Path convertFileFromStorage(Path originalFile)
-            throws IOException, InterruptedException {
-
-        Path directory = Paths.get(rootLocation + File.separator);
-        Path file = Paths.get(rootLocation + File.separator +
-                UUID.randomUUID().toString() + ".pdf");
-
-        // Check if the document storage directory exists, if not try to create
-        // it. This should have been done with init!!
-        if (!Files.exists(directory)) {
-            Files.createDirectory(directory);
-        }
-
-        String command = "unoconv ";
-        String toFormat = " -f pdf ";
-        String originalFromFileLocation = originalFile.toAbsolutePath()
-                .toString();
-
-        String toFileLocation = " -o " +
-                file.toAbsolutePath();
-
-        String convertCommand = command + toFormat + toFileLocation + " " +
-                originalFromFileLocation;
-
-        Process p = Runtime.getRuntime().exec(convertCommand);
-        p.waitFor();
-
-        return file;
-    }
-
-    protected Path copyFileToStorage(InputStream inputStream)
-            throws Exception {
-        long bytesTotal = -1;
-
-        String uploadedFileLocalFilename = UUID.randomUUID().toString();
-
-        Path directory = Paths.get(rootLocation + File.separator);
-        Path file = Paths.get(rootLocation + File.separator +
-                uploadedFileLocalFilename);
-
-        // Check if the document storage directory exists, if not try to
-        // create it. This should have been done with init!!
-        if (!Files.exists(directory)) {
-            Files.createDirectory(directory);
-        }
-
-        // Check if we actually can create the file
-        Path path = Files.createFile(file);
-
-        // Check if we can write something to the file
-        if (!Files.isWritable(file)) {
-            throw new StorageException("The file (" + file.getFileName() +
-                    ") is not writable server-side. ");
-        }
-
-        FileOutputStream outputStream = new FileOutputStream(path.toFile());
-
-        bytesTotal = copyFile(inputStream, outputStream);
-
-        if (bytesTotal == 0L) {
-            Files.delete(file);
-            logger.warn("The file (" + file.getFileName() + ") has 0 length content and should have been deleted");
-            throw new StorageException("The file (" + file.getFileName() + ") has 0 length content. Rejecting " +
-                    "upload!");
-        }
-
-        return file;
-    }
 
     // All HELPER operations
 
     /**
      * Retrieve mime-type of a file
      *
-     * @param fileLocation The location on disk of the file
+     * @param file A Path object pointing to the file
      * @return the actual mime-type
      * @throws IOException if there is a problem with the file
      */
 
-    private String getMimeType(String fileLocation)
+    private String getMimeType(Path file)
             throws IOException {
 
-        Path file = Paths.get(fileLocation);
         TikaConfig config = TikaConfig.getDefaultConfig();
         Detector detector = config.getDetector();
 
@@ -548,25 +497,14 @@ public class DocumentObjectService implements IDocumentObjectService {
     /**
      * Calculate the sha256 checksum of an identified file
      *
-     * @param fileLocation The location on disk of the file
-     * @return the checksum as a String
      * @throws IOException if there is a problem with the file
      */
-    private String calculateChecksum(String fileLocation) throws IOException {
-        FileInputStream inputStream =
-                new FileInputStream(new File(fileLocation));
-        StringBuilder sb = new StringBuilder();
-
-        try {
-            byte[] digest = DigestUtils.sha256(inputStream);
-            inputStream.close();
-            for (byte b : digest) {
-                sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-            }
-        } finally {
-            inputStream.close();
-        }
-        return sb.toString();
+    private void calculateAndSetChecksum(DocumentObject documentObject)
+            throws IOException {
+        documentObject.setChecksumAlgorithm(defaultChecksumAlgorithm);
+        String checksum = new DigestUtils(defaultChecksumAlgorithm).digestAsHex(
+                getToFile(documentObject).toFile());
+        documentObject.setChecksum(checksum);
     }
 
     /**
@@ -580,7 +518,6 @@ public class DocumentObjectService implements IDocumentObjectService {
         return Files.size(Paths.get(fileLocation));
     }
 
-
     /**
      * copy the contents of an input stream to an output stream.
      * <p>
@@ -588,27 +525,91 @@ public class DocumentObjectService implements IDocumentObjectService {
      * uploaded. Perhaps we should consider only using copyLarge if the
      * length is known in advance.
      *
-     * @param inputStream  The input file
-     * @param outputStream The output file
-     * @return The number of bytes that were copied from input to output
-     * @throws IOException if something goes wrong
+     * @param inputStream    inputstream of incoming document
+     * @param incoming       path where the incoming document is to be placed
+     * @param documentObject documentObject associated with this document
      */
-    private long copyFile(InputStream inputStream, OutputStream outputStream)
+
+    private void copyDocumentContentsToIncomingAndSetValues(
+            InputStream inputStream, Path incoming,
+            DocumentObject documentObject) {
+
+        try {
+
+            MessageDigest md = MessageDigest.getInstance(
+                    documentObject.getChecksumAlgorithm());
+
+            // Create a DigestInputStream to be read with the identified
+            // checksumAlgorithm. This is done to avoid having to create the
+            // checksum after the document has been uploaded
+            DigestInputStream digestInputStream = new DigestInputStream(
+                    inputStream, md);
+            FileOutputStream outputStream = new FileOutputStream(
+                    incoming.toFile());
+
+            checkValues(copyDocumentContentsToIncoming(digestInputStream,
+                    outputStream), incoming, documentObject);
+            checksumSetIfOK(digestInputStream, incoming, documentObject);
+
+        } catch (NoSuchAlgorithmException | IOException e) {
+            String msg = "Internal error, could not load checksum algorithm " +
+                    "[" + documentObject.getChecksumAlgorithm() + "] when " +
+                    "attempting to store a file associated with " +
+                    documentObject;
+            logger.warn(msg);
+            throw new StorageException(msg);
+        }
+    }
+
+
+    private void checkValues(Long bytesTotal, Path incoming,
+                             DocumentObject documentObject)
             throws IOException {
 
-        long bytesTotal = 0L;
+        // Check that  we actually copied in some data
+        if (bytesTotal == 0L) {
+            Files.delete(incoming);
+            String msg = "The file (" + incoming.getFileName() + ") " +
+                    "has 0 length content. Rejecting upload! This file is" +
+                    "  being associated with " + documentObject;
+            logger.warn(msg);
+            throw new StorageException(msg);
+        }
+
+        // If the client has identified the filesize prior to document
+        // upload, check that the number bytes uploaded matches the
+        // number of bytes the client said they would upload
+        if (documentObject.getFileSize() != null &&
+                !documentObject.getFileSize().equals(bytesTotal)) {
+            Files.delete(incoming);
+            String msg = "The  file (" + incoming.getFileName()
+                    + ") has length [" + bytesTotal + "] This does not" +
+                    "match the dokumentobjekt filstoerrelse field [" +
+                    documentObject.getFileSize() + "]. Rejecting upload! " +
+                    "This file is being associated with " + documentObject;
+            logger.warn(msg);
+            throw new StorageException(msg);
+        }
+    }
+
+    private Long copyDocumentContentsToIncoming(
+            DigestInputStream digestInputStream, OutputStream outputStream)
+            throws IOException {
+
+        long bytesTotal;
         try { // Try close without exceptions if copy() threw an exception.
-            bytesTotal = IOUtils.copyLarge(inputStream, outputStream);
+            bytesTotal = IOUtils.copyLarge(digestInputStream, outputStream);
 
             // Tidy up and close outputStream
             outputStream.flush();
             outputStream.close();
 
             // Finished with inputStream now as well
-            inputStream.close();
+            digestInputStream.close();
+
         } finally {
             try { // Try close without exceptions if copy() threw an exception.
-                inputStream.close();
+                digestInputStream.close();
             } catch (IOException e) {
                 // swallow any error to expose exceptions from IOUtil.copy()
             }
@@ -621,21 +622,136 @@ public class DocumentObjectService implements IDocumentObjectService {
         return bytesTotal;
     }
 
+    private void checksumSetIfOK(DigestInputStream digestInputStream,
+                                 Path incoming,
+                                 DocumentObject documentObject)
+            throws IOException {
+
+        // Get the digest
+        byte[] digest = digestInputStream.getMessageDigest().digest();
+
+        // Convert digest to HEX
+        StringBuilder sb = new StringBuilder();
+        for (byte b : digest) {
+            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        }
+
+        String oldDigest = documentObject.getChecksum();
+        String newDigest = sb.toString();
+        // If the client had not specified a checksum for the incoming document
+        // set the checksum to the value calculated
+        if (null == oldDigest) {
+            documentObject.setChecksum(newDigest);
+        } else if (!oldDigest.equals(newDigest)) {
+            Files.delete(incoming);
+            String msg = "The file (" + incoming.getFileName() + ") " +
+                    "has the following server-side calculated checksum [" +
+                    newDigest + "]. This does not match the checksum " +
+                    "specified by the client in the documentObject [" +
+                    oldDigest + "]. Rejecting upload! This file was being " +
+                    "associated with " + documentObject;
+            logger.warn(msg);
+            throw new StorageException(msg);
+        }
+    }
+
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid DocumentObject back. If there is no valid
-     * DocumentObject, an exception is thrown
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid DocumentObject back. If there is no
+     * valid DocumentObject, an exception is thrown
      *
-     * @param documentObjectSystemId
-     * @return
+     * @param documentObjectSystemId systemID of the documentObject to retrieve
+     * @return the documentObject with the identified systemID
      */
-    protected DocumentObject getDocumentObjectOrThrow(@NotNull String documentObjectSystemId) {
-        DocumentObject documentObject = documentObjectRepository.findBySystemId(documentObjectSystemId);
+    protected DocumentObject getDocumentObjectOrThrow(
+            @NotNull String documentObjectSystemId) {
+        DocumentObject documentObject =
+                documentObjectRepository.findBySystemId(documentObjectSystemId);
         if (documentObject == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " DocumentObject, using systemId " + documentObjectSystemId;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " DocumentObject, using systemId " +
+                    documentObjectSystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
         return documentObject;
+    }
+
+    /**
+     * Check if the checksum the client identifies is one that we support. If
+     * it is null, set the checksun value to default. We only support SHA256,
+     * however we leave it open that other checksum algorithms may be
+     * supported in the future.
+     *
+     * @param documentObject The documentObject to check the checksum of
+     */
+    private void checkChecksumAlgorithmSetIfNull(
+            DocumentObject documentObject) {
+        String currentChecksumAlgorithm = documentObject.getChecksumAlgorithm();
+        if (null != currentChecksumAlgorithm &&
+                !defaultChecksumAlgorithm.equals(currentChecksumAlgorithm)) {
+            throw new NikitaMalformedInputDataException(
+                    "The checksum algorithm " +
+                            documentObject.getChecksumAlgorithm() +
+                            " is not supported");
+        } else if (currentChecksumAlgorithm == null) {
+            documentObject.setChecksumAlgorithm(defaultChecksumAlgorithm);
+        }
+    }
+
+    private Path createIncomingFile(DocumentObject documentObject)
+            throws IOException {
+
+        String extension = FilenameUtils.getExtension(
+                documentObject.getOriginalFilename());
+        // Set the filename to be the systemID of the documentObject,
+        // effectively locking this in as one-to-one relationship
+        Path incoming = Paths.get(incomingDirectoryName +
+                File.separator + documentObject.getSystemId() + "." +
+                extension);
+
+        Path path = Files.createFile(incoming);
+
+        // Check if we can write something to the file
+        if (!Files.isWritable(incoming)) {
+            throw new StorageException("The file (" +
+                    incoming.getFileName() + ") is not writable " +
+                    "server-side. This file is being associated with " +
+                    documentObject);
+        }
+        return path;
+    }
+
+    private Path getToDirectory(DocumentObject documentObject) {
+        return Paths.get(directoryStoreName + File.separator +
+                calculateDirectoryStructure(documentObject));
+    }
+
+    private Path getToFile(DocumentObject documentObject) {
+        return Paths.get(directoryStoreName + File.separator +
+                calculateDirectoryStructure(documentObject) +
+                documentObject.getReferenceDocumentFile());
+    }
+
+    private String calculateDirectoryStructure(DocumentObject documentObject) {
+        String checksum = documentObject.getChecksum();
+        if (checksum.length() > 6) {
+            return String.format("%s%s%s%s%s%s",
+                    checksum.substring(0, 2), File.separator,
+                    checksum.substring(2, 4), File.separator,
+                    checksum.substring(4, 6), File.separator);
+        }
+        return "";
+    }
+
+    private void moveIncomingToStorage(Path incoming,
+                                       DocumentObject documentObject)
+            throws IOException {
+        Path toDirectory = getToDirectory(documentObject);
+        Files.createDirectories(toDirectory);
+        Path toFile = getToFile(documentObject);
+
+        Files.move(incoming, toFile);
     }
 }

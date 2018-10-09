@@ -1,21 +1,28 @@
 package nikita.webapp.run;
 
+import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Fonds;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.admin.Authority;
 import nikita.common.model.noark5.v4.admin.AuthorityName;
 import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.model.noark5.v4.casehandling.CaseFile;
+import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
 import nikita.webapp.service.impl.admin.UserService;
+import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IFondsService;
+import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,16 +30,20 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static java.lang.System.out;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.FileConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.config.N5ResourceMappings.CASE_HANDLER;
 import static nikita.common.model.noark5.v4.admin.AuthorityName.*;
-
+import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
 
 /**
  * Create som basic data if application is in demo mode
@@ -40,16 +51,30 @@ import static nikita.common.model.noark5.v4.admin.AuthorityName.*;
 @Component
 public class AfterApplicationStartup {
 
-    private static final Logger logger = LoggerFactory.getLogger(AfterApplicationStartup.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(AfterApplicationStartup.class);
     private final RequestMappingHandlerMapping handlerMapping;
     private UserService userService;
     private AuthorityRepository authorityRepository;
     private AdministrativeUnitService administrativeUnitService;
     private IFondsService fondsService;
     private ISeriesService seriesService;
+    private ICaseFileService caseFileService;
+    private IRecordService recordService;
+    private ApplicationContext applicationContext;
+
 
     @Value("${nikita.startup.create-demo-users}")
     private Boolean createUsers = false;
+
+    @Value("${nikita.startup.create-directory-store}")
+    private Boolean createDirectoryStore = false;
+
+    @Value("${nikita.startup.directory-store-name}")
+    private String directoryStoreName = "/data/nikita/storage";
+
+    @Value("${nikita.startup.incoming-directory}")
+    private String incomingDirectoryName = "/data/nikita/storage/incoming";
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,
@@ -58,14 +83,20 @@ public class AfterApplicationStartup {
                                    AdministrativeUnitService
                                            administrativeUnitService,
                                    IFondsService fondsService,
-                                   ISeriesService seriesService) {
+                                   ISeriesService seriesService,
+                                   ICaseFileService caseFileService,
+                                   IRecordService recordService,
+                                   ApplicationContext applicationContext) {
 
         this.handlerMapping = handlerMapping;
         this.userService = userService;
         this.authorityRepository = authorityRepository;
         this.fondsService = fondsService;
         this.seriesService = seriesService;
+        this.caseFileService = caseFileService;
         this.administrativeUnitService = administrativeUnitService;
+        this.recordService = recordService;
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -77,13 +108,65 @@ public class AfterApplicationStartup {
      */
     public void afterApplicationStarts() {
         mapEndpointsWithHttpMethods();
+        mapProductionToArchiveMimeTypes();
         populateTranslatedNames();
+
+        if (createDirectoryStore) {
+            createDirectoryStoreIfNotExists();
+        }
 
         if (createUsers) {
             createDemoUsers();
         }
+    }
 
-        createDemoData();
+    /**
+     * Check if the document storage directory exists, if not try to
+     * create it. If there is a problem shut down the core.
+     */
+    private void createDirectoryStoreIfNotExists() {
+        try {
+            if (!Files.exists(Paths.get(directoryStoreName))) {
+                Files.createDirectories(Paths.get(directoryStoreName));
+            }
+            if (!Files.exists(Paths.get(incomingDirectoryName))) {
+                Files.createDirectories(Paths.get(incomingDirectoryName));
+            }
+        } catch (IOException e) {
+            ((ConfigurableApplicationContext) applicationContext).close();
+            System.exit(1);
+        }
+    }
+
+
+    private void mapProductionToArchiveMimeTypes() {
+
+        addProductionToArchiveVersion(MIME_TYPE_ODT, FILE_EXTENSION_ODT,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_ODS, FILE_EXTENSION_ODS,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_ODP, FILE_EXTENSION_ODP,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_DOCX, FILE_EXTENSION_DOCX,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_DOC, FILE_EXTENSION_DOC,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_XLSX, FILE_EXTENSION_XLSX,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_XLS, FILE_EXTENSION_XLS,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_PPT, FILE_EXTENSION_PPT,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_PPTX, FILE_EXTENSION_PPTX,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_PNG, FILE_EXTENSION_PNG,
+                MIME_TYPE_PDF);
+        addProductionToArchiveVersion(MIME_TYPE_GIF, FILE_EXTENSION_GIF,
+                MIME_TYPE_GIF);
+        addProductionToArchiveVersion(MIME_TYPE_TEXT, FILE_EXTENSION_TEXT,
+                MIME_TYPE_TEXT);
+        addProductionToArchiveVersion(MIME_TYPE_PDF, FILE_EXTENSION_PDF,
+                MIME_TYPE_PDF);
     }
 
     /**
@@ -1145,7 +1228,36 @@ public class AfterApplicationStartup {
         seriesService.handleUpdate(series.getSystemId(),
                 fonds.getVersion(), series);
 
+
         fondsService.createSeriesAssociatedWithFonds(
                 fonds.getSystemId(), series);
+
+        CaseFile caseFile = new CaseFile();
+
+        caseFile.setTitle("Søknad om barnehageplass");
+        caseFile.setOfficialTitle("Søknad om barnehageplass");
+        caseFile.setCaseStatus("Opprettet av saksbehandler");
+
+        seriesService.createCaseFileAssociatedWithSeries(series.getSystemId(),
+                caseFile);
+
+        RegistryEntry registryEntry = new RegistryEntry();
+        registryEntry.setTitle("Innkommende brev");
+        registryEntry.setRecordStatus("Journalført");
+        registryEntry.setRegistryEntryType("Inngående dokument");
+        caseFileService.
+                createRegistryEntryAssociatedWithCaseFile(caseFile.getSystemId(),
+                        registryEntry);
+
+        DocumentDescription documentDescription = new DocumentDescription();
+        documentDescription.setTitle(registryEntry.getTitle());
+        documentDescription.setDescription("Beskrivelsen!!");
+        documentDescription.setAssociatedWithRecordAs("Hoveddokument");
+        documentDescription.setDocumentType("Brev");
+        registryEntry.addReferenceDocumentDescription(documentDescription);
+        documentDescription.addReferenceRecord(registryEntry);
+
+        recordService.createDocumentDescriptionAssociatedWithRecord(
+                registryEntry.getSystemId(), documentDescription);
     }
 }

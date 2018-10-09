@@ -50,6 +50,13 @@ public final class CommonUtils {
      */
     private static Map<String, ModelNames> nor2engEntityMap = new HashMap<>();
 
+    /**
+     * Holds a mapping of mimeTypes and their archive equivalent. The equivalent
+     * contains both the equivalent mimeType and file extension.
+     */
+    private static Map<String, FileExtensionAndMimeType> archiveVersion =
+            new HashMap<>();
+
     // You shall not instantiate me!
     private CommonUtils() {
     }
@@ -103,6 +110,51 @@ public final class CommonUtils {
             }
             return etagVal;
         }
+    }
+
+    public static final class FileUtils {
+
+        public static void addProductionToArchiveVersion(
+                @NotNull String productionMimeType,
+                @NotNull String archiveFileExtension,
+                @NotNull String archiveMimeType) {
+
+            archiveVersion.put(productionMimeType,
+                    new FileExtensionAndMimeType(archiveMimeType,
+                            archiveFileExtension));
+        }
+
+        public static String getArchiveFileExtension(
+                String productionMimeType) {
+
+            String fileExtension = "unknown";
+
+            if (null == productionMimeType) {
+                return fileExtension;
+            }
+
+            FileExtensionAndMimeType fileExtensionAndMimeType =
+                    archiveVersion.get(productionMimeType);
+            if (null != fileExtensionAndMimeType) {
+                fileExtension = archiveVersion.get(
+                        productionMimeType).getFileExtension();
+            } else {
+                fileExtension = "unknown";
+            }
+            return fileExtension;
+        }
+
+        public static String getArchiveMimeType(
+                String productionMimeType) {
+            return archiveVersion.get(productionMimeType).getMimeType();
+        }
+
+        public static FileExtensionAndMimeType
+        getArchiveFileExtensionAndMimeType(
+                String productionMimeType) {
+            return archiveVersion.get(productionMimeType);
+        }
+
     }
 
     public static final class WebUtils {

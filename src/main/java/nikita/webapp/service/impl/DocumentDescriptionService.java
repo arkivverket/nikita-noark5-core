@@ -70,7 +70,6 @@ public class DocumentDescriptionService
      */
 
     public DocumentDescription save(DocumentDescription documentDescription) {
-
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
         documentDescription.setSystemId(UUID.randomUUID().toString());

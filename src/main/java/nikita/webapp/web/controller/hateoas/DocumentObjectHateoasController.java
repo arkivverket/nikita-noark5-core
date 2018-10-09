@@ -48,8 +48,10 @@ import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT)
-public class DocumentObjectHateoasController extends NoarkController {
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH +
+        SLASH + DOCUMENT_OBJECT)
+public class DocumentObjectHateoasController
+        extends NoarkController {
 
     private IDocumentObjectService documentObjectService;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
@@ -57,16 +59,18 @@ public class DocumentObjectHateoasController extends NoarkController {
     private DocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private RecordHateoasHandler recordHateoasHandler;
 
-    public DocumentObjectHateoasController(IDocumentObjectService documentObjectService,
-                                           IDocumentObjectHateoasHandler documentObjectHateoasHandler,
-                                           ApplicationEventPublisher applicationEventPublisher,
-                                           DocumentDescriptionHateoasHandler documentDescriptionHateoasHandler,
-                                           RecordHateoasHandler recordHateoasHandler) {
+    public DocumentObjectHateoasController(
+            IDocumentObjectService documentObjectService,
+            IDocumentObjectHateoasHandler documentObjectHateoasHandler,
+            ApplicationEventPublisher applicationEventPublisher,
+            DocumentDescriptionHateoasHandler documentDescriptionHateoasHandler,
+            RecordHateoasHandler recordHateoasHandler) {
 
         this.documentObjectService = documentObjectService;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
-        this.documentDescriptionHateoasHandler = documentDescriptionHateoasHandler;
+        this.documentDescriptionHateoasHandler =
+                documentDescriptionHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
     }
 
@@ -144,7 +148,7 @@ public class DocumentObjectHateoasController extends NoarkController {
             String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
             documentObjectHateoas = new
                     DocumentObjectHateoas((List<INikitaEntity>) (List)
-                    documentObjectService.findByOwnedBy(loggedInUser));
+                    documentObjectService.findDocumentObjectByOwner());
         }
         documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
@@ -252,31 +256,22 @@ public class DocumentObjectHateoasController extends NoarkController {
                         + documentObject);
             }
 
-            if (null == documentObject.getFileSize()) {
-                throw new StorageException("Attempt to upload a document with a content-length set in the header ("
-                        + contentLength + "), but the value in documentObject has not been set (== null).  The " +
-                        "document was attempted to be associated with " + documentObject);
-            }
 
-            if (!contentLength.equals(documentObject.getFileSize())) {
-                throw new StorageException("Attempt to upload a document with a content-length set in the header ("
-                        + contentLength + ") that is not the same as the value in documentObject (" +
-                        documentObject.getFileSize() + ").  The document was attempted to be associated with "
-                        + documentObject);
-            }
-
-            // Check that the content-type is set and in agreement with mimeType value in documentObject
+            // Check that if the content-type is set it should be in agreement
+            // with mimeType value in documentObject
+            /*
             String headerContentType = request.getHeader("content-type");
-            if (headerContentType == null) {
-                throw new StorageException("Attempt to upload a document without content-type set. The document " +
-                        "was attempted to be associated with " + documentObject);
-            }
-
-            if (!headerContentType.equals(documentObject.getMimeType())) {
+            if (documentObject.getMimeType() != null && !headerContentType.equals(documentObject.getMimeType())) {
                 throw new StorageException("Attempt to upload a document with a content-type set in the header ("
                         + contentLength + ") that is not the same as the mimeType in documentObject (" +
                         documentObject.getMimeType() + ").  The document was attempted to be associated with "
                         + documentObject);
+            }
+*/
+            String originalFilename = request.getHeader("X-File-Name");
+
+            if (null != originalFilename) {
+                documentObject.setOriginalFilename(originalFilename);
             }
 
             documentObjectService.storeAndCalculateChecksum(request.getInputStream(), documentObject);

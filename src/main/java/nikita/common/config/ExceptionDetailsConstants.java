@@ -10,7 +10,8 @@ public final class ExceptionDetailsConstants {
 
     public static final String MISSING_DOCUMENT_DESCRIPTION_ERROR =
             "You tried to create an archive version of a production document" +
-                    "that has no parent document description";
+                    "that has no parent document description.";
+
 
     private ExceptionDetailsConstants() {
     }

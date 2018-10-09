@@ -1,5 +1,6 @@
 package nikita.common.repository.n5v4;
 
+import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,7 @@ public interface IDocumentObjectRepository extends
 
     // ownedBy
     List<DocumentObject> findByOwnedBy(String ownedBy);
+
+    Long countByReferenceDocumentDescriptionAndVariantFormat(
+            DocumentDescription documentDescription, String variantFormat);
 }

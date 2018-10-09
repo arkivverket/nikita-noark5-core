@@ -107,7 +107,7 @@ var seriesStatusList = [
     {id: 'O', value: 'Opprettet'},
     {id: 'A', value: 'Avsluttet'}];
 
-var tilknyttetRegistreringSomList = [
+var associatedWithRecordAsList = [
     {id: 'H', value: 'Hoveddokument'},
     {id: 'V', value: 'Vedlegg'}];
 
@@ -124,6 +124,21 @@ var correspondencePartTypeList = [
 var documentStatusList = [
     {id: 'B', value: 'Dokumentet er under redigering'},
     {id: 'F', value: 'Dokumentet er ferdigstilt'}];
+
+var formatList = [
+  {id: 'odt', value: 'application/vnd.oasis.opendocument.text'},
+  {id: 'docx', value: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'},
+  {id: 'doc', value: 'application/msword'},
+  {id: 'ods', value: 'application/vnd.oasis.opendocument.spreadsheet'},
+  {id: 'xlsx', value: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'},
+  {id: 'xls', value: 'application/vnd.ms-excel'},
+  {id: 'odp', value: 'application/vnd.oasis.opendocument.presentation'},
+  {id: 'ppt', value: 'application/vnd.ms-powerpoint'},
+  {id: 'pptx', value: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'},
+  {id: 'png', value: 'image/png'},
+  {id: 'gif', value: 'image/gif'},
+  {id: 'txt', value: 'text/plain'},
+  {id: 'pdf', value: 'application/pdf'}];
 
 var emptyList = [{id: '', value: ''},
     {id: '', value: ''},

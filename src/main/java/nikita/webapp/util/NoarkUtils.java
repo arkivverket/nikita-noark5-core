@@ -43,7 +43,8 @@ public final class NoarkUtils {
             }
 
             public static void setNikitaEntityValues(INikitaEntity nikitaEntity) {
-                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                String username = SecurityContextHolder.getContext().
+                        getAuthentication().getName();
                 // Nikita values
                 nikitaEntity.setOwnedBy(username);
                 nikitaEntity.setDeleted(false);
@@ -56,10 +57,12 @@ public final class NoarkUtils {
 
 
             public static void setCreateEntityValues(INoarkCreateEntity createEntity) {
-                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                String username = SecurityContextHolder.getContext()
+                        .getAuthentication().getName();
                 if (username == null) {
-                    throw new NikitaException("Security context problem. username is null! Cannot continue with " +
-                            "this request!");
+                    throw new NikitaException("Security context problem. " +
+                            "username is null! Cannot continue with this  " +
+                            "request!");
                 }
                 createEntity.setCreatedDate(new Date());
                 createEntity.setCreatedBy(username);

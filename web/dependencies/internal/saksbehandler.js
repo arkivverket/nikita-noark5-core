@@ -1,4 +1,4 @@
-var app = angular.module('nikita-arkivar', []);
+var app = angular.module('nikita-arkivar', ['ngFileUpload']);
 
 /**
  * Enables the following functionality:
@@ -27,7 +27,18 @@ app.directive('newCaseFileModalDir', function () {
   };
 });
 
-app.directive('newDocumentModalDir', function () {
+app.directive('newDocumentDescriptionModalDir', function () {
+  return {
+    restrict: 'A',
+    link: function (scope, element) {
+      scope.dismissNewDocumentModal = function () {
+        element.modal('hide');
+      };
+    }
+  };
+});
+
+app.directive('newDocumentObjectModalDir', function () {
   return {
     restrict: 'A',
     link: function (scope, element) {
@@ -61,15 +72,38 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       $scope.storageLocationList = storageLocationList;
       $scope.caseFileStatusList = caseFileStatusList;
       $scope.registryEntryStatusList = registryEntryStatusList;
+      $scope.registryEntryTypeList = registryEntryTypeList;
+      $scope.documentStatusList = documentStatusList;
+      $scope.variantFormatList = variantFormatList;
+      $scope.formatList = formatList;
+
+      $scope.associatedWithRecordAsList = associatedWithRecordAsList;
       $scope.selectedStorageLocation = "Sentralarkivet";
 
       $scope.showCaseFileBreadcrumb = false;
       $scope.showDocumentBreadcrumb = false;
       $scope.showRegistryEntryBreadcrumb = false;
+      $scope.showRegistryEntryListBreadcrumb = false;
+      $scope.showCorrespondencePartBreadcrumb = false;
+      $scope.showDocumentListBreadcrumb = false;
+      $scope.showCorrespondencePartListBreadcrumb = false;
 
       $scope.newCaseResponsibleForCaseFile = GetUsername();
       $scope.newCaseStatusForCaseFile = "Opprettet av saksbehandler";
 
+      // TODO : DELETE THESE
+      $scope.newTitleForRegistryEntry = "Test brev";
+      $scope.newPublicTitleForRegistryEntry = "Test brev";
+      $scope.newDescriptionForRegistryEntry = "Test brev";
+      $scope.newRegistryEntryStatus = "Journalført";
+      $scope.newRegistryEntryType = "Inngående dokument";
+      $scope.newDocumentType = "Brev";
+      $scope.newTitleForDocument = "Dokument tittel";
+      $scope.selectedDocumentType = "Brev";
+      $scope.selectedFormat = "odt";
+      $scope.selectedVariantFormat = "Produksjonsformat";
+
+      $scope.documentObjectList = "";
 
       $scope.disableAllButtons = false;
       pageLoad();
@@ -89,14 +123,17 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         $scope.selectedCaseFileStatus = "Opprettet";
         $scope.selectedDocumentMediumCaseFile = "";
         $scope.selectedDocumentMediumNewCaseFile = "Elektronisk arkiv";
+        $scope.selectedAssociatedWithRecordAs = "Hoveddokument";
+        $scope.selectedDocumentStatus = "Dokumentet er under redigering";
 
         // Create variables to bind with ng-model and modals so we can blank them out
         // For caseFile
         $scope.newDescriptionForCaseFile = "";
         $scope.newTitleForCaseFile = "";
+        $scope.newTitleForCaseFile = "Test";
         // For document
         $scope.newIdForDocument = "";
-        $scope.newNameForDocument = "";
+
         $scope.newDescriptionForDocument = "";
 
         // For RegistryEntry
@@ -104,6 +141,8 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         $scope.selectedDocumentMediumNewRegistryEntry = "";
         $scope.newDescriptionForRegistryEntry = "";
         $scope.newTitleForRegistryEntry = "";
+        $scope.newRegistryEntryStatus = "";
+        $scope.newRegistryEntryType = "";
 
         // GET the application root. There you get a HREF to REL_CASEFILE_STRUCTURE
         // Then you GET the REL_CASEFILE_STRUCTURE. Make a note of HREFS for:
@@ -271,7 +310,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
                 arkivstatus: $scope.selectedCaseFileStatus
               },
             }).then(function successCallback(response) {
-              console.log(" put/post on caseFile data returned= " + JSON.stringify(response.data));
+              console.log(" put on caseFile data returned= " + JSON.stringify(response.data));
               // Pick up and make a note of the ETAG so we can update the object
               $scope.caseFileETag = response.headers('ETag');
               $scope.caseFile = response.data;
@@ -309,7 +348,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
                 arkivdelstatus: $scope.selectedRegistryEntryStatus
               },
             }).then(function successCallback(response) {
-              console.log(" put/post on registryEntry data returned= " + JSON.stringify(response.data));
+              console.log(" put on registryEntry data returned= " + JSON.stringify(response.data));
               // Pick up and make a note of the ETAG so we can update the object
               $scope.registryEntryETag = response.headers('ETag');
               $scope.registryEntry = response.data;
@@ -320,9 +359,9 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
 
 
       /**
-       * createDocument
+       * updateDocument
        *
-       * Undertakes either a PUT or a POST request to the core with data fields from the webpage
+       * Undertakes either a PUT request to the core with data fields from the webpage
        *
        * The action is decided by whether or not $scope.createCaseFile == true. If it's true then we will
        * create a caseFile. If it's false, we are updating a caseFile.
@@ -366,30 +405,29 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
 
       /**
        *
-       * create a new Document associated with the current caseFile
+       * create a new documentDescription associated with the current registryEntry
        */
-      $scope.createDocument = function () {
+      $scope.createDocumentDescription = function () {
 
-        for (var rel in $scope.caseFile._links) {
-          var relation = $scope.caseFile._links[rel].rel;
-          if (relation === REL_NEW_CaseFile_CREATOR) {
-            console.log("href for creating a document is " + $scope.caseFile._links[rel].href);
-            console.log("href for creating a document is " + $scope.caseFile._links[rel].href);
+        for (var rel in $scope.registryEntry._links) {
+          var relation = $scope.registryEntry._links[rel].rel;
+          if (relation === REL_NEW_DOCUMENT_DESCRIPTION) {
+            console.log("href for creating a document is " + $scope.registryEntry._links[rel].href);
             $http({
-              url: $scope.caseFile._links[rel].href,
+              url: $scope.registryEntry._links[rel].href,
               method: "POST",
               headers: {
                 'Content-Type': 'application/vnd.noark5-v4+json',
                 'Authorization': $scope.token,
               },
               data: {
-                arkivskaperID: $scope.newIdForDocument,
-                arkivskaperNavn: $scope.newNameForDocument,
-                beskrivelse: $scope.newDescriptionForDocument
+                'tittel': $scope.newTitleForDocument,
+                'beskrivelse': $scope.newDescriptionForDocument,
+                'tilknyttetRegistreringSom': $scope.selectedAssociatedWithRecordAs,
+                'dokumenttype': $scope.selectedDocumentType
               },
             }).then(function successCallback(response) {
               console.log("POST on document data returned= " + JSON.stringify(response.data));
-
               $scope.doDismissNewDocumentModal();
 
               // Update the document object so fields in GUI are changed
@@ -397,7 +435,52 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
 
               // Pick up and make a note of the ETAG so we can update the object
               $scope.documentETag = response.headers('eTag');
+              $scope.documentETag = '"' + $scope.documentETag + '"';
+              console.log("Etag after post on document is = " + $scope.documentETag);
+            });
+          }
+        }
+      };
 
+
+      /**
+       *
+       * create a new documentObject associated with the current documentDescription
+       */
+      $scope.createDocumentObject = function () {
+
+        for (let i = 0; i < formatList.length; i++) {
+          if (formatList[i].id === $scope.selectedFormat)
+            $scope.selectedMimeType = formatList[i].value;
+        }
+        console.log("Setting mimetype to " + $scope.selectedMimeType);
+
+        for (var rel in $scope.documentDescription._links) {
+          var relation = $scope.documentDescription._links[rel].rel;
+          if (relation === REL_NEW_DOCUMENT_OBJECT) {
+            console.log("href for creating a document is " + $scope.documentDescription._links[rel].href);
+            $http({
+              url: $scope.documentDescription._links[rel].href,
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Authorization': $scope.token,
+              },
+              data: {
+                'format': $scope.selectedFormat,
+                'mimeType': $scope.selectedMimeType,
+                'variantformat': $scope.selectedVariantFormat
+              }
+            }).then(function successCallback(response) {
+              console.log("POST on document data returned= " + JSON.stringify(response.data));
+              $scope.doDismissNewDocumentModal();
+
+              // Update the document object so fields in GUI are changed
+              $scope.document = response.data;
+              $scope.documentObjectList.push(response.data);
+
+              // Pick up and make a note of the ETAG so we can update the object
+              $scope.documentETag = response.headers('eTag');
               $scope.documentETag = '"' + $scope.documentETag + '"';
               console.log("Etag after post on document is = " + $scope.documentETag);
             });
@@ -413,7 +496,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
 
         for (var rel in $scope.caseFile._links) {
           var relation = $scope.caseFile._links[rel].rel;
-          if (relation === REL_NEW_RegistryEntry) {
+          if (relation === REL_NEW_REGISTRY_ENTRY) {
             console.log("href for creating a document is " + $scope.caseFile._links[rel].href);
             $http({
               url: $scope.caseFile._links[rel].href,
@@ -425,8 +508,9 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               data: {
                 tittel: $scope.newTitleForRegistryEntry,
                 beskrivelse: $scope.newDescriptionForRegistryEntry,
+                journalstatus: $scope.newRegistryEntryStatus,
+                journalposttype: $scope.newRegistryEntryType,
                 dokumentmedium: $scope.selectedDocumentMediumNewRegistryEntry,
-                arkivdelstatus: "Opprettet"
               },
             }).then(function successCallback(response) {
               console.log("POST on registryEntry data returned= " + JSON.stringify(response.data));
@@ -456,6 +540,22 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         $scope.showDocumentCard = false;
         $scope.showRegistryEntryListCard = false;
         $scope.showRegistryEntryCard = false;
+      }
+
+      /**
+       * As this is a single-page-application, we need to hide and show breadcrumbs.
+       * This is a helper method to hide all breadcrumbs and the caller can then
+       * show the breadcrumb they want to show.
+       *
+       */
+      function hideAllBreadcrumbs() {
+        $scope.showCaseFileBreadcrumb = false;
+        $scope.showDocumentBreadcrumb = false;
+        $scope.showRegistryEntryBreadcrumb = false;
+        $scope.showRegistryEntryListBreadcrumb = false;
+        $scope.showCorrespondencePartBreadcrumb = false;
+        $scope.showDocumentListBreadcrumb = false;
+        $scope.showCorrespondencePartListBreadcrumb = false;
       }
 
       /**
@@ -512,50 +612,57 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       $scope.doShowCaseFileListCard = function () {
         disableAllCards();
         $scope.showCaseFileListCard = true;
-        $scope.showCaseFileBreadcrumb = false;
-        $scope.showDocumentBreadcrumb = false;
-        $scope.showRegistryEntryBreadcrumb = false;
+        hideAllBreadcrumbs();
         pageLoad();
       };
 
       $scope.doShowCaseFileCard = function () {
         disableAllCards();
         $scope.showCaseFileCard = true;
+        hideAllBreadcrumbs();
         $scope.showCaseFileBreadcrumb = true;
-        $scope.showDocumentBreadcrumb = false;
-        $scope.showRegistryEntryBreadcrumb = false;
       };
 
       $scope.doShowRegistryEntryCard = function () {
         disableAllCards();
         $scope.showRegistryEntryCard = true;
+        hideAllBreadcrumbs();
         $scope.showCaseFileBreadcrumb = true;
-        $scope.showDocumentBreadcrumb = false;
+        $scope.showRegistryEntryListBreadcrumb = true;
         $scope.showRegistryEntryBreadcrumb = true;
       };
 
       $scope.doShowDocumentCard = function () {
         disableAllCards();
+        hideAllBreadcrumbs();
         $scope.showDocumentCard = true;
-        $scope.showCaseFileBreadcrumb = true;
-        $scope.showDocumentBreadcrumb = true;
-        $scope.showRegistryEntryBreadcrumb = false;
       };
 
       $scope.doShowDocumentListCard = function () {
         disableAllCards();
         $scope.showDocumentListCard = true;
+        hideAllBreadcrumbs();
         $scope.showCaseFileBreadcrumb = true;
-        $scope.showDocumentBreadcrumb = true;
-        $scope.showRegistryEntryBreadcrumb = false;
+        $scope.showRegistryEntryListBreadcrumb = true;
+        $scope.showRegistryEntryBreadcrumb = true;
+        $scope.showDocumentListBreadcrumb = true;
         $scope.getListDocument();
+      };
+
+      $scope.doShowCorrespondencePartCard = function () {
+        disableAllCards();
+        $scope.showDocumentListCard = true;
+        hideAllBreadcrumbs();
+        $scope.showCaseFileBreadcrumb = true;
+        $scope.getListCorrespondencePart();
       };
 
       $scope.doShowRegistryEntryListCard = function () {
         disableAllCards();
         $scope.showRegistryEntryListCard = true;
+        hideAllBreadcrumbs();
         $scope.showCaseFileBreadcrumb = true;
-        $scope.showRegistryEntryBreadcrumb = true;
+        $scope.showRegistryEntryListBreadcrumb = true;
         $scope.getRegistryEntry();
       };
 
@@ -578,20 +685,23 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         $scope.newTitleForRegistryEntry = "";
       };
 
+      $scope.doDismissNewCorrespondencePartModal = function () {
+        $scope.dismissNewDocumentModal();
+        $scope.newDescriptionForRegistryEntry = "";
+        $scope.newTitleForRegistryEntry = "";
+      };
+
       $scope.doLoadRegistryEntryModal = function () {
         $scope.selectedDocumentMediumNewRegistryEntry = $scope.caseFile.dokumentmedium;
       };
-      /**
-       *  caseFile_selected
-       *
-       */
 
-      $scope.documentSelected = function (document) {
+      $scope.doLoadDocumentDescriptionModal = function () {
+
       };
 
       $scope.checkDocumentMediumForRegistryEntry = function () {
 
-        console.log("Change detected " + $scope.caseFile.dokumentmedium + " " + $scope.selectedDocumentMediumRegistryEntry);
+        console.log("Change detected " + $scope.caseFile.dokumentmedium + " " + $scope.selecteddoLoadRegistryEntryModalDocumentMediumRegistryEntry);
         if ($scope.caseFile.dokumentmedium !== $scope.selectedDocumentMediumRegistryEntry) {
 
           if ($scope.caseFile.dokumentmedium === "Elektronisk arkiv") {
@@ -655,6 +765,24 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         }
       };
 
+
+      $scope.fetchDocumentObjects = function () {
+
+        for (var rel in $scope.documentDescription._links) {
+          var relation = $scope.documentDescription._links[rel].rel;
+          if (relation == REL_DOCUMENT_OBJECT) {
+            $http({
+              method: 'GET',
+              url: $scope.documentDescription._links[rel].href,
+              headers: {'Authorization': $scope.token}
+            }).then(function successCallback(response) {
+              $scope.documentObjectList = response.data.results;
+              console.log("Retrieved the following documentObjectList " + JSON.stringify($scope.documentObjectList));
+            });
+          }
+        }
+      };
+
       $scope.documentSelected = function (document) {
         $scope.doShowDocumentCard();
         // Retrieve the latest copy of the data and pull out the ETAG
@@ -667,9 +795,12 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               url: document._links[rel].href,
               headers: {'Authorization': $scope.token}
             }).then(function successCallback(response) {
-              $scope.document = response.data;
+              $scope.documentDescription = response.data;
+              $scope.selectedAssociatedWithRecordAs = $scope.documentDescription.tilknyttetRegistreringSom;
+              $scope.selectedDocumentStatus = $scope.documentDescription.dokumentstatus;
               $scope.documentETag = response.headers('eTag');
-              console.log("Retrieved the following document " + JSON.stringify($scope.document));
+              $scope.fetchDocumentObjects();
+              console.log("Retrieved the following document " + JSON.stringify($scope.documentDescription));
               console.log("The ETAG header for the document is " + $scope.documentETag);
             });
           }
@@ -677,25 +808,93 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       };
 
       $scope.getListDocument = function () {
-        for (var rel in $scope.caseFile._links) {
-          var relation = $scope.caseFile._links[rel].rel;
-          if (relation == REL_CaseFile_CREATOR) {
+        for (var rel in $scope.registryEntry._links) {
+          var relation = $scope.registryEntry._links[rel].rel;
+          if (relation == REL_DOCUMENT_DESCRIPTION) {
             $http({
               method: 'GET',
-              url: $scope.caseFile._links[rel].href,
+              url: $scope.registryEntry._links[rel].href,
               headers: {'Authorization': $scope.token}
             }).then(function successCallback(response) {
               $scope.documentList = response.data.results;
-              console.log("Retrieved the following documentList " + JSON.stringify($scope.documentList));
+              console.log("Retrieved the following documentList " +
+                JSON.stringify($scope.documentList));
             });
           }
         }
       };
 
+      $scope.getListCorrespondencePart = function () {
+        for (var rel in $scope.registryEntry._links) {
+          var relation = $scope.registryEntry._links[rel].rel;
+          // Should be all correspondnaceparts
+          if (relation == REL_CORRESPONDENCE_PART_PERSON) {
+            $http({
+              method: 'GET',
+              url: $scope.registryEntry._links[rel].href,
+              headers: {'Authorization': $scope.token}
+            }).then(function successCallback(response) {
+              $scope.correspondencePart = response.data.results;
+              console.log("Retrieved the following correspondencePartList " +
+                JSON.stringify($scope.correspondencePart));
+            });
+          }
+        }
+      };
+
+
+      $scope.selectDocumentObject = function (selectedDocumentObject) {
+
+        $scope.documentObject = selectedDocumentObject;
+
+        console.log("Setting selected documentObject do to " + JSON.stringify($scope.documentObject));
+
+
+      };
+
+      $scope.uploadFiles = function (file, errFiles) {
+        $scope.f = file;
+
+        for (let i = 0; i < formatList.length; i++) {
+          if (formatList[i].id === $scope.selectedFormat) {
+            $scope.selectedMimeType = formatList[i].value;
+          }
+        }
+        //console.log("uploadDocument selected " + JSON.stringify($scope.documentObject ));
+        console.log("Setting mimetype to " + $scope.selectedMimeType);
+
+        for (rel in $scope.documentObject._links) {
+          if ($scope.documentObject._links[rel].rel === REL_DOCUMENT_FILE) {
+            $scope.errFile = errFiles && errFiles[0];
+            if (file) {
+              var xhr = new XMLHttpRequest();
+              xhr.withCredentials = true;
+              xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                  if (this.status != 200) {
+                    alert("Kunne ikke laste opp fil. Kjernen sier følgende: " + this.responseText.message);
+                  }
+                  else {
+                    $scope.fetchDocumentObjects();
+                  }
+                }
+              });
+              xhr.open("POST", $scope.documentObject._links[rel].href);
+              var blob = new Blob([file], {type: $scope.selectedMimeType});
+              xhr.setRequestHeader('content-type', $scope.selectedMimeType);
+              xhr.setRequestHeader('Authorization', $scope.token);
+              xhr.setRequestHeader("X-File-Name", file.name);
+              xhr.send(blob);
+            }
+          }
+        }
+      };
+
+
       $scope.getRegistryEntry = function () {
         for (var rel in $scope.caseFile._links) {
           var relation = $scope.caseFile._links[rel].rel;
-          if (relation == REL_RegistryEntry) {
+          if (relation == REL_REGISTRY_ENTRY) {
             $http({
               method: 'GET',
               url: $scope.caseFile._links[rel].href,
@@ -726,6 +925,55 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
             "] returned " + JSON.stringify(response));
         });
       };
+
+
+      /**
+       * download the document. The code here is adapted from:
+       *  https://stackoverflow.com/questions/14215049/how-to-download-file-using-angularjs-and-calling-mvc-api
+       */
+      $scope.doDownloadDocument = function (documentObject) {
+
+        $scope.documentObject = documentObject;
+
+        let type = $scope.documentObject.mimeType;
+        let format = $scope.documentObject.format;
+        let filename = "mildertidignavn." + format;
+
+        for (rel in $scope.documentObject._links) {
+          if ($scope.documentObject._links[rel].rel === REL_DOCUMENT_FILE) {
+
+            $http({
+              method: 'GET',
+              url: $scope.documentObject._links[rel].href,
+              headers: {
+                'Authorization': $scope.token,
+                'Accept': type
+              },
+              responseType: 'arraybuffer'
+            }).then(function successCallback(response) {
+
+              var file = new Blob([response.data], {
+                type: type
+              });
+
+              var fileURL = URL.createObjectURL(file);
+              var a = document.createElement('a');
+              a.href = fileURL;
+              a.target = '_blank';
+              a.download = filename;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+
+            }, function errorCallback(response) {
+              alert("Kunne ikke laste ned. " +
+                JSON.stringify(response));
+              console.log(" GET documentHref[" + $scope.documentHref +
+                "] returned " + JSON.stringify(response));
+            });
+          }
+        }
+      }
     }
   ])
 ;

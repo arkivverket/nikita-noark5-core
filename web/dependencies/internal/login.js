@@ -31,8 +31,12 @@ var login = app.controller('LoginController',
   ['$scope', '$http', '$httpParamSerializer',
     function ($scope, $http, $httpParamSerializer) {
 
+      $scope.emailAddress = "admin@example.com";
+      $scope.password = "password";
+
       // This sets 'arkivar' to be the default choice on the webpage
       $scope.selectedLoginRole = "arkivar";
+      $scope.selectedLoginRole = "saksbehandler";
 
       // Set values for dropdown in webpage
       $scope.loginOptions = loginOptions;

@@ -29,7 +29,9 @@ import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
 //@Indexed(index = "document_object")
 @JsonDeserialize(using = DocumentObjectDeserializer.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_document_object_id"))
-public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
+public class DocumentObject
+        extends NoarkEntity
+        implements INoarkCreateEntity,
         IElectronicSignature, IConversion {
 
     /**
@@ -38,7 +40,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
     @NotNull
     @Column(name = "version_number", nullable = false)
     @Audited
-
     private Integer versionNumber;
 
     /**
@@ -47,7 +48,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
     @NotNull
     @Column(name = "variant_format", nullable = false)
     @Audited
-
     private String variantFormat;
 
     /**
@@ -55,7 +55,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
      */
     @Column(name = "format")
     @Audited
-
     private String format;
 
     /**
@@ -63,7 +62,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
      */
     @Column(name = "format_details")
     @Audited
-
     private String formatDetails;
 
     /**
@@ -72,7 +70,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     @Audited
-
     private Date createdDate;
 
     /**
@@ -80,7 +77,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
      */
     @Column(name = "created_by")
     @Audited
-
     private String createdBy;
 
     /**
@@ -88,7 +84,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
      */
     @Column(name = "reference_document_file")
     @Audited
-
     private String referenceDocumentFile;
 
     /**
@@ -96,7 +91,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
      */
     @Column(name = "checksum")
     @Audited
-
     private String checksum;
 
     /**
@@ -104,7 +98,6 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
      */
     @Column(name = "checksum_algorithm")
     @Audited
-
     private String checksumAlgorithm;
 
     /**
@@ -112,17 +105,14 @@ public class DocumentObject extends NoarkEntity implements INoarkCreateEntity,
      */
     @Column(name = "file_size")
     @Audited
-
     private Long fileSize;
 
     @Column(name = "original_filename")
     @Audited
-
     private String originalFilename;
 
     @Column(name = "mime_type")
     @Audited
-
     private String mimeType;
 
     // Link to DocumentDescription
