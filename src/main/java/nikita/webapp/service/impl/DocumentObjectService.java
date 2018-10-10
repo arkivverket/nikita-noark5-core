@@ -106,7 +106,8 @@ public class DocumentObjectService
                         countByReferenceDocumentDescriptionAndVariantFormat(
                                 documentObject.getReferenceDocumentDescription(),
                                 documentObject.getVariantFormat());
-        documentObject.setVersionNumber(version.intValue());
+        // + 1 because while arrays start at 0, document counts start at 1
+        documentObject.setVersionNumber(version.intValue() + 1);
 
         checkChecksumAlgorithmSetIfNull(documentObject);
         return documentObjectRepository.save(documentObject);
