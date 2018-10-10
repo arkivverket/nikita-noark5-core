@@ -855,6 +855,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       $scope.uploadFiles = function (documentObject, file, errFiles) {
         $scope.f = file;
 
+        /*
         for (let i = 0; i < formatList.length; i++) {
           if (formatList[i].id === $scope.selectedFormat) {
             $scope.selectedMimeType = formatList[i].value;
@@ -862,7 +863,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         }
         //console.log("uploadDocument selected " + JSON.stringify($scope.documentObject ));
         console.log("Setting mimetype to " + $scope.selectedMimeType);
-
+*/
         for (rel in documentObject._links) {
           if (documentObject._links[rel].rel === REL_DOCUMENT_FILE) {
             $scope.errFile = errFiles && errFiles[0];
@@ -872,7 +873,8 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               xhr.addEventListener("readystatechange", function () {
                 if (this.readyState === 4) {
                   if (this.status != 200) {
-                    alert("Kunne ikke laste opp fil. Kjernen sier følgende: " + this.responseText.message);
+                    alert("Kunne ikke laste opp fil. Kjernen sier følgende: " +
+                      this.responseText.message);
                   }
                   else {
                     $scope.fetchDocumentObjects();
@@ -880,8 +882,8 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
                 }
               });
               xhr.open("POST", documentObject._links[rel].href);
-              var blob = new Blob([file], {type: $scope.selectedMimeType});
-              xhr.setRequestHeader('content-type', $scope.selectedMimeType);
+              var blob = new Blob([file], {type: documentObject.selectedMimeType});
+              xhr.setRequestHeader('content-type', documentObject.selectedMimeType);
               xhr.setRequestHeader('Authorization', $scope.token);
               xhr.setRequestHeader("X-File-Name", file.name);
               xhr.send(blob);
