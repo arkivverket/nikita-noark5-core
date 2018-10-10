@@ -306,9 +306,9 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               data: {
                 tittel: $scope.caseFile.tittel,
                 beskrivelse: $scope.caseFile.beskrivelse,
-                dokumentmedium: $scope.selectedDocumentMediumCaseFile,
-                arkivstatus: $scope.selectedCaseFileStatus
-              },
+                offentligTittel: $scope.caseFile.offentligTittel,
+                saksstatus: $scope.caseFile.saksstatus
+              }
             }).then(function successCallback(response) {
               console.log(" put on caseFile data returned= " + JSON.stringify(response.data));
               // Pick up and make a note of the ETAG so we can update the object
@@ -744,7 +744,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               console.log("Retrieved the following caseFile " + JSON.stringify($scope.caseFile));
               console.log("The ETAG header for the caseFile is " + $scope.caseFileETag);
               $scope.selectedDocumentMediumCaseFile = $scope.caseFile.dokumentmedium;
-              $scope.selectedCaseFileStatus = $scope.caseFile.arkivstatus;
+              $scope.selectedCaseFileStatus = $scope.caseFile.saksstatus;
             });
           }
         }
@@ -768,7 +768,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               console.log("Retrieved the following registryEntry " + JSON.stringify($scope.registryEntry));
               console.log("The ETAG header for the registryEntry is " + $scope.registryEntryETag);
               $scope.selectedDocumentMediumRegistryEntry = $scope.registryEntry.dokumentmedium;
-              $scope.selectedRegistryEntryStatus = $scope.registryEntry.arkivdelstatus;
+              $scope.selectedRegistryEntryStatus = $scope.registryEntry.journalstatus;
             });
           }
         }

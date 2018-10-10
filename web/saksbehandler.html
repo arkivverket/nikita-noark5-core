@@ -112,7 +112,6 @@
             <ul class="dropdown-menu" ng-repeat="series in seriesList" ng-click="seriesSelected(series)">
               <li><a href="#">{{series.tittel | limitTo:20}}</a></li>
             </ul>
-            </button>
             <button type="button" class="btn btn-primary float-right"
                     data-toggle="modal" data-target="#newCaseFileModal"
                     ng-disabled="disableAllButtons">
@@ -288,32 +287,67 @@
             <div class="col-lg-6">
               <div class="row">
                 <div class="col-lg-12">
-                  <label class="control-label" for="tittelArkiv">Tittel</label>
-                  <input id="tittelArkiv" class="form-control form-control-lg rounded-1" type="text"
+                  <label class="control-label" for="titleCaseFile">Tittel</label>
+                  <input id="titleCaseFile" class="form-control form-control-lg rounded-1" type="text"
                          ng-model="caseFile.tittel"
                          data-toggle="tooltip" data-placement="top"
-                         title="Navnet på arkivet feks 'Eksempel kommune hovedarkiv'."/>
+                         title="En dekkende tittel for saken."/>
                 </div>
               </div>
               <div class="row">
                 <div class="col-lg-12">
-                  <label class="control-label" for="beskrivelseArkiv">Beskrivelse</label>
-                  <textarea id="beskrivelseArkiv" class="form-control  form-control-lg rounded-1" rows="5"
+                  <label class="control-label" for="descriptionCaseFile">Beskrivelse</label>
+                  <textarea id="descriptionCaseFile" class="form-control  form-control-lg rounded-1" rows="5"
                             ng-model="caseFile.beskrivelse"
                             data-toggle="tooltip" data-placement="top"
-                            title="En beskrivelse av arkivet. Merk at dette er ikke en beskrivelse av organisasjonen.">
+                            title="En beskrivelse av saken">
                 </textarea>
                 </div>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="row">
+                <div class="col-lg-3">
+                  <label class="control-label" for="caseFileId">mappeID</label>
+                  <input id="caseFileId" class="form-control form-control-lg rounded-1" type="text"
+                         ng-model="caseFile.mappeID"
+                         data-toggle="tooltip" data-placement="top"
+                         title="Entydig identifikasjon av mappen innenfor det arkivet mappen tilhører. Merk at mappeID er identisk med kombinasjonen saksår og sekvensnummer (oftest bare kalt  'saksnummer')."
+                         disabled/>
+                </div>
+                <div class="col-lg-3">
+                  <label class="control-label" for="caseFileSequenceNumber">sakssekvensnummer</label>
+                  <input id="caseFileSequenceNumber" class="form-control form-control-lg rounded-1" type="text"
+                         ng-model="caseFile.sakssekvensnummer"
+                         data-toggle="tooltip" data-placement="top"
+                         title="Viser rekkefølgen når saksmappen ble opprettet innenfor året."
+                         disabled/>
+                </div>
+                <div class="col-lg-3">
+                  <label class="control-label" for="caseFileYear">saksaar</label>
+                  <input id="caseFileYear" class="form-control form-control-lg rounded-1" type="text"
+                         ng-model="caseFile.saksaar"
+                         data-toggle="tooltip" data-placement="top"
+                         title="Viser året saksmappen ble opprettet."
+                         disabled/>
+                </div>
+                <div class="col-lg-3">
+                  <label class="control-label" for="caseFileDate">saksdato</label>
+                  <input id="caseFileDate" class="form-control form-control-lg rounded-1" type="text"
+                         ng-model="caseFile.saksdato"
+                         data-toggle="tooltip" data-placement="top"
+                         title="Datoen saken er opprettet."
+                         disabled/>
+                </div>
+
+              </div>
+              <div class="row">
                 <div class="col-lg-12">
-                  <label class="control-label" for="arkivstatus">Arkivstatus:</label>
-                  <select id="arkivstatus" class="form-control form-control-lg rounded-1"
+                  <label class="control-label" for="caseFileStatus">Saksstatus:</label>
+                  <select id="caseFileStatus" class="form-control form-control-lg rounded-1"
                           ng-model="selectedCaseFileStatus"
                           data-toggle="tooltip" data-placement="top"
-                          title="En arkiv kan enten være aktiv (status Opprettet) eller avsluttet (status Avsluttet). Merk! Å sette status til Avlsuttet angir at du er ferdig med arkivdanning i dette arkivet">
+                          title="Status til saksmappen, dvs. hvor langt saksbehandlingen har kommet.">
                     <option ng-selected="{{caseFileStatus.value == selectedCaseFileStatus}}"
                             ng-repeat="caseFileStatus in caseFileStatusList"
                             value="{{caseFileStatus.value}}">{{caseFileStatus.value}}
@@ -323,36 +357,13 @@
               </div>
               <div class="row">
                 <div class="col-lg-12">
-                  <label class="control-label" for="dokumentmediumArkiv">Dokumentmedium:</label>
-                  <select id="dokumentmediumArkiv" class="form-control form-control-lg rounded-1"
-                          ng-model="selectedDocumentMediumCaseFile"
-                          data-toggle="tooltip" data-placement="top"
-                          title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
-                    <option ng-selected="{{documentMedium.value == selectedDocumentMediumCaseFile}}"
-                            ng-repeat="documentMedium in documentMediumList"
-                            value="{{documentMedium.value}}">{{documentMedium.value}}
-                    </option>
-                  </select>
+                  <label class="control-label" for="publicTitleCaseFile">Offentligtittel</label>
+                  <input id="publicTitleCaseFile" class="form-control form-control-lg rounded-1" type="text"
+                         ng-model="caseFile.offentligTittel"
+                         data-toggle="tooltip" data-placement="top"
+                         title="Offentlig tittel på arkivenheten, ord som skal skjermes er fjernet fra innholdet i tittelen (erstattet med ******)."/>
                 </div>
               </div>
-
-              <!-- oppbevaringsted. Note this fields is only shown if documentMedium is not electronic. This will
-                   have to be editable later. -->
-              <div class="row" ng-show="selectedDocumentMediumCaseFile != 'Elektronisk arkiv'">
-                <div class="col-lg-12">
-                  <label class="control-label" for="oppbevaringsStedArkiv">Oppbevarings sted:</label>
-                  <select id="oppbevaringsStedArkiv" class="form-control form-control-lg rounded-1"
-                          ng-model="selectedStorageLocation"
-                          data-toggle="tooltip" data-placement="top"
-                          title="Hvor analogt materiale oppbevares.">
-                    <option ng-selected="{{storageLocation.value == selectedStorageLocation}}"
-                            ng-repeat="storageLocation in storageLocationList"
-                            value="{{storageLocation.value}}">{{storageLocation.value}}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
             </div>
           </div>
 
@@ -500,19 +511,63 @@
             </div>
             <div class="col-lg-6">
               <div class="row">
+                <div class="col-lg-3">
+                  <label class="control-label" for="registryEntryId">registreringsID:</label>
+                  <input id="registryEntryId" class="form-control form-control-lg rounded-1" type="text"
+                         ng-model="registryEntry.registreringsID"
+                         data-toggle="tooltip" data-placement="top"
+                         title="Entydig identifikasjon av registreringen innenfor arkivet."
+                         disabled/>
+                </div>
+                <div class="col-lg-3">
+                  <label class="control-label" for="registryEntryDate">Journaldato:</label>
+                  <input id="registryEntryDate" class="form-control form-control-lg rounded-1" type="text"
+                         ng-model="registryEntry.journaldato"
+                         data-toggle="tooltip" data-placement="top"
+                         title="Datoen journalposten er opprettet/arkivert."
+                         disabled/>
+                  </select>
+                </div>
+                <div class="col-lg-2">
+                  <label class="control-label" for="registryEntryNumber">Journalpostnummer:</label>
+                  <input id="registryEntryNumber" class="form-control form-control-lg rounded-1" type="text"
+                         ng-model="registryEntry.journalpostnummer"
+                         data-toggle="tooltip" data-placement="top"
+                         title="Viser rekkefølgen journalpostene ble opprettet innenfor saksmappen, f.eks. 2018/3869-8 (dokument nr. 8 i sak 2018/3869)."
+                         disabled/>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col-lg-12">
                   <label class="control-label" for="registryEntryStatus">Journalstatus:</label>
                   <select id="registryEntryStatus" class="form-control form-control-lg rounded-1"
-                          ng-model="selectedRegistryEntryStatus"
+                          ng-model="registryEntry.journalstatus"
                           data-toggle="tooltip" data-placement="top"
                           title="Status på journalposten">
-                    <option ng-selected="{{registryEntryStatus.value == selectedRegistryEntryStatus}}"
+                    <option ng-selected="{{registryEntryStatus.value == registryEntry.journalstatus}}"
                             ng-repeat="registryEntryStatus in registryEntryStatusList"
                             value="{{registryEntryStatus.value}}">{{registryEntryStatus.value}}
                     </option>
                   </select>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-lg-12">
+                  <label class="control-label" for="registryEntryType">Journalposttype:</label>
+                  <select id="registryEntryType" class="form-control form-control-lg rounded-1"
+                          ng-model="registryEntry.journalposttype"
+                          data-toggle="tooltip" data-placement="top"
+                          title="Navn på type journalpost">
+                    <option ng-selected="{{registryEntryType.value == registryEntry.journalposttype}}"
+                            ng-repeat="registryEntryType in registryEntryTypeList"
+                            value="{{registryEntryType.value}}">{{registryEntryType.value}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- we are removing this!!
               <div class="row">
                 <div class="col-lg-12">
                   <label class="control-label" for="documentMediumForRegistryEntry">Dokumentmedium:</label>
@@ -528,9 +583,10 @@
                   </select>
                 </div>
               </div>
-
+              -->
               <!-- oppbevaringsted. Note this fields is only shown if documentMedium is not electronic. This will
                    have to be editable later. -->
+              <!-- we are removing this!!
               <div class="row" ng-show="selectedDocumentMediumRegistryEntry != 'Elektronisk arkiv'">
                 <div class="col-lg-12">
                   <label class="control-label" for="storageLocationForRegistryEntry">Oppbevarings sted:</label>
@@ -545,6 +601,7 @@
                   </select>
                 </div>
               </div>
+              -->
             </div>
           </div>
 
