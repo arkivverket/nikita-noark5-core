@@ -778,7 +778,7 @@
                     <div class="col-lg-2">
                       <label class="control-label" for="version">versjonsnummer</label>
                       <input id="version" class="form-control  form-control-lg rounded-1"
-                             ng-model="documentObject.versjon"
+                             ng-model="documentObject.versjonsnummer"
                              data-toggle="tooltip" data-placement="top"
                              title="Versjonsnummer gjelder bare arkiverte versjoner. Produksjonsversjoner genererer ikke metadata som skal følge med i et arkivuttrekk."
                              disabled/>
@@ -814,7 +814,7 @@
                         <span class="input-group-btn">
                         <button id="upload" ng-show="documentObject.sjekksum == null"
                                 class="btn btn-info"
-                                type="file" ngf-select="uploadFiles($file, $invalidFiles)"
+                                type="file" ngf-select="uploadFiles(documentObject, $file, $invalidFiles)"
                                 accept="pdf/*" ngf-max-height="1000" ngf-max-size="1MB">
                           <span class="fas fa-upload fa-2x"></span>
                         </button>

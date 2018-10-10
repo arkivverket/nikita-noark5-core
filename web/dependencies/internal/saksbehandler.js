@@ -852,7 +852,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
 
       };
 
-      $scope.uploadFiles = function (file, errFiles) {
+      $scope.uploadFiles = function (documentObject, file, errFiles) {
         $scope.f = file;
 
         for (let i = 0; i < formatList.length; i++) {
@@ -863,8 +863,8 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         //console.log("uploadDocument selected " + JSON.stringify($scope.documentObject ));
         console.log("Setting mimetype to " + $scope.selectedMimeType);
 
-        for (rel in $scope.documentObject._links) {
-          if ($scope.documentObject._links[rel].rel === REL_DOCUMENT_FILE) {
+        for (rel in documentObject._links) {
+          if (documentObject._links[rel].rel === REL_DOCUMENT_FILE) {
             $scope.errFile = errFiles && errFiles[0];
             if (file) {
               var xhr = new XMLHttpRequest();
@@ -879,7 +879,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
                   }
                 }
               });
-              xhr.open("POST", $scope.documentObject._links[rel].href);
+              xhr.open("POST", documentObject._links[rel].href);
               var blob = new Blob([file], {type: $scope.selectedMimeType});
               xhr.setRequestHeader('content-type', $scope.selectedMimeType);
               xhr.setRequestHeader('Authorization', $scope.token);
