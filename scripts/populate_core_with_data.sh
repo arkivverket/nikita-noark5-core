@@ -24,7 +24,7 @@ else
 fi
 
 # login to the core using the JWT method
-authToken=$(curl -s   -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=' --header Accept:application/json --header Content-Type:application/json -X POST  "http://localhost:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=gjest@example.com&password=password" | jq '."access_token"' | sed 's/\"//g');
+authToken=$(curl -s   -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=' --header Accept:application/json --header Content-Type:application/json -X POST  "http://localhost:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=admin@example.com&password=password" | jq '."access_token"' | sed 's/\"//g');
 echo "Token is " $authToken;
 # Note It seems to returning the word "null" if empty
 if [ $authToken == "null" ]; then
