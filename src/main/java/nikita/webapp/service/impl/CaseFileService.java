@@ -196,9 +196,13 @@ public class CaseFileService
             existingCaseFile.setCaseResponsible(
                     incomingCaseFile.getCaseResponsible());
         }
-        if (null != incomingCaseFile.getCaseSequenceNumber()) {
-            existingCaseFile.setCaseSequenceNumber(
-                    incomingCaseFile.getCaseSequenceNumber());
+        if (null != incomingCaseFile.getOfficialTitle()) {
+            existingCaseFile.setOfficialTitle(
+                    incomingCaseFile.getOfficialTitle());
+        }
+        if (null != incomingCaseFile.getCaseStatus()) {
+            existingCaseFile.setCaseStatus(
+                    incomingCaseFile.getCaseStatus());
         }
 
         existingCaseFile.setVersion(version);
