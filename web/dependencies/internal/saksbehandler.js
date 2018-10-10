@@ -855,15 +855,6 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       $scope.uploadFiles = function (documentObject, file, errFiles) {
         $scope.f = file;
 
-        /*
-        for (let i = 0; i < formatList.length; i++) {
-          if (formatList[i].id === $scope.selectedFormat) {
-            $scope.selectedMimeType = formatList[i].value;
-          }
-        }
-        //console.log("uploadDocument selected " + JSON.stringify($scope.documentObject ));
-        console.log("Setting mimetype to " + $scope.selectedMimeType);
-*/
         for (rel in documentObject._links) {
           if (documentObject._links[rel].rel === REL_DOCUMENT_FILE) {
             $scope.errFile = errFiles && errFiles[0];
@@ -962,7 +953,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               var a = document.createElement('a');
               a.href = fileURL;
               a.target = '_blank';
-              a.download = filename;
+              a.download = documentObject.filnavn;
               document.body.appendChild(a);
               a.click();
               document.body.removeChild(a);
