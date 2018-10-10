@@ -31,7 +31,7 @@ app.directive('newDocumentDescriptionModalDir', function () {
   return {
     restrict: 'A',
     link: function (scope, element) {
-      scope.dismissNewDocumentModal = function () {
+      scope.dismissNewDocumentDescriptionModal = function () {
         element.modal('hide');
       };
     }
@@ -42,7 +42,7 @@ app.directive('newDocumentObjectModalDir', function () {
   return {
     restrict: 'A',
     link: function (scope, element) {
-      scope.dismissNewDocumentModal = function () {
+      scope.dismissNewDocumentObjectModal = function () {
         element.modal('hide');
       };
     }
@@ -428,7 +428,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               },
             }).then(function successCallback(response) {
               console.log("POST on document data returned= " + JSON.stringify(response.data));
-              $scope.doDismissNewDocumentModal();
+              $scope.doDismissNewDocumentDescriptionModal();
 
               // Update the document object so fields in GUI are changed
               $scope.document = response.data;
@@ -473,7 +473,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               }
             }).then(function successCallback(response) {
               console.log("POST on document data returned= " + JSON.stringify(response.data));
-              $scope.doDismissNewDocumentModal();
+              $scope.doDismissNewDocumentObjectModal();
 
               // Update the document object so fields in GUI are changed
               $scope.document = response.data;
@@ -556,6 +556,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         $scope.showCorrespondencePartBreadcrumb = false;
         $scope.showDocumentListBreadcrumb = false;
         $scope.showCorrespondencePartListBreadcrumb = false;
+        $scope.showDocumentBreadcrumb = false;
       }
 
       /**
@@ -635,6 +636,11 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       $scope.doShowDocumentCard = function () {
         disableAllCards();
         hideAllBreadcrumbs();
+        $scope.showCaseFileBreadcrumb = true;
+        $scope.showRegistryEntryListBreadcrumb = true;
+        $scope.showRegistryEntryBreadcrumb = true;
+        $scope.showDocumentListBreadcrumb = true;
+        $scope.showDocumentBreadcrumb = true;
         $scope.showDocumentCard = true;
       };
 
@@ -679,14 +685,18 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         $scope.newDescriptionForDocument = "";
       };
 
-      $scope.doDismissNewDocumentModal = function () {
-        $scope.dismissNewDocumentModal();
-        $scope.newDescriptionForRegistryEntry = "";
-        $scope.newTitleForRegistryEntry = "";
+      $scope.doDismissNewDocumentDescriptionModal = function () {
+        $scope.dismissNewDocumentDescriptionModal();
+        $scope.newDescriptionForDocument = "";
+        $scope.newTitleForDocument = "";
+      };
+
+      $scope.doDismissNewDocumentObjectModal = function () {
+        $scope.dismissNewDocumentObjectModal();
       };
 
       $scope.doDismissNewCorrespondencePartModal = function () {
-        $scope.dismissNewDocumentModal();
+        $scope.dismissNewDocumentObjectModal();
         $scope.newDescriptionForRegistryEntry = "";
         $scope.newTitleForRegistryEntry = "";
       };
@@ -712,7 +722,6 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
           }
         }
       };
-
 
       $scope.caseFileSelected = function (caseFile) {
 
@@ -764,7 +773,6 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
           }
         }
       };
-
 
       $scope.fetchDocumentObjects = function () {
 
@@ -842,7 +850,6 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         }
       };
 
-
       $scope.selectDocumentObject = function (selectedDocumentObject) {
 
         $scope.documentObject = selectedDocumentObject;
@@ -883,7 +890,6 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         }
       };
 
-
       $scope.getRegistryEntry = function () {
         for (var rel in $scope.caseFile._links) {
           var relation = $scope.caseFile._links[rel].rel;
@@ -918,7 +924,6 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
             "] returned " + JSON.stringify(response));
         });
       };
-
 
       /**
        * download the document. The code here is adapted from:
