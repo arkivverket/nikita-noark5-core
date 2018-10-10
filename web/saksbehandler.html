@@ -180,15 +180,18 @@
             <table class="table table-hover">
               <thead>
               <tr>
-                <th style="width: 20%">registreringsID</th>
-                <th style="width: 20%">journalposttype</th>
-                <th style="width: 60%">journaldato</th>
-                <th style="width: 60%">tittel</th>
+                <th style="width: 65%">tittel</th>
+                <th style="width: 10%">registreringsID</th>
+                <th style="width: 15%">journalposttype</th>
+                <th style="width: 10%">journaldato</th>
               </tr>
               </thead>
               <tbody>
               <tr ng-repeat="registryEntry in registryEntryList"
                   ng-click="registryEntrySelected(registryEntry)">
+                <td>
+                  {{ registryEntry.tittel | limitTo:60 }}
+                </td>
                 <td>
                   {{ registryEntry.registreringsID}}
                 </td>
@@ -197,9 +200,6 @@
                 </td>
                 <td>
                   {{ registryEntry.journaldato }}
-                </td>
-                <td>
-                  {{ registryEntry.tittel | limitTo:60 }}
                 </td>
               </tr>
               </tbody>
