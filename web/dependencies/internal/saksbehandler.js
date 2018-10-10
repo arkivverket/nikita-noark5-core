@@ -49,6 +49,17 @@ app.directive('newDocumentObjectModalDir', function () {
   };
 });
 
+app.directive('newCorrespondencePartModalDir', function () {
+  return {
+    restrict: 'A',
+    link: function (scope, element) {
+      scope.dismissNewCorrespondencePartModal = function () {
+        element.modal('hide');
+      };
+    }
+  };
+});
+
 app.directive('newRegistryEntryModalDir', function () {
   return {
     restrict: 'A',
@@ -696,9 +707,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       };
 
       $scope.doDismissNewCorrespondencePartModal = function () {
-        $scope.dismissNewDocumentObjectModal();
-        $scope.newDescriptionForRegistryEntry = "";
-        $scope.newTitleForRegistryEntry = "";
+        $scope.dismissNewCorrespondencePartModal();
       };
 
       $scope.doLoadRegistryEntryModal = function () {

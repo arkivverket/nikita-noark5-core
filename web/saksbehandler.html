@@ -1283,6 +1283,335 @@
 <!-- End modal to create a new documentObject -->
 
 
+<!-- modal to create a new correspondencePart -->
+<div class="modal fade" id="newCorrespondencePartModal"
+     role="dialog" aria-hidden="true" new-correspondence-part-modal-dir>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Opprett nytt korrespondansepart</h4>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="card text-center">
+            <div class="card-header">
+              <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#">Person</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Enhet</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Intern</a>
+                </li>
+              </ul>
+            </div>
+            <div class="card-body">
+              <!-- korrespondansepartPerson --->
+              <div class="row" ng-show="">
+
+                <div class="col-12">
+                  <div class="row">
+                    <div class="row">
+                      <div class="col-1"></div>
+                      <div class="col-10">
+                        <label class="control-label" for="correspondencepartPersonName">Navn</label>
+                        <input id="correspondencepartPersonName" class="form-control form-control-lg rounded-1"
+                               type="text"
+                               data-toggle="tooltip" data-placement="top"
+                               ng-model="correspondencepartPerson.navn"
+                               title="Navnet på personen."/>
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-1"></div>
+                      <div class="col-10">
+                        <label class="control-label" for="correspondencepartPersonSocialNumber">Fødselsnummer</label>
+                        <input id="correspondencepartPersonSocialNumber" class="form-control form-control-lg rounded-1"
+                               type="text"
+                               data-toggle="tooltip" data-placement="top"
+                               ng-model="correspondencepartPerson.foedselsnummer"
+                               title="Fødselsnummer til personen."/>
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-1"></div>
+                      <div class="col-10">
+                        <label class="control-label" for="correspondencepartPersonDNumber">>D-nummer</label>
+                        <input id="correspondencepartPersonDNumber" class="form-control form-control-lg rounded-1"
+                               type="text"
+                               data-toggle="tooltip" data-placement="top"
+                               ng-model="correspondencepartPerson.dnummer"
+                               title="D-nummer til personen."/>
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-1"></div>
+                      <div class="col-10">
+                        <label class="control-label" for="correspondencepartPerson">Navn</label>
+                        <input id="correspondencepartPerson" class="form-control form-control-lg rounded-1"
+                               type="text"
+                               data-toggle="tooltip" data-placement="top"
+                               ng-model="correspondencepartPerson."
+                               title="Navnet på personen."/>
+                      </div>
+                      <div class="col-1"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="card-header">
+                          <h6 class="text-muted">Postadresse</h6>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonAddressLine1">adresselinje1
+                            </label>
+                            <input id="correspondencepartPersonAddressLine1"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.postadresse.adresselinje1"
+                                   title=">Adresselinje nummer 1"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonAddressLine2">adresselinje2
+                            </label>
+                            <input id="correspondencepartPersonAddressLine2"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.postadresse.adresselinje2"
+                                   title=">Adresselinje nummer 2"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonAddressLine3">adresselinje3
+                            </label>
+                            <input id="correspondencepartPersonAddressLine3"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.postadresse.adresselinje1"
+                                   title=">Adresselinje nummer 1"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-2">
+                            <label class="control-label" for="correspondencepartPersonPostalNumber">postnummer
+                            </label>
+                            <input id="correspondencepartPersonPostalNumber"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.postadresse.postnummer"
+                                   title=">Postnummer"/>
+                          </div>
+                          <div class="col-6">
+                            <label class="control-label" for="correspondencepartPersonTown">poststed
+                            </label>
+                            <input id="correspondencepartPersonTown"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.postadresse.poststed"
+                                   title=">Postnummer"/>
+                          </div>
+                          <div class="col-2">
+                            <label class="control-label" for="correspondencepartPersonCountryCode">landkode
+                            </label>
+                            <input id="correspondencepartPersonCountryCode"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.postadresse.landkode"
+                                   title=">Postnummer"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="card-header">
+                          <h6 class="text-muted">Bostedsadresse</h6>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonLivingAddressLine1">adresselinje1
+                            </label>
+                            <input id="correspondencepartPersonLivingAddressLine1"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.bostedsadresse.adresselinje1"
+                                   title=">Adresselinje nummer 1"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonLivingAddressLine2">adresselinje2
+                            </label>
+                            <input id="correspondencepartPersonLivingAddressLine2"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.bostedsadresse.adresselinje2"
+                                   title=">Adresselinje nummer 2"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonLivingAddressLine3">adresselinje3
+                            </label>
+                            <input id="correspondencepartPersonLivingAddressLine3"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.bostedsadresse.adresselinje1"
+                                   title=">Adresselinje nummer 1"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-2">
+                            <label class="control-label" for="correspondencepartPersonLivingPostalNumber">postnummer
+                            </label>
+                            <input id="correspondencepartPersonLivingPostalNumber"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.bostedsadresse.postnummer"
+                                   title=">Postnummer"/>
+                          </div>
+                          <div class="col-6">
+                            <label class="control-label" for="correspondencepartPersonLivingTown">poststed
+                            </label>
+                            <input id="correspondencepartPersonLivingTown"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.bostedsadresse.poststed"
+                                   title=">Postnummer"/>
+                          </div>
+                          <div class="col-2">
+                            <label class="control-label" for="correspondencepartPersonLivingCountryCode">landkode
+                            </label>
+                            <input id="correspondencepartPersonLivingCountryCode"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.bostedsadresse.landkode"
+                                   title=">Postnummer"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="card-header">
+                          <h6 class="text-muted">Kontaktinformasjon</h6>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonEmailAddress">epostadresse
+                            </label>
+                            <input id="correspondencepartPersonEmailAddress"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.kontaktinformasjon.epostadresse"
+                                   title=">Epostadresse"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonMobileNumber">mobiltelefon
+                            </label>
+                            <input id="correspondencepartPersonMobileNumber"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.kontaktinformasjon.mobiltelefon"
+                                   title=">Mobiltelefonnummer"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                          <div class="col-1"></div>
+                          <div class="col-10">
+                            <label class="control-label" for="correspondencepartPersonTelephoneNumber">telefonnummer
+                            </label>
+                            <input id="correspondencepartPersonTelephoneNumber"
+                                   class="form-control form-control-lg rounded-1"
+                                   type="text"
+                                   data-toggle="tooltip" data-placement="top"
+                                   ng-model="correspondencepartPerson.kontaktinformasjon.telefonnummer"
+                                   title=">Annet telefonnummer"/>
+                          </div>
+                          <div class="col-1"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- korrespondansepartEnhet --->
+                <div class="row" ng-show="">
+                </div>
+                <!-- korrespondansepartIntern --->
+                <div class="row" ng-show="">
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-lg btn-primary float-left" data-dismiss="modal"
+              ng-click="doDismissNewCorrespondancePartModal()">
+        Lukk
+      </button>
+      <button class="btn btn-lg btn-success float-right" ng-click="createDocumentObject()">Opprett dokumentObjekt
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- End modal to create a new correspondencePart -->
+
+
 </div>
 
 </body>
