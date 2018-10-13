@@ -13,6 +13,17 @@ Release 0.X UNRELEASED
  * Restructured repository, moved code into src/ and web/.
  * Updated code to use Spring Boot version 2.
  * Added support for OAuth2 authentication.
+ * Fixed several bugs discovered by Coverity.
+ * Corrected handling of date/datetime fields.
+ * Improved error reporting when rejecting during deserializatoin.
+ * Adjusted default values provided for ny-arkivdel, ny-mappe,
+   ny-saksmappe, ny-journalpost and ny-dokumentbeskrivelse.
+ * Several fixes for korrespondansepart*.
+ * Updated web GUI:
+  - Now handle both file upload and download.
+  - Uses new OAuth2 authentication for login.
+  - Forms now fetches default values from API using GET.
+  - Added RFC 822 (email), TIFF and JPEG to list of possible file formats.
 
 Release 0.1.1 2017-06-09 (commit a3932c87b22aee272e2a0385bb8a7d029a73faf4)
 --------------------------------------------------------------------------
