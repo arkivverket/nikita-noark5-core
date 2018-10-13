@@ -7,6 +7,12 @@ Release 0.X UNRELEASED
 ------------------------
  * Corrected some opprettetDato (M600) (de)serialisation errors.
  * Improve parse error reporting.
+ * Started on OData search and filtering.
+ * Added Contributor Covenant Code of Conduct to project.
+ * Moved repository and project from Github to Gitlab.
+ * Restructured repository, moved code into src/ and web/.
+ * Updated code to use Spring Boot version 2.
+ * Added support for OAuth2 authentication.
 
 Release 0.1.1 2017-06-09 (commit a3932c87b22aee272e2a0385bb8a7d029a73faf4)
 --------------------------------------------------------------------------
