@@ -19,24 +19,38 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
  * separate calls at the moment.
  */
 @Component("correspondencePartPersonHateoasHandler")
-public class CorrespondencePartPersonHateoasHandler extends HateoasHandler implements ICorrespondencePartHateoasHandler {
+public class CorrespondencePartPersonHateoasHandler
+        extends HateoasHandler
+        implements ICorrespondencePartHateoasHandler {
 
     @Override
-    public void addEntityLinksOnNew(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinksOnNew(INikitaEntity entity,
+                                    IHateoasNoarkObject hateoasNoarkObject) {
+        addCorrespondencePartType(entity, hateoasNoarkObject);
+    }
+
+
+    @Override
+    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject
+            hateoasNoarkObject) {
+
+
+    }
+
+    @Override
+    public void addEntityLinksOnTemplate(INikitaEntity entity,
+                                         IHateoasNoarkObject
+                                                 hateoasNoarkObject) {
         addCorrespondencePartType(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        addCorrespondencePartType(entity, hateoasNoarkObject);
-    }
-
-    @Override
-    public void addCorrespondencePartType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addCorrespondencePartType(INikitaEntity entity,
+                                          IHateoasNoarkObject
+                                                  hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(contextPath +
-                HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH + CORRESPONDENCE_PART_TYPE,
-                REL_METADATA_CORRESPONDENCE_PART_TYPE,
+                HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH +
+                CORRESPONDENCE_PART_TYPE, REL_METADATA_CORRESPONDENCE_PART_TYPE,
                 false));
     }
-
 }

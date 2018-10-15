@@ -87,6 +87,9 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       $scope.documentStatusList = documentStatusList;
       $scope.variantFormatList = variantFormatList;
       $scope.formatList = formatList;
+      $scope.correspondencePartTypeList = correspondencePartTypeList;
+      $scope.selectedCorrespondencePartType = "Avsender";
+
 
       $scope.associatedWithRecordAsList = associatedWithRecordAsList;
       $scope.selectedStorageLocation = "Sentralarkivet";
@@ -122,10 +125,17 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
 
       function pageLoad() {
 
+        $scope.newCorrespondencepartPerson = {};
+        $scope.newCorrespondencepartPerson.postadresse = {};
+        $scope.newCorrespondencepartPerson.bostedsadresse = {};
+        $scope.newCorrespondencepartPerson.kontaktinformasjon = {};
+
         // Disable all cards except the caseFile list one
         $scope.showCaseFileListCard = true;
         $scope.showCaseFileCard = false;
         $scope.showDocumentListCard = false;
+        $scope.showCorrespondencePartListCard = false;
+        $scope.showCorrespondencePartCard = false;
         $scope.showDocumentCard = false;
         $scope.showRegistryEntryListCard = false;
         $scope.showRegistryEntryCard = false;
@@ -281,8 +291,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
             }
           }, function errorCallback(response) {
             if (response.status == -1) {
-              consol;
-              e.log(MSG_NIKITA_DOWN_LOG + JSON.stringify(response));
+              console.log(MSG_NIKITA_DOWN_LOG + JSON.stringify(response));
               alert(MSG_NIKITA_DOWN);
             } else {
               console.log(MSG_NIKITA_UNKNOWN_ERROR_LOG + JSON.stringify(response));
@@ -499,6 +508,71 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         }
       };
 
+
+      /**
+       *
+       * create a new correspondencePart associated with the current registryEntry
+       */
+      $scope.createCorrespondencePart = function () {
+
+        for (var rel in $scope.registryEntry._links) {
+          if ($scope.registryEntry._links[rel].rel === REL_NEW_CORRESPONDENCE_PART_PERSON) {
+            let href = $scope.registryEntry._links[rel].href;
+            console.log("href for createCorrespondencePart is " + href);
+            $http({
+              url: href,
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Authorization': $scope.token,
+              },
+              data: {
+                korrespondanseparttype: {
+                  kode: "EA",
+                  beskrivelse: $scope.selectedCorrespondencePartType
+                },
+                foedselsnummer: $scope.newCorrespondencepartPerson.foedselsnummer,
+                dnummer: $scope.newCorrespondencepartPerson.dnummer,
+                navn: $scope.newCorrespondencepartPerson.navn,
+                postadresse: {
+                  adresselinje1: $scope.newCorrespondencepartPerson.postadresse.adresselinje1,
+                  adresselinje2: $scope.newCorrespondencepartPerson.postadresse.adresselinje2,
+                  adresselinje3: $scope.newCorrespondencepartPerson.postadresse.adresselinje3,
+                  postnummer: $scope.newCorrespondencepartPerson.postadresse.postnummer,
+                  poststed: $scope.newCorrespondencepartPerson.postadresse.poststed,
+                  landkode: $scope.newCorrespondencepartPerson.postadresse.landkode
+                },
+                bostedsadresse: {
+                  adresselinje1: $scope.newCorrespondencepartPerson.bostedsadresse.adresselinje1,
+                  adresselinje2: $scope.newCorrespondencepartPerson.bostedsadresse.adresselinje2,
+                  adresselinje3: $scope.newCorrespondencepartPerson.bostedsadresse.adresselinje3,
+                  postnummer: $scope.newCorrespondencepartPerson.bostedsadresse.postnummer,
+                  poststed: $scope.newCorrespondencepartPerson.bostedsadresse.poststed,
+                  landkode: $scope.newCorrespondencepartPerson.bostedsadresse.landkode
+                },
+                kontaktinformasjon: {
+                  epostadresse: $scope.newCorrespondencepartPerson.kontaktinformasjon.epostadresse,
+                  mobiltelefon: $scope.newCorrespondencepartPerson.kontaktinformasjon.mobiltelefon,
+                  telefonnummer: $scope.newCorrespondencepartPerson.kontaktinformasjon.telefonnummer
+                }
+              },
+            }).then(function successCallback(response) {
+              console.log("POST on document data returned= " + JSON.stringify(response.data));
+              $scope.doDismissNewDocumentDescriptionModal();
+
+              // Update the document object so fields in GUI are changed
+              $scope.correspondencepartPerson = response.data;
+
+              // Pick up and make a note of the ETAG so we can update the object
+              $scope.documentETag = response.headers('eTag');
+              $scope.documentETag = '"' + $scope.documentETag + '"';
+              console.log("Etag after post on document is = " + $scope.documentETag);
+            });
+          }
+        }
+      };
+
+
       /**
        *
        * create a new RegistryEntry associated with the current caseFile
@@ -536,39 +610,6 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
           }
         }
       };
-
-
-      /**
-       * As this is a single-page-application, we need to hide and show cards.
-       * This is a helper method to hide all cards and the caller can then
-       * show the card they want to show.
-       *
-       */
-      function disableAllCards() {
-        $scope.showCaseFileListCard = false;
-        $scope.showCaseFileCard = false;
-        $scope.showDocumentListCard = false;
-        $scope.showDocumentCard = false;
-        $scope.showRegistryEntryListCard = false;
-        $scope.showRegistryEntryCard = false;
-      }
-
-      /**
-       * As this is a single-page-application, we need to hide and show breadcrumbs.
-       * This is a helper method to hide all breadcrumbs and the caller can then
-       * show the breadcrumb they want to show.
-       *
-       */
-      function hideAllBreadcrumbs() {
-        $scope.showCaseFileBreadcrumb = false;
-        $scope.showDocumentBreadcrumb = false;
-        $scope.showRegistryEntryBreadcrumb = false;
-        $scope.showRegistryEntryListBreadcrumb = false;
-        $scope.showCorrespondencePartBreadcrumb = false;
-        $scope.showDocumentListBreadcrumb = false;
-        $scope.showCorrespondencePartListBreadcrumb = false;
-        $scope.showDocumentBreadcrumb = false;
-      }
 
       /**
        * createCaseFile
@@ -621,6 +662,40 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         )
       };
 
+
+      /**
+       * As this is a single-page-application, we need to hide and show cards.
+       * This is a helper method to hide all cards and the caller can then
+       * show the card they want to show.
+       *
+       */
+      function disableAllCards() {
+        $scope.showCaseFileListCard = false;
+        $scope.showCaseFileCard = false;
+        $scope.showRegistryEntryListCard = false;
+        $scope.showRegistryEntryCard = false;
+        $scope.showDocumentListCard = false;
+        $scope.showDocumentCard = false;
+        $scope.showCorrespondencePartListCard = false;
+        $scope.showCorrespondencePartCard = false;
+      }
+
+      /**
+       * As this is a single-page-application, we need to hide and show breadcrumbs.
+       * This is a helper method to hide all breadcrumbs and the caller can then
+       * show the breadcrumb they want to show.
+       *
+       */
+      function hideAllBreadcrumbs() {
+        $scope.showCaseFileBreadcrumb = false;
+        $scope.showRegistryEntryListBreadcrumb = false;
+        $scope.showRegistryEntryBreadcrumb = false;
+        $scope.showDocumentListBreadcrumb = false;
+        $scope.showDocumentBreadcrumb = false;
+        $scope.showCorrespondencePartListBreadcrumb = false;
+        $scope.showCorrespondencePartBreadcrumb = false;
+      }
+
       $scope.doShowCaseFileListCard = function () {
         disableAllCards();
         $scope.showCaseFileListCard = true;
@@ -637,12 +712,24 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
 
       $scope.doShowRegistryEntryCard = function () {
         disableAllCards();
-        $scope.showRegistryEntryCard = true;
         hideAllBreadcrumbs();
+        $scope.showRegistryEntryCard = true;
         $scope.showCaseFileBreadcrumb = true;
         $scope.showRegistryEntryListBreadcrumb = true;
         $scope.showRegistryEntryBreadcrumb = true;
       };
+
+      $scope.doShowCorrespondencePartCard = function () {
+        disableAllCards();
+        hideAllBreadcrumbs();
+        $scope.showCaseFileBreadcrumb = true;
+        $scope.showRegistryEntryListBreadcrumb = true;
+        $scope.showRegistryEntryBreadcrumb = true;
+        $scope.showCorrespondencePartListBreadcrumb = true;
+        $scope.showCorrespondencePartBreadcrumb = true;
+        $scope.showCorrespondencePartCard = true;
+      };
+
 
       $scope.doShowDocumentCard = function () {
         disableAllCards();
@@ -666,20 +753,23 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         $scope.getListDocument();
       };
 
-      $scope.doShowCorrespondencePartCard = function () {
+      $scope.doShowCorrespondencePartListCard = function () {
         disableAllCards();
-        $scope.showDocumentListCard = true;
         hideAllBreadcrumbs();
         $scope.showCaseFileBreadcrumb = true;
+        $scope.showRegistryEntryListBreadcrumb = true;
+        $scope.showRegistryEntryBreadcrumb = true;
+        $scope.showCorrespondencePartListBreadcrumb = true;
+        $scope.showCorrespondencePartListCard = true;
         $scope.getListCorrespondencePart();
       };
 
       $scope.doShowRegistryEntryListCard = function () {
         disableAllCards();
-        $scope.showRegistryEntryListCard = true;
         hideAllBreadcrumbs();
-        $scope.showCaseFileBreadcrumb = true;
+        $scope.showRegistryEntryListCard = true;
         $scope.showRegistryEntryListBreadcrumb = true;
+        $scope.showCaseFileBreadcrumb = true;
         $scope.getRegistryEntry();
       };
 
@@ -718,6 +808,10 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
 
       };
 
+      $scope.doLoadCorrespondencePartModal = function () {
+
+      };
+
       $scope.checkDocumentMediumForRegistryEntry = function () {
 
         console.log("Change detected " + $scope.caseFile.dokumentmedium + " " + $scope.selecteddoLoadRegistryEntryModalDocumentMediumRegistryEntry);
@@ -728,6 +822,32 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
           }
           else if ($scope.caseFile.dokumentmedium === "Fysisk arkiv") {
             $scope.selectedDocumentMediumRegistryEntry = $scope.caseFile.dokumentmedium;
+          }
+        }
+      };
+
+      $scope.correspondencePartSelected = function (correspondencePart) {
+        $scope.doShowCorrespondencePartCard();
+
+        // Retrieve the latest copy of the data and pull out the ETAG
+        // Find the self link of the current correspondencePart and issue a GET
+
+        for (var rel in correspondencePart._links) {
+          var relation = correspondencePart._links[rel].rel;
+          if (relation === REL_SELF) {
+            var urlToCorrespondencePart = correspondencePart._links[rel].href;
+            var token = $scope.token;
+            console.log("Retrieving " + urlToCorrespondencePart);
+            $http({
+              method: 'GET',
+              url: urlToCorrespondencePart,
+              headers: {'Authorization': token}
+            }).then(function successCallback(response) {
+              $scope.correspondencepartPerson = response.data;
+              $scope.correspondencePartPersonETag = response.headers('eTag');
+              console.log("Retrieved the following correspondencePart " + JSON.stringify($scope.correspondencepartPerson));
+              console.log("The ETAG header for the correspondencePart is " + $scope.correspondencePartPersonETag);
+            });
           }
         }
       };
@@ -758,6 +878,36 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
           }
         }
       };
+
+
+      $scope.doGetCorrespondencePartTemplate = function () {
+
+        for (let rel in $scope.registryEntry._links) {
+          // find one that contains a link to a  ny-korrespondansepartperson
+          if ($scope.registryEntry._links[rel].rel === REL_NEW_CORRESPONDENCE_PART_PERSON) {
+            // Issue a GET for the ny-korrespondansepartperson
+            console.log("href is (" +
+              $scope.registryEntry._links[rel].href + ")");
+            let href = $scope.registryEntry._links[rel].href;
+            $http({
+              method: 'GET',
+              url: href,
+              headers: {'Authorization': $scope.token}
+            }).then(function successCallback(response) {
+              console.log("Result from GET (" +
+                href + ") is " +
+                JSON.stringify(response.data));
+              // populate the values in the GUI
+              $scope.newCorrespondencepartPerson = response.data;
+            }, function errorCallback(response) {
+              console.log("Problem with call to url [" +
+                $scope.registryEntry._links[rel].rel + "] response is "
+                + response);
+            });
+          }
+        }
+      };
+
 
       $scope.registryEntrySelected = function (registryEntry) {
 
@@ -845,15 +995,15 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
         for (var rel in $scope.registryEntry._links) {
           var relation = $scope.registryEntry._links[rel].rel;
           // Should be all correspondnaceparts
-          if (relation == REL_CORRESPONDENCE_PART_PERSON) {
+          if (relation === REL_CORRESPONDENCE_PART_PERSON) {
             $http({
               method: 'GET',
               url: $scope.registryEntry._links[rel].href,
               headers: {'Authorization': $scope.token}
             }).then(function successCallback(response) {
-              $scope.correspondencePart = response.data.results;
+              $scope.correspondencePartList = response.data.results;
               console.log("Retrieved the following correspondencePartList " +
-                JSON.stringify($scope.correspondencePart));
+                JSON.stringify($scope.correspondencePartList));
             });
           }
         }

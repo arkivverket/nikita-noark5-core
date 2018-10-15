@@ -118,7 +118,7 @@ public class CorrespondencePartPerson
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CORRESPONDENCE_PART_UNIT;
+        return N5ResourceMappings.CORRESPONDENCE_PART_PERSON;
     }
 
     @Override

@@ -959,6 +959,9 @@ public final class CommonUtils {
                             simpleAddress,
                             currentNode.deepCopy(), errors);
                     postalAddress.setSimpleAddress(simpleAddress);
+                    postalAddress.setCorrespondencePartPerson(
+                            (CorrespondencePartPerson)
+                                    correspondencePartPersonEntity);
                     correspondencePartPersonEntity.
                             setPostalAddress(postalAddress);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
@@ -972,9 +975,12 @@ public final class CommonUtils {
                     SimpleAddress simpleAddress = new SimpleAddress();
                     simpleAddress.setAddressType(RESIDING_ADDRESS);
                     deserialiseSimpleAddressEntity(
-                            residingAddress.getSimpleAddress(),
+                            simpleAddress,
                             currentNode.deepCopy(), errors);
                     residingAddress.setSimpleAddress(simpleAddress);
+                    residingAddress.setCorrespondencePartPerson(
+                            (CorrespondencePartPerson)
+                                    correspondencePartPersonEntity);
                     correspondencePartPersonEntity.
                             setResidingAddress(residingAddress);
                     objectNode.remove(RESIDING_ADDRESS);

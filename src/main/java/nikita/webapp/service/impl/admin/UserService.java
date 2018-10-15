@@ -87,6 +87,7 @@ public class UserService implements IUserService {
             administrativeUnit.setAdministrativeUnitName("system opprettet " +
                     "AdministrativtEnhet for bruker " + user.getUsername());
             administrativeUnit.setShortName("adminenhet " + user.getUsername());
+            administrativeUnit.setDefaultAdministrativeUnit(true);
             administrativeUnit.addUser(user);
             administrativeUnitService.createNewAdministrativeUnitByUser(
                     administrativeUnit, user);
