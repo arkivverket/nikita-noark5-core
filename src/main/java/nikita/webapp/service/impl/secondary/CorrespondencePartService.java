@@ -83,7 +83,8 @@ public class CorrespondencePartService implements ICorrespondencePartService {
 
         existingCorrespondencePart.setPostalAddress(incomingCorrespondencePart.getPostalAddress());
         */
-        existingCorrespondencePart.setContactInformation(incomingCorrespondencePart.getContactInformation());
+        //existingCorrespondencePart.setContactInformation
+        // (incomingCorrespondencePart.getContactInformation());
         existingCorrespondencePart.setContactPerson(incomingCorrespondencePart.getContactPerson());
         existingCorrespondencePart.setOrganisationNumber(incomingCorrespondencePart.getOrganisationNumber());
         existingCorrespondencePart.setName(incomingCorrespondencePart.getName());
@@ -94,17 +95,10 @@ public class CorrespondencePartService implements ICorrespondencePartService {
 
 
     @Override
-    public CorrespondencePartPerson createNewCorrespondencePartPerson(CorrespondencePartPerson
-                                                                              correspondencePartPerson) {
-/*
-        TODO: Temp disabled!
-
+    public CorrespondencePartPerson
+    createNewCorrespondencePartPerson(
+            CorrespondencePartPerson correspondencePartPerson) {
         return correspondencePartRepository.save(correspondencePartPerson);
-
-        TODO: Temp disabled!
-
-        */
-        return null;
     }
 
     @Override

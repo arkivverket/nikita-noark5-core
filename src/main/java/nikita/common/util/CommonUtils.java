@@ -874,7 +874,9 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseSimpleAddressEntity(ISimpleAddressEntity simpleAddress, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseSimpleAddressEntity(
+                    ISimpleAddressEntity simpleAddress, ObjectNode objectNode,
+                    StringBuilder errors) {
                 if (simpleAddress != null) {
                     // Deserialize adresselinje1
                     JsonNode currentNode = objectNode.get(ADDRESS_LINE_1);
@@ -915,65 +917,80 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseCorrespondencePartPersonEntity(ICorrespondencePartPersonEntity
-                                                                                 correspondencePartPersonEntity,
-                                                                         ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseCorrespondencePartPersonEntity(
+                    ICorrespondencePartPersonEntity
+                            correspondencePartPersonEntity,
+                    ObjectNode objectNode, StringBuilder errors) {
 
-                deserialiseCorrespondencePartType(correspondencePartPersonEntity, objectNode, errors);
-/*
+                deserialiseCorrespondencePartType(
+                        correspondencePartPersonEntity, objectNode, errors);
 
-ZZXC
                 // Deserialize foedselsnummer
                 JsonNode currentNode = objectNode.get(SOCIAL_SECURITY_NUMBER);
                 if (null != currentNode) {
-                    correspondencePartPersonEntity.setSocialSecurityNumber(currentNode.textValue());
+                    correspondencePartPersonEntity.
+                            setSocialSecurityNumber(currentNode.textValue());
                     objectNode.remove(SOCIAL_SECURITY_NUMBER);
                 }
 
                 // Deserialize dnummer
                 currentNode = objectNode.get(D_NUMBER);
                 if (null != currentNode) {
-                    correspondencePartPersonEntity.setdNumber(currentNode.textValue());
+                    correspondencePartPersonEntity.
+                            setdNumber(currentNode.textValue());
                     objectNode.remove(D_NUMBER);
                 }
 
                 // Deserialize navn
                 currentNode = objectNode.get(NAME);
                 if (null != currentNode) {
-                    correspondencePartPersonEntity.setName(currentNode.textValue());
+                    correspondencePartPersonEntity.
+                            setName(currentNode.textValue());
                     objectNode.remove(NAME);
                 }
 
                 // Deserialize postalAddress
-                currentNode = objectNode.get(N5ResourceMappings.POSTAL_ADDRESS);
+                currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
-                    PostalAddress postalAddressEntity = new PostalAddress();
-                    postalAddressEntity.setAddressType(POSTAL_ADDRESS);
-                    deserialiseSimpleAddressEntity(postalAddressEntity, currentNode.deepCopy(), errors);
-                    correspondencePartPersonEntity.setPostalAddress(postalAddressEntity);
+                    PostalAddress postalAddress = new PostalAddress();
+                    SimpleAddress simpleAddress = new SimpleAddress();
+                    simpleAddress.setAddressType(POSTAL_ADDRESS);
+                    deserialiseSimpleAddressEntity(
+                            simpleAddress,
+                            currentNode.deepCopy(), errors);
+                    postalAddress.setSimpleAddress(simpleAddress);
+                    correspondencePartPersonEntity.
+                            setPostalAddress(postalAddress);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
 
                 // Deserialize residingAddress
                 currentNode = objectNode.get(RESIDING_ADDRESS);
                 if (null != currentNode) {
-                    ResidingAddress residingAddressEntity = new ResidingAddress();
-                    residingAddressEntity.setAddressType(RESIDING_ADDRESS);
-                    deserialiseSimpleAddressEntity(residingAddressEntity, currentNode.deepCopy(), errors);
-                    correspondencePartPersonEntity.setResidingAddress(residingAddressEntity);
+                    ResidingAddress residingAddress =
+                            new ResidingAddress();
+                    SimpleAddress simpleAddress = new SimpleAddress();
+                    simpleAddress.setAddressType(RESIDING_ADDRESS);
+                    deserialiseSimpleAddressEntity(
+                            residingAddress.getSimpleAddress(),
+                            currentNode.deepCopy(), errors);
+                    residingAddress.setSimpleAddress(simpleAddress);
+                    correspondencePartPersonEntity.
+                            setResidingAddress(residingAddress);
                     objectNode.remove(RESIDING_ADDRESS);
                 }
 
                 // Deserialize kontaktinformasjon
                 currentNode = objectNode.get(CONTACT_INFORMATION);
                 if (null != currentNode) {
-                    ContactInformation contactInformation = new ContactInformation();
-                    deserialiseContactInformationEntity(contactInformation, currentNode.deepCopy(), errors);
-                    correspondencePartPersonEntity.setContactInformation(contactInformation);
+                    ContactInformation contactInformation =
+                            new ContactInformation();
+                    deserialiseContactInformationEntity(
+                            contactInformation, currentNode.deepCopy(), errors);
+                    correspondencePartPersonEntity.
+                            setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
-
                 }
-                */
             }
 
             public static void deserialiseCorrespondencePartInternalEntity(ICorrespondencePartInternalEntity
@@ -1047,34 +1064,37 @@ ZZXC
                     correspondencePartUnit.setContactPerson(currentNode.textValue());
                     objectNode.remove(CONTACT_PERSON);
                 }
-/*
+
                 // Deserialize postadresse
                 currentNode = objectNode.get(N5ResourceMappings.POSTAL_ADDRESS);
                 if (null != currentNode) {
                     PostalAddress postalAddressEntity = new PostalAddress();
-                    postalAddressEntity.setAddressType(POSTAL_ADDRESS);
-                    deserialiseSimpleAddressEntity(postalAddressEntity, currentNode.deepCopy(), errors);
-                    correspondencePartUnit.setPostalAddress(postalAddressEntity);
+                    SimpleAddress simpleAddress = new SimpleAddress();
+                    deserialiseSimpleAddressEntity(simpleAddress,
+                            currentNode.deepCopy(), errors);
+                    //correspondencePartUnit.setPostalAddress
+                    // (postalAddressEntity);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
 
-                ZZXC
                 // Deserialize forretningsadresse
                 currentNode = objectNode.get(BUSINESS_ADDRESS);
                 if (null != currentNode) {
                     BusinessAddress businessAddressEntity = new BusinessAddress();
-                    businessAddressEntity.setAddressType(BUSINESS_ADDRESS);
-                    deserialiseSimpleAddressEntity(businessAddressEntity, currentNode.deepCopy(), errors);
-                    correspondencePartUnit.setBusinessAddress(businessAddressEntity);
+                    //businessAddressEntity.setAddressType(BUSINESS_ADDRESS);
+                    //deserialiseSimpleAddressEntity(businessAddressEntity,
+                    //      currentNode.deepCopy(), errors);
+                    //correspondencePartUnit.setBusinessAddress
+                    // (businessAddressEntity);
                     objectNode.remove(BUSINESS_ADDRESS);
                 }
-*/
                 // Deserialize kontaktinformasjon
                 currentNode = objectNode.get(CONTACT_INFORMATION);
                 if (null != currentNode) {
                     ContactInformation contactInformation = new ContactInformation();
                     deserialiseContactInformationEntity(contactInformation, currentNode.deepCopy(), errors);
-                    correspondencePartUnit.setContactInformation(contactInformation);
+//                    correspondencePartUnit.setContactInformation
+// (contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
                 }
 
@@ -1385,64 +1405,83 @@ ZZXC
                 }
             }
 
-            public static void printAddress(JsonGenerator jgen, ISimpleAddressEntity address) throws IOException {
+            public static void printAddress(JsonGenerator jgen,
+                                            ISimpleAddressEntity address)
+                    throws IOException {
 
                 if (null != address) {
                     jgen.writeFieldName(address.getAddressType());
                     jgen.writeStartObject();
-                    printSystemIdEntity(jgen, address);
 
                     if (null != address.getAddressLine1()) {
-                        jgen.writeStringField(ADDRESS_LINE_1, address.getAddressLine1());
+                        jgen.writeStringField(ADDRESS_LINE_1,
+                                address.getAddressLine1());
                     }
                     if (null != address.getAddressLine2()) {
-                        jgen.writeStringField(ADDRESS_LINE_2, address.getAddressLine2());
+                        jgen.writeStringField(ADDRESS_LINE_2,
+                                address.getAddressLine2());
                     }
                     if (null != address.getAddressLine3()) {
-                        jgen.writeStringField(ADDRESS_LINE_3, address.getAddressLine3());
+                        jgen.writeStringField(ADDRESS_LINE_3,
+                                address.getAddressLine3());
                     }
                     if (null != address.getPostalNumber()) {
                         PostalNumber postalNumber = address.getPostalNumber();
-                        if (null != postalNumber && null != postalNumber.getPostalNumber()) {
-                            jgen.writeStringField(POSTAL_NUMBER, postalNumber.getPostalNumber());
+                        if (null != postalNumber &&
+                                null != postalNumber.getPostalNumber()) {
+                            jgen.writeStringField(POSTAL_NUMBER,
+                                    postalNumber.getPostalNumber());
                         }
                     }
                     if (null != address.getPostalTown()) {
-                        jgen.writeStringField(POSTAL_TOWN, address.getPostalTown());
+                        jgen.writeStringField(POSTAL_TOWN,
+                                address.getPostalTown());
                     }
                     if (null != address.getCountryCode()) {
-                        jgen.writeStringField(COUNTRY_CODE, address.getCountryCode());
+                        jgen.writeStringField(COUNTRY_CODE,
+                                address.getCountryCode());
                     }
                     jgen.writeEndObject();
                 }
             }
 
-            public static void printCorrespondencePartPerson(JsonGenerator jgen,
-                                                             ICorrespondencePartPersonEntity correspondencePartPerson)
+            public static void printCorrespondencePartPerson(
+                    JsonGenerator jgen,
+                    ICorrespondencePartPersonEntity correspondencePartPerson)
                     throws IOException {
                 if (null != correspondencePartPerson) {
                     printCorrespondencePart(jgen, correspondencePartPerson);
 
-                    if (null != correspondencePartPerson.getSocialSecurityNumber()) {
-                        jgen.writeStringField(SOCIAL_SECURITY_NUMBER, correspondencePartPerson.getSocialSecurityNumber());
+                    if (null !=
+                            correspondencePartPerson.getSocialSecurityNumber()) {
+                        jgen.writeStringField(SOCIAL_SECURITY_NUMBER,
+                                correspondencePartPerson.
+                                        getSocialSecurityNumber());
                     }
                     if (null != correspondencePartPerson) {
-                        jgen.writeStringField(D_NUMBER, correspondencePartPerson.getdNumber());
+                        jgen.writeStringField(D_NUMBER,
+                                correspondencePartPerson.getdNumber());
                     }
                     if (null != correspondencePartPerson.getName()) {
-                        jgen.writeStringField(NAME, correspondencePartPerson.getName());
+                        jgen.writeStringField(NAME,
+                                correspondencePartPerson.getName());
                     }
-                    /* ZZXC
                     if (null != correspondencePartPerson.getPostalAddress()) {
-                        printAddress(jgen, correspondencePartPerson.getPostalAddress());
+                        printAddress(jgen,
+                                correspondencePartPerson.
+                                        getPostalAddress().
+                                        getSimpleAddress());
                     }
                     if (null != correspondencePartPerson.getResidingAddress()) {
-                        printAddress(jgen, correspondencePartPerson.getResidingAddress());
+                        printAddress(jgen, correspondencePartPerson.
+                                getResidingAddress().getSimpleAddress());
                     }
-                    if (null != correspondencePartPerson.getContactInformation()) {
-                        printContactInformation(jgen, correspondencePartPerson.getContactInformation());
+                    if (null !=
+                            correspondencePartPerson.getContactInformation()) {
+                        printContactInformation(jgen,
+                                correspondencePartPerson.
+                                        getContactInformation());
                     }
-*/
                 }
             }
 
@@ -1493,14 +1532,14 @@ ZZXC
                     if (null != correspondencePartUnit.getPostalAddress()) {
                         printAddress(jgen, correspondencePartUnit.getPostalAddress());
                     }
-                    */
+
                     if (null != correspondencePartUnit.getContactInformation()) {
                         printContactInformation(jgen, correspondencePartUnit.getContactInformation());
                     }
                     if (null != correspondencePartUnit.getContactPerson()) {
                         jgen.writeStringField(CONTACT_PERSON, correspondencePartUnit.getContactPerson());
                     }
-
+*/
                 }
             }
 

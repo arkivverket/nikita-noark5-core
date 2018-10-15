@@ -11,6 +11,9 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
 
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseCorrespondencePartPersonEntity;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
+
 /**
  * Created by tsodring on 1/6/17.
  * <p>
@@ -28,11 +31,14 @@ public class CorrespondencePartPersonDeserializer extends JsonDeserializer {
             throws IOException {
         StringBuilder errors = new StringBuilder();
 
-        CorrespondencePartPerson correspondencePart = new CorrespondencePartPerson();
+        CorrespondencePartPerson correspondencePart =
+                new CorrespondencePartPerson();
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity(correspondencePart, objectNode, errors);
-        CommonUtils.Hateoas.Deserialize.deserialiseCorrespondencePartPersonEntity(correspondencePart, objectNode, errors);
+
+        deserialiseNoarkSystemIdEntity(correspondencePart, objectNode, errors);
+        deserialiseCorrespondencePartPersonEntity(
+                correspondencePart, objectNode, errors);
 
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception

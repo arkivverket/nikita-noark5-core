@@ -10,10 +10,7 @@ import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.casehandling.DocumentFlow;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.secondary.ContactInformation;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v4.casehandling.secondary.*;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v4.hateoas.casehandling.*;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
@@ -90,7 +87,8 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
             SLASH + NEW_CORRESPONDENCE_PART_PERSON, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
-    public ResponseEntity<CorrespondencePartPersonHateoas> createCorrespondencePartPersonAssociatedWithRecord(
+    public ResponseEntity<CorrespondencePartPersonHateoas>
+    createCorrespondencePartPersonAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of record to associate the CorrespondencePartPerson with.",
@@ -475,28 +473,31 @@ TODO: Temp disabled!
                     CORRESPONDENCE_PART_CODE_EA + "] returns no value");
         }
         suggestedCorrespondencePart.setCorrespondencePartType(correspondencePartType);
-/*
-ZZXC
+
         PostalAddress postalAddress = new PostalAddress();
-        postalAddress.setAddressType(POSTAL_ADDRESS);
-        postalAddress.setAddressLine1("ADRL1: 742 Evergreen Terrace");
-        postalAddress.setAddressLine2("ADRL2: 742 Evergreen Terrace");
-        postalAddress.setAddressLine3("ADRL3: 742 Evergreen Terrace");
-        postalAddress.setCountryCode("US");
-        postalAddress.setPostalNumber(new PostalNumber("12345"));
-        postalAddress.setPostalTown("Springfield");
+        SimpleAddress simpleAddress = new SimpleAddress();
+        simpleAddress.setAddressType(POSTAL_ADDRESS);
+        simpleAddress.setAddressLine1("ADRL1: 742 Evergreen Terrace");
+        simpleAddress.setAddressLine2("ADRL2: 742 Evergreen Terrace");
+        simpleAddress.setAddressLine3("ADRL3: 742 Evergreen Terrace");
+        simpleAddress.setCountryCode("US");
+        simpleAddress.setPostalNumber(new PostalNumber("12345"));
+        simpleAddress.setPostalTown("Springfield");
+        postalAddress.setSimpleAddress(simpleAddress);
         suggestedCorrespondencePart.setPostalAddress(postalAddress);
 
         ResidingAddress residingAddress = new ResidingAddress();
-        residingAddress.setAddressType(RESIDING_ADDRESS);
-        residingAddress.setAddressLine1("ADRL1: 743 Evergreen Terrace");
-        residingAddress.setAddressLine2("ADRL2: 743 Evergreen Terrace");
-        residingAddress.setAddressLine3("ADRL3: 743 Evergreen Terrace");
-        residingAddress.setCountryCode("US");
-        residingAddress.setPostalNumber(new PostalNumber("12345"));
-        residingAddress.setPostalTown("Springfield");
+        simpleAddress = new SimpleAddress();
+        simpleAddress.setAddressType(RESIDING_ADDRESS);
+        simpleAddress.setAddressLine1("ADRL1: 743 Evergreen Terrace");
+        simpleAddress.setAddressLine2("ADRL2: 743 Evergreen Terrace");
+        simpleAddress.setAddressLine3("ADRL3: 743 Evergreen Terrace");
+        simpleAddress.setCountryCode("US");
+        simpleAddress.setPostalNumber(new PostalNumber("12345"));
+        simpleAddress.setPostalTown("Springfield");
+        residingAddress.setSimpleAddress(simpleAddress);
+        residingAddress.setCorrespondencePartPerson(suggestedCorrespondencePart);
         suggestedCorrespondencePart.setResidingAddress(residingAddress);
-
         suggestedCorrespondencePart.setSocialSecurityNumber("09088512345");
         suggestedCorrespondencePart.setdNumber("dddddd1234");
 
@@ -505,8 +506,10 @@ ZZXC
         contactInformation.setMobileTelephoneNumber("123456789");
         contactInformation.setTelephoneNumber("987654321");
         suggestedCorrespondencePart.setContactInformation(contactInformation);
-*/
+
         suggestedCorrespondencePart.setName("Frank Grimes");
+        suggestedCorrespondencePart.setSocialSecurityNumber("02029212743");
+        suggestedCorrespondencePart.setdNumber("d-02029212743");
 
         CorrespondencePartPersonHateoas correspondencePartHateoas =
                 new CorrespondencePartPersonHateoas(suggestedCorrespondencePart);
@@ -572,7 +575,7 @@ ZZXC
         contactInformation.setEmailAddress("nikita@example.com");
         contactInformation.setMobileTelephoneNumber("123456789");
         contactInformation.setTelephoneNumber("987654321");
-        suggestedCorrespondencePart.setContactInformation(contactInformation);
+//        suggestedCorrespondencePart.setContactInformation(contactInformation);
 
         suggestedCorrespondencePart.setName("Frank Grimes");
 

@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface ICorrespondencePartRepository extends NoarkEntityRepository<CorrespondencePart, Long> {
+public interface ICorrespondencePartRepository extends
+        NoarkEntityRepository<CorrespondencePart, Long> {
 }

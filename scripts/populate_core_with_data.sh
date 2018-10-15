@@ -74,10 +74,12 @@ systemIDCreatedFondsCreator=$(curl "${curloptsCreateFondsCreator[@]}" | jq '.sys
 printf "created FondsCreator 2(arkiv)($systemIDCreatedFondsCreator) \n";
 
 # Setup curl options for fonds from existing fondsCreator
-curloptsCreateFondsFromFondsCreator+=("${curlPostOpts[@]}");
-curloptsCreateFondsFromFondsCreator+=( --data @"$curl_files_dir"fonds-data.json  'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/arkivskaper/'$systemIDCreatedFondsCreator'/ny-arkiv' );
-systemIDCreatedFonds=$(curl "${curloptsCreateFondsFromFondsCreator[@]}" | jq '.systemID' | sed 's/\"//g');
-printf "created Fonds 2(arkivskaper)($systemIDCreatedFonds) \n";
+#curloptsCreateFondsFromFondsCreator+=("${curlPostOpts[@]}");
+#curloptsCreateFondsFromFondsCreator+=( --data @"$curl_files_dir"fonds-data
+# .json  'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/arkivskaper/'$systemIDCreatedFondsCreator'/ny-arkiv' );
+#systemIDCreatedFonds=$(curl "${curloptsCreateFondsFromFondsCreator[@]}" | jq
+# '.systemID' | sed 's/\"//g');
+#printf "created Fonds 2(arkivskaper)($systemIDCreatedFonds) \n";
 
 # Setup curl options for series
 curloptsCreateSeries+=("${curlPostOpts[@]}");

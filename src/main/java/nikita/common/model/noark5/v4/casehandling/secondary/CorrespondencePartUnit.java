@@ -20,11 +20,11 @@ public class CorrespondencePartUnit
         extends CorrespondencePart
         implements ICorrespondencePartUnitEntity {
 
-
+/*
     @OneToOne(mappedBy = "correspondencePartUnit", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, optional = false)
     ContactInformation contactInformation;
-
+*/
     /*    @OneToOne(fetch = FetchType.LAZY)
         @MapsId
         BusinessAddress businessAddress;
@@ -75,6 +75,7 @@ public class CorrespondencePartUnit
         this.name = name;
     }
 
+    /*
     public ContactInformation getContactInformation() {
         return contactInformation;
     }
@@ -82,7 +83,7 @@ public class CorrespondencePartUnit
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
     }
-
+*/
     /*
         public BusinessAddress getBusinessAddress() {
             return businessAddress;

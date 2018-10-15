@@ -1,26 +1,20 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
-import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.interfaces.entities.casehandling.ISimpleAddressEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by tsodring on 5/14/17.
  */
-@Entity
-@Table(name = "simple_address")
-@Inheritance(strategy = InheritanceType.JOINED)
-@AttributeOverride(name = "id",
-        column = @Column(name = "pk_simple_address_id"))
-@DiscriminatorColumn(name = "object_type",
-        discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue(value = "SimpleAddress")
+@Embeddable
 public class SimpleAddress
-        extends NoarkEntity
         implements ISimpleAddressEntity {
 
     /**
@@ -28,12 +22,6 @@ public class SimpleAddress
      */
     @Embedded
     PostalNumber postalNumber;
-
-    /*
-    @OneToOne(mappedBy = "postalAddress", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
-    CorrespondencePartPerson correspondencePartPerson;
-*/
 
     /**
      * M??? - adresselinje1 (xs:string)
@@ -71,7 +59,8 @@ public class SimpleAddress
     private String countryCode;
 
     // Holds if this is a postAddress / residingAddress etc
-    @Column(name = "address_type")
+    @NotNull
+    @Column(name = "address_type", nullable = false)
     private String addressType;
 
     public String getAddressLine1() {

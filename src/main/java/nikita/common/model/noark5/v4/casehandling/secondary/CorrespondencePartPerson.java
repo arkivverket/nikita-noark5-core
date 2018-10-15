@@ -1,12 +1,9 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.interfaces.entities.casehandling.ICorrespondencePartPersonEntity;
-import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartPersonDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,37 +13,16 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.PRIMARY_KEY_CORRESPONDENCE_PART_PERSON;
+
 @Entity
 @Table(name = "correspondence_part_person")
 @JsonDeserialize(using = CorrespondencePartPersonDeserializer.class)
 @AttributeOverride(name = "id",
-        column = @Column(name = "pk_correspondence_part_person_id"))
+        column = @Column(name = PRIMARY_KEY_CORRESPONDENCE_PART_PERSON))
 public class CorrespondencePartPerson
-        extends NoarkEntity
+        extends CorrespondencePart
         implements ICorrespondencePartPersonEntity {
-
-
-    @Override
-    public CorrespondencePartType getCorrespondencePartType() {
-        return null;
-    }
-
-    /*
-        @OneToOne(fetch = FetchType.LAZY)
-        @MapsId
-        private ContactInformation contactInformation;
-
-        @OneToOne(fetch = FetchType.LAZY)
-        @MapsId
-        private ResidingAddress residingAddress;
-
-        @OneToOne(fetch = FetchType.LAZY)
-        @MapsId
-        private PostalAddress postalAddress;
-    */
-    // Links to RegistryEntry
-    @ManyToMany(mappedBy = "referenceCorrespondencePartPerson")
-    private List<RegistryEntry> referenceRegistryEntry = new ArrayList<>();
 
     /**
      * M??? - fødselsnummer (xs:string)
@@ -70,80 +46,92 @@ public class CorrespondencePartPerson
     @Column(name = "name")
     private String name;
 
-    @Override
-    public void setCorrespondencePartType(
-            CorrespondencePartType correspondencePartType) {
-    }
+    @OneToOne(mappedBy = "correspondencePartPerson",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    PostalAddress postalAddress;
 
+    @OneToOne(mappedBy = "correspondencePartPerson",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    ResidingAddress residingAddress;
+
+    @OneToOne(mappedBy = "correspondencePartPerson",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private ContactInformation contactInformation;
+
+    // Links to RegistryEntry
+    @ManyToMany(mappedBy = "referenceCorrespondencePartPerson")
+    private List<RegistryEntry> referenceRegistryEntry = new ArrayList<>();
+
+    @Override
     public String getSocialSecurityNumber() {
         return socialSecurityNumber;
     }
 
+    @Override
     public void setSocialSecurityNumber(String socialSecurityNumber) {
         this.socialSecurityNumber = socialSecurityNumber;
     }
 
+    @Override
     public String getdNumber() {
         return dNumber;
     }
 
+    @Override
     public void setdNumber(String dNumber) {
         this.dNumber = dNumber;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    /*
-        //@Override
-        public PostalAddress getPostalAddress() {
-            return postalAddress;
-        }
+    public ContactInformation getContactInformation() {
+        return contactInformation;
+    }
 
-        public void setPostalAddress(PostalAddress postalAddress) {
-            this.postalAddress = postalAddress;
-        }
+    public void setContactInformation(ContactInformation contactInformation) {
+        this.contactInformation = contactInformation;
+    }
 
-        public ResidingAddress getResidingAddress() {
-            return residingAddress;
-        }
+    public ResidingAddress getResidingAddress() {
+        return residingAddress;
+    }
 
-        public void setResidingAddress(ResidingAddress residingAddress) {
-            this.residingAddress = residingAddress;
-        }
+    public void setResidingAddress(ResidingAddress residingAddress) {
+        this.residingAddress = residingAddress;
+    }
 
-        public ContactInformation getContactInformation() {
-            return contactInformation;
-        }
+    public PostalAddress getPostalAddress() {
+        return postalAddress;
+    }
 
-        public void setContactInformation(ContactInformation contactInformation) {
-            this.contactInformation = contactInformation;
-        }
-    */
+    public void setPostalAddress(PostalAddress postalAddress) {
+        this.postalAddress = postalAddress;
+    }
+
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CORRESPONDENCE_PART_PERSON;
+        return N5ResourceMappings.CORRESPONDENCE_PART_UNIT;
     }
 
     @Override
-    public String getFunctionalTypeName() {
-        return Constants.NOARK_CASE_HANDLING_PATH;
-    }
-
     public List<RegistryEntry> getReferenceRegistryEntry() {
         return referenceRegistryEntry;
     }
 
-    public void setReferenceRegistryEntry(
-            List<RegistryEntry> referenceRegistryEntry) {
+    @Override
+    public void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry) {
         this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
+    @Override
     public void addRegistryEntry(RegistryEntry referenceRegistryEntry) {
         this.referenceRegistryEntry.add(referenceRegistryEntry);
     }

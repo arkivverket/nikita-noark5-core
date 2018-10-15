@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static nikita.common.config.Constants.FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK;
+import static nikita.common.config.Constants.PRIMARY_KEY_CORRESPONDENCE_PART;
+
 @Entity
 @Table(name = "registry_entry")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -169,8 +172,9 @@ public class RegistryEntry
     @JoinTable(name = "registry_entry_correspondence_part_person",
             joinColumns = @JoinColumn(name = "f_pk_record_id",
                     referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_correspondence_part_person_id",
-                    referencedColumnName = "pk_correspondence_part_person_id"))
+            inverseJoinColumns = @JoinColumn(name =
+                    FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK,
+                    referencedColumnName = PRIMARY_KEY_CORRESPONDENCE_PART))
     private List<CorrespondencePartPerson>
             referenceCorrespondencePartPerson = new ArrayList<>();
 

@@ -630,6 +630,8 @@ public final class Constants {
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
             "f_pk_administrative_unit_id";
+    public static final String FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK =
+            "f_pk_correspondence_part_person_id";
 
     // Primary key names
     public static final String PRIMARY_KEY_FONDS = "pk_fonds_id";
@@ -639,6 +641,11 @@ public final class Constants {
     public static final String PRIMARY_KEY_USER = "pk_user_id";
     public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
             "pk_administrative_unit_id";
+    public static final String PRIMARY_KEY_CORRESPONDENCE_PART_PERSON =
+            "pk_correspondence_part_person_id";
+
+    public static final String PRIMARY_KEY_CORRESPONDENCE_PART =
+            "pk_correspondence_part_id";
 
     public static final String PRIMARY_KEY_CASE_FILE_STATUS =
             "pk_case_file_status_id";

@@ -3,9 +3,7 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.secondary.ContactInformation;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v4.casehandling.secondary.*;
 import nikita.common.model.noark5.v4.interfaces.ICorrespondencePart;
 import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v4.IRegistryEntryRepository;
@@ -142,45 +140,49 @@ public class RegistryEntryService
         // It should be rejected at controller level
         // The incoming CorrespondencePartType will not have @id field set. Therefore, we have to look it up
         // in the database and make sure the proper CorrespondencePartType is associated with the CorrespondencePart
-        if (incomingCorrespondencePartType != null && incomingCorrespondencePartType.getCode() != null) {
+        if (incomingCorrespondencePartType != null &&
+                incomingCorrespondencePartType.getCode() != null) {
             CorrespondencePartType actualCorrespondencePartType =
-                    correspondencePartTypeRepository.findByCode(incomingCorrespondencePartType.getCode());
+                    correspondencePartTypeRepository.
+                            findByCode(incomingCorrespondencePartType.getCode());
             if (actualCorrespondencePartType != null) {
-                correspondencePart.setCorrespondencePartType(actualCorrespondencePartType);
+                correspondencePart.
+                        setCorrespondencePartType(actualCorrespondencePartType);
             }
         }
 
-         /*
-         ZZXC
-         ContactInformation contactInformation
-                 = correspondencePart.getContactInformation();
-         if (null != contactInformation) {
-             setNikitaEntityValues(contactInformation);
-             setSystemIdEntityValues(contactInformation);
-         }
-         correspondencePart.setContactInformation(contactInformation);
+        ContactInformation contactInformation
+                = correspondencePart.getContactInformation();
+        if (null != contactInformation) {
+            setNikitaEntityValues(contactInformation);
+            setSystemIdEntityValues(contactInformation);
+        }
+        correspondencePart.setContactInformation(contactInformation);
 
-         PostalAddress postalAddress = correspondencePart.getPostalAddress();
-         if (null != postalAddress) {
-             setNikitaEntityValues(postalAddress);
-             setSystemIdEntityValues(postalAddress);
-         }
-         correspondencePart.setPostalAddress(postalAddress);
+        PostalAddress postalAddress = correspondencePart.getPostalAddress();
+        if (null != postalAddress) {
+            setNikitaEntityValues(postalAddress);
+            setSystemIdEntityValues(postalAddress);
+        }
+        correspondencePart.setPostalAddress(postalAddress);
 
-         ResidingAddress residingAddress = correspondencePart.getResidingAddress();
-         if (null != residingAddress) {
-             setNikitaEntityValues(residingAddress);
-             setSystemIdEntityValues(residingAddress);
-         }
-         correspondencePart.setResidingAddress(residingAddress);
+        ResidingAddress residingAddress =
+                correspondencePart.getResidingAddress();
+        if (null != residingAddress) {
+            setNikitaEntityValues(residingAddress);
+            setSystemIdEntityValues(residingAddress);
+        }
+        correspondencePart.setResidingAddress(residingAddress);
 
-         setNikitaEntityValues(correspondencePart);
-         setSystemIdEntityValues(correspondencePart);
-         */
+        setNikitaEntityValues(correspondencePart);
+        setSystemIdEntityValues(correspondencePart);
+
         // bidirectional relationship @ManyToMany, set both sides of relationship
-        registryEntry.getReferenceCorrespondencePartPerson().add(correspondencePart);
+        registryEntry.getReferenceCorrespondencePartPerson().
+                add(correspondencePart);
         correspondencePart.addRegistryEntry(registryEntry);
-        return correspondencePartService.createNewCorrespondencePartPerson(correspondencePart);
+        return correspondencePartService.
+                createNewCorrespondencePartPerson(correspondencePart);
     }
 
     /*
@@ -219,11 +221,12 @@ public class RegistryEntryService
             }
         }
 
-        ContactInformation contactInformation = correspondencePart.getContactInformation();
-        if (null != contactInformation) {
-        }
-        correspondencePart.setContactInformation(contactInformation);
-        contactInformation.setCorrespondencePartUnit(correspondencePart);
+        //ContactInformation contactInformation =
+        //      correspondencePart.getContactInformation();
+        // if (null != contactInformation) {
+        // }
+        //correspondencePart.setContactInformation(contactInformation);
+        //contactInformation.setCorrespondencePartUnit(correspondencePart);
 /*
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {

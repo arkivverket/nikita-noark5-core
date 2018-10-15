@@ -1,23 +1,31 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
+import nikita.common.model.noark5.v4.NoarkEntity;
+
+import javax.persistence.*;
+
 /**
  * Created by tsodring on 5/14/17.
  */
-//@Entity
-//@Table(name = "postal_address")
-//@AttributeOverride(name = "pk_simple_address_id",
-//        column = @Column(name = "pk_postal_address_id"))
+@Entity
+@Table(name = "postal_address")
 public class PostalAddress
-        extends SimpleAddress {
+        extends NoarkEntity {
 
-    //@OneToOne(mappedBy = "postalAddress", cascade = CascadeType.ALL,
-    //        fetch = FetchType.LAZY, optional = false)
-    //CorrespondencePartPerson correspondencePartPerson;
+    @Embedded
+    private SimpleAddress simpleAddress;
 
-    //    @OneToOne(fetch = FetchType.LAZY)
-    //   @MapsId
-    //   CorrespondencePartUnit correspondencePartUnit;
-/*
+    @OneToOne(fetch = FetchType.LAZY)
+    private CorrespondencePartPerson correspondencePartPerson;
+
+    public SimpleAddress getSimpleAddress() {
+        return simpleAddress;
+    }
+
+    public void setSimpleAddress(SimpleAddress simpleAddress) {
+        this.simpleAddress = simpleAddress;
+    }
+
     public CorrespondencePartPerson getCorrespondencePartPerson() {
         return correspondencePartPerson;
     }
@@ -27,15 +35,6 @@ public class PostalAddress
         this.correspondencePartPerson = correspondencePartPerson;
     }
 
-    public CorrespondencePartUnit getCorrespondencePartUnit() {
-        return correspondencePartUnit;
-    }
-
-    public void setCorrespondencePartUnit(
-            CorrespondencePartUnit correspondencePartUnit) {
-        this.correspondencePartUnit = correspondencePartUnit;
-    }
-*/
     @Override
     public String toString() {
         return super.toString();

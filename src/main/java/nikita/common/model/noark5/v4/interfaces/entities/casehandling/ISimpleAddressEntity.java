@@ -1,12 +1,11 @@
 package nikita.common.model.noark5.v4.interfaces.entities.casehandling;
 
 import nikita.common.model.noark5.v4.casehandling.secondary.PostalNumber;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 
 /**
  * Created by tsodring on 5/22/17.
  */
-public interface ISimpleAddressEntity extends INikitaEntity {
+public interface ISimpleAddressEntity {
 
     String getAddressType();
 
