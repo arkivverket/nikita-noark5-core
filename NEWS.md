@@ -3,8 +3,28 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
-Release 0.X UNRELEASED
+Release 0.2 2018-10-17 (commit d7c3feaa945e2b0cfc19055a201091c7b3840b89)
 ------------------------
+ * Fix typos in REL names
+ * Tidy up error message reporting
+ * Fix issue where we used Integer.valueOf(), not Integer.getInteger()
+ * Change some String handling to StringBuffer
+ * Fix error reporting
+ * Code tidy-up
+ * Fix issue using static non-synchronized SimpleDateFormat to avoid 
+ race conditions
+ * Fix problem where deserialisers were treating integers as strings
+ * Update methods to make them null-safe
+ * Fix many issues reported by coverity
+ * Improve equals(), compareTo() and hash() in domain model
+ * Improvements to the domain model for metadata classes
+ * Fix CORS issues when downloading document
+ * Implementation of case-handling with registryEntry and document upload
+ * Better support in Javascript for OPTIONS
+ * Adding concept description of mail integration
+ * Improve setting of default values for GET on ny-journalpost
+ * Better handling of required values during deserialisation 
+ * Changed tilknyttetDato (M620) from date to dateTime
  * Corrected some opprettetDato (M600) (de)serialisation errors.
  * Improve parse error reporting.
  * Started on OData search and filtering.
@@ -29,7 +49,7 @@ Release 0.1.1 2017-06-09 (commit a3932c87b22aee272e2a0385bb8a7d029a73faf4)
 --------------------------------------------------------------------------
  * Continued work on the angularjs GUI, including document upload
  * Implemented correspondencepartPerson, correspondencepartUnit and correspondencepartInternal
- * Applied for coverity coverage and started submitting code on regualr basis
+ * Applied for coverity coverage and started submitting code on regular basis
  * Started fixing bugs reported by coverity
  * Corrected and completed HATEOAS links to make sure entire API is
    available via URLs in \_links.
