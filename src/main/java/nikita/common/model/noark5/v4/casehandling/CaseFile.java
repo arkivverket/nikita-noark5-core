@@ -46,16 +46,14 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
      */
     @Column(name = "case_year")
     @Audited
-
-    protected Integer caseYear;
+    private Integer caseYear;
 
     /**
      * M012 - sakssekvensnummer (xs:integer)
      */
     @Column(name = "case_sequence_number")
     @Audited
-
-    protected Integer caseSequenceNumber;
+    private Integer caseSequenceNumber;
 
     /**
      * M100 - saksdato (xs:date)
@@ -64,15 +62,7 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     @Column(name = "case_date", nullable = false)
     @Temporal(TemporalType.DATE)
     @Audited
-
-    protected Date caseDate;
-
-    /**
-     * M305 - administrativEnhet (xs:string)
-     */
-    @Column(name = "administrative_unit")
-    @Audited
-    protected String administrativeUnit;
+    private Date caseDate;
 
     /**
      * M306 - saksansvarlig (xs:string)
@@ -81,15 +71,14 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     @Column(name = "case_responsible", nullable = false)
     @Audited
 
-    protected String caseResponsible;
+    private String caseResponsible;
 
     /**
      * M308 - journalenhet (xs:string)
      */
     @Column(name = "records_management_unit")
     @Audited
-
-    protected String recordsManagementUnit;
+    private String recordsManagementUnit;
 
     /**
      * M052 - saksstatus (xs:string)
@@ -97,8 +86,7 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     @NotNull
     @Column(name = "case_status", nullable = false)
     @Audited
-
-    protected String caseStatus;
+    private String caseStatus;
 
     /**
      * M106 - utlaantDato (xs:date)
@@ -106,18 +94,18 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     @Column(name = "loaned_date")
     @Temporal(TemporalType.DATE)
     @Audited
-    protected Date loanedDate;
+    private Date loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
      */
     @Column(name = "loaned_to")
     @Audited
-    protected String loanedTo;
+    private String loanedTo;
+
     @Column(name = "owned_by")
     @Audited
-
-    protected String ownedBy;
+    private String ownedBy;
 
     // Links to CaseParty
     @ManyToMany
@@ -127,7 +115,7 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
             inverseJoinColumns = @JoinColumn(name = "f_pk_case_party_id",
                     referencedColumnName = "pk_case_party_id"))
 
-    protected List<CaseParty> referenceCaseParty = new ArrayList<CaseParty>();
+    private List<CaseParty> referenceCaseParty = new ArrayList<>();
 
     // Links to Precedence
     @ManyToMany
@@ -137,7 +125,7 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
             inverseJoinColumns = @JoinColumn(name = "f_pk_precedence_id",
                     referencedColumnName = "pk_precedence_id"))
 
-    protected List<Precedence> referencePrecedence = new ArrayList<Precedence>();
+    private List<Precedence> referencePrecedence = new ArrayList<>();
 
     // Used for soft delete.
     @Column(name = "deleted")
@@ -180,14 +168,6 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
 
     public void setCaseDate(Date caseDate) {
         this.caseDate = caseDate;
-    }
-
-    public String getAdministrativeUnit() {
-        return administrativeUnit;
-    }
-
-    public void setAdministrativeUnit(String administrativeUnit) {
-        this.administrativeUnit = administrativeUnit;
     }
 
     public String getCaseResponsible() {
@@ -297,7 +277,6 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
                 ", caseStatus='" + caseStatus + '\'' +
                 ", recordsManagementUnit='" + recordsManagementUnit + '\'' +
                 ", caseResponsible='" + caseResponsible + '\'' +
-                ", administrativeUnit='" + administrativeUnit + '\'' +
                 ", caseDate=" + caseDate +
                 ", caseSequenceNumber=" + caseSequenceNumber +
                 ", caseYear=" + caseYear +
@@ -324,7 +303,6 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
                 .append(caseResponsible, rhs.caseResponsible)
                 .append(caseStatus, rhs.caseStatus)
                 .append(recordsManagementUnit, rhs.recordsManagementUnit)
-                .append(administrativeUnit, rhs.administrativeUnit)
                 .append(loanedDate, rhs.loanedDate)
                 .append(loanedTo, rhs.loanedTo)
                 .isEquals();
@@ -340,7 +318,6 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
                 .append(caseResponsible)
                 .append(caseStatus)
                 .append(recordsManagementUnit)
-                .append(administrativeUnit)
                 .append(loanedDate)
                 .append(loanedTo)
                 .toHashCode();
