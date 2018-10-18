@@ -3,6 +3,11 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
+Release 0.X UNRELEASED
+----------------------
+ * Corrected handling of AdministrativeEnhet.
+ * Fixed bug in some \_links href entries containing double slashes.
+
 Release 0.2 2018-10-17 (commit d7c3feaa945e2b0cfc19055a201091c7b3840b89)
 ------------------------
  * Fix typos in REL names
