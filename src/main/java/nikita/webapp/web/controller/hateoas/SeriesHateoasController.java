@@ -7,12 +7,12 @@ import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.metadata.CaseStatus;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -43,15 +42,16 @@ import static org.springframework.http.HttpHeaders.ETAG;
 public class SeriesHateoasController extends NoarkController {
 
     private ISeriesService seriesService;
+    private ICaseFileService caseFileService;
     private IFondsHateoasHandler fondsHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
     private IFileHateoasHandler fileHateoasHandler;
-    private ICaseStatusService caseStatusService;
     private ApplicationEventPublisher applicationEventPublisher;
 
     public SeriesHateoasController(ISeriesService seriesService,
+                                   ICaseFileService caseFileService,
                                    IFondsHateoasHandler fondsHateoasHandler,
                                    ISeriesHateoasHandler seriesHateoasHandler,
                                    IRecordHateoasHandler recordHateoasHandler,
@@ -61,12 +61,12 @@ public class SeriesHateoasController extends NoarkController {
                                    ApplicationEventPublisher applicationEventPublisher) {
 
         this.seriesService = seriesService;
+        this.caseFileService = caseFileService;
         this.fondsHateoasHandler = fondsHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
-        this.caseStatusService = caseStatusService;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -398,15 +398,6 @@ public class SeriesHateoasController extends NoarkController {
         defaultFile.setDocumentMedium(DOCUMENT_MEDIUM_ELECTRONIC);
         return defaultFile;
     }
-    private CaseFile setCaseFileDefaults(CaseFile defaultCaseFile)
-    {
-        defaultCaseFile = (CaseFile)setFileDefaults(defaultCaseFile);
-        defaultCaseFile.setCaseResponsible(TEST_USER_CASE_HANDLER_1);
-        defaultCaseFile.setAdministrativeUnit(TEST_ADMINISTRATIVE_UNIT);
-        defaultCaseFile.setCaseDate(new Date());
-        defaultCaseFile.setCaseStatus(STATUS_OPEN);
-        return defaultCaseFile;
-    }
 
     // Create a File object with default values
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-mappe/
@@ -448,16 +439,10 @@ public class SeriesHateoasController extends NoarkController {
     public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
             HttpServletRequest request, final HttpServletResponse response) {
 
-        CaseStatus caseStatus = caseStatusService.generateDefaultCaseStatus();
-        CaseFile defaultCaseFile = new CaseFile();
-        defaultCaseFile.setReferenceCaseFileStatus(caseStatus);
-        // Same for filetype
-        //defaultCaseFile.setReferenceCaseFileStatus(caseStatus);
 
-        defaultCaseFile = setCaseFileDefaults(defaultCaseFile);
-        CaseFileHateoas caseFileHateoas = new
-                CaseFileHateoas(defaultCaseFile);
-        caseFileHateoasHandler.addLinksOnNew(caseFileHateoas, new Authorisation());
+        CaseFileHateoas caseFileHateoas =
+                caseFileService.generateDefaultCaseFile();
+
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(caseFileHateoas);

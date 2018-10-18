@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.metadata.CaseStatus;
 import nikita.common.repository.n5v4.ICaseFileRepository;
 import nikita.common.repository.n5v4.admin.IAdministrativeUnitRepository;
@@ -14,10 +15,11 @@ import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
-import nikita.webapp.util.NoarkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,8 +34,10 @@ import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
 
 @Service
 @Transactional
@@ -49,10 +53,8 @@ public class CaseFileService
     private IAdministrativeUnitRepository administrativeUnitRepository;
     private IUserRepository userRepository;
     private ICaseStatusService caseStatusService;
+    private ICaseFileHateoasHandler caseFileHateoasHandler;
     private EntityManager entityManager;
-
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    Integer maxPageSize = 10;
 
     public CaseFileService(
             IRegistryEntryService registryEntryService,
@@ -61,6 +63,7 @@ public class CaseFileService
             IAdministrativeUnitRepository administrativeUnitRepository,
             IUserRepository userRepository,
             ICaseStatusService caseStatusService,
+            ICaseFileHateoasHandler caseFileHateoasHandler,
             EntityManager entityManager) {
         this.registryEntryService = registryEntryService;
         this.caseFileRepository = caseFileRepository;
@@ -68,13 +71,14 @@ public class CaseFileService
         this.administrativeUnitRepository = administrativeUnitRepository;
         this.userRepository = userRepository;
         this.caseStatusService = caseStatusService;
+        this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.entityManager = entityManager;
     }
 
     @Override
     public CaseFile save(CaseFile caseFile) {
-        NoarkUtils.NoarkEntity.Create.setNoarkEntityValues(caseFile);
-        NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid(caseFile);
+        setNoarkEntityValues(caseFile);
+        checkDocumentMediumValid(caseFile);
 
         // If caseStatus is not set, set it to "Opprettet"
         checkCaseStatusUponCreation(caseFile);
@@ -85,39 +89,21 @@ public class CaseFileService
             caseFile.setCaseResponsible(caseFile.getOwnedBy());
         }
 
-
-        // If administrativeUnit is null then we just use the default
-        // administrativeUnit this user is associated with
-
-        if (null == caseFile.getAdministrativeUnit()) {
-
-        }
-
-
         // Before assigning ownership make sure the owner is part of the
         // administrative unit
         AdministrativeUnit administrativeUnit =
                 getAdministrativeUnitIfMemberOrThrow(caseFile);
+        caseFile.setReferenceAdministrativeUnit(administrativeUnit);
 
-        //caseFile.setAdministrativeUnit();
         // Set case year
         Calendar date = new GregorianCalendar();
         Integer currentYear = date.get(Calendar.YEAR);
         caseFile.setCaseYear(currentYear);
-
-        // Set case year
         caseFile.setCaseDate(new Date());
-
         caseFile.setCaseSequenceNumber(getNextSequenceNumber(
                 administrativeUnit));
-
         caseFile.setFileId(currentYear.toString() + "/" +
                 caseFile.getCaseSequenceNumber());
-
-        caseFile.setAdministrativeUnit(
-                administrativeUnit.getAdministrativeUnitName());
-        caseFile.setReferenceAdministrativeUnit(administrativeUnit);
-
         return caseFileRepository.save(caseFile);
     }
 
@@ -131,8 +117,6 @@ public class CaseFileService
             @NotNull String fileSystemId,
             @NotNull RegistryEntry registryEntry) {
         CaseFile caseFile = getCaseFileOrThrow(fileSystemId);
-        // bidirectional relationship @OneToMany and @ManyToOne,
-        // set both sides of relationship
         registryEntry.setReferenceFile(caseFile);
         caseFile.getReferenceRecord().add(registryEntry);
         return registryEntryService.save(registryEntry);
@@ -142,8 +126,8 @@ public class CaseFileService
     @Override
     public List<CaseFile> findCaseFileByOwnerPaginated(
             Integer top, Integer skip) {
-        if (top == null || top > maxPageSize) {
-            top = maxPageSize;
+        if (top == null || top > 10) {
+            top = 10;
         }
         if (skip == null) {
             skip = 0;
@@ -184,10 +168,6 @@ public class CaseFileService
         if (null != incomingCaseFile.getTitle()) {
             existingCaseFile.setTitle(incomingCaseFile.getTitle());
         }
-        if (null != incomingCaseFile.getAdministrativeUnit()) {
-            existingCaseFile.setAdministrativeUnit(
-                    incomingCaseFile.getAdministrativeUnit());
-        }
         if (null != incomingCaseFile.getRecordsManagementUnit()) {
             existingCaseFile.setRecordsManagementUnit(
                     incomingCaseFile.getRecordsManagementUnit());
@@ -206,8 +186,8 @@ public class CaseFileService
         }
 
         existingCaseFile.setVersion(version);
-        caseFileRepository.save(existingCaseFile);
-        return existingCaseFile;
+
+        return caseFileRepository.save(existingCaseFile);
     }
 
     // All DELETE operations
@@ -254,11 +234,9 @@ public class CaseFileService
      */
     protected Integer getNextSequenceNumber(AdministrativeUnit
                                                     administrativeUnit) {
-
         Calendar date = new GregorianCalendar();
         Integer currentYear = date.get(Calendar.YEAR);
         Integer sequenceNumber;
-
 
         Optional<SequenceNumberGenerator> nextSequenceOptional =
                 numberGeneratorRepository.
@@ -280,6 +258,25 @@ public class CaseFileService
         }
 
         return sequenceNumber;
+    }
+
+    public CaseFileHateoas generateDefaultCaseFile() {
+        CaseFile defaultCaseFile = new CaseFile();
+        defaultCaseFile.setReferenceCaseFileStatus(
+                caseStatusService.generateDefaultCaseStatus());
+        defaultCaseFile.setCaseResponsible(SecurityContextHolder.getContext().
+                getAuthentication().getName());
+        defaultCaseFile.setCaseDate(new Date());
+        defaultCaseFile.setTitle(TEST_TITLE);
+        defaultCaseFile.setOfficialTitle(TEST_TITLE);
+        defaultCaseFile.setDescription(TEST_DESCRIPTION);
+        defaultCaseFile.setCaseStatus(STATUS_OPEN);
+
+        CaseFileHateoas caseFileHateoas = new
+                CaseFileHateoas(defaultCaseFile);
+        caseFileHateoasHandler.addLinksOnNew(caseFileHateoas,
+                new Authorisation());
+        return caseFileHateoas;
     }
 
 
@@ -305,10 +302,7 @@ public class CaseFileService
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-
-            administrativeUnit = getAdministrativeUnitOrThrow(user,
-                    caseFile.getAdministrativeUnit());
-
+            administrativeUnit = getAdministrativeUnitOrThrow(user);
             checkOwnerMemberAdministrativeUnit(user, administrativeUnit);
         } else {
             throw new NoarkEntityNotFoundException(
@@ -331,35 +325,20 @@ public class CaseFileService
         return administrativeUnit;
     }
 
-
     private void checkOwnerMemberAdministrativeUnit(
             User user, AdministrativeUnit administrativeUnit) {
 
         Set<User> users = administrativeUnit.getUsers();
-
         // Check that the owner is part of the administrativeUnit
         if (!users.contains(user)) {
             throw new NoarkAdministrativeUnitMemberException(
                     "User [" + user.getUsername() + "] is not a member " +
                             "of the administrativeUnit with systemID [" +
-                            administrativeUnit.getSystemId() + "] when assigning " +
-                            "ownership field.");
+                            administrativeUnit.getSystemId() + "] when " +
+                            "assigning ownership field.");
         }
     }
 
-    /*
-
-
-
-
-            throw new NoarkAdministrativeUnitMemberException(
-                    "User [" + caseFile.getCaseResponsible() + "] is not a " +
-                            "member " +
-                            "of the administrativeUnit with systemID [" +
-                            administrativeUnitSystemId + "] when assigning " +
-                            "case responsible field.");
-
-     */
     private void checkCaseResponsibleMemberAdministrativeUnit(
             User user, AdministrativeUnit administrativeUnit) {
         // Check that the person responsible is part of the administrativeUnit
@@ -375,44 +354,33 @@ public class CaseFileService
     }
 
     /**
-     * Internal helper method. Find the administrativeUnit identified by the
-     * given systemId or throw a NoarkEntityNotFoundException. Note this method
+     * Internal helper method. Find the administrativeUnit identified for the
+     * given user or throw a NoarkEntityNotFoundException. Note this method
      * will return a non-null administrativeUnit. An exception is thrown
      * otherwise.
      *
-     * @param administrativeUnitSystemId systemId of administrativeUnit to
-     *                                   retrive
+     * @param user the user you want to retrieve an associated
+     *             administrativeUnit
      * @return the administrativeUnit
      */
+    private AdministrativeUnit getAdministrativeUnitOrThrow(User user) {
 
-    private AdministrativeUnit getAdministrativeUnitOrThrow(
-            User user, String administrativeUnitSystemId) {
-
-        // If administrativeUnitSystemId isn't set i.e is null, try to see if
-        // we have a default value registered for the user.
-        if (administrativeUnitSystemId == null) {
-            Set<User> users = new HashSet<>();
-            users.add(user);
-            Optional<AdministrativeUnit> administrativeUnit =
-                    administrativeUnitRepository.
-                            findByUsersInAndDefaultAdministrativeUnit(
-                                    users, true);
-            if (administrativeUnit.isPresent()) {
-                return administrativeUnit.get();
-            }
-        }
-
-        AdministrativeUnit administrativeUnit = administrativeUnitRepository.
-                findBySystemId(administrativeUnitSystemId);
-        if (null == administrativeUnit) {
+        Set<User> users = new HashSet<>();
+        users.add(user);
+        Optional<AdministrativeUnit> administrativeUnit =
+                administrativeUnitRepository.
+                        findByUsersInAndDefaultAdministrativeUnit(
+                                users, true);
+        if (administrativeUnit.isPresent()) {
+            return administrativeUnit.get();
+        } else {
             String info =
                     INFO_CANNOT_FIND_OBJECT +
-                            " AdministrativeUnit, using systemId " +
-                            administrativeUnitSystemId;
+                            " AdministrativeUnit associated with user " +
+                            user.toString();
             logger.warn(info);
             throw new NoarkEntityNotFoundException(info);
         }
-        return administrativeUnit;
     }
 
     private void checkCaseStatusUponCreation(CaseFile caseFile) {
