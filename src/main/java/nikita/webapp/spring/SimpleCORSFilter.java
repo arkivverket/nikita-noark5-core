@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+
 @Component
 @Order(Integer.MIN_VALUE)
 public class SimpleCORSFilter implements Filter {
@@ -52,14 +54,34 @@ public class SimpleCORSFilter implements Filter {
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", stringJoin(allowMethods, ","));
             response.setHeader("Access-Control-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, Authorization, Origin, ETAG, grant_type, X-File-Name");
+            response.setHeader("Access-Control-Allow-Headers", "Content-Type," +
+                    " Accept, X-Requested-With, remember-me, Authorization, " +
+                    "Origin, ETAG, grant_type, X-File-Name, Allow");
             response.setHeader("Access-Control-Expose-Headers", "Allow, ETAG");
         }
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setHeader("Allow",
+                    getMethodsAsString(
+                            getMethodsForRequestOrThrow(
+                                    request.getServletPath())));
+
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             chain.doFilter(req, res);
         }
+    }
+
+    private String getMethodsAsString(HttpMethod[] httpMethods) {
+
+        StringBuilder methodsAsString = new StringBuilder();
+        for (HttpMethod httpMethod : httpMethods) {
+            methodsAsString.append(httpMethod.toString());
+            methodsAsString.append(", ");
+        }
+        methodsAsString.delete(
+                methodsAsString.lastIndexOf(", "),
+                methodsAsString.length());
+        return methodsAsString.toString();
     }
 
     @Override
