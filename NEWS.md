@@ -3,6 +3,11 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
+Release 0.X UNRELEASED
+----------------------
+ * Corrected handling of AdministrativeEnhet.
+ * Fixed bug in some \_links href entries containing double slashes.
+
 Release 0.2 2018-10-17 (commit d7c3feaa945e2b0cfc19055a201091c7b3840b89)
 ------------------------
  * Fix typos in REL names
@@ -12,7 +17,7 @@ Release 0.2 2018-10-17 (commit d7c3feaa945e2b0cfc19055a201091c7b3840b89)
  * Fix error reporting
  * Code tidy-up
  * Fix issue using static non-synchronized SimpleDateFormat to avoid 
- race conditions
+   race conditions
  * Fix problem where deserialisers were treating integers as strings
  * Update methods to make them null-safe
  * Fix many issues reported by coverity
@@ -40,10 +45,10 @@ Release 0.2 2018-10-17 (commit d7c3feaa945e2b0cfc19055a201091c7b3840b89)
    ny-saksmappe, ny-journalpost and ny-dokumentbeskrivelse.
  * Several fixes for korrespondansepart*.
  * Updated web GUI:
-  - Now handle both file upload and download.
-  - Uses new OAuth2 authentication for login.
-  - Forms now fetches default values from API using GET.
-  - Added RFC 822 (email), TIFF and JPEG to list of possible file formats.
+    - Now handle both file upload and download.
+    - Uses new OAuth2 authentication for login.
+    - Forms now fetches default values from API using GET.
+    - Added RFC 822 (email), TIFF and JPEG to list of possible file formats.
 
 Release 0.1.1 2017-06-09 (commit a3932c87b22aee272e2a0385bb8a7d029a73faf4)
 --------------------------------------------------------------------------
