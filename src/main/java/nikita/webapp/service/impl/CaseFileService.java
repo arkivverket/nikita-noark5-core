@@ -240,9 +240,8 @@ public class CaseFileService
 
         Optional<SequenceNumberGenerator> nextSequenceOptional =
                 numberGeneratorRepository.
-                        findByAdministrativeUnitNameAndYear(
-                                administrativeUnit.getAdministrativeUnitName(),
-                                currentYear);
+                        findByAdministrativeUnitAndYear(
+                                administrativeUnit, currentYear);
 
         if (nextSequenceOptional.isPresent()) {
             SequenceNumberGenerator nextSequence =

@@ -1,5 +1,6 @@
 package nikita.common.repository.n5v4.casehandling;
 
+import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,8 @@ public interface ISequenceNumberGeneratorRepository
     // -- All READ operations
     Optional<SequenceNumberGenerator> findById(Long id);
 
-    Optional<SequenceNumberGenerator>
-    findByAdministrativeUnitNameAndYear(String administrativeUnitName, Integer
-            year);
+
+    Optional<SequenceNumberGenerator> findByAdministrativeUnitAndYear(
+            AdministrativeUnit administrativeUnit, Integer year);
+
 }

@@ -60,10 +60,10 @@ public class SimpleCORSFilter implements Filter {
             response.setHeader("Access-Control-Expose-Headers", "Allow, ETAG");
         }
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            response.setHeader("Allow",
-                    getMethodsAsString(
-                            getMethodsForRequestOrThrow(
-                                    request.getServletPath())));
+            String headerContents = getMethodsAsString(
+                    getMethodsForRequestOrThrow(
+                            request.getServletPath()));
+            response.setHeader("Allow", headerContents);
 
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
@@ -76,10 +76,10 @@ public class SimpleCORSFilter implements Filter {
         StringBuilder methodsAsString = new StringBuilder();
         for (HttpMethod httpMethod : httpMethods) {
             methodsAsString.append(httpMethod.toString());
-            methodsAsString.append(", ");
+            methodsAsString.append(",");
         }
         methodsAsString.delete(
-                methodsAsString.lastIndexOf(", "),
+                methodsAsString.lastIndexOf(","),
                 methodsAsString.length());
         return methodsAsString.toString();
     }
@@ -91,5 +91,4 @@ public class SimpleCORSFilter implements Filter {
     @Override
     public void destroy() {
     }
-
 }
