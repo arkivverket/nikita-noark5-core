@@ -79,25 +79,6 @@ public class DocumentDescriptionService
         documentDescription.setAssociationDate(new Date());
         documentDescription.setAssociatedBy(username);
 
-
-        // Setting it to 0 as the field is not null. Get's updated to the
-        // correct value straight after
-        documentDescription.setDocumentNumber(0);
-        // Saving and flushing the cache to avoid a transient object save
-        // exception. This has to be revisited, as it will soon become an issue
-        // when all the metadata entities start being implemented properly.
-        documentDescriptionRepository.save(documentDescription);
-        entityManager.flush();
-
-        // upon creating, the record/registryEntry should already have
-        // added.
-        Record record = documentDescription.
-                getReferenceRecord().get(0);
-        Long documentNumber =
-                documentDescriptionRepository.
-                        countByReferenceRecord(record);
-        documentDescription.setDocumentNumber(documentNumber.intValue());
-
         return documentDescriptionRepository.save(documentDescription);
     }
 

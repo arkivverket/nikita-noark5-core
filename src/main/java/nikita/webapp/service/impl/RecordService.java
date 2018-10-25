@@ -3,6 +3,7 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
+import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v4.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
@@ -38,6 +39,7 @@ public class RecordService
     private EntityManager entityManager;
     private IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
+    private IDocumentDescriptionRepository documentDescriptionRepository;
     private ApplicationEventPublisher applicationEventPublisher;
 
 
@@ -49,6 +51,7 @@ public class RecordService
                          IDocumentDescriptionHateoasHandler
                                  documentDescriptionHateoasHandler,
                          ApplicationEventPublisher applicationEventPublisher,
+                         IDocumentDescriptionRepository documentDescriptionRepository,
                          EntityManager entityManager) {
 
         this.documentDescriptionService = documentDescriptionService;
@@ -56,6 +59,7 @@ public class RecordService
         this.documentDescriptionHateoasHandler =
                 documentDescriptionHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.documentDescriptionRepository = documentDescriptionRepository;
         this.entityManager = entityManager;
     }
 
@@ -80,8 +84,15 @@ public class RecordService
 
         Record record = getRecordOrThrow(systemID);
 
+
+        Long documentNumber =
+                documentDescriptionRepository.
+                        countByReferenceRecord(record);
+        documentDescription.setDocumentNumber(documentNumber.intValue());
         record.addReferenceDocumentDescription(documentDescription);
         documentDescription.addReferenceRecord(record);
+
+        documentDescription.setDocumentNumber(documentNumber.intValue());
 
         DocumentDescriptionHateoas documentDescriptionHateoas =
                 new DocumentDescriptionHateoas(
