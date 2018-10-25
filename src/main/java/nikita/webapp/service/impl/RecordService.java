@@ -42,16 +42,13 @@ public class RecordService
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private ApplicationEventPublisher applicationEventPublisher;
 
-
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    private Integer maxPageSize = 10;
-
     public RecordService(DocumentDescriptionService documentDescriptionService,
                          IRecordRepository recordRepository,
                          IDocumentDescriptionHateoasHandler
                                  documentDescriptionHateoasHandler,
                          ApplicationEventPublisher applicationEventPublisher,
-                         IDocumentDescriptionRepository documentDescriptionRepository,
+                         IDocumentDescriptionRepository
+                                 documentDescriptionRepository,
                          EntityManager entityManager) {
 
         this.documentDescriptionService = documentDescriptionService;
@@ -65,7 +62,8 @@ public class RecordService
 
     // All CREATE operations
     public Record save(Record record){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = SecurityContextHolder.getContext().
+                getAuthentication().getName();
 
 
         record.setSystemId(UUID.randomUUID().toString());
@@ -124,7 +122,8 @@ public class RecordService
 
     // ownedBy
     public List<Record> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().getAuthentication().getName():ownedBy;
+        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().
+                getAuthentication().getName() : ownedBy;
         return recordRepository.findByOwnedBy(ownedBy);
     }
 
@@ -135,11 +134,13 @@ public class RecordService
 
     // All UPDATE operations
     @Override
-    public Record handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull Record incomingRecord) {
+    public Record handleUpdate(@NotNull String systemId, @NotNull Long version,
+                               @NotNull Record incomingRecord) {
         Record existingRecord = getRecordOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         // TODO: FIND ALL VALUES
-        // This might be a class that can only have values set via parameter values rather than request bodies
+        // This might be a class that can only have values set via parameter
+        // values rather than request bodies
         existingRecord.setVersion(version);
         recordRepository.save(existingRecord);
         return existingRecord;
@@ -152,7 +153,8 @@ public class RecordService
 
         // See issue for a description of why this code was written this way
         // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
-        //Query q = entityManager.createNativeQuery("DELETE FROM fonds_fonds_creator WHERE pk_fonds_creator_id  = :id ;");
+        //Query q = entityManager.createNativeQuery("DELETE FROM
+        // fonds_fonds_creator WHERE pk_fonds_creator_id  = :id ;");
         //q.setParameter("id", record.getId());
         //q.executeUpdate();
         entityManager.remove(record);
@@ -173,11 +175,11 @@ public class RecordService
     protected Record getRecordOrThrow(@NotNull String systemID) {
         Record record = recordRepository.findBySystemId(systemID);
         if (record == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Record, using systemId " + systemID;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " Record, using systemId " + systemID;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
         return record;
     }
-
 }
