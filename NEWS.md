@@ -5,8 +5,12 @@ These are the highlevel changes.  For details, see the git history.
 
 Release 0.X UNRELEASED
 ----------------------
- * Corrected handling of AdministrativeEnhet.
+ * Corrected handling of administrativEnhet.
  * Fixed bug in some \_links href entries containing double slashes.
+ * Reintroduce Allow headers for OPTIONS.
+ * Fixed bug when creating saksmappe, failing to find the correct
+   administrativEnhet when there were several with identical names.
+ * Fixed bug causing empty \_links when creating dokumentbeskrivelse.
 
 Release 0.2 2018-10-17 (commit d7c3feaa945e2b0cfc19055a201091c7b3840b89)
 ------------------------
