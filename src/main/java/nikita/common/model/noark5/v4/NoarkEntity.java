@@ -191,7 +191,7 @@ public class NoarkEntity implements INikitaEntity, Comparable<NoarkEntity> {
         if (other.getClass() != getClass()) {
             return false;
         }
-        NoarkGeneralEntity rhs = (NoarkGeneralEntity) other;
+        NoarkEntity rhs = (NoarkEntity) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(systemId, rhs.getSystemId())
