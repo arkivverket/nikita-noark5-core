@@ -3,6 +3,7 @@ package nikita.common.util;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.FondsCreator;
 import nikita.common.model.noark5.v4.Series;
@@ -40,9 +41,16 @@ import static org.springframework.http.HttpMethod.*;
 public final class CommonUtils {
 
     /**
-     * Holds a list of serlvetPaths and their HTTP methods
+     * Holds a list of servletPaths and their HTTP methods
      */
     private static Map<String, Set<HttpMethod>> requestMethodMap = new HashMap<>();
+
+    /**
+     * Holds a list of mimeType and boolean value stating if we should attempt
+     * to convert a file of that mimeType to an archive version
+     */
+    private static Map<String, Boolean> mimeTypeConversionMap =
+            new HashMap<>();
 
     /**
      * Holds a mapping of Norwegian entity names to English entity names
@@ -113,6 +121,34 @@ public final class CommonUtils {
     }
 
     public static final class FileUtils {
+
+
+        public static Boolean mimeTypeIsConvertible(@NotNull String mimeType) {
+            return mimeTypeConversionMap.containsKey(mimeType);
+        }
+
+        public static void setDefaultMimeTypesAsConvertible() {
+            // doc, ppt, xls
+            addMimeTypeAsConvertible(MediaType.MICROSOFT_EXCEL);
+            addMimeTypeAsConvertible(MediaType.MICROSOFT_POWERPOINT);
+            addMimeTypeAsConvertible(MediaType.MICROSOFT_WORD);
+            //docx, pptx, xlsx
+            addMimeTypeAsConvertible(MediaType.OOXML_DOCUMENT);
+            addMimeTypeAsConvertible(MediaType.OOXML_PRESENTATION);
+            addMimeTypeAsConvertible(MediaType.OOXML_SHEET);
+            //odt, odp, ods
+            addMimeTypeAsConvertible(MediaType.OPENDOCUMENT_PRESENTATION);
+            addMimeTypeAsConvertible(MediaType.OPENDOCUMENT_SPREADSHEET);
+            addMimeTypeAsConvertible(MediaType.OPENDOCUMENT_TEXT);
+        }
+
+        public static void addMimeTypeAsConvertible(@NotNull MediaType mimeType) {
+            mimeTypeConversionMap.put(mimeType.toString(), true);
+        }
+
+        public static void addMimeTypeAsConvertible(@NotNull String mimeType) {
+            mimeTypeConversionMap.put(mimeType, true);
+        }
 
         public static void addProductionToArchiveVersion(
                 @NotNull String productionMimeType,

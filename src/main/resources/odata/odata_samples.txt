@@ -17,5 +17,6 @@ http://localhost/noark5v4/api/arkivstruktur/mappe?$filter==year(oppdatertDato) g
 http://localhost/noark5v4/api/arkivstruktur/mappe?$filter==year(oppdatertDato) le 2012
 http://localhost/noark5v4/odata/arkiv
 
+http://localhost/noark5v4/api/arkivstruktur/arkivdel/123456789/saksmappe?$top=2$skip=4$filter=tittel eq 'hello'$orderby=beskrivelse desc
 
 https://arkivarium.no/noark5v4/api/arkivstruktur/arkiv?$filter=contains(tittel, 'Oslo')

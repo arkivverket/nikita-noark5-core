@@ -44,6 +44,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.config.N5ResourceMappings.CASE_HANDLER;
 import static nikita.common.model.noark5.v4.admin.AuthorityName.*;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
+import static nikita.common.util.CommonUtils.FileUtils.setDefaultMimeTypesAsConvertible;
 
 /**
  * Create som basic data if application is in demo mode
@@ -110,6 +111,7 @@ public class AfterApplicationStartup {
         mapEndpointsWithHttpMethods();
         mapProductionToArchiveMimeTypes();
         populateTranslatedNames();
+        setDefaultMimeTypesAsConvertible();
 
         if (createDirectoryStore) {
             createDirectoryStoreIfNotExists();
@@ -284,6 +286,10 @@ public class AfterApplicationStartup {
                 (BASIC_RECORD,
                         BASIC_RECORD_ENG,
                         BASIC_RECORD_ENG_OBJECT);
+        CommonUtils.WebUtils.addNorToEnglishNameMap
+                (CASE_FILE,
+                        CASE_FILE_ENG,
+                        CASE_FILE_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (CLASSIFIED_CODE,
                         CLASSIFIED_CODE_ENG,
@@ -1031,6 +1037,10 @@ public class AfterApplicationStartup {
                 (SECONDARY_CLASSIFICATION_SYSTEM,
                         SECONDARY_CLASSIFICATION_SYSTEM_ENG,
                         SECONDARY_CLASSIFICATION_SYSTEM_ENG_OBJECT);
+        CommonUtils.WebUtils.addNorToEnglishNameMap
+                (SERIES,
+                        SERIES_ENG,
+                        SERIES_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (SERIES_END_DATE,
                         SERIES_END_DATE_ENG,

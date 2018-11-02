@@ -28,11 +28,17 @@ api             : '/' string;
 
 functionality   : '/' string;
 
+parentResource  : string;
+
 resource        : string;
+
+systemId        : uuid;
 
 port            : DIGITS;
 
-fromContextPath: contextPath api functionality '/' resource '?' odataCommand;
+fromContextPath: contextPath api functionality '/' nikitaObjects '?' odataCommand;
+
+nikitaObjects   : (parentResource '/' systemId '/' resource) | resource;
 
 odataCommand    : (filter | top | skip | orderby)*;
 
@@ -87,7 +93,7 @@ ge              : GE;
 le              : LE;
 string          : STRING;
 number          : DIGITS;
-
+uuid            : UUID;
 asc             : ASC;
 desc            : DESC;
 
@@ -108,5 +114,6 @@ WS              : ' '+;
 DIGITS          : [0-9] +;
 HEX             : ('%' [a-fA-F0-9] [a-fA-F0-9]) +;
 STRING          : ([a-zA-Z~0-9])+;
+UUID            : ('a'..'z'|'A'..'Z'|'0'..'9'|'-')+;
 COLON           : ':';
 SEPERATOR       : '://';

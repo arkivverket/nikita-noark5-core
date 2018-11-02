@@ -55,6 +55,7 @@ import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT_FILE_NAME;
+import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 /**
@@ -161,7 +162,9 @@ public class DocumentObjectService
 
             // Try to convert the file upon upload. Silently ignore
             // if there is a problem
-            convertDocumentToPDF(documentObject);
+            if (supportForDocumentConversion(documentObject)) {
+                convertDocumentToPDF(documentObject);
+            }
             documentObjectRepository.save(documentObject);
         } catch (IOException e) {
             String msg = "When associating an uploaded file with " +
@@ -754,5 +757,19 @@ public class DocumentObjectService
         Path toFile = getToFile(documentObject);
 
         Files.move(incoming, toFile);
+    }
+
+    /**
+     * Is this mimetype a format we can automatically convert to archive
+     * format. If the mimeType is null, false should be returned. This method
+     * will always return either true of false.
+     *
+     * @param documentObject the documentobject containg the mimetype
+     * @return true if the mimetype is supported, false otherwise
+     */
+
+    private boolean supportForDocumentConversion(
+            @NotNull DocumentObject documentObject) {
+        return mimeTypeIsConvertible(documentObject.getMimeType());
     }
 }
