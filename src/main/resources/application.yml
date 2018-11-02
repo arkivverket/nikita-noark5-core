@@ -56,7 +56,7 @@ hateoas:
   publicAddress: http://localhost:8092/noark5v4/
 
 
-nikita-noark5-core:
+nikita:
   startup:
     create-demo-users: true
     create-directory-store: true
@@ -67,9 +67,12 @@ nikita-noark5-core:
       max-page-size: 10
     checksum-algorithm: SHA-256
   server:
-    name: nikita.hioa.no
+    name: localhost
+    hateoas:
+      publicAddress: http://localhost:8092/noark5v4/ # Make sure there is a slash at the end of the address
     details:
       conformity-levels:
         official: arkivstruktur, casehandling, metadata
         non-official: gui, import-api
+
 
