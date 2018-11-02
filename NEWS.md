@@ -3,8 +3,9 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
-Release 0.X UNRELEASED
+Release 0.2.1 2018-11-02 (commit 2bf7dfb7f39067c09b9db1d473b4b2c42cd602de)
 ----------------------
+ * Fixed bug resulting in a class cast exception
  * Corrected handling of administrativEnhet.
  * Fixed bug in some \_links href entries containing double slashes.
  * Reintroduce Allow headers for OPTIONS.
