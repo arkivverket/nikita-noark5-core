@@ -54,6 +54,11 @@ info:
 # Make sure there is a slash at the end of the address
 hateoas:
   publicAddress: http://localhost:8092/noark5v4/
+# Application properties
+application:
+  pagination:
+    max-page-size: 10
+
 
 
 nikita:
