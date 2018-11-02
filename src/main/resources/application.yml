@@ -51,6 +51,11 @@ info:
     app.name: OsloMet Noark 5 Core (Demo mode)
     build.version: ${project.version}
 
+# Make sure there is a slash at the end of the address
+hateoas:
+  publicAddress: http://localhost:8092/noark5v4/
+
+
 nikita-noark5-core:
   startup:
     create-demo-users: true
@@ -63,8 +68,6 @@ nikita-noark5-core:
     checksum-algorithm: SHA-256
   server:
     name: nikita.hioa.no
-    hateoas:
-      publicAddress: http://localhost:8092/noark5v4/ # Make sure there is a slash at the end of the address
     details:
       conformity-levels:
         official: arkivstruktur, casehandling, metadata
