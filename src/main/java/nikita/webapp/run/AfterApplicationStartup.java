@@ -136,6 +136,8 @@ public class AfterApplicationStartup {
             }
         } catch (IOException e) {
             ((ConfigurableApplicationContext) applicationContext).close();
+            logger.error("Unable to create document store directories! " +
+                    "Exiting!");
             System.exit(1);
         }
     }
