@@ -8,8 +8,8 @@
 </a>
 
 This is an open source Noark 5v4 core.  This implement a REST based web API for
-storing av retrieving documents and metadata based on the Norwegian archive 
-standard NOARK 5.  
+storing and retrieving documents and metadata based on the Norwegian archive
+standard NOARK 5.
 
 Read [INSTALL](docs/general/Install.md) to get started.
 
