@@ -27,7 +27,7 @@ spring:
       #        show_sql: true # Slows things down if this is enabled.
       hbm2ddl.auto: create-drop
       #hbm2ddl.auto: validate
-    database: mysql
+    database: postgresql
   profiles:
     active: security-oauth2-authentication, postgres
 
