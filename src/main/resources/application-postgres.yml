@@ -58,10 +58,6 @@ hateoas:
 application:
   pagination:
     max-page-size: 10
-# Application properties
-application:
-  pagination:
-    max-page-size: 10
 
 # We will move all application properties here. Just need to make the code
 # in sync with these properties. That's why they are duplicated
