@@ -14,7 +14,7 @@ server:
     name: OsloMet Noark 5 Core (Demo mode)
   servlet:
     context-path: /noark5v4
-  port: 8099
+  port: 8092
 
 spring:
   datasource:
