@@ -14,14 +14,14 @@
 #
 # Or whatever variation you use to create a user
 # ===================================================================
-
-logging:
-  level:
-    org:
-      springframework:
-        web: DEBUG
-      hibernate:
-        SQL: DEBUG
+#
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+#      hibernate:
+#        SQL: DEBUG
 
 server:
   application:
@@ -89,7 +89,8 @@ application:
   pagination:
     max-page-size: 10
 
-
+# We will move all application properties here. Just need to make the code
+# in sync with these properties. That's why they are duplicated
 nikita:
   startup:
     create-demo-users: true

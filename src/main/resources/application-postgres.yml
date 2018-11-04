@@ -1,4 +1,3 @@
-# ===================================================================
 # Spring Boot configuration for the "postgres" profile.
 #
 # This configuration overrides the application.yml file.
@@ -18,32 +17,35 @@ spring:
     password: INSERT-PASSWORD-HERE
     driver-class-name: org.postgresql.Driver
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialec
     properties:
-      hibernate:
-        hbm2ddl:
-          import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
-          import_files: db/h2/import.sql,db/noark5_metadata_values.sql,db/postcode.sql,db/countrycode.sql
-#        show_sql: true # Slows things down if this is enabled.
-        hbm2ddl.auto: create
-    database: postgresql
+      hbm2ddl:
+        import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+        import_files: db/noark5_metadata_values.sql,db/postcode.sql,db/countrycode.sql
+        #import_files: db/h2/import.sql,db/noark5_metadata_values.sql,
+        #db/postcode.sql,db/countrycode.sql
+      #        show_sql: true # Slows things down if this is enabled.
+      hbm2ddl.auto: create-drop
+      #hbm2ddl.auto: validate
+    database: mysql
   profiles:
-    active: security-oauth2-authentication
-jwt:
-  header: Authorization
-  secret: mySecret
-  expiration: 604800
-  route:
-    authentication:
-      path: auth
-      refresh: refresh
-management:
-  server:
-    servlet:
-      context-path: /management
+    active: security-oauth2-authentication, postgres
+
+hibernate:
+  discriminator:
+    ignore_explicit_for_joined: true
+
+security:
+  oauth2:
+    client:
+      client-id: nikita-client
+      client-secret: $2a$10$52VgSTgNvk4ROc8YNYdTUesHhQTm2r5oeH1aiCtIgu3rfPQZQzswa
+
 info:
-    app.name: OsloMet Noark 5 Core (Demo version)
-    build.version: ${project.version}
+  app.name: OsloMet Noark 5 Core (Postgres)
+  build.version: ${project.version}
+
+
 # Make sure there is a slash at the end of the address
 hateoas:
     publicAddress: http://localhost:8092/noark5v4/
@@ -56,44 +58,28 @@ hateoas:
 application:
   pagination:
     max-page-size: 10
+# Application properties
+application:
+  pagination:
+    max-page-size: 10
 
+# We will move all application properties here. Just need to make the code
+# in sync with these properties. That's why they are duplicated
 nikita:
   startup:
     create-demo-users: true
-
-nikita-noark5-core:
-    mail:
-        from: nikita@example.com
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: true
-        spark:
-            enabled: false
-            host: localhost
-            port: 9999
-        graphite:
-            enabled: false
-            host: localhost
-            port: 2003
-            prefix: nikitaNoark5Core
-        logs: # report metrics in the logs
-            enabled: false
-            reportFrequency: 60 # in seconds
-    logging:
-        level:
-            ROOT: DEBUG
-        logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
-            enabled: false
-            host: localhost
-            port: 5000
-            queueSize: 512
-    persistence:
-         jpa.generateDdl: true
-    server:
-         name: nikita.hioa.no
+    create-directory-store: true
+    directory-store-name: /data/nikita/storage/
+    incoming-directory: /data/nikita/storage/incoming/
+  application:
+    pagination:
+      max-page-size: 10
+    checksum-algorithm: SHA-256
+  server:
+    name: localhost
+    hateoas:
+      publicAddress: http://localhost:8092/noark5v4/ # Make sure there is a slash at the end of the address
     details:
-        conformity-levels:
-            official: arkivstruktur, casehandling, metadata
-            non-official: gui, import-api
-    storage:
-        location: /tmp/dokumenter
-    checksumAlgorithm: SHA-256
+      conformity-levels:
+        official: arkivstruktur, casehandling, metadata
+        non-official: gui, import-api
