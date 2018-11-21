@@ -3,6 +3,12 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
+Release 0.3 UNRELEASED
+----------------------
+ * Update postgresql setup to reflect changes done in mysql setup.
+ * Disable 'conversion' to PDF using libreoffice for everything
+   except doc, ppt, xls, docx, pptx, xlsx, odt, odp and ods.
+
 Release 0.2.1 2018-11-02 (commit 2bf7dfb7f39067c09b9db1d473b4b2c42cd602de)
 ----------------------
  * Fixed bug resulting in a class cast exception
