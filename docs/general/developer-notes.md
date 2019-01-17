@@ -1,5 +1,24 @@
 # Nikita developer notes
 
+## 2018-11-28
+
+  - OData parsing
+
+### OData parsing
+
+We have added further support for OData including parent/child searches like 
+the following:
+
+    http://localhost/noark5v4/api/arkivstruktur/arkivdel/123456789/saksmappe?$top=2$skip=4$filter=tittel
+
+We also included $count as a parameter for search, but it is unclear how the 
+results should be formatted. $count is not even mentioned in the noark5v4 
+interface standard.
+
+Note! If you want to test OData from command-line, remember you have to 
+URL-escape the URL.     
+
+    curl -v  --header Accept:application/vnd.noark5-v4+json --header Content-Type:application/vnd.noark5-v4+json --2bcd-91e7-45d2-ab19-e020d5d9c49a" -X  GET http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/arkivdel/c45c6d1b-a108-4db3-8a60-a8f8fc41e798/saksmappe?%24top=2%24skip=4%24filter=tittel+eq+%27hello+goodbye%27
 
 ## 2018-08-03
   
