@@ -64,6 +64,9 @@ public class OAuth2AuthorizationServerConfiguration
     @Value("${security.oauth2.client.client-secret}")
     private String oauth2Secret;
 
+    @Value("${security.oauth2.client.token-expiry:28800}")
+    private Integer tokenExpiry;
+
     public OAuth2AuthorizationServerConfiguration(
             AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -89,6 +92,7 @@ public class OAuth2AuthorizationServerConfiguration
                 .authorizedGrantTypes(
                         "password", "authorization_code", "refresh_token")
                 .secret(oauth2Secret)
+                .accessTokenValiditySeconds(tokenExpiry)
                 .scopes("all");
     }
 

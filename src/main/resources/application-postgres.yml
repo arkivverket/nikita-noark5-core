@@ -40,6 +40,7 @@ security:
     client:
       client-id: nikita-client
       client-secret: $2a$10$52VgSTgNvk4ROc8YNYdTUesHhQTm2r5oeH1aiCtIgu3rfPQZQzswa
+      token-expiry: 28800 # seconds
 
 info:
   app.name: OsloMet Noark 5 Core (Postgres)
