@@ -13,6 +13,8 @@ public interface IHateoasNoarkObject {
 
     void addSelfLink(Link selfLink);
 
+    void addNextLink(Link selfLink);
+
     void addLink(Link selfLink);
 
     List<Link> getSelfLinks();
