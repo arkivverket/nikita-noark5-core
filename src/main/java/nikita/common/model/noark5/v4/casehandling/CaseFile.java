@@ -269,6 +269,14 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
         this.referenceCaseFileStatus = referenceCaseFileStatus;
     }
 
+    public static String getForeignKeyIdentifier(String parent) {
+
+        if (parent.equalsIgnoreCase("series")) {
+            return "referenceSeries";
+        } else
+            return null;
+    }
+
     @Override
     public String toString() {
         return super.toString() + " CaseFile{" +

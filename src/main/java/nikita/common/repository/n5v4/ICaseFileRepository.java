@@ -2,6 +2,8 @@ package nikita.common.repository.n5v4;
 
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +21,6 @@ public interface ICaseFileRepository
     CaseFile findBySystemId(String systemId);
 
     List<CaseFile> findByReferenceSeries(Series series);
+
+    Page<CaseFile> findByReferenceSeries(Series series, Pageable page);
 }
