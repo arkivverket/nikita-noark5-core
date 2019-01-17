@@ -2,7 +2,6 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
-import nikita.common.model.noark5.v4.Record;
 import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
@@ -27,15 +26,17 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 public class DocumentDescriptionService
         implements IDocumentDescriptionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(FileService.class);
 
     private DocumentObjectService documentObjectService;
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private EntityManager entityManager;
 
-    public DocumentDescriptionService(DocumentObjectService documentObjectService,
-                                      IDocumentDescriptionRepository documentDescriptionRepository,
-                                      EntityManager entityManager) {
+    public DocumentDescriptionService(
+            DocumentObjectService documentObjectService,
+            IDocumentDescriptionRepository documentDescriptionRepository,
+            EntityManager entityManager) {
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.entityManager = entityManager;
@@ -43,11 +44,17 @@ public class DocumentDescriptionService
 
     // All CREATE operations
     @Override
-    public DocumentObject createDocumentObjectAssociatedWithDocumentDescription(String documentDescriptionSystemId, DocumentObject documentObject) {
-        DocumentObject persistedDocumentObject = null;
-        DocumentDescription documentDescription = documentDescriptionRepository.findBySystemId(documentDescriptionSystemId);
+    public DocumentObject
+    createDocumentObjectAssociatedWithDocumentDescription(
+            String documentDescriptionSystemId, DocumentObject documentObject) {
+        DocumentObject persistedDocumentObject;
+        DocumentDescription documentDescription =
+                documentDescriptionRepository.
+                        findBySystemId(documentDescriptionSystemId);
         if (documentDescription == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " DocumentDescription, using documentDescriptionSystemId " + documentDescriptionSystemId;
+            String info = INFO_CANNOT_FIND_OBJECT + " DocumentDescription, " +
+                    "using documentDescriptionSystemId " +
+                    documentDescriptionSystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         } else {
@@ -55,7 +62,8 @@ public class DocumentDescriptionService
             List<DocumentObject> documentObjects = documentDescription
                     .getReferenceDocumentObject();
             documentObjects.add(documentObject);
-            persistedDocumentObject = documentObjectService.save(documentObject);
+            persistedDocumentObject =
+                    documentObjectService.save(documentObject);
         }
         return persistedDocumentObject;
     }
@@ -99,7 +107,9 @@ public class DocumentDescriptionService
 
     // ownedBy
     public List<DocumentDescription> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().getAuthentication().getName() : ownedBy;
+        ownedBy = (ownedBy == null) ?
+                SecurityContextHolder.getContext().getAuthentication().getName()
+                : ownedBy;
         return documentDescriptionRepository.findByOwnedBy(ownedBy);
     }
 
@@ -110,24 +120,31 @@ public class DocumentDescriptionService
 
     // -- All UPDATE operations
     @Override
-    public DocumentDescription handleUpdate(@NotNull String systemId, @NotNull Long version,
-                                            @NotNull DocumentDescription incomingDocumentDescription) {
-        DocumentDescription existingDocumentDescription = getDocumentDescriptionOrThrow(systemId);
+    public DocumentDescription handleUpdate(
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull DocumentDescription incomingDocumentDescription) {
+        DocumentDescription existingDocumentDescription =
+                getDocumentDescriptionOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         if (null != incomingDocumentDescription.getDescription()) {
-            existingDocumentDescription.setDescription(incomingDocumentDescription.getDescription());
+            existingDocumentDescription.setDescription(
+                    incomingDocumentDescription.getDescription());
         }
         if (null != incomingDocumentDescription.getTitle()) {
-            existingDocumentDescription.setTitle(incomingDocumentDescription.getTitle());
+            existingDocumentDescription.setTitle(
+                    incomingDocumentDescription.getTitle());
         }
         if (null != incomingDocumentDescription.getDocumentMedium()) {
-            existingDocumentDescription.setDocumentMedium(existingDocumentDescription.getDocumentMedium());
+            existingDocumentDescription.setDocumentMedium(
+                    existingDocumentDescription.getDocumentMedium());
         }
         if (null != incomingDocumentDescription.getAssociatedWithRecordAs()) {
-            existingDocumentDescription.setAssociatedWithRecordAs(incomingDocumentDescription.getAssociatedWithRecordAs());
+            existingDocumentDescription.setAssociatedWithRecordAs(
+                    incomingDocumentDescription.getAssociatedWithRecordAs());
         }
         if (null != incomingDocumentDescription.getDocumentNumber()) {
-            existingDocumentDescription.setDocumentNumber(incomingDocumentDescription.getDocumentNumber());
+            existingDocumentDescription.setDocumentNumber(
+                    incomingDocumentDescription.getDocumentNumber());
         }
 
         existingDocumentDescription.setVersion(version);
@@ -140,8 +157,11 @@ public class DocumentDescriptionService
     public void deleteEntity(@NotNull String documentDescriptionSystemId) {
         // See issue for a description of why this code was written this way
         // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
-        DocumentDescription documentDescription = getDocumentDescriptionOrThrow(documentDescriptionSystemId);
-        Query q = entityManager.createNativeQuery("DELETE FROM record_document_description WHERE F_PK_DOCUMENT_DESCRIPTION_ID  = :id ;");
+        DocumentDescription documentDescription =
+                getDocumentDescriptionOrThrow(documentDescriptionSystemId);
+        String query = "DELETE FROM record_document_description WHERE " +
+                "F_PK_DOCUMENT_DESCRIPTION_ID  = :id ;";
+        Query q = entityManager.createNativeQuery(query);
         q.setParameter("id", documentDescription.getId());
         q.executeUpdate();
 
@@ -174,38 +194,5 @@ public class DocumentDescriptionService
             throw new NoarkEntityNotFoundException(info);
         }
         return documentDescription;
-    }
-
-    /**
-     * Using JPA as SpringData countBy was seeing a transient object exception.
-     * Rather than spend time on that it was easier to just create a query.
-     *
-     * @param record The record containing the required systemId
-     * @return the count
-     */
-
-    private Integer getNumberDocumentsAssociatedWithRecord(Record record) {
-
-        String queryString = "select count(*) from Record" +
-                " r join r.referenceDocumentDescription " +
-                "f where r.id= :recordId";
-
-
-        /*
-
-"select c from Category c join c.fragrances f where c.referencedId = :id"
-                //"DocumentDescription d join where d" +
-               // ".referenceRecord=:recordSystemId";
-
-       // "from Portailuser u join u.portailroles r where r.name=:roleName"
-       "SELECT COUNT(1) FROM " +
-                "from DocumentDescription d join d.referenceRecord r where r.referenceRecord=:recordSystemId";
-
-       */
-        Query query = entityManager.createQuery(queryString);
-        query.setParameter("recordId", record.getId());
-
-        Long result = (Long) query.getSingleResult();
-        return result.intValue();
     }
 }
