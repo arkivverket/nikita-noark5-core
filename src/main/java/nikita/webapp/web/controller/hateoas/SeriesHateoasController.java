@@ -7,7 +7,6 @@ import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
@@ -26,10 +25,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 @RestController
@@ -107,7 +108,7 @@ public class SeriesHateoasController extends NoarkController {
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdFile));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdFile.getVersion().toString())
                 .body(fileHateoas);
     }
@@ -148,7 +149,7 @@ public class SeriesHateoasController extends NoarkController {
         caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdCaseFile));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdCaseFile.getVersion().toString())
                 .body(caseFileHateoas);
     }
@@ -355,7 +356,7 @@ public class SeriesHateoasController extends NoarkController {
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedSeries));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedSeries.getVersion().toString())
                 .body(seriesHateoas);
     }
@@ -387,7 +388,7 @@ public class SeriesHateoasController extends NoarkController {
                 SeriesHateoas(series);
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(series.getVersion().toString())
                 .body(seriesHateoas);
     }
@@ -420,7 +421,7 @@ public class SeriesHateoasController extends NoarkController {
                 FileHateoas(defaultFile);
         fileHateoasHandler.addLinksOnNew(fileHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileHateoas);
     }
 
@@ -444,7 +445,7 @@ public class SeriesHateoasController extends NoarkController {
                 caseFileService.generateDefaultCaseFile();
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(caseFileHateoas);
     }
 
@@ -608,7 +609,7 @@ public class SeriesHateoasController extends NoarkController {
                 seriesService.findByOwnedBy(ownedBy));
         seriesHateoasHandler.addLinksOnRead(seriesHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(seriesHateoas);
     }
 
@@ -642,7 +643,7 @@ public class SeriesHateoasController extends NoarkController {
         RecordHateoas recordHateoas = new RecordHateoas((List<INikitaEntity>) (List) series.getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
     }
 
@@ -681,13 +682,12 @@ public class SeriesHateoasController extends NoarkController {
                 (List) series.getReferenceFile());
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileHateoas);
     }
 
     // Retrieve all CaseFiles associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/saksmappe/
-    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/saksmappe/?top=5&skip=1
     @ApiOperation(value = "Retrieves a list of CaseFiles associated with a Series", notes = "The field skip" +
             "tells how many CaseFile rows of the result set to ignore (starting at 0), while  top tells how many rows" +
             " after skip to return. Note if the value of top is greater than system value " +
@@ -708,17 +708,20 @@ public class SeriesHateoasController extends NoarkController {
             @ApiParam(name = "systemID",
                     value = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID
-            ) {
-        seriesService.findAllCaseFileBySeries(systemID);
-
-        CaseFileHateoas caseFileHateoas = new
-                CaseFileHateoas((List<INikitaEntity>) (List)
-                seriesService.findAllCaseFileBySeries(systemID));
-        caseFileHateoasHandler.addLinksOnRead(caseFileHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(caseFileHateoas);
+            @PathVariable("systemID") final String systemID)
+            throws UnsupportedEncodingException {
+        if (null == request.getQueryString()) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                    .body((CaseFileHateoas) seriesService.
+                            findPagedCaseFilesBySeries(systemID, 0, 10));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                    .body((CaseFileHateoas) seriesService.
+                            findCaseFilesBySeriesWithOData(systemID,
+                                    getODataString(request)));
+        }
     }
 
     // API - All DELETE Requests (CRUD - DELETE)
@@ -749,7 +752,7 @@ public class SeriesHateoasController extends NoarkController {
         seriesService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, fonds));
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fonds.getVersion().toString())
                 .body(fondsHateoas);
     }
