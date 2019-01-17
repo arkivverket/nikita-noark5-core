@@ -1,4 +1,4 @@
-// Generated from /home/tsodring/git/nikita-noark5-core/core-webapp/src/main/resources/odata/OData.g4 by ANTLR 4.7
+// Generated from /home/tsodring/git/nikita-noark5-core/src/main/resources/odata/OData.g4 by ANTLR 4.7
 package nikita.webapp.odata;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -106,6 +106,20 @@ public interface ODataListener extends ParseTreeListener {
     void exitFunctionality(ODataParser.FunctionalityContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ODataParser#parentResource}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterParentResource(ODataParser.ParentResourceContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#parentResource}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitParentResource(ODataParser.ParentResourceContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ODataParser#resource}.
      *
      * @param ctx the parse tree
@@ -118,6 +132,20 @@ public interface ODataListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitResource(ODataParser.ResourceContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ODataParser#systemId}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterSystemId(ODataParser.SystemIdContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#systemId}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitSystemId(ODataParser.SystemIdContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ODataParser#port}.
@@ -148,6 +176,20 @@ public interface ODataListener extends ParseTreeListener {
     void exitFromContextPath(ODataParser.FromContextPathContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ODataParser#nikitaObjects}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterNikitaObjects(ODataParser.NikitaObjectsContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#nikitaObjects}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitNikitaObjects(ODataParser.NikitaObjectsContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ODataParser#odataCommand}.
      *
      * @param ctx the parse tree
@@ -174,6 +216,20 @@ public interface ODataListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitFilter(ODataParser.FilterContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ODataParser#count}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCount(ODataParser.CountContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#count}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCount(ODataParser.CountContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ODataParser#search}.
@@ -526,6 +582,20 @@ public interface ODataListener extends ParseTreeListener {
     void exitString(ODataParser.StringContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ODataParser#stringContent}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterStringContent(ODataParser.StringContentContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#stringContent}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitStringContent(ODataParser.StringContentContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ODataParser#number}.
      *
      * @param ctx the parse tree
@@ -538,6 +608,20 @@ public interface ODataListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitNumber(ODataParser.NumberContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ODataParser#uuid}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterUuid(ODataParser.UuidContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#uuid}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitUuid(ODataParser.UuidContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ODataParser#asc}.

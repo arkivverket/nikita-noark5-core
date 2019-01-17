@@ -40,9 +40,11 @@ fromContextPath: contextPath api functionality '/' nikitaObjects '?' odataComman
 
 nikitaObjects   : (parentResource '/' systemId '/' resource) | resource;
 
-odataCommand    : (filter | top | skip | orderby)*;
+odataCommand    : (filter | top | skip | orderby | count)*;
 
 filter          : '$filter=' filterCommand;
+
+count           : '$count';
 
 search          : '$search=' searchCommand;
 
@@ -54,12 +56,11 @@ orderby         : '$orderby=' attribute sortOrder? (attribute sortOrder?)*;
 
 searchCommand   : string;
 
-filterCommand   : (command | comparatorCommand) (operator filterCommand)? ;
+filterCommand   : (command | comparatorCommand) (operator filterCommand)?;
 
+command         : (contains | startsWith);
 
-command        : (contains | startsWith);
-
-comparatorCommand : (attribute comparator '\'' value '\'');
+comparatorCommand : (attribute comparator stringContent);
 
 
 contains        : 'contains' leftCurlyBracket attribute ',' '\'' value '\''
@@ -70,11 +71,9 @@ startsWith      : 'startsWith' leftCurlyBracket attribute ',' '\'' value '\''
 
 attribute       : string;
 
-
 value           : string;
 
 sortOrder       : asc | desc;
-
 
 comparator      : eq | gt | lt | ge | le;
 operator        : (and | or);
@@ -92,6 +91,7 @@ lt              : LT;
 ge              : GE;
 le              : LE;
 string          : STRING;
+stringContent   : STRING_CONTENT;
 number          : DIGITS;
 uuid            : UUID;
 asc             : ASC;
@@ -112,8 +112,9 @@ COUNT           : 'count';
 ORDERBY         : 'orderby';
 WS              : ' '+;
 DIGITS          : [0-9] +;
-HEX             : ('%' [a-fA-F0-9] [a-fA-F0-9]) +;
-STRING          : ([a-zA-Z~0-9])+;
+HEX             : ('%' [a-fA-F0-9] [a-fA-F0-9])+;
+STRING          : ([a-zA-Z~0-9])+ [-]* ([a-zA-Z~0-9])+;
+STRING_CONTENT  : '\''([a-zA-Z~0-9 ])+'\'';
 UUID            : ('a'..'z'|'A'..'Z'|'0'..'9'|'-')+;
 COLON           : ':';
 SEPERATOR       : '://';

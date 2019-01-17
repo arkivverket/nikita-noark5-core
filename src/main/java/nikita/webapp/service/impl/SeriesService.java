@@ -1,20 +1,31 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.File;
+import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
+import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.ISeriesRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
+import nikita.webapp.odata.NikitaODataToHQLWalker;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
+import org.antlr.v4.runtime.CharStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +39,7 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityVal
 @Service
 @Transactional
 public class SeriesService
+        extends NoarkService
         implements ISeriesService {
 
     private static final Logger logger =
@@ -36,10 +48,15 @@ public class SeriesService
     private IFileService fileService;
     private ICaseFileService caseFileService;
     private ISeriesRepository seriesRepository;
+    private ICaseFileHateoasHandler caseFileHateoasHandler;
 
-    public SeriesService(IFileService fileService,
+    public SeriesService(EntityManager entityManager,
+                         ICaseFileHateoasHandler caseFileHateoasHandler,
+                         IFileService fileService,
                          ICaseFileService caseFileService,
                          ISeriesRepository seriesRepository) {
+        super(entityManager);
+        this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
         this.seriesRepository = seriesRepository;
@@ -81,9 +98,40 @@ public class SeriesService
     }
 
     @Override
-    public List<CaseFile> findAllCaseFileBySeries(String systemId) {
+    public HateoasNoarkObject findPagedCaseFilesBySeries(String systemId,
+                                                         Integer skip,
+                                                         Integer top) {
         Series series = getSeriesOrThrow(systemId);
-        return caseFileService.findAllCaseFileBySeries(series);
+        return packResults(caseFileService.findByReferenceSeries(series,
+                PageRequest.of(skip, top)));
+    }
+
+    @Override
+    public HateoasNoarkObject findCaseFilesBySeriesWithOData(
+            String systemId, CharStream oDataString) {
+        Series series = getSeriesOrThrow(systemId);
+        NikitaODataToHQLWalker oDataToHQLWalker =
+                getHQLFromODataString(oDataString);
+        oDataToHQLWalker.replaceParentIdWithPrimaryKey(series.getId().
+                toString());
+        List<NoarkEntity> caseFiles =
+                executeHQL(oDataToHQLWalker);
+        return packResults((List<INikitaEntity>) (List) caseFiles);
+    }
+
+    @Override
+    protected HateoasNoarkObject packResults(List<INikitaEntity> caseFileList) {
+
+        CaseFileHateoas caseFileHateoas = new
+                CaseFileHateoas(caseFileList);
+        caseFileHateoasHandler.addLinksOnRead(caseFileHateoas,
+                new Authorisation());
+
+        return caseFileHateoas;
+    }
+
+    protected HateoasNoarkObject packResults(Page<CaseFile> caseFiles) {
+        return packResults((List<INikitaEntity>) (List) caseFiles.getContent());
     }
 
     // id

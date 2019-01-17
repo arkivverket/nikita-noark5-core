@@ -21,6 +21,10 @@ public class NikitaODataToHQLWalker
         this.hqlStatement = new HQLStatementBuilder();
     }
 
+    public void replaceParentIdWithPrimaryKey(String primaryKey) {
+        hqlStatement.replaceParentIdWithPrimaryKey(primaryKey);
+    }
+
     /**
      * processResource
      * <p>
@@ -49,6 +53,39 @@ public class NikitaODataToHQLWalker
     }
 
     /**
+     * processNikitaObjects
+     * <p>
+     * When dealing with the following example URL:
+     * <p>
+     * [contextPath][api]/arkivstruktur/arkiv?$filter=startsWith(tittel,'hello')
+     * <p>
+     * The 'arkiv' entity is identified as a resource and picked out and is
+     * identified as the 'from' part. We always add to the where clause to
+     * filter out rows that actually belong to the user first and then can add
+     * extra filtering as the walker progresses.
+     * <p>
+     * Note this will cause some problems when dealing with ownership of objects
+     * via groups. Probably have to some lookup or something. But we are
+     * currently just dealing with getting OData2HQL to work.
+     *
+     * @param parentResource the parent resource e.g. series->casefile query
+     *                       then series is the parent resource.
+     * @param resource       the resource to retreve e.g. series->casefile query
+     *                       *                       then casefile is the resource.
+     * @param systemId       systemId of the parent resource
+     * @param loggedInUser   The name of the user whose tuples you want to
+     *                       retrieve
+     */
+
+    @Override
+    public void processNikitaObjects(String parentResource, String resource,
+                                     String systemId, String loggedInUser) {
+        hqlStatement.addSelectWithForeignKey(
+                parentResource, resource,
+                DM_OWNED_BY, loggedInUser);
+    }
+
+    /**
      * processComparatorCommand
      * <p>
      * Convert a general Odata attribute comparator value command to HQL. In
@@ -71,7 +108,8 @@ public class NikitaODataToHQLWalker
     @Override
     public void processComparatorCommand(String attribute, String comparator,
                                          String value) {
-
+        hqlStatement.addEqualsWhere(getNameDatabase(attribute), comparator,
+                value);
     }
 
     @Override
@@ -104,4 +142,5 @@ public class NikitaODataToHQLWalker
     public Query getHqlStatment(Session session) {
         return hqlStatement.buildHQLStatement(session);
     }
+
 }

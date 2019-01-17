@@ -7,17 +7,42 @@ import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
 
 import static nikita.common.config.Constants.SLASH;
+import static org.apache.commons.lang3.CharEncoding.UTF_8;
 
 /**
  * Created by tsodring on 2/17/17.
  */
 public class NoarkController {
+
+    /**
+     * Take an incoming HttpServletRequest and pull out the OData query part.
+     * Currently the OData parser expects the entire string including
+     * query and request URL. This will probably change later and we will just
+     * pass in the query part.
+     *
+     * @param request The incoming HttpServletRequest
+     * @return CharStream representation of the query part
+     * @throws UnsupportedEncodingException
+     */
+    protected CharStream getODataString(HttpServletRequest request)
+            throws UnsupportedEncodingException {
+
+        String queryString = request.getQueryString();
+        String decoded = URLDecoder.decode(queryString, UTF_8);
+        StringBuffer originalRequest = request.getRequestURL();
+        originalRequest.append("?" + decoded);
+        return CharStreams.fromString(originalRequest.toString());
+    }
 
 
     /**

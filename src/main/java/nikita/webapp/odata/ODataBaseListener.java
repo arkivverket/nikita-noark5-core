@@ -1,4 +1,4 @@
-// Generated from /home/tsodring/git/nikita-noark5-core/core-webapp/src/main/resources/odata/OData.g4 by ANTLR 4.7
+// Generated from /home/tsodring/git/nikita-noark5-core/src/main/resources/odata/OData.g4 by ANTLR 4.7
 package nikita.webapp.odata;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -13,7 +13,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class ODataBaseListener implements ODataListener {
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -22,7 +22,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -31,7 +31,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -40,7 +40,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -49,7 +49,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -58,7 +58,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -67,7 +67,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -76,7 +76,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -85,7 +85,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -94,7 +94,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -103,7 +103,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -112,7 +112,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -121,7 +121,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -130,7 +130,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -139,7 +139,25 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterParentResource(ODataParser.ParentResourceContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitParentResource(ODataParser.ParentResourceContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -148,7 +166,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -157,7 +175,25 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterSystemId(ODataParser.SystemIdContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitSystemId(ODataParser.SystemIdContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -166,7 +202,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -175,7 +211,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -184,7 +220,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -193,7 +229,25 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterNikitaObjects(ODataParser.NikitaObjectsContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitNikitaObjects(ODataParser.NikitaObjectsContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -202,7 +256,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -211,7 +265,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -220,7 +274,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -229,7 +283,25 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCount(ODataParser.CountContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCount(ODataParser.CountContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -238,7 +310,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -247,7 +319,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -256,7 +328,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -265,7 +337,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -274,7 +346,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -283,7 +355,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -292,7 +364,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -301,7 +373,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -310,7 +382,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -319,7 +391,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -328,7 +400,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -337,7 +409,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -346,7 +418,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -355,7 +427,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -364,7 +436,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -373,7 +445,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -382,7 +454,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -391,7 +463,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -400,7 +472,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -409,7 +481,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -418,7 +490,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -427,7 +499,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -436,7 +508,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -445,7 +517,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -454,7 +526,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -463,7 +535,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -472,7 +544,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -481,7 +553,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -490,7 +562,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -499,7 +571,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -508,7 +580,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -517,7 +589,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -526,7 +598,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -535,7 +607,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -544,7 +616,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -553,7 +625,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -562,7 +634,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -571,7 +643,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -580,7 +652,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -589,7 +661,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -598,7 +670,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -607,7 +679,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -616,7 +688,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -625,7 +697,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -634,7 +706,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -643,7 +715,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -652,7 +724,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -661,7 +733,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -670,7 +742,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -679,7 +751,25 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterStringContent(ODataParser.StringContentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitStringContent(ODataParser.StringContentContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -688,7 +778,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -697,7 +787,25 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterUuid(ODataParser.UuidContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitUuid(ODataParser.UuidContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -706,7 +814,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -715,7 +823,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -724,7 +832,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -733,7 +841,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -742,7 +850,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -751,7 +859,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override
@@ -760,7 +868,7 @@ public class ODataBaseListener implements ODataListener {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * <p>The default implementation does nothing.</p>
      */
     @Override

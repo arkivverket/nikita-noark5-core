@@ -1,6 +1,7 @@
 package nikita.webapp.odata;
 
 import nikita.common.util.CommonUtils;
+import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -78,7 +79,7 @@ public abstract class NikitaODataWalker
      *
      * @param ctx ODataParser.ResourceContext ctx
      */
-    @Override
+    /*@Override
     public void enterResource(ODataParser.ResourceContext ctx) {
         super.enterResource(ctx);
         System.out.println("Entering enterResource. Found [" +
@@ -96,7 +97,7 @@ public abstract class NikitaODataWalker
         String entity = ctx.getText();
         processResource(entity, loggedInUser);
     }
-
+*/
     /**
      * enterContains
      * <p>
@@ -154,8 +155,9 @@ public abstract class NikitaODataWalker
     }
 
     @Override
-    public void enterComparatorCommand(
-            ODataParser.ComparatorCommandContext ctx) {
+    public void enterComparatorCommand(ODataParser.ComparatorCommandContext ctx) {
+        super.enterComparatorCommand(ctx);
+
         System.out.println("Entering filter. Found [" +
                 ctx.getText() + "]");
         String attribute = ctx.getChild(
@@ -163,7 +165,7 @@ public abstract class NikitaODataWalker
         String comparator = ctx.getChild(
                 ODataParser.ComparatorContext.class, 0).getText();
         String value = ctx.getChild(
-                ODataParser.ValueContext.class, 0).getText();
+                ODataParser.StringContentContext.class, 0).getText();
 
         processComparatorCommand(attribute, comparator, value);
     }
@@ -205,6 +207,41 @@ public abstract class NikitaODataWalker
         processOrderByCommand(attribute, sortOrder);
     }
 
+    @Override
+    public void enterNikitaObjects(ODataParser.NikitaObjectsContext ctx) {
+        super.enterNikitaObjects(ctx);
+        System.out.println("Entering enterNikitaObjects. Found [" +
+                ctx.getText() + "]");
+        String parentResource = ctx.getChild(
+                ODataParser.ParentResourceContext.class, 0).getText();
+        String resource = ctx.getChild(
+                ODataParser.ResourceContext.class, 0).getText();
+        String systemId = ctx.getChild(
+                ODataParser.SystemIdContext.class, 0).getText();
+
+        System.out.println("Entering enterResource. Found [" +
+                ctx.getText() + "]");
+        String loggedInUser = null;
+        if (SecurityContextHolder.getContext() != null &&
+                SecurityContextHolder.getContext().
+                        getAuthentication() != null) {
+            loggedInUser = SecurityContextHolder.getContext().
+                    getAuthentication().getName();
+        }
+
+        if (loggedInUser == null) {
+            throw new NikitaMisconfigurationException(
+                    "Internal error when parsing OData syntax. Cannot find " +
+                            "user.");
+        }
+
+        if (parentResource != null && systemId != null) {
+            processNikitaObjects(parentResource, resource, systemId,
+                    loggedInUser);
+        } else {
+            processResource(resource, loggedInUser);
+        }
+    }
 
     /**
      * getNameDatabase
@@ -257,7 +294,6 @@ public abstract class NikitaODataWalker
     protected String getNameObject(String norwegianName) {
         String englishName = CommonUtils.WebUtils
                 .getEnglishNameObject(norwegianName);
-
         if (englishName == null)
             return norwegianName;
         else

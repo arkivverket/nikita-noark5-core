@@ -1,6 +1,8 @@
 package nikita.webapp.odata;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static nikita.common.config.Constants.DM_OWNED_BY;
 import static nikita.common.config.ESConstants.*;
@@ -19,6 +21,10 @@ import static nikita.common.config.ESConstants.*;
 public class NikitaODataToESWalker
         extends NikitaODataWalker
         implements IODataWalker {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(NikitaODataToESWalker.class);
+
 
     private JSONObject query;
 
@@ -70,6 +76,11 @@ public class NikitaODataToESWalker
         query.put(QUERY_QUERY, where);
     }
 
+    @Override
+    public void processNikitaObjects(
+            String parentResource, String resource, String systemId, String loggedInUser) {
+        logger.error("processNikitaObjects ES not implemented");
+    }
     /**
      * processStartsWith
      * <p>

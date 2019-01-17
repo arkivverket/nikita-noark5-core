@@ -16,11 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.util.List;
 
@@ -43,18 +41,17 @@ public class OdataTest {
             value = "arkivstruktur/{\\w*}"
 //            value = "{\\w*}"
     )
-    public ResponseEntity<String> testOdata(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest
-            request, final HttpServletResponse response
-    )
-            throws Exception {
 
+    @SuppressWarnings("unchecked")
+    public ResponseEntity<String> testOdata(HttpServletRequest request)
+            throws Exception {
 
         String uqueryString = request.getQueryString();
         String decoded = URLDecoder.decode(uqueryString, UTF_8);
 
         StringBuffer originalRequest = request.getRequestURL();
-        originalRequest.append("?" + decoded);
+        originalRequest.append("?");
+        originalRequest.append(decoded);
         CharStream stream = CharStreams.fromString(originalRequest.toString());
 
         ODataLexer lexer = new ODataLexer(stream);

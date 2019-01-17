@@ -2,7 +2,10 @@ package nikita.webapp.odata;
 
 public interface IODataWalker {
 
-    void processResource(String entity, String loggedInUser);
+    void processResource(String resource, String loggedInUser);
+
+    void processNikitaObjects(String parentResource, String resource,
+                              String systemId, String loggedInUser);
 
     void processContains(String attribute, String value);
 

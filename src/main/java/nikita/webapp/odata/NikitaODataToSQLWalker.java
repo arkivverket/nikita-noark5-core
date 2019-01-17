@@ -1,5 +1,8 @@
 package nikita.webapp.odata;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +16,9 @@ import static nikita.common.config.ODataConstants.*;
 
 public class NikitaODataToSQLWalker
         extends NikitaODataWalker {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(NikitaODataToSQLWalker.class);
 
     private SQLStatementBuilder sqlStatementBuilder;
     private Map<String, String> comparatorMap;
@@ -54,6 +60,11 @@ public class NikitaODataToSQLWalker
                 loggedInUser);
     }
 
+    @Override
+    public void processNikitaObjects(
+            String parentResource, String resource, String systemId, String loggedInUser) {
+        logger.error("processNikitaObjects SQL not implemented");
+    }
 
     /**
      * processContains
