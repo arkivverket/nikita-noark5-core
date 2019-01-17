@@ -14,17 +14,18 @@ app.controller('SearchController', ['$scope', '$http', function ($scope, $http) 
 	console.log(" The value of element is " + elementValue);
 	console.log(" The value of filter is " + filterValue);
 	console.log(" The value of string is " + stringValue);
-      var urlToFonds = baseUrl + "odata/arkivstruktur/" + elementValue + "?%24filter%3Dcontains%28" + contentValue + "%2C%27" + stringValue + "%27%29%24top%3D2%24skip%3D0%24orderby%3D" + contentValue + "%20desc";
-	console.log("Attempting search on " + urlToFonds);
+	var urlToFonds = baseUrl + "arkivstruktur/" + elementValue + "?%24filter%3Dcontains%28" + contentValue + "%2C%27" + stringValue + "%27%29%24top%3D2%24skip%3D0%24orderby%3D" + contentValue + "%20desc";
+	console.log(" Attempting OData Search on " + urlToFonds);
 	var token = GetUserToken();
+	console.log(" Authorization Token " + token);
 	$http({
 	    method: 'GET',
 	    url: urlToFonds,
-	    headers: {'Authorization': token}
+	    headers: {'Authorization': token, 'Access-Control-Allow-Origin': baseUrl}
 	}).then(function successCallback(response) {
 	    console.log("Data received from search is : " + JSON.stringify(response.data));
 	}, function errorCallback(response) {
-    console.log("Error when attempting search. Response is " + JSON.stringify(response));
+	    console.log("Error when attempting search. Response is " + response);
 	});
     }
 }]);
