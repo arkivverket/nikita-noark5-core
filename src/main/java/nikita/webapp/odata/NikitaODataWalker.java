@@ -165,7 +165,7 @@ public abstract class NikitaODataWalker
         String comparator = ctx.getChild(
                 ODataParser.ComparatorContext.class, 0).getText();
         String value = ctx.getChild(
-                ODataParser.StringContentContext.class, 0).getText();
+                ODataParser.StringContext.class, 0).getText();
 
         processComparatorCommand(attribute, comparator, value);
     }
