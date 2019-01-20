@@ -174,6 +174,145 @@ INSERT INTO format (pk_format_id, system_id, code,
 VALUES (8, '7412833e-ceaf-40fd-95b5-e634f4640f99', 'RA-MP3',
         'MP3', FALSE, 0);
 
+/* Graderingskode : ClassifiedCode */
+
+/* Hendelsetype : EventType */
+
+
+/* registry_entry_status journalpoststatus */
+INSERT INTO registry_entry_status(pk_registry_entry_status_id,
+                                  system_id,
+                                  code,
+                                  description,
+                                  deleted,
+                                  version)
+VALUES (1,
+        '0b4cfcb9-e979-4cdd-94d3-1660172976a4',
+        'J',
+        'Journalført',
+        FALSE,
+        0);
+INSERT INTO registry_entry_status(pk_registry_entry_status_id,
+                                  system_id,
+                                  code,
+                                  description,
+                                  deleted,
+                                  version)
+VALUES (2,
+        '2f140067-8239-4ea3-88a3-c42380ec3885',
+        'F',
+        'Ferdigstilt fra saksbehandler',
+        FALSE,
+        0);
+INSERT INTO registry_entry_status(pk_registry_entry_status_id,
+                                  system_id,
+                                  code,
+                                  description,
+                                  deleted,
+                                  version)
+VALUES (3,
+        '218deb74-f9e0-48e2-a523-3f47a6a44aba',
+        'G',
+        'Godkjent av leder',
+        FALSE,
+        0);
+INSERT INTO registry_entry_status(pk_registry_entry_status_id,
+                                  system_id,
+                                  code,
+                                  description,
+                                  deleted,
+                                  version)
+VALUES (4, '35940d96-e531-4e5b-8f0a-63f8c7d08cb0', 'E', 'Ekspedert', FALSE, 0);
+INSERT INTO registry_entry_status(pk_registry_entry_status_id,
+                                  system_id,
+                                  code,
+                                  description,
+                                  deleted,
+                                  version)
+VALUES (5, '74aef294-f3d1-4e77-a3c1-abcb45a7eeea', 'A', 'Arkivert', FALSE, 0);
+INSERT INTO registry_entry_status(pk_registry_entry_status_id,
+                                  system_id,
+                                  code,
+                                  description,
+                                  deleted,
+                                  version)
+VALUES (6, '8bc27628-f722-41c5-9ce9-4f46fc54bf34', 'U', 'Utgår', FALSE, 0);
+INSERT INTO registry_entry_status(pk_registry_entry_status_id,
+                                  system_id,
+                                  code,
+                                  description,
+                                  deleted,
+                                  version)
+VALUES (7,
+        '395ff299-e60d-4550-979e-5b682d8e4f61',
+        'M',
+        'Midlertidig registrering av',
+        FALSE,
+        0);
+
+/* registry_entry_type journalposttype */
+INSERT INTO registry_entry_type(pk_registry_entry_type_id,
+                                system_id,
+                                code,
+                                description,
+                                deleted,
+                                version)
+VALUES (1,
+        '4827e5e0-0fae-4b9e-a01d-88ce00e8c62e',
+        'I',
+        'Inngående dokument',
+        FALSE,
+        0);
+INSERT INTO registry_entry_type(pk_registry_entry_type_id,
+                                system_id,
+                                code,
+                                description,
+                                deleted,
+                                version)
+VALUES (2,
+        'f87a8b7f-bb31-4dea-98c6-13e1ac17e24f',
+        'U',
+        'Utgående dokument',
+        FALSE,
+        0);
+INSERT INTO registry_entry_type(pk_registry_entry_type_id,
+                                system_id,
+                                code,
+                                description,
+                                deleted,
+                                version)
+VALUES (3,
+        '001f176e-d68a-42f4-95f8-555a72c1a748',
+        'N',
+        'Organinternt dokument for oppfølging',
+        FALSE,
+        0);
+INSERT INTO registry_entry_type(pk_registry_entry_type_id,
+                                system_id,
+                                code,
+                                description,
+                                deleted,
+                                version)
+VALUES (4,
+        '2014243a-5d33-4fd3-98af-eda7ddd4cdc8',
+        'X',
+        'Organinternt dokument uten oppfølging',
+        FALSE,
+        0);
+INSERT INTO registry_entry_type(pk_registry_entry_type_id,
+                                system_id,
+                                code,
+                                description,
+                                deleted,
+                                version)
+VALUES (5,
+        '07c06822-50e8-47fb-a760-eaff70eaa64e',
+        'S',
+        'Saksframlegg',
+        FALSE,
+        0);
+
+
 /* correspondence_part_type korrespondanseparttype */
 INSERT INTO correspondence_part_type (
   pk_correspondence_part_type_id, system_id, code,
@@ -210,70 +349,6 @@ INSERT INTO correspondence_part_type (
   description, deleted, version)
 VALUES (7, '78e59b26-819c-4cf7-abe1-69fb6e457bcb', 'IK',
         'Intern kopimottaker', FALSE, 0);
-
-/* registry_entry_status journalpoststatus */
-INSERT INTO registry_entry_status (
-  pk_registry_entry_status_id, system_id, code,
-  description, deleted, version)
-VALUES (1, '0b4cfcb9-e979-4cdd-94d3-1660172976a4', 'J',
-        'Journalført', FALSE, 0);
-INSERT INTO registry_entry_status (
-  pk_registry_entry_status_id, system_id, code,
-  description, deleted, version)
-VALUES (2, '2f140067-8239-4ea3-88a3-c42380ec3885', 'F',
-        'Ferdigstilt fra saksbehandler', FALSE, 0);
-INSERT INTO registry_entry_status (
-  pk_registry_entry_status_id, system_id, code,
-  description, deleted, version)
-VALUES (3, '218deb74-f9e0-48e2-a523-3f47a6a44aba', 'G',
-        'Godkjent av leder', FALSE, 0);
-INSERT INTO registry_entry_status (
-  pk_registry_entry_status_id, system_id, code,
-  description, deleted, version)
-VALUES (4, '35940d96-e531-4e5b-8f0a-63f8c7d08cb0', 'E',
-        'Ekspedert', FALSE, 0);
-INSERT INTO registry_entry_status (
-  pk_registry_entry_status_id, system_id, code,
-  description, deleted, version)
-VALUES (5, '74aef294-f3d1-4e77-a3c1-abcb45a7eeea', 'A',
-        'Arkivert', FALSE, 0);
-INSERT INTO registry_entry_status (
-  pk_registry_entry_status_id, system_id, code,
-  description, deleted, version)
-VALUES (6, '8bc27628-f722-41c5-9ce9-4f46fc54bf34', 'U',
-        'Utgår', FALSE, 0);
-INSERT INTO registry_entry_status (
-  pk_registry_entry_status_id, system_id, code,
-  description, deleted, version)
-VALUES (7, '395ff299-e60d-4550-979e-5b682d8e4f61', 'M',
-        'Midlertidig registrering av', FALSE, 0);
-
-/* registry_entry_type journalposttype */
-INSERT INTO registry_entry_type (
-  pk_registry_entry_type_id, system_id, code,
-  description, deleted, version)
-VALUES (1, '4827e5e0-0fae-4b9e-a01d-88ce00e8c62e', 'I',
-        'Inngående dokument', FALSE, 0);
-INSERT INTO registry_entry_type (
-  pk_registry_entry_type_id, system_id, code,
-  description, deleted, version)
-VALUES (2, 'f87a8b7f-bb31-4dea-98c6-13e1ac17e24f', 'U',
-        'Utgående dokument', FALSE, 0);
-INSERT INTO registry_entry_type (
-  pk_registry_entry_type_id, system_id, code,
-  description, deleted, version)
-VALUES (3, '001f176e-d68a-42f4-95f8-555a72c1a748', 'N',
-        'Organinternt dokument for oppfølging', FALSE, 0);
-INSERT INTO registry_entry_type (
-  pk_registry_entry_type_id, system_id, code,
-  description, deleted, version)
-VALUES (4, '2014243a-5d33-4fd3-98af-eda7ddd4cdc8', 'X',
-        'Organinternt dokument uten oppfølging', FALSE, 0);
-INSERT INTO registry_entry_type (
-  pk_registry_entry_type_id, system_id, code,
-  description, deleted, version)
-VALUES (5, '07c06822-50e8-47fb-a760-eaff70eaa64e', 'S',
-        'Saksframlegg', FALSE, 0);
 
 /* precedence_status / presedensstatus */
 INSERT INTO precedence_status (
@@ -415,62 +490,6 @@ INSERT INTO classification_type (
 VALUES (8, '9f8b839e-35c5-4382-a774-3f42f00e75a4', 'PNR',
         'Fødselsnummer', FALSE, 0);
 
-
-/* variant_format / variantformat */
-INSERT INTO variant_format (
-  pk_variant_format_id, system_id, code,
-  description, deleted, version)
-VALUES (1, '04c49db4-5a6f-47a9-a763-d7d3d6fee2a2', 'P',
-        'Produksjonsformat', FALSE, 0);
-
-INSERT INTO variant_format (
-  pk_variant_format_id, system_id, code,
-  description, deleted, version)
-VALUES (2, '0998cf74-d352-4aca-b8d7-ce6deba18ea4', 'A',
-        'Arkivformat', FALSE, 0);
-
-INSERT INTO variant_format (
-  pk_variant_format_id, system_id, code,
-  description, deleted, version)
-VALUES (3, '3a89bb13-e796-4f44-a2ee-509fbbbef0aa', 'O',
-        'Dokument hvor deler av innholdet er skjermet', FALSE, 0);
-
-/* case_status / saksstatus*/
-INSERT INTO case_status (pk_case_file_status_id, system_id, code,
-                         description, deleted, version)
-VALUES (1, '33f1e0f1-ba44-4c9b-9493-28998c4f9fe4', 'B',
-        'Under behandling', FALSE, 0);
-
-INSERT INTO case_status (pk_case_file_status_id, system_id, code,
-                         description, deleted, version)
-VALUES (2, '985a4607-0a24-4427-91e0-95438d6a2529', 'A',
-        'Avsluttet', FALSE, 0);
-
-INSERT INTO case_status (pk_case_file_status_id, system_id, code,
-                         description, deleted, version)
-VALUES (3, '51f2d7c2-8146-4735-94c2-543d3cc17263', 'U',
-        'Utgår', FALSE, 0);
-
-INSERT INTO case_status (pk_case_file_status_id, system_id, code,
-                         description, deleted, version)
-VALUES (4, 'a23b0a12-5e02-4edf-b75b-896a7744d7ca', 'R',
-        'Opprettet av saksbehandler', FALSE, 0);
-
-INSERT INTO case_status (pk_case_file_status_id, system_id, code,
-                         description, deleted, version)
-VALUES (5, '0c9e8e57-1a5a-4c11-9f1b-5d646b6a683f', 'S',
-        'Avsluttet av saksbehandler', FALSE, 0);
-
-INSERT INTO case_status (pk_case_file_status_id, system_id, code,
-                         description, deleted, version)
-VALUES (6, 'd26041b1-50cd-4a8b-9431-0833dfaa45d3', 'P',
-        'Unntatt prosesstyring', FALSE, 0);
-
-INSERT INTO case_status (pk_case_file_status_id, system_id, code,
-                         description, deleted, version)
-VALUES (7, '6cc5cca6-8ae5-4a6d-a7d6-9383067a38a1', 'F',
-        'Ferdig fra saksbehandler', FALSE, 0);
-
 /* screening_document / skjermingdokument*/
 INSERT INTO screening_document (
   pk_screening_document_id, system_id, code,
@@ -557,3 +576,126 @@ INSERT INTO screening_metadata (
   description, deleted, version)
 VALUES (12, '2f68901a-a60a-4212-8b6a-7505c02d7104', 'M',
         'Midlertidig skjerming', FALSE, 0);
+
+
+/* case_status / saksstatus*/
+INSERT INTO case_status(pk_case_file_status_id,
+                        system_id,
+                        code,
+                        description,
+                        deleted,
+                        version)
+VALUES (1,
+        '33f1e0f1-ba44-4c9b-9493-28998c4f9fe4',
+        'B',
+        'Under behandling',
+        FALSE,
+        0);
+
+INSERT INTO case_status(pk_case_file_status_id,
+                        system_id,
+                        code,
+                        description,
+                        deleted,
+                        version)
+VALUES (2, '985a4607-0a24-4427-91e0-95438d6a2529', 'A', 'Avsluttet', FALSE, 0);
+
+INSERT INTO case_status(pk_case_file_status_id,
+                        system_id,
+                        code,
+                        description,
+                        deleted,
+                        version)
+VALUES (3, '51f2d7c2-8146-4735-94c2-543d3cc17263', 'U', 'Utgår', FALSE, 0);
+
+INSERT INTO case_status(pk_case_file_status_id,
+                        system_id,
+                        code,
+                        description,
+                        deleted,
+                        version)
+VALUES (4,
+        'a23b0a12-5e02-4edf-b75b-896a7744d7ca',
+        'R',
+        'Opprettet av saksbehandler',
+        FALSE,
+        0);
+
+INSERT INTO case_status(pk_case_file_status_id,
+                        system_id,
+                        code,
+                        description,
+                        deleted,
+                        version)
+VALUES (5,
+        '0c9e8e57-1a5a-4c11-9f1b-5d646b6a683f',
+        'S',
+        'Avsluttet av saksbehandler',
+        FALSE,
+        0);
+
+INSERT INTO case_status(pk_case_file_status_id,
+                        system_id,
+                        code,
+                        description,
+                        deleted,
+                        version)
+VALUES (6,
+        'd26041b1-50cd-4a8b-9431-0833dfaa45d3',
+        'P',
+        'Unntatt prosesstyring',
+        FALSE,
+        0);
+
+INSERT INTO case_status(pk_case_file_status_id,
+                        system_id,
+                        code,
+                        description,
+                        deleted,
+                        version)
+VALUES (7,
+        '6cc5cca6-8ae5-4a6d-a7d6-9383067a38a1',
+        'F',
+        'Ferdig fra saksbehandler',
+        FALSE,
+        0);
+
+/* variant_format / variantformat */
+INSERT INTO variant_format(pk_variant_format_id,
+                           system_id,
+                           code,
+                           description,
+                           deleted,
+                           version)
+VALUES (1,
+        '04c49db4-5a6f-47a9-a763-d7d3d6fee2a2',
+        'P',
+        'Produksjonsformat',
+        FALSE,
+        0);
+
+INSERT INTO variant_format(pk_variant_format_id,
+                           system_id,
+                           code,
+                           description,
+                           deleted,
+                           version)
+VALUES (2,
+        '0998cf74-d352-4aca-b8d7-ce6deba18ea4',
+        'A',
+        'Arkivformat',
+        FALSE,
+        0);
+
+INSERT INTO variant_format(pk_variant_format_id,
+                           system_id,
+                           code,
+                           description,
+                           deleted,
+                           version)
+VALUES (3,
+        '3a89bb13-e796-4f44-a2ee-509fbbbef0aa',
+        'O',
+        'Dokument hvor deler av innholdet er skjermet',
+        FALSE,
+        0);
