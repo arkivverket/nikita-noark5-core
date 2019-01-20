@@ -579,7 +579,7 @@ public final class N5ResourceMappings {
     public static final String BASIC_RECORD_ID_ENG_OBJECT = "registreringsID";
     public static final String BUSINESS_ADDRESS_ENG_OBJECT = "forretningsadresse";
     public static final String CASE_DATE_ENG_OBJECT = "saksdato";
-    public static final String CASE_FILE_ENG_OBJECT = "casefile";
+    public static final String CASE_FILE_ENG_OBJECT = "CaseFile";
     public static final String CASE_HANDLER_ENG_OBJECT = "saksbehandler";
     public static final String CASE_LOANED_DATE_ENG_OBJECT = "utlaantDato";
     public static final String CASE_LOANED_TO_ENG_OBJECT = "utlaantTil";
@@ -752,7 +752,7 @@ public final class N5ResourceMappings {
     public static final String SECONDARY_CLASSIFICATION_ENG_OBJECT = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG_OBJECT = "sekundaerklassifikasjonssystem";
     public static final String SERIES_END_DATE_ENG_OBJECT = "arkivperiodeSluttDato";
-    public static final String SERIES_ENG_OBJECT = "series";
+    public static final String SERIES_ENG_OBJECT = "Series";
     public static final String SERIES_PRECURSOR_ENG_OBJECT = "forloeper";
     public static final String SERIES_START_DATE_ENG_OBJECT = "arkivperiodeStartDato";
     public static final String SERIES_STATUS_ENG_OBJECT = "arkivdelstatus";

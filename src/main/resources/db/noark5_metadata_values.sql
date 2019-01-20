@@ -176,6 +176,84 @@ VALUES (8, '7412833e-ceaf-40fd-95b5-e634f4640f99', 'RA-MP3',
 
 /* Graderingskode : ClassifiedCode */
 
+INSERT INTO classified_code(pk_classified_code_id,
+                            system_id,
+                            code,
+                            description,
+                            deleted,
+                            version)
+VALUES (1,
+        '16665453-136d-4d28-a3c2-68fbd2fa0b5e',
+        'SH',
+        'Strengt hemmelig (sikkerhetsgrad)',
+        FALSE,
+        0);
+
+INSERT INTO classified_code(pk_classified_code_id,
+                            system_id,
+                            code,
+                            description,
+                            deleted,
+                            version)
+VALUES (2,
+        '04ebca54-7672-4433-858b-0c684916d625',
+        'H',
+        'Hemmelig (sikkerhetsgrad)',
+        FALSE,
+        0);
+
+INSERT INTO classified_code(pk_classified_code_id,
+                            system_id,
+                            code,
+                            description,
+                            deleted,
+                            version)
+VALUES (3,
+        '11dc8ec9-0328-4166-a7d9-e1ea192d5eda',
+        'K',
+        'Konfidensielt (sikkerhetsgrad)',
+        FALSE,
+        0);
+
+INSERT INTO classified_code(pk_classified_code_id,
+                            system_id,
+                            code,
+                            description,
+                            deleted,
+                            version)
+VALUES (4,
+        'c8c2ad9a-d812-4c3b-b912-3924dd176373',
+        'B',
+        'Begrenset (sikkerhetsgrad)',
+        FALSE,
+        0);
+
+INSERT INTO classified_code(pk_classified_code_id,
+                            system_id,
+                            code,
+                            description,
+                            deleted,
+                            version)
+VALUES (5,
+        '538b04f8-a156-41b3-b9dc-55fd04655d8d',
+        'F',
+        'Fortrolig (beskyttelsesgrad)',
+        FALSE,
+        0);
+
+INSERT INTO classified_code(pk_classified_code_id,
+                            system_id,
+                            code,
+                            description,
+                            deleted,
+                            version)
+VALUES (6,
+        '803e731d-0012-4958-944c-39ccd3e39609',
+        'SF',
+        'Strengt fortrolig (beskyttelsesgrad)',
+        FALSE,
+        0);
+
 /* Hendelsetype : EventType */
 
 

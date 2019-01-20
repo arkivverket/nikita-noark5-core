@@ -398,5 +398,22 @@ public class MetadataDetails extends APIDetails {
                         NEW_SCREENING_DOCUMENT + SLASH,
                 true
         ));
+
+        // Add support for ClassifiedCode
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HATEOAS_API_PATH + SLASH +
+                        NOARK_METADATA_PATH + SLASH + CLASSIFIED_CODE,
+                REL_METADATA_CLASSIFIED_CODE,
+                true
+        ));
+
+        // Add support for new ClassifiedCode
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HATEOAS_API_PATH + SLASH +
+                        NOARK_METADATA_PATH + SLASH + NEW_CLASSIFIED_CODE,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH +
+                        NEW_CLASSIFIED_CODE + SLASH,
+                true
+        ));
     }
 }

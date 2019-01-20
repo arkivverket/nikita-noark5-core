@@ -147,6 +147,9 @@ public final class Constants {
     public static final String NEW_CLASSIFICATION_TYPE =
             NEW + DASH + CLASSIFICATION_TYPE;
 
+    public static final String NEW_CLASSIFIED_CODE =
+            NEW + DASH + CLASSIFIED_CODE;
+
     public static final String NEW_COMMENT_TYPE = NEW + DASH + COMMENT_TYPE;
 
     public static final String NEW_DOCUMENT_TYPE = NEW + DASH +
@@ -284,6 +287,10 @@ public final class Constants {
     public static final String TEMPLATE_CLASSIFICATION_TYPE_CODE = "FH";
     public static final String TEMPLATE_CLASSIFICATION_TYPE_DESCRIPTION =
             "Funksjonsbasert, hierarkisk";
+
+    public static final String TEMPLATE_CLASSIFIED_CODE_CODE = "SH";
+    public static final String TEMPLATE_CLASSIFIED_CODE_DESCRIPTION =
+            "Strengt hemmelig (sikkerhetsgrad)";
 
     public static final String TEMPLATE_COMMENT_TYPE_CODE = "MS";
     public static final String TEMPLATE_COMMENT_TYPE_DESCRIPTION =
@@ -592,6 +599,9 @@ public final class Constants {
 
     public static final String REL_METADATA_SCREENING_DOCUMENT =
             REL_METADATA + SCREENING_DOCUMENT + SLASH;
+
+    public static final String REL_METADATA_CLASSIFIED_CODE =
+            REL_METADATA + CLASSIFIED_CODE + SLASH;
 
     public static final String REL_METADATA_SCREENING_METADATA =
             REL_METADATA + SCREENING_METADATA + SLASH;
