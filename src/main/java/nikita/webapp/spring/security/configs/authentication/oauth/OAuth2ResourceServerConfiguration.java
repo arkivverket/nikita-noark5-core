@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
-import static nikita.common.config.Constants.LOGIN_OAUTH2_PATH;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.PATHPatterns.PATTERN_ADMIN_NEW_USER;
 import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
 
@@ -98,6 +98,8 @@ public class OAuth2ResourceServerConfiguration
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, LOGIN_OAUTH2_PATH).permitAll()
+                .antMatchers(HttpMethod.OPTIONS, LOGOUT_PATH).permitAll()
+                .antMatchers(HttpMethod.OPTIONS, CHECK_TOKEN_PATH).permitAll()
                 // GET [api]/admin/ny-bruker, public to read basic structure
                 .antMatchers(HttpMethod.POST, PATTERN_ADMIN_NEW_USER)
                     .permitAll()

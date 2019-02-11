@@ -207,6 +207,7 @@ public final class Constants {
     public static final String LOGOUT_REL_PATH = "logout";
     public static final String LOGIN_PATH = "oauth/token";
     public static final String LOGOUT_PATH = "oauth/revoke-token";
+    public static final String CHECK_TOKEN_PATH = "oauth/check_token";
     // Logging using JWT / RFC7519
     public static final String LOGIN_JWT = "rfc7519";
     public static final String LOGIN_OAUTH = "rfc6749";

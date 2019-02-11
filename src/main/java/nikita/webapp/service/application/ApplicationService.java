@@ -82,6 +82,27 @@ public class ApplicationService {
     }
 
     /**
+     * Adds check token mechanism to hateoas links
+     */
+    public void addCheckToken(HttpServletRequest request,
+                              List<ConformityLevel> conformityLevels) {
+
+        String address = request.getHeader("X-Forwarded-Host");
+        String protocol = request.getHeader("X-Forwarded-Proto");
+
+        ConformityLevel checkTokenOauth2 = new ConformityLevel();
+        if (address == null) {
+            checkTokenOauth2.setHref(publicUrlPath + CHECK_TOKEN_PATH);
+        } else {
+            checkTokenOauth2.setHref(protocol + "://" + address + contextPath +
+                    SLASH + CHECK_TOKEN_PATH);
+        }
+        checkTokenOauth2.setRel(NIKITA_CONFORMANCE_REL + CHECK_TOKEN_PATH
+                + SLASH + LOGIN_OAUTH + SLASH);
+        conformityLevels.add(checkTokenOauth2);
+    }
+
+    /**
      * Creates a method to create an account
      *
      * @return
@@ -160,6 +181,7 @@ public class ApplicationService {
         if (!username.equals("anonymousUser")) {
             addConformityLevels(conformityLevels);
             addLogoutInformation(request, conformityLevels);
+            addCheckToken(request, conformityLevels);
         }
 
         // Show login relation also for logged in users to allow user
