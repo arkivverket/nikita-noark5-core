@@ -95,7 +95,6 @@ var login = app.controller('LoginController',
       $scope.doLogin = function () {
         console.log("Attempting to login using [" + $scope.loginHref + "]");
         console.log("Username [" + $scope.emailAddress + "]");
-        console.log("Passwordd [" + $scope.password + "]");
 
 
         //+ "?grant_type=password&client_id=nikita-client&username=admin&password=password"
