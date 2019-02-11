@@ -37,6 +37,7 @@ var REL_FONDS_CREATOR = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivska
 var REL_SELF = 'self';
 var REL_LOGIN_OAUTH2 = 'http://nikita.arkivlab.no/noark5/v4/login/rfc6749/';
 var REL_LOGOUT_OAUTH2 = 'http://nikita.arkivlab.no/noark5/v4/logout/rfc6749/';
+var REL_CHECK_TOKEN = 'http://nikita.arkivlab.no/noark5/v4/oauth/check_token/rfc6749/';
 var REL_ADMIN_NEW_USER = 'http://rel.kxml.no/noark5/v4/api/administrasjon/ny-bruker/';
 
 

@@ -1,104 +1,116 @@
 <!doctype html>
-<html ng-app="nikita">
+<html ng-app="nikita-browse">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <title>nikita web</title>
-    <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
-    <script src="dependencies/internal/config.js"></script>
-    <script src="dependencies/internal/login.js"></script>
-    
-    <link rel="stylesheet" href="dependencies/vendor/META-INF/resources/webjars/material-design-lite/1.3.0/material.min.css">
-    <script src="dependencies/vendor/META-INF/resources/webjars/material-design-lite/1.3.0/material.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-    <script src="/node_modules/resolve-url/resolve-url.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <title>Nikita browser</title>
+  <script src="dependencies/internal/config.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="dependencies/internal/login.js"></script>
+
+  <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
+        rel="stylesheet" type="text/css">
+
+  <link
+    href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+    rel="stylesheet" type="text/css">
+
+  <script src="dependencies/internal/browse.js"></script>
 </head>
-<body ng-controller="MainController">
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
-            <span class="mdl-layout-title">nikita web - v{{ app_version }}</span>
+<body ng-controller="BrowseController">
+
+<nav class="navbar navbar-expand-sm bg-light">
+  <a class="navbar-brand" href="https://nikita.hioa.no/browse">Nikita browser</a>
+
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item dropdown">
+      <a class="nav-link" href="#" id="navbardrop" data-toggle="dropdown">
+        <span class="fa fa-bars"></span>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">
+          Logg inn &nbsp; <span class="fas fa-sign-in-alt"></span></a>
+        <a class="nav-link" href="#" ng-click="doLogout()">
+          Logg ut &nbsp; <span class="fas fa-sign-out-alt"></span></a>
+      </div>
+    </li>
+  </ul>
+</nav>
+<div class="card">
+  <div class="card-body">
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          Current noark object
         </div>
-    </header>
-    <main class="mdl-layout__content">
-        <div class="page-content">
-            <p ng-click="hrefSelected(current)">Current link: {{ current }} ({{ allow }})</p>
-            <div id="links_table_group">
-                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                    <thead>
-                    <tr>
-                        <th>href</th>
-                        <th>rel</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="l in links"class="mdl-data-table__cell--non-numeric">
-                        <td class="mdl-data-table__cell--non-numeric" ng-click="hrefSelected(l.href)">{{ l.href }}</td>
-                        <td class="mdl-data-table__cell--non-numeric"><a href="{{ l.rel }}">{{ l.rel }}</a></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <p ng-click="hrefSelected(parent)">Parent link: {{ parent }}</p>
-                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                    <thead>
-                    <tr>
-                        <th>attribute</th>
-                        <th>value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="(key, value) in data"class="mdl-data-table__cell--non-numeric">
-                        <td class="mdl-data-table__cell--non-numeric">{{ key }}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{ value }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div >
-                    <h2 ng-if="results">Results</h2>
-                    <div ng-repeat="entry in results">
-                        <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                            <thead>
-                            <tr>
-                                <th>attribute</th>
-                                <th>value</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="(key, value) in entry">
-                                <td class="mdl-data-table__cell--non-numeric">{{ key }}</td>
-                                <td class="mdl-data-table__cell--non-numeric">
-                                    <div ng-if="key == '_links'">
-                                        <div ng-repeat="link in value">
-                                            <br>{
-                                            <div ng-repeat="(lkey, lvalue) in link">
-                                                <div ng-if="lkey == 'href'">
-                                                    <br>href: <div ng-click="hrefSelected(lvalue)">{{ lvalue }},</div>
-                                                </div>
-                                                <div ng-if="lkey == 'rel'">
-                                                    <br>{{ lkey }}: <a href="{{ lvalue }}">{{ lvalue }}</A>,
-                                                </div>
-                                                <div ng-if="lkey != 'href' && lkey != 'rel'">
-                                                    <br>{{ lkey }}: {{ lvalue }},
-                                                </div>
-                                            </div>
-                                            <br>}
-                                        </div>
-                                    </div>
-                                    <div ng-if="key != '_links' ">
-                                        {{ value }}
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p><a href="login.html">logg inn</a><p>
-                    <hr>
-                    <p>Denne webklient er del av
-                        <a href="https://gitlab.com/OsloMet-ABI/nikita-noark5-core/">Nikita Noark 5 kjerne</a>, en fri programvareimplementasjon av Noark 5 Tjenestegrensesnitt.</p>
+        <div class="card-body">
+          <div>
+            <table class="table table-hover">
+              <tbody ng-repeat="(key, value) in filterLinks(current)">
+              <tr>
+                <td style="width: 16%">
+                  {{ key }}
+                </td>
+                <td style="width: 84%">
+                  {{ value }}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card" ng-repeat="link in current._links" ng-click="selectLink(link.href)">
+            <div class="card-body">
+              <ul class="list-group">
+                <li class="list-group-item small">{{ link.rel }}</li>
+                <li class="list-group-item small">{{ link.href }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal to login -->
+<div class="modal fade" id="loginModal" login-modal>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Logg på nikita</h4>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="panel-body">
+            <form role="form">
+              <fieldset>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Epost adresse"
+                         name="emailAddress" type="email" ng-model="emailAddress" autofocus>
                 </div>
-    </main>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Passord"
+                         name="password" type="password" ng-model="password">
+                </div>
+                <div class="btn-toolbar">
+                  <button type="button" ng-click="doLogin()"
+                          class="btn btn-primary pull-right">Logg på
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
+<!-- End modal to login -->
 </body>
 </html>
