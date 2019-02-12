@@ -23,7 +23,10 @@
 <body ng-controller="BrowseController">
 
 <nav class="navbar navbar-expand-sm bg-light">
-  <a class="navbar-brand" href="https://nikita.hioa.no/browse">Nikita browser</a>
+  <a class="navbar-brand" href="https://nikita.hioa.no/browse">
+    <span ng-show="!loggedIn">Nikita browser (Not logged in)</span>
+    <span ng-show="loggedIn">Nikita browser ({{emailAddress}})</span>
+  </a>
 
   <ul class="nav navbar-nav ml-auto">
     <li class="nav-item dropdown">
@@ -42,40 +45,62 @@
 <div class="card">
   <div class="card-body">
     <div class="container">
-      <div class="card">
-        <div class="card-header">
-          Current noark object
-        </div>
-        <div class="card-body">
-          <div>
-            <table class="table table-hover">
-              <tbody ng-repeat="(key, value) in filterLinks(current)">
-              <tr>
-                <td style="width: 16%">
-                  {{ key }}
-                </td>
-                <td style="width: 84%">
-                  {{ value }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
 
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="card" ng-repeat="link in current._links" ng-click="selectLink(link.href)">
-            <div class="card-body">
-              <ul class="list-group">
-                <li class="list-group-item small">{{ link.rel }}</li>
-                <li class="list-group-item small">{{ link.href }}</li>
-              </ul>
+      <div class="card">
+        <div class="card-body">
+          <div class="container">
+
+            <div ng-repeat="current in results" class="card">
+              <div class="card-header">
+                HTTP Request ({{ selectedHref }})
+              </div>
+              <div class="card-body">
+                <div>
+                  <table class="table table-hover">
+                    <tbody ng-repeat="(key, value) in filterLinks(current)">
+                    <tr>
+                      <td style="width: 16%">
+                        {{ key }}
+                      </td>
+                      <td style="width: 84%">
+                        {{ value }}
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="card-footer">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"
+                        ng-click="selectParent()" aria-current="page">
+                      <span ng-show="selectedHref != parentHref">Parent ({{ parentHref }})</span>
+                      <span ng-show="selectedHref == parentHref">Parent ()</span>
+                    </li>
+                  </ol>
+                </nav>
+                <div class="card" ng-repeat="link in current._links"
+                     ng-click="selectLink(link.href)">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-lg-6 small">
+                        <a href="#" ng-click="link.href" class="card-link">{{ link.rel }}</a>
+                      </div>
+                      <div class="col-lg-6 small">
+                        <a href="#" ng-click="link.href" class="card-link">{{ link.href }}</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 <!-- modal to login -->
 <div class="modal fade" id="loginModal" login-modal>
