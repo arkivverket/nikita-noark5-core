@@ -25,8 +25,7 @@ spring:
         #import_files: db/h2/import.sql,db/noark5_metadata_values.sql,
         #db/postcode.sql,db/countrycode.sql
       #        show_sql: true # Slows things down if this is enabled.
-      hbm2ddl.auto: create-drop
-      #hbm2ddl.auto: validate
+        auto: validate
     database: postgresql
   profiles:
     active: security-oauth2-authentication, postgres
