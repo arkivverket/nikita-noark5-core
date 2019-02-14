@@ -14,7 +14,7 @@ import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY;
 public class CaseHandlingDetails extends APIDetails {
 
 
-    @Value("${hateoas.publicAddress}")
+    @Value("${nikita.server.hateoas.publicAddress}")
     private String publicUrlPath;
 
     public CaseHandlingDetails() {

@@ -23,7 +23,7 @@ public class HateoasHandler implements IHateoasHandler {
 
     protected IAuthorisation authorisation;
 
-    @Value("${hateoas.publicAddress}")
+    @Value("${nikita.server.hateoas.publicAddress}")
     protected String contextPath;
 
     @Override

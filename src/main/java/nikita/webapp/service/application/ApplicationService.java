@@ -22,7 +22,7 @@ public class ApplicationService {
     private static final Logger logger = LoggerFactory.getLogger(
             ApplicationService.class);
 
-    @Value("${hateoas.publicAddress}")
+    @Value("${nikita.server.hateoas.publicAddress}")
     private String publicUrlPath;
 
     @Value("${server.servlet.context-path}")
