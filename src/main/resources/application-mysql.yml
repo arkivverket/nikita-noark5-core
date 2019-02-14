@@ -14,7 +14,7 @@
 #
 # Or whatever variation you use to create a user
 # ===================================================================
-#
+# Leaving logging here so you can quickly turn it on when required
 #logging:
 #  level:
 #    org:
@@ -24,33 +24,33 @@
 #        SQL: DEBUG
 
 server:
-  application:
-    name: OsloMet Noark 5 Core (using MySQL)
   servlet:
     context-path: /noark5v4
   port: 8092
 
 spring:
+  application:
+    name: OsloMet Noark 5 Core (using MySQL)
   datasource:
-    url: jdbc:mysql://localhost:3306/nikita_noark5_prod
-    username: INSERT-USERNAME-HERE
-    password: INSERT-PASSWORD-HERE
     driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/nikita_noark5_prod
+    username: root
+    password: techno23
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-    properties:
-        hbm2ddl:
-          import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
-          import_files: db/noark5_metadata_values.sql,db/postcode.sql,db/countrycode.sql
-#        show_sql: true # Slows things down if this is enabled.
-          auto: validate
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     database: mysql
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    properties:
+      hibernate.hbm2ddl.auto: validate
+      hibernate.discriminator.ignore_explicit_for_joined: true
+
   profiles:
     active: security-oauth2-authentication, mysql
-
-hibernate:
-  discriminator:
-    ignore_explicit_for_joined: true
 
 security:
   oauth2:
@@ -59,52 +59,24 @@ security:
       client-secret: $2a$10$52VgSTgNvk4ROc8YNYdTUesHhQTm2r5oeH1aiCtIgu3rfPQZQzswa
       token-expiry: 28800 # seconds
 
-jwt:
-  header: Authorization
-  secret: mySecret
-  expiration: 604800
-  route:
-    authentication:
-      path: auth
-      refresh: refresh
-management:
-  server:
-    servlet:
-      context-path: /management
 info:
-    app.name: HiOA Noark 5 Core (Demo version)
-    build.version: ${project.version}
-# Make sure there is a slash at the end of the address
-hateoas:
-    publicAddress: http://localhost:8092/noark5v4/
+  app.name: OsloMet Noark 5 Core
+  build.version: ${project.version}
 
-# ===================================================================
-# nikita-noark5-core specific properties
-# ===================================================================
-
-# Application properties
-application:
-  pagination:
-    max-page-size: 10
-
-# We will move all application properties here. Just need to make the code
-# in sync with these properties. That's why they are duplicated
 nikita:
   startup:
-    create-demo-users: true
-    create-directory-store: true
-    directory-store-name: /data/nikita/storage/
-    incoming-directory: /data/nikita/storage/incoming/
+    create-demo-users: false # Populate database with some users
+    create-directory-store: true # If not created, attempt to create
+    directory-store-name: /data/nikita/storage/ # Where to store documents
+    incoming-directory: /data/nikita/storage/incoming/ # Temporary storage area
   application:
     pagination:
-      max-page-size: 10
+      max-page-size: 10 # Set number of results per page. Currently not used
     checksum-algorithm: SHA-256
   server:
-    name: localhost
     hateoas:
       publicAddress: http://localhost:8092/noark5v4/ # Make sure there is a slash at the end of the address
     details:
       conformity-levels:
         official: arkivstruktur, casehandling, metadata
         non-official: gui, import-api
-

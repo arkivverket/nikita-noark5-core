@@ -2,7 +2,6 @@
 # Spring Boot configuration for the default profile.
 #
 # ===================================================================
-
 #logging:
 #  level:
 #    org:
@@ -10,75 +9,59 @@
 #        web: DEBUG
 
 server:
-  application:
-    name: OsloMet Noark 5 Core (Demo mode)
   servlet:
     context-path: /noark5v4
   port: 8092
 
 spring:
+  application:
+    name: OsloMet Noark 5 Core (Demo mode)
   datasource:
-    url: jdbc:h2:mem:n5DemoDb
+    driver-class-name: org.h2.Driver
+    url: jpa:jdbc:h2:mem:n5DemoDb
     username: sa
     password:
-    driver-class-name: org.h2.Driver
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    properties:
-      hibernate:
-        hbm2ddl:
-          import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
-          import_files: db/noark5_metadata_values.sql,db/postcode.sql,db/countrycode.sql
-        #        show_sql: true
-          auto: create-drop
     database: h2
-  h2:
-    console:
-      enabled: true
-      path: /console
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    properties:
+      hibernate.hbm2ddl.auto: create-drop
+      hibernate.discriminator.ignore_explicit_for_joined: true
+      hibernate.hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+      hibernate.hbm2ddl.import_files: db/noark5_metadata_values.sql,db/postcode.sql,db/countrycode.sql
   profiles:
     active: security-oauth2-authentication
+
 security:
   oauth2:
     client:
       client-id: nikita-client
       client-secret: $2a$10$52VgSTgNvk4ROc8YNYdTUesHhQTm2r5oeH1aiCtIgu3rfPQZQzswa
       token-expiry: 28800 # seconds
-management:
-  server:
-    servlet:
-      context-path: /management
 info:
-    app.name: OsloMet Noark 5 Core (Demo mode)
-    build.version: ${project.version}
+  app.name: OsloMet Noark 5 Core
+  build.version: ${project.version}
 
-# Make sure there is a slash at the end of the address
-hateoas:
-  publicAddress: http://localhost:8092/noark5v4/
-# Application properties
-application:
-  pagination:
-    max-page-size: 10
-
-# We will move all application properties here. Just need to make the code
-# in sync with these properties. That's why they are duplicated
 nikita:
   startup:
-    create-demo-users: true
-    create-directory-store: true
-    directory-store-name: /data/nikita/storage/
-    incoming-directory: /data/nikita/storage/incoming/
+    create-demo-users: true # Populate database with some users
+    create-directory-store: true # If not created, attempt to create
+    directory-store-name: /data/nikita/storage/ # Where to store documents
+    incoming-directory: /data/nikita/storage/incoming/ # Temporary storage area
   application:
     pagination:
-      max-page-size: 10
+      max-page-size: 10 # Set number of results per page. Currently not used
     checksum-algorithm: SHA-256
   server:
-    name: localhost
     hateoas:
       publicAddress: http://localhost:8092/noark5v4/ # Make sure there is a slash at the end of the address
     details:
       conformity-levels:
         official: arkivstruktur, casehandling, metadata
         non-official: gui, import-api
-
-
