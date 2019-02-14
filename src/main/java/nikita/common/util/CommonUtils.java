@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.REFERENCE_ADMINISTRATIVE_UNIT;
 import static org.springframework.http.HttpMethod.*;
 
 public final class CommonUtils {

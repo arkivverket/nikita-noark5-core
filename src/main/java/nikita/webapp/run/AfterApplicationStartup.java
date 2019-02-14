@@ -42,6 +42,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.FileConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.config.N5ResourceMappings.CASE_HANDLER;
+import static nikita.common.config.N5ResourceMappings.REFERENCE_ADMINISTRATIVE_UNIT;
 import static nikita.common.model.noark5.v4.admin.AuthorityName.*;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
 import static nikita.common.util.CommonUtils.FileUtils.setDefaultMimeTypesAsConvertible;
