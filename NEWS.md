@@ -5,7 +5,19 @@ These are the highlevel changes.  For details, see the git history.
 
 Release 0.3 UNRELEASED
 ----------------------
- * Update postgresql setup to reflect changes done in mysql setup.
+ * Make token expiry time configurable at upstart from properties file
+ * Continued work on OData syntax support
+ * Started work on pagination for entities
+ * Continued code style fixing, making code more readable
+ * Finalise ClassifiedCode Metadata entity
+ * Enable check token ability to allow GUI to check token validity. Makes GUI
+  experience nicer if user has not used the GUI since token expired
+ * Minor bug fixes
+ * Introduce browser ability (browse.html) to allow user to browse API using 
+ hateoas links 
+ * Fix bug with sequence number for file/mappe where change to new year was
+ not handled properly
+ * Update application yml files to be in sync with current development
  * Disable 'conversion' to PDF using libreoffice for everything
    except doc, ppt, xls, docx, pptx, xlsx, odt, odp and ods.
 
