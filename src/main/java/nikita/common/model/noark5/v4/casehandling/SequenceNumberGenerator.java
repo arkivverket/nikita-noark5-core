@@ -1,53 +1,67 @@
 package nikita.common.model.noark5.v4.casehandling;
 
-import nikita.common.config.Constants;
 import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
+
+import static nikita.common.config.Constants.FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID;
+import static nikita.common.config.Constants.TABLE_CASE_FILE_SEQUENCE;
 
 /**
- * This is note a part of the Noark 5 data model, but a requirement in order
- * to provide sequenceNumbers. This is not part of the "official" data model
+ * A sequence number generator is required to automatically fill in values for
+ * mappeId/fileId in nikita. A sequence normally takes the following form
+ *
+ *  2019/0001 where 2019 is year and 0001 is the sequence a file object is
+ *  created per year.
+ *
+ * This is not part of the official Noark 5 data model, but a requirement in
+ * order to provide sequenceNumbers. It needs to be associated with the Noark
+ * 5 domain model to work.
  */
-
 @Entity
-@Table(name = Constants.TABLE_CASE_FILE_SEQUENCE)
-public class SequenceNumberGenerator {
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    AdministrativeUnit administrativeUnit;
+@Table(name = TABLE_CASE_FILE_SEQUENCE)
+@IdClass(SequenceNumberGeneratorId.class)
+public class SequenceNumberGenerator
+        implements Serializable {
 
     @Id
-    @Column(name = "sequence_id", nullable = false, updatable = false)
-    private Long id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID,
+            insertable = false, updatable = false)
+    private AdministrativeUnit referenceAdministrativeUnit;
 
+    @Id
     @Column(name = "year")
     private Integer year;
 
     @Column(name = "sequence_number")
     private Integer sequenceNumber;
+
     @Column(name = "administrative_unit_name")
     private String administrativeUnitName;
 
-    public Long getId() {
-        return id;
+    public SequenceNumberGenerator() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public SequenceNumberGenerator(
+            Integer year, AdministrativeUnit referenceAdministrativeUnit) {
+        this.year = year;
+        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
+    }
+
+    public AdministrativeUnit getReferenceAdministrativeUnit() {
+        return referenceAdministrativeUnit;
+    }
+
+    public void setReferenceAdministrativeUnit(
+            AdministrativeUnit referenceAdministrativeUnit) {
+        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
     }
 
     public Integer incrementByOne() {
         return sequenceNumber++;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
     }
 
     public Integer getSequenceNumber() {
@@ -66,20 +80,28 @@ public class SequenceNumberGenerator {
         this.administrativeUnitName = administrativeUnitName;
     }
 
-    public AdministrativeUnit getReferenceAdministrativeUnit() {
-        return administrativeUnit;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SequenceNumberGenerator)) return false;
+        SequenceNumberGenerator that = (SequenceNumberGenerator) o;
+        return Objects.equals(year, that.year) &&
+                Objects.equals(referenceAdministrativeUnit,
+                        that.referenceAdministrativeUnit) &&
+                Objects.equals(sequenceNumber, that.sequenceNumber) &&
+                Objects.equals(administrativeUnitName,
+                        that.administrativeUnitName);
     }
 
-    public void setReferenceAdministrativeUnit(
-            AdministrativeUnit administrativeUnit) {
-        this.administrativeUnit = administrativeUnit;
+    @Override
+    public int hashCode() {
+        return Objects.hash(year, referenceAdministrativeUnit,
+                sequenceNumber, administrativeUnitName);
     }
 
     @Override
     public String toString() {
         return "SequenceNumberGenerator{" +
-                "administrativeUnit='" + administrativeUnit + '\'' +
-                ", year=" + year +
                 ", sequenceNumber=" + sequenceNumber +
                 '}';
     }

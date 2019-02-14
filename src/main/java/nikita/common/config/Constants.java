@@ -623,6 +623,11 @@ public final class Constants {
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
     public static final String TABLE_CASE_FILE_SEQUENCE = "sequence_generator";
+    public static final String TABLE_NIKITA_ADMINISTRATIVE_UNIT =
+            "nikita_administrative_unit";
+
+    public static final String TABLE_ADMINISTRATIVE_UNIT_JOIN_NIKITA_USER =
+            "administrative_unit_nikita_user";
 
 
     // Join table names
@@ -641,8 +646,16 @@ public final class Constants {
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
             "f_pk_administrative_unit_id";
+
     public static final String FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK =
             "f_pk_correspondence_part_person_id";
+
+    public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID =
+            "administrative_unit_pk_administrative_unit_id";
+
+
+    public static final String REFERENCE_ADMINISTRATIVE_UNIT =
+            "referenceAdministrativeUnit";
 
     // Primary key names
     public static final String PRIMARY_KEY_FONDS = "pk_fonds_id";

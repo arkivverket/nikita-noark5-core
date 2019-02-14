@@ -5,20 +5,18 @@ import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.metadata.CaseStatus;
 import nikita.common.repository.n5v4.ICaseFileRepository;
 import nikita.common.repository.n5v4.admin.IAdministrativeUnitRepository;
-import nikita.common.repository.n5v4.casehandling.ISequenceNumberGeneratorRepository;
 import nikita.common.repository.nikita.IUserRepository;
-import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
+import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +49,7 @@ public class CaseFileService
 
     private IRegistryEntryService registryEntryService;
     private ICaseFileRepository caseFileRepository;
-    private ISequenceNumberGeneratorRepository numberGeneratorRepository;
+    private ISequenceNumberGeneratorService numberGeneratorService;
     private IAdministrativeUnitRepository administrativeUnitRepository;
     private IUserRepository userRepository;
     private ICaseStatusService caseStatusService;
@@ -61,7 +59,7 @@ public class CaseFileService
     public CaseFileService(
             IRegistryEntryService registryEntryService,
             ICaseFileRepository caseFileRepository,
-            ISequenceNumberGeneratorRepository numberGeneratorRepository,
+            ISequenceNumberGeneratorService numberGeneratorService,
             IAdministrativeUnitRepository administrativeUnitRepository,
             IUserRepository userRepository,
             ICaseStatusService caseStatusService,
@@ -69,7 +67,7 @@ public class CaseFileService
             EntityManager entityManager) {
         this.registryEntryService = registryEntryService;
         this.caseFileRepository = caseFileRepository;
-        this.numberGeneratorRepository = numberGeneratorRepository;
+        this.numberGeneratorService = numberGeneratorService;
         this.administrativeUnitRepository = administrativeUnitRepository;
         this.userRepository = userRepository;
         this.caseStatusService = caseStatusService;
@@ -236,29 +234,7 @@ public class CaseFileService
      */
     protected Integer getNextSequenceNumber(AdministrativeUnit
                                                     administrativeUnit) {
-        Calendar date = new GregorianCalendar();
-        Integer currentYear = date.get(Calendar.YEAR);
-        Integer sequenceNumber;
-
-        Optional<SequenceNumberGenerator> nextSequenceOptional =
-                numberGeneratorRepository.
-                        findByAdministrativeUnitAndYear(
-                                administrativeUnit, currentYear);
-
-        if (nextSequenceOptional.isPresent()) {
-            SequenceNumberGenerator nextSequence =
-                    nextSequenceOptional.get();
-
-            sequenceNumber = nextSequence.getSequenceNumber();
-            // increment and save the value
-            nextSequence.incrementByOne();
-            numberGeneratorRepository.save(nextSequence);
-        } else {
-            throw new NikitaException("Error missing sequencenumber " +
-                    "generator for " + administrativeUnit);
-        }
-
-        return sequenceNumber;
+        return numberGeneratorService.getNextSequenceNumber(administrativeUnit);
     }
 
     public CaseFileHateoas generateDefaultCaseFile() {

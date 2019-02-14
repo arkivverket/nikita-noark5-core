@@ -17,8 +17,6 @@ public interface ISequenceNumberGeneratorRepository
     // -- All READ operations
     Optional<SequenceNumberGenerator> findById(Long id);
 
-
-    Optional<SequenceNumberGenerator> findByAdministrativeUnitAndYear(
+    Optional<SequenceNumberGenerator> findByReferenceAdministrativeUnitAndYear(
             AdministrativeUnit administrativeUnit, Integer year);
-
 }

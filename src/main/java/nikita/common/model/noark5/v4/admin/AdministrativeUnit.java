@@ -17,7 +17,7 @@ import java.util.*;
 import static nikita.common.config.Constants.*;
 
 @Entity
-@Table(name = "nikita_administrative_unit")
+@Table(name = TABLE_NIKITA_ADMINISTRATIVE_UNIT)
 @JsonDeserialize(using = AdministrativeUnitDeserializer.class)
 @AttributeOverride(name = "id",
         column = @Column(name = PRIMARY_KEY_ADMINISTRATIVE_UNIT))
@@ -81,22 +81,25 @@ public class AdministrativeUnit
     @Audited
     private Boolean defaultAdministrativeUnit;
 
-    @OneToOne(mappedBy = "administrativeUnit", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
-    private SequenceNumberGenerator sequenceNumberGenerator;
+    // Links to SequenceNumberGenerator
+    @OneToMany(mappedBy = REFERENCE_ADMINISTRATIVE_UNIT,
+            cascade = CascadeType.ALL)
+    private List<SequenceNumberGenerator>
+            referenceSequenceNumberGenerator = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
-            name = "administrative_unit_nikita_user",
+            name = TABLE_ADMINISTRATIVE_UNIT_JOIN_NIKITA_USER,
             joinColumns = {
                     @JoinColumn(name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
-                            referencedColumnName = PRIMARY_KEY_ADMINISTRATIVE_UNIT)},
+                            referencedColumnName =
+                                    PRIMARY_KEY_ADMINISTRATIVE_UNIT)},
             inverseJoinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
                     referencedColumnName = PRIMARY_KEY_USER)})
     private Set<User> users = new HashSet<>();
 
     // Links to CaseFile
-    @OneToMany(mappedBy = "referenceAdministrativeUnit")
+    @OneToMany(mappedBy = REFERENCE_ADMINISTRATIVE_UNIT)
     @JsonIgnore
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
@@ -153,6 +156,14 @@ public class AdministrativeUnit
         this.finalisedBy = finalisedBy;
     }
 
+    public List<CaseFile> getReferenceCaseFile() {
+        return referenceCaseFile;
+    }
+
+    public void setReferenceCaseFile(List<CaseFile> referenceCaseFile) {
+        this.referenceCaseFile = referenceCaseFile;
+    }
+
     public String getShortName() {
         return shortName;
     }
@@ -167,6 +178,20 @@ public class AdministrativeUnit
 
     public void setAdministrativeUnitName(String administrativeUnitName) {
         this.administrativeUnitName = administrativeUnitName;
+    }
+
+    public List<SequenceNumberGenerator> getReferenceSequenceNumberGenerator() {
+        return referenceSequenceNumberGenerator;
+    }
+
+    public void setReferenceSequenceNumberGenerator(
+            List<SequenceNumberGenerator> referenceSequenceNumberGenerator) {
+        this.referenceSequenceNumberGenerator = referenceSequenceNumberGenerator;
+    }
+
+    public void addReferenceSequenceNumberGenerator(
+            SequenceNumberGenerator sequenceNumberGenerator) {
+        this.referenceSequenceNumberGenerator.add(sequenceNumberGenerator);
     }
 
     public String getAdministrativeUnitStatus() {
@@ -194,15 +219,6 @@ public class AdministrativeUnit
     public void setDefaultAdministrativeUnit(
             Boolean defaultAdministrativeUnit) {
         this.defaultAdministrativeUnit = defaultAdministrativeUnit;
-    }
-
-    public SequenceNumberGenerator getSequenceNumberGenerator() {
-        return sequenceNumberGenerator;
-    }
-
-    public void setSequenceNumberGenerator(
-            SequenceNumberGenerator sequenceNumberGenerator) {
-        this.sequenceNumberGenerator = sequenceNumberGenerator;
     }
 
     public List<AdministrativeUnit> getReferenceChildAdministrativeUnit() {
