@@ -18,7 +18,7 @@ spring:
     name: OsloMet Noark 5 Core (Demo mode)
   datasource:
     driver-class-name: org.h2.Driver
-    url: jpa:jdbc:h2:mem:n5DemoDb
+    url: jdbc:h2:mem:n5DemoDb
     username: sa
     password:
   jpa:
