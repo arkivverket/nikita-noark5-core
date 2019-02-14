@@ -22,7 +22,6 @@ import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -47,9 +46,6 @@ public class FondsService implements IFondsService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(FondsService.class);
-
-    @Value("${application.pagination.max-page-size}")
-    private Integer maxPageSize;
 
     private IFondsRepository fondsRepository;
     private SeriesService seriesService;
@@ -317,8 +313,8 @@ public class FondsService implements IFondsService {
     @Override
     public FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip) {
 
-        if (top == null || top > maxPageSize) {
-            top = maxPageSize;
+        if (top == null || top > 10) {
+            top = 10;
         }
         if (skip == null) {
             skip = 0;
