@@ -119,6 +119,13 @@
       <version>${tika-parsers.version}</version>
     </dependency>
 
+    <!-- Used in EventHandler to record in blockchain -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+
+
     <!-- Used for CompareToBuilder etc -->
     <dependency>
       <groupId>org.apache.commons</groupId>
