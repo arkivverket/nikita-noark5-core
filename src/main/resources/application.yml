@@ -65,3 +65,7 @@ nikita:
       conformity-levels:
         official: arkivstruktur, casehandling, metadata
         non-official: gui, import-api
+  # Only used if eventhandling profile is enabled
+  simplechain:
+    # Address to post a block to the chain.
+    address: http://localhost:9792:/simplechain/block
