@@ -108,25 +108,38 @@ public class NikitaEventListener {
                 } else if (entityType.equals(CASE_FILE)) {
                     body.put(FILE_ID, ((CaseFile) entity).getFileId());
                     body.put(CASE_STATUS, ((CaseFile) entity).getCaseStatus());
-                } else if (entityType.equals(REGISTRY_ENTRY_TYPE)) {
-                    body.put(REGISTRY_ENTRY_NUMBER, ((RegistryEntry) entity).
-                            getRegistryEntryNumber());
-                } else if (entityType.equals(DOCUMENT_DESCRIPTION)) {
-                    body.put(ASSOCIATED_WITH_RECORD_AS,
-                            ((DocumentDescription) entity).
-                                    getAssociatedWithRecordAs());
-                } else if (entityType.equals(DOCUMENT_OBJECT)) {
-                    DocumentObject documentObject = (DocumentObject) entity;
-                    body.put(DOCUMENT_OBJECT_CHECKSUM,
-                            documentObject.getChecksum());
-                    body.put(DOCUMENT_OBJECT_CHECKSUM_ALGORITHM,
-                            documentObject.getChecksumAlgorithm());
-                    body.put(DOCUMENT_OBJECT_MIME_TYPE,
-                            documentObject.getMimeType());
-                    body.put(DOCUMENT_OBJECT_FILE_SIZE,
-                            documentObject.getFileSize());
                 }
+            } else if (entityType.equals(REGISTRY_ENTRY)) {
+                body.put(REGISTRY_ENTRY_NUMBER, ((RegistryEntry) entity).
+                        getRegistryEntryNumber());
+                body.put(REGISTRY_ENTRY_TYPE, ((RegistryEntry) entity).
+                        getRegistryEntryType());
+                body.put(REGISTRY_ENTRY_STATUS, ((RegistryEntry) entity).
+                        getRecordStatus());
+                body.put(REGISTRY_ENTRY_DATE, ((RegistryEntry) entity).
+                        getDocumentDate());
+            } else if (entityType.equals(DOCUMENT_DESCRIPTION)) {
+                body.put(ASSOCIATED_WITH_RECORD_AS,
+                        ((DocumentDescription) entity).
+                                getAssociatedWithRecordAs());
+                body.put(DOCUMENT_TYPE,
+                        ((DocumentDescription) entity).
+                                getDocumentType());
+                body.put(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
+                        ((DocumentDescription) entity).
+                                getDocumentNumber());
+            } else if (entityType.equals(DOCUMENT_OBJECT)) {
+                DocumentObject documentObject = (DocumentObject) entity;
+                body.put(DOCUMENT_OBJECT_CHECKSUM,
+                        documentObject.getChecksum());
+                body.put(DOCUMENT_OBJECT_CHECKSUM_ALGORITHM,
+                        documentObject.getChecksumAlgorithm());
+                body.put(DOCUMENT_OBJECT_MIME_TYPE,
+                        documentObject.getMimeType());
+                body.put(DOCUMENT_OBJECT_FILE_SIZE,
+                        documentObject.getFileSize());
             }
+
             block.put("body", body);
 
             post.setEntity(new StringEntity(block.toString()));
