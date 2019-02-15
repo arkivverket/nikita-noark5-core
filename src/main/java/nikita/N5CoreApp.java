@@ -16,13 +16,15 @@ import java.util.Arrays;
 @SpringBootApplication
 public class N5CoreApp {
 
-    private static final Logger logger = LoggerFactory.getLogger(N5CoreApp.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(N5CoreApp.class);
 
     /**
      * Main method, used to run the application.
      *
      * @param args the command line arguments
-     * @throws UnknownHostException if the local host name could not be resolved into an address
+     * @throws UnknownHostException if the local host name could not be
+     * resolved into an address
      */
 
     public static void main(String[] args) throws UnknownHostException {
@@ -30,8 +32,6 @@ public class N5CoreApp {
         ConfigurableApplicationContext context = SpringApplication.run
                 (N5CoreApp.class, args);
 
-        //context.getBean(AfterApplicationStartup.class)
-        //      .afterApplicationStarts();
         Environment env = context.getEnvironment();
 
         String[] activeProfiles = env.getActiveProfiles();
