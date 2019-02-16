@@ -15,7 +15,10 @@ import nikita.webapp.service.application.ApplicationService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +27,7 @@ import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value =
@@ -69,9 +73,9 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(method = RequestMethod.POST,
+    @RequestMapping(method = POST,
             value = NEW_CLASSIFICATION_SYSTEM,
-            consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystem(
             HttpServletRequest request,
@@ -115,8 +119,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.POST,
+    @RequestMapping(method = POST,
             value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS +
                     "classificationSystemSystemId" + RIGHT_PARENTHESIS + SLASH +
                     NEW_CLASS,
@@ -126,7 +129,7 @@ public class ClassificationSystemHateoasController
             HttpServletRequest request,
             @ApiParam(name = "classificationSystemSystemId",
                     value = "systemId of classificationSystem to associate " +
-                            "the klass with.",
+                            "the class with.",
                     required = true)
             @PathVariable String classificationSystemSystemId,
             @ApiParam(name = "klass",
@@ -146,7 +149,7 @@ public class ClassificationSystemHateoasController
 
     // API - All GET Requests (CRUD - READ)
 
-    @RequestMapping(method = RequestMethod.GET,
+    @RequestMapping(method = GET,
             value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS +
                     SYSTEM_ID + RIGHT_PARENTHESIS)
     public ResponseEntity<ClassificationSystemHateoas> findOne(
@@ -156,8 +159,8 @@ public class ClassificationSystemHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         ClassificationSystemHateoas classificationSystemHateoas =
-                classificationSystemService.findSingleClassificationSystem(
-                        systemID);
+                classificationSystemService.
+                        findSingleClassificationSystem(systemID);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classificationSystemHateoas.getEntityVersion().toString())
@@ -178,9 +181,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = CLASSIFICATION_SYSTEM,
-            method = RequestMethod.GET)
+    @RequestMapping(value = CLASSIFICATION_SYSTEM, method = GET)
     public ResponseEntity<ClassificationSystemHateoas>
     findAllClassificationSystem(
             HttpServletRequest request) {
@@ -206,7 +207,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(method = RequestMethod.DELETE,
+    @RequestMapping(method = DELETE,
             value = SLASH + CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS +
                     SYSTEM_ID + RIGHT_PARENTHESIS)
     public ResponseEntity<FondsStructureDetails>
@@ -249,11 +250,10 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.PUT,
+    @RequestMapping(method = PUT,
             value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS +
                     SYSTEM_ID + RIGHT_PARENTHESIS,
-            consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     updateClassificationSystem(
             HttpServletRequest request,
@@ -267,8 +267,6 @@ public class ClassificationSystemHateoasController
             @RequestBody ClassificationSystem classificationSystem)
             throws NikitaException {
         validateForUpdate(classificationSystem);
-
-
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)),
