@@ -13,10 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
@@ -24,15 +20,25 @@ import java.util.Optional;
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
+/**
+ * Service class for Class
+ * <p>
+ * Provides basic CRUD functionality for ClassificationSystem using systemID.
+ * <p>
+ * Also supports CREATE for a (Noark Classification Class) Class.
+ * <p>
+ * All public methods return Hateoas objects
+ */
+
 @Service
 @Transactional
-public class ClassService implements IClassService {
+public class ClassService
+        implements IClassService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClassService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(ClassService.class);
     private IClassRepository classRepository;
     private EntityManager entityManager;
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    private Integer maxPageSize = 10;
 
     public ClassService(IClassRepository classRepository, EntityManager entityManager) {
         this.classRepository = classRepository;
@@ -79,6 +85,7 @@ public class ClassService implements IClassService {
     public Class findBySystemId(String systemId) {
         return getClassOrThrow(systemId);
     }
+
     // ownedBy
     public List<Class> findByOwnedBy(String ownedBy) {
         ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().getAuthentication().getName():ownedBy;
@@ -91,27 +98,6 @@ public class ClassService implements IClassService {
     }
 
     // All READ operations
-    @Override
-    public List<Class> findClassByOwnerPaginated(Integer top, Integer skip) {
-        if (top == null || top > maxPageSize) {
-            top = maxPageSize;
-        }
-        if (skip == null) {
-            skip = 0;
-        }
-
-        String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Class> criteriaQuery = criteriaBuilder.createQuery(Class.class);
-        Root<Class> from = criteriaQuery.from(Class.class);
-        CriteriaQuery<Class> select = criteriaQuery.select(from);
-
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), loggedInUser));
-        TypedQuery<Class> typedQuery = entityManager.createQuery(select);
-        typedQuery.setFirstResult(skip);
-        typedQuery.setMaxResults(top);
-        return typedQuery.getResultList();
-    }
 
     // All UPDATE operations
     @Override
@@ -136,6 +122,7 @@ public class ClassService implements IClassService {
     }
 
     // All HELPER operations
+
     /**
      * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
      * If you call this, be aware that you will only ever get a valid Class back. If there is no valid
