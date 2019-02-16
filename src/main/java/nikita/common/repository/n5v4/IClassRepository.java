@@ -10,20 +10,11 @@ import java.util.Optional;
 @Repository
 public interface IClassRepository
         extends PagingAndSortingRepository<Class, Long> {
-
-    // -- All SAVE operations
-    @Override
-    Class save(Class klass);
-
-    // -- All READ operations
-    @Override
-    List<Class> findAll();
-
     // id
     Optional<Class> findById(Long id);
 
     // systemId
-    Class findBySystemId(String systemId);
+    Optional<Class> findBySystemId(String systemId);
 
     // ownedBy
     List<Class> findByOwnedBy(String ownedBy);

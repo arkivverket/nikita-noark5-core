@@ -1,9 +1,11 @@
 package nikita.webapp.service.interfaces;
 
 
+import nikita.common.model.noark5.v4.ClassificationSystem;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
+import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
 import org.antlr.v4.runtime.CharStream;
 
@@ -19,11 +21,13 @@ public interface ISeriesService {
 
     // -- All CREATE operations
     Series save(Series series);
-
     File createFileAssociatedWithSeries(String seriesSystemId, File file);
-
     CaseFile createCaseFileAssociatedWithSeries(String seriesSystemId,
                                                 CaseFile caseFile);
+
+    ClassificationSystemHateoas createClassificationSystem(
+            String systemId,
+            ClassificationSystem classificationSystem);
 
     // -- All READ operations
     List<Series> findAll();

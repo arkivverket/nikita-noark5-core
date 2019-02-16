@@ -1,35 +1,43 @@
 package nikita.webapp.service.interfaces;
 
-
 import nikita.common.model.noark5.v4.Class;
+import nikita.common.model.noark5.v4.File;
+import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v4.casehandling.CaseFile;
+import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
+import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Optional;
 
 public interface IClassService {
 
-
 	// -- All CREATE operations
+    ClassHateoas save(Class klass);
 
-	Class save(Class klass);
-	Class createClassAssociatedWithClass(String classSystemId, Class klass);
+    ClassHateoas createClassAssociatedWithClass(
+            String classSystemId, Class klass);
+
+    FileHateoas createFileAssociatedWithClass(
+            String classSystemId, File file);
+
+    CaseFileHateoas createCaseFileAssociatedWithClass(
+            String classSystemId, CaseFile caseFile);
+
+    RecordHateoas createRecordAssociatedWithClass(
+            String classSystemId, Record record);
 
 	// -- All READ operations
-	List<Class> findAll();
+    ClassHateoas findAll(String ownedBy);
 
-	// id
-    Optional<Class> findById(Long id);
+    ClassHateoas findSingleClass(String classSystemId);
 
-	// systemId
-    Class findBySystemId(String systemId);
-
-	// ownedBy
-	List<Class> findByOwnedBy(String ownedBy);
-
-	// All UPDATE operations
-	Class handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull Class klass);
+    // All UPDATE operations
+    ClassHateoas handleUpdate(@NotNull String systemId, @NotNull Long version,
+                              @NotNull Class klass);
 
 	// All DELETE operations
-	void deleteEntity(@NotNull String systemId);
+    HateoasNoarkObject deleteEntity(@NotNull String systemId);
 }

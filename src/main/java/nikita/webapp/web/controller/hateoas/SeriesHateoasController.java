@@ -32,6 +32,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES,
@@ -72,6 +73,53 @@ public class SeriesHateoasController extends NoarkController {
     }
 
     // API - All POST Requests (CRUD - CREATE)
+
+
+    // Create a new file
+    // POST [contextPath][api]/arkivstruktur/arkivdel/ny-mappe/
+    @ApiOperation(value = "Persists a File object associated with the given Series systemId", notes = "Returns the " +
+            "newly created file object after it was associated with a Series object and persisted to the database",
+            response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "File " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 201, message = "File " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type File"),
+            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+
+    @RequestMapping(method = RequestMethod.POST,
+            value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
+                    SLASH + NEW_CLASSIFICATION_SYSTEM,
+            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+    public ResponseEntity<ClassificationSystemHateoas>
+    createClassificationSystemAssociatedWithSeries(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of series to associate the " +
+                            "ClassificationSystem with",
+                    required = true)
+            @PathVariable String systemID,
+            @ApiParam(name = "ClassificationSystem",
+                    value = "Incoming ClassificationSystem object",
+                    required = true)
+            @RequestBody ClassificationSystem classificationSystem)
+            throws NikitaException {
+        validateForCreate(classificationSystem);
+        ClassificationSystemHateoas classificationSystemHateoas =
+                seriesService.createClassificationSystem(systemID,
+                        classificationSystem);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(classificationSystemHateoas.getEntityVersion().toString())
+                .body(classificationSystemHateoas);
+    }
+
+
 
     // Create a new file
     // POST [contextPath][api]/arkivstruktur/arkivdel/ny-mappe/
@@ -213,7 +261,7 @@ public class SeriesHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+    @RequestMapping(method = PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
             RIGHT_PARENTHESIS + SLASH + SERIES_ASSOCIATE_AS_SUCCESSOR, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
     public ResponseEntity<String> associateSeriesWithSeriesPrecursor(
             HttpServletRequest request,
@@ -256,7 +304,7 @@ public class SeriesHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+    @RequestMapping(method = PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
             RIGHT_PARENTHESIS + SLASH + SERIES_ASSOCIATE_AS_PRECURSOR, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
     public ResponseEntity<String> associateSeriesWithSeriesSuccessor(
             HttpServletRequest request,
@@ -297,8 +345,9 @@ public class SeriesHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + NEW_CLASSIFICATION_SYSTEM, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+    @RequestMapping(method = PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            RIGHT_PARENTHESIS + SLASH + NEW_CLASSIFICATION_SYSTEM,
+            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
     public ResponseEntity<String> associateSeriesWithClassificationSystem(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -338,7 +387,7 @@ public class SeriesHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+    @RequestMapping(method = PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
             RIGHT_PARENTHESIS, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
     public ResponseEntity<SeriesHateoas> updateSeries(
             HttpServletRequest request,

@@ -86,8 +86,7 @@ public class ClassificationSystemHateoasController
             throws NikitaException {
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.
-                        createNewClassificationSystem(
-                                classificationSystem);
+                        save(classificationSystem);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classificationSystem.getVersion().toString())
@@ -121,17 +120,17 @@ public class ClassificationSystemHateoasController
     @Counted
     @RequestMapping(method = POST,
             value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS +
-                    "classificationSystemSystemId" + RIGHT_PARENTHESIS + SLASH +
+                    "systemID" + RIGHT_PARENTHESIS + SLASH +
                     NEW_CLASS,
-            consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas>
     createClassAssociatedWithClassificationSystem(
             HttpServletRequest request,
-            @ApiParam(name = "classificationSystemSystemId",
+            @ApiParam(name = "systemId",
                     value = "systemId of classificationSystem to associate " +
                             "the class with.",
                     required = true)
-            @PathVariable String classificationSystemSystemId,
+            @PathVariable String systemID,
             @ApiParam(name = "klass",
                     value = "Incoming class object",
                     required = true)
@@ -140,7 +139,7 @@ public class ClassificationSystemHateoasController
         ClassHateoas classHateoas =
                 classificationSystemService.
                         createClassAssociatedWithClassificationSystem(
-                                classificationSystemSystemId, klass);
+                                systemID, klass);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(klass.getVersion().toString())

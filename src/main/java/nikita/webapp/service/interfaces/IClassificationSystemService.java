@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public interface IClassificationSystemService {
 
 	// -- All CREATE operations
-    ClassificationSystemHateoas createNewClassificationSystem(
+    ClassificationSystemHateoas save(
             @NotNull ClassificationSystem classificationSystem);
 
     ClassHateoas createClassAssociatedWithClassificationSystem(

@@ -16,6 +16,8 @@ public interface ICaseFileService {
 
     CaseFile save(@NotNull CaseFile caseFile);
 
+    CaseFileHateoas saveHateoas(@NotNull CaseFile caseFile);
+
     RegistryEntry createRegistryEntryAssociatedWithCaseFile(
             @NotNull String fileSystemId, @NotNull RegistryEntry registryEntry);
 

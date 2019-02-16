@@ -94,10 +94,34 @@ echo ${curloptsCreateSeries[@]};
 curloptsCreateFile+=("${curlPostOpts[@]}");
 curloptsCreateFile+=( --data @"$curl_files_dir"file-data.json  'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-mappe/' )
 
-# Create a file object and capture the systemId
-systemIDCreatedFile=$(curl "${curloptsCreateFile[@]}" | jq '.systemID' | sed 's/\"//g');
-printf "created   File 1              ($systemIDCreatedFile) \n";
+
+# Setup curl options for ClassificationSystem
+curloptsCreateClassificationSystem+=("${curlPostOpts[@]}");
+curloptsCreateClassificationSystem+=( --data @"$curl_files_dir"classification-system-data.json 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-klassifikasjonssystem/' )
+
+# Create a ClassificationSystem object and capture the systemId
+systemIDCreatedClassificationSystem=$(curl "${curloptsCreateClassificationSystem[@]}" | jq '.systemID' | sed 's/\"//g');
+printf "created   ClassificationSystem 1              ($systemIDCreatedClassificationSystem) \n";
 #echo ${curloptsCreateFile[@]};
+
+curloptsCreateClass+=("${curlPostOpts[@]}");
+curloptsCreateClass+=( --data @"$curl_files_dir"class-data.json 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/klassifikasjonssystem/'$systemIDCreatedClassificationSystem'/ny-klasse/' )
+
+# Create a Class object and capture the systemId
+systemIDCreatedClass=$(curl "${curloptsCreateClass[@]}" | jq '.systemID' | sed 's/\"//g');
+printf "created   Class 1              ($systemIDCreatedClass) \n";
+echo ${curloptsCreateClass[@]};
+
+# Setup curl options for file
+curloptsCreateFileClass+=("${curlPostOpts[@]}");
+curloptsCreateFileClass+=( --data @"$curl_files_dir"case-file-data.json 'http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/klasse/'$systemIDCreatedClass'/ny-saksmappe/' )
+
+echo ${curloptsCreateFileClass[@]};
+systemIDCreatedFile=$(curl "${curloptsCreateFileClass[@]}" | jq '.systemID' |
+ sed 's/\"//g');
+printf "created   File 1              ($systemIDCreatedFile) \n";
+
+exit
 
 # Create a record object and capture the systemId
 # Note that record does not contain any administration to be uploaded in JSON to be created. createdBy etc are set by the core.

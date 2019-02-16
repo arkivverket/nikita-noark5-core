@@ -18,8 +18,10 @@ import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
+import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,6 +57,7 @@ public class CaseFileService
     private ICaseStatusService caseStatusService;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
     private EntityManager entityManager;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public CaseFileService(
             IRegistryEntryService registryEntryService,
@@ -64,7 +67,8 @@ public class CaseFileService
             IUserRepository userRepository,
             ICaseStatusService caseStatusService,
             ICaseFileHateoasHandler caseFileHateoasHandler,
-            EntityManager entityManager) {
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher) {
         this.registryEntryService = registryEntryService;
         this.caseFileRepository = caseFileRepository;
         this.numberGeneratorService = numberGeneratorService;
@@ -73,6 +77,7 @@ public class CaseFileService
         this.caseStatusService = caseStatusService;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.entityManager = entityManager;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -105,6 +110,19 @@ public class CaseFileService
         caseFile.setFileId(currentYear.toString() + "/" +
                 caseFile.getCaseSequenceNumber());
         return caseFileRepository.save(caseFile);
+    }
+
+
+    @Override
+    public CaseFileHateoas saveHateoas(CaseFile caseFile) {
+        CaseFile caseFileNew = save(caseFile);
+        CaseFileHateoas caseFileHateoas = new
+                CaseFileHateoas(caseFileNew);
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(
+                        this, caseFileNew));
+        return caseFileHateoas;
     }
 
     // systemId

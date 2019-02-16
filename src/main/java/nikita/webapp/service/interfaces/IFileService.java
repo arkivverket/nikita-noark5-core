@@ -4,6 +4,7 @@ package nikita.webapp.service.interfaces;
 import nikita.common.model.noark5.v4.BasicRecord;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -13,6 +14,8 @@ public interface IFileService {
 
     // -- All CREATE operations
     File createFile(File file);
+
+    FileHateoas save(File file);
 
     Record createRecordAssociatedWithFile(String fileSystemId, Record record);
 

@@ -1,9 +1,11 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.noark5.v4.ClassificationSystem;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
+import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
@@ -14,6 +16,7 @@ import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.odata.NikitaODataToHQLWalker;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
+import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import org.antlr.v4.runtime.CharStream;
@@ -47,19 +50,23 @@ public class SeriesService
 
     private IFileService fileService;
     private ICaseFileService caseFileService;
+    private IClassificationSystemService classificationSystemService;
     private ISeriesRepository seriesRepository;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
 
-    public SeriesService(EntityManager entityManager,
-                         ICaseFileHateoasHandler caseFileHateoasHandler,
-                         IFileService fileService,
-                         ICaseFileService caseFileService,
-                         ISeriesRepository seriesRepository) {
+    public SeriesService(
+            EntityManager entityManager,
+            ICaseFileHateoasHandler caseFileHateoasHandler,
+            IClassificationSystemService classificationSystemService,
+            IFileService fileService,
+            ICaseFileService caseFileService,
+            ISeriesRepository seriesRepository) {
         super(entityManager);
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
         this.seriesRepository = seriesRepository;
+        this.classificationSystemService = classificationSystemService;
     }
 
     // All CREATE operations
@@ -86,6 +93,14 @@ public class SeriesService
         setNoarkEntityValues(series);
         checkDocumentMediumValid(series);
         return seriesRepository.save(series);
+    }
+
+    @Override
+    public ClassificationSystemHateoas createClassificationSystem(
+            String systemId, ClassificationSystem classificationSystem) {
+        Series series = getSeriesOrThrow(systemId);
+        series.setReferenceClassificationSystem(classificationSystem);
+        return classificationSystemService.save(classificationSystem);
     }
 
     // All READ operations

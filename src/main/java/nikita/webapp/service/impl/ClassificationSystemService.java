@@ -82,7 +82,7 @@ public class ClassificationSystemService
      * classificationSystemHateaos object
      */
     @Override
-    public ClassificationSystemHateoas createNewClassificationSystem(
+    public ClassificationSystemHateoas save(
             ClassificationSystem classificationSystem) {
         setNoarkEntityValues(classificationSystem);
         setFinaliseEntityValues(classificationSystem);
@@ -121,16 +121,7 @@ public class ClassificationSystemService
         ClassificationSystem classificationSystem =
                 getClassificationSystemOrThrow(classificationSystemSystemId);
         klass.setReferenceClassificationSystem(classificationSystem);
-
-        ClassHateoas classHateoas = new ClassHateoas(
-                classService.save(klass));
-
-        classHateoasHandler.addLinks(classHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(
-                        this, klass));
-        return classHateoas;
+        return classService.save(klass);
     }
 
     // All READ operations

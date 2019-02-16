@@ -3,10 +3,12 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
 import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v4.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -37,34 +39,51 @@ public class RecordService
     private DocumentDescriptionService documentDescriptionService;
     private IRecordRepository recordRepository;
     private EntityManager entityManager;
+    private IRecordHateoasHandler recordHateoasHandler;
     private IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public RecordService(DocumentDescriptionService documentDescriptionService,
-                         IRecordRepository recordRepository,
-                         IDocumentDescriptionHateoasHandler
-                                 documentDescriptionHateoasHandler,
-                         ApplicationEventPublisher applicationEventPublisher,
-                         IDocumentDescriptionRepository
-                                 documentDescriptionRepository,
-                         EntityManager entityManager) {
-
+    public RecordService(
+            DocumentDescriptionService documentDescriptionService,
+            IRecordRepository recordRepository,
+            EntityManager entityManager,
+            IRecordHateoasHandler recordHateoasHandler,
+            IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler,
+            IDocumentDescriptionRepository documentDescriptionRepository,
+            ApplicationEventPublisher applicationEventPublisher) {
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
-        this.documentDescriptionHateoasHandler =
-                documentDescriptionHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
-        this.documentDescriptionRepository = documentDescriptionRepository;
         this.entityManager = entityManager;
+        this.recordHateoasHandler = recordHateoasHandler;
+        this.documentDescriptionHateoasHandler = documentDescriptionHateoasHandler;
+        this.documentDescriptionRepository = documentDescriptionRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
-    public Record save(Record record){
+    @Override
+    public RecordHateoas save(Record record) {
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
 
+        record.setSystemId(UUID.randomUUID().toString());
+        record.setCreatedDate(new Date());
+        record.setOwnedBy(username);
+        record.setCreatedBy(username);
+        record.setDeleted(false);
+
+        RecordHateoas recordHateoas =
+                new RecordHateoas(recordRepository.save(record));
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        return recordHateoas;
+    }
+
+
+    public Record create(Record record) {
+        String username = SecurityContextHolder.getContext().
+                getAuthentication().getName();
 
         record.setSystemId(UUID.randomUUID().toString());
         record.setCreatedDate(new Date());

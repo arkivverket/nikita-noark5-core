@@ -3,44 +3,61 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v4.BasicRecord;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
 import nikita.common.repository.n5v4.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.util.NoarkUtils;
+import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 @Service
 @Transactional
-public class FileService implements IFileService {
+public class FileService
+        implements IFileService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(FileService.class);
 
     private IRecordService recordService;
     private IFileRepository fileRepository;
-    private EntityManager entityManager;
-
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    Integer maxPageSize = 10;
+    private IFileHateoasHandler fileHateoasHandler;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public FileService(IRecordService recordService,
                        IFileRepository fileRepository,
-                       EntityManager entityManager) {
+                       IFileHateoasHandler fileHateoasHandler,
+                       ApplicationEventPublisher applicationEventPublisher) {
         this.recordService = recordService;
         this.fileRepository = fileRepository;
-        this.entityManager = entityManager;
+        this.applicationEventPublisher = applicationEventPublisher;
+        this.fileHateoasHandler = fileHateoasHandler;
+    }
+
+    public FileHateoas save(File file) {
+        checkDocumentMediumValid(file);
+        setNoarkEntityValues(file);
+        setFinaliseEntityValues(file);
+        FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, file));
+        return fileHateoas;
     }
 
     @Override
@@ -62,7 +79,7 @@ public class FileService implements IFileService {
         }
         else {
             record.setReferenceFile(file);
-            persistedRecord = recordService.save(record);
+            persistedRecord = recordService.create(record);
         }
         return persistedRecord;        
     }
@@ -78,7 +95,8 @@ public class FileService implements IFileService {
         }
         else {
             basicRecord.setReferenceFile(file);
-            persistedBasicRecord = (BasicRecord) recordService.save(basicRecord);
+            persistedBasicRecord =
+                    (BasicRecord) recordService.create(basicRecord);
         }
         return persistedBasicRecord;
     }

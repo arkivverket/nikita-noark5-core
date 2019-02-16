@@ -3,6 +3,7 @@ package nikita.webapp.service.interfaces;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.Optional;
 public interface IRecordService {
 
 	// -- All CREATE operations
-	Record save(Record record);
+    RecordHateoas save(Record record);
+
+    Record create(Record record);
 
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription);
