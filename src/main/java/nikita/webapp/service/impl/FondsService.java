@@ -298,8 +298,6 @@ public class FondsService implements IFondsService {
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.
                 save(existingFonds));
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, existingFonds));
         return fondsHateoas;
     }
 
