@@ -3,8 +3,10 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v4.BasicRecord;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.hateoas.FileHateoas;
 import nikita.common.repository.n5v4.IFileRepository;
+import nikita.common.repository.n5v4.ISeriesRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -36,20 +38,24 @@ public class FileService
 
     private IRecordService recordService;
     private IFileRepository fileRepository;
+    private ISeriesRepository seriesRepository;
     private IFileHateoasHandler fileHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
 
     public FileService(IRecordService recordService,
                        IFileRepository fileRepository,
+                       ISeriesRepository seriesRepository,
                        IFileHateoasHandler fileHateoasHandler,
                        ApplicationEventPublisher applicationEventPublisher) {
         this.recordService = recordService;
         this.fileRepository = fileRepository;
+        this.seriesRepository = seriesRepository;
         this.applicationEventPublisher = applicationEventPublisher;
         this.fileHateoasHandler = fileHateoasHandler;
     }
 
     public FileHateoas save(File file) {
+        checkSeriesReference(file);
         checkDocumentMediumValid(file);
         setNoarkEntityValues(file);
         setFinaliseEntityValues(file);
@@ -171,5 +177,24 @@ public class FileService
             throw new NoarkEntityNotFoundException(info);
         }
         return file;
+    }
+
+    /**
+     * If all are true, then this is an incoming object that has an
+     * association to a series. When persisting the file object, we need to
+     * make sure the referenceSeries object has been retrieved from the
+     * database
+     *
+     * @param file The file to check
+     */
+    private void checkSeriesReference(@NotNull File file) {
+
+        if (file.getReferenceSeries() != null &&
+                file.getId() != null &&
+                file.getReferenceSeries().getSystemId() != null) {
+            Series series = seriesRepository.
+                    findBySystemId(file.getReferenceSeries().getSystemId());
+            file.setReferenceSeries(series);
+        }
     }
 }

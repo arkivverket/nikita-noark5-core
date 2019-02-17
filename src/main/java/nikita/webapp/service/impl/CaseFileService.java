@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.metadata.CaseStatus;
 import nikita.common.repository.n5v4.ICaseFileRepository;
+import nikita.common.repository.n5v4.ISeriesRepository;
 import nikita.common.repository.n5v4.admin.IAdministrativeUnitRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
@@ -51,6 +52,7 @@ public class CaseFileService
 
     private IRegistryEntryService registryEntryService;
     private ICaseFileRepository caseFileRepository;
+    private ISeriesRepository seriesRepository;
     private ISequenceNumberGeneratorService numberGeneratorService;
     private IAdministrativeUnitRepository administrativeUnitRepository;
     private IUserRepository userRepository;
@@ -62,6 +64,7 @@ public class CaseFileService
     public CaseFileService(
             IRegistryEntryService registryEntryService,
             ICaseFileRepository caseFileRepository,
+            ISeriesRepository seriesRepository,
             ISequenceNumberGeneratorService numberGeneratorService,
             IAdministrativeUnitRepository administrativeUnitRepository,
             IUserRepository userRepository,
@@ -69,6 +72,8 @@ public class CaseFileService
             ICaseFileHateoasHandler caseFileHateoasHandler,
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher) {
+
+        this.seriesRepository = seriesRepository;
         this.registryEntryService = registryEntryService;
         this.caseFileRepository = caseFileRepository;
         this.numberGeneratorService = numberGeneratorService;
@@ -82,6 +87,7 @@ public class CaseFileService
 
     @Override
     public CaseFile save(CaseFile caseFile) {
+        checkSeriesReference(caseFile);
         setNoarkEntityValues(caseFile);
         checkDocumentMediumValid(caseFile);
 
@@ -405,6 +411,25 @@ public class CaseFileService
 //            Optional<CaseStatus> caseStatus =
 //                    caseStatusService.getCaseStatusByDescription();
 //            if()
+        }
+    }
+
+    /**
+     * If all are true, then this is an incoming object that has an
+     * association to a series. When persisting the caseFile object, we need to
+     * make sure the referenceSeries object has been retrieved from the
+     * database
+     *
+     * @param caseFile The caseFile to check
+     */
+    private void checkSeriesReference(@NotNull CaseFile caseFile) {
+
+        if (caseFile.getReferenceSeries() != null &&
+                caseFile.getId() == null &&
+                caseFile.getReferenceSeries().getSystemId() != null) {
+            Series series = seriesRepository.
+                    findBySystemId(caseFile.getReferenceSeries().getSystemId());
+            caseFile.setReferenceSeries(series);
         }
     }
 }
