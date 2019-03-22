@@ -5,6 +5,9 @@ These are the highlevel changes.  For details, see the git history.
 
 Release 0.3 UNRELEASED
 ----------------------
+ * Ensure ClassificationSystem and Class work as intended.
+ * Tidied up known inconsistencies between domain model and hateaos links.
+ * Added experimental code for blockchain integration. 	
  * Make token expiry time configurable at upstart from properties file.
  * Continued work on OData syntax support.
  * Started work on pagination for entities.
