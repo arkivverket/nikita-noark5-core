@@ -9,21 +9,22 @@ Release 0.3 UNRELEASED
  * Tidied up known inconsistencies between domain model and hateaos links.
  * Added experimental code for blockchain integration. 	
  * Make token expiry time configurable at upstart from properties file.
- * Continued work on OData syntax support.
- * Started work on pagination for entities.
- * Continued code style fixing, making code more readable.
+ * Continued work on OData search syntax.
+ * Started work on pagination for entities, partly implemented for Saksmappe.
  * Finalise ClassifiedCode Metadata entity.
  * Enable check token ability to allow GUI to check token
    validity. Makes GUI experience nicer if user has not used the GUI
    since token expired.
- * Minor bug fixes.
- * Introduce browser ability (browse.html) to allow user to browse API
-   using hateoas links.
- * Fix bug with sequence number for file/mappe where change to new
-   year was not handled properly.
+ * Reintroduce browse.html page to allow user to browse JSON API using
+   hateoas links.
+ * Fix bug in handling file/mappe sequence number.  Year change was
+   not properly handled.
  * Update application yml files to be in sync with current development.
- * Disable 'conversion' to PDF using libreoffice for everything except
-   doc, ppt, xls, docx, pptx, xlsx, odt, odp and ods.
+ * Stop 'converting' everything to PDF using libreoffice.  Only
+   convert the file formats doc, ppt, xls, docx, pptx, xlsx, odt, odp
+   and ods.
+ * Continued code style fixing, making code more readable.
+ * Minor bug fixes.
 
 Release 0.2.1 2018-11-02 (commit 2bf7dfb7f39067c09b9db1d473b4b2c42cd602de)
 ----------------------
