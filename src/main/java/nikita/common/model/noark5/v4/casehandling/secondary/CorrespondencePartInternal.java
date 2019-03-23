@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -14,12 +13,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "correspondence_part_internal")
 //@JsonDeserialize(using = CorrespondencePartPersonInternal.class)
-@AttributeOverride(name = "id",
-        column = @Column(name = "pk_correspondence_part_internal_id"))
 public class CorrespondencePartInternal
         extends CorrespondencePart
         implements ICorrespondencePartInternalEntity {
-
 
     /**
      * M305 - administrativEnhet (xs:string)

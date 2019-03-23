@@ -7,15 +7,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "correspondence_part_unit")
 //@JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
-@AttributeOverride(name = "id",
-        column = @Column(name = "pk_correspondence_part_unit_id"))
 public class CorrespondencePartUnit
         extends CorrespondencePart
         implements ICorrespondencePartUnitEntity {

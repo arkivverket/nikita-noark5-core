@@ -13,13 +13,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_CORRESPONDENCE_PART_PERSON;
-
 @Entity
 @Table(name = "correspondence_part_person")
 @JsonDeserialize(using = CorrespondencePartPersonDeserializer.class)
-@AttributeOverride(name = "id",
-        column = @Column(name = PRIMARY_KEY_CORRESPONDENCE_PART_PERSON))
 public class CorrespondencePartPerson
         extends CorrespondencePart
         implements ICorrespondencePartPersonEntity {
