@@ -3,7 +3,7 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
-Release 0.3 UNRELEASED
+Release 0.3 2019-03-22 (commit 7d712e2e796ab86013915c027db17bb6f3416f16)
 ----------------------
  * Tidied up inconsistencies in how ClassificationSystem and Class are  
    developed.
