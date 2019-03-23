@@ -10,6 +10,7 @@ import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
+import java.util.List;
 
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
@@ -106,6 +107,14 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         if (null != currentNode) {
             documentDescription.setStorageLocation(currentNode.textValue());
             objectNode.remove(STORAGE_LOCATION);
+        }
+
+        List<JsonNode> authors = objectNode.findValues(AUTHOR);
+        for (JsonNode author : authors) {
+            if (null != author) {
+                documentDescription.setStorageLocation(author.textValue());
+                objectNode.remove(AUTHOR);
+            }
         }
 
         // Deserialize general documentDescription properties
