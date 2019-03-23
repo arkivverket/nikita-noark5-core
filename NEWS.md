@@ -5,16 +5,18 @@ These are the highlevel changes.  For details, see the git history.
 
 Release 0.3 UNRELEASED
 ----------------------
- * Ensure ClassificationSystem and Class work as intended.
+ * Tidied up inconsistencies in how ClassificationSystem and Class are  
+   developed.
  * Tidied up known inconsistencies between domain model and hateaos links.
  * Added experimental code for blockchain integration. 	
  * Make token expiry time configurable at upstart from properties file.
  * Continued work on OData search syntax.
- * Started work on pagination for entities, partly implemented for Saksmappe.
+ * Started work on pagination for entities, partly implemented for
+   Saksmappe.
  * Finalise ClassifiedCode Metadata entity.
- * Enable check token ability to allow GUI to check token
-   validity. Makes GUI experience nicer if user has not used the GUI
-   since token expired.
+ * Implement mechanism to check if authentication token is still valid.
+   This allows the GUI to return a more sensible message to the user if
+   the token is expired.
  * Reintroduce browse.html page to allow user to browse JSON API using
    hateoas links.
  * Fix bug in handling file/mappe sequence number.  Year change was
