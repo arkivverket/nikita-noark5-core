@@ -49,7 +49,6 @@
     <start-class>nikita.N5CoreApp</start-class>
 
     <!-- dependency versions -->
-    <spring-security.version>5.0.3.RELEASE</spring-security.version>
     <spring-security-saml2-core.version>1.0.3.RELEASE</spring-security-saml2-core.version>
     <spring-security-oauth2.version>2.3.5.RELEASE</spring-security-oauth2.version>
     <spring-security-jwt.version>1.0.10.RELEASE</spring-security-jwt.version>
@@ -259,31 +258,37 @@
       <artifactId>jquery</artifactId>
       <version>${jquery.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>angularjs</artifactId>
       <version>${angularjs.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>font-awesome</artifactId>
       <version>${font-awesome.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>bootstrap</artifactId>
       <version>${bootstrap.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>popper.js</artifactId>
       <version>${popper.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>angular-file-upload</artifactId>
       <version>${angular-file-upload.version}</version>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -414,6 +419,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>3.1.0</version>
