@@ -41,9 +41,11 @@ public class ClassifiactionSystemDeserializer extends JsonDeserializer {
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The klassifikasjonssystem you tried to create is " +
-                    "malformed. The following fields are not recognised as klassifikasjonssystem fields [" +
-                    checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append("The klassifikasjonssystem you tried to create is ");
+            errors.append("malformed. The following fields are not recognised");
+            errors.append(" as klassifikasjonssystem fields [");
+            errors.append(checkNodeObjectEmpty(objectNode));
+            errors.append("].");
         }
 
         if (0 < errors.length())
