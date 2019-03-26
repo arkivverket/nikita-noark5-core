@@ -22,7 +22,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * Note:
  * - Unknown property values in the JSON will trigger an exception
  * - Missing obligatory property values in the JSON will trigger an exception
- * - DocumentObject has no obligatory values required to be present at 
+ * - DocumentObject has no obligatory values required to be present at
  * instantiation time
  */
 public class DocumentObjectDeserializer extends JsonDeserializer {
@@ -105,10 +105,11 @@ public class DocumentObjectDeserializer extends JsonDeserializer {
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The dokumentobjekt you tried to create is " +
-                    "malformed. The following fields are not recognised as " +
-                    "dokumentobjekt fields [" + checkNodeObjectEmpty(objectNode)
-                    + "]. ");
+            errors.append("The dokumentobjekt you tried to create is ");
+            errors.append("malformed. The following fields are not ");
+            errors.append("recognised as dokumentobjekt fields [");
+            errors.append(checkNodeObjectEmpty(objectNode));
+            errors.append("].");
         }
 
         if (0 < errors.length())
