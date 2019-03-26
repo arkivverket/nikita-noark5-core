@@ -1,6 +1,8 @@
 package nikita.common.model.noark5.v4;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.util.deserialisers.ClassifiactionSystemDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -15,6 +17,7 @@ import java.util.List;
 // @SQLDelete(sql="UPDATE classification_system SET deleted = true WHERE pk_classification_system_id = ? and version = ?")
 // @Where(clause="deleted <> true")
 //@Indexed(index = "classification_system")
+@JsonDeserialize(using = ClassifiactionSystemDeserializer.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_classification_system_id"))
 public class ClassificationSystem extends NoarkGeneralEntity {
 
