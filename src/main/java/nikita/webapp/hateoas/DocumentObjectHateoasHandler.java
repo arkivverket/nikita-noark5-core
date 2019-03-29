@@ -20,6 +20,13 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Component("documentObjectHateoasHandler")
 public class DocumentObjectHateoasHandler extends HateoasHandler implements IDocumentObjectHateoasHandler {
 
+    public DocumentObjectHateoasHandler(String contextPath) {
+        super(contextPath);
+    }
+
+    public DocumentObjectHateoasHandler() {
+    }
+
     @Override
     public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
 

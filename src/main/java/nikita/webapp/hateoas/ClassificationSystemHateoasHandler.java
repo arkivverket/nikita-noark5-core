@@ -46,6 +46,13 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Component("classificationSystemHateoasHandler")
 public class ClassificationSystemHateoasHandler extends HateoasHandler implements IClassificationSystemHateoasHandler {
 
+    public ClassificationSystemHateoasHandler(String contextPath) {
+        super(contextPath);
+    }
+
+    public ClassificationSystemHateoasHandler() {
+    }
+
     @Override
     public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
 

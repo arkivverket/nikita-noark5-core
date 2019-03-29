@@ -20,6 +20,13 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Component("recordHateoasHandler")
 public class RecordHateoasHandler extends HateoasHandler implements IRecordHateoasHandler {
 
+    public RecordHateoasHandler(String contextPath) {
+        super(contextPath);
+    }
+
+    public RecordHateoasHandler() {
+    }
+
     @Override
     public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
 

@@ -28,6 +28,13 @@ import static nikita.common.config.N5ResourceMappings.*;
 public class SeriesHateoasHandler extends HateoasHandler
         implements ISeriesHateoasHandler {
 
+    public SeriesHateoasHandler(String contextPath) {
+        super(contextPath);
+    }
+
+    public SeriesHateoasHandler() {
+    }
+
     @Override
     public void addEntityLinks(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {

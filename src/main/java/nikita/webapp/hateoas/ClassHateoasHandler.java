@@ -13,10 +13,16 @@ import static nikita.common.config.N5ResourceMappings.*;
  * Created by tsodring on 2/6/17.
  * <p>
  * Used to add ClassHateoas links with Class specific information
- *
  */
 @Component("classHateoasHandler")
 public class ClassHateoasHandler extends HateoasHandler implements IClassHateoasHandler {
+
+    public ClassHateoasHandler(String contextPath) {
+        super(contextPath);
+    }
+
+    public ClassHateoasHandler() {
+    }
 
     @Override
     public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
@@ -31,7 +37,6 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
         addClassificationSystem(entity, hateoasNoarkObject);
         addParentClass(entity, hateoasNoarkObject);
         addSubClass(entity, hateoasNoarkObject);
-        addNewSubClass(entity, hateoasNoarkObject);
         // links for secondary entities (non-embeddable)
         addKeyword(entity, hateoasNoarkObject);
         addNewKeyword(entity, hateoasNoarkObject);
@@ -57,8 +62,8 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
     @Override
     public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + SUB_CLASS +
-                SLASH, REL_FONDS_STRUCTURE_CLASS, false));
+                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + NEW_SUB_CLASS +
+                SLASH, REL_FONDS_STRUCTURE_NEW_SUB_CLASS, false));
     }
 
     @Override
@@ -73,13 +78,6 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
         hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + SUB_CLASS +
                 SLASH, REL_FONDS_STRUCTURE_SUB_CLASS, false));
-    }
-
-    @Override
-    public void addNewSubClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + SUB_CLASS +
-                SLASH, REL_FONDS_STRUCTURE_NEW_SUB_CLASS, false));
     }
 
     @Override

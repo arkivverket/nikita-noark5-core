@@ -24,8 +24,6 @@ public interface IClassHateoasHandler extends IHateoasHandler {
 
     void addSubClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSubClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
