@@ -109,35 +109,35 @@ public class OdataTest {
         } else if (entity.equals(SERIES)) {
             noarkObject =
                     new SeriesHateoas((List<INikitaEntity>) (List) list);
-            handler = new SeriesHateoasHandler();
+            handler = new SeriesHateoasHandler(contextPath);
         } else if (entity.equals(CLASSIFICATION_SYSTEM)) {
             noarkObject =
                     new ClassificationSystemHateoas((List<INikitaEntity>) (List) list);
-            handler = new ClassificationSystemHateoasHandler();
+            handler = new ClassificationSystemHateoasHandler(contextPath);
         } else if (entity.equals(CLASS)) {
             noarkObject =
                     new ClassHateoas((List<INikitaEntity>) (List) list);
-            handler = new ClassHateoasHandler();
+            handler = new ClassHateoasHandler(contextPath);
         } else if (entity.equals(FILE)) {
             noarkObject =
                     new FileHateoas((List<INikitaEntity>) (List) list);
-            handler = new FileHateoasHandler();
+            handler = new FileHateoasHandler(contextPath);
         } else if (entity.equals(REGISTRATION)) {
             noarkObject =
                     new RecordHateoas((List<INikitaEntity>) (List) list);
-            handler = new RecordHateoasHandler();
+            handler = new RecordHateoasHandler(contextPath);
         } else if (entity.equals(DOCUMENT_DESCRIPTION)) {
             noarkObject =
                     new DocumentDescriptionHateoas((List<INikitaEntity>) (List) list);
-            handler = new DocumentDescriptionHateoasHandler();
+            handler = new DocumentDescriptionHateoasHandler(contextPath);
         } else if (entity.equals(DOCUMENT_OBJECT)) {
             noarkObject =
                     new DocumentObjectHateoas((List<INikitaEntity>) (List) list);
-            handler = new DocumentObjectHateoasHandler();
+            handler = new DocumentObjectHateoasHandler(contextPath);
         } else {
             noarkObject =
                     new HateoasNoarkObject((List<INikitaEntity>) (List) list, entity);
-            handler = new HateoasHandler();
+            handler = new HateoasHandler(contextPath);
         }
 
         handler.addLinks(noarkObject, new Authorisation());

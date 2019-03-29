@@ -32,7 +32,7 @@ parentResource  : string;
 
 resource        : string;
 
-systemId        : uuid;
+systemId        : string;
 
 port            : DIGITS;
 
@@ -70,7 +70,6 @@ startsWith      : 'startsWith' leftCurlyBracket attribute ',' '\'' value '\''
 
 attribute       : string;
 
-
 value           : string;
 
 sortOrder       : asc | desc;
@@ -79,7 +78,9 @@ sortOrder       : asc | desc;
 comparator      : eq | gt | lt | ge | le;
 operator        : (and | or);
 
+
 WHITESPACE       : [ \n\t\r]+ -> skip ;
+
 
 leftCurlyBracket        : '(';
 rightCurlyBracket       : ')';
@@ -113,7 +114,8 @@ ORDERBY         : 'orderby';
 WS              : ' '+;
 DIGITS          : [0-9] +;
 HEX             : ('%' [a-fA-F0-9] [a-fA-F0-9]) +;
-STRING          : ([a-zA-Z~0-9])+;
+STRING          : ([a-zA-Z~0-9-])+;
 UUID            : ('a'..'z'|'A'..'Z'|'0'..'9'|'-')+;
 COLON           : ':';
 SEPERATOR       : '://';
+

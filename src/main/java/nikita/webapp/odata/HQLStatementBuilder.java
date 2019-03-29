@@ -1,6 +1,5 @@
 package nikita.webapp.odata;
 
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.hibernate.Session;
@@ -42,19 +41,21 @@ public class HQLStatementBuilder {
 
     public void addSelect(String entity, String ownerColumn, String
             loggedInUser) {
-        select = "FROM " + entity + " where " + ownerColumn + " ='" +
+        String objectName = entity;
+        select = "FROM " + objectName + " where " + ownerColumn + " ='" +
                 loggedInUser + "'";
     }
 
     public void addSelectWithForeignKey
             (String parentResource, String resource, String ownerColumn,
              String loggedInUser) {
-        select = "FROM CaseFile where ";
-        if (getNameObject(resource).equalsIgnoreCase("caseFile")) {
-            select += CaseFile.getForeignKeyIdentifier(
-                    getNameObject(parentResource)) + "= 'PARENT_ID' and ";
-        }
+        String objectName = getNameObject(resource);
+        select = "FROM " + objectName + " where ";
+        String foreignKeyIdentifier = "reference" +
+                getNameObject(parentResource);
+        select += foreignKeyIdentifier + "= 'PARENT_ID' and ";
         select += ownerColumn + " = '" + loggedInUser + "'";
+        System.out.println(select);
     }
 
     /**
@@ -122,9 +123,12 @@ public class HQLStatementBuilder {
             hqlStatement.append(entry.getKey() + " " + entry.getValue());
         }
 
-        query.setFirstResult(limitOffset);
-        query.setMaxResults(limitHowMany);
-
+        if (limitOffset != null) {
+            query.setFirstResult(limitOffset);
+        }
+        if (limitHowMany != null) {
+            query.setMaxResults(limitHowMany);
+        }
         String queryString = query.getQueryString();
         out.println("HQL Query string is " + queryString);
         return query;
@@ -224,6 +228,6 @@ public class HQLStatementBuilder {
         }
         throw new NikitaMalformedInputDataException(
                 "Unrecognised comparator used in OData query (" +
-                        comparator +")");
+                        comparator + ")");
     }
 }

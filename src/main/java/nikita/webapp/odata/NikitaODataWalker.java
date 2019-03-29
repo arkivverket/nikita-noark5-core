@@ -165,7 +165,7 @@ public abstract class NikitaODataWalker
         String comparator = ctx.getChild(
                 ODataParser.ComparatorContext.class, 0).getText();
         String value = ctx.getChild(
-                ODataParser.StringContext.class, 0).getText();
+                ODataParser.ValueContext.class, 0).getText();
 
         processComparatorCommand(attribute, comparator, value);
     }
@@ -212,12 +212,22 @@ public abstract class NikitaODataWalker
         super.enterNikitaObjects(ctx);
         System.out.println("Entering enterNikitaObjects. Found [" +
                 ctx.getText() + "]");
-        String parentResource = ctx.getChild(
-                ODataParser.ParentResourceContext.class, 0).getText();
+        String parentResource = null;
+        String systemId = null;
+
+        if (null != ctx.getChild(ODataParser.ParentResourceContext.class, 0)) {
+            parentResource = ctx.getChild(
+                    ODataParser.ParentResourceContext.class, 0).getText();
+        }
+
         String resource = ctx.getChild(
                 ODataParser.ResourceContext.class, 0).getText();
-        String systemId = ctx.getChild(
-                ODataParser.SystemIdContext.class, 0).getText();
+
+        if (null != ctx.getChild(
+                ODataParser.SystemIdContext.class, 0)) {
+            systemId = ctx.getChild(
+                    ODataParser.SystemIdContext.class, 0).getText();
+        }
 
         System.out.println("Entering enterResource. Found [" +
                 ctx.getText() + "]");
