@@ -155,8 +155,17 @@ var SetUserToken = function (t) {
     console.log("Adding token " + t + " to local storage");
 };
 
-var GetUserToken = function (t) {
+var GetUserToken = function () {
     return localStorage.getItem("token");
+};
+
+var GetBaseURLForODataSearch = function () {
+  return localStorage.getItem("base-url-odata");
+};
+
+var SetBaseURLForODataSearch = function (t) {
+  localStorage.setItem("base-url-odata", t);
+  console.log("Adding base-url-odata " + t + " to local storage");
 };
 
 var SetUsername = function (t) {
