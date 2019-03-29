@@ -415,8 +415,8 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_UNIT_ENG = "korrespondansepartenhet";
     public static final String COUNTRY_CODE_ENG = "landkode";
     public static final String COUNTRY_ENG = "land";
-    public static final String CREATED_BY_ENG = "opprettetAv";
-    public static final String CREATED_DATE_ENG = "opprettetDato";
+    public static final String CREATED_BY_ENG = "createdBy";
+    public static final String CREATED_DATE_ENG = "createdDate";
     public static final String CROSS_REFERENCE_CLASS_ENG = "referanseTilKlasse";
     public static final String CROSS_REFERENCE_ENG = "kryssreferanse";
     public static final String CROSS_REFERENCE_FILE_ENG = "referanseTilMappe";
@@ -425,7 +425,7 @@ public final class N5ResourceMappings {
     public static final String DELETION_DATE_ENG = "slettetDato";
     public static final String DELETION_ENG = "sletting";
     public static final String DELETION_TYPE_ENG = "slettingstype";
-    public static final String DESCRIPTION_ENG = "beskrivelse";
+    public static final String DESCRIPTION_ENG = "description";
     public static final String DISPOSAL_AUTHORITY_ENG = "kassasjonshjemmel";
     public static final String DISPOSAL_DATE_ENG = "kassasjonsdato";
     public static final String DISPOSAL_DECISION_ENG = "kassasjonsvedtak";
@@ -473,7 +473,7 @@ public final class N5ResourceMappings {
     public static final String EVENT_TYPE_ENG = "hendelsetype";
     public static final String FILE_ENG = "file";
     public static final String FILE_ID_ENG = "fileId";
-    public static final String FILE_PUBLIC_TITLE_ENG = "offentligTittel";
+    public static final String FILE_PUBLIC_TITLE_ENG = "officialTitle";
     public static final String FILE_TYPE_ENG = "mappetype";
     public static final String FINALISED_BY_ENG = "avsluttetAv";
     public static final String FINALISED_DATE_ENG = "avsluttetDato";
@@ -627,8 +627,8 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_UNIT_ENG_OBJECT = "korrespondansepartenhet";
     public static final String COUNTRY_CODE_ENG_OBJECT = "landkode";
     public static final String COUNTRY_ENG_OBJECT = "land";
-    public static final String CREATED_BY_ENG_OBJECT = "opprettetAv";
-    public static final String CREATED_DATE_ENG_OBJECT = "opprettetDato";
+    public static final String CREATED_BY_ENG_OBJECT = "createdBy";
+    public static final String CREATED_DATE_ENG_OBJECT = "createdDate";
     public static final String CROSS_REFERENCE_CLASS_ENG_OBJECT = "referanseTilKlasse";
     public static final String CROSS_REFERENCE_ENG_OBJECT = "kryssreferanse";
     public static final String CROSS_REFERENCE_FILE_ENG_OBJECT = "referanseTilMappe";
@@ -637,7 +637,7 @@ public final class N5ResourceMappings {
     public static final String DELETION_DATE_ENG_OBJECT = "slettetDato";
     public static final String DELETION_ENG_OBJECT = "sletting";
     public static final String DELETION_TYPE_ENG_OBJECT = "slettingstype";
-    public static final String DESCRIPTION_ENG_OBJECT = "beskrivelse";
+    public static final String DESCRIPTION_ENG_OBJECT = "description";
     public static final String DISPOSAL_AUTHORITY_ENG_OBJECT = "kassasjonshjemmel";
     public static final String DISPOSAL_DATE_ENG_OBJECT = "kassasjonsdato";
     public static final String DISPOSAL_DECISION_ENG_OBJECT = "kassasjonsvedtak";
@@ -683,9 +683,9 @@ public final class N5ResourceMappings {
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_ENG_OBJECT = "elektronisksignaturverifisert";
     public static final String EMAIL_ADDRESS_ENG_OBJECT = "epostadresse";
     public static final String EVENT_TYPE_ENG_OBJECT = "hendelsetype";
-    public static final String FILE_ENG_OBJECT = "file";
+    public static final String FILE_ENG_OBJECT = "File";
     public static final String FILE_ID_ENG_OBJECT = "fileId";
-    public static final String FILE_PUBLIC_TITLE_ENG_OBJECT = "offentligTittel";
+    public static final String FILE_PUBLIC_TITLE_ENG_OBJECT = "officialTitle";
     public static final String FILE_TYPE_ENG_OBJECT = "mappetype";
     public static final String FINALISED_BY_ENG_OBJECT = "avsluttetAv";
     public static final String FINALISED_DATE_ENG_OBJECT = "avsluttetDato";
@@ -766,7 +766,7 @@ public final class N5ResourceMappings {
     public static final String SIGN_OFF_METHOD_ENG_OBJECT = "avskrivningsmaate";
     public static final String SUB_CLASS_ENG_OBJECT = "underklasse";
     public static final String SUB_FONDS_ENG_OBJECT = "underarkiv";
-    public static final String SYSTEM_ID_ENG_OBJECT = "systemID";
+    public static final String SYSTEM_ID_ENG_OBJECT = "systemId";
     public static final String TELEPHONE_NUMBER_ENG_OBJECT = "telefonnummer";
     public static final String TITLE_ENG_OBJECT = "title";
     public static final String USER_ENG_OBJECT = "bruker";

@@ -21,6 +21,14 @@ import static nikita.common.config.N5ResourceMappings.*;
 public class FondsHateoasHandler extends HateoasHandler
         implements IFondsHateoasHandler {
 
+    public FondsHateoasHandler(String contextPath) {
+        super(contextPath);
+    }
+
+    public FondsHateoasHandler() {
+        super();
+    }
+
     @Override
     public void addEntityLinks(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {

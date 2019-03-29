@@ -1,65 +1,116 @@
-<!DOCTYPE html>
-<html lang="nb" ng-app="nikita-search">
-  <head>
-    <meta charset="UTF-8">
-    <script src="dependencies/internal/config.js"></script>
-    <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
-    <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
-    <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
-    <script src="dependencies/internal/login.js"></script>
-    <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
-          rel="stylesheet" type="text/css">
-    <link
-      href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
-      rel="stylesheet" type="text/css">
-    <script src="dependencies/internal/common_functionality.js"></script>
-    <script src="dependencies/internal/search.js"></script>
-    <meta charset="UTF-8">
-    <title>nikita-noark5</title>
-    <!-- Manually setting the size of the modal for creating a new user -->
-    <style media="screen" type="text/css">
-      .col-padding-right {
-      padding-right: 15px;
-      }
-    </style>
-  </head>
-  <body ng-controller="SearchController">
-    <p><a href="login.html">logg inn</a> (Status: {{ status }})</p>
-    <h2></h2>
-    <form ng-submit="do_search()" method="post">
-    <table>
-      <tr>
-	<th>Element:</th>
-	<td><select name="element" id="element">
-	    <option value="arkiv">arkiv</option>
-	    <option value="arkivdel">arkivdel</option>
-	    <option value="mappe">mappe</option>
-	  </select>
-	</td>
-	<th>Content:</th>
-	<td><select name="content" id="content">
-	    <option value="tittel">tittel</option>
-	    <option value="beskrivelse">beskrivelse</option>
-	  </select>
-	</td>
-	<th>Filter:</th>
-	<td><select name="filter" id="filter">
-	    <option value="contains">contains</option>
-	    <option value="eq">Equal</option>
-	    <option value="ne">Not equal</option>
-	    <option value="gt">Greater than</option>
-	    <option value="ge">Greater than or equal</option>
-	    <option value="lt">Less than</option>
-	    <option value="le">Less than or equal</option>
-	    <option value="startswith">startswith</option>
-	  </select>
-	</td>
-	<th>String:</th>
-	<td><input id="string" type="text" name="string"/></td>
-	<td><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" ng-click="do_search()">Search</button></td>
-      </tr>
-    </table>
-    </form>
-  </body>
+<!doctype html>
+<html ng-app="nikita-search">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+  <title>Nikita browser</title>
+  <script src="dependencies/internal/config.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="dependencies/vendor/json_editor/dist/jquery.json-editor.min.js" type="text/javascript"></script>
+  <script src="dependencies/internal/login.js"></script>
+
+  <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
+        rel="stylesheet" type="text/css">
+
+  <link
+    href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+    rel="stylesheet" type="text/css">
+
+  <script src="dependencies/internal/search.js"></script>
+</head>
+<body ng-controller="SearchController">
+
+<nav class="navbar navbar-expand-sm bg-light">
+  <a class="navbar-brand" href="https://nikita.hioa.no/search.html">
+    <span ng-show="!loggedIn">Nikita browser (Not logged in)</span>
+    <span ng-show="loggedIn">Nikita browser ({{emailAddress}})</span>
+  </a>
+
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item dropdown">
+      <a class="nav-link" data-toggle="dropdown" href="#" id="navbardrop">
+        <span class="fa fa-bars"></span>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a class="nav-link" data-target="#loginModal" data-toggle="modal" href="#">
+          Logg inn &nbsp; <span class="fas fa-sign-in-alt"></span></a>
+        <a class="nav-link" href="#" ng-click="doLogout()">
+          Logg ut &nbsp; <span class="fas fa-sign-out-alt"></span></a>
+      </div>
+    </li>
+  </ul>
+</nav>
+<div class="card">
+  <div class="card-body">
+    <div class="container">
+
+      <div class="card">
+        <div class="card-body">
+          <div class="container">
+            <div class="col-12">
+              <div class="row">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">OData spørring</span>
+                  </div>
+                  <textarea aria-label="OData spørring" class="form-control"
+                            ng-model="odataQuery" rows="1">
+  							</textarea>
+                  <button class="btn btn-primary" ng-click="doSearch()" ng-disabled="!loggedIn" type="button">Søk
+                  </button>
+                </div>
+                <hr/>
+                <hr/>
+                <div class="row">
+                  <div class="col-12">
+                    <pre id="json-display" ng-model="odataResult"></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal to login -->
+<div class="modal fade" id="loginModal" login-modal>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Logg på nikita</h4>
+        <button class="close" data-dismiss="modal" type="button">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="panel-body">
+            <form role="form">
+              <fieldset>
+                <div class="form-group">
+                  <input autofocus class="form-control"
+                         name="emailAddress" ng-model="emailAddress" placeholder="Epost adresse" type="email">
+                </div>
+                <div class="form-group">
+                  <input class="form-control" name="password"
+                         ng-model="password" placeholder="Passord" type="password">
+                </div>
+                <div class="btn-toolbar">
+                  <button class="btn btn-primary pull-right" ng-click="doLogin()"
+                          type="button">Logg på
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End modal to login -->
+</body>
 </html>

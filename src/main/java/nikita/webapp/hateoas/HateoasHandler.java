@@ -26,6 +26,13 @@ public class HateoasHandler implements IHateoasHandler {
     @Value("${nikita.server.hateoas.publicAddress}")
     protected String contextPath;
 
+    public HateoasHandler(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public HateoasHandler() {
+    }
+
     @Override
     public void addLinks(IHateoasNoarkObject hateoasNoarkObject,
                          IAuthorisation authorisation) {
