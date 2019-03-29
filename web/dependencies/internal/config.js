@@ -164,7 +164,7 @@ var SetUsername = function (t) {
   console.log("Adding username " + t + " to local storage");
 };
 
-var GetUsername = function (t) {
+var GetUsername = function () {
   return localStorage.getItem("username");
 };
 
