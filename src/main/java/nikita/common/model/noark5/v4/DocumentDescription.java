@@ -332,6 +332,10 @@ public class DocumentDescription
         this.referenceAuthor = referenceAuthor;
     }
 
+    public void addReferenceAuthor(Author author) {
+        referenceAuthor.add(author);
+    }
+
     @Override
     public Classified getReferenceClassified() {
         return referenceClassified;
