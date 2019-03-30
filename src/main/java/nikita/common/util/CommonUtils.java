@@ -35,8 +35,8 @@ import java.util.regex.Pattern;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
-import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.config.N5ResourceMappings.REFERENCE_ADMINISTRATIVE_UNIT;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpMethod.*;
 
 public final class CommonUtils {
@@ -205,7 +205,8 @@ public final class CommonUtils {
         }
 
         public static String getEnglishNameObject(String norwegianName) {
-            return nor2engEntityMap.get(norwegianName).getEnglishNameObject();
+            ModelNames names = nor2engEntityMap.get(norwegianName);
+            return names.getEnglishNameObject();
         }
 
         public static String getEnglishNameDatabase(String norwegianName) {
