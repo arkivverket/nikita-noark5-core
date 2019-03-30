@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v4.DocumentDescription;
+import nikita.common.model.noark5.v4.secondary.Author;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
@@ -112,7 +113,9 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         List<JsonNode> authors = objectNode.findValues(AUTHOR);
         for (JsonNode author : authors) {
             if (null != author) {
-                documentDescription.setStorageLocation(author.textValue());
+                Author authorObj = new Author();
+                authorObj.setAuthor(author.textValue());
+                documentDescription.addReferenceAuthor(authorObj);
                 objectNode.remove(AUTHOR);
             }
         }
