@@ -13,9 +13,9 @@ import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,10 +76,20 @@ public class NikitaEventListener {
 
     private void createBlockAndPost(AfterNoarkEntityEvent event,
                                     String eventType) {
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost(urlSimpleChain);
+
+        if (client == null) {
+            logger.error("could not create CloseableHttpClient");
+            return;
+        }
+
+        if (post == null) {
+            logger.error("could not create HttpPost to " + urlSimpleChain);
+            return;
+        }
 
         try {
-            HttpClient client = HttpClientBuilder.create().build();
-            HttpPost post = new HttpPost(urlSimpleChain);
 
             JSONObject block = new JSONObject();
 
@@ -155,9 +165,18 @@ public class NikitaEventListener {
                 logger.error("SimpleChain integration problem (" + status +
                         ") message " + message);
             }
+            client.close();
         } catch (IOException | JSONException e) {
             logger.error("Could not create JSON object during " +
                     event.toString());
+        } finally {
+            if (client != null) {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage());
+                }
+            }
         }
     }
 }
