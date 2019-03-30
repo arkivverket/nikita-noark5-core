@@ -18,7 +18,7 @@ odataURL: scheme SEPERATOR host (COLON port)? fromContextPath;
 
 scheme          :  ('http' | 'https');
 
-host            : string;
+host            : string (DOT string)+;
 
 slash           : '/';
 
@@ -118,4 +118,4 @@ STRING          : ([a-zA-Z~0-9-])+;
 UUID            : ('a'..'z'|'A'..'Z'|'0'..'9'|'-')+;
 COLON           : ':';
 SEPERATOR       : '://';
-
+DOT             : '.';
