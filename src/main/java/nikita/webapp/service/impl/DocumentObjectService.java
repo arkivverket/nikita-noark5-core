@@ -485,17 +485,32 @@ public class DocumentObjectService
      * @throws IOException if there is a problem with the file
      */
 
-    private String getMimeType(Path file)
-            throws IOException {
+    private String getMimeType(Path file) {
 
-        TikaConfig config = TikaConfig.getDefaultConfig();
-        Detector detector = config.getDetector();
+        MediaType mediaType;
+        TikaInputStream stream = null;
+        try {
+            TikaConfig config = TikaConfig.getDefaultConfig();
+            Detector detector = config.getDetector();
 
-        TikaInputStream stream = TikaInputStream.get(file);
-        Metadata metadata = new Metadata();
-        MediaType mediaType = detector.detect(stream, metadata);
+            stream = TikaInputStream.get(file);
+            Metadata metadata = new Metadata();
+            mediaType = detector.detect(stream, metadata);
 
-        return mediaType.toString();
+            stream.close();
+            return mediaType.toString();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+        }
+        return "unknown";
     }
 
     /**
