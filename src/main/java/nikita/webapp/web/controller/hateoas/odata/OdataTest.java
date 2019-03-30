@@ -82,8 +82,6 @@ public class OdataTest {
         System.out.println(queryString);
         List<NoarkEntity> list = query.getResultList();
 
-        // Yes it's ugly but it's temporary code until I figure out to
-        // do reflection here, or something smarter
 
         String address = request.getHeader("X-Forwarded-Host");
         String protocol = request.getHeader("X-Forwarded-Proto");
@@ -100,44 +98,63 @@ public class OdataTest {
             contextPath += env.getProperty("server.servlet.context-path");
             contextPath += "/";
         }
+
         HateoasNoarkObject noarkObject;
-        HateoasHandler handler = new HateoasHandler();
-        if (entity.equals(FONDS)) {
-            noarkObject =
-                    new FondsHateoas((List<INikitaEntity>) (List) list);
-            handler = new FondsHateoasHandler(contextPath);
-        } else if (entity.equals(SERIES)) {
-            noarkObject =
-                    new SeriesHateoas((List<INikitaEntity>) (List) list);
-            handler = new SeriesHateoasHandler(contextPath);
-        } else if (entity.equals(CLASSIFICATION_SYSTEM)) {
-            noarkObject =
-                    new ClassificationSystemHateoas((List<INikitaEntity>) (List) list);
-            handler = new ClassificationSystemHateoasHandler(contextPath);
-        } else if (entity.equals(CLASS)) {
-            noarkObject =
-                    new ClassHateoas((List<INikitaEntity>) (List) list);
-            handler = new ClassHateoasHandler(contextPath);
-        } else if (entity.equals(FILE)) {
-            noarkObject =
-                    new FileHateoas((List<INikitaEntity>) (List) list);
-            handler = new FileHateoasHandler(contextPath);
-        } else if (entity.equals(REGISTRATION)) {
-            noarkObject =
-                    new RecordHateoas((List<INikitaEntity>) (List) list);
-            handler = new RecordHateoasHandler(contextPath);
-        } else if (entity.equals(DOCUMENT_DESCRIPTION)) {
-            noarkObject =
-                    new DocumentDescriptionHateoas((List<INikitaEntity>) (List) list);
-            handler = new DocumentDescriptionHateoasHandler(contextPath);
-        } else if (entity.equals(DOCUMENT_OBJECT)) {
-            noarkObject =
-                    new DocumentObjectHateoas((List<INikitaEntity>) (List) list);
-            handler = new DocumentObjectHateoasHandler(contextPath);
-        } else {
-            noarkObject =
-                    new HateoasNoarkObject((List<INikitaEntity>) (List) list, entity);
-            handler = new HateoasHandler(contextPath);
+        HateoasHandler handler;
+
+        // Yes it's ugly but it's temporary code until I figure out to
+        // do reflection here, or something smarter
+
+        switch (entity) {
+            case FONDS:
+                noarkObject =
+                        new FondsHateoas((List<INikitaEntity>) (List) list);
+                handler = new FondsHateoasHandler(contextPath);
+                break;
+            case SERIES:
+                noarkObject =
+                        new SeriesHateoas((List<INikitaEntity>) (List) list);
+                handler = new SeriesHateoasHandler(contextPath);
+                break;
+            case CLASSIFICATION_SYSTEM:
+                noarkObject =
+                        new ClassificationSystemHateoas((List<INikitaEntity>)
+                                (List) list);
+                handler = new ClassificationSystemHateoasHandler(contextPath);
+                break;
+            case CLASS:
+                noarkObject =
+                        new ClassHateoas((List<INikitaEntity>) (List) list);
+                handler = new ClassHateoasHandler(contextPath);
+                break;
+            case FILE:
+                noarkObject =
+                        new FileHateoas((List<INikitaEntity>) (List) list);
+                handler = new FileHateoasHandler(contextPath);
+                break;
+            case REGISTRATION:
+                noarkObject =
+                        new RecordHateoas((List<INikitaEntity>) (List) list);
+                handler = new RecordHateoasHandler(contextPath);
+                break;
+            case DOCUMENT_DESCRIPTION:
+                noarkObject =
+                        new DocumentDescriptionHateoas((List<INikitaEntity>)
+                                (List) list);
+                handler = new DocumentDescriptionHateoasHandler(contextPath);
+                break;
+            case DOCUMENT_OBJECT:
+                noarkObject =
+                        new DocumentObjectHateoas((List<INikitaEntity>)
+                                (List) list);
+                handler = new DocumentObjectHateoasHandler(contextPath);
+                break;
+            default:
+                noarkObject =
+                        new HateoasNoarkObject((List<INikitaEntity>)
+                                (List) list, entity);
+                handler = new HateoasHandler(contextPath);
+                break;
         }
 
         handler.addLinks(noarkObject, new Authorisation());
