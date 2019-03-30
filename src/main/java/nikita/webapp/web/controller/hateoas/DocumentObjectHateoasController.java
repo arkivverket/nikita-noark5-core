@@ -32,7 +32,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -145,7 +144,6 @@ public class DocumentObjectHateoasController
         }
 
         if (null == documentObjectHateoas) {
-            String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
             documentObjectHateoas = new
                     DocumentObjectHateoas((List<INikitaEntity>) (List)
                     documentObjectService.findDocumentObjectByOwner());
