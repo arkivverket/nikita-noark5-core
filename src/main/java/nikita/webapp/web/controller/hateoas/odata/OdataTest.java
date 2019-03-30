@@ -90,7 +90,7 @@ public class OdataTest {
         String contextPath;
 
         if (address != null && protocol != null) {
-            contextPath = protocol + "://" + address;
+            contextPath = protocol + "://" + address + "/";
         } else {
             Environment env = context.getEnvironment();
             contextPath = "http://" + InetAddress.getLocalHost().getHostAddress();
