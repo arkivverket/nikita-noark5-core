@@ -76,10 +76,11 @@ public class NikitaEventListener {
 
     private void createBlockAndPost(AfterNoarkEntityEvent event,
                                     String eventType) {
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(urlSimpleChain);
 
         try {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost post = new HttpPost(urlSimpleChain);
+
             JSONObject block = new JSONObject();
 
             block.put("header", event.getEntity().getSystemId());
