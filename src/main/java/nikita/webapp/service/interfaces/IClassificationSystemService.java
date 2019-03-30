@@ -17,11 +17,16 @@ public interface IClassificationSystemService {
     ClassHateoas createClassAssociatedWithClassificationSystem(
             @NotNull String systemId, @NotNull Class klass);
 
-	// -- All READ operations
+    ClassHateoas generateDefaultClass(@NotNull String classSystemId);
+
+    // -- All READ operations
     ClassificationSystemHateoas findSingleClassificationSystem(
             @NotNull String classificationSystemSystemId);
 
     ClassificationSystemHateoas findAllClassificationSystem();
+
+    ClassHateoas findAllClassAssociatedWithClassificationSystem(
+            @NotNull String classificationSystemSystemId);
 
     // All UPDATE operations
     ClassificationSystemHateoas handleUpdate(

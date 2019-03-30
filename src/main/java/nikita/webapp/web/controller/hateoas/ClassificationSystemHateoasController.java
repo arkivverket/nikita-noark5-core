@@ -15,16 +15,12 @@ import nikita.webapp.service.application.ApplicationService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -189,6 +185,81 @@ public class ClassificationSystemHateoasController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemHateoas);
+    }
+
+    // Return a Class object with default values
+    //GET [contextPath][api]/arkivstruktur/klassifikasjonssystem/{systemId}/klasse
+    @ApiOperation(
+            value = "Retrieves the class's associated with a " +
+                    "ClassificationSystem identified by a systemId",
+            response = Class.class)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 200,
+                    message = "Class returned", response = Class.class),
+            @ApiResponse(
+                    code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value =
+            CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+                    RIGHT_PARENTHESIS + SLASH + CLASS
+    )
+    public ResponseEntity<ClassHateoas>
+    findClassAssociatedWithClassificationSystem(
+            HttpServletRequest request,
+            @ApiParam(
+                    name = "systemID",
+                    value = "systemId of ClassificationSystem you want " +
+                            "retrieve associated  Class objects for",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(classificationSystemService.
+                        findAllClassAssociatedWithClassificationSystem(
+                                systemID));
+    }
+
+    // Return a Class object with default values
+    //GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-underklasse
+    @ApiOperation(
+            value = "Create a Class with default values",
+            response = Class.class)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 200,
+                    message = "Class returned", response = Class.class),
+            @ApiResponse(
+                    code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+
+    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS +
+            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CLASS
+    )
+    public ResponseEntity<ClassHateoas> createDefaultClass(
+            HttpServletRequest request,
+            @ApiParam(
+                    name = "systemID",
+                    value = "systemId of Class to associate Class with.",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(classificationSystemService.generateDefaultClass(systemID));
     }
 
     // Delete a ClassificationSystem identified by systemID

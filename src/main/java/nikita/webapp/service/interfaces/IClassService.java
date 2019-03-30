@@ -29,10 +29,14 @@ public interface IClassService {
     RecordHateoas createRecordAssociatedWithClass(
             String classSystemId, Record record);
 
+    ClassHateoas generateDefaultSubClass(@NotNull String classSystemId);
+
 	// -- All READ operations
     ClassHateoas findAll(String ownedBy);
 
     ClassHateoas findSingleClass(String classSystemId);
+
+    ClassHateoas findAllChildren(@NotNull String classSystemId);
 
     // All UPDATE operations
     ClassHateoas handleUpdate(@NotNull String systemId, @NotNull Long version,
