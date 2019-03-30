@@ -8,6 +8,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static nikita.common.config.Constants.PRIMARY_KEY_CASE_FILE_STATUS;
 
@@ -43,5 +44,19 @@ public class CaseStatus extends MetadataSuperClass {
 
     public void setDefaultCaseStatus(Boolean defaultCaseStatus) {
         this.defaultCaseStatus = defaultCaseStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CaseStatus)) return false;
+        if (!super.equals(o)) return false;
+        CaseStatus that = (CaseStatus) o;
+        return Objects.equals(defaultCaseStatus, that.defaultCaseStatus);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), defaultCaseStatus);
     }
 }
