@@ -15,14 +15,16 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
 @Transactional
-public class CorrespondencePartService implements ICorrespondencePartService {
+public class CorrespondencePartService
+        implements ICorrespondencePartService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CorrespondencePartService.class);
 
     private ICorrespondencePartRepository correspondencePartRepository;
 
-    public CorrespondencePartService(ICorrespondencePartRepository correspondencePartRepository) {
+    public CorrespondencePartService(
+            ICorrespondencePartRepository correspondencePartRepository) {
         this.correspondencePartRepository = correspondencePartRepository;
     }
 
@@ -73,14 +75,18 @@ public class CorrespondencePartService implements ICorrespondencePartService {
     }
 
     @Override
-    public CorrespondencePartInternal updateCorrespondencePartInternal(String systemId, Long version,
-                                                                       CorrespondencePartInternal incomingCorrespondencePart) {
+    public CorrespondencePartInternal updateCorrespondencePartInternal(
+            String systemId, Long version,
+            CorrespondencePartInternal incomingCorrespondencePart) {
         CorrespondencePartInternal existingCorrespondencePart =
-                (CorrespondencePartInternal) getCorrespondencePartOrThrow(systemId);
+                (CorrespondencePartInternal)
+                        getCorrespondencePartOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
 
-        existingCorrespondencePart.setAdministrativeUnit(incomingCorrespondencePart.getAdministrativeUnit());
-        existingCorrespondencePart.setCaseHandler(incomingCorrespondencePart.getCaseHandler());
+        existingCorrespondencePart.setAdministrativeUnit(
+                incomingCorrespondencePart.getAdministrativeUnit());
+        existingCorrespondencePart.setCaseHandler(
+                incomingCorrespondencePart.getCaseHandler());
         //existingCorrespondencePart.setReferenceAdministrativeUnit
         //      (incomingCorrespondencePart.getReferenceAdministrativeUnit());
 //        existingCorrespondencePart.setReferenceUser(incomingCorrespondencePart
@@ -91,21 +97,27 @@ public class CorrespondencePartService implements ICorrespondencePartService {
     }
 
     @Override
-    public CorrespondencePartUnit updateCorrespondencePartUnit(String systemId, Long version,
-                                                               CorrespondencePartUnit incomingCorrespondencePart) {
+    public CorrespondencePartUnit updateCorrespondencePartUnit(
+            String systemId, Long version,
+            CorrespondencePartUnit incomingCorrespondencePart) {
         CorrespondencePartUnit existingCorrespondencePart =
                 (CorrespondencePartUnit) getCorrespondencePartOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         /* ZZXC
-        existingCorrespondencePart.setBusinessAddress(incomingCorrespondencePart.getBusinessAddress());
+        existingCorrespondencePart.setBusinessAddress(
+        incomingCorrespondencePart.getBusinessAddress());
 
-        existingCorrespondencePart.setPostalAddress(incomingCorrespondencePart.getPostalAddress());
+        existingCorrespondencePart.setPostalAddress(
+        incomingCorrespondencePart.getPostalAddress());
         */
         //existingCorrespondencePart.setResidingAddress
         // (incomingCorrespondencePart.getResidingAddress());
-        existingCorrespondencePart.setContactPerson(incomingCorrespondencePart.getContactPerson());
-        existingCorrespondencePart.setOrganisationNumber(incomingCorrespondencePart.getOrganisationNumber());
-        existingCorrespondencePart.setName(incomingCorrespondencePart.getName());
+        existingCorrespondencePart.setContactPerson(
+                incomingCorrespondencePart.getContactPerson());
+        existingCorrespondencePart.setOrganisationNumber(
+                incomingCorrespondencePart.getOrganisationNumber());
+        existingCorrespondencePart.setName(
+                incomingCorrespondencePart.getName());
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
         return existingCorrespondencePart;
@@ -120,42 +132,27 @@ public class CorrespondencePartService implements ICorrespondencePartService {
     }
 
     @Override
-    public CorrespondencePartUnit createNewCorrespondencePartUnit(CorrespondencePartUnit correspondencePartUnit) {
+    public CorrespondencePartUnit createNewCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePartUnit) {
         return correspondencePartRepository.save(correspondencePartUnit);
     }
 
     @Override
-    public CorrespondencePartInternal createNewCorrespondencePartInternal(CorrespondencePartInternal
-                                                                                  correspondencePartInternal) {
+    public CorrespondencePartInternal createNewCorrespondencePartInternal(
+            CorrespondencePartInternal correspondencePartInternal) {
         return correspondencePartRepository.save(correspondencePartInternal);
     }
 
     @Override
-    public CorrespondencePart findBySystemId(String correspondencePartSystemId) {
-        return correspondencePartRepository.findBySystemId(correspondencePartSystemId);
+    public CorrespondencePart findBySystemId(String systemId) {
+        return getCorrespondencePartOrThrow(systemId);
     }
 
-    /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid CorrespondencePart back. If there is no valid
-     * CorrespondencePart, an exception is thrown
-     *
-     * @param correspondencePartSystemId
-     * @return
-     */
-    protected CorrespondencePart getCorrespondencePartOrThrow(@NotNull String correspondencePartSystemId) {
-        CorrespondencePart correspondencePart = correspondencePartRepository.findBySystemId(correspondencePartSystemId);
-        if (correspondencePart == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " CorrespondencePart, using systemId " + correspondencePartSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return correspondencePart;
-    }
 
     @Override
     public void deleteCorrespondencePartUnit(@NotNull String code) {
-        CorrespondencePartUnit correspondencePartUnit = (CorrespondencePartUnit) getCorrespondencePartOrThrow(code);
+        CorrespondencePartUnit correspondencePartUnit =
+                (CorrespondencePartUnit) getCorrespondencePartOrThrow(code);
         correspondencePartRepository.delete(correspondencePartUnit);
     }
 
@@ -163,19 +160,22 @@ public class CorrespondencePartService implements ICorrespondencePartService {
     public void deleteCorrespondencePartPerson(@NotNull String code) {
         /*
         TODO: Temp disabled!
-        CorrespondencePartPerson correspondencePartPerson = (CorrespondencePartPerson) getCorrespondencePartOrThrow(code);
+        CorrespondencePartPerson correspondencePartPerson =
+        (CorrespondencePartPerson) getCorrespondencePartOrThrow(code);
         correspondencePartRepository.delete(correspondencePartPerson);
         */
     }
 
     @Override
     public void deleteCorrespondencePartInternal(@NotNull String code) {
-        CorrespondencePartInternal correspondencePartInternal = (CorrespondencePartInternal) getCorrespondencePartOrThrow(code);
+        CorrespondencePartInternal correspondencePartInternal =
+                (CorrespondencePartInternal) getCorrespondencePartOrThrow(code);
 
 /*
         // Disassociate the link between Fonds and FondsCreator
         // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
-        Query q = entityManager.createNativeQuery("DELETE FROM fonds_fonds_creator WHERE f_pk_fonds_id  = :id ;");
+        Query q = entityManager.createNativeQuery("DELETE FROM
+        fonds_fonds_creator WHERE f_pk_fonds_id  = :id ;");
         q.setParameter("id", fonds.getId());
         q.executeUpdate();
         entityManager.remove(fonds);
@@ -186,7 +186,31 @@ public class CorrespondencePartService implements ICorrespondencePartService {
 
     // Internal helper methods
 
-    public ContactInformation updateContactInformation(
+    /**
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid CorrespondencePart back. If there
+     * is no valid CorrespondencePart, an exception is thrown
+     *
+     * @param correspondencePartSystemId systemId of correspondencePart to
+     *                                   retrieve
+     * @return the retrieved CorrespondencePart
+     */
+    protected CorrespondencePart getCorrespondencePartOrThrow(
+            @NotNull String correspondencePartSystemId) {
+        CorrespondencePart correspondencePart =
+                correspondencePartRepository.findBySystemId(
+                        correspondencePartSystemId);
+        if (correspondencePart == null) {
+            String info = INFO_CANNOT_FIND_OBJECT + " CorrespondencePart, " +
+                    "using systemId " + correspondencePartSystemId;
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        return correspondencePart;
+    }
+
+    public void updateContactInformation(
             CorrespondencePartPerson existingCorrespondencePart,
             CorrespondencePartPerson incomingCorrespondencePart) {
 
@@ -201,8 +225,6 @@ public class CorrespondencePartService implements ICorrespondencePartService {
                 updatedContactInformation.getMobileTelephoneNumber());
         contactInformation.setTelephoneNumber(
                 updatedContactInformation.getTelephoneNumber());
-
-        return contactInformation;
     }
 
     /**
