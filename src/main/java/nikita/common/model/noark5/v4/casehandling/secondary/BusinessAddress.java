@@ -1,16 +1,40 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
+import nikita.common.model.noark5.v4.NoarkEntity;
+
+import javax.persistence.*;
+
 /**
  * Created by tsodring on 5/14/17.
  */
-//@Entity
-//@Table(name = "business_address")
-//@AttributeOverride(name = "pk_simple_address_id",
-//       column = @Column(name = "pk_business_address_id"))
-//@DiscriminatorValue(value = "BusinessAddress")
+@Entity
+@Table(name = "business_address")
 public class BusinessAddress
-        //      extends SimpleAddress {
-{
+        extends NoarkEntity {
+
+    @Embedded
+    private SimpleAddress simpleAddress;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private CorrespondencePartUnit correspondencePartUnit;
+
+    public SimpleAddress getSimpleAddress() {
+        return simpleAddress;
+    }
+
+    public void setSimpleAddress(SimpleAddress simpleAddress) {
+        this.simpleAddress = simpleAddress;
+    }
+
+    public CorrespondencePartUnit getCorrespondencePartUnit() {
+        return correspondencePartUnit;
+    }
+
+    public void setCorrespondencePartUnit(CorrespondencePartUnit
+                                                  correspondencePartUnit) {
+        this.correspondencePartUnit = correspondencePartUnit;
+    }
+
     @Override
     public String toString() {
         return super.toString();
@@ -25,4 +49,5 @@ public class BusinessAddress
     public int hashCode() {
         return super.hashCode();
     }
+
 }

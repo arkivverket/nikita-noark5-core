@@ -1,40 +1,25 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.interfaces.entities.casehandling.ICorrespondencePartUnitEntity;
+import nikita.common.util.deserialisers.casehandling.CorrespondencePartUnitDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "correspondence_part_unit")
-//@JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
+@JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
 public class CorrespondencePartUnit
         extends CorrespondencePart
         implements ICorrespondencePartUnitEntity {
 
-/*
-    @OneToOne(mappedBy = "correspondencePartUnit", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
-    ContactInformation contactInformation;
-*/
-    /*    @OneToOne(fetch = FetchType.LAZY)
-        @MapsId
-        BusinessAddress businessAddress;
-    */
-    /*
-    @OneToOne(mappedBy = "correspondencePartUnit;\n", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
-    PostalAddress postalAddress;
-*/
     /**
      * M??? - organisasjonsnummer (xs:string)
      */
@@ -56,6 +41,18 @@ public class CorrespondencePartUnit
     @Audited
     private String contactPerson;
 
+    @OneToOne(mappedBy = "correspondencePartUnit",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private PostalAddress postalAddress;
+
+    @OneToOne(mappedBy = "correspondencePartUnit",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private BusinessAddress businessAddress;
+
+    @OneToOne(mappedBy = "correspondencePartUnit",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private ContactInformation contactInformation;
+
     // Links to RegistryEntry
     @ManyToMany(mappedBy = "referenceCorrespondencePartUnit")
     private List<RegistryEntry> referenceRegistryEntry = new ArrayList<>();
@@ -76,7 +73,6 @@ public class CorrespondencePartUnit
         this.name = name;
     }
 
-    /*
     public ContactInformation getContactInformation() {
         return contactInformation;
     }
@@ -84,15 +80,15 @@ public class CorrespondencePartUnit
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
     }
-*/
-    /*
-        public BusinessAddress getBusinessAddress() {
-            return businessAddress;
-        }
 
-        public void setBusinessAddress(BusinessAddress businessAddress) {
-            this.businessAddress = businessAddress;
-        }
+    public BusinessAddress getBusinessAddress() {
+        return businessAddress;
+    }
+
+    public void setBusinessAddress(BusinessAddress businessAddress) {
+        this.businessAddress = businessAddress;
+    }
+
     public PostalAddress getPostalAddress() {
         return postalAddress;
     }
@@ -100,7 +96,7 @@ public class CorrespondencePartUnit
     public void setPostalAddress(PostalAddress postalAddress) {
         this.postalAddress = postalAddress;
     }
-*/
+
     public String getContactPerson() {
         return contactPerson;
     }

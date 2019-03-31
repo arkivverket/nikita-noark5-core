@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
 import nikita.common.model.noark5.v4.NoarkEntity;
+import nikita.common.model.noark5.v4.interfaces.entities.casehandling.ISimpleAddress;
 
 import javax.persistence.*;
 
@@ -10,13 +11,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "postal_address")
 public class PostalAddress
-        extends NoarkEntity {
+        extends NoarkEntity
+        implements ISimpleAddress {
 
     @Embedded
     private SimpleAddress simpleAddress;
 
     @OneToOne(fetch = FetchType.LAZY)
     private CorrespondencePartPerson correspondencePartPerson;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private CorrespondencePartUnit correspondencePartUnit;
 
     public SimpleAddress getSimpleAddress() {
         return simpleAddress;
@@ -33,6 +38,15 @@ public class PostalAddress
     public void setCorrespondencePartPerson(
             CorrespondencePartPerson correspondencePartPerson) {
         this.correspondencePartPerson = correspondencePartPerson;
+    }
+
+    public CorrespondencePartUnit getCorrespondencePartUnit() {
+        return correspondencePartUnit;
+    }
+
+    public void setCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePartUnit) {
+        this.correspondencePartUnit = correspondencePartUnit;
     }
 
     @Override

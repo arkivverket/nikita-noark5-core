@@ -42,7 +42,8 @@ public class ContactInformation
     @Column(name = "telephone_number")
     @Audited
     private String telephoneNumber;
-
+    @OneToOne(fetch = FetchType.LAZY)
+    CorrespondencePartUnit correspondencePartUnit;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -83,8 +84,18 @@ public class ContactInformation
         return correspondencePartPerson;
     }
 
-    public void setCorrespondencePartPerson(CorrespondencePartPerson correspondencePartPerson) {
+    public void setCorrespondencePartPerson(
+            CorrespondencePartPerson correspondencePartPerson) {
         this.correspondencePartPerson = correspondencePartPerson;
+    }
+
+    public CorrespondencePartUnit getCorrespondencePartUnit() {
+        return correspondencePartUnit;
+    }
+
+    public void setCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePartUnit) {
+        this.correspondencePartUnit = correspondencePartUnit;
     }
 
     @Override

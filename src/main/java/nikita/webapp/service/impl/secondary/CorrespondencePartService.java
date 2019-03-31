@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v4.casehandling.secondary.*;
+import nikita.common.model.noark5.v4.interfaces.entities.casehandling.IContactInformationEntity;
 import nikita.common.repository.n5v4.secondary.ICorrespondencePartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
@@ -26,6 +27,11 @@ public class CorrespondencePartService
     public CorrespondencePartService(
             ICorrespondencePartRepository correspondencePartRepository) {
         this.correspondencePartRepository = correspondencePartRepository;
+    }
+
+    @Override
+    public CorrespondencePart findBySystemId(@NotNull String systemId) {
+        return getCorrespondencePartOrThrow(systemId);
     }
 
     /**
@@ -60,15 +66,21 @@ public class CorrespondencePartService
                 incomingCorrespondencePart.getSocialSecurityNumber());
 
         // Then secondary objects
-        updateContactInformation(existingCorrespondencePart,
-                incomingCorrespondencePart);
-        updateResidingAddress(existingCorrespondencePart,
-                incomingCorrespondencePart);
-        updatePostalAddress(existingCorrespondencePart,
-                incomingCorrespondencePart);
-        updateResidingAddress(existingCorrespondencePart,
-                incomingCorrespondencePart);
-
+        updateContactInformation(existingCorrespondencePart.
+                        getContactInformation(),
+                incomingCorrespondencePart.
+                        getContactInformation());
+        // Residing address
+        updateAddress(existingCorrespondencePart.
+                        getResidingAddress().getSimpleAddress(),
+                incomingCorrespondencePart.
+                        getResidingAddress().getSimpleAddress());
+        // Postal address
+        updateAddress(existingCorrespondencePart.
+                        getPostalAddress().getSimpleAddress(),
+                incomingCorrespondencePart.
+                        getPostalAddress().getSimpleAddress());
+        
         // Check the ETAG
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
@@ -103,22 +115,34 @@ public class CorrespondencePartService
             CorrespondencePartUnit incomingCorrespondencePart) {
         CorrespondencePartUnit existingCorrespondencePart =
                 (CorrespondencePartUnit) getCorrespondencePartOrThrow(systemId);
-        // Copy all the values you are allowed to copy ....
-        /* ZZXC
-        existingCorrespondencePart.setBusinessAddress(
-        incomingCorrespondencePart.getBusinessAddress());
 
-        existingCorrespondencePart.setPostalAddress(
-        incomingCorrespondencePart.getPostalAddress());
-        */
-        //existingCorrespondencePart.setResidingAddress
-        // (incomingCorrespondencePart.getResidingAddress());
-        existingCorrespondencePart.setContactPerson(
-                incomingCorrespondencePart.getContactPerson());
-        existingCorrespondencePart.setOrganisationNumber(
-                incomingCorrespondencePart.getOrganisationNumber());
+        // Copy all the values you are allowed to copy ....
+        // First the values
         existingCorrespondencePart.setName(
                 incomingCorrespondencePart.getName());
+        existingCorrespondencePart.setOrganisationNumber(
+                incomingCorrespondencePart.getOrganisationNumber());
+        existingCorrespondencePart.setContactPerson(
+                incomingCorrespondencePart.getContactPerson());
+
+        // Then secondary objects
+        // Contact information
+        updateContactInformation(existingCorrespondencePart.
+                        getContactInformation(),
+                incomingCorrespondencePart.
+                        getContactInformation());
+        // Business address
+        updateAddress(existingCorrespondencePart.
+                        getBusinessAddress().getSimpleAddress(),
+                incomingCorrespondencePart.
+                        getBusinessAddress().getSimpleAddress());
+        // Postal address
+        updateAddress(existingCorrespondencePart.
+                        getPostalAddress().getSimpleAddress(),
+                incomingCorrespondencePart.
+                        getPostalAddress().getSimpleAddress());
+
+        // Check the ETAG
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
         return existingCorrespondencePart;
@@ -143,12 +167,6 @@ public class CorrespondencePartService
             CorrespondencePartInternal correspondencePartInternal) {
         return correspondencePartRepository.save(correspondencePartInternal);
     }
-
-    @Override
-    public CorrespondencePart findBySystemId(String systemId) {
-        return getCorrespondencePartOrThrow(systemId);
-    }
-
 
     @Override
     public void deleteCorrespondencePartUnit(@NotNull String code) {
@@ -211,66 +229,38 @@ public class CorrespondencePartService
         return correspondencePart;
     }
 
+    /**
+     * Copy the values you are allowed to copy from the incoming
+     * contactInformation object to the existing contactInformation object
+     * retrieved from the database.
+     *
+     * @param existingContactInformation An existing contactInformation object
+     *                                   retrieved from the database
+     * @param incomingContactInformation Incoming contactInformation object
+     */
     public void updateContactInformation(
-            CorrespondencePartPerson existingCorrespondencePart,
-            CorrespondencePartPerson incomingCorrespondencePart) {
+            IContactInformationEntity existingContactInformation,
+            IContactInformationEntity incomingContactInformation) {
 
-        ContactInformation updatedContactInformation =
-                incomingCorrespondencePart.getContactInformation();
-        ContactInformation contactInformation =
-                existingCorrespondencePart.getContactInformation();
-
-        contactInformation.setEmailAddress(
-                updatedContactInformation.getEmailAddress());
-        contactInformation.setMobileTelephoneNumber(
-                updatedContactInformation.getMobileTelephoneNumber());
-        contactInformation.setTelephoneNumber(
-                updatedContactInformation.getTelephoneNumber());
-    }
-
-    /**
-     * Update PostalAddress. Copy all values from the incoming payload to a
-     * retrieved copy from the database. Actual copying is done by calling
-     * copyAddress.
-     *
-     * @param existingCorrespondencePartPerson from the database
-     * @param incomingCorrespondencePartPerson incoming payload from a client
-     */
-    public void updatePostalAddress(
-            CorrespondencePartPerson existingCorrespondencePartPerson,
-            CorrespondencePartPerson incomingCorrespondencePartPerson) {
-        copyAddress(existingCorrespondencePartPerson.getPostalAddress().
-                        getSimpleAddress(),
-                incomingCorrespondencePartPerson.getPostalAddress().
-                        getSimpleAddress());
-    }
-
-    /**
-     * Update ResidingAddress. Copy all values from the incoming payload to a
-     * retrieved copy from the database. Actual copying is done by calling
-     * copyAddress.
-     *
-     * @param existingCorrespondencePartPerson from the database
-     * @param incomingCorrespondencePartPerson incoming payload from a client
-     */
-    public void updateResidingAddress(
-            CorrespondencePartPerson existingCorrespondencePartPerson,
-            CorrespondencePartPerson incomingCorrespondencePartPerson) {
-        copyAddress(existingCorrespondencePartPerson.
-                        getResidingAddress().getSimpleAddress(),
-                incomingCorrespondencePartPerson.
-                        getResidingAddress().getSimpleAddress());
+        existingContactInformation.setEmailAddress(
+                incomingContactInformation.getEmailAddress());
+        existingContactInformation.setMobileTelephoneNumber(
+                incomingContactInformation.getMobileTelephoneNumber());
+        existingContactInformation.setTelephoneNumber(
+                incomingContactInformation.getTelephoneNumber());
     }
 
     /**
      * Copy the values you are allowed to copy from the incoming address object
-     * to the existing address object in the database.
+     * to the existing address object retrieved from the database.
      *
-     * @param existingAddress An existing address object
+     * @param existingAddress An existing address object retrieved from the
+     *                        database
      * @param incomingAddress Incoming address object
      */
-    private void copyAddress(SimpleAddress existingAddress,
-                             SimpleAddress incomingAddress) {
+    private void updateAddress(SimpleAddress existingAddress,
+                               SimpleAddress incomingAddress) {
+
         existingAddress.setAddressType(incomingAddress.getAddressType());
         existingAddress.setAddressLine1(incomingAddress.getAddressLine1());
         existingAddress.setAddressLine2(incomingAddress.getAddressLine2());

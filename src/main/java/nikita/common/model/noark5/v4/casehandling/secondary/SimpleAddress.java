@@ -9,13 +9,16 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * Created by tsodring on 5/14/17.
  */
 @Embeddable
 public class SimpleAddress
-        implements ISimpleAddressEntity {
+        implements ISimpleAddressEntity, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * M407 - postnummer (xs:string)

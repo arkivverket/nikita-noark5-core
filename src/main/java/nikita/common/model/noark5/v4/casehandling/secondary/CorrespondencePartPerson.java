@@ -36,7 +36,8 @@ public class CorrespondencePartPerson
 
     /**
      * M400 - korrespondansepartNavn (xs:string)
-     * Interface standard lists this as name. Using name until clarification is provided
+     * Interface standard lists this as name. Using name until clarification
+     * is provided
      */
     @Audited
     @Column(name = "name")
@@ -44,11 +45,11 @@ public class CorrespondencePartPerson
 
     @OneToOne(mappedBy = "correspondencePartPerson",
             fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    PostalAddress postalAddress;
+    private PostalAddress postalAddress;
 
     @OneToOne(mappedBy = "correspondencePartPerson",
             fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    ResidingAddress residingAddress;
+    private ResidingAddress residingAddress;
 
     @OneToOne(mappedBy = "correspondencePartPerson",
             fetch = FetchType.LAZY, cascade = CascadeType.ALL)

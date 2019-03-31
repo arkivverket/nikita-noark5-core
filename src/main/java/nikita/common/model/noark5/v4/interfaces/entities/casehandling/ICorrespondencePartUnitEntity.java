@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v4.interfaces.entities.casehandling;
 
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v4.casehandling.secondary.ContactInformation;
 
 import java.util.List;
 
@@ -8,7 +9,8 @@ import java.util.List;
  * Created by tsodring on 5/22/17.
  */
 public interface ICorrespondencePartUnitEntity
-        extends ICorrespondencePartEntity {
+        extends IPostalAddress, IBusinessAddress,
+        IContactInformation, ICorrespondencePartEntity {
 
     String getOrganisationNumber();
 
@@ -18,18 +20,10 @@ public interface ICorrespondencePartUnitEntity
 
     void setName(String name);
 
-    //ContactInformation getContactInformation();
+    ContactInformation getContactInformation();
 
-    //void setContactInformation(ContactInformation contactInformation);
+    void setContactInformation(ContactInformation contactInformation);
 
-    //BusinessAddress getBusinessAddress();
-
-    //void setBusinessAddress(BusinessAddress businessAddress);
-/*
-    PostalAddress getPostalAddress();
-
-    void setPostalAddress(PostalAddress postalAddress);
-*/
     String getContactPerson();
 
     void setContactPerson(String contactPerson);

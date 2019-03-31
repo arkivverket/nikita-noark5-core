@@ -1097,15 +1097,18 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseCorrespondencePartUnitEntity(ICorrespondencePartUnitEntity
-                                                                               correspondencePartUnit,
-                                                                       ObjectNode objectNode, StringBuilder errors) {
-                deserialiseCorrespondencePartType(correspondencePartUnit, objectNode, errors);
+            public static void deserialiseCorrespondencePartUnitEntity(
+                    ICorrespondencePartUnitEntity correspondencePartUnit,
+                    ObjectNode objectNode, StringBuilder errors) {
+
+                deserialiseCorrespondencePartType(correspondencePartUnit,
+                        objectNode, errors);
 
                 // Deserialize kontaktperson
                 JsonNode currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
-                    correspondencePartUnit.setContactPerson(currentNode.textValue());
+                    correspondencePartUnit.setContactPerson(
+                            currentNode.textValue());
                     objectNode.remove(CONTACT_PERSON);
                 }
 
@@ -1119,50 +1122,55 @@ public final class CommonUtils {
                 // Deserialize organisasjonsnummer
                 currentNode = objectNode.get(ORGANISATION_NUMBER);
                 if (null != currentNode) {
-                    correspondencePartUnit.setOrganisationNumber(currentNode.textValue());
+                    correspondencePartUnit.setOrganisationNumber(
+                            currentNode.textValue());
                     objectNode.remove(ORGANISATION_NUMBER);
                 }
 
                 // Deserialize kontaktperson
                 currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
-                    correspondencePartUnit.setContactPerson(currentNode.textValue());
+                    correspondencePartUnit.setContactPerson(
+                            currentNode.textValue());
                     objectNode.remove(CONTACT_PERSON);
                 }
 
                 // Deserialize postadresse
-                currentNode = objectNode.get(N5ResourceMappings.POSTAL_ADDRESS);
+                currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
                     PostalAddress postalAddressEntity = new PostalAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
                     deserialiseSimpleAddressEntity(simpleAddress,
                             currentNode.deepCopy(), errors);
-                    //correspondencePartUnit.setPostalAddress
-                    // (postalAddressEntity);
+                    correspondencePartUnit.
+                            setPostalAddress(postalAddressEntity);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
 
                 // Deserialize forretningsadresse
                 currentNode = objectNode.get(BUSINESS_ADDRESS);
                 if (null != currentNode) {
-                    BusinessAddress businessAddressEntity = new BusinessAddress();
-                    //businessAddressEntity.setAddressType(BUSINESS_ADDRESS);
-                    //deserialiseSimpleAddressEntity(businessAddressEntity,
-                    //      currentNode.deepCopy(), errors);
-                    //correspondencePartUnit.setBusinessAddress
-                    // (businessAddressEntity);
+                    BusinessAddress businessAddressEntity =
+                            new BusinessAddress();
+                    SimpleAddress simpleAddress = new SimpleAddress();
+                    deserialiseSimpleAddressEntity(simpleAddress,
+                            currentNode.deepCopy(), errors);
+                    correspondencePartUnit.setBusinessAddress(
+                            businessAddressEntity);
                     objectNode.remove(BUSINESS_ADDRESS);
                 }
+
                 // Deserialize kontaktinformasjon
                 currentNode = objectNode.get(CONTACT_INFORMATION);
                 if (null != currentNode) {
-                    ContactInformation contactInformation = new ContactInformation();
-                    deserialiseContactInformationEntity(contactInformation, currentNode.deepCopy(), errors);
-//                    correspondencePartUnit.setContactInformation
-// (contactInformation);
+                    ContactInformation contactInformation =
+                            new ContactInformation();
+                    deserialiseContactInformationEntity(
+                            contactInformation, currentNode.deepCopy(), errors);
+                    correspondencePartUnit.
+                            setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
                 }
-
             }
 
             // TODO: Double check how the JSON of this looks if multiple fondsCreators are embedded within a fonds
