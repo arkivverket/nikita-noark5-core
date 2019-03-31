@@ -9,20 +9,26 @@ import javax.validation.constraints.NotNull;
 
 public interface ICorrespondencePartService {
 
-    CorrespondencePartPerson updateCorrespondencePartPerson(String systemId, Long version,
-                                                            CorrespondencePartPerson incomingCorrespondencePart);
+    CorrespondencePartPerson updateCorrespondencePartPerson(
+            String systemId, Long version,
+            CorrespondencePartPerson incomingCorrespondencePart);
 
-    CorrespondencePartUnit updateCorrespondencePartUnit(String systemId, Long version,
-                                                        CorrespondencePartUnit incomingCorrespondencePart);
+    CorrespondencePartUnit updateCorrespondencePartUnit(
+            String systemId, Long version,
+            CorrespondencePartUnit incomingCorrespondencePart);
 
-    CorrespondencePartInternal updateCorrespondencePartInternal(String systemId, Long version,
-                                                                CorrespondencePartInternal incomingCorrespondencePart);
+    CorrespondencePartInternal updateCorrespondencePartInternal(
+            String systemId, Long version,
+            CorrespondencePartInternal incomingCorrespondencePart);
 
-    CorrespondencePartUnit createNewCorrespondencePartUnit(CorrespondencePartUnit correspondencePartUnit);
+    CorrespondencePartUnit createNewCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePartUnit);
 
-    CorrespondencePartInternal createNewCorrespondencePartInternal(CorrespondencePartInternal correspondencePartUnit);
+    CorrespondencePartInternal createNewCorrespondencePartInternal(
+            CorrespondencePartInternal correspondencePartUnit);
 
-    CorrespondencePartPerson createNewCorrespondencePartPerson(CorrespondencePartPerson correspondencePartPerson);
+    CorrespondencePartPerson createNewCorrespondencePartPerson(
+            CorrespondencePartPerson correspondencePartPerson);
 
     void deleteCorrespondencePartUnit(@NotNull String code);
 
