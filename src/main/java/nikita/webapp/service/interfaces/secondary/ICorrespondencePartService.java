@@ -1,7 +1,6 @@
 package nikita.webapp.service.interfaces.secondary;
 
 
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
@@ -24,8 +23,6 @@ public interface ICorrespondencePartService {
     CorrespondencePartInternal createNewCorrespondencePartInternal(CorrespondencePartInternal correspondencePartUnit);
 
     CorrespondencePartPerson createNewCorrespondencePartPerson(CorrespondencePartPerson correspondencePartPerson);
-
-    CorrespondencePart findBySystemId(String correspondencePartSystemId);
 
     void deleteCorrespondencePartUnit(@NotNull String code);
 
