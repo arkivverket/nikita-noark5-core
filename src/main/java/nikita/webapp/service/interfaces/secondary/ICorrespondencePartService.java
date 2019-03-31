@@ -30,7 +30,7 @@ public interface ICorrespondencePartService {
     CorrespondencePartPerson createNewCorrespondencePartPerson(
             @NotNull CorrespondencePartPerson correspondencePartPerson);
 
-    CorrespondencePart findBySystemId(String systemID);
+    CorrespondencePart findBySystemId(@NotNull String systemID);
 
     void deleteCorrespondencePartUnit(@NotNull String code);
 
