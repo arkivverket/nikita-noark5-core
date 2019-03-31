@@ -11,10 +11,7 @@ import java.io.Serializable;
 public interface ICorrespondencePartEntity
         extends INikitaEntity, Serializable {
 
-
     CorrespondencePartType getCorrespondencePartType();
 
     void setCorrespondencePartType(CorrespondencePartType correspondencePartType);
-
-
 }
