@@ -84,11 +84,6 @@ public class NikitaEventListener {
             return;
         }
 
-        if (post == null) {
-            logger.error("could not create HttpPost to " + urlSimpleChain);
-            return;
-        }
-
         try {
 
             JSONObject block = new JSONObject();
