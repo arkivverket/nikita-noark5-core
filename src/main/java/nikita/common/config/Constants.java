@@ -387,7 +387,7 @@ public final class Constants {
     public static final String REL_METADATA_COUNTRY = REL_METADATA + COUNTRY + SLASH;
     public static final String REL_METADATA_POST_CODE = REL_METADATA + POST_CODE + SLASH;
 
-    public static final String REL_CASE_HANDLING_NEW_REGISTRY_ENTRY = NIKITA_CONFORMANCE_REL + NEW_REGISTRY_ENTRY + SLASH;
+    public static final String REL_CASE_HANDLING_NEW_REGISTRY_ENTRY = REL_CASE_HANDLING + NEW_REGISTRY_ENTRY + SLASH;
     public static final String REL_CASE_HANDLING_REGISTRY_ENTRY = REL_CASE_HANDLING + REGISTRY_ENTRY + SLASH;
 
     // FileHateoas REL links
