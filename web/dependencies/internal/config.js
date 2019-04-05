@@ -14,7 +14,7 @@ var oauthClientId = "nikita-client";
  These should probably be implemented as a 2D-array where we can easily pull out the required value
  */
 
-var REL_NEW_REGISTRY_ENTRY = 'http://nikita.arkivlab.no/noark5/v4/ny-journalpost/';
+var REL_NEW_REGISTRY_ENTRY = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/ny-journalpost/';
 var REL_REGISTRY_ENTRY = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/journalpost/';
 var REL_NEW_DOCUMENT_DESCRIPTION = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-dokumentbeskrivelse/';
 var REL_DOCUMENT_DESCRIPTION = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/dokumentbeskrivelse/';
