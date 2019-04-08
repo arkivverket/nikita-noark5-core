@@ -17,7 +17,6 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.IFondsService;
-import nikita.webapp.util.NoarkUtils;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -38,6 +37,7 @@ import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 @Service
 @Transactional
@@ -87,10 +87,10 @@ public class FondsService implements IFondsService {
      */
     @Override
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
-        NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid(fonds);
-        NoarkUtils.NoarkEntity.Create.setNoarkEntityValues(fonds);
+        checkDocumentMediumValid(fonds);
+        setNoarkEntityValues(fonds);
         fonds.setFondsStatus(STATUS_OPEN);
-        NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues(fonds);
+        setFinaliseEntityValues(fonds);
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.save(fonds));
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new
