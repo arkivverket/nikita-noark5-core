@@ -16,7 +16,7 @@ import java.util.Map;
  * <p>
  * A HateoasNoarkObject is used for serializing Noark objects that have a
  * systemId. A Controller will populate the entityList with the results of a
- * query to the persistence layer.  There are classes that traverses this
+ * query to the service layer.  There are classes that traverses this
  * list of entities and populates corresponding entity HashMap entry with
  * Hateoas links.
  * <p>
