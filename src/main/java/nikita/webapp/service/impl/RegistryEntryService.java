@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v4.interfaces.ICorrespondencePart;
 import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v4.IRegistryEntryRepository;
 import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
@@ -206,49 +207,71 @@ public class RegistryEntryService
             String systemID, CorrespondencePartUnit correspondencePart) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
 
+        setCorrespondencePartType(correspondencePart);
 
-        CorrespondencePartType incomingCorrespondencePartType =
-                correspondencePart.getCorrespondencePartType();
-        // It should never get this far with a null value
-        // It should be rejected at controller level
-        // The incoming CorrespondencePartType will not have @id field set. Therefore, we have to look it up
-        // in the database and make sure the proper CorrespondencePartType is associated with the CorrespondencePart
-        if (incomingCorrespondencePartType != null && incomingCorrespondencePartType.getCode() != null) {
-            CorrespondencePartType actualCorrespondencePartType =
-                    correspondencePartTypeRepository.findByCode(incomingCorrespondencePartType.getCode());
-            if (actualCorrespondencePartType != null) {
-                correspondencePart.setCorrespondencePartType(actualCorrespondencePartType);
-            }
+        // Set NikitaEntity values for ContactInformation, PostalAddress,
+        // BusinessAddress
+
+        ContactInformation contactInformation =
+                correspondencePart.getContactInformation();
+        if (null != contactInformation) {
+            setNikitaEntityValues(contactInformation);
+            setSystemIdEntityValues(contactInformation);
         }
 
-        //ContactInformation contactInformation =
-        //      correspondencePart.getContactInformation();
-        // if (null != contactInformation) {
-        // }
-        //correspondencePart.setContactInformation(contactInformation);
-        //contactInformation.setCorrespondencePartUnit(correspondencePart);
-/*
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {
             setNikitaEntityValues(postalAddress);
             setSystemIdEntityValues(postalAddress);
         }
-        correspondencePart.setPostalAddress(postalAddress);
 
-ZZXC
-
-        SimpleAddress businessAddress = correspondencePart.getBusinessAddress();
+        BusinessAddress businessAddress =
+                correspondencePart.getBusinessAddress();
         if (null != businessAddress) {
             setNikitaEntityValues(businessAddress);
             setSystemIdEntityValues(businessAddress);
         }
-*/
+
         setNikitaEntityValues(correspondencePart);
         setSystemIdEntityValues(correspondencePart);
         // bidirectional relationship @ManyToMany, set both sides of relationship
-        registryEntry.getReferenceCorrespondencePartUnit().add(correspondencePart);
+        registryEntry.
+                getReferenceCorrespondencePartUnit().add(correspondencePart);
         correspondencePart.getReferenceRegistryEntry().add(registryEntry);
-        return correspondencePartService.createNewCorrespondencePartUnit(correspondencePart);
+        return correspondencePartService.
+                createNewCorrespondencePartUnit(correspondencePart);
+    }
+
+    /**
+     * The incoming CorrespondencePartType does not have @id field set.
+     * Therefore, we have to look it up in the database and make sure the
+     * correct CorrespondencePartType is associated with the CorrespondencePart
+     * <p>
+     * If CorrespondencePartType type is not set, a
+     * NikitaMalformedInputDataException is thrown. This means that this
+     * method should originate based on a incoming request from a
+     * Controller.
+     *
+     * @param correspondencePart Incoming correspondencePart
+     */
+    private void setCorrespondencePartType(
+            @NotNull CorrespondencePart correspondencePart) {
+        CorrespondencePartType incomingCorrespondencePartType =
+                correspondencePart.getCorrespondencePartType();
+
+        if (incomingCorrespondencePartType != null &&
+                incomingCorrespondencePartType.getCode() != null) {
+            CorrespondencePartType actualCorrespondencePartType =
+                    correspondencePartTypeRepository.findByCode(
+                            incomingCorrespondencePartType.getCode());
+            if (actualCorrespondencePartType != null) {
+                correspondencePart.setCorrespondencePartType(
+                        actualCorrespondencePartType);
+            }
+        } else {
+            throw new NikitaMalformedInputDataException("Missing required " +
+                    "CorrespondencePartType value");
+        }
     }
 
     // All READ operations
