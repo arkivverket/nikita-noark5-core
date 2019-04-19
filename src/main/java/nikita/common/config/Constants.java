@@ -194,7 +194,7 @@ public final class Constants {
     public static final String REFERENCE_FILE = "referanseFil";
 
     // namespace definition
-    public static final String NOARK_CONFORMANCE_REL = "http://rel.kxml.no/noark5/v4/api/";
+    public static final String NOARK_CONFORMANCE_REL = "http://rel.arkivverket.no/noark5/v4/api/";
     public static final String NIKITA_CONFORMANCE_REL = "http://nikita.arkivlab.no/noark5/v4/";
 
     public static final String NOARK_FONDS_STRUCTURE_PATH = "arkivstruktur";
@@ -328,10 +328,10 @@ public final class Constants {
     public static final String API_MESSAGE_MALFORMED_PAYLOAD = "Incoming data is malformed";
 
 
-    public static final String REL_METADATA = "http://rel.kxml.no/noark5/v4/api/metadata/";
-    public static final String REL_ADMINISTRATION = "http://rel.kxml.no/noark5/v4/api/administrasjon/";
-    public static final String REL_FONDS_STRUCTURE = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/";
-    public static final String REL_CASE_HANDLING = "http://rel.kxml.no/noark5/v4/api/sakarkiv/";
+    public static final String REL_METADATA = "http://rel.arkivverket.no/noark5/v4/api/metadata/";
+    public static final String REL_ADMINISTRATION = "http://rel.arkivverket.no/noark5/v4/api/administrasjon/";
+    public static final String REL_FONDS_STRUCTURE = "http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/";
+    public static final String REL_CASE_HANDLING = "http://rel.arkivverket.no/noark5/v4/api/sakarkiv/";
 
     // FondsHateoas REL links
 

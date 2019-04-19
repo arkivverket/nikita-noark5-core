@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
  *
  * The following is an example of this:
  * "href" : "http://localhost:8092/noark5v4/hateoas-api/arkivstruktur",
- *  "rel" : "http://rel.kxml.no/noark5/v4/api/arkivstruktur"
+ *  "rel" : "http://rel.arkivverket.no/noark5/v4/api/arkivstruktur"
  *
  *
  * Also used to identify conformity with additional interfaces. The example below shows
