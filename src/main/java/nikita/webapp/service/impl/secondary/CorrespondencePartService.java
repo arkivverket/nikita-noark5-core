@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v4.casehandling.secondary.*;
-import nikita.common.model.noark5.v4.interfaces.entities.casehandling.IContactInformationEntity;
+import nikita.common.model.noark5.v4.interfaces.entities.casehandling.*;
 import nikita.common.repository.n5v4.secondary.ICorrespondencePartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
@@ -66,20 +66,14 @@ public class CorrespondencePartService
                 incomingCorrespondencePart.getSocialSecurityNumber());
 
         // Then secondary objects
-        updateContactInformation(existingCorrespondencePart.
-                        getContactInformation(),
-                incomingCorrespondencePart.
-                        getContactInformation());
+        updateCorrespondencePartContactInformationCreateIfNull(
+                existingCorrespondencePart, incomingCorrespondencePart);
         // Residing address
-        updateAddress(existingCorrespondencePart.
-                        getResidingAddress().getSimpleAddress(),
-                incomingCorrespondencePart.
-                        getResidingAddress().getSimpleAddress());
+        updateCorrespondencePartResidingAddressCreateIfNull
+                (existingCorrespondencePart, incomingCorrespondencePart);
         // Postal address
-        updateAddress(existingCorrespondencePart.
-                        getPostalAddress().getSimpleAddress(),
-                incomingCorrespondencePart.
-                        getPostalAddress().getSimpleAddress());
+        updateCorrespondencePartPostalAddressCreateIfNull(
+                existingCorrespondencePart, incomingCorrespondencePart);
         
         // Check the ETAG
         existingCorrespondencePart.setVersion(version);
@@ -127,21 +121,14 @@ public class CorrespondencePartService
 
         // Then secondary objects
         // Contact information
-        updateContactInformation(existingCorrespondencePart.
-                        getContactInformation(),
-                incomingCorrespondencePart.
-                        getContactInformation());
+        updateCorrespondencePartContactInformationCreateIfNull(
+                existingCorrespondencePart, incomingCorrespondencePart);
         // Business address
-        updateAddress(existingCorrespondencePart.
-                        getBusinessAddress().getSimpleAddress(),
-                incomingCorrespondencePart.
-                        getBusinessAddress().getSimpleAddress());
+        updateCorrespondencePartUnitBusinessAddressCreateIfNull(
+                existingCorrespondencePart, incomingCorrespondencePart);
         // Postal address
-        updateAddress(existingCorrespondencePart.
-                        getPostalAddress().getSimpleAddress(),
-                incomingCorrespondencePart.
-                        getPostalAddress().getSimpleAddress());
-
+        updateCorrespondencePartPostalAddressCreateIfNull(
+                existingCorrespondencePart, incomingCorrespondencePart);
         // Check the ETAG
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
@@ -230,6 +217,127 @@ public class CorrespondencePartService
     }
 
     /**
+     * Update BusinessAddress if it exists. If none exists, create a
+     * new BusinessAddress asn set the values.
+     *
+     * @param existingCorrespondencePart The existing CorrespondencePart
+     * @param incomingCorrespondencePart The incoming CorrespondencePart
+     */
+    public void updateCorrespondencePartUnitBusinessAddressCreateIfNull(
+            IBusinessAddress existingCorrespondencePart,
+            IBusinessAddress incomingCorrespondencePart) {
+
+        if (existingCorrespondencePart.getBusinessAddress() != null &&
+                incomingCorrespondencePart.getBusinessAddress() != null) {
+            updateAddress(existingCorrespondencePart.
+                            getBusinessAddress().getSimpleAddress(),
+                    incomingCorrespondencePart.
+                            getBusinessAddress().getSimpleAddress());
+        }
+        // Create a new BusinessAddress object based on the incoming one
+        else if (incomingCorrespondencePart.getBusinessAddress() != null) {
+            BusinessAddress postalAddress = new BusinessAddress();
+            postalAddress.setSimpleAddress(new SimpleAddress());
+
+            updateAddress(postalAddress.getSimpleAddress(),
+                    incomingCorrespondencePart.getBusinessAddress()
+                            .getSimpleAddress());
+
+            existingCorrespondencePart.setBusinessAddress(postalAddress);
+        }
+    }
+
+    /**
+     * Update ResidingAddress if it exists. If none exists, create a
+     * new ResidingAddress asn set the values.
+     *
+     * @param existingCorrespondencePart The existing CorrespondencePart
+     * @param incomingCorrespondencePart The incoming CorrespondencePart
+     */
+    public void updateCorrespondencePartResidingAddressCreateIfNull(
+            IResidingAddress existingCorrespondencePart,
+            IResidingAddress incomingCorrespondencePart) {
+
+        if (existingCorrespondencePart.getResidingAddress() != null &&
+                incomingCorrespondencePart.getResidingAddress() != null) {
+            updateAddress(existingCorrespondencePart.
+                            getResidingAddress().getSimpleAddress(),
+                    incomingCorrespondencePart.
+                            getResidingAddress().getSimpleAddress());
+        }
+        // Create a new ResidingAddress object based on the incoming one
+        else if (existingCorrespondencePart.getResidingAddress() == null &&
+                incomingCorrespondencePart.getResidingAddress() != null) {
+            ResidingAddress postalAddress = new ResidingAddress();
+            postalAddress.setSimpleAddress(new SimpleAddress());
+
+            updateAddress(postalAddress.getSimpleAddress(),
+                    incomingCorrespondencePart.getResidingAddress()
+                            .getSimpleAddress());
+
+            existingCorrespondencePart.setResidingAddress(postalAddress);
+        }
+    }
+
+    /**
+     * Update PostalAddress if it exists. If none exists, create a
+     * new PostalAddress asn set the values.
+     *
+     * @param existingPostalAddress The existing
+     *                              CorrespondencePart
+     * @param incomingPostalAddress The incoming CorrespondencePart
+     */
+    public void updateCorrespondencePartPostalAddressCreateIfNull(
+            IPostalAddress existingPostalAddress,
+            IPostalAddress incomingPostalAddress) {
+
+        if (existingPostalAddress.getPostalAddress() != null
+                && existingPostalAddress.getPostalAddress() != null) {
+            updateAddress(existingPostalAddress.
+                            getPostalAddress().getSimpleAddress(),
+                    incomingPostalAddress.
+                            getPostalAddress().getSimpleAddress());
+        }
+        // Create a new PostalAddress object based on the incoming one
+        else if (incomingPostalAddress.getPostalAddress() != null) {
+            PostalAddress postalAddress = new PostalAddress();
+            postalAddress.setSimpleAddress(new SimpleAddress());
+
+            updateAddress(postalAddress.getSimpleAddress(),
+                    incomingPostalAddress.getPostalAddress().
+                            getSimpleAddress());
+
+            existingPostalAddress.setPostalAddress(postalAddress);
+        }
+    }
+
+    /**
+     * Update ContactInformation if it exists. If none exists, create a
+     * new ContactInformation asn set the values.
+     *
+     * @param existingCorrespondencePart The existing CorrespondencePart
+     * @param incomingCorrespondencePart The incoming CorrespondencePart
+     */
+    public void updateCorrespondencePartContactInformationCreateIfNull(
+            IContactInformation existingCorrespondencePart,
+            IContactInformation incomingCorrespondencePart) {
+
+        if (existingCorrespondencePart.getContactInformation() != null &&
+                incomingCorrespondencePart.getContactInformation() != null) {
+            updateContactInformation(existingCorrespondencePart.
+                            getContactInformation(),
+                    incomingCorrespondencePart.
+                            getContactInformation());
+        }
+        // Create a new ContactInformation object based on the incoming one
+        else if (incomingCorrespondencePart.getContactInformation() != null) {
+            existingCorrespondencePart.setContactInformation(
+                    updateContactInformation(new ContactInformation(),
+                            incomingCorrespondencePart.getContactInformation()));
+        }
+    }
+
+    /**
      * Copy the values you are allowed to copy from the incoming
      * contactInformation object to the existing contactInformation object
      * retrieved from the database.
@@ -237,8 +345,9 @@ public class CorrespondencePartService
      * @param existingContactInformation An existing contactInformation object
      *                                   retrieved from the database
      * @param incomingContactInformation Incoming contactInformation object
+     * @return The existing ContactInformation object updated with values
      */
-    public void updateContactInformation(
+    public ContactInformation updateContactInformation(
             IContactInformationEntity existingContactInformation,
             IContactInformationEntity incomingContactInformation) {
 
@@ -248,6 +357,7 @@ public class CorrespondencePartService
                 incomingContactInformation.getMobileTelephoneNumber());
         existingContactInformation.setTelephoneNumber(
                 incomingContactInformation.getTelephoneNumber());
+        return (ContactInformation) existingContactInformation;
     }
 
     /**
@@ -257,8 +367,9 @@ public class CorrespondencePartService
      * @param existingAddress An existing address object retrieved from the
      *                        database
      * @param incomingAddress Incoming address object
+     * @return The existing SimpleAddress object updated with values
      */
-    private void updateAddress(SimpleAddress existingAddress,
+    private SimpleAddress updateAddress(SimpleAddress existingAddress,
                                SimpleAddress incomingAddress) {
 
         existingAddress.setAddressType(incomingAddress.getAddressType());
@@ -268,5 +379,6 @@ public class CorrespondencePartService
         existingAddress.setPostalNumber(incomingAddress.getPostalNumber());
         existingAddress.setPostalTown(incomingAddress.getPostalTown());
         existingAddress.setCountryCode(incomingAddress.getCountryCode());
+        return existingAddress;
     }
 }
