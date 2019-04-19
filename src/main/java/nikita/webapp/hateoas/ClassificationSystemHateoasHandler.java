@@ -39,7 +39,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  ny-klassifikasjon and ny-sekundaerklassifiikasjon should be visible of the root
 
  What is the purpose of this REL?
- http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-arkivdel/
+ http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkivdel/
  It must be a 'helper'. Normally you create a arkivdel and assign classificationsystem
  Here ,it must just be a shortcut, but how do you assign the arkivdel to its arkiv? This must be wrong!!
  */
