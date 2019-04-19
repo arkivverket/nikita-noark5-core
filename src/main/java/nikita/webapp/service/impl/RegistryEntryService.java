@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.casehandling.secondary.*;
-import nikita.common.model.noark5.v4.interfaces.ICorrespondencePart;
 import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v4.IRegistryEntryRepository;
 import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
@@ -91,23 +90,6 @@ public class RegistryEntryService
         return registryEntry;
     }
 
-    private void associateCorrespondencePartTypeWithCorrespondencePart(
-            @NotNull ICorrespondencePart correspondencePart) {
-        CorrespondencePartType incomingCorrespondencePartType =
-                correspondencePart.getCorrespondencePartType();
-        // It should never get this far with a null value
-        // It should be rejected at controller level
-        // The incoming CorrespondencePartType will not have @id field set. Therefore, we have to look it up
-        // in the database and make sure the proper CorrespondencePartType is associated with the CorrespondencePart
-        if (incomingCorrespondencePartType != null && incomingCorrespondencePartType.getCode() != null) {
-            CorrespondencePartType actualCorrespondencePartType =
-                    correspondencePartTypeRepository.findByCode(incomingCorrespondencePartType.getCode());
-            if (actualCorrespondencePartType != null) {
-                correspondencePart.setCorrespondencePartType(actualCorrespondencePartType);
-            }
-        }
-    }
-
     @Override
     public List<CorrespondencePartPerson>
     getCorrespondencePartPersonAssociatedWithRegistryEntry(String systemID) {
@@ -132,25 +114,11 @@ public class RegistryEntryService
     @Override
     public CorrespondencePartPerson
     createCorrespondencePartPersonAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartPerson correspondencePart) {
+            @NotNull String systemID,
+            @NotNull CorrespondencePartPerson correspondencePart) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
 
-        CorrespondencePartType incomingCorrespondencePartType =
-                correspondencePart.getCorrespondencePartType();
-        // It should never get this far with a null value
-        // It should be rejected at controller level
-        // The incoming CorrespondencePartType will not have @id field set. Therefore, we have to look it up
-        // in the database and make sure the proper CorrespondencePartType is associated with the CorrespondencePart
-        if (incomingCorrespondencePartType != null &&
-                incomingCorrespondencePartType.getCode() != null) {
-            CorrespondencePartType actualCorrespondencePartType =
-                    correspondencePartTypeRepository.
-                            findByCode(incomingCorrespondencePartType.getCode());
-            if (actualCorrespondencePartType != null) {
-                correspondencePart.
-                        setCorrespondencePartType(actualCorrespondencePartType);
-            }
-        }
+        setCorrespondencePartType(correspondencePart);
 
         ContactInformation contactInformation
                 = correspondencePart.getContactInformation();
