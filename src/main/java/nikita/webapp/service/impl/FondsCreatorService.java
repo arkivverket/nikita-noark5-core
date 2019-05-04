@@ -26,20 +26,15 @@ import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 public class FondsCreatorService implements IFondsCreatorService {
 
     private static final Logger logger = LoggerFactory.getLogger(FondsCreatorService.class);
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    Integer maxPageSize = new Integer(10);
     private IFondsCreatorRepository fondsCreatorRepository;
     private IFondsRepository fondsRepository;
-    private SeriesService seriesService;
     private EntityManager entityManager;
 
     public FondsCreatorService(IFondsCreatorRepository fondsCreatorRepository,
                                IFondsRepository fondsRepository,
-                               SeriesService seriesService,
                                EntityManager entityManager) {
         this.fondsCreatorRepository = fondsCreatorRepository;
         this.fondsRepository = fondsRepository;
-        this.seriesService = seriesService;
         this.entityManager = entityManager;
     }
 
@@ -128,17 +123,22 @@ public class FondsCreatorService implements IFondsCreatorService {
 
     // All HELPER operations
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid FondsCreator back. If there is no valid
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. Note. If you call this,  you
+     * will only ever get a valid FondsCreator back. If there is no valid
      * FondsCreator, an exception is thrown
      *
-     * @param fondsCreatorSystemId
-     * @return
+     * @param fondsCreatorSystemId systemID of the fondsCreator object to
+     *                             retrive
+     * @return the fondsCreator object
      */
-    protected FondsCreator getFondsCreatorOrThrow(@NotNull String fondsCreatorSystemId) {
-        FondsCreator fondsCreator = fondsCreatorRepository.findBySystemId(fondsCreatorSystemId);
+    protected FondsCreator getFondsCreatorOrThrow(
+            @NotNull String fondsCreatorSystemId) {
+        FondsCreator fondsCreator = fondsCreatorRepository.
+                findBySystemId(fondsCreatorSystemId);
         if (fondsCreator == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " FondsCreator, using systemId " + fondsCreatorSystemId;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " FondsCreator, using systemId " + fondsCreatorSystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
