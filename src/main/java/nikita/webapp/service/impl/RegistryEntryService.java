@@ -4,15 +4,24 @@ import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.casehandling.secondary.*;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v4.interfaces.entities.casehandling.IBusinessAddress;
+import nikita.common.model.noark5.v4.interfaces.entities.casehandling.IContactInformation;
+import nikita.common.model.noark5.v4.interfaces.entities.casehandling.IPostalAddress;
+import nikita.common.model.noark5.v4.interfaces.entities.casehandling.IResidingAddress;
 import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v4.IRegistryEntryRepository;
 import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
+import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
+import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
+import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -30,6 +39,8 @@ import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 @Service
@@ -37,39 +48,34 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 public class RegistryEntryService
         implements IRegistryEntryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RegistryEntryService.class);
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    Integer maxPageSize = 10;
-    private DocumentDescriptionService documentDescriptionService;
+    private static final Logger logger =
+            LoggerFactory.getLogger(RegistryEntryService.class);
     private ICorrespondencePartService correspondencePartService;
     private IPrecedenceService precedenceService;
     private IRegistryEntryRepository registryEntryRepository;
     private ICorrespondencePartTypeRepository correspondencePartTypeRepository;
-    private IDocumentDescriptionHateoasHandler
-            documentDescriptionHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
     private EntityManager entityManager;
+    private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
+    private ICorrespondencePartTypeService correspondencePartTypeService;
 
     public RegistryEntryService(
-            DocumentDescriptionService documentDescriptionService,
             ICorrespondencePartService correspondencePartService,
             IPrecedenceService precedenceService,
             IRegistryEntryRepository registryEntryRepository,
             ICorrespondencePartTypeRepository correspondencePartTypeRepository,
-            IDocumentDescriptionHateoasHandler
-                    documentDescriptionHateoasHandler,
             ApplicationEventPublisher applicationEventPublisher,
-            EntityManager entityManager) {
-
-        this.documentDescriptionService = documentDescriptionService;
+            EntityManager entityManager,
+            ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
+            ICorrespondencePartTypeService correspondencePartTypeService) {
         this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
         this.registryEntryRepository = registryEntryRepository;
         this.correspondencePartTypeRepository = correspondencePartTypeRepository;
-        this.documentDescriptionHateoasHandler =
-                documentDescriptionHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
         this.entityManager = entityManager;
+        this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
+        this.correspondencePartTypeService = correspondencePartTypeService;
     }
 
     @Override
@@ -132,6 +138,7 @@ public class RegistryEntryService
         if (null != postalAddress) {
             setNikitaEntityValues(postalAddress);
             setSystemIdEntityValues(postalAddress);
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
         }
         correspondencePart.setPostalAddress(postalAddress);
 
@@ -140,6 +147,7 @@ public class RegistryEntryService
         if (null != residingAddress) {
             setNikitaEntityValues(residingAddress);
             setSystemIdEntityValues(residingAddress);
+            residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
         }
         correspondencePart.setResidingAddress(residingAddress);
 
@@ -170,7 +178,7 @@ public class RegistryEntryService
     }
 */
     @Override
-    public CorrespondencePartUnit
+    public CorrespondencePartUnitHateoas
     createCorrespondencePartUnitAssociatedWithRegistryEntry(
             String systemID, CorrespondencePartUnit correspondencePart) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
@@ -179,7 +187,6 @@ public class RegistryEntryService
 
         // Set NikitaEntity values for ContactInformation, PostalAddress,
         // BusinessAddress
-
         ContactInformation contactInformation =
                 correspondencePart.getContactInformation();
         if (null != contactInformation) {
@@ -191,6 +198,9 @@ public class RegistryEntryService
         if (null != postalAddress) {
             setNikitaEntityValues(postalAddress);
             setSystemIdEntityValues(postalAddress);
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            correspondencePart.setPostalAddress(postalAddress);
+            postalAddress.setCorrespondencePartUnit(correspondencePart);
         }
 
         BusinessAddress businessAddress =
@@ -198,16 +208,29 @@ public class RegistryEntryService
         if (null != businessAddress) {
             setNikitaEntityValues(businessAddress);
             setSystemIdEntityValues(businessAddress);
+            businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
+            correspondencePart.setBusinessAddress(businessAddress);
+            businessAddress.setCorrespondencePartUnit(correspondencePart);
         }
 
         setNikitaEntityValues(correspondencePart);
         setSystemIdEntityValues(correspondencePart);
-        // bidirectional relationship @ManyToMany, set both sides of relationship
+        // bidirectional relationship @ManyToMany, set both sides of
+        // relationship
         registryEntry.
                 getReferenceCorrespondencePartUnit().add(correspondencePart);
         correspondencePart.getReferenceRegistryEntry().add(registryEntry);
-        return correspondencePartService.
-                createNewCorrespondencePartUnit(correspondencePart);
+
+        CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
+                new CorrespondencePartUnitHateoas(correspondencePartService.
+                        createNewCorrespondencePartUnit(correspondencePart));
+        correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas,
+                new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this,
+                        correspondencePart));
+
+        return correspondencePartUnitHateoas;
     }
 
     /**
@@ -242,9 +265,52 @@ public class RegistryEntryService
         }
     }
 
+    /**
+     * Generate a Default CorrespondencePartUnit object that can be
+     * associated with the identified RegistryEntry.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param registryEntrySystemId The systemId of the registryEntry object
+     *                              you wish to create a templated object for
+     * @return the CorrespondencePartUnit object wrapped as a
+     * CorrespondencePartUnitHateoas object
+     */
+    @Override
+    public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
+            String registryEntrySystemId) {
+        CorrespondencePartUnit suggestedCorrespondencePart =
+                new CorrespondencePartUnit();
+
+        CorrespondencePartType correspondencePartType =
+                correspondencePartTypeService.
+                        findByCode(CORRESPONDENCE_PART_CODE_EA);
+        if (correspondencePartType == null) {
+            throw new NikitaException("Internal error, metadata missing. [" +
+                    CORRESPONDENCE_PART_CODE_EA + "] returns no value");
+        }
+
+        suggestedCorrespondencePart.
+                setCorrespondencePartType(correspondencePartType);
+
+        createTemplatePostalAddress(suggestedCorrespondencePart);
+        createTemplateBusinessAddress(suggestedCorrespondencePart);
+        createTemplateContactInformation(suggestedCorrespondencePart);
+        suggestedCorrespondencePart.setContactPerson("Frank Grimes");
+
+        CorrespondencePartUnitHateoas correspondencePartHateoas =
+                new CorrespondencePartUnitHateoas(suggestedCorrespondencePart);
+        correspondencePartHateoasHandler.addLinksOnTemplate(
+                correspondencePartHateoas, new Authorisation());
+        return correspondencePartHateoas;
+    }
+
     // All READ operations
     public List<RegistryEntry> findRegistryEntryByOwnerPaginated(Integer top, Integer skip) {
 
+        int maxPageSize = 10;
         if (top == null || top > maxPageSize) {
             top = maxPageSize;
         }
@@ -326,6 +392,84 @@ public class RegistryEntryService
         registryEntryRepository.delete(registryEntry);
     }
 
+    // All helper methods
+
+    /**
+     * Create a templated ContactInformation object
+     *
+     * @param correspondencePart templated correspondencePart
+     */
+    private void createTemplateContactInformation(IContactInformation
+                                                          correspondencePart) {
+        ContactInformation contactInformation = new ContactInformation();
+        contactInformation.setEmailAddress("nikita@example.com");
+        contactInformation.setMobileTelephoneNumber("123456789");
+        contactInformation.setTelephoneNumber("987654321");
+        correspondencePart.setContactInformation(contactInformation);
+    }
+
+    /**
+     * Create a templated address for the business address object
+     *
+     * @param correspondencePart templated correspondencePart
+     */
+    private void createTemplateBusinessAddress(IBusinessAddress
+                                                       correspondencePart) {
+        BusinessAddress businessAddress = new BusinessAddress();
+        SimpleAddress simpleAddress = new SimpleAddress();
+        simpleAddress.setAddressType(BUSINESS_ADDRESS);
+        simpleAddress.setAddressLine1("ADRL1 Business : 742 Evergreen Terrace");
+        simpleAddress.setAddressLine2("ADRL2 Business : 742 Evergreen Terrace");
+        simpleAddress.setAddressLine3("ADRL3 Business : 742 Evergreen Terrace");
+        simpleAddress.setCountryCode("US");
+        simpleAddress.setPostalNumber(new PostalNumber("12345"));
+        simpleAddress.setPostalTown("Springfield");
+        businessAddress.setSimpleAddress(simpleAddress);
+        correspondencePart.setBusinessAddress(businessAddress);
+    }
+
+
+    /**
+     * Create a templated address for the residing address object
+     *
+     * @param correspondencePart templated correspondencePart
+     */
+    private void createTemplateResidingAddress(IResidingAddress
+                                                       correspondencePart) {
+        ResidingAddress residingAddress = new ResidingAddress();
+        SimpleAddress simpleAddress = new SimpleAddress();
+        simpleAddress.setAddressType(RESIDING_ADDRESS);
+        simpleAddress.setAddressLine1("ADRL1 Residing : 742 Evergreen Terrace");
+        simpleAddress.setAddressLine2("ADRL2 Residing : 742 Evergreen Terrace");
+        simpleAddress.setAddressLine3("ADRL3 Residing : 742 Evergreen Terrace");
+        simpleAddress.setCountryCode("US");
+        simpleAddress.setPostalNumber(new PostalNumber("12345"));
+        simpleAddress.setPostalTown("Springfield");
+        residingAddress.setSimpleAddress(simpleAddress);
+        correspondencePart.setResidingAddress(residingAddress);
+    }
+
+    /**
+     * Create a templated address for the postal address object
+     *
+     * @param correspondencePart templated correspondencePart
+     */
+    private void createTemplatePostalAddress(IPostalAddress
+                                                     correspondencePart) {
+        PostalAddress postalAddress = new PostalAddress();
+        SimpleAddress simpleAddress = new SimpleAddress();
+        simpleAddress.setAddressType(POSTAL_ADDRESS);
+        simpleAddress.setAddressLine1("ADRL1 Postal: 742 Evergreen Terrace");
+        simpleAddress.setAddressLine2("ADRL2 Postal: 742 Evergreen Terrace");
+        simpleAddress.setAddressLine3("ADRL3 Postal: 742 Evergreen Terrace");
+        simpleAddress.setCountryCode("US");
+        simpleAddress.setPostalNumber(new PostalNumber("12345"));
+        simpleAddress.setPostalTown("Springfield");
+        postalAddress.setSimpleAddress(simpleAddress);
+        correspondencePart.setPostalAddress(postalAddress);
+    }
+    
+    
     /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. If you call this, be aware
@@ -347,5 +491,4 @@ public class RegistryEntryService
         }
         return registryEntry;
     }
-
 }
