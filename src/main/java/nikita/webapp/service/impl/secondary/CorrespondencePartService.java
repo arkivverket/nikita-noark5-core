@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotNull;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Service
 @Transactional
@@ -245,6 +246,8 @@ public class CorrespondencePartService
 
             existingCorrespondencePart.setBusinessAddress(postalAddress);
         }
+        existingCorrespondencePart.getBusinessAddress().getSimpleAddress().
+                setAddressType(BUSINESS_ADDRESS);
     }
 
     /**
@@ -277,6 +280,9 @@ public class CorrespondencePartService
 
             existingCorrespondencePart.setResidingAddress(postalAddress);
         }
+        // Make sure the addressType field is set
+        existingCorrespondencePart.getResidingAddress().
+                getSimpleAddress().setAddressType(RESIDING_ADDRESS);
     }
 
     /**
@@ -292,7 +298,7 @@ public class CorrespondencePartService
             IPostalAddress incomingPostalAddress) {
 
         if (existingPostalAddress.getPostalAddress() != null
-                && existingPostalAddress.getPostalAddress() != null) {
+                && incomingPostalAddress.getPostalAddress() != null) {
             updateAddress(existingPostalAddress.
                             getPostalAddress().getSimpleAddress(),
                     incomingPostalAddress.
@@ -309,6 +315,9 @@ public class CorrespondencePartService
 
             existingPostalAddress.setPostalAddress(postalAddress);
         }
+        // Make sure the addressType field is set
+        existingPostalAddress.getPostalAddress().getSimpleAddress().
+                setAddressType(POSTAL_ADDRESS);
     }
 
     /**
