@@ -269,8 +269,7 @@ public class CorrespondencePartService
                             getResidingAddress().getSimpleAddress());
         }
         // Create a new ResidingAddress object based on the incoming one
-        else if (existingCorrespondencePart.getResidingAddress() == null &&
-                incomingCorrespondencePart.getResidingAddress() != null) {
+        else if (incomingCorrespondencePart.getResidingAddress() != null) {
             ResidingAddress postalAddress = new ResidingAddress();
             postalAddress.setSimpleAddress(new SimpleAddress());
 
