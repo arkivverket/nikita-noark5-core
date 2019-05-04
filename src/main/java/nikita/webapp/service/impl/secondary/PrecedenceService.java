@@ -26,14 +26,19 @@ public class PrecedenceService implements IPrecedenceService {
     }
 
     @Override
-    public Precedence updatePrecedence(String systemId, Long version, Precedence incomingPrecedence) {
+    public Precedence updatePrecedence(String systemId, Long version,
+                                       Precedence incomingPrecedence) {
         Precedence existingPrecedence = getPrecedenceOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         existingPrecedence.setDescription(incomingPrecedence.getDescription());
-        existingPrecedence.setPrecedenceDate(incomingPrecedence.getPrecedenceDate());
-        existingPrecedence.setPrecedenceApprovedBy(incomingPrecedence.getPrecedenceApprovedBy());
-        existingPrecedence.setPrecedenceApprovedDate(incomingPrecedence.getPrecedenceApprovedDate());
-        existingPrecedence.setPrecedenceAuthority(incomingPrecedence.getPrecedenceAuthority());
+        existingPrecedence.setPrecedenceDate(
+                incomingPrecedence.getPrecedenceDate());
+        existingPrecedence.setPrecedenceApprovedBy(
+                incomingPrecedence.getPrecedenceApprovedBy());
+        existingPrecedence.setPrecedenceApprovedDate(
+                incomingPrecedence.getPrecedenceApprovedDate());
+        existingPrecedence.setPrecedenceAuthority(
+                incomingPrecedence.getPrecedenceAuthority());
         precedenceRepository.save(existingPrecedence);
         return existingPrecedence;
     }
@@ -48,19 +53,22 @@ public class PrecedenceService implements IPrecedenceService {
         return precedenceRepository.findBySystemId(precedenceSystemId);
     }
 
-
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid Precedence back. If there is no valid
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. Note. If you call this, you
+     * will only ever get a valid Precedence back. If there is no valid
      * Precedence, an exception is thrown
      *
-     * @param precedenceSystemId
-     * @return
+     * @param precedenceSystemId systemID of the Precedence object to retrieve
+     * @return the Precedence object
      */
-    protected Precedence getPrecedenceOrThrow(@NotNull String precedenceSystemId) {
-        Precedence precedence = precedenceRepository.findBySystemId(precedenceSystemId);
+    protected Precedence getPrecedenceOrThrow(
+            @NotNull String precedenceSystemId) {
+        Precedence precedence = precedenceRepository.
+                findBySystemId(precedenceSystemId);
         if (precedence == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Precedence, using systemId " + precedenceSystemId;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " Precedence, using systemId " + precedenceSystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
