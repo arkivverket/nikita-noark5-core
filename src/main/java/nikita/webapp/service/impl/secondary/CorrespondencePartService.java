@@ -50,9 +50,9 @@ public class CorrespondencePartService
      */
     @Override
     public CorrespondencePartPerson
-    updateCorrespondencePartPerson(String systemId, Long version,
-                                   CorrespondencePartPerson
-                                           incomingCorrespondencePart) {
+    updateCorrespondencePartPerson(
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull CorrespondencePartPerson incomingCorrespondencePart) {
         CorrespondencePartPerson existingCorrespondencePart =
                 (CorrespondencePartPerson)
                         getCorrespondencePartOrThrow(systemId);
@@ -84,8 +84,8 @@ public class CorrespondencePartService
 
     @Override
     public CorrespondencePartInternal updateCorrespondencePartInternal(
-            String systemId, Long version,
-            CorrespondencePartInternal incomingCorrespondencePart) {
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull CorrespondencePartInternal incomingCorrespondencePart) {
         CorrespondencePartInternal existingCorrespondencePart =
                 (CorrespondencePartInternal)
                         getCorrespondencePartOrThrow(systemId);
@@ -106,8 +106,8 @@ public class CorrespondencePartService
 
     @Override
     public CorrespondencePartUnit updateCorrespondencePartUnit(
-            String systemId, Long version,
-            CorrespondencePartUnit incomingCorrespondencePart) {
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull CorrespondencePartUnit incomingCorrespondencePart) {
         CorrespondencePartUnit existingCorrespondencePart =
                 (CorrespondencePartUnit) getCorrespondencePartOrThrow(systemId);
 
@@ -376,8 +376,8 @@ public class CorrespondencePartService
      *                        database
      * @param incomingAddress Incoming address object
      */
-    private void updateAddress(SimpleAddress existingAddress,
-                               SimpleAddress incomingAddress) {
+    private void updateAddress(@NotNull SimpleAddress existingAddress,
+                               @NotNull SimpleAddress incomingAddress) {
 
         existingAddress.setAddressType(incomingAddress.getAddressType());
         existingAddress.setAddressLine1(incomingAddress.getAddressLine1());

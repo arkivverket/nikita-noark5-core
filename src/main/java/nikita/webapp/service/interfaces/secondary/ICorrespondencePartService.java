@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 public interface ICorrespondencePartService {
 
     CorrespondencePartPerson updateCorrespondencePartPerson(
-            String systemId, Long version,
-            CorrespondencePartPerson incomingCorrespondencePart);
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull CorrespondencePartPerson incomingCorrespondencePart);
 
     CorrespondencePartUnit updateCorrespondencePartUnit(
             @NotNull String systemId, @NotNull Long version,
