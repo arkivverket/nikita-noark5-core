@@ -23,7 +23,7 @@ public class CorrespondencePartService
     private static final Logger logger =
             LoggerFactory.getLogger(CorrespondencePartService.class);
 
-    private ICorrespondencePartRepository correspondencePartRepository;
+    private final ICorrespondencePartRepository correspondencePartRepository;
 
     public CorrespondencePartService(
             ICorrespondencePartRepository correspondencePartRepository) {
@@ -203,7 +203,7 @@ public class CorrespondencePartService
      *                                   retrieve
      * @return the retrieved CorrespondencePart
      */
-    protected CorrespondencePart getCorrespondencePartOrThrow(
+    private CorrespondencePart getCorrespondencePartOrThrow(
             @NotNull String correspondencePartSystemId) {
         CorrespondencePart correspondencePart =
                 correspondencePartRepository.findBySystemId(
@@ -376,9 +376,8 @@ public class CorrespondencePartService
      * @param existingAddress An existing address object retrieved from the
      *                        database
      * @param incomingAddress Incoming address object
-     * @return The existing SimpleAddress object updated with values
      */
-    private SimpleAddress updateAddress(SimpleAddress existingAddress,
+    private void updateAddress(SimpleAddress existingAddress,
                                SimpleAddress incomingAddress) {
 
         existingAddress.setAddressType(incomingAddress.getAddressType());
@@ -388,6 +387,5 @@ public class CorrespondencePartService
         existingAddress.setPostalNumber(incomingAddress.getPostalNumber());
         existingAddress.setPostalTown(incomingAddress.getPostalTown());
         existingAddress.setCountryCode(incomingAddress.getCountryCode());
-        return existingAddress;
     }
 }
