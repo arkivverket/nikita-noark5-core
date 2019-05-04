@@ -106,14 +106,18 @@ public class NikitaEventListener {
                     body.put(TITLE, noarkEntity.getTitle());
                     body.put(FINALISED_DATE, noarkEntity.getFinalisedDate());
                 }
-                if (entityType.equals(FONDS)) {
-                    body.put(TITLE, noarkEntity.getTitle());
-                    body.put(FONDS_STATUS, ((Fonds) entity).getFondsStatus());
-                } else if (entityType.equals(SERIES)) {
-                    body.put(SERIES_STATUS, ((Series) entity).getSeriesStatus());
-                } else if (entityType.equals(CASE_FILE)) {
-                    body.put(FILE_ID, ((CaseFile) entity).getFileId());
-                    body.put(CASE_STATUS, ((CaseFile) entity).getCaseStatus());
+                switch (entityType) {
+                    case FONDS:
+                        body.put(TITLE, noarkEntity.getTitle());
+                        body.put(FONDS_STATUS, ((Fonds) entity).getFondsStatus());
+                        break;
+                    case SERIES:
+                        body.put(SERIES_STATUS, ((Series) entity).getSeriesStatus());
+                        break;
+                    case CASE_FILE:
+                        body.put(FILE_ID, ((CaseFile) entity).getFileId());
+                        body.put(CASE_STATUS, ((CaseFile) entity).getCaseStatus());
+                        break;
                 }
             } else if (entityType.equals(REGISTRY_ENTRY)) {
                 body.put(REGISTRY_ENTRY_NUMBER, ((RegistryEntry) entity).
