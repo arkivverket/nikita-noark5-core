@@ -123,6 +123,6 @@ public class HateoasNoarkObject implements IHateoasNoarkObject {
         if (isSingleEntity() && entityList.get(0) != null)
             return entityList.get(0).getVersion();
         else
-            return new Long(-1);
+            return Long.valueOf(-1);
     }
 }
