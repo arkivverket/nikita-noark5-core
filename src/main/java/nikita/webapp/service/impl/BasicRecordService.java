@@ -24,12 +24,11 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 @Transactional
 public class BasicRecordService implements IBasicRecordService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BasicRecordService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(BasicRecordService.class);
 
     private EntityManager entityManager;
     private IBasicRecordRepository basicRecordRepository;
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    private Integer maxPageSize = new Integer(10);
 
     public BasicRecordService(EntityManager entityManager,
                               IBasicRecordRepository basicRecordRepository) {
@@ -40,13 +39,6 @@ public class BasicRecordService implements IBasicRecordService {
     // All READ operations
     @Override
     public List<BasicRecord> findBasicRecordByOwnerPaginated(Integer top, Integer skip) {
-
-        if (top == null || top > maxPageSize) {
-            top = maxPageSize;
-        }
-        if (skip == null) {
-            skip = 0;
-        }
 
         String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -94,17 +86,21 @@ public class BasicRecordService implements IBasicRecordService {
 
     // All HELPER operations
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid BasicRecord back. If there is no valid
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. Note. If you call this you
+     * will only ever get a valid BasicRecord back. If there is no valid
      * BasicRecord, an exception is thrown
      *
-     * @param basicRecordSystemId
-     * @return
+     * @param basicRecordSystemId systemID of the BasicRecord to retrieve
+     * @return the BascRecord object
      */
-    protected BasicRecord getBasicRecordOrThrow(@NotNull String basicRecordSystemId) {
-        BasicRecord basicRecord = basicRecordRepository.findBySystemId(basicRecordSystemId);
+    protected BasicRecord getBasicRecordOrThrow(
+            @NotNull String basicRecordSystemId) {
+        BasicRecord basicRecord = basicRecordRepository.
+                findBySystemId(basicRecordSystemId);
         if (basicRecord == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " BasicRecord, using systemId " + basicRecordSystemId;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " BasicRecord, using systemId " + basicRecordSystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
