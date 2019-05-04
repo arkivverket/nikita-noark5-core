@@ -29,7 +29,6 @@ import java.util.Map;
 @JsonDeserialize(using = HateoasDeserializer.class)
 public class HateoasNoarkObject implements IHateoasNoarkObject {
 
-    private int pageSize = 10;
     /**
      * A list of noark entities comprising a result set from a query. Using a
      * List to get implements Iterator and Collection.
