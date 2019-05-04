@@ -17,12 +17,8 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 @Transactional
 public class PrecedenceService implements IPrecedenceService {
 
-    private static final Logger logger = LoggerFactory.getLogger(PrecedenceService.class);
-
-    // TODO: Trying to pick up property from yaml file, but not working ...
-    //@Value("${nikita-noark5-core.pagination.maxPageSize}")
-    Integer maxPageSize = new Integer(10);
-
+    private static final Logger logger =
+            LoggerFactory.getLogger(PrecedenceService.class);
     private IPrecedenceRepository precedenceRepository;
 
     public PrecedenceService(IPrecedenceRepository precedenceRepository) {
