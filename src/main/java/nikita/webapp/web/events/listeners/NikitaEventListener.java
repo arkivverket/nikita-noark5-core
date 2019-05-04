@@ -165,12 +165,10 @@ public class NikitaEventListener {
             logger.error("Could not create JSON object during " +
                     event.toString());
         } finally {
-            if (client != null) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage());
-                }
+            try {
+                client.close();
+            } catch (IOException e) {
+                logger.error(e.getMessage());
             }
         }
     }
