@@ -477,7 +477,7 @@ public class FondsService implements IFondsService {
 
         // Disassociate any links between Fonds and StorageLocation
         q = entityManager.createNativeQuery(
-                "DELETE FROM " + TABLE_STORAGE_LOCATION + " WHERE " +
+                "DELETE FROM " + TABLE_FONDS_STORAGE_LOCATION + " WHERE " +
                         FOREIGN_KEY_FONDS_PK + " = :id ;");
         q.setParameter("id", fonds.getId());
         q.executeUpdate();
