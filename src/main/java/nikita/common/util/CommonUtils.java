@@ -104,7 +104,7 @@ public final class CommonUtils {
         }
 
         public static Long parseETAG(String quotedETAG) {
-            Long etagVal = new Long(-1L);
+            long etagVal = -1L;
             if (quotedETAG != null) {
                 try {
                     etagVal = Long.parseLong(quotedETAG.replaceAll("^\"|\"$", ""));
@@ -1013,7 +1013,6 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     PostalAddress postalAddress = new PostalAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    simpleAddress.setAddressType(POSTAL_ADDRESS);
                     deserialiseSimpleAddressEntity(
                             simpleAddress,
                             currentNode.deepCopy(), errors);
@@ -1032,7 +1031,6 @@ public final class CommonUtils {
                     ResidingAddress residingAddress =
                             new ResidingAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    simpleAddress.setAddressType(RESIDING_ADDRESS);
                     deserialiseSimpleAddressEntity(
                             simpleAddress,
                             currentNode.deepCopy(), errors);
@@ -1142,6 +1140,7 @@ public final class CommonUtils {
                     SimpleAddress simpleAddress = new SimpleAddress();
                     deserialiseSimpleAddressEntity(simpleAddress,
                             currentNode.deepCopy(), errors);
+                    postalAddressEntity.setSimpleAddress(simpleAddress);
                     correspondencePartUnit.
                             setPostalAddress(postalAddressEntity);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
@@ -1155,6 +1154,7 @@ public final class CommonUtils {
                     SimpleAddress simpleAddress = new SimpleAddress();
                     deserialiseSimpleAddressEntity(simpleAddress,
                             currentNode.deepCopy(), errors);
+                    businessAddressEntity.setSimpleAddress(simpleAddress);
                     correspondencePartUnit.setBusinessAddress(
                             businessAddressEntity);
                     objectNode.remove(BUSINESS_ADDRESS);
@@ -1531,7 +1531,7 @@ public final class CommonUtils {
                                 correspondencePartPerson.
                                         getSocialSecurityNumber());
                     }
-                    if (null != correspondencePartPerson) {
+                    if (null != correspondencePartPerson.getdNumber()) {
                         jgen.writeStringField(D_NUMBER,
                                 correspondencePartPerson.getdNumber());
                     }
@@ -1585,34 +1585,39 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printCorrespondencePartUnit(JsonGenerator jgen,
-                                                           ICorrespondencePartUnitEntity correspondencePartUnit)
+            public static void printCorrespondencePartUnit(
+                    JsonGenerator jgen,
+                    ICorrespondencePartUnitEntity correspondencePartUnit)
                     throws IOException {
                 if (null != correspondencePartUnit) {
                     printCorrespondencePart(jgen, correspondencePartUnit);
 
                     if (null != correspondencePartUnit.getOrganisationNumber()) {
-                        jgen.writeStringField(ORGANISATION_NUMBER, correspondencePartUnit.getOrganisationNumber());
+                        jgen.writeStringField(ORGANISATION_NUMBER,
+                                correspondencePartUnit.getOrganisationNumber());
                     }
                     if (null != correspondencePartUnit.getName()) {
-                        jgen.writeStringField(NAME, correspondencePartUnit.getName());
+                        jgen.writeStringField(NAME,
+                                correspondencePartUnit.getName());
                     }
-                    /* ZZXC
                     if (null != correspondencePartUnit.getBusinessAddress()) {
-                        printAddress(jgen, correspondencePartUnit.getBusinessAddress());
+                        printAddress(jgen,
+                                correspondencePartUnit.getBusinessAddress().
+                                        getSimpleAddress());
                     }
-
                     if (null != correspondencePartUnit.getPostalAddress()) {
-                        printAddress(jgen, correspondencePartUnit.getPostalAddress());
+                        printAddress(jgen, correspondencePartUnit.
+                                getPostalAddress().getSimpleAddress());
                     }
 
                     if (null != correspondencePartUnit.getContactInformation()) {
-                        printContactInformation(jgen, correspondencePartUnit.getContactInformation());
+                        printContactInformation(jgen,
+                                correspondencePartUnit.getContactInformation());
                     }
                     if (null != correspondencePartUnit.getContactPerson()) {
-                        jgen.writeStringField(CONTACT_PERSON, correspondencePartUnit.getContactPerson());
+                        jgen.writeStringField(CONTACT_PERSON,
+                                correspondencePartUnit.getContactPerson());
                     }
-*/
                 }
             }
 
