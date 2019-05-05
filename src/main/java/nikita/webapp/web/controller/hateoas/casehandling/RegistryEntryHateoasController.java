@@ -40,7 +40,10 @@ import java.util.List;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY,
@@ -108,8 +111,8 @@ public class RegistryEntryHateoasController extends NoarkController {
                 new CorrespondencePartPersonHateoas(createdCorrespondencePartPerson);
         correspondencePartHateoasHandler.addLinks(correspondencePartPersonHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdCorrespondencePartPerson));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdCorrespondencePartPerson.getVersion().toString())
                 .body(correspondencePartPersonHateoas);
     }
@@ -193,17 +196,16 @@ public class RegistryEntryHateoasController extends NoarkController {
             @ApiParam(name = "CorrespondencePartUnit",
                     value = "Incoming CorrespondencePartUnit object",
                     required = true)
-            @RequestBody CorrespondencePartUnit CorrespondencePartUnit)
+            @RequestBody CorrespondencePartUnit correspondencePartUnit)
             throws NikitaException {
-        CorrespondencePartUnit createdCorrespondencePartUnit =
-                registryEntryService.createCorrespondencePartUnitAssociatedWithRegistryEntry(systemID, CorrespondencePartUnit);
+
         CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
-                new CorrespondencePartUnitHateoas(createdCorrespondencePartUnit);
-        correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdCorrespondencePartUnit));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdCorrespondencePartUnit.getVersion().toString())
+                registryEntryService.
+                        createCorrespondencePartUnitAssociatedWithRegistryEntry(
+                                systemID, correspondencePartUnit);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(correspondencePartUnitHateoas.getEntityVersion().toString())
                 .body(correspondencePartUnitHateoas);
     }
 
@@ -373,8 +375,8 @@ public class RegistryEntryHateoasController extends NoarkController {
         CorrespondencePartPersonHateoas correspondencePartHateoas =
                 new CorrespondencePartPersonHateoas((List<INikitaEntity>) (List) correspondencePartPerson);
         correspondencePartHateoasHandler.addLinks(correspondencePartHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(correspondencePartHateoas);
     }
 
@@ -404,8 +406,8 @@ public class RegistryEntryHateoasController extends NoarkController {
         CorrespondencePartUnitHateoas correspondencePartHateoas =
                 new CorrespondencePartUnitHateoas((List<INikitaEntity>) (List) correspondencePartUnit);
         correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(correspondencePartHateoas);
 
     }
@@ -514,8 +516,8 @@ TODO: Temp disabled!
         CorrespondencePartPersonHateoas correspondencePartHateoas =
                 new CorrespondencePartPersonHateoas(suggestedCorrespondencePart);
         correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(correspondencePartHateoas);
     }
 
@@ -537,54 +539,10 @@ TODO: Temp disabled!
     public ResponseEntity<CorrespondencePartUnitHateoas> getCorrespondencePartUnitTemplate(
             HttpServletRequest request
     ) throws NikitaException {
-        CorrespondencePartUnit suggestedCorrespondencePart = new CorrespondencePartUnit();
-
-        CorrespondencePartType correspondencePartType =
-                correspondencePartTypeService.findByCode(CORRESPONDENCE_PART_CODE_EA);
-        if (correspondencePartType == null) {
-            throw new NikitaException("Internal error, metadata missing. [" +
-                    CORRESPONDENCE_PART_CODE_EA + "] returns no value");
-        }
-        suggestedCorrespondencePart.setCorrespondencePartType(correspondencePartType);
-/*
-        PostalAddress postalAddress = new PostalAddress();
-        postalAddress.setAddressType(POSTAL_ADDRESS);
-        postalAddress.setAddressLine1("ADRL1: 744 Evergreen Terrace");
-        postalAddress.setAddressLine2("ADRL2: 744 Evergreen Terrace");
-        postalAddress.setAddressLine3("ADRL3: 744 Evergreen Terrace");
-        postalAddress.setCountryCode("US");
-        postalAddress.setPostalNumber(new PostalNumber("12345"));
-        postalAddress.setPostalTown("Springfield");
-        suggestedCorrespondencePart.setPostalAddress(postalAddress);
-
-ZZXC
-
-        BusinessAddress businessAddress = new BusinessAddress();
-        businessAddress.setAddressType(BUSINESS_ADDRESS);
-        businessAddress.setAddressLine1("ADRL1: 745 Evergreen Terrace");
-        businessAddress.setAddressLine2("ADRL2: 745 Evergreen Terrace");
-        businessAddress.setAddressLine3("ADRL3: 745 Evergreen Terrace");
-        businessAddress.setCountryCode("US");
-        businessAddress.setPostalNumber(new PostalNumber("12345"));
-        businessAddress.setPostalTown("Springfield");
-        suggestedCorrespondencePart.setBusinessAddress(businessAddress);
-*/
-        suggestedCorrespondencePart.setContactPerson("Frank Contact Person Grimes");
-
-        ContactInformation contactInformation = new ContactInformation();
-        contactInformation.setEmailAddress("nikita@example.com");
-        contactInformation.setMobileTelephoneNumber("123456789");
-        contactInformation.setTelephoneNumber("987654321");
-//        suggestedCorrespondencePart.setContactInformation(contactInformation);
-
-        suggestedCorrespondencePart.setName("Frank Grimes");
-
-        CorrespondencePartUnitHateoas correspondencePartHateoas =
-                new CorrespondencePartUnitHateoas(suggestedCorrespondencePart);
-        correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(correspondencePartHateoas);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(registryEntryService.
+                        generateDefaultCorrespondencePartUnit(null));
     }
 
     // Create a suggested CorrespondencePartInternal (like a template) object with default values (nothing persisted)
@@ -620,7 +578,7 @@ ZZXC
                 new CorrespondencePartInternalHateoas(suggestedCorrespondencePart);
         correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body("");
     }
 
@@ -749,8 +707,8 @@ ZZXC
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas(registryEntry);
         registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(registryEntry.getVersion().toString())
                 .body(registryEntryHateoas);
     }
@@ -780,8 +738,8 @@ ZZXC
                 RegistryEntryHateoas((List<INikitaEntity>) (List)
                 registryEntryService.findRegistryEntryByOwnerPaginated(top, skip));
         registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryHateoas);
     }
 
@@ -806,8 +764,8 @@ ZZXC
         RegistryEntry registryEntry = registryEntryService.findBySystemId(systemID);
         registryEntryService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, registryEntry));
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(CommonUtils.WebUtils.getSuccessStatusStringForDelete());
     }
 
@@ -845,8 +803,8 @@ ZZXC
         RegistryEntryHateoas registryEntryHateoas = new RegistryEntryHateoas(updatedRegistryEntry);
         registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedRegistryEntry));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedRegistryEntry.getVersion().toString())
                 .body(registryEntryHateoas);
     }

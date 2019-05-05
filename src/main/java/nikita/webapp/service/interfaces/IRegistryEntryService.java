@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartUnitHateoas;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -17,8 +18,10 @@ public interface IRegistryEntryService {
     createCorrespondencePartPersonAssociatedWithRegistryEntry(
             String systemID, CorrespondencePartPerson correspondencePart);
 
+    CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
+            String registryEntrySystemId);
 
-    CorrespondencePartUnit
+    CorrespondencePartUnitHateoas
     createCorrespondencePartUnitAssociatedWithRegistryEntry(
             String systemID, CorrespondencePartUnit correspondencePart);
 
