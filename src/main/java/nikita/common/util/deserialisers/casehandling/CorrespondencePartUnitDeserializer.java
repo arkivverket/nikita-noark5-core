@@ -6,13 +6,11 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
 
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseCorrespondencePartUnitEntity;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -43,9 +41,11 @@ public class CorrespondencePartUnitDeserializer extends JsonDeserializer {
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The korrespondansepartenhet you tried to create is malformed. The " +
-                    "following fields are not recognised as korrespondansepartenhet fields [" +
-                    CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append("The korrespondansepartenhet you tried to create ");
+            errors.append("is malformed. The following fields are not ");
+            errors.append("recognised as korrespondansepartenhet fields [");
+            errors.append(checkNodeObjectEmpty(objectNode));
+            errors.append("]. ");
         }
 
         if (0 < errors.length())
