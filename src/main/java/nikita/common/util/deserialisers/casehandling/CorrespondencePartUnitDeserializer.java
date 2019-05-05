@@ -17,8 +17,9 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * <p>
  * Deserialise an incoming CorrespondencePart JSON object.
  * <p>
- * Detect if the CorrespondencePart is CorrespondencePartPerson, CorrespondencePartInternal or
- * CorrespondencePartUnit and returns an object the appropriate type.
+ * Detect if the CorrespondencePart is CorrespondencePartPerson,
+ * CorrespondencePartInternal or CorrespondencePartUnit and returns an object
+ * the appropriate type.
  * <p>
  * Note:
  * - Unknown property values in the JSON will trigger an exception
@@ -29,17 +30,21 @@ public class CorrespondencePartUnitDeserializer extends JsonDeserializer {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public CorrespondencePartUnit deserialize(JsonParser jsonParser, DeserializationContext dc)
+    public CorrespondencePartUnit deserialize(JsonParser jsonParser,
+                                              DeserializationContext dc)
             throws IOException {
         StringBuilder errors = new StringBuilder();
 
-        CorrespondencePartUnit correspondencePartUnit = new CorrespondencePartUnit();
+        CorrespondencePartUnit correspondencePartUnit =
+                new CorrespondencePartUnit();
         ObjectNode objectNode = mapper.readTree(jsonParser);
-        deserialiseNoarkSystemIdEntity(correspondencePartUnit, objectNode, errors);
-        deserialiseCorrespondencePartUnitEntity(correspondencePartUnit, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(correspondencePartUnit,
+                objectNode, errors);
+        deserialiseCorrespondencePartUnitEntity(correspondencePartUnit,
+                objectNode, errors);
 
-        // Check that there are no additional values left after processing the tree
-        // If there are additional throw a malformed input exception
+        // Check that there are no additional values left after processing
+        // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
             errors.append("The korrespondansepartenhet you tried to create ");
             errors.append("is malformed. The following fields are not ");
