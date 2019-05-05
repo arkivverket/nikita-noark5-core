@@ -54,39 +54,3 @@ public class CorrespondencePartUnitDeserializer extends JsonDeserializer {
         return correspondencePartUnit;
     }
 }
-/*
-        if (null != currentNode) {
-            ObjectNode correspondencePartTypeObjectNode = currentNode.deepCopy();
-            correspondencePartType = new CorrespondencePartType();
-            //
-            JsonNode correspondencePartTypeNode = correspondencePartTypeObjectNode.get(CODE);
-
-            if (null != correspondencePartTypeNode) {
-                String correspondencePartTypeCode = correspondencePartTypeNode.asText();
-
-                if (correspondencePartTypeCode.equalsIgnoreCase()) {
-
-                }
-                else if (correspondencePartTypeCode.equalsIgnoreCase()) {
-
-                }
-                else if (correspondencePartTypeCode.equalsIgnoreCase()) {
-
-                }
-                else {
-                    errors.append("The korrespondansepart you are trying to create " +
-                            "is malformed. kode under korrespondanseparttype has a non-recognised value. The value " +
-                            "you set is " + correspondencePartTypeCode + ". ");
-                }
-            }
-            else {
-                errors.append("The korrespondansepart you are trying to create " +
-                        "is malformed. kode under korrespondanseparttype has no value. ");
-            }
-        }
-        else {
-            errors.append("The korrespondansepart you are trying to create is malformed" +
-                    ". It is missing korrespondanseparttype. It is not possible to construct a valid " +
-                    " korrespondansepart without this value being set. ");
-        }
-*/
