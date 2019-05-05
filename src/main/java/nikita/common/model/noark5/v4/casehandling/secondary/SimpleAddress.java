@@ -61,7 +61,19 @@ public class SimpleAddress
     @Column(name = "country_code")
     private String countryCode;
 
-    // Holds if this is a postAddress / residingAddress etc
+    /**
+     * Holds if this is a postAddress / residingAddress etc. Note, this is not
+     * an attribute define in Noark, but an attribute used when writing entity
+     * type.
+     * <p>
+     * "forretningsadresse": {
+     * ....
+     * },
+     * "postadresse": {
+     * ....
+     * }
+     * Here forretningsadresse and postadresse are examples of addressType
+     */
     @NotNull
     @Column(name = "address_type", nullable = false)
     private String addressType;
