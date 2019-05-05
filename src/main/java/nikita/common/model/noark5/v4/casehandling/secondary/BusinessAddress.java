@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
 import nikita.common.model.noark5.v4.NoarkEntity;
+import nikita.common.model.noark5.v4.interfaces.entities.casehandling.ISimpleAddress;
 
 import javax.persistence.*;
 
@@ -10,7 +11,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "business_address")
 public class BusinessAddress
-        extends NoarkEntity {
+        extends NoarkEntity
+        implements ISimpleAddress {
 
     @Embedded
     private SimpleAddress simpleAddress;
