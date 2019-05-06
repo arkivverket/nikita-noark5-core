@@ -18,10 +18,6 @@ import java.util.List;
 @Entity
 @Table(name = "file")
 @Inheritance(strategy = InheritanceType.JOINED)
-// Enable soft delete of File
-// @SQLDelete(sql="UPDATE file SET deleted = true WHERE pk_file_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-//@Indexed(index = "file")
 @JsonDeserialize(using = FileDeserializer.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_file_id"))
 public class File extends NoarkGeneralEntity implements IDocumentMedium,
@@ -32,7 +28,6 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
      */
     @Column(name = "file_id")
     @Audited
-
     private String fileId;
 
     /**
@@ -40,7 +35,6 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
      */
     @Column(name = "official_title")
     @Audited
-
     private String officialTitle;
 
     /**
@@ -52,15 +46,19 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
 
     // Link to StorageLocation
     @ManyToMany
-    @JoinTable(name = "file_storage_location", joinColumns = @JoinColumn(name = "f_pk_file_id",
-            referencedColumnName = "pk_file_id"), inverseJoinColumns = @JoinColumn(name = "f_pk_storage_location_id",
+    @JoinTable(name = "file_storage_location",
+            joinColumns = @JoinColumn(name = "f_pk_file_id",
+                    referencedColumnName = "pk_file_id"),
+            inverseJoinColumns = @JoinColumn(name = "f_pk_storage_location_id",
             referencedColumnName = "pk_storage_location_id"))
     private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
 
     // Links to Keywords
     @ManyToMany
-    @JoinTable(name = "file_keyword", joinColumns = @JoinColumn(name = "f_pk_file_id",
-            referencedColumnName = "pk_file_id"), inverseJoinColumns = @JoinColumn(name = "f_pk_keyword_id",
+    @JoinTable(name = "file_keyword", joinColumns =
+    @JoinColumn(name = "f_pk_file_id",
+            referencedColumnName = "pk_file_id"),
+            inverseJoinColumns = @JoinColumn(name = "f_pk_keyword_id",
             referencedColumnName = "pk_keyword_id"))
     private List<Keyword> referenceKeyword = new ArrayList<>();
 
@@ -88,25 +86,30 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
 
     // Links to Comments
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "file_comment", joinColumns = @JoinColumn(name = "f_pk_file_id",
-            referencedColumnName = "pk_file_id"), inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id",
+    @JoinTable(name = "file_comment",
+            joinColumns = @JoinColumn(name = "f_pk_file_id",
+                    referencedColumnName = "pk_file_id"),
+            inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id",
             referencedColumnName = "pk_comment_id"))
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Classified
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "file_classified_id", referencedColumnName = "pk_classified_id")
+    @JoinColumn(name = "file_classified_id",
+            referencedColumnName = "pk_classified_id")
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "file_disposal_id", referencedColumnName = "pk_disposal_id")
+    @JoinColumn(name = "file_disposal_id",
+            referencedColumnName = "pk_disposal_id")
     private Disposal referenceDisposal;
 
     // Link to Screening
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "file_screening_id", referencedColumnName = "pk_screening_id")
+    @JoinColumn(name = "file_screening_id",
+            referencedColumnName = "pk_screening_id")
     private Screening referenceScreening;
 
     @OneToMany(mappedBy = "referenceFile")
@@ -177,7 +180,8 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
     }
 
     @Override
-    public void setReferenceStorageLocation(List<StorageLocation> referenceStorageLocation) {
+    public void setReferenceStorageLocation(
+            List<StorageLocation> referenceStorageLocation) {
         this.referenceStorageLocation = referenceStorageLocation;
     }
 
@@ -244,7 +248,8 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
     }
 
     @Override
-    public void setReferenceCrossReference(List<CrossReference> referenceCrossReference) {
+    public void setReferenceCrossReference(
+            List<CrossReference> referenceCrossReference) {
         this.referenceCrossReference = referenceCrossReference;
     }
 
