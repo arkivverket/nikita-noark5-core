@@ -12,7 +12,6 @@ import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v4.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.application.FondsStructureDetails;
 import nikita.webapp.service.interfaces.IFondsService;
@@ -24,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 @RestController
@@ -97,7 +97,7 @@ public class FondsHateoasController extends NoarkController {
         validateForCreate(fonds);
         FondsHateoas fondsHateoas = fondsService.createNewFonds(fonds);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
+                .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fonds.getVersion().toString())
                 .body(fondsHateoas);
@@ -154,7 +154,7 @@ public class FondsHateoasController extends NoarkController {
         FondsHateoas fondsHateoas = fondsService
                 .createFondsAssociatedWithFonds(systemID, fonds);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
+                .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fonds.getVersion().toString())
                 .body(fondsHateoas);
@@ -222,7 +222,7 @@ public class FondsHateoasController extends NoarkController {
         SeriesHateoas seriesHateoas =
                 fondsService.createSeriesAssociatedWithFonds(systemID, series);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
+                .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(seriesHateoas.getEntityVersion().toString())
                 .body(seriesHateoas);
@@ -293,7 +293,7 @@ public class FondsHateoasController extends NoarkController {
                 .createFondsCreatorAssociatedWithFonds(systemID, fondsCreator);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
+                .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fondsCreatorHateoas.getEntityVersion().toString())
                 .body(fondsCreatorHateoas);
@@ -332,7 +332,7 @@ public class FondsHateoasController extends NoarkController {
         FondsHateoas fondsHateoas = fondsService.findSingleFonds(systemID);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
+                .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fondsHateoas.getEntityVersion().toString())
                 .body(fondsHateoas);
@@ -372,8 +372,7 @@ public class FondsHateoasController extends NoarkController {
                     required = true)
             @PathVariable("systemID") final String systemID) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.generateDefaultSeries(systemID));
     }
 
@@ -415,8 +414,7 @@ public class FondsHateoasController extends NoarkController {
         FondsCreatorHateoas fondsCreatorHateoas = fondsService
                 .findFondsCreatorAssociatedWithFonds(systemID);
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsCreatorHateoas);
     }
 
@@ -456,8 +454,7 @@ public class FondsHateoasController extends NoarkController {
             @PathVariable("systemID") final String systemID) {
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.findSeriesAssociatedWithFonds(systemID));
     }
 
@@ -541,8 +538,7 @@ public class FondsHateoasController extends NoarkController {
                 findFondsByOwnerPaginated(top, skip);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsHateoas);
     }
 
@@ -583,8 +579,7 @@ public class FondsHateoasController extends NoarkController {
             @PathVariable("systemID") String systemID
     ) throws NikitaException {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.generateDefaultFonds(systemID));
     }
 
@@ -620,8 +615,7 @@ public class FondsHateoasController extends NoarkController {
             HttpServletRequest request
     ) throws NikitaException {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.generateDefaultFonds(null));
     }
 
@@ -683,8 +677,7 @@ public class FondsHateoasController extends NoarkController {
                         parseETAG(request.getHeader(ETAG)), fonds);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fondsHateoas.getEntityVersion().toString())
                 .body(fondsHateoas);
     }
