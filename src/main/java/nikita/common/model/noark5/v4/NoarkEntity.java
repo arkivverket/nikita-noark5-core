@@ -123,7 +123,7 @@ public class NoarkEntity
 
     @Override
     public ZonedDateTime getLastModifiedDate() {
-        return ZonedDateTime.from(lastModifiedDate);
+        return lastModifiedDate;
     }
 
     @Override

@@ -92,7 +92,7 @@ public class NoarkGeneralEntity
 
     @Override
     public ZonedDateTime getCreatedDate() {
-        return ZonedDateTime.from(createdDate);
+        return createdDate;
     }
 
     @Override
