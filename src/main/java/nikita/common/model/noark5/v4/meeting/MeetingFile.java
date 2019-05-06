@@ -7,8 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -38,7 +38,7 @@ public class MeetingFile extends File {
      */
     @Column(name = "loaned_date")
     @Audited
-    private Date meetingDate;
+    private ZonedDateTime meetingDate;
 
     /**
      * M371 - moetested (xs:string)
@@ -83,11 +83,11 @@ public class MeetingFile extends File {
         this.committee = committee;
     }
 
-    public Date getMeetingDate() {
+    public ZonedDateTime getMeetingDate() {
         return meetingDate;
     }
 
-    public void setMeetingDate(Date meetingDate) {
+    public void setMeetingDate(ZonedDateTime meetingDate) {
         this.meetingDate = meetingDate;
     }
 

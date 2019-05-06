@@ -31,7 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -474,7 +474,7 @@ public class FileHateoasController extends NoarkController {
 
         Record defaultRecord = new Record();
         defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
-        defaultRecord.setArchivedDate(new Date());
+        defaultRecord.setArchivedDate(ZonedDateTime.now());
         RecordHateoas recordHateoas = new
                 RecordHateoas(defaultRecord);
         recordHateoasHandler.addLinksOnNew(recordHateoas, new Authorisation());
@@ -500,7 +500,7 @@ public class FileHateoasController extends NoarkController {
 
         BasicRecord defaultBasicRecord = new BasicRecord();
         defaultBasicRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
-        defaultBasicRecord.setArchivedDate(new Date());
+        defaultBasicRecord.setArchivedDate(ZonedDateTime.now());
         BasicRecordHateoas basicRecordHateoas = new
                 BasicRecordHateoas(defaultBasicRecord);
         basicRecordHateoasHandler.addLinksOnNew(basicRecordHateoas, new Authorisation());

@@ -10,11 +10,17 @@ import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static nikita.common.config.Constants.*;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_NIKITA_ADMINISTRATIVE_UNIT)
@@ -29,9 +35,9 @@ public class AdministrativeUnit
      * M600 - opprettetDato (xs:dateTime)
      */
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date createdDate;
+    private ZonedDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -44,9 +50,9 @@ public class AdministrativeUnit
      * M602 - avsluttetDato (xs:dateTime)
      */
     @Column(name = "finalised_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date finalisedDate;
+    private ZonedDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
@@ -117,12 +123,12 @@ public class AdministrativeUnit
             new ArrayList<>();
 
     @Override
-    public Date getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
     @Override
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -137,12 +143,12 @@ public class AdministrativeUnit
     }
 
     @Override
-    public Date getFinalisedDate() {
+    public ZonedDateTime getFinalisedDate() {
         return finalisedDate;
     }
 
     @Override
-    public void setFinalisedDate(Date finalisedDate) {
+    public void setFinalisedDate(ZonedDateTime finalisedDate) {
         this.finalisedDate = finalisedDate;
     }
 

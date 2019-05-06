@@ -8,15 +8,17 @@ import nikita.common.util.deserialisers.admin.UserDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "nikita_user")
@@ -53,9 +55,9 @@ public class User
      * M600 - opprettetDato (xs:dateTime)
      */
     @Column(name = "account_created_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date createdDate;
+    private ZonedDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -68,9 +70,9 @@ public class User
      * M602 - avsluttetDato (xs:dateTime)
      */
     @Column(name = "finalised_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date finalisedDate;
+    private ZonedDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
@@ -96,8 +98,8 @@ public class User
     private Boolean enabled = true;
 
     @Column(name = "last_password_reset_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastPasswordResetDate;
+    @DateTimeFormat(iso = DATE_TIME)
+    private ZonedDateTime lastPasswordResetDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -132,12 +134,12 @@ public class User
     }
 
     @Override
-    public Date getFinalisedDate() {
+    public ZonedDateTime getFinalisedDate() {
         return finalisedDate;
     }
 
     @Override
-    public void setFinalisedDate(Date finalisedDate) {
+    public void setFinalisedDate(ZonedDateTime finalisedDate) {
         this.finalisedDate = finalisedDate;
     }
 
@@ -191,11 +193,11 @@ public class User
         this.enabled = enabled;
     }
 
-    public Date getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -258,11 +260,11 @@ public class User
 //        this.referenceCorrespondencePartInternal = referenceCorrespondencePartInternal;
 //    }
 
-    public Date getLastPasswordResetDate() {
+    public ZonedDateTime getLastPasswordResetDate() {
         return lastPasswordResetDate;
     }
 
-    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
+    public void setLastPasswordResetDate(ZonedDateTime lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
 

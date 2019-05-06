@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -70,7 +70,7 @@ public class UserService implements IUserService {
         user.setEnabled(true);
         user.setDeleted(false);
         user.setCreatedBy(SYSTEM);
-        user.setCreatedDate(new Date());
+        user.setCreatedDate(ZonedDateTime.now());
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);

@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,7 +69,7 @@ public class RecordService
                 getAuthentication().getName();
 
         record.setSystemId(UUID.randomUUID().toString());
-        record.setCreatedDate(new Date());
+        record.setCreatedDate(ZonedDateTime.now());
         record.setOwnedBy(username);
         record.setCreatedBy(username);
         record.setDeleted(false);
@@ -86,7 +86,7 @@ public class RecordService
                 getAuthentication().getName();
 
         record.setSystemId(UUID.randomUUID().toString());
-        record.setCreatedDate(new Date());
+        record.setCreatedDate(ZonedDateTime.now());
         record.setOwnedBy(username);
         record.setCreatedBy(username);
         record.setDeleted(false);

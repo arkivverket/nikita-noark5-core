@@ -1,12 +1,12 @@
 package nikita.common.model.noark5.v4.interfaces.entities;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public interface INoarkFinaliseEntity {
 
-    Date getFinalisedDate();
+    ZonedDateTime getFinalisedDate();
 
-    void setFinalisedDate(Date FinalisedDate);
+    void setFinalisedDate(ZonedDateTime FinalisedDate);
 
     String getFinalisedBy();
 

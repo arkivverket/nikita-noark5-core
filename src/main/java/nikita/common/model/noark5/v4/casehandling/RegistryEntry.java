@@ -16,15 +16,18 @@ import nikita.common.util.deserialisers.casehandling.RegistryEntryDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK;
 import static nikita.common.config.Constants.PRIMARY_KEY_CORRESPONDENCE_PART;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "registry_entry")
@@ -44,7 +47,6 @@ public class RegistryEntry
      */
     @Column(name = "record_year")
     @Audited
-
     private Integer recordYear;
 
     /**
@@ -52,7 +54,6 @@ public class RegistryEntry
      */
     @Column(name = "record_sequence_number")
     @Audited
-
     private Integer recordSequenceNumber;
 
     /**
@@ -60,7 +61,6 @@ public class RegistryEntry
      */
     @Column(name = "registry_entry_number")
     @Audited
-
     private Integer registryEntryNumber;
 
     /**
@@ -69,7 +69,6 @@ public class RegistryEntry
     @NotNull
     @Column(name = "registry_entry_type", nullable = false)
     @Audited
-
     private String registryEntryType;
 
     /**
@@ -78,7 +77,6 @@ public class RegistryEntry
     @NotNull
     @Column(name = "record_status")
     @Audited
-
     private String recordStatus;
 
     /**
@@ -86,55 +84,49 @@ public class RegistryEntry
      */
     @NotNull
     @Column(name = "record_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-
-    private Date recordDate;
+    private ZonedDateTime recordDate;
 
     /**
      * M103 - dokumentetsDato (xs:date)
      */
     @Column(name = "document_date")
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-
-    private Date documentDate;
+    private ZonedDateTime documentDate;
 
     /**
      * M104 - mottattDato (xs:dateTime)
      */
     @Column(name = "received_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-
-    private Date receivedDate;
+    private ZonedDateTime receivedDate;
 
     /**
      * M105 - sendtDato (xs:dateTime)
      */
     @Column(name = "sent_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-
-    private Date sentDate;
+    private ZonedDateTime sentDate;
 
     /**
      * M109 - forfallsdato (xs:date)
      */
     @Column(name = "due_date")
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-
-    private Date dueDate;
+    private ZonedDateTime dueDate;
 
     /**
      * M110 - offentlighetsvurdertDato (xs:date)
      */
     @Column(name = "freedom_assessment_date")
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-
-    private Date freedomAssessmentDate;
+    private ZonedDateTime freedomAssessmentDate;
 
     /**
      * M304 - antallVedlegg (xs:integer)
@@ -148,9 +140,9 @@ public class RegistryEntry
      * M106 - utlaantDato (xs:date)
      */
     @Column(name = "loaned_date")
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-    private Date loanedDate;
+    private ZonedDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
@@ -267,51 +259,51 @@ public class RegistryEntry
         this.recordStatus = recordStatus;
     }
 
-    public Date getRecordDate() {
+    public ZonedDateTime getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(Date recordDate) {
+    public void setRecordDate(ZonedDateTime recordDate) {
         this.recordDate = recordDate;
     }
 
-    public Date getDocumentDate() {
+    public ZonedDateTime getDocumentDate() {
         return documentDate;
     }
 
-    public void setDocumentDate(Date documentDate) {
+    public void setDocumentDate(ZonedDateTime documentDate) {
         this.documentDate = documentDate;
     }
 
-    public Date getReceivedDate() {
+    public ZonedDateTime getReceivedDate() {
         return receivedDate;
     }
 
-    public void setReceivedDate(Date receivedDate) {
+    public void setReceivedDate(ZonedDateTime receivedDate) {
         this.receivedDate = receivedDate;
     }
 
-    public Date getSentDate() {
+    public ZonedDateTime getSentDate() {
         return sentDate;
     }
 
-    public void setSentDate(Date sentDate) {
+    public void setSentDate(ZonedDateTime sentDate) {
         this.sentDate = sentDate;
     }
 
-    public Date getDueDate() {
+    public ZonedDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(ZonedDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
-    public Date getFreedomAssessmentDate() {
+    public ZonedDateTime getFreedomAssessmentDate() {
         return freedomAssessmentDate;
     }
 
-    public void setFreedomAssessmentDate(Date freedomAssessmentDate) {
+    public void setFreedomAssessmentDate(ZonedDateTime freedomAssessmentDate) {
         this.freedomAssessmentDate = freedomAssessmentDate;
     }
 
@@ -323,11 +315,11 @@ public class RegistryEntry
         this.numberOfAttachments = numberOfAttachments;
     }
 
-    public Date getLoanedDate() {
+    public ZonedDateTime getLoanedDate() {
         return loanedDate;
     }
 
-    public void setLoanedDate(Date loanedDate) {
+    public void setLoanedDate(ZonedDateTime loanedDate) {
         this.loanedDate = loanedDate;
     }
 

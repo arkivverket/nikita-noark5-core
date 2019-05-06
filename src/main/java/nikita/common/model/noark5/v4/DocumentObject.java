@@ -12,14 +12,16 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "document_object")
@@ -68,9 +70,9 @@ public class DocumentObject
      * M600 - opprettetDato (xs:dateTime)
      */
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date createdDate;
+    private ZonedDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -167,11 +169,11 @@ public class DocumentObject
         this.formatDetails = formatDetails;
     }
 
-    public Date getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 

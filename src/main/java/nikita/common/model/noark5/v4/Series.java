@@ -10,12 +10,15 @@ import nikita.common.util.deserialisers.SeriesDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
 @Table(name = "series")
@@ -41,17 +44,17 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
      * M107 - arkivperiodeStartDato (xs:date)
      */
     @Column(name = "series_start_date")
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-    private Date seriesStartDate;
+    private ZonedDateTime seriesStartDate;
 
     /**
      * M108 - arkivperiodeSluttDato (xs:date)
      */
     @Column(name = "series_end_date")
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-    private Date seriesEndDate;
+    private ZonedDateTime seriesEndDate;
 
     /**
      * M300 - dokumentmedium (xs:string)
@@ -145,19 +148,19 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
         this.documentMedium = documentMedium;
     }
 
-    public Date getSeriesStartDate() {
+    public ZonedDateTime getSeriesStartDate() {
         return seriesStartDate;
     }
 
-    public void setSeriesStartDate(Date seriesStartDate) {
+    public void setSeriesStartDate(ZonedDateTime seriesStartDate) {
         this.seriesStartDate = seriesStartDate;
     }
 
-    public Date getSeriesEndDate() {
+    public ZonedDateTime getSeriesEndDate() {
         return seriesEndDate;
     }
 
-    public void setSeriesEndDate(Date seriesEndDate) {
+    public void setSeriesEndDate(ZonedDateTime seriesEndDate) {
         this.seriesEndDate = seriesEndDate;
     }
 

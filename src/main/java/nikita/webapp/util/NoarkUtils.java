@@ -9,7 +9,7 @@ import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.util.exceptions.NikitaException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static nikita.common.config.N5ResourceMappings.*;
@@ -64,7 +64,7 @@ public final class NoarkUtils {
                             "username is null! Cannot continue with this  " +
                             "request!");
                 }
-                createEntity.setCreatedDate(new Date());
+                createEntity.setCreatedDate(ZonedDateTime.now());
                 createEntity.setCreatedBy(username);
             }
 

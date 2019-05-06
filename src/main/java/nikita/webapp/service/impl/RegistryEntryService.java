@@ -35,7 +35,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -84,7 +84,7 @@ public class RegistryEntryService
         setSystemIdEntityValues(registryEntry);
         setCreateEntityValues(registryEntry);
         checkDocumentMediumValid(registryEntry);
-        registryEntry.setRecordDate(new Date());
+        registryEntry.setRecordDate(ZonedDateTime.now());
         File file = registryEntry.getReferenceFile();
         if (null != file) {
             Long numberAssociated =

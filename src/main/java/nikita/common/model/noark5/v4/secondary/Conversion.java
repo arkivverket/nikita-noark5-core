@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "conversion")
@@ -25,7 +25,7 @@ public class Conversion extends NoarkEntity {
      */
     @Column(name = "converted_date")
     @Audited
-    private Date convertedDate;
+    private ZonedDateTime convertedDate;
 
     /**
      * M616 - konvertertAv (xs:string)
@@ -68,11 +68,11 @@ public class Conversion extends NoarkEntity {
     private DocumentObject referenceDocumentObject;
 
 
-    public Date getConvertedDate() {
+    public ZonedDateTime getConvertedDate() {
         return convertedDate;
     }
 
-    public void setConvertedDate(Date convertedDate) {
+    public void setConvertedDate(ZonedDateTime convertedDate) {
         this.convertedDate = convertedDate;
     }
 

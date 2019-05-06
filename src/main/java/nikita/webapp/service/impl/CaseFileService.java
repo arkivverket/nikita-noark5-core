@@ -34,7 +34,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
@@ -102,17 +106,15 @@ public class CaseFileService
         caseFile.setReferenceAdministrativeUnit(administrativeUnit);
 
         // Set case year
-        Calendar date = new GregorianCalendar();
-        Integer currentYear = date.get(Calendar.YEAR);
+        Integer currentYear = ZonedDateTime.now().getYear();
         caseFile.setCaseYear(currentYear);
-        caseFile.setCaseDate(new Date());
+        caseFile.setCaseDate(ZonedDateTime.now());
         caseFile.setCaseSequenceNumber(getNextSequenceNumber(
                 administrativeUnit));
         caseFile.setFileId(currentYear.toString() + "/" +
                 caseFile.getCaseSequenceNumber());
         return caseFileRepository.save(caseFile);
     }
-
 
     @Override
     public CaseFileHateoas saveHateoas(CaseFile caseFile) {
@@ -262,7 +264,7 @@ public class CaseFileService
                 caseStatusService.generateDefaultCaseStatus());
         defaultCaseFile.setCaseResponsible(SecurityContextHolder.getContext().
                 getAuthentication().getName());
-        defaultCaseFile.setCaseDate(new Date());
+        defaultCaseFile.setCaseDate(ZonedDateTime.now());
         defaultCaseFile.setTitle(TEST_TITLE);
         defaultCaseFile.setOfficialTitle(TEST_TITLE);
         defaultCaseFile.setDescription(TEST_DESCRIPTION);

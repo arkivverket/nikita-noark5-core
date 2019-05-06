@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +58,7 @@ public class AdministrativeUnitService
     public AdministrativeUnit
     createNewAdministrativeUnitBySystem(AdministrativeUnit administrativeUnit) {
         administrativeUnit.setSystemId(UUID.randomUUID().toString());
-        administrativeUnit.setCreatedDate(new Date());
+        administrativeUnit.setCreatedDate(ZonedDateTime.now());
         administrativeUnit.setCreatedBy(SYSTEM);
         administrativeUnit.setDeleted(false);
         administrativeUnit.setOwnedBy(SYSTEM);
@@ -83,7 +83,7 @@ public class AdministrativeUnitService
             AdministrativeUnit administrativeUnit,
             User user) {
         administrativeUnit.setSystemId(UUID.randomUUID().toString());
-        administrativeUnit.setCreatedDate(new Date());
+        administrativeUnit.setCreatedDate(ZonedDateTime.now());
         administrativeUnit.setCreatedBy(user.getCreatedBy());
         administrativeUnit.setDeleted(false);
         administrativeUnit.setOwnedBy(user.getCreatedBy());

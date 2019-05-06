@@ -43,7 +43,7 @@ import java.nio.file.Paths;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -323,14 +323,14 @@ public class DocumentObjectService
             String username = SecurityContextHolder.getContext().
                     getAuthentication().getName();
             archiveDocumentObject.setCreatedBy(username);
-            archiveDocumentObject.setCreatedDate(new Date());
+            archiveDocumentObject.setCreatedDate(ZonedDateTime.now());
 
             // Handle the conversion details
             Conversion conversion = new Conversion();
             // perhaps here capture unoconv --version
             conversion.setConversionTool("LibreOffice via uconov ");
             conversion.setConvertedBy(username);
-            conversion.setConvertedDate(new Date());
+            conversion.setConvertedDate(ZonedDateTime.now());
             conversion.setConvertedFromFormat(
                     originalDocumentObject.getFormat());
             conversion.setConvertedToFormat(archiveDocumentObject.getFormat());

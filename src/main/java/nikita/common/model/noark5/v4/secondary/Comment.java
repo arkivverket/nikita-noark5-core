@@ -9,11 +9,14 @@ import nikita.common.model.noark5.v4.interfaces.entities.ICommentEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "comment")
@@ -21,7 +24,9 @@ import java.util.List;
 // @SQLDelete(sql="UPDATE comment SET deleted = true WHERE pk_comment_id = ? and version = ?")
 // @Where(clause="deleted <> true")
 @AttributeOverride(name = "id", column = @Column(name = "pk_comment_id"))
-public class Comment extends NoarkEntity implements ICommentEntity {
+public class Comment
+        extends NoarkEntity
+        implements ICommentEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,8 +48,9 @@ public class Comment extends NoarkEntity implements ICommentEntity {
      * M611 - merknadsdato (xs:dateTime)
      */
     @Column(name = "comment_time")
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date commentDate;
+    private ZonedDateTime commentDate;
 
     /**
      * M612 - merknadRegistrertAv (xs:string)
@@ -81,11 +87,11 @@ public class Comment extends NoarkEntity implements ICommentEntity {
         this.commentType = commentType;
     }
 
-    public Date getCommentDate() {
+    public ZonedDateTime getCommentDate() {
         return commentDate;
     }
 
-    public void setCommentDate(Date commentDate) {
+    public void setCommentDate(ZonedDateTime commentDate) {
         this.commentDate = commentDate;
     }
 

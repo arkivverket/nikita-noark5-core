@@ -10,14 +10,17 @@ import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "document_description")
@@ -71,9 +74,9 @@ public class DocumentDescription
      * M600 - opprettetDato (xs:dateTime)
      */
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date createdDate;
+    private ZonedDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -110,9 +113,9 @@ public class DocumentDescription
      */
     @NotNull
     @Column(name = "association_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-    private Date associationDate;
+    private ZonedDateTime associationDate;
 
     /**
      * M621 - tilknyttetAv (xs:string)
@@ -218,11 +221,11 @@ public class DocumentDescription
         this.description = description;
     }
 
-    public Date getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -263,11 +266,11 @@ public class DocumentDescription
         this.documentNumber = documentNumber;
     }
 
-    public Date getAssociationDate() {
+    public ZonedDateTime getAssociationDate() {
         return associationDate;
     }
 
-    public void setAssociationDate(Date associationDate) {
+    public void setAssociationDate(ZonedDateTime associationDate) {
         this.associationDate = associationDate;
     }
 

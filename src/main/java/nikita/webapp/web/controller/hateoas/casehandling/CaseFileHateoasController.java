@@ -38,8 +38,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -132,16 +131,14 @@ public class CaseFileHateoasController extends NoarkController {
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response) {
 
         RegistryEntry defaultRegistryEntry = new RegistryEntry();
-
-        // TODO consider using Calendar date = new GregorianCalendar()
-        Date now = new Date();
+        ZonedDateTime now = ZonedDateTime.now();
 
         // TODO figure out good defaults to return
         defaultRegistryEntry.setRecordDate(now);
         defaultRegistryEntry.setDocumentDate(now);
         defaultRegistryEntry.setRecordStatus(TEST_RECORD_STATUS);
         defaultRegistryEntry.setRegistryEntryType(TEST_REGISTRY_ENTRY_TYPE);
-        defaultRegistryEntry.setRecordYear(Calendar.getInstance().get(Calendar.YEAR));
+        defaultRegistryEntry.setRecordYear(now.getYear());
         // TODO generate these
         //defaultRegistryEntry.setRecordSequenceNumber(201701011);
         //defaultRegistryEntry.setRegistryEntryNumber(201701);

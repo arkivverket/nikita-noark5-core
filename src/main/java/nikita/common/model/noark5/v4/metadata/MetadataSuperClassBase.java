@@ -7,14 +7,21 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
  * Created by tsodring on 3/23/17.
  */
 @MappedSuperclass
-public class MetadataSuperClassBase implements INikitaEntity, Comparable<MetadataSuperClassBase> {
+public class MetadataSuperClassBase
+        implements INikitaEntity, Comparable<MetadataSuperClassBase> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +55,21 @@ public class MetadataSuperClassBase implements INikitaEntity, Comparable<Metadat
     @Column(name = "deleted")
     @Audited
     private Boolean deleted;
+
+    /**
+     * M??? - oppdatertDato (xs:dateTime)
+     */
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    @DateTimeFormat(iso = DATE_TIME)
+    private ZonedDateTime lastModifiedDate;
+
+    /**
+     * M??? - oppdatertAv (xs:string)
+     */
+    @LastModifiedBy
+    @Column(name = "last_modified_by")
+    private String lastModifiedBy;
 
     @Override
     public String getSystemId() {
@@ -105,6 +127,16 @@ public class MetadataSuperClassBase implements INikitaEntity, Comparable<Metadat
     @Override
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    @Override
+    public ZonedDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    @Override
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
     }
 
     @Override

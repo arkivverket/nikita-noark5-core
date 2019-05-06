@@ -7,11 +7,14 @@ import nikita.common.model.noark5.v4.interfaces.entities.IClassifiedEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
  * Created by tsodring on 4/10/16.
@@ -20,10 +23,12 @@ import java.util.List;
 @Entity
 @Table(name = "classified")
 // Enable soft delete of Classified
-// @SQLDelete(sql="UPDATE classified SET deleted = true WHERE pk_classified_id = ? and version = ?")
+// @SQLDelete(sql="UPZonedDateTime classified SET deleted = true WHERE pk_classified_id = ? and version = ?")
 // @Where(clause="deleted <> true")
 @AttributeOverride(name = "id", column = @Column(name = "pk_classified_id"))
-public class Classified extends NoarkEntity implements IClassifiedEntity {
+public class Classified
+        extends NoarkEntity
+        implements IClassifiedEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,8 +43,9 @@ public class Classified extends NoarkEntity implements IClassifiedEntity {
      * M624 - graderingsdato (xs:dateTime)
      **/
     @Column(name = "classification_date")
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date classificationDate;
+    private ZonedDateTime classificationDate;
 
     /**
      * M629 - gradertAv (xs:string)
@@ -53,7 +59,7 @@ public class Classified extends NoarkEntity implements IClassifiedEntity {
      **/
     @Column(name = "classification_downgraded_date")
     @Audited
-    private Date classificationDowngradedDate;
+    private ZonedDateTime classificationDowngradedDate;
 
     /**
      * M627 - nedgradertAv (xs:string)
@@ -89,11 +95,11 @@ public class Classified extends NoarkEntity implements IClassifiedEntity {
         this.classification = classification;
     }
 
-    public Date getClassificationDate() {
+    public ZonedDateTime getClassificationDate() {
         return classificationDate;
     }
 
-    public void setClassificationDate(Date classificationDate) {
+    public void setClassificationDate(ZonedDateTime classificationDate) {
         this.classificationDate = classificationDate;
     }
 
@@ -105,11 +111,11 @@ public class Classified extends NoarkEntity implements IClassifiedEntity {
         this.classificationBy = classificationBy;
     }
 
-    public Date getClassificationDowngradedDate() {
+    public ZonedDateTime getClassificationDowngradedDate() {
         return classificationDowngradedDate;
     }
 
-    public void setClassificationDowngradedDate(Date classificationDowngradedDate) {
+    public void setClassificationDowngradedDate(ZonedDateTime classificationDowngradedDate) {
         this.classificationDowngradedDate = classificationDowngradedDate;
     }
 

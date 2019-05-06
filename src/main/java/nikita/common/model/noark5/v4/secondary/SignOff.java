@@ -7,11 +7,14 @@ import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePart;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 
 @Entity
@@ -26,8 +29,10 @@ public class SignOff extends NoarkEntity {
      * M617 - avskrivningsdato
      */
     @Column(name = "sign_off_date")
+    @DateTimeFormat(iso = DATE)
+
     @Audited
-    private Date signOffDate;
+    private ZonedDateTime signOffDate;
 
     /**
      * M618 - avskrevetAv
@@ -63,11 +68,11 @@ public class SignOff extends NoarkEntity {
     @ManyToMany(mappedBy = "referenceSignOff")
     private List<RegistryEntry> referenceRecord = new ArrayList<>();
 
-    public Date getSignOffDate() {
+    public ZonedDateTime getSignOffDate() {
         return signOffDate;
     }
 
-    public void setSignOffDate(Date signOffDate) {
+    public void setSignOffDate(ZonedDateTime signOffDate) {
         this.signOffDate = signOffDate;
     }
 

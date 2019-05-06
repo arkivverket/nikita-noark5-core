@@ -6,19 +6,22 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.ZonedDateTime;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
  * Created by tsodring on 5/8/17.
  */
 @MappedSuperclass
-public class NoarkGeneralEntity extends NoarkEntity implements INoarkGeneralEntity {
+public class NoarkGeneralEntity
+        extends NoarkEntity
+        implements INoarkGeneralEntity {
 
     /**
      * M020 - tittel (xs:string)
@@ -26,7 +29,6 @@ public class NoarkGeneralEntity extends NoarkEntity implements INoarkGeneralEnti
     @NotNull
     @Column(name = "title", nullable = false)
     @Audited
-
     @JsonProperty("tittel")
     private String title;
 
@@ -35,7 +37,6 @@ public class NoarkGeneralEntity extends NoarkEntity implements INoarkGeneralEnti
      */
     @Column(name = "description")
     @Audited
-
     private String description;
 
 
@@ -43,9 +44,9 @@ public class NoarkGeneralEntity extends NoarkEntity implements INoarkGeneralEnti
      * M600 - opprettetDato (xs:dateTime)
      */
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date createdDate;
+    private ZonedDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -58,9 +59,9 @@ public class NoarkGeneralEntity extends NoarkEntity implements INoarkGeneralEnti
      * M602 - avsluttetDato (xs:dateTime)
      */
     @Column(name = "finalised_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date finalisedDate;
+    private ZonedDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
@@ -90,12 +91,12 @@ public class NoarkGeneralEntity extends NoarkEntity implements INoarkGeneralEnti
     }
 
     @Override
-    public Date getCreatedDate() {
-        return createdDate;
+    public ZonedDateTime getCreatedDate() {
+        return ZonedDateTime.from(createdDate);
     }
 
     @Override
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -110,12 +111,12 @@ public class NoarkGeneralEntity extends NoarkEntity implements INoarkGeneralEnti
     }
 
     @Override
-    public Date getFinalisedDate() {
+    public ZonedDateTime getFinalisedDate() {
         return finalisedDate;
     }
 
     @Override
-    public void setFinalisedDate(Date finalisedDate) {
+    public void setFinalisedDate(ZonedDateTime finalisedDate) {
         this.finalisedDate = finalisedDate;
     }
 

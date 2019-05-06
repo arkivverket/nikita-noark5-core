@@ -33,7 +33,7 @@ spring:
     name: OsloMet Noark 5 Core (using MySQL)
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/nikita_noark5_prod
+    url: jdbc:mysql://localhost:3306/nikita_noark5_prod?serverTimezone=Europe/Oslo
     username: INSERT-USERNAME-HERE
     password: INSERT-PASSWORD-HERE
   jpa:
@@ -41,12 +41,11 @@ spring:
     database: mysql
     show-sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
     properties:
-      hibernate.hbm2ddl.auto: validate
       hibernate.discriminator.ignore_explicit_for_joined: true
 
   profiles:
@@ -65,7 +64,7 @@ info:
 
 nikita:
   startup:
-    create-demo-users: false # Populate database with some users
+    create-demo-users: true # Populate database with some users
     create-directory-store: true # If not created, attempt to create
     directory-store-name: /data/nikita/storage/ # Where to store documents
     incoming-directory: /data/nikita/storage/incoming/ # Temporary storage area

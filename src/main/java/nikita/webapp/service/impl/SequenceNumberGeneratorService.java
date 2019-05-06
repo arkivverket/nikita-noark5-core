@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 /**
@@ -50,7 +49,7 @@ public class SequenceNumberGeneratorService
      */
     public Integer getNextSequenceNumber(
             AdministrativeUnit administrativeUnit) {
-        Integer currentYear = new GregorianCalendar().get(Calendar.YEAR);
+        Integer currentYear = ZonedDateTime.now().getYear();
 
         Optional<SequenceNumberGenerator> nextSequenceOptional =
                 numberGeneratorRepository

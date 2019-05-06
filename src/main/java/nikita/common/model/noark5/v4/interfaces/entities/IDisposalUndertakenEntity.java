@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v4.interfaces.entities;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * Created by tsodring on 12/7/16.
@@ -11,7 +11,7 @@ public interface IDisposalUndertakenEntity extends Serializable {
 
     void setDisposalBy(String disposalBy);
 
-    Date getDisposalDate();
+    ZonedDateTime getDisposalDate();
 
-    void setDisposalDate(Date disposalDate);
+    void setDisposalDate(ZonedDateTime disposalDate);
 }

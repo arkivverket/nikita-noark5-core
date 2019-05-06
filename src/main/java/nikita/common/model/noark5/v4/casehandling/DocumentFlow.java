@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "document_flow")
@@ -37,14 +37,14 @@ public class DocumentFlow extends NoarkEntity {
      */
     @Column(name = "flow_received_date")
     @Audited
-    private Date flowReceivedDate;
+    private ZonedDateTime flowReceivedDate;
 
     /**
      * M662 flytSendtDato (xs:dateTime)
      */
     @Column(name = "flow_sent_date")
     @Audited
-    private Date flowSentDate;
+    private ZonedDateTime flowSentDate;
 
     /**
      * M663 flytStatus (xs:string)
@@ -81,19 +81,19 @@ public class DocumentFlow extends NoarkEntity {
         this.flowFrom = flowFrom;
     }
 
-    public Date getFlowReceivedDate() {
+    public ZonedDateTime getFlowReceivedDate() {
         return flowReceivedDate;
     }
 
-    public void setFlowReceivedDate(Date flowReceivedDate) {
+    public void setFlowReceivedDate(ZonedDateTime flowReceivedDate) {
         this.flowReceivedDate = flowReceivedDate;
     }
 
-    public Date getFlowSentDate() {
+    public ZonedDateTime getFlowSentDate() {
         return flowSentDate;
     }
 
-    public void setFlowSentDate(Date flowSentDate) {
+    public void setFlowSentDate(ZonedDateTime flowSentDate) {
         this.flowSentDate = flowSentDate;
     }
 

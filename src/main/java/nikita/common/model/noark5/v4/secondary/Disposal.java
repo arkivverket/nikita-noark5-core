@@ -9,8 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,7 +52,7 @@ public class Disposal extends NoarkEntity implements IDisposalEntity {
      */
     @Column(name = "disposal_date")
     @Audited
-    private Date disposalDate;
+    private ZonedDateTime disposalDate;
 
     // Links to Series
     @OneToMany(mappedBy = "referenceDisposal")
@@ -98,11 +98,11 @@ public class Disposal extends NoarkEntity implements IDisposalEntity {
         this.preservationTime = preservationTime;
     }
 
-    public Date getDisposalDate() {
+    public ZonedDateTime getDisposalDate() {
         return disposalDate;
     }
 
-    public void setDisposalDate(Date disposalDate) {
+    public void setDisposalDate(ZonedDateTime disposalDate) {
         this.disposalDate = disposalDate;
     }
 

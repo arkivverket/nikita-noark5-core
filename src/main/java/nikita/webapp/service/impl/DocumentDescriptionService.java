@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -81,10 +81,10 @@ public class DocumentDescriptionService
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
         documentDescription.setSystemId(UUID.randomUUID().toString());
-        documentDescription.setCreatedDate(new Date());
+        documentDescription.setCreatedDate(ZonedDateTime.now());
         documentDescription.setOwnedBy(username);
         documentDescription.setCreatedBy(username);
-        documentDescription.setAssociationDate(new Date());
+        documentDescription.setAssociationDate(ZonedDateTime.now());
         documentDescription.setAssociatedBy(username);
 
         return documentDescriptionRepository.save(documentDescription);

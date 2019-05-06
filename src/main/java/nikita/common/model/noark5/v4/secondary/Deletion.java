@@ -8,11 +8,14 @@ import nikita.common.model.noark5.v4.interfaces.entities.IDeletionEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "deletion")
@@ -42,8 +45,9 @@ public class Deletion extends NoarkEntity implements IDeletionEntity {
      * M613 slettetDato (xs:dateTime)
      */
     @Column(name = "deletion_date")
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private Date deletionDate;
+    private ZonedDateTime deletionDate;
 
     // Links to Series
     @OneToMany(mappedBy = "referenceDeletion")
@@ -69,11 +73,11 @@ public class Deletion extends NoarkEntity implements IDeletionEntity {
         this.deletionBy = deletionBy;
     }
 
-    public Date getDeletionDate() {
+    public ZonedDateTime getDeletionDate() {
         return deletionDate;
     }
 
-    public void setDeletionDate(Date deletionDate) {
+    public void setDeletionDate(ZonedDateTime deletionDate) {
         this.deletionDate = deletionDate;
     }
 

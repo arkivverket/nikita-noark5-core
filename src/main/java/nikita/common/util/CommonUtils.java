@@ -27,12 +27,18 @@ import org.springframework.http.HttpMethod;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
+import static java.time.temporal.ChronoField.HOUR_OF_DAY;
+import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.REFERENCE_ADMINISTRATIVE_UNIT;
@@ -319,20 +325,28 @@ public final class CommonUtils {
 
         public static final class Deserialize {
 
-            public static Date deserializeDate(String fieldname,
+            private final static DateTimeFormatter dateFormatter =
+                    new DateTimeFormatterBuilder()
+                            .append(ISO_DATE)
+                            .parseDefaulting(HOUR_OF_DAY, 0)
+                            .parseDefaulting(MINUTE_OF_HOUR, 0)
+                            .toFormatter();
+
+            public static ZonedDateTime deserializeDate(String fieldname,
                                                ObjectNode objectNode,
                                                StringBuilder errors,
                                                boolean required) {
-                Date d = null;
+                ZonedDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        SimpleDateFormat dateFormat =
-                                new SimpleDateFormat(NOARK_DATE_FORMAT_PATTERN);
-                        d = dateFormat.parse(currentNode.textValue());
-                    } catch (ParseException e) {
-                        errors.append("Malformed " + fieldname + ". Make sure format is " +
-                                NOARK_DATE_FORMAT_PATTERN + ". ");
+                        d = ZonedDateTime.parse(currentNode.textValue(),
+                                dateFormatter);
+                    } catch (DateTimeParseException e) {
+                        errors.append("Malformed ");
+                        errors.append(fieldname);
+                        errors.append(". Make sure format is ");
+                        errors.append(NOARK_TIME_FORMAT_PATTERN + ". ");
                     }
                     objectNode.remove(fieldname);
                 } else if (required) {
@@ -341,26 +355,27 @@ public final class CommonUtils {
                 return d;
             }
 
-            public static Date deserializeDate(String fieldname,
-                                               ObjectNode objectNode,
-                                               StringBuilder errors) {
+            public static ZonedDateTime deserializeDate(String fieldname,
+                                                        ObjectNode objectNode,
+                                                        StringBuilder errors) {
                 return deserializeDate(fieldname, objectNode, errors, false);
             }
 
-            public static Date deserializeDateTime(String fieldname,
-                                                   ObjectNode objectNode,
-                                                   StringBuilder errors,
-                                                   boolean required) {
-                Date d = null;
+            public static ZonedDateTime deserializeDateTime(String fieldname,
+                                                            ObjectNode objectNode,
+                                                            StringBuilder errors,
+                                                            boolean required) {
+                ZonedDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        SimpleDateFormat dateFormat =
-                                new SimpleDateFormat(NOARK_DATE_TIME_FORMAT_PATTERN);
-                        d = dateFormat.parse(currentNode.textValue());
-                    } catch (ParseException e) {
-                        errors.append("Malformed " + fieldname + ". Make sure format is " +
-                                NOARK_DATE_TIME_FORMAT_PATTERN + ". ");
+                        d = ZonedDateTime.parse(currentNode.textValue(),
+                                ISO_DATE_TIME);
+                    } catch (DateTimeParseException e) {
+                        errors.append("Malformed ");
+                        errors.append(fieldname);
+                        errors.append(". Make sure format is ");
+                        errors.append(NOARK_DATE_TIME_FORMAT_PATTERN + ". ");
                     }
                     objectNode.remove(fieldname);
                 } else if (required) {
@@ -369,9 +384,9 @@ public final class CommonUtils {
                 return d;
             }
 
-            public static Date deserializeDateTime(String fieldname,
-                                                   ObjectNode objectNode,
-                                                   StringBuilder errors) {
+            public static ZonedDateTime deserializeDateTime(String fieldname,
+                                                            ObjectNode objectNode,
+                                                            StringBuilder errors) {
                 return deserializeDateTime(fieldname, objectNode, errors, false);
             }
 
@@ -1299,14 +1314,12 @@ public final class CommonUtils {
         }
 
         public static final class Serialize {
-            public static String formatDate(Date value) {
-                SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(NOARK_DATE_FORMAT_PATTERN);
-                return DATE_FORMAT.format(value);
+            public static String formatDate(ZonedDateTime value) {
+                return value.format(ISO_DATE);
             }
 
-            public static String formatDateTime(Date value) {
-                SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat(NOARK_DATE_TIME_FORMAT_PATTERN);
-                return DATE_TIME_FORMAT.format(value);
+            public static String formatDateTime(ZonedDateTime value) {
+                return value.format(ISO_DATE_TIME);
             }
 
             public static void printTitleAndDescription(JsonGenerator jgen,

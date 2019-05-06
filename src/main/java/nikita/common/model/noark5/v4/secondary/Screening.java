@@ -7,11 +7,14 @@ import nikita.common.model.noark5.v4.interfaces.entities.IScreeningEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
 @Table(name = "screening")
@@ -53,8 +56,9 @@ public class Screening extends NoarkEntity implements IScreeningEntity {
      * M505 - skjermingOpphoererDato n4(JP.AGDATO)
      */
     @Column(name = "screening_expires")
+    @DateTimeFormat(iso = DATE)
     @Audited
-    private Date screeningExpiresDate;
+    private ZonedDateTime screeningExpiresDate;
 
     /**
      * M504 - skjermingsvarighet
@@ -116,11 +120,11 @@ public class Screening extends NoarkEntity implements IScreeningEntity {
         this.screeningDocument = screeningDocument;
     }
 
-    public Date getScreeningExpiresDate() {
+    public ZonedDateTime getScreeningExpiresDate() {
         return screeningExpiresDate;
     }
 
-    public void setScreeningExpiresDate(Date screeningExpiresDate) {
+    public void setScreeningExpiresDate(ZonedDateTime screeningExpiresDate) {
         this.screeningExpiresDate = screeningExpiresDate;
     }
 

@@ -9,8 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -26,7 +26,7 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
      */
     @Column(name = "precedence_date")
     @Audited
-    private Date precedenceDate;
+    private ZonedDateTime precedenceDate;
 
     /**
      * M311 - presedensHjemmel (xs:string)
@@ -47,7 +47,7 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
      */
     @Column(name = "precedence_approved_date")
     @Audited
-    private Date precedenceApprovedDate;
+    private ZonedDateTime precedenceApprovedDate;
 
     /**
      * M629 - presedensGodkjentAv (xs:string)
@@ -72,11 +72,11 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
 
-    public Date getPrecedenceDate() {
+    public ZonedDateTime getPrecedenceDate() {
         return precedenceDate;
     }
 
-    public void setPrecedenceDate(Date precedenceDate) {
+    public void setPrecedenceDate(ZonedDateTime precedenceDate) {
         this.precedenceDate = precedenceDate;
     }
 
@@ -96,11 +96,11 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
         this.sourceOfLaw = sourceOfLaw;
     }
 
-    public Date getPrecedenceApprovedDate() {
+    public ZonedDateTime getPrecedenceApprovedDate() {
         return precedenceApprovedDate;
     }
 
-    public void setPrecedenceApprovedDate(Date precedenceApprovedDate) {
+    public void setPrecedenceApprovedDate(ZonedDateTime precedenceApprovedDate) {
         this.precedenceApprovedDate = precedenceApprovedDate;
     }
 

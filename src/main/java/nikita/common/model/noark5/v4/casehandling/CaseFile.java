@@ -14,16 +14,18 @@ import nikita.common.util.deserialisers.casehandling.CaseFileDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.JOIN_CASE_FILE_STATUS;
 import static nikita.common.config.Constants.PRIMARY_KEY_CASE_FILE_STATUS;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 
 // TODO: You are missing M209 referanseSekundaerKlassifikasjon
@@ -60,9 +62,9 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
      */
     @NotNull
     @Column(name = "case_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-    private Date caseDate;
+    private ZonedDateTime caseDate;
 
     /**
      * M306 - saksansvarlig (xs:string)
@@ -92,9 +94,9 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
      * M106 - utlaantDato (xs:date)
      */
     @Column(name = "loaned_date")
-    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DATE)
     @Audited
-    private Date loanedDate;
+    private ZonedDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
@@ -162,11 +164,11 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
         this.caseSequenceNumber = caseSequenceNumber;
     }
 
-    public Date getCaseDate() {
+    public ZonedDateTime getCaseDate() {
         return caseDate;
     }
 
-    public void setCaseDate(Date caseDate) {
+    public void setCaseDate(ZonedDateTime caseDate) {
         this.caseDate = caseDate;
     }
 
@@ -194,11 +196,11 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
         this.caseStatus = caseStatus;
     }
 
-    public Date getLoanedDate() {
+    public ZonedDateTime getLoanedDate() {
         return loanedDate;
     }
 
-    public void setLoanedDate(Date loanedDate) {
+    public void setLoanedDate(ZonedDateTime loanedDate) {
         this.loanedDate = loanedDate;
     }
 

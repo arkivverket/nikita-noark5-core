@@ -14,13 +14,15 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "record")
@@ -31,40 +33,38 @@ import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
 //@Indexed(index = "record")
 @JsonDeserialize(using = RecordDeserializer.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_record_id"))
-public class Record extends NoarkEntity implements INoarkCreateEntity, IClassified, IScreening, IDisposal {
+public class Record
+        extends NoarkEntity
+        implements INoarkCreateEntity, IClassified, IScreening, IDisposal {
 
     /**
      * M600 - opprettetDato (xs:dateTime)
      */
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-
-    private Date createdDate;
+    private ZonedDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
      */
     @Column(name = "created_by")
     @Audited
-
     private String createdBy;
 
     /**
      * M604 - arkivertDato (xs:dateTime)
      */
     @Column(name = "archived_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
-
-    private Date archivedDate;
+    private ZonedDateTime archivedDate;
 
     /**
      * M605 - arkivertAv (xs:string)
      */
     @Column(name = "archived_by")
     @Audited
-
     private String archivedBy;
 
     // Link to File
@@ -109,11 +109,11 @@ public class Record extends NoarkEntity implements INoarkCreateEntity, IClassifi
     @JoinColumn(name = "record_screening_id", referencedColumnName = "pk_screening_id")
     private Screening referenceScreening;
 
-    public Date getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -125,11 +125,11 @@ public class Record extends NoarkEntity implements INoarkCreateEntity, IClassifi
         this.createdBy = createdBy;
     }
 
-    public Date getArchivedDate() {
+    public ZonedDateTime getArchivedDate() {
         return archivedDate;
     }
 
-    public void setArchivedDate(Date archivedDate) {
+    public void setArchivedDate(ZonedDateTime archivedDate) {
         this.archivedDate = archivedDate;
     }
 

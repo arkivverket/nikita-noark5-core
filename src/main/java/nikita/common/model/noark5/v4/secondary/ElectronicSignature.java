@@ -8,11 +8,13 @@ import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
 @Table(name = "electronic_signature")
@@ -40,8 +42,9 @@ public class ElectronicSignature extends NoarkEntity {
      * M622 - verifisertDato (xs:date)
      */
     @Column(name = "verified_date")
+    @DateTimeFormat(iso = DATE)
     @Audited
-    private Date verifiedDate;
+    private ZonedDateTime verifiedDate;
 
     /**
      * M623 - verifisertAv (xs:string)
@@ -81,11 +84,11 @@ public class ElectronicSignature extends NoarkEntity {
         this.electronicSignatureVerified = electronicSignatureVerified;
     }
 
-    public Date getVerifiedDate() {
+    public ZonedDateTime getVerifiedDate() {
         return verifiedDate;
     }
 
-    public void setVerifiedDate(Date verifiedDate) {
+    public void setVerifiedDate(ZonedDateTime verifiedDate) {
         this.verifiedDate = verifiedDate;
     }
 

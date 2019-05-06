@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v4.interfaces.entities;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 public interface INikitaEntity extends Serializable {
     Long getId();
@@ -40,6 +41,7 @@ public interface INikitaEntity extends Serializable {
      */
     String getFunctionalTypeName();
 
-    //boolean validateForUpdate(String description);
-    //boolean validateForCreate(String description);
+    ZonedDateTime getLastModifiedDate();
+
+    String getLastModifiedBy();
 }
