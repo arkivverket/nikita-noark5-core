@@ -38,16 +38,17 @@ public class FileHateoasSerializer extends HateoasSerializer implements IHateoas
         CommonUtils.Hateoas.Serialize.printStorageLocation(jgen, file);
         if (file.getFileId() != null) {
             jgen.writeStringField(FILE_ID, file.getFileId());
-            if (file.getTitle() != null) {
-                jgen.writeStringField(TITLE, file.getTitle());
-            }
-            if (file.getOfficialTitle() != null) {
-                jgen.writeStringField(FILE_PUBLIC_TITLE, file.getOfficialTitle());
-            }
-            if (file.getDescription() != null) {
-                jgen.writeStringField(DESCRIPTION, file.getDescription());
-            }
         }
+        if (file.getTitle() != null) {
+            jgen.writeStringField(TITLE, file.getTitle());
+        }
+        if (file.getOfficialTitle() != null) {
+            jgen.writeStringField(FILE_PUBLIC_TITLE, file.getOfficialTitle());
+        }
+        if (file.getDescription() != null) {
+            jgen.writeStringField(DESCRIPTION, file.getDescription());
+        }
+
         CommonUtils.Hateoas.Serialize.printDocumentMedium(jgen, file);
         CommonUtils.Hateoas.Serialize.printKeyword(jgen, file);
         CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, file);
