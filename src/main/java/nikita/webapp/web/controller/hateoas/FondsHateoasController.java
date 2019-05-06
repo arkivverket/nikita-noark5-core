@@ -30,15 +30,6 @@ import static org.springframework.http.HttpHeaders.ETAG;
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH +
         NOARK_FONDS_STRUCTURE_PATH + SLASH, produces =
         {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
-// Note we are seeing intellij report bugs that contents in the PathVarible
-// cannot be found in the RequestMapping.
-//     https://youtrack.jetbrains.com/issue/IDEA-100240
-// We are seeing similar false positives on bean inspection.
-@SuppressWarnings({"MVCPathVariableInspection",
-        "SpringJavaAutowiringInspection", "unchecked"})
-// Ideally I do not want IDE related stuff in the code and think we can
-// remove it later. For now it's handy as it helps me to keep track of potential
-// issues.
 public class FondsHateoasController extends NoarkController {
 
     private IFondsService fondsService;
