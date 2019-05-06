@@ -94,13 +94,11 @@ public class RecordService
         return recordRepository.save(record);
     }
 
-
     public DocumentDescriptionHateoas
     createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription) {
 
         Record record = getRecordOrThrow(systemID);
-
 
         // Adding 1 as documentNumber starts at 1, not 0
         Long documentNumber =
@@ -109,7 +107,6 @@ public class RecordService
         documentDescription.setDocumentNumber(documentNumber.intValue());
         record.addReferenceDocumentDescription(documentDescription);
         documentDescription.addReferenceRecord(record);
-
         documentDescription.setDocumentNumber(documentNumber.intValue());
 
         DocumentDescriptionHateoas documentDescriptionHateoas =
@@ -127,7 +124,6 @@ public class RecordService
     public List<Record> findAll() {
         return recordRepository.findAll();
     }
-
 
     // id
     public Optional<Record> findById(Long id) {
