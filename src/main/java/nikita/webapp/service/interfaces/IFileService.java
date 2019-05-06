@@ -38,4 +38,6 @@ public interface IFileService {
 
     // -- All DELETE operations
     void deleteEntity(@NotNull String systemId);
+
+    FileHateoas generateDefaultFile();
 }

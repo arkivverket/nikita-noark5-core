@@ -12,8 +12,8 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
+import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
-import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -41,10 +41,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
         "entities that can be associated with a series e.g. File / ClassificationSystem. Update and delete operations" +
         " are on individual series entities identified by systemId. Read operations are either on individual series" +
         "entities or pageable iterable sets of series")
-public class SeriesHateoasController extends NoarkController {
+public class SeriesHateoasController
+        extends NoarkController {
 
     private ISeriesService seriesService;
     private ICaseFileService caseFileService;
+    private IFileService fileService;
     private IFondsHateoasHandler fondsHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
@@ -59,7 +61,7 @@ public class SeriesHateoasController extends NoarkController {
                                    IRecordHateoasHandler recordHateoasHandler,
                                    ICaseFileHateoasHandler caseFileHateoasHandler,
                                    IFileHateoasHandler fileHateoasHandler,
-                                   ICaseStatusService caseStatusService,
+                                   IFileService fileService,
                                    ApplicationEventPublisher applicationEventPublisher) {
 
         this.seriesService = seriesService;
@@ -69,6 +71,7 @@ public class SeriesHateoasController extends NoarkController {
         this.recordHateoasHandler = recordHateoasHandler;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
+        this.fileService = fileService;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -442,13 +445,6 @@ public class SeriesHateoasController extends NoarkController {
                 .body(seriesHateoas);
     }
 
-    private File setFileDefaults(File defaultFile)
-    {
-        defaultFile.setFileId("2017/01");
-        defaultFile.setDocumentMedium(DOCUMENT_MEDIUM_ELECTRONIC);
-        return defaultFile;
-    }
-
     // Create a File object with default values
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-mappe/
     @ApiOperation(value = "Create a File with default values", response = File.class)
@@ -459,19 +455,14 @@ public class SeriesHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FILE,
+    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            RIGHT_PARENTHESIS + SLASH + NEW_FILE,
             method = RequestMethod.GET)
     public ResponseEntity<FileHateoas> createDefaultFile(
             HttpServletRequest request, final HttpServletResponse response) {
-
-        File defaultFile = new File();
-        defaultFile = setFileDefaults(defaultFile);
-        FileHateoas fileHateoas = new
-                FileHateoas(defaultFile);
-        fileHateoasHandler.addLinksOnNew(fileHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fileHateoas);
+                .body(fileService.generateDefaultFile());
     }
 
     // Create a CaseFile object with default values

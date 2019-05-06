@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.Constants.*;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 @Service
@@ -152,6 +152,25 @@ public class FileService
     public void deleteEntity(@NotNull String fileSystemId) {
         File file = getFileOrThrow(fileSystemId);
         fileRepository.delete(file);
+    }
+
+    /**
+     * Generate a Default File object
+     * <br>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @return the File object wrapped as a FileHateoas object
+     */
+    @Override
+    public FileHateoas generateDefaultFile() {
+        File defaultFile = new File();
+        defaultFile.setTitle(TEST_TITLE);
+        defaultFile.setDescription(TEST_DESCRIPTION);
+        FileHateoas fondsHateoas = new FileHateoas(defaultFile);
+        fileHateoasHandler.addLinksOnNew(fondsHateoas, new Authorisation());
+        return fondsHateoas;
     }
 
     // All HELPER operations
