@@ -622,6 +622,7 @@ public final class Constants {
     public static final String TABLE_FONDS = "fonds";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
+
     public static final String TABLE_CASE_FILE_SEQUENCE = "sequence_generator";
     public static final String TABLE_NIKITA_ADMINISTRATIVE_UNIT =
             "nikita_administrative_unit";
@@ -633,6 +634,12 @@ public final class Constants {
     // Join table names
     public static final String TABLE_FONDS_FONDS_CREATOR =
             "fonds_fonds_creator";
+    public static final String TABLE_FILE_STORAGE_LOCATION =
+            "file_storage_location";
+    public static final String TABLE_FILE_KEYWORD =
+            "file_keyword";
+    public static final String TABLE_FILE_COMMENT =
+            "file_comment";
     public static final String TABLE_FONDS_STORAGE_LOCATION =
             "fonds_storage_location";
 
@@ -641,11 +648,18 @@ public final class Constants {
     public static final String FOREIGN_KEY_FONDS_PK = "f_pk_fonds_id";
     public static final String FOREIGN_KEY_FONDS_CREATOR_PK =
             "f_pk_fonds_creator_id";
-    public static final String FOREIGN_KEY_STORAGE_LOCATION_PK = "f_pk_fonds_id";
 
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
             "f_pk_administrative_unit_id";
+
+    public static final String FOREIGN_KEY_KEYWORD_PK =
+            "f_pk_keyword_id";
+    public static final String FOREIGN_KEY_FILE_PK = "f_pk_file_id";
+    public static final String FOREIGN_KEY_COMMENT_PK = "f_pk_comment_id";
+
+    public static final String FOREIGN_KEY_STORAGE_LOCATION_PK =
+            "f_pk_storage_location_id";
 
     public static final String FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK =
             "f_pk_correspondence_part_person_id";
@@ -654,6 +668,12 @@ public final class Constants {
             "administrative_unit_pk_administrative_unit_id";
 
 
+    public static final String FILE_SERIES_ID = "file_series_id";
+    public static final String FILE_CLASS_ID = "file_class_id";
+    public static final String FILE_CLASSIFIED_ID = "file_classified_id";
+    public static final String FILE_SCREENING_ID = "file_screening_id";
+    public static final String FILE_DISPOSAL_ID = "file_disposal_id";
+
     public static final String REFERENCE_ADMINISTRATIVE_UNIT =
             "referenceAdministrativeUnit";
 
@@ -661,8 +681,17 @@ public final class Constants {
     public static final String PRIMARY_KEY_FONDS = "pk_fonds_id";
     public static final String PRIMARY_KEY_FONDS_CREATOR =
             "pk_fonds_creator_id";
+    public static final String PRIMARY_KEY_SERIES = "pk_series_id";
+    public static final String PRIMARY_KEY_CLASS = "pk_class_id";
+    public static final String PRIMARY_KEY_FILE = "pk_file_id";
+    public static final String PRIMARY_KEY_KEYWORD = "pk_keyword_id";
+    public static final String PRIMARY_KEY_COMMENT = "pk_comment_id";
+    public static final String PRIMARY_KEY_CLASSIFIED = "pk_classified_id";
+    public static final String PRIMARY_KEY_DISPOSAL = "pk_disposal_id";
+    public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";
 
     public static final String PRIMARY_KEY_USER = "pk_user_id";
+    public static final String PRIMARY_KEY_STORAGE_LOCATION = "pk_storage_location_id";
     public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
             "pk_administrative_unit_id";
     public static final String PRIMARY_KEY_CORRESPONDENCE_PART_PERSON =

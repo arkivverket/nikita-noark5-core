@@ -15,14 +15,17 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.*;
+
 @Entity
 @Table(name = "file")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonDeserialize(using = FileDeserializer.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_file_id"))
-public class File extends NoarkGeneralEntity implements IDocumentMedium,
-        IStorageLocation, IKeyword, IClassified, IDisposal, IScreening,
-        IComment, ICrossReference {
+@AttributeOverride(name = "id", column = @Column(name = PRIMARY_KEY_FILE))
+public class File
+        extends NoarkGeneralEntity
+        implements IDocumentMedium, IStorageLocation, IKeyword, IClassified,
+        IDisposal, IScreening, IComment, ICrossReference {
     /**
      * M003 - mappeID (xs:string)
      */
@@ -46,20 +49,21 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
 
     // Link to StorageLocation
     @ManyToMany
-    @JoinTable(name = "file_storage_location",
-            joinColumns = @JoinColumn(name = "f_pk_file_id",
-                    referencedColumnName = "pk_file_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_storage_location_id",
-            referencedColumnName = "pk_storage_location_id"))
+    @JoinTable(name = TABLE_FILE_STORAGE_LOCATION,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
+                    referencedColumnName = PRIMARY_KEY_FILE),
+            inverseJoinColumns =
+            @JoinColumn(name = FOREIGN_KEY_STORAGE_LOCATION_PK,
+                    referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
     private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
 
     // Links to Keywords
     @ManyToMany
-    @JoinTable(name = "file_keyword", joinColumns =
-    @JoinColumn(name = "f_pk_file_id",
-            referencedColumnName = "pk_file_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_keyword_id",
-            referencedColumnName = "pk_keyword_id"))
+    @JoinTable(name = TABLE_FILE_KEYWORD, joinColumns =
+    @JoinColumn(name = FOREIGN_KEY_FILE_PK,
+            referencedColumnName = PRIMARY_KEY_FILE),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
+                    referencedColumnName = PRIMARY_KEY_KEYWORD))
     private List<Keyword> referenceKeyword = new ArrayList<>();
 
     // Link to parent File
@@ -72,12 +76,14 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
 
     // Link to Series
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_series_id", referencedColumnName = "pk_series_id")
+    @JoinColumn(name = FILE_SERIES_ID,
+            referencedColumnName = PRIMARY_KEY_SERIES)
     private Series referenceSeries;
 
     // Link to Class
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_class_id", referencedColumnName = "pk_class_id")
+    @JoinColumn(name = FILE_CLASS_ID,
+            referencedColumnName = PRIMARY_KEY_CLASS)
     private Class referenceClass;
 
     // Links to Records
@@ -86,30 +92,30 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
 
     // Links to Comments
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "file_comment",
-            joinColumns = @JoinColumn(name = "f_pk_file_id",
-                    referencedColumnName = "pk_file_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id",
-            referencedColumnName = "pk_comment_id"))
+    @JoinTable(name = TABLE_FILE_COMMENT,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
+                    referencedColumnName = PRIMARY_KEY_FILE),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
+                    referencedColumnName = PRIMARY_KEY_COMMENT))
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Classified
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "file_classified_id",
-            referencedColumnName = "pk_classified_id")
+    @JoinColumn(name = FILE_CLASSIFIED_ID,
+            referencedColumnName = PRIMARY_KEY_CLASSIFIED)
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "file_disposal_id",
-            referencedColumnName = "pk_disposal_id")
+    @JoinColumn(name = FILE_DISPOSAL_ID,
+            referencedColumnName = PRIMARY_KEY_DISPOSAL)
     private Disposal referenceDisposal;
 
     // Link to Screening
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "file_screening_id",
-            referencedColumnName = "pk_screening_id")
+    @JoinColumn(name = FILE_SCREENING_ID,
+            referencedColumnName = PRIMARY_KEY_SCREENING)
     private Screening referenceScreening;
 
     @OneToMany(mappedBy = "referenceFile")
@@ -263,8 +269,10 @@ public class File extends NoarkGeneralEntity implements IDocumentMedium,
             return referenceClass;
         } else if (null != referenceSeries) {
             return referenceSeries;
-        } else { // This should be impossible, a File cannot exist without a parent
-            throw new NoarkEntityNotFoundException("Could not find parent object for " + this.toString());
+        } else { // This should be impossible,
+            // a File cannot exist without a parent
+            throw new NoarkEntityNotFoundException(
+                    "Could not find parent object for " + this.toString());
         }
     }
 
