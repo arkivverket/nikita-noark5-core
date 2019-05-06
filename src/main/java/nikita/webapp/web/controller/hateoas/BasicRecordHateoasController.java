@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
-import nikita.common.model.noark5.v4.*;
 import nikita.common.model.noark5.v4.Class;
+import nikita.common.model.noark5.v4.*;
 import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
@@ -109,7 +109,7 @@ public class BasicRecordHateoasController extends NoarkController {
 
         BasicRecordHateoas basicRecordHateoas = new
                 BasicRecordHateoas((List<INikitaEntity>) (List)
-                basicRecordService.findBasicRecordByOwnerPaginated(top, skip));
+                basicRecordService.findAllBasicRecordByOwner());
         basicRecordHateoasHandler.addLinks(basicRecordHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

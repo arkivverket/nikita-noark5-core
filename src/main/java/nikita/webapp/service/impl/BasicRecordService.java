@@ -38,8 +38,7 @@ public class BasicRecordService implements IBasicRecordService {
 
     // All READ operations
     @Override
-    public List<BasicRecord> findBasicRecordByOwnerPaginated(Integer top, Integer skip) {
-
+    public List<BasicRecord> findAllBasicRecordByOwner() {
         String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<BasicRecord> criteriaQuery = criteriaBuilder.createQuery(BasicRecord.class);
@@ -48,8 +47,6 @@ public class BasicRecordService implements IBasicRecordService {
 
         criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), loggedInUser));
         TypedQuery<BasicRecord> typedQuery = entityManager.createQuery(select);
-        typedQuery.setFirstResult(skip);
-        typedQuery.setMaxResults(top);
         return typedQuery.getResultList();
     }
 
