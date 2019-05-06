@@ -39,13 +39,16 @@ public class BasicRecordService implements IBasicRecordService {
     // All READ operations
     @Override
     public List<BasicRecord> findAllBasicRecordByOwner() {
-        String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        String loggedInUser = SecurityContextHolder.getContext().
+                getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<BasicRecord> criteriaQuery = criteriaBuilder.createQuery(BasicRecord.class);
+        CriteriaQuery<BasicRecord> criteriaQuery =
+                criteriaBuilder.createQuery(BasicRecord.class);
         Root<BasicRecord> from = criteriaQuery.from(BasicRecord.class);
         CriteriaQuery<BasicRecord> select = criteriaQuery.select(from);
 
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), loggedInUser));
+        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"),
+                loggedInUser));
         TypedQuery<BasicRecord> typedQuery = entityManager.createQuery(select);
         return typedQuery.getResultList();
     }
@@ -55,10 +58,11 @@ public class BasicRecordService implements IBasicRecordService {
         return getBasicRecordOrThrow(systemId);
     }
 
-
     // All UPDATE operations
     @Override
-    public BasicRecord handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull BasicRecord incomingBasicRecord) {
+    public BasicRecord handleUpdate(@NotNull String systemId,
+                                    @NotNull Long version,
+                                    @NotNull BasicRecord incomingBasicRecord) {
         BasicRecord existingBasicRecord = getBasicRecordOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         if (null != incomingBasicRecord.getDescription()) {
@@ -68,7 +72,8 @@ public class BasicRecordService implements IBasicRecordService {
             existingBasicRecord.setTitle(incomingBasicRecord.getTitle());
         }
         if (null != incomingBasicRecord.getDocumentMedium()) {
-            existingBasicRecord.setDocumentMedium(existingBasicRecord.getDocumentMedium());
+            existingBasicRecord.setDocumentMedium(
+                    existingBasicRecord.getDocumentMedium());
         }        existingBasicRecord.setVersion(version);
         basicRecordRepository.save(existingBasicRecord);
         return existingBasicRecord;
