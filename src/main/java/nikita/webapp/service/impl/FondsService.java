@@ -42,7 +42,8 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 @Service
 @Transactional
 @SuppressWarnings("unchecked")
-public class FondsService implements IFondsService {
+public class FondsService
+        implements IFondsService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(FondsService.class);
@@ -337,7 +338,7 @@ public class FondsService implements IFondsService {
     }
 
     /**
-     * Generate a Default Fonds object that can be associated with the
+     * Generate a Default Series object that can be associated with the
      * identified Fonds.
      * <br>
      * Note. Ideally this method would be configurable based on the logged in
@@ -350,7 +351,6 @@ public class FondsService implements IFondsService {
      */
     @Override
     public SeriesHateoas generateDefaultSeries(@NotNull String fondsSystemId) {
-
         Series defaultSeries = new Series();
         defaultSeries.setSeriesStatus(STATUS_OPEN);
         defaultSeries.setDocumentMedium(DOCUMENT_MEDIUM_ELECTRONIC);
@@ -379,9 +379,7 @@ public class FondsService implements IFondsService {
      */
     @Override
     public FondsHateoas generateDefaultFonds(String fondsSystemId) {
-
         Fonds defaultFonds = new Fonds();
-
         defaultFonds.setTitle(TEST_TITLE);
         defaultFonds.setDescription(TEST_DESCRIPTION);
         defaultFonds.setDocumentMedium(DOCUMENT_MEDIUM_ELECTRONIC);
