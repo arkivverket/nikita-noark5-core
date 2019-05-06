@@ -101,13 +101,13 @@ public class RecordService
         Record record = getRecordOrThrow(systemID);
 
         // Adding 1 as documentNumber starts at 1, not 0
-        Long documentNumber =
+        long documentNumber =
                 documentDescriptionRepository.
                         countByReferenceRecord(record) + 1;
-        documentDescription.setDocumentNumber(documentNumber.intValue());
+        documentDescription.setDocumentNumber((int) documentNumber);
         record.addReferenceDocumentDescription(documentDescription);
         documentDescription.addReferenceRecord(record);
-        documentDescription.setDocumentNumber(documentNumber.intValue());
+        documentDescription.setDocumentNumber((int) documentNumber);
 
         DocumentDescriptionHateoas documentDescriptionHateoas =
                 new DocumentDescriptionHateoas(
