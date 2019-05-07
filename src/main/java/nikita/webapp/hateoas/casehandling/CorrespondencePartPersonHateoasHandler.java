@@ -13,10 +13,8 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
 /**
  * Created by tsodring on 2/6/17.
  * <p>
- * Used to add CorrespondencePartHateoas links with CorrespondencePart specific information
- * <p>
- * Not sure if there is a difference in what should be returned of links for various CRUD operations so keeping them
- * separate calls at the moment.
+ * Used to add CorrespondencePartHateoas links with CorrespondencePart
+ * specific information
  */
 @Component("correspondencePartPersonHateoasHandler")
 public class CorrespondencePartPersonHateoasHandler
@@ -33,8 +31,6 @@ public class CorrespondencePartPersonHateoasHandler
     @Override
     public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject
             hateoasNoarkObject) {
-
-
     }
 
     @Override

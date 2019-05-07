@@ -13,29 +13,32 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
 /**
  * Created by tsodring on 2/6/17.
  * <p>
- * Used to add CorrespondencePartHateoas links with CorrespondencePart specific information
- * <p>
- * Not sure if there is a difference in what should be returned of links for various CRUD operations so keeping them
- * separate calls at the moment.
+ * Used to add CorrespondencePartHateoas links with CorrespondencePart
+ * specific information
  */
 @Component("correspondencePartUnitHateoasHandler")
-public class CorrespondencePartUnitHateoasHandler extends HateoasHandler implements ICorrespondencePartHateoasHandler {
+public class CorrespondencePartUnitHateoasHandler
+        extends HateoasHandler
+        implements ICorrespondencePartHateoasHandler {
 
     @Override
-    public void addEntityLinksOnNew(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinksOnNew(INikitaEntity entity,
+                                    IHateoasNoarkObject hateoasNoarkObject) {
         addCorrespondencePartType(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinksOnTemplate(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         addCorrespondencePartType(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addCorrespondencePartType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addCorrespondencePartType(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(contextPath +
-                HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH + CORRESPONDENCE_PART_TYPE,
-                REL_METADATA_CORRESPONDENCE_PART_TYPE,
+                HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH +
+                CORRESPONDENCE_PART_TYPE, REL_METADATA_CORRESPONDENCE_PART_TYPE,
                 false));
     }
 
