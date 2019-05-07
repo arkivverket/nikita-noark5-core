@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.BasicRecord;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v4.interfaces.IDocumentFlow;
@@ -24,18 +25,13 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK;
-import static nikita.common.config.Constants.PRIMARY_KEY_CORRESPONDENCE_PART;
+import static nikita.common.config.Constants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "registry_entry")
 @Inheritance(strategy = InheritanceType.JOINED)
-// Enable soft delete of RegistryEntry
-// @SQLDelete(sql="UPDATE registry_entry SET deleted = true WHERE pk_record_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-//@Indexed(index = "registry_entry")
 @JsonDeserialize(using = RegistryEntryDeserializer.class)
 public class RegistryEntry
         extends BasicRecord implements
@@ -180,17 +176,16 @@ public class RegistryEntry
     private List<CorrespondencePartUnit>
             referenceCorrespondencePartUnit = new ArrayList<>();
 
-    /*
-
     // Links to CorrespondencePartInternal
     @ManyToMany
-    @JoinTable(name = "registry_entry_correspondence_part_internal",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_correspondence_part_internal_id",
-                    referencedColumnName = "pk_correspondence_part_id"))
-    private List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal> referenceCorrespondencePartInternal = new ArrayList<>();
-*/
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_RECORD),
+            inverseJoinColumns =
+            @JoinColumn(name = FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID,
+                    referencedColumnName = PRIMARY_KEY_CORRESPONDENCE_PART))
+    private List<CorrespondencePartInternal>
+            referenceCorrespondencePartInternal = new ArrayList<>();
 
     // Links to DocumentFlow
     @OneToMany(mappedBy = "referenceRegistryEntry")
@@ -389,16 +384,18 @@ public class RegistryEntry
                 correspondencePartUnit);
     }
 
-    /*
-        public List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal> getReferenceCorrespondencePartInternal() {
-            return referenceCorrespondencePartInternal;
-        }
+    public List<CorrespondencePartInternal>
+    getReferenceCorrespondencePartInternal() {
+        return referenceCorrespondencePartInternal;
+    }
 
-        public void setReferenceCorrespondencePartInternal(List<nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal> referenceCorrespondencePartInternal) {
-            this.referenceCorrespondencePartInternal = referenceCorrespondencePartInternal;
-        }
+    public void setReferenceCorrespondencePartInternal(
+            List<CorrespondencePartInternal>
+                    referenceCorrespondencePartInternal) {
+        this.referenceCorrespondencePartInternal =
+                referenceCorrespondencePartInternal;
+    }
 
-    */
     public List<SignOff> getReferenceSignOff() {
         return referenceSignOff;
     }
