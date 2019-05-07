@@ -1,4 +1,4 @@
-package nikita.webapp.handlers.hateoas.casehandling;
+package nikita.webapp.hateoas.casehandling;
 
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
