@@ -1,9 +1,13 @@
 package nikita.webapp.service.interfaces.secondary;
 
+import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartPersonHateoas;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartUnitHateoas;
 
 import javax.validation.constraints.NotNull;
 
@@ -21,21 +25,32 @@ public interface ICorrespondencePartService {
             @NotNull String systemId, @NotNull Long version,
             @NotNull CorrespondencePartInternal incomingCorrespondencePart);
 
-    CorrespondencePartUnit createNewCorrespondencePartUnit(
-            @NotNull CorrespondencePartUnit correspondencePartUnit);
+    CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
+            @NotNull CorrespondencePartUnit correspondencePartUnit,
+            @NotNull RegistryEntry registryEntry);
 
-    CorrespondencePartInternal createNewCorrespondencePartInternal(
-            @NotNull CorrespondencePartInternal correspondencePartUnit);
+    CorrespondencePartInternalHateoas createNewCorrespondencePartInternal(
+            @NotNull CorrespondencePartInternal correspondencePartUnit,
+            @NotNull RegistryEntry registryEntry);
 
-    CorrespondencePartPerson createNewCorrespondencePartPerson(
-            @NotNull CorrespondencePartPerson correspondencePartPerson);
+    CorrespondencePartPersonHateoas createNewCorrespondencePartPerson(
+            @NotNull CorrespondencePartPerson correspondencePartPerson,
+            @NotNull RegistryEntry registryEntry);
 
     CorrespondencePart findBySystemId(@NotNull String systemID);
 
-    void deleteCorrespondencePartUnit(@NotNull String code);
+    void deleteCorrespondencePartUnit(@NotNull String systemID);
 
-    void deleteCorrespondencePartPerson(@NotNull String code);
+    void deleteCorrespondencePartPerson(@NotNull String systemID);
 
-    void deleteCorrespondencePartInternal(@NotNull String code);
+    void deleteCorrespondencePartInternal(@NotNull String systemID);
 
+    CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
+            String registryEntrySystemId);
+
+    CorrespondencePartPersonHateoas generateDefaultCorrespondencePartPerson(
+            String registryEntrySystemId);
+
+    CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
+            String registryEntrySystemId);
 }

@@ -10,21 +10,20 @@ import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.casehandling.DocumentFlow;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.secondary.*;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v4.hateoas.casehandling.*;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.model.noark5.v4.secondary.SignOff;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
-import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
+import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -38,7 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
@@ -50,22 +48,20 @@ import static org.springframework.http.HttpStatus.OK;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 public class RegistryEntryHateoasController extends NoarkController {
 
-    ICorrespondencePartTypeService correspondencePartTypeService;
-    private IRegistryEntryService registryEntryService;
-    private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
-    private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
+    private final IRegistryEntryService registryEntryService;
+    private final IRegistryEntryHateoasHandler registryEntryHateoasHandler;
+    private final ICorrespondencePartService correspondencePartService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public RegistryEntryHateoasController(IRegistryEntryService registryEntryService,
-                                          IRegistryEntryHateoasHandler registryEntryHateoasHandler,
-                                          ApplicationEventPublisher applicationEventPublisher,
-                                          ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
-                                          ICorrespondencePartTypeService correspondencePartTypeService) {
+    public RegistryEntryHateoasController(
+            IRegistryEntryService registryEntryService,
+            IRegistryEntryHateoasHandler registryEntryHateoasHandler,
+            ICorrespondencePartService correspondencePartService,
+            ApplicationEventPublisher applicationEventPublisher) {
         this.registryEntryService = registryEntryService;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
+        this.correspondencePartService = correspondencePartService;
         this.applicationEventPublisher = applicationEventPublisher;
-        this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
-        this.correspondencePartTypeService = correspondencePartTypeService;
     }
 
     // API - All POST Requests (CRUD - CREATE)
@@ -100,21 +96,17 @@ public class RegistryEntryHateoasController extends NoarkController {
             @ApiParam(name = "CorrespondencePartPerson",
                     value = "Incoming CorrespondencePartPerson object",
                     required = true)
-            @RequestBody CorrespondencePartPerson CorrespondencePartPerson)
+            @RequestBody CorrespondencePartPerson correspondencePartPerson)
             throws NikitaException {
 
-        CorrespondencePartPerson createdCorrespondencePartPerson =
+        CorrespondencePartPersonHateoas createdCorrespondencePartPerson =
                 registryEntryService.
                         createCorrespondencePartPersonAssociatedWithRegistryEntry(
-                                systemID, CorrespondencePartPerson);
-        CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
-                new CorrespondencePartPersonHateoas(createdCorrespondencePartPerson);
-        correspondencePartHateoasHandler.addLinks(correspondencePartPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdCorrespondencePartPerson));
+                                systemID, correspondencePartPerson);
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdCorrespondencePartPerson.getVersion().toString())
-                .body(correspondencePartPersonHateoas);
+                .eTag(createdCorrespondencePartPerson.getEntityVersion().toString())
+                .body(createdCorrespondencePartPerson);
     }
 
     // Create a new CorrespondencePartInternal and associate it with the given journalpost
@@ -146,25 +138,17 @@ public class RegistryEntryHateoasController extends NoarkController {
             @ApiParam(name = "CorrespondencePartInternal",
                     value = "Incoming CorrespondencePartInternal object",
                     required = true)
-            @RequestBody CorrespondencePartInternal CorrespondencePartInternal)
+            @RequestBody CorrespondencePartInternal correspondencePartInternal)
             throws NikitaException {
 
-        /*
-
-        TODO: Temp disabled!
-
-        CorrespondencePartInternal createdCorrespondencePartInternal =
-                registryEntryService.createCorrespondencePartInternalAssociatedWithRegistryEntry(systemID, CorrespondencePartInternal);
         CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
-                new CorrespondencePartInternalHateoas(createdCorrespondencePartInternal);
-        correspondencePartHateoasHandler.addLinks(correspondencePartInternalHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdCorrespondencePartInternal));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdCorrespondencePartInternal.getVersion().toString())
+                registryEntryService.
+                        createCorrespondencePartInternalAssociatedWithRegistryEntry(
+                                systemID, correspondencePartInternal);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(correspondencePartInternalHateoas.getEntityVersion().toString())
                 .body(correspondencePartInternalHateoas);
-                */
-        return null;
     }
 
     // Create a new CorrespondencePartUnit and associate it with the given journalpost
@@ -363,21 +347,19 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
             CORRESPONDENCE_PART_PERSON, method = RequestMethod.GET)
-    public ResponseEntity<CorrespondencePartPersonHateoas> findAllCorrespondencePartPersonAssociatedWithRecord(
+    public ResponseEntity<CorrespondencePartPersonHateoas>
+    findAllCorrespondencePartPersonAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve associated Record",
                     required = true)
             @PathVariable("systemID") final String systemID) {
 
-        List<CorrespondencePartPerson> correspondencePartPerson =
-                registryEntryService.getCorrespondencePartPersonAssociatedWithRegistryEntry(systemID);
-        CorrespondencePartPersonHateoas correspondencePartHateoas =
-                new CorrespondencePartPersonHateoas((List<INikitaEntity>) (List) correspondencePartPerson);
-        correspondencePartHateoasHandler.addLinks(correspondencePartHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(correspondencePartHateoas);
+                .body(registryEntryService.
+                        getCorrespondencePartPersonAssociatedWithRegistryEntry(
+                                systemID));
     }
 
     // Retrieve all CorrespondencePartUnit associated with a RegistryEntry identified by systemId
@@ -395,21 +377,18 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
             CORRESPONDENCE_PART_UNIT, method = RequestMethod.GET)
-    public ResponseEntity<CorrespondencePartUnitHateoas> findAllCorrespondencePartUnitAssociatedWithRecord(
+    public ResponseEntity<CorrespondencePartUnitHateoas>
+    findAllCorrespondencePartUnitAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve associated Record",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        List<CorrespondencePartUnit> correspondencePartUnit =
-                registryEntryService.getCorrespondencePartUnitAssociatedWithRegistryEntry(systemID);
-        CorrespondencePartUnitHateoas correspondencePartHateoas =
-                new CorrespondencePartUnitHateoas((List<INikitaEntity>) (List) correspondencePartUnit);
-        correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(correspondencePartHateoas);
-
+                .body(registryEntryService.
+                        getCorrespondencePartUnitAssociatedWithRegistryEntry(
+                                systemID));
     }
 
     // Retrieve all CorrespondencePartInternal associated with a RegistryEntry identified by systemId
@@ -460,65 +439,19 @@ TODO: Temp disabled!
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @RequestMapping(method = RequestMethod.GET, value = {SLASH + LEFT_PARENTHESIS +
             SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_PERSON})
-    public ResponseEntity<CorrespondencePartPersonHateoas> getCorrespondencePartPersonTemplate(
-            HttpServletRequest request
-    ) throws NikitaException {
-        CorrespondencePartPerson suggestedCorrespondencePart = new CorrespondencePartPerson();
-
-        CorrespondencePartType correspondencePartType =
-                correspondencePartTypeService.findByCode(CORRESPONDENCE_PART_CODE_EA);
-        if (correspondencePartType == null) {
-            throw new NikitaException("Internal error, metadata missing. [" +
-                    CORRESPONDENCE_PART_CODE_EA + "] returns no value");
-        }
-        suggestedCorrespondencePart.setCorrespondencePartType(correspondencePartType);
-
-        PostalAddress postalAddress = new PostalAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressType(POSTAL_ADDRESS);
-        simpleAddress.setAddressLine1("ADRL1: 742 Evergreen Terrace");
-        simpleAddress.setAddressLine2("ADRL2: 742 Evergreen Terrace");
-        simpleAddress.setAddressLine3("ADRL3: 742 Evergreen Terrace");
-        simpleAddress.setCountryCode("US");
-        simpleAddress.setPostalNumber(new PostalNumber("12345"));
-        simpleAddress.setPostalTown("Springfield");
-        postalAddress.setSimpleAddress(simpleAddress);
-        suggestedCorrespondencePart.setPostalAddress(postalAddress);
-
-        ResidingAddress residingAddress = new ResidingAddress();
-        simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressType(RESIDING_ADDRESS);
-        simpleAddress.setAddressLine1("ADRL1: 743 Evergreen Terrace");
-        simpleAddress.setAddressLine2("ADRL2: 743 Evergreen Terrace");
-        simpleAddress.setAddressLine3("ADRL3: 743 Evergreen Terrace");
-        simpleAddress.setCountryCode("US");
-        simpleAddress.setPostalNumber(new PostalNumber("12345"));
-        simpleAddress.setPostalTown("Springfield");
-        residingAddress.setSimpleAddress(simpleAddress);
-        residingAddress.setCorrespondencePartPerson(suggestedCorrespondencePart);
-        suggestedCorrespondencePart.setResidingAddress(residingAddress);
-        suggestedCorrespondencePart.setSocialSecurityNumber("09088512345");
-        suggestedCorrespondencePart.setdNumber("dddddd1234");
-
-        ContactInformation contactInformation = new ContactInformation();
-        contactInformation.setEmailAddress("nikita@example.com");
-        contactInformation.setMobileTelephoneNumber("123456789");
-        contactInformation.setTelephoneNumber("987654321");
-        suggestedCorrespondencePart.setContactInformation(contactInformation);
-
-        suggestedCorrespondencePart.setName("Frank Grimes");
-        suggestedCorrespondencePart.setSocialSecurityNumber("02029212743");
-        suggestedCorrespondencePart.setdNumber("d-02029212743");
-
-        CorrespondencePartPersonHateoas correspondencePartHateoas =
-                new CorrespondencePartPersonHateoas(suggestedCorrespondencePart);
-        correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation());
+    public ResponseEntity<CorrespondencePartPersonHateoas>
+    getCorrespondencePartPersonTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated Record",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(correspondencePartHateoas);
+                .body(registryEntryService.
+                        generateDefaultCorrespondencePartPerson(systemID));
     }
 
     // Create a suggested CorrespondencePartUnit (like a template) object with default values (nothing persisted)
@@ -537,12 +470,15 @@ TODO: Temp disabled!
     @RequestMapping(method = RequestMethod.GET, value = {SLASH + LEFT_PARENTHESIS +
             SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_UNIT})
     public ResponseEntity<CorrespondencePartUnitHateoas> getCorrespondencePartUnitTemplate(
-            HttpServletRequest request
-    ) throws NikitaException {
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of record to associate the CorrespondencePartPerson with.",
+                    required = true)
+            @PathVariable("systemID") String systemID) throws NikitaException {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.
-                        generateDefaultCorrespondencePartUnit(null));
+                        generateDefaultCorrespondencePartUnit(systemID));
     }
 
     // Create a suggested CorrespondencePartInternal (like a template) object with default values (nothing persisted)
@@ -557,29 +493,19 @@ TODO: Temp disabled!
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @RequestMapping(method = RequestMethod.GET, value = {SLASH + LEFT_PARENTHESIS +
             SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_INTERNAL})
-    public ResponseEntity<String> getCorrespondencePartInternalTemplate(
-            HttpServletRequest request
-    ) throws NikitaException {
-        CorrespondencePartInternal suggestedCorrespondencePart = new CorrespondencePartInternal();
-
-        CorrespondencePartType correspondencePartType =
-                correspondencePartTypeService.findByCode(CORRESPONDENCE_PART_CODE_EA);
-        if (correspondencePartType == null) {
-            throw new NikitaException("Internal error, metadata missing. [" +
-                    CORRESPONDENCE_PART_CODE_EA + "] returns no value");
-        }
-        suggestedCorrespondencePart.setCorrespondencePartType(correspondencePartType);
-
-        // The reason this is not implemented is that we are missing AdministrativeUnit and multiple users
-        CorrespondencePartInternalHateoas correspondencePartHateoas =
-                new CorrespondencePartInternalHateoas(suggestedCorrespondencePart);
-        correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
+    public ResponseEntity<CorrespondencePartUnitHateoas>
+    getCorrespondencePartInternalTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated Record",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body("");
+                .body(correspondencePartService.
+                        generateDefaultCorrespondencePartUnit(systemID));
     }
 
     // Retrieve all SignOff associated with a RegistryEntry identified by systemId

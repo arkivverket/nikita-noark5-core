@@ -9,7 +9,9 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
  * <p>
  * Describe Hateoas links handler
  */
-public interface ICorrespondencePartHateoasHandler extends IHateoasHandler {
+public interface ICorrespondencePartHateoasHandler
+        extends IHateoasHandler {
 
-    void addCorrespondencePartType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCorrespondencePartType(INikitaEntity entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
 }

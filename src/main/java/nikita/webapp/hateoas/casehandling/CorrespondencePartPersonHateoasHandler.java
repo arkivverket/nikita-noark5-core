@@ -18,6 +18,8 @@ public class CorrespondencePartPersonHateoasHandler
     public void addEntityLinksOnTemplate(INikitaEntity entity,
                                          IHateoasNoarkObject
                                                  hateoasNoarkObject) {
-        addCorrespondencePartType(entity, hateoasNoarkObject);
+        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
     }
+
+
 }

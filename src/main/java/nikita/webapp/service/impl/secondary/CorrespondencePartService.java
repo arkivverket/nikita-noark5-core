@@ -1,19 +1,35 @@
 package nikita.webapp.service.impl.secondary;
 
+import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.casehandling.secondary.*;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartPersonHateoas;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.casehandling.*;
+import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
+import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.repository.n5v4.secondary.ICorrespondencePartRepository;
+import nikita.common.util.exceptions.NikitaException;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
+import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
+import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNikitaEntityValues;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues;
 
 @Service
 @Transactional
@@ -24,10 +40,24 @@ public class CorrespondencePartService
             LoggerFactory.getLogger(CorrespondencePartService.class);
 
     private final ICorrespondencePartRepository correspondencePartRepository;
+    private final ICorrespondencePartTypeRepository
+            correspondencePartTypeRepository;
+    private final ICorrespondencePartHateoasHandler
+            correspondencePartHateoasHandler;
+    private final ICorrespondencePartTypeService correspondencePartTypeService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public CorrespondencePartService(
-            ICorrespondencePartRepository correspondencePartRepository) {
+            ICorrespondencePartRepository correspondencePartRepository,
+            ICorrespondencePartTypeRepository correspondencePartTypeRepository,
+            ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
+            ICorrespondencePartTypeService correspondencePartTypeService,
+            ApplicationEventPublisher applicationEventPublisher) {
         this.correspondencePartRepository = correspondencePartRepository;
+        this.correspondencePartTypeRepository = correspondencePartTypeRepository;
+        this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
+        this.correspondencePartTypeService = correspondencePartTypeService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -75,7 +105,7 @@ public class CorrespondencePartService
         // Postal address
         updateCorrespondencePartPostalAddressCreateIfNull(
                 existingCorrespondencePart, incomingCorrespondencePart);
-        
+
         // Check the ETAG
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
@@ -136,59 +166,168 @@ public class CorrespondencePartService
         return existingCorrespondencePart;
     }
 
-
     @Override
-    public CorrespondencePartPerson
+    public CorrespondencePartPersonHateoas
     createNewCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePartPerson) {
-        return correspondencePartRepository.save(correspondencePartPerson);
+            CorrespondencePartPerson correspondencePart,
+            RegistryEntry registryEntry) {
+
+        setCorrespondencePartType(correspondencePart);
+
+        ContactInformation contactInformation
+                = correspondencePart.getContactInformation();
+        if (null != contactInformation) {
+            setNikitaEntityValues(contactInformation);
+            setSystemIdEntityValues(contactInformation);
+        }
+        correspondencePart.setContactInformation(contactInformation);
+
+        PostalAddress postalAddress = correspondencePart.getPostalAddress();
+        if (null != postalAddress) {
+            setNikitaEntityValues(postalAddress);
+            setSystemIdEntityValues(postalAddress);
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+        }
+        correspondencePart.setPostalAddress(postalAddress);
+
+        ResidingAddress residingAddress =
+                correspondencePart.getResidingAddress();
+        if (null != residingAddress) {
+            setNikitaEntityValues(residingAddress);
+            setSystemIdEntityValues(residingAddress);
+            residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
+        }
+        correspondencePart.setResidingAddress(residingAddress);
+
+        setNikitaEntityValues(correspondencePart);
+        setSystemIdEntityValues(correspondencePart);
+
+        registryEntry.getReferenceCorrespondencePartPerson().
+                add(correspondencePart);
+        correspondencePart.addRegistryEntry(registryEntry);
+
+        correspondencePartRepository.save(correspondencePart);
+
+        CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
+                new CorrespondencePartPersonHateoas(correspondencePart);
+        correspondencePartHateoasHandler.addLinks(
+                correspondencePartPersonHateoas,
+                new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this,
+                        correspondencePart));
+
+        return correspondencePartPersonHateoas;
     }
 
     @Override
-    public CorrespondencePartUnit createNewCorrespondencePartUnit(
-            CorrespondencePartUnit correspondencePartUnit) {
-        return correspondencePartRepository.save(correspondencePartUnit);
+    public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePart,
+            RegistryEntry registryEntry) {
+
+        setCorrespondencePartType(correspondencePart);
+
+        // Set NikitaEntity values for ContactInformation, PostalAddress,
+        // BusinessAddress
+        ContactInformation contactInformation =
+                correspondencePart.getContactInformation();
+        if (null != contactInformation) {
+            setNikitaEntityValues(contactInformation);
+            setSystemIdEntityValues(contactInformation);
+        }
+
+        PostalAddress postalAddress = correspondencePart.getPostalAddress();
+        if (null != postalAddress) {
+            setNikitaEntityValues(postalAddress);
+            setSystemIdEntityValues(postalAddress);
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            correspondencePart.setPostalAddress(postalAddress);
+            postalAddress.setCorrespondencePartUnit(correspondencePart);
+        }
+
+        BusinessAddress businessAddress =
+                correspondencePart.getBusinessAddress();
+        if (null != businessAddress) {
+            setNikitaEntityValues(businessAddress);
+            setSystemIdEntityValues(businessAddress);
+            businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
+            correspondencePart.setBusinessAddress(businessAddress);
+            businessAddress.setCorrespondencePartUnit(correspondencePart);
+        }
+
+        setNikitaEntityValues(correspondencePart);
+        setSystemIdEntityValues(correspondencePart);
+        // bidirectional relationship @ManyToMany, set both sides of
+        // relationship
+        registryEntry.
+                getReferenceCorrespondencePartUnit().add(correspondencePart);
+        correspondencePart.getReferenceRegistryEntry().add(registryEntry);
+
+        correspondencePartRepository.save(correspondencePart);
+
+        CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
+                new CorrespondencePartUnitHateoas(correspondencePart);
+        correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas,
+                new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this,
+                        correspondencePart));
+
+        return correspondencePartUnitHateoas;
+
     }
 
     @Override
-    public CorrespondencePartInternal createNewCorrespondencePartInternal(
-            CorrespondencePartInternal correspondencePartInternal) {
-        return correspondencePartRepository.save(correspondencePartInternal);
+    public CorrespondencePartInternalHateoas
+    createNewCorrespondencePartInternal(
+            CorrespondencePartInternal correspondencePart,
+            RegistryEntry registryEntry) {
+
+        setCorrespondencePartType(correspondencePart);
+
+        registryEntry.getReferenceCorrespondencePartInternal().
+                add(correspondencePart);
+
+        correspondencePartRepository.save(correspondencePart);
+
+        CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
+                new CorrespondencePartInternalHateoas(correspondencePart);
+        correspondencePartHateoasHandler.addLinks(
+                correspondencePartInternalHateoas,
+                new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this,
+                        correspondencePart));
+
+        return correspondencePartInternalHateoas;
     }
 
     @Override
-    public void deleteCorrespondencePartUnit(@NotNull String code) {
-        CorrespondencePartUnit correspondencePartUnit =
-                (CorrespondencePartUnit) getCorrespondencePartOrThrow(code);
-        correspondencePartRepository.delete(correspondencePartUnit);
+    public void deleteCorrespondencePartUnit(@NotNull String systemId) {
+        correspondencePartRepository.delete(
+                getCorrespondencePartOrThrow(systemId));
     }
 
+
     @Override
-    public void deleteCorrespondencePartPerson(@NotNull String code) {
-        /*
-        TODO: Temp disabled!
-        CorrespondencePartPerson correspondencePartPerson =
-        (CorrespondencePartPerson) getCorrespondencePartOrThrow(code);
-        correspondencePartRepository.delete(correspondencePartPerson);
-        */
+    public void deleteCorrespondencePartPerson(@NotNull String systemId) {
+        correspondencePartRepository.delete(
+                getCorrespondencePartOrThrow(systemId));
     }
 
-    @Override
-    public void deleteCorrespondencePartInternal(@NotNull String code) {
-        CorrespondencePartInternal correspondencePartInternal =
-                (CorrespondencePartInternal) getCorrespondencePartOrThrow(code);
 
-/*
-        // Disassociate the link between Fonds and FondsCreator
-        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
-        Query q = entityManager.createNativeQuery("DELETE FROM
-        fonds_fonds_creator WHERE f_pk_fonds_id  = :id ;");
-        q.setParameter("id", fonds.getId());
-        q.executeUpdate();
-        entityManager.remove(fonds);
-        entityManager.flush();
-        entityManager.clear();*/
-        correspondencePartRepository.delete(correspondencePartInternal);
+    /**
+     * Delete a CorrespondencePart identified by the given systemId
+     * <p>
+     * Note. This assumes all children have also been deleted.
+     *
+     * @param systemId The systemId of the CorrespondencePart object you wish
+     *                 to delete
+     */
+    @Override
+    public void deleteCorrespondencePartInternal(@NotNull String systemId) {
+        correspondencePartRepository.delete(
+                getCorrespondencePartOrThrow(systemId));
     }
 
     // Internal helper methods
@@ -219,7 +358,7 @@ public class CorrespondencePartService
 
     /**
      * Update BusinessAddress if it exists. If none exists, create a
-     * new BusinessAddress asn set the values.
+     * new BusinessAddress and set the values.
      *
      * @param existingCorrespondencePart The existing CorrespondencePart
      * @param incomingCorrespondencePart The incoming CorrespondencePart
@@ -237,14 +376,12 @@ public class CorrespondencePartService
         }
         // Create a new BusinessAddress object based on the incoming one
         else if (incomingCorrespondencePart.getBusinessAddress() != null) {
-            BusinessAddress postalAddress = new BusinessAddress();
-            postalAddress.setSimpleAddress(new SimpleAddress());
-
-            updateAddress(postalAddress.getSimpleAddress(),
+            BusinessAddress businessAddress = new BusinessAddress();
+            businessAddress.setSimpleAddress(new SimpleAddress());
+            updateAddress(businessAddress.getSimpleAddress(),
                     incomingCorrespondencePart.getBusinessAddress()
                             .getSimpleAddress());
-
-            existingCorrespondencePart.setBusinessAddress(postalAddress);
+            existingCorrespondencePart.setBusinessAddress(businessAddress);
         }
         existingCorrespondencePart.getBusinessAddress().getSimpleAddress().
                 setAddressType(BUSINESS_ADDRESS);
@@ -252,7 +389,7 @@ public class CorrespondencePartService
 
     /**
      * Update ResidingAddress if it exists. If none exists, create a
-     * new ResidingAddress asn set the values.
+     * new ResidingAddress and set the values.
      *
      * @param existingCorrespondencePart The existing CorrespondencePart
      * @param incomingCorrespondencePart The incoming CorrespondencePart
@@ -270,14 +407,12 @@ public class CorrespondencePartService
         }
         // Create a new ResidingAddress object based on the incoming one
         else if (incomingCorrespondencePart.getResidingAddress() != null) {
-            ResidingAddress postalAddress = new ResidingAddress();
-            postalAddress.setSimpleAddress(new SimpleAddress());
-
-            updateAddress(postalAddress.getSimpleAddress(),
+            ResidingAddress residingAddress = new ResidingAddress();
+            residingAddress.setSimpleAddress(new SimpleAddress());
+            updateAddress(residingAddress.getSimpleAddress(),
                     incomingCorrespondencePart.getResidingAddress()
                             .getSimpleAddress());
-
-            existingCorrespondencePart.setResidingAddress(postalAddress);
+            existingCorrespondencePart.setResidingAddress(residingAddress);
         }
         // Make sure the addressType field is set
         existingCorrespondencePart.getResidingAddress().
@@ -286,7 +421,7 @@ public class CorrespondencePartService
 
     /**
      * Update PostalAddress if it exists. If none exists, create a
-     * new PostalAddress asn set the values.
+     * new PostalAddress and set the values.
      *
      * @param existingPostalAddress The existing
      *                              CorrespondencePart
@@ -307,11 +442,9 @@ public class CorrespondencePartService
         else if (incomingPostalAddress.getPostalAddress() != null) {
             PostalAddress postalAddress = new PostalAddress();
             postalAddress.setSimpleAddress(new SimpleAddress());
-
             updateAddress(postalAddress.getSimpleAddress(),
                     incomingPostalAddress.getPostalAddress().
                             getSimpleAddress());
-
             existingPostalAddress.setPostalAddress(postalAddress);
         }
         // Make sure the addressType field is set
@@ -321,7 +454,7 @@ public class CorrespondencePartService
 
     /**
      * Update ContactInformation if it exists. If none exists, create a
-     * new ContactInformation asn set the values.
+     * new ContactInformation and set the values.
      *
      * @param existingCorrespondencePart The existing CorrespondencePart
      * @param incomingCorrespondencePart The incoming CorrespondencePart
@@ -344,6 +477,183 @@ public class CorrespondencePartService
                             incomingCorrespondencePart.getContactInformation()));
         }
     }
+
+    /**
+     * Generate a Default CorrespondencePartUnit object that can be
+     * associated with the identified RegistryEntry.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param registryEntrySystemId The systemId of the registryEntry object
+     *                              you wish to create a templated object for
+     * @return the CorrespondencePartUnit object wrapped as a
+     * CorrespondencePartUnitHateoas object
+     */
+    @Override
+    public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
+            final String registryEntrySystemId) {
+        CorrespondencePartUnit suggestedCorrespondencePart =
+                new CorrespondencePartUnit();
+
+        findAndSetCorrespondencePartType(CORRESPONDENCE_PART_CODE_EA,
+                suggestedCorrespondencePart);
+
+        createTemplatePostalAddress(suggestedCorrespondencePart);
+        createTemplateBusinessAddress(suggestedCorrespondencePart);
+        createTemplateContactInformation(suggestedCorrespondencePart);
+        suggestedCorrespondencePart.setContactPerson("Frank Grimes");
+
+        CorrespondencePartUnitHateoas correspondencePartHateoas =
+                new CorrespondencePartUnitHateoas(suggestedCorrespondencePart);
+        correspondencePartHateoasHandler.addLinksOnTemplate(
+                correspondencePartHateoas, new Authorisation());
+        return correspondencePartHateoas;
+    }
+
+    /**
+     * Generate a Default CorrespondencePartPerson object that can be
+     * associated with the identified RegistryEntry.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param registryEntrySystemId The systemId of the registryEntry object
+     *                              you wish to create a templated object for
+     * @return the CorrespondencePartPerson object wrapped as a
+     * CorrespondencePartPersonHateoas object
+     */
+    @Override
+    public CorrespondencePartPersonHateoas
+    generateDefaultCorrespondencePartPerson(final String registryEntrySystemId) {
+        CorrespondencePartPerson suggestedCorrespondencePart =
+                new CorrespondencePartPerson();
+
+        findAndSetCorrespondencePartType(CORRESPONDENCE_PART_CODE_EA,
+                suggestedCorrespondencePart);
+
+        createTemplatePostalAddress(suggestedCorrespondencePart);
+        createTemplateResidingAddress(suggestedCorrespondencePart);
+        createTemplateContactInformation(suggestedCorrespondencePart);
+        suggestedCorrespondencePart.setName("Frank Grimes");
+        suggestedCorrespondencePart.setSocialSecurityNumber("01010012345");
+        suggestedCorrespondencePart.setdNumber("01010012345");
+
+        CorrespondencePartPersonHateoas correspondencePartHateoas =
+                new CorrespondencePartPersonHateoas(suggestedCorrespondencePart);
+        correspondencePartHateoasHandler.addLinksOnTemplate(
+                correspondencePartHateoas, new Authorisation());
+        return correspondencePartHateoas;
+    }
+
+    /**
+     * Generate a Default CorrespondencePartInternal object that can be
+     * associated with the identified RegistryEntry.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param registryEntrySystemId The systemId of the registryEntry object
+     *                              you wish to create a templated object for
+     * @return the CorrespondencePartInternal object wrapped as a
+     * CorrespondencePartInternalHateoas object
+     */
+    @Override
+    public CorrespondencePartInternalHateoas
+    generateDefaultCorrespondencePartInternal(
+            final String registryEntrySystemId) {
+        CorrespondencePartInternal suggestedCorrespondencePart =
+                new CorrespondencePartInternal();
+
+        findAndSetCorrespondencePartType(CORRESPONDENCE_PART_CODE_EA,
+                suggestedCorrespondencePart);
+
+        CorrespondencePartInternalHateoas correspondencePartHateoas =
+                new CorrespondencePartInternalHateoas(
+                        suggestedCorrespondencePart);
+        correspondencePartHateoasHandler.addLinksOnTemplate(
+                correspondencePartHateoas, new Authorisation());
+        return correspondencePartHateoas;
+    }
+
+    /**
+     * Create a templated ContactInformation object
+     *
+     * @param correspondencePart templated correspondencePart
+     */
+    private void createTemplateContactInformation(final IContactInformation
+                                                          correspondencePart) {
+        ContactInformation contactInformation = new ContactInformation();
+        contactInformation.setEmailAddress("nikita@example.com");
+        contactInformation.setMobileTelephoneNumber("123456789");
+        contactInformation.setTelephoneNumber("987654321");
+        correspondencePart.setContactInformation(contactInformation);
+    }
+
+    /**
+     * Create a templated address for the business address object
+     *
+     * @param correspondencePart templated correspondencePart
+     */
+    private void createTemplateBusinessAddress(IBusinessAddress
+                                                       correspondencePart) {
+        BusinessAddress businessAddress = new BusinessAddress();
+        SimpleAddress simpleAddress = new SimpleAddress();
+        simpleAddress.setAddressType(BUSINESS_ADDRESS);
+        simpleAddress.setAddressLine1("ADRL1 Business : 742 Evergreen Terrace");
+        simpleAddress.setAddressLine2("ADRL2 Business : 742 Evergreen Terrace");
+        simpleAddress.setAddressLine3("ADRL3 Business : 742 Evergreen Terrace");
+        simpleAddress.setCountryCode("US");
+        simpleAddress.setPostalNumber(new PostalNumber("12345"));
+        simpleAddress.setPostalTown("Springfield");
+        businessAddress.setSimpleAddress(simpleAddress);
+        correspondencePart.setBusinessAddress(businessAddress);
+    }
+
+
+    /**
+     * Create a templated address for the residing address object
+     *
+     * @param correspondencePart templated correspondencePart
+     */
+    private void createTemplateResidingAddress(final IResidingAddress
+                                                       correspondencePart) {
+        ResidingAddress residingAddress = new ResidingAddress();
+        SimpleAddress simpleAddress = new SimpleAddress();
+        simpleAddress.setAddressType(RESIDING_ADDRESS);
+        simpleAddress.setAddressLine1("ADRL1 Residing : 742 Evergreen Terrace");
+        simpleAddress.setAddressLine2("ADRL2 Residing : 742 Evergreen Terrace");
+        simpleAddress.setAddressLine3("ADRL3 Residing : 742 Evergreen Terrace");
+        simpleAddress.setCountryCode("US");
+        simpleAddress.setPostalNumber(new PostalNumber("12345"));
+        simpleAddress.setPostalTown("Springfield");
+        residingAddress.setSimpleAddress(simpleAddress);
+        correspondencePart.setResidingAddress(residingAddress);
+    }
+
+    /**
+     * Create a templated address for the postal address object
+     *
+     * @param correspondencePart templated correspondencePart
+     */
+    private void createTemplatePostalAddress(IPostalAddress
+                                                     correspondencePart) {
+        PostalAddress postalAddress = new PostalAddress();
+        SimpleAddress simpleAddress = new SimpleAddress();
+        simpleAddress.setAddressType(POSTAL_ADDRESS);
+        simpleAddress.setAddressLine1("ADRL1 Postal: 742 Evergreen Terrace");
+        simpleAddress.setAddressLine2("ADRL2 Postal: 742 Evergreen Terrace");
+        simpleAddress.setAddressLine3("ADRL3 Postal: 742 Evergreen Terrace");
+        simpleAddress.setCountryCode("US");
+        simpleAddress.setPostalNumber(new PostalNumber("12345"));
+        simpleAddress.setPostalTown("Springfield");
+        postalAddress.setSimpleAddress(simpleAddress);
+        correspondencePart.setPostalAddress(postalAddress);
+    }
+
 
     /**
      * Copy the values you are allowed to copy from the incoming
@@ -386,5 +696,58 @@ public class CorrespondencePartService
         existingAddress.setPostalNumber(incomingAddress.getPostalNumber());
         existingAddress.setPostalTown(incomingAddress.getPostalTown());
         existingAddress.setCountryCode(incomingAddress.getCountryCode());
+    }
+
+    /**
+     * The incoming CorrespondencePartType does not have @id field set.
+     * Therefore, we have to look it up in the database and make sure the
+     * correct CorrespondencePartType is associated with the CorrespondencePart
+     * <p>
+     * If CorrespondencePartType type is not set, a
+     * NikitaMalformedInputDataException is thrown. This means that this
+     * method should originate based on a incoming request from a
+     * Controller.
+     *
+     * @param correspondencePart Incoming correspondencePart
+     */
+    private void setCorrespondencePartType(
+            @NotNull CorrespondencePart correspondencePart) {
+        CorrespondencePartType incomingCorrespondencePartType =
+                correspondencePart.getCorrespondencePartType();
+
+        if (incomingCorrespondencePartType != null &&
+                incomingCorrespondencePartType.getCode() != null) {
+            CorrespondencePartType actualCorrespondencePartType =
+                    correspondencePartTypeRepository.findByCode(
+                            incomingCorrespondencePartType.getCode());
+            if (actualCorrespondencePartType != null) {
+                correspondencePart.setCorrespondencePartType(
+                        actualCorrespondencePartType);
+            }
+        } else {
+            throw new NikitaMalformedInputDataException("Missing required " +
+                    "CorrespondencePartType value");
+        }
+    }
+
+    /**
+     * Internal helper method to retrieve a correspondencePartType object
+     * given a code e.g. EA returns EA, Avsender. Note if this does not find a
+     * code it throws an exception. So this should only be called as part of
+     * a process where that type of action is acceptable.
+     *
+     * @param code               A code identifying a correspondencePartType
+     * @param correspondencePart The correct correspondencePartType
+     */
+    private void findAndSetCorrespondencePartType(String code,
+                                                  CorrespondencePart correspondencePart) {
+        CorrespondencePartType correspondencePartType =
+                correspondencePartTypeService.
+                        findByCode(code);
+        if (correspondencePartType == null) {
+            throw new NikitaException("Internal error, metadata missing. [" +
+                    CORRESPONDENCE_PART_CODE_EA + "] returns no value");
+        }
+        correspondencePart.setCorrespondencePartType(correspondencePartType);
     }
 }

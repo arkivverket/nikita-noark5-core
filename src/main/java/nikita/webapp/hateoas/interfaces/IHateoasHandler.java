@@ -18,7 +18,7 @@ public interface IHateoasHandler {
                           IAuthorisation authorisation);
 
     void addLinksOnTemplate(IHateoasNoarkObject hateoasNoarkObject,
-                            IAuthorisation authorisationt);
+                            IAuthorisation authorisation);
 
     void addLinksOnRead(IHateoasNoarkObject hateoasNoarkObject,
                         IAuthorisation authorisation);

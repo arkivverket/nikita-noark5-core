@@ -629,6 +629,8 @@ public final class Constants {
 
     public static final String TABLE_ADMINISTRATIVE_UNIT_JOIN_NIKITA_USER =
             "administrative_unit_nikita_user";
+    public static final String TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL =
+            "registry_entry_correspondence_part_internal";
 
 
     // Join table names
@@ -657,6 +659,7 @@ public final class Constants {
             "f_pk_keyword_id";
     public static final String FOREIGN_KEY_FILE_PK = "f_pk_file_id";
     public static final String FOREIGN_KEY_COMMENT_PK = "f_pk_comment_id";
+    public static final String FOREIGN_KEY_RECORD_PK = "f_pk_record_id";
 
     public static final String FOREIGN_KEY_STORAGE_LOCATION_PK =
             "f_pk_storage_location_id";
@@ -666,6 +669,9 @@ public final class Constants {
 
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID =
             "administrative_unit_pk_administrative_unit_id";
+
+    public static final String FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID =
+            "f_pk_correspondence_part_internal_id";
 
 
     public static final String FILE_SERIES_ID = "file_series_id";
@@ -691,6 +697,7 @@ public final class Constants {
     public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";
 
     public static final String PRIMARY_KEY_USER = "pk_user_id";
+    public static final String PRIMARY_KEY_RECORD = "pk_record_id";
     public static final String PRIMARY_KEY_STORAGE_LOCATION = "pk_storage_location_id";
     public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
             "pk_administrative_unit_id";

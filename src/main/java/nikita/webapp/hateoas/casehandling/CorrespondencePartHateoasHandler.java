@@ -22,12 +22,6 @@ public class CorrespondencePartHateoasHandler
         implements ICorrespondencePartHateoasHandler {
 
     @Override
-    public void addEntityLinksOnNew(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        addCorrespondencePartType(entity, hateoasNoarkObject);
-    }
-
-    @Override
     public void addEntityLinksOnTemplate(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         addCorrespondencePartType(entity, hateoasNoarkObject);
@@ -41,5 +35,4 @@ public class CorrespondencePartHateoasHandler
                 CORRESPONDENCE_PART_TYPE, REL_METADATA_CORRESPONDENCE_PART_TYPE,
                 false));
     }
-
 }

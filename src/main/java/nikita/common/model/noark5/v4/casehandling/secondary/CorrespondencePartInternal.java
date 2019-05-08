@@ -1,18 +1,23 @@
 package nikita.common.model.noark5.v4.casehandling.secondary;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.interfaces.entities.casehandling.ICorrespondencePartInternalEntity;
+import nikita.common.util.deserialisers.casehandling.CorrespondencePartInternalDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "correspondence_part_internal")
-//@JsonDeserialize(using = CorrespondencePartPersonInternal.class)
+@JsonDeserialize(using = CorrespondencePartInternalDeserializer.class)
 public class CorrespondencePartInternal
         extends CorrespondencePart
         implements ICorrespondencePartInternalEntity {
@@ -24,9 +29,8 @@ public class CorrespondencePartInternal
     @Audited
     private String administrativeUnit;
 
-
-    //@ManyToOne
-    //private AdministrativeUnit referenceAdministrativeUnit;
+    @ManyToOne
+    private AdministrativeUnit referenceAdministrativeUnit;
 
     /**
      * M307 - saksbehandler (xs:string)
@@ -35,13 +39,13 @@ public class CorrespondencePartInternal
     @Audited
     private String caseHandler;
 
+    @ManyToOne
+    private User user;
 
-    /*
-  TODO: Temp disabled!
     // Links to RegistryEntry
     @ManyToMany(mappedBy = "referenceCorrespondencePartInternal")
     private List<RegistryEntry> referenceRegistryEntry = new ArrayList<>();
-*/
+
     public String getAdministrativeUnit() {
         return administrativeUnit;
     }
@@ -49,14 +53,15 @@ public class CorrespondencePartInternal
     public void setAdministrativeUnit(String administrativeUnit) {
         this.administrativeUnit = administrativeUnit;
     }
-//
-//    public AdministrativeUnit getReferenceAdministrativeUnit() {
-//        return referenceAdministrativeUnit;
-//    }
-//
-//    public void setReferenceAdministrativeUnit(AdministrativeUnit referenceAdministrativeUnit) {
-//        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
-//    }
+
+    public AdministrativeUnit getReferenceAdministrativeUnit() {
+        return referenceAdministrativeUnit;
+    }
+
+    public void setReferenceAdministrativeUnit(
+            AdministrativeUnit referenceAdministrativeUnit) {
+        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
+    }
 
     public String getCaseHandler() {
         return caseHandler;
@@ -66,23 +71,27 @@ public class CorrespondencePartInternal
         this.caseHandler = caseHandler;
     }
 
-    @Override
-    public String getBaseTypeName() {
-        return N5ResourceMappings.CORRESPONDENCE_PART_UNIT;
+    public User getUser() {
+        return user;
     }
 
-    /*
-      TODO: Temp disabled!
-        @Override
-        public List<RegistryEntry> getReferenceRegistryEntry() {
-            return referenceRegistryEntry;
-        }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-        @Override
-        public void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry) {
-            this.referenceRegistryEntry = referenceRegistryEntry;
-        }
-    */
+    public List<RegistryEntry> getReferenceRegistryEntry() {
+        return referenceRegistryEntry;
+    }
+
+    public void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry) {
+        this.referenceRegistryEntry = referenceRegistryEntry;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
+    }
+
     @Override
     public String toString() {
         return "CorrespondencePartInternal{" + super.toString() +
