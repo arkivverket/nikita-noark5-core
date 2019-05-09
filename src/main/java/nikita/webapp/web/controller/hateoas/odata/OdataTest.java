@@ -16,7 +16,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-import java.net.InetAddress;
 import java.net.URLDecoder;
 import java.util.List;
 
@@ -82,23 +80,6 @@ public class OdataTest {
         System.out.println(queryString);
         List<NoarkEntity> list = query.getResultList();
 
-
-        String address = request.getHeader("X-Forwarded-Host");
-        String protocol = request.getHeader("X-Forwarded-Proto");
-        String contextPath;
-
-        if (address != null && protocol != null) {
-            contextPath = protocol + "://" + address + "/";
-        } else {
-            Environment env = context.getEnvironment();
-            contextPath = "http://" + InetAddress.getLocalHost().getHostAddress();
-            if (env.getProperty("server.port") != null) {
-                contextPath += ":" + env.getProperty("server.port");
-            }
-            contextPath += env.getProperty("server.servlet.context-path");
-            contextPath += "/";
-        }
-
         HateoasNoarkObject noarkObject;
         HateoasHandler handler;
 
@@ -109,51 +90,51 @@ public class OdataTest {
             case FONDS:
                 noarkObject =
                         new FondsHateoas((List<INikitaEntity>) (List) list);
-                handler = new FondsHateoasHandler(contextPath);
+                handler = new FondsHateoasHandler();
                 break;
             case SERIES:
                 noarkObject =
                         new SeriesHateoas((List<INikitaEntity>) (List) list);
-                handler = new SeriesHateoasHandler(contextPath);
+                handler = new SeriesHateoasHandler();
                 break;
             case CLASSIFICATION_SYSTEM:
                 noarkObject =
                         new ClassificationSystemHateoas((List<INikitaEntity>)
                                 (List) list);
-                handler = new ClassificationSystemHateoasHandler(contextPath);
+                handler = new ClassificationSystemHateoasHandler();
                 break;
             case CLASS:
                 noarkObject =
                         new ClassHateoas((List<INikitaEntity>) (List) list);
-                handler = new ClassHateoasHandler(contextPath);
+                handler = new ClassHateoasHandler();
                 break;
             case FILE:
                 noarkObject =
                         new FileHateoas((List<INikitaEntity>) (List) list);
-                handler = new FileHateoasHandler(contextPath);
+                handler = new FileHateoasHandler();
                 break;
             case REGISTRATION:
                 noarkObject =
                         new RecordHateoas((List<INikitaEntity>) (List) list);
-                handler = new RecordHateoasHandler(contextPath);
+                handler = new RecordHateoasHandler();
                 break;
             case DOCUMENT_DESCRIPTION:
                 noarkObject =
                         new DocumentDescriptionHateoas((List<INikitaEntity>)
                                 (List) list);
-                handler = new DocumentDescriptionHateoasHandler(contextPath);
+                handler = new DocumentDescriptionHateoasHandler();
                 break;
             case DOCUMENT_OBJECT:
                 noarkObject =
                         new DocumentObjectHateoas((List<INikitaEntity>)
                                 (List) list);
-                handler = new DocumentObjectHateoasHandler(contextPath);
+                handler = new DocumentObjectHateoasHandler();
                 break;
             default:
                 noarkObject =
                         new HateoasNoarkObject((List<INikitaEntity>)
                                 (List) list, entity);
-                handler = new HateoasHandler(contextPath);
+                handler = new HateoasHandler();
                 break;
         }
 

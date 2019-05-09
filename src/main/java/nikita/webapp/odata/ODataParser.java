@@ -1,17 +1,20 @@
-// Generated from /home/tsodring/git/nikita-noark5-core/src/main/resources/odata/OData.g4 by ANTLR 4.7
+// Generated from /home/tsodring/git/nikita-noark5-core/src/main/resources/odata/OData.g4 by ANTLR 4.7.2
 package nikita.webapp.odata;
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
+
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class ODataParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+    public static final String[] ruleNames = makeRuleNames();
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -34,29 +37,43 @@ public class ODataParser extends Parser {
 		RULE_and = 32, RULE_or = 33, RULE_eq = 34, RULE_gt = 35, RULE_lt = 36, 
 		RULE_ge = 37, RULE_le = 38, RULE_string = 39, RULE_number = 40, RULE_uuid = 41, 
 		RULE_asc = 42, RULE_desc = 43;
-	public static final String[] ruleNames = {
-		"odataURL", "scheme", "host", "slash", "contextPath", "api", "functionality", 
-		"parentResource", "resource", "systemId", "port", "fromContextPath", "nikitaObjects", 
-		"odataCommand", "filter", "search", "top", "skip", "orderby", "searchCommand", 
-		"filterCommand", "command", "comparatorCommand", "contains", "startsWith", 
-		"attribute", "value", "sortOrder", "comparator", "operator", "leftCurlyBracket", 
-		"rightCurlyBracket", "and", "or", "eq", "gt", "lt", "ge", "le", "string", 
-		"number", "uuid", "asc", "desc"
-	};
+    private static final String[] _LITERAL_NAMES = makeLiteralNames();
+    private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'http'", "'https'", "'/'", "'?'", "'$filter='", "'$search='", "'$top='", 
-		"'$skip='", "'$orderby='", "'''", "'contains'", "','", "'startsWith'", 
-		"'('", "')'", null, "'eq'", "'gt'", "'lt'", "'ge'", "'le'", "'and'", "'or'", 
-		"'asc'", "'desc'", "'top'", "'skip'", "'count'", "'orderby'", null, null, 
-		null, null, null, "':'", "'://'", "'.'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, "WHITESPACE", "EQ", "GT", "LT", "GE", "LE", "AND", 
-		"OR", "ASC", "DESC", "TOP", "SKIP_", "COUNT", "ORDERBY", "WS", "DIGITS", 
-		"HEX", "STRING", "UUID", "COLON", "SEPERATOR", "DOT"
-	};
+    static {
+        RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION);
+    }
+
+    private static String[] makeRuleNames() {
+        return new String[]{
+                "odataURL", "scheme", "host", "slash", "contextPath", "api", "functionality",
+                "parentResource", "resource", "systemId", "port", "fromContextPath",
+                "nikitaObjects", "odataCommand", "filter", "search", "top", "skip", "orderby",
+                "searchCommand", "filterCommand", "command", "comparatorCommand", "contains",
+                "startsWith", "attribute", "value", "sortOrder", "comparator", "operator",
+                "leftCurlyBracket", "rightCurlyBracket", "and", "or", "eq", "gt", "lt",
+                "ge", "le", "string", "number", "uuid", "asc", "desc"
+        };
+    }
+
+    private static String[] makeLiteralNames() {
+        return new String[]{
+                null, "'http'", "'https'", "'/'", "'?'", "'$filter='", "'$search='",
+                "'$top='", "'$skip='", "'$orderby='", "'''", "'contains'", "','", "'startsWith'",
+                "'('", "')'", null, "'eq'", "'gt'", "'lt'", "'ge'", "'le'", "'and'",
+                "'or'", "'asc'", "'desc'", "'top'", "'skip'", "'count'", "'orderby'",
+                null, null, null, null, null, "':'", "'://'", "'.'"
+        };
+    }
+
+    private static String[] makeSymbolicNames() {
+        return new String[]{
+                null, null, null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, "WHITESPACE", "EQ", "GT", "LT", "GE", "LE", "AND",
+                "OR", "ASC", "DESC", "TOP", "SKIP_", "COUNT", "ORDERBY", "WS", "DIGITS",
+                "HEX", "STRING", "UUID", "COLON", "SEPERATOR", "DOT"
+        };
+    }
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -106,7 +123,8 @@ public class ODataParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
-	public static class OdataURLContext extends ParserRuleContext {
+
+    public static class OdataURLContext extends ParserRuleContext {
 		public SchemeContext scheme() {
 			return getRuleContext(SchemeContext.class,0);
 		}

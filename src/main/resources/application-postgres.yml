@@ -17,7 +17,7 @@ spring:
     username: INSERT-USERNAME-HERE
     password: INSERT-PASSWORD-HERE
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialec
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
     show-sql: false
     hibernate:
@@ -55,7 +55,7 @@ nikita:
     checksum-algorithm: SHA-256
   server:
     hateoas:
-      publicAddress: http://localhost:8092/noark5v4/ # Make sure there is a slash at the end of the address
+      publicAddress: http://localhost:8092
     details:
       conformity-levels:
         official: arkivstruktur, casehandling, metadata

@@ -40,7 +40,7 @@ public class N5CoreApp {
                         "Application '{}' is running! Access URLs:\n\t" +
                         "Local: \t\t\thttp://localhost:{}\n\t" +
                         "External: \t\thttp://{}:{}\n\t" +
-                        "contextPath: \thttp://{}:{}{} \n\t" +
+                        "getOutgoingAddress(): \thttp://{}:{}{} \n\t" +
                         "Application is running with following profile(s): {} \n\t" +
                         "\n----------------------------------------------------------",
                 env.getProperty("server.application.name"),

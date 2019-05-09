@@ -49,7 +49,7 @@ public class FondsTest
 
     @Before
     public void init() {
-        fondsHateoasHandler = new FondsHateoasHandler("context");
+        fondsHateoasHandler = new FondsHateoasHandler();
         initMocks(this);
         initRelList();
     }

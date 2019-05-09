@@ -7,6 +7,11 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 import nikita.webapp.security.IAuthorisation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.SELF;
@@ -16,7 +21,6 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
  * Created by tsodring on 2/6/17.
  * <p>
  * Used to add Hateoas links with information
- *
  */
 @Component
 public class HateoasHandler implements IHateoasHandler {
@@ -24,11 +28,10 @@ public class HateoasHandler implements IHateoasHandler {
     protected IAuthorisation authorisation;
 
     @Value("${nikita.server.hateoas.publicAddress}")
-    protected String contextPath;
+    protected String publicAddress;
 
-    public HateoasHandler(String contextPath) {
-        this.contextPath = contextPath;
-    }
+    @Value("${server.servlet.context-path}")
+    protected String contextPath;
 
     public HateoasHandler() {
     }
@@ -46,7 +49,7 @@ public class HateoasHandler implements IHateoasHandler {
         // If hateoasNoarkObject is a list add a self link.
         // { "entity": [], "_links": [] }
         if (!hateoasNoarkObject.isSingleEntity()) {
-            String url = this.contextPath;
+            String url = this.getOutgoingAddress();
             Link selfLink = new Link(url, getRelSelfLink(), false);
             hateoasNoarkObject.addSelfLink(selfLink);
         }
@@ -102,7 +105,7 @@ public class HateoasHandler implements IHateoasHandler {
     public void addSelfLink(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         String systemId = entity.getSystemId();
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
                 SLASH + entity.getBaseTypeName() + SLASH + systemId + SLASH,
                 getRelSelfLink(), false));
@@ -111,7 +114,7 @@ public class HateoasHandler implements IHateoasHandler {
     @Override
     public void addDocumentMedium(INikitaEntity entity,
                                   IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH +
                 DOCUMENT_MEDIUM, REL_METADATA_DOCUMENT_MEDIUM, false));
     }
@@ -152,5 +155,40 @@ public class HateoasHandler implements IHateoasHandler {
         return SELF;
     }
 
+    /**
+     * Get the outgoing address to use when generating links.
+     * If we are not running behind a front facing server incoming requests
+     * will not have X-Forward-* values set. In this case use the hardcoded
+     * value from the properties file.
+     * <p>
+     * If X-Forward-*  values are set, then use them. At a minimum Host and
+     * Proto must be set. If Port is also set use this to.
+     *
+     * @return the outgoing address
+     */
+    protected String getOutgoingAddress() {
+        RequestAttributes attribs = RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = null;
+        if (attribs instanceof NativeWebRequest) {
+            request = (HttpServletRequest) ((NativeWebRequest) attribs).getNativeRequest();
+        }
+        if (request != null) {
+            String address = request.getHeader("X-Forwarded-Host");
+            String protocol = request.getHeader("X-Forwarded-Proto");
+            String port = request.getHeader("X-Forwarded-Port");
+
+            if (address != null && protocol != null) {
+                if (port != null) {
+                    return protocol + "://" + address + ":" + port +
+                            contextPath + SLASH;
+                } else {
+                    return protocol + "://" + address + SLASH + contextPath + SLASH;
+                }
+            } else {
+                return publicAddress + contextPath + SLASH;
+            }
+        }
+        return publicAddress + contextPath + SLASH;
+    }
 }
 

@@ -21,10 +21,6 @@ import static nikita.common.config.N5ResourceMappings.*;
 public class FondsHateoasHandler extends HateoasHandler
         implements IFondsHateoasHandler {
 
-    public FondsHateoasHandler(String contextPath) {
-        super(contextPath);
-    }
-
     public FondsHateoasHandler() {
         super();
     }
@@ -66,7 +62,7 @@ public class FondsHateoasHandler extends HateoasHandler
 
     public void addFondsCreator(INikitaEntity entity,
                                 IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH +
                 SLASH + FONDS + SLASH + entity.getSystemId() + SLASH +
                 FONDS_CREATOR + SLASH, REL_FONDS_STRUCTURE_FONDS_CREATOR, false));
@@ -74,21 +70,21 @@ public class FondsHateoasHandler extends HateoasHandler
 
     public void addSeries(INikitaEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
                 FONDS + SLASH + entity.getSystemId() + SLASH + SERIES +
                 SLASH, REL_FONDS_STRUCTURE_SERIES, false));
     }
 
     public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                 SLASH + entity.getSystemId() + SLASH + FONDS + SLASH, REL_FONDS_STRUCTURE_FONDS, false));
     }
 
     public void addNewFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (authorisation.canCreateFonds()) {
-            hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                     SLASH + entity.getSystemId() + SLASH + NEW_FONDS_CREATOR + SLASH, REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR,
                     false));
@@ -96,27 +92,27 @@ public class FondsHateoasHandler extends HateoasHandler
     }
 
     public void addSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                 SLASH + entity.getSystemId() + SLASH + SUB_FONDS + SLASH, REL_FONDS_STRUCTURE_SUB_FONDS, false));
 
     }
 
     public void addNewSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS + SLASH + entity.getSystemId() + SLASH + NEW_SUB_FONDS +
                 SLASH, REL_FONDS_STRUCTURE_NEW_SUB_FONDS, false));
 
     }
 
     public void addFondsStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH
                 + FONDS_STATUS, REL_METADATA_FONDS_STATUS, false));
     }
 
     public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (authorisation.canCreateFonds()) {
-            hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                     SLASH + entity.getSystemId() + SLASH + NEW_FONDS + SLASH, REL_FONDS_STRUCTURE_NEW_FONDS, false));
         }
@@ -124,7 +120,7 @@ public class FondsHateoasHandler extends HateoasHandler
 
     public void addNewSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (authorisation.canCreateSeries()) {
-            hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                     SLASH + entity.getSystemId() + SLASH + NEW_SERIES + SLASH, REL_FONDS_STRUCTURE_NEW_SERIES, false));
         }

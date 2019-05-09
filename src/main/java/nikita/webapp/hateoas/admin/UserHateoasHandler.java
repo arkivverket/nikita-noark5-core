@@ -46,7 +46,7 @@ public class UserHateoasHandler
     public void addNewAdministrativeUnit(INikitaEntity entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
-                new Link(contextPath + HATEOAS_API_PATH + SLASH +
+                new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                         NOARK_ADMINISTRATION_PATH + SLASH + entity.getSystemId() + SLASH +
                         NEW_ADMINISTRATIVE_UNIT + SLASH,
                         REL_ADMIN_NEW_ADMINISTRATIVE_UNIT, false));
@@ -55,7 +55,7 @@ public class UserHateoasHandler
     public void addAdministrativeUnit(INikitaEntity entity,
                                       IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
-                new Link(contextPath + HATEOAS_API_PATH + SLASH +
+                new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                         NOARK_ADMINISTRATION_PATH + SLASH + entity
                         .getSystemId() + SLASH + ADMINISTRATIVE_UNIT +
                         SLASH, REL_ADMIN_ADMINISTRATIVE_UNIT, false));

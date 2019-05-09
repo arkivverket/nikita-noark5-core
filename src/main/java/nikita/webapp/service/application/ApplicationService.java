@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class ApplicationService {
             ApplicationService.class);
 
     @Value("${nikita.server.hateoas.publicAddress}")
-    private String publicUrlPath;
+    private String publicAddress;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
@@ -37,18 +39,9 @@ public class ApplicationService {
      *
      * @return
      */
-    public void addLoginInformation(HttpServletRequest request,
-                                    List<ConformityLevel> conformityLevels) {
+    public void addLoginInformation(List<ConformityLevel> conformityLevels) {
         ConformityLevel loginOauth2 = new ConformityLevel();
-        String address = request.getHeader("X-Forwarded-Host");
-        String protocol = request.getHeader("X-Forwarded-Proto");
-
-        if (address == null) {
-            loginOauth2.setHref(publicUrlPath + LOGIN_PATH);
-        } else {
-            loginOauth2.setHref(protocol + "://" + address + contextPath +
-                    SLASH + LOGIN_PATH);
-        }
+        loginOauth2.setHref(getOutgoingAddress() + LOGIN_PATH);
         loginOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
                 LOGIN_OAUTH + SLASH);
         conformityLevels.add(loginOauth2);
@@ -63,19 +56,9 @@ public class ApplicationService {
      *
      * @return
      */
-    public void addLogoutInformation(HttpServletRequest request,
-                                     List<ConformityLevel> conformityLevels) {
-
-        String address = request.getHeader("X-Forwarded-Host");
-        String protocol = request.getHeader("X-Forwarded-Proto");
-
+    public void addLogoutInformation(List<ConformityLevel> conformityLevels) {
         ConformityLevel logoutOauth2 = new ConformityLevel();
-        if (address == null) {
-            logoutOauth2.setHref(publicUrlPath + LOGOUT_PATH);
-        } else {
-            logoutOauth2.setHref(protocol + "://" + address + contextPath +
-                    SLASH + LOGOUT_PATH);
-        }
+        logoutOauth2.setHref(getOutgoingAddress() + LOGOUT_PATH);
         logoutOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGOUT_REL_PATH + SLASH +
                 LOGIN_OAUTH + SLASH);
         conformityLevels.add(logoutOauth2);
@@ -84,19 +67,10 @@ public class ApplicationService {
     /**
      * Adds check token mechanism to hateoas links
      */
-    public void addCheckToken(HttpServletRequest request,
-                              List<ConformityLevel> conformityLevels) {
-
-        String address = request.getHeader("X-Forwarded-Host");
-        String protocol = request.getHeader("X-Forwarded-Proto");
-
+    public void addCheckToken(List<ConformityLevel> conformityLevels) {
         ConformityLevel checkTokenOauth2 = new ConformityLevel();
-        if (address == null) {
-            checkTokenOauth2.setHref(publicUrlPath + CHECK_TOKEN_PATH);
-        } else {
-            checkTokenOauth2.setHref(protocol + "://" + address + contextPath +
-                    SLASH + CHECK_TOKEN_PATH);
-        }
+
+        checkTokenOauth2.setHref(getOutgoingAddress() + CHECK_TOKEN_PATH);
         checkTokenOauth2.setRel(NIKITA_CONFORMANCE_REL + CHECK_TOKEN_PATH
                 + SLASH + LOGIN_OAUTH + SLASH);
         conformityLevels.add(checkTokenOauth2);
@@ -107,22 +81,11 @@ public class ApplicationService {
      *
      * @return
      */
-    public void addAccountCreationInformation(HttpServletRequest request,
-                                              List<ConformityLevel> conformityLevels) {
-
-        String address = request.getHeader("X-Forwarded-Host");
-        String protocol = request.getHeader("X-Forwarded-Proto");
-
+    public void addAccountCreationInformation(
+            List<ConformityLevel> conformityLevels) {
         ConformityLevel accountCreation = new ConformityLevel();
-        if (address == null) {
-            accountCreation.setHref(publicUrlPath + HATEOAS_API_PATH + SLASH +
-                    NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
-        } else {
-            accountCreation.setHref(protocol + "://" + address + contextPath +
-                    SLASH + HATEOAS_API_PATH + SLASH +
-                    NOARK_ADMINISTRATION_PATH +
-                    SLASH + NEW_USER);
-        }
+        accountCreation.setHref(getOutgoingAddress() + HATEOAS_API_PATH +
+                SLASH + NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
         accountCreation.setRel(REL_ADMIN_NEW_USER);
         conformityLevels.add(accountCreation);
     }
@@ -134,39 +97,43 @@ public class ApplicationService {
      *
      * @return
      */
-
     public void addConformityLevels(List<ConformityLevel> conformityLevels) {
         // ConformityLevel : arkivstruktur
         ConformityLevel conformityLevelFondsStructure = new ConformityLevel();
-        conformityLevelFondsStructure.setHref(publicUrlPath + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH);
-        conformityLevelFondsStructure.setRel(NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH);
+        conformityLevelFondsStructure.setHref(getOutgoingAddress() +
+                HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH);
+        conformityLevelFondsStructure.setRel(NOARK_CONFORMANCE_REL +
+                NOARK_FONDS_STRUCTURE_PATH + SLASH);
         conformityLevels.add(conformityLevelFondsStructure);
 
         // ConformityLevel : casehandling
         ConformityLevel conformityLevelCaseHandling = new ConformityLevel();
-        conformityLevelCaseHandling.setHref(publicUrlPath + HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH);
-        conformityLevelCaseHandling.setRel(NOARK_CONFORMANCE_REL + NOARK_CASE_HANDLING_PATH + SLASH);
+        conformityLevelCaseHandling.setHref(getOutgoingAddress() +
+                HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH);
+        conformityLevelCaseHandling.setRel(NOARK_CONFORMANCE_REL +
+                NOARK_CASE_HANDLING_PATH + SLASH);
         conformityLevels.add(conformityLevelCaseHandling);
 
         // ConformityLevel : metadata
         ConformityLevel conformityLevelMetadata = new ConformityLevel();
-        conformityLevelMetadata.setHref(publicUrlPath + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH);
-        conformityLevelMetadata.setRel(NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH);
+        conformityLevelMetadata.setHref(getOutgoingAddress() +
+                HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH);
+        conformityLevelMetadata.setRel(NIKITA_CONFORMANCE_REL +
+                NOARK_METADATA_PATH + SLASH);
         conformityLevels.add(conformityLevelMetadata);
-
 
         /*
         // These will be added as the development progresses.
         // They are not really specified properly in the interface standard.
         // ConformityLevel : administrasjon
         ConformityLevel conformityLevelAdministration = new ConformityLevel();
-        conformityLevelAdministration.setHref(publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH);
+        conformityLevelAdministration.setHref(getOutgoingAddress()+ SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH);
         conformityLevelAdministration.setRel(NOARK_CONFORMANCE_REL + NOARK_ADMINISTRATION_PATH + SLASH);
         conformityLevels.add(conformityLevelAdministration);
 
         // ConformityLevel : loggingogsporing
         ConformityLevel conformityLevelLogging = new ConformityLevel();
-        conformityLevelLogging.setHref(publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_LOGGING_PATH);
+        conformityLevelLogging.setHref(getOutgoingAddress()+ SLASH + HATEOAS_API_PATH + SLASH + NOARK_LOGGING_PATH);
         conformityLevelLogging.setRel(NOARK_CONFORMANCE_REL + NOARK_LOGGING_PATH + SLASH);
         conformityLevels.add(conformityLevelLogging);
         */
@@ -175,39 +142,72 @@ public class ApplicationService {
     public ApplicationDetails getApplicationDetails(HttpServletRequest request) {
         ApplicationDetails applicationDetails;
         ArrayList<ConformityLevel> conformityLevels = new ArrayList(10);
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = SecurityContextHolder.getContext().
+                getAuthentication().getName();
 
         // If you are logged in, add more information
         if (!username.equals("anonymousUser")) {
             addConformityLevels(conformityLevels);
-            addLogoutInformation(request, conformityLevels);
-            addCheckToken(request, conformityLevels);
+            addLogoutInformation(conformityLevels);
+            addCheckToken(conformityLevels);
         }
 
         // Show login relation also for logged in users to allow user
         // change also when logged in.
-        addLoginInformation(request, conformityLevels);
+        addLoginInformation(conformityLevels);
 
-        // Show accoount creation relation 
-        addAccountCreationInformation(request, conformityLevels);
+        // Show account creation relation
+        addAccountCreationInformation(conformityLevels);
 
         applicationDetails = new ApplicationDetails(conformityLevels);
         return applicationDetails;
     }
 
     public FondsStructureDetails getFondsStructureDetails() {
-        return new FondsStructureDetails(publicUrlPath);
+        return new FondsStructureDetails(getOutgoingAddress());
     }
 
     public AdministrationDetails getAdministrationDetails() {
-        return new AdministrationDetails(publicUrlPath);
+        return new AdministrationDetails(getOutgoingAddress());
     }
 
     public MetadataDetails getMetadataDetails() {
-        return new MetadataDetails(publicUrlPath);
+        return new MetadataDetails(getOutgoingAddress());
     }
 
     public CaseHandlingDetails getCaseHandlingDetails() {
-        return new CaseHandlingDetails(publicUrlPath);
+        return new CaseHandlingDetails(getOutgoingAddress());
+    }
+
+    /**
+     * Get the outgoing address to use when generating links.
+     * If we are not running behind a front facing server incoming requests
+     * will not have X-Forward-* values set. In this case use the hardcoded
+     * value from the properties file.
+     * <p>
+     * If X-Forward-*  values are set, then use them. At a minimum Host and
+     * Proto must be set. If Port is also set use this to.
+     *
+     * @return the outgoing address
+     */
+    protected String getOutgoingAddress() {
+        HttpServletRequest request =
+                ((ServletRequestAttributes)
+                        RequestContextHolder.currentRequestAttributes())
+                        .getRequest();
+        String address = request.getHeader("X-Forwarded-Host");
+        String protocol = request.getHeader("X-Forwarded-Proto");
+        String port = request.getHeader("X-Forwarded-Port");
+
+        if (address != null && protocol != null) {
+            if (port != null) {
+                return protocol + "://" + address + ":" + port + contextPath +
+                        SLASH;
+            } else {
+                return protocol + "://" + address + contextPath + SLASH;
+            }
+        } else {
+            return publicAddress + contextPath + SLASH;
+        }
     }
 }

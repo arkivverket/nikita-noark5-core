@@ -39,7 +39,7 @@ public class AdministrativeUnitHateoasHandler extends HateoasHandler implements 
 
 
     public void addChildAdministrativeUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_ADMINISTRATION_PATH + SLASH + ADMINISTRATIVE_UNIT + SLASH + entity.getSystemId() + SLASH +
                 NEW_ADMINISTRATIVE_UNIT + SLASH, REL_ADMIN_ADMINISTRATIVE_UNIT, false));
     }

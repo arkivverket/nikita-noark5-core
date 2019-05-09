@@ -1,4 +1,4 @@
-// Generated from /home/tsodring/git/nikita-noark5-core/src/main/resources/odata/OData.g4 by ANTLR 4.7
+// Generated from /home/tsodring/git/nikita-noark5-core/src/main/resources/odata/OData.g4 by ANTLR 4.7.2
 package nikita.webapp.odata;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 

@@ -30,7 +30,7 @@ public class CorrespondencePartHateoasHandler
     @Override
     public void addCorrespondencePartType(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH +
                 CORRESPONDENCE_PART_TYPE, REL_METADATA_CORRESPONDENCE_PART_TYPE,
                 false));

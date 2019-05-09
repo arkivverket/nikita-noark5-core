@@ -24,13 +24,13 @@ public class MetadataHateoasHandler extends HateoasHandler implements IMetadataH
 
     @Override
     public void addCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemId() + SLASH,
                 REL_METADATA + entity.getBaseTypeName() + SLASH, false));
     }
     @Override
     public void addNewCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + NEW + DASH + entity.getBaseTypeName(),
                 NIKITA_CONFORMANCE_REL + NEW + DASH + entity.getBaseTypeName() + SLASH, false));
     }
