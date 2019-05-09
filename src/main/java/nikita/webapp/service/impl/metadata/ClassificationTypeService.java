@@ -188,13 +188,13 @@ public class ClassificationTypeService
                 getClassificationTypeOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingClassificationType.getCode()) {
+        if (null != classificationType.getCode()) {
             existingClassificationType.setCode(
-                    existingClassificationType.getCode());
+                    classificationType.getCode());
         }
-        if (null != existingClassificationType.getDescription()) {
+        if (null != classificationType.getDescription()) {
             existingClassificationType.setDescription(
-                    existingClassificationType.getDescription());
+                    classificationType.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

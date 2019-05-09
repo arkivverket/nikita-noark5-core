@@ -136,7 +136,7 @@ public class DocumentDescriptionService
         }
         if (null != incomingDocumentDescription.getDocumentMedium()) {
             existingDocumentDescription.setDocumentMedium(
-                    existingDocumentDescription.getDocumentMedium());
+                    incomingDocumentDescription.getDocumentMedium());
         }
         if (null != incomingDocumentDescription.getAssociatedWithRecordAs()) {
             existingDocumentDescription.setAssociatedWithRecordAs(

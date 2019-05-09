@@ -188,13 +188,13 @@ public class ClassifiedCodeService
                 getClassifiedCodeOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingClassifiedCode.getCode()) {
+        if (null != classifiedCode.getCode()) {
             existingClassifiedCode.setCode(
-                    existingClassifiedCode.getCode());
+                    classifiedCode.getCode());
         }
-        if (null != existingClassifiedCode.getDescription()) {
+        if (null != classifiedCode.getDescription()) {
             existingClassifiedCode.setDescription(
-                    existingClassifiedCode.getDescription());
+                    classifiedCode.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

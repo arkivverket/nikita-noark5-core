@@ -162,22 +162,22 @@ public class SignOffMethodService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param SignOffMethod
+     * @param signOffMethod
      * @return the updated SignOffMethod
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, SignOffMethod SignOffMethod) {
+            version, SignOffMethod signOffMethod) {
 
         SignOffMethod existingSignOffMethod = getSignOffMethodOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingSignOffMethod.getCode()) {
-            existingSignOffMethod.setCode(existingSignOffMethod.getCode());
+        if (null != signOffMethod.getCode()) {
+            existingSignOffMethod.setCode(signOffMethod.getCode());
         }
-        if (null != existingSignOffMethod.getDescription()) {
-            existingSignOffMethod.setDescription(existingSignOffMethod.
-                    getDescription());
+        if (null != signOffMethod.getDescription()) {
+            existingSignOffMethod.setDescription(
+                    signOffMethod.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

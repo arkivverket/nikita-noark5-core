@@ -185,12 +185,12 @@ public class PrecedenceStatusService
                 getPrecedenceStatusOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingPrecedenceStatus.getCode()) {
-            existingPrecedenceStatus.setCode(existingPrecedenceStatus.getCode());
+        if (null != precedenceStatus.getCode()) {
+            existingPrecedenceStatus.setCode(precedenceStatus.getCode());
         }
-        if (null != existingPrecedenceStatus.getDescription()) {
+        if (null != precedenceStatus.getDescription()) {
             existingPrecedenceStatus.setDescription(
-                    existingPrecedenceStatus.getDescription());
+                    precedenceStatus.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

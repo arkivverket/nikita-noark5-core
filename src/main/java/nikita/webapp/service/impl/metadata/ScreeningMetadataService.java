@@ -183,12 +183,12 @@ public class ScreeningMetadataService
         ScreeningMetadata existingScreeningMetadata = getScreeningMetadataOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingScreeningMetadata.getCode()) {
-            existingScreeningMetadata.setCode(existingScreeningMetadata.getCode());
+        if (null != screeningMetadata.getCode()) {
+            existingScreeningMetadata.setCode(screeningMetadata.getCode());
         }
-        if (null != existingScreeningMetadata.getDescription()) {
+        if (null != screeningMetadata.getDescription()) {
             existingScreeningMetadata.setDescription(
-                    existingScreeningMetadata.getDescription());
+                    screeningMetadata.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

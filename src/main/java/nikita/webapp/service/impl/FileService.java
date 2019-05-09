@@ -136,11 +136,11 @@ public class FileService
         if (null != existingFile.getDescription()) {
             existingFile.setDescription(incomingFile.getDescription());
         }
-        if (null != existingFile.getTitle()) {
+        if (null != incomingFile.getTitle()) {
             existingFile.setTitle(incomingFile.getTitle());
         }
-        if (null != existingFile.getDocumentMedium()) {
-            existingFile.setDocumentMedium(existingFile.getDocumentMedium());
+        if (null != incomingFile.getDocumentMedium()) {
+            existingFile.setDocumentMedium(incomingFile.getDocumentMedium());
         }
         existingFile.setVersion(version);
         fileRepository.save(existingFile);

@@ -177,12 +177,12 @@ public class FlowStatusService
         FlowStatus existingFlowStatus = getFlowStatusOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingFlowStatus.getCode()) {
-            existingFlowStatus.setCode(existingFlowStatus.getCode());
+        if (null != flowStatus.getCode()) {
+            existingFlowStatus.setCode(flowStatus.getCode());
         }
-        if (null != existingFlowStatus.getDescription()) {
+        if (null != flowStatus.getDescription()) {
             existingFlowStatus.setDescription(
-                    existingFlowStatus.getDescription());
+                    flowStatus.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

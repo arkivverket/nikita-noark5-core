@@ -73,8 +73,9 @@ public class BasicRecordService implements IBasicRecordService {
         }
         if (null != incomingBasicRecord.getDocumentMedium()) {
             existingBasicRecord.setDocumentMedium(
-                    existingBasicRecord.getDocumentMedium());
-        }        existingBasicRecord.setVersion(version);
+                    incomingBasicRecord.getDocumentMedium());
+        }
+        existingBasicRecord.setVersion(version);
         basicRecordRepository.save(existingBasicRecord);
         return existingBasicRecord;
     }

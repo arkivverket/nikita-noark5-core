@@ -180,12 +180,12 @@ public class PostalCodeService
         PostalCode existingPostalCode = getPostalCodeOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingPostalCode.getCode()) {
-            existingPostalCode.setCode(existingPostalCode.getCode());
+        if (null != postalCode.getCode()) {
+            existingPostalCode.setCode(postalCode.getCode());
         }
-        if (null != existingPostalCode.getDescription()) {
+        if (null != postalCode.getDescription()) {
             existingPostalCode.setDescription(
-                    existingPostalCode.getDescription());
+                    postalCode.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

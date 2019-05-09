@@ -162,21 +162,21 @@ public class RegistryEntryStatusService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param RegistryEntryStatus
+     * @param registryEntryStatus
      * @return the updated RegistryEntryStatus
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, RegistryEntryStatus RegistryEntryStatus) {
+            version, RegistryEntryStatus registryEntryStatus) {
 
         RegistryEntryStatus existingRegistryEntryStatus = getRegistryEntryStatusOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingRegistryEntryStatus.getCode()) {
-            existingRegistryEntryStatus.setCode(existingRegistryEntryStatus.getCode());
+        if (null != registryEntryStatus.getCode()) {
+            existingRegistryEntryStatus.setCode(registryEntryStatus.getCode());
         }
-        if (null != existingRegistryEntryStatus.getDescription()) {
-            existingRegistryEntryStatus.setDescription(existingRegistryEntryStatus.
+        if (null != registryEntryStatus.getDescription()) {
+            existingRegistryEntryStatus.setDescription(registryEntryStatus.
                     getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException

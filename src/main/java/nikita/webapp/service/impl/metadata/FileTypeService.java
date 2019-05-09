@@ -180,12 +180,12 @@ public class FileTypeService
         FileType existingFileType = getFileTypeOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingFileType.getCode()) {
-            existingFileType.setCode(existingFileType.getCode());
+        if (null != fileType.getCode()) {
+            existingFileType.setCode(fileType.getCode());
         }
-        if (null != existingFileType.getDescription()) {
+        if (null != fileType.getDescription()) {
             existingFileType.setDescription(
-                    existingFileType.getDescription());
+                    fileType.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

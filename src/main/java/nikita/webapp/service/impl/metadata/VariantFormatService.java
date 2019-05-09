@@ -180,12 +180,12 @@ public class VariantFormatService
         VariantFormat existingVariantFormat = getVariantFormatOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingVariantFormat.getCode()) {
-            existingVariantFormat.setCode(existingVariantFormat.getCode());
+        if (null != variantFormat.getCode()) {
+            existingVariantFormat.setCode(variantFormat.getCode());
         }
-        if (null != existingVariantFormat.getDescription()) {
+        if (null != variantFormat.getDescription()) {
             existingVariantFormat.setDescription(
-                    existingVariantFormat.getDescription());
+                    variantFormat.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

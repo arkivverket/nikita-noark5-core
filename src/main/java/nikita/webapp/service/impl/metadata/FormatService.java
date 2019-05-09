@@ -183,11 +183,11 @@ public class FormatService
         Format existingFormat = getFormatOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingFormat.getCode()) {
-            existingFormat.setCode(existingFormat.getCode());
+        if (null != format.getCode()) {
+            existingFormat.setCode(format.getCode());
         }
-        if (null != existingFormat.getDescription()) {
-            existingFormat.setDescription(existingFormat.getDescription());
+        if (null != format.getDescription()) {
+            existingFormat.setDescription(format.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

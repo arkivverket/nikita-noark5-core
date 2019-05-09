@@ -180,12 +180,12 @@ public class CommentTypeService
         CommentType existingCommentType = getCommentTypeOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingCommentType.getCode()) {
-            existingCommentType.setCode(existingCommentType.getCode());
+        if (null != commentType.getCode()) {
+            existingCommentType.setCode(commentType.getCode());
         }
-        if (null != existingCommentType.getDescription()) {
+        if (null != commentType.getDescription()) {
             existingCommentType.setDescription(
-                    existingCommentType.getDescription());
+                    commentType.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

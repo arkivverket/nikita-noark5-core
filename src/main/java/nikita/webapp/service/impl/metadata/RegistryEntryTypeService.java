@@ -176,16 +176,16 @@ public class RegistryEntryTypeService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, RegistryEntryType format) {
+            version, RegistryEntryType registryEntryType) {
 
         RegistryEntryType existingRegistryEntryType = getRegistryEntryTypeOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingRegistryEntryType.getCode()) {
-            existingRegistryEntryType.setCode(existingRegistryEntryType.getCode());
+        if (null != registryEntryType.getCode()) {
+            existingRegistryEntryType.setCode(registryEntryType.getCode());
         }
-        if (null != existingRegistryEntryType.getDescription()) {
-            existingRegistryEntryType.setDescription(existingRegistryEntryType.getDescription());
+        if (null != registryEntryType.getDescription()) {
+            existingRegistryEntryType.setDescription(registryEntryType.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

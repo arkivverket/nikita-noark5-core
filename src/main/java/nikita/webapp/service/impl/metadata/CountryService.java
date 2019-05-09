@@ -180,12 +180,12 @@ public class CountryService
         Country existingCountry = getCountryOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingCountry.getCode()) {
-            existingCountry.setCode(existingCountry.getCode());
+        if (null != country.getCode()) {
+            existingCountry.setCode(country.getCode());
         }
-        if (null != existingCountry.getDescription()) {
+        if (null != country.getDescription()) {
             existingCountry.setDescription(
-                    existingCountry.getDescription());
+                    country.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

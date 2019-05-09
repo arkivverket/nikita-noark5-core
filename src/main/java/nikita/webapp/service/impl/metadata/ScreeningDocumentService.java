@@ -187,13 +187,13 @@ public class ScreeningDocumentService
                 getScreeningDocumentOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingScreeningDocument.getCode()) {
+        if (null != screeningDocument.getCode()) {
             existingScreeningDocument.setCode(
-                    existingScreeningDocument.getCode());
+                    screeningDocument.getCode());
         }
-        if (null != existingScreeningDocument.getDescription()) {
+        if (null != screeningDocument.getDescription()) {
             existingScreeningDocument.setDescription(
-                    existingScreeningDocument.getDescription());
+                    screeningDocument.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

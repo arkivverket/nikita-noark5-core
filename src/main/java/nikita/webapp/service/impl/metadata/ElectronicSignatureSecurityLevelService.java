@@ -206,13 +206,13 @@ public class ElectronicSignatureSecurityLevelService
                 getElectronicSignatureSecurityLevelOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingElectronicSignatureSecurityLevel.getCode()) {
+        if (null != electronicSignatureSecurityLevel.getCode()) {
             existingElectronicSignatureSecurityLevel.
-                    setCode(existingElectronicSignatureSecurityLevel.getCode());
+                    setCode(electronicSignatureSecurityLevel.getCode());
         }
-        if (null != existingElectronicSignatureSecurityLevel.getDescription()) {
+        if (null != electronicSignatureSecurityLevel.getDescription()) {
             existingElectronicSignatureSecurityLevel.
-                    setDescription(existingElectronicSignatureSecurityLevel.
+                    setDescription(electronicSignatureSecurityLevel.
                             getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException

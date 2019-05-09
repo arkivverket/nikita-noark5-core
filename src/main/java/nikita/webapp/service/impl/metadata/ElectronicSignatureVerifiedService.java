@@ -206,13 +206,13 @@ public class ElectronicSignatureVerifiedService
                 getElectronicSignatureVerifiedOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingElectronicSignatureVerified.getCode()) {
+        if (null != electronicSignatureVerified.getCode()) {
             existingElectronicSignatureVerified.
-                    setCode(existingElectronicSignatureVerified.getCode());
+                    setCode(electronicSignatureVerified.getCode());
         }
-        if (null != existingElectronicSignatureVerified.getDescription()) {
+        if (null != electronicSignatureVerified.getDescription()) {
             existingElectronicSignatureVerified.
-                    setDescription(existingElectronicSignatureVerified.
+                    setDescription(electronicSignatureVerified.
                             getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException

@@ -181,12 +181,12 @@ public class CaseStatusService
         CaseStatus existingCaseStatus = getCaseStatusOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingCaseStatus.getCode()) {
-            existingCaseStatus.setCode(existingCaseStatus.getCode());
+        if (null != caseStatus.getCode()) {
+            existingCaseStatus.setCode(caseStatus.getCode());
         }
-        if (null != existingCaseStatus.getDescription()) {
+        if (null != caseStatus.getDescription()) {
             existingCaseStatus.setDescription(
-                    existingCaseStatus.getDescription());
+                    caseStatus.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

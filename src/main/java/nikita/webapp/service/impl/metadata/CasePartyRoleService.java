@@ -183,12 +183,12 @@ public class CasePartyRoleService
         CasePartyRole existingCasePartyRole = getCasePartyRoleOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingCasePartyRole.getCode()) {
-            existingCasePartyRole.setCode(existingCasePartyRole.getCode());
+        if (null != casePartyRole.getCode()) {
+            existingCasePartyRole.setCode(casePartyRole.getCode());
         }
-        if (null != existingCasePartyRole.getDescription()) {
+        if (null != casePartyRole.getDescription()) {
             existingCasePartyRole.setDescription(
-                    existingCasePartyRole.getDescription());
+                    casePartyRole.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception

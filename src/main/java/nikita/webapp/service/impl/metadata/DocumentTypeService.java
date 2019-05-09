@@ -171,11 +171,11 @@ public class DocumentTypeService
         DocumentType existingDocumentType = getDocumentTypeOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingDocumentType.getCode()) {
-            existingDocumentType.setCode(existingDocumentType.getCode());
+        if (null != documentType.getCode()) {
+            existingDocumentType.setCode(documentType.getCode());
         }
-        if (null != existingDocumentType.getDescription()) {
-            existingDocumentType.setDescription(existingDocumentType.
+        if (null != documentType.getDescription()) {
+            existingDocumentType.setDescription(documentType.
                     getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
