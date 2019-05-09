@@ -9,8 +9,6 @@ import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -24,36 +22,7 @@ import static org.apache.commons.lang3.CharEncoding.UTF_8;
 /**
  * Created by tsodring on 2/17/17.
  */
-@Component
 public class NoarkController {
-
-    @Value("${nikita.server.hateoas.publicAddress}")
-    private String publicUrlPath;
-
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
-
-    /**
-     * Retrieve the address of the incoming request so it can be used when
-     * generating outgoing rel/hrefs. Currently it is possible to use a
-     * hardcoded nikita.server.hateoas.publicAddress. This will be removed a
-     * later stage when all code reuses the incoming address.
-     *
-     * @param request
-     * @return
-     */
-    protected String getAddress(HttpServletRequest request) {
-        String address = request.getHeader("X-Forwarded-Host");
-        String protocol = request.getHeader("X-Forwarded-Proto");
-        if (address == null) {
-            contextPath = contextPath.startsWith("/") ?
-                    contextPath.substring(1) : contextPath;
-            return publicUrlPath + contextPath + SLASH;
-        } else {
-            return protocol + "://" + address + contextPath + SLASH;
-        }
-    }
-
 
     /**
      * Take an incoming HttpServletRequest and pull out the OData query part.
