@@ -16,18 +16,12 @@ public class ODataLexer extends Lexer {
 		EQ=17, GT=18, LT=19, GE=20, LE=21, AND=22, OR=23, ASC=24, DESC=25, TOP=26,
             SKIP_ = 27, COUNT = 28, ORDERBY = 29, WS = 30, DIGITS = 31, HEX = 32, STRING = 33, UUID = 34,
             COLON = 35, SEPERATOR = 36, DOT = 37;
-
-    protected static final DFA[] _decisionToDFA;
-    protected static final PredictionContextCache _sharedContextCache =
-            new PredictionContextCache();
     public static final String[] ruleNames = makeRuleNames();
-	public static String[] channelNames = {
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
-	};
-
-	public static String[] modeNames = {
-		"DEFAULT_MODE"
-	};
+    /**
+     * @deprecated Use {@link #VOCABULARY} instead.
+     */
+    @Deprecated
+    public static final String[] tokenNames;
 	public static final String _serializedATN =
             "\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\'\u0101\b\1\4\2\t" +
                     "\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13" +
@@ -108,13 +102,22 @@ public class ODataLexer extends Lexer {
                     "\u00fa\7<\2\2\u00faH\3\2\2\2\u00fb\u00fc\7<\2\2\u00fc\u00fd\7\61\2\2\u00fd" +
                     "\u00fe\7\61\2\2\u00feJ\3\2\2\2\u00ff\u0100\7\60\2\2\u0100L\3\2\2\2\t\2" +
                     "\u00a4\u00e1\u00e6\u00ed\u00f2\u00f7\3\b\2\2";
+    public static String[] channelNames = {
+            "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+    };
+
+    public static String[] modeNames = {
+            "DEFAULT_MODE"
+    };
+    protected static final DFA[] _decisionToDFA;
+    protected static final PredictionContextCache _sharedContextCache =
+            new PredictionContextCache();
     private static final String[] _LITERAL_NAMES = makeLiteralNames();
     private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
     static {
-        RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION);
-    }
+        RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
@@ -129,16 +132,11 @@ public class ODataLexer extends Lexer {
 			}
 		}
 	}
+
 	public ODataLexer(CharStream input) {
 		super(input);
         _interp = new LexerATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
     }
-
-    /**
-     * @deprecated Use {@link #VOCABULARY} instead.
-     */
-    @Deprecated
-    public static final String[] tokenNames;
 
     private static String[] makeRuleNames() {
         return new String[]{
@@ -167,7 +165,7 @@ public class ODataLexer extends Lexer {
                 "OR", "ASC", "DESC", "TOP", "SKIP_", "COUNT", "ORDERBY", "WS", "DIGITS",
                 "HEX", "STRING", "UUID", "COLON", "SEPERATOR", "DOT"
         };
-    }
+	}
 
 	@Override
 	@Deprecated
