@@ -11,7 +11,7 @@ public interface IDocumentMediumService {
 
     DocumentMedium createNewDocumentMedium(DocumentMedium documentMedium);
 
-    Iterable<DocumentMedium> findAll(String outgoingAddress);
+    Iterable<DocumentMedium> findAll();
 
     List<DocumentMedium> findAll2();
 

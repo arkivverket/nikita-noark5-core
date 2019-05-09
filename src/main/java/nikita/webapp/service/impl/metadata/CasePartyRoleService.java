@@ -62,7 +62,7 @@ public class CasePartyRoleService
      */
     @Override
     public MetadataHateoas createNewCasePartyRole(
-            CasePartyRole casePartyRole, String outgoingAddress) {
+            CasePartyRole casePartyRole) {
 
         casePartyRole.setDeleted(false);
         casePartyRole.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,7 @@ public class CasePartyRoleService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 casePartyRoleRepository.save(casePartyRole));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -83,11 +83,11 @@ public class CasePartyRoleService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll(String outgoingAddress) {
+    public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         casePartyRoleRepository.findAll(), CASE_PARTY_ROLE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -100,11 +100,11 @@ public class CasePartyRoleService
      * @return single CasePartyRole object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId, String outgoingAddress) {
+    public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 casePartyRoleRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -120,13 +120,13 @@ public class CasePartyRoleService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
+    public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         casePartyRoleRepository
                                 .findByDescription(description),
                 CASE_PARTY_ROLE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -140,12 +140,12 @@ public class CasePartyRoleService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code, String outgoingAddress) {
+    public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         casePartyRoleRepository.findByCode
                                 (code), CASE_PARTY_ROLE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -178,7 +178,7 @@ public class CasePartyRoleService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, CasePartyRole casePartyRole, String outgoingAddress) {
+            version, CasePartyRole casePartyRole) {
 
         CasePartyRole existingCasePartyRole = getCasePartyRoleOrThrow(systemId);
 
@@ -198,7 +198,7 @@ public class CasePartyRoleService
                 casePartyRoleRepository.save(existingCasePartyRole));
 
         metadataHateoasHandler.addLinks(casePartyRoleHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

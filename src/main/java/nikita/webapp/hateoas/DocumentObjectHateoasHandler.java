@@ -28,81 +28,81 @@ public class DocumentObjectHateoasHandler extends HateoasHandler implements IDoc
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
 
         // links for primary entities
         // link to record/documentdescription is one or the other
-        addRecord(entity, hateoasNoarkObject, outgoingAddress);
-        addDocumentDescription(entity, hateoasNoarkObject, outgoingAddress);
+        addRecord(entity, hateoasNoarkObject);
+        addDocumentDescription(entity, hateoasNoarkObject);
         // links for secondary entities
-        addConversion(entity, hateoasNoarkObject, outgoingAddress);
-        addNewConversion(entity, hateoasNoarkObject, outgoingAddress);
-        addElectronicSignature(entity, hateoasNoarkObject, outgoingAddress);
-        addReferenceDocumentFile(entity, hateoasNoarkObject, outgoingAddress);
-        addNewElectronicSignature(entity, hateoasNoarkObject, outgoingAddress);
+        addConversion(entity, hateoasNoarkObject);
+        addNewConversion(entity, hateoasNoarkObject);
+        addElectronicSignature(entity, hateoasNoarkObject);
+        addReferenceDocumentFile(entity, hateoasNoarkObject);
+        addNewElectronicSignature(entity, hateoasNoarkObject);
         // links for metadata entities
-        addVariantFormat(entity, hateoasNoarkObject, outgoingAddress);
-        addFormat(entity, hateoasNoarkObject, outgoingAddress);
+        addVariantFormat(entity, hateoasNoarkObject);
+        addFormat(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
                 REGISTRATION + SLASH, REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override
-    public void addConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
                 CONVERSION + SLASH, REL_FONDS_STRUCTURE_CONVERSION, false));
     }
 
     @Override
-    public void addNewConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
                 NEW_CONVERSION + SLASH, REL_FONDS_STRUCTURE_NEW_CONVERSION, false));
     }
 
     @Override
-    public void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
                 ELECTRONIC_SIGNATURE + SLASH, REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE, false));
     }
 
     @Override
-    public void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
                 NEW_ELECTRONIC_SIGNATURE + SLASH, REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE, false));
     }
 
     @Override
-    public void addDocumentDescription(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addDocumentDescription(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
                 DOCUMENT_DESCRIPTION + SLASH, REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION, false));
     }
 
     @Override
-    public void addReferenceDocumentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addReferenceDocumentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
                 REFERENCE_FILE + SLASH, REL_FONDS_STRUCTURE_DOCUMENT_FILE, false));
     }
 
     @Override
-    public void addVariantFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addVariantFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + VARIANT_FORMAT, REL_METADATA_VARIANT_FORMAT, false));
     }
 
     @Override
-    public void addFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + FORMAT, REL_METADATA_FORMAT, false));
     }
 }

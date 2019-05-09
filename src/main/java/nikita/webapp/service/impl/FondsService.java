@@ -87,13 +87,13 @@ public class FondsService
      * @return the newly persisted fonds object wrapped as a fondsHateaos object
      */
     @Override
-    public FondsHateoas createNewFonds(@NotNull Fonds fonds, String outgoingAddress) {
+    public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
         checkDocumentMediumValid(fonds);
         setNoarkEntityValues(fonds);
         fonds.setFondsStatus(STATUS_OPEN);
         setFinaliseEntityValues(fonds);
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.save(fonds));
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation(), outgoingAddress);
+        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityCreatedEvent(this, fonds));
         return fondsHateoas;
@@ -115,12 +115,12 @@ public class FondsService
     @Override
     public FondsHateoas createFondsAssociatedWithFonds(
             @NotNull String parentFondsSystemId,
-            @NotNull Fonds childFonds, String outgoingAddress) {
+            @NotNull Fonds childFonds) {
 
         Fonds parentFonds = getFondsOrThrow(parentFondsSystemId);
         checkFondsDoesNotContainSeries(parentFonds);
         childFonds.setReferenceParentFonds(parentFonds);
-        return createNewFonds(childFonds, outgoingAddress);
+        return createNewFonds(childFonds);
     }
 
     /**
@@ -143,7 +143,7 @@ public class FondsService
     @Override
     public SeriesHateoas createSeriesAssociatedWithFonds(
             @NotNull String fondsSystemId,
-            @NotNull Series series, String outgoingAddress) {
+            @NotNull Series series) {
 
         Fonds fonds = getFondsOrThrow(fondsSystemId);
 
@@ -153,7 +153,7 @@ public class FondsService
         series.setReferenceFonds(fonds);
         SeriesHateoas seriesHateoas = new SeriesHateoas(seriesService.save
                 (series));
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), outgoingAddress);
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityCreatedEvent(this, fonds));
         return seriesHateoas;
@@ -177,7 +177,7 @@ public class FondsService
     @Override
     public FondsCreatorHateoas createFondsCreatorAssociatedWithFonds(
             @NotNull String fondsSystemId,
-            @NotNull FondsCreator fondsCreator, String outgoingAddress) {
+            @NotNull FondsCreator fondsCreator) {
 
         Fonds fonds = getFondsOrThrow(fondsSystemId);
         checkFondsNotClosed(fonds);
@@ -192,7 +192,7 @@ public class FondsService
         FondsCreatorHateoas fondsCreatorHateoas = new FondsCreatorHateoas
                 (fondsCreator);
         fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas, new
-                Authorisation(), outgoingAddress);
+                Authorisation());
 
         return fondsCreatorHateoas;
     }
@@ -214,7 +214,7 @@ public class FondsService
      */
     @Override
     public FondsCreatorHateoas findFondsCreatorAssociatedWithFonds(
-            @NotNull String fondsSystemId, String outgoingAddress) {
+            @NotNull String fondsSystemId) {
 
         Fonds fonds = getFondsOrThrow(fondsSystemId);
 
@@ -222,7 +222,7 @@ public class FondsService
                 FondsCreatorHateoas((List<INikitaEntity>)
                 (List) fonds.getReferenceFondsCreator());
         fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
         return fondsCreatorHateoas;
     }
 
@@ -242,7 +242,7 @@ public class FondsService
      */
     @Override
     public SeriesHateoas findSeriesAssociatedWithFonds(
-            @NotNull String fondsSystemId, String outgoingAddress) {
+            @NotNull String fondsSystemId) {
 
         Fonds fonds = getFondsOrThrow(fondsSystemId);
         SeriesHateoas seriesHateoas = new
@@ -250,7 +250,7 @@ public class FondsService
                 (List) fonds.getReferenceSeries());
 
         seriesHateoasHandler.addLinks(seriesHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
         return seriesHateoas;
     }
 
@@ -281,7 +281,7 @@ public class FondsService
                 StorageLocationHateoas((List<INikitaEntity>)
                 (List) fonds.getReferenceStorageLocation());
         fondsCreatorHateoasHandler.addLinks(stroageLocationHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
         return stroageLocationHateoas;
     } */
 
@@ -293,13 +293,12 @@ public class FondsService
      * @return the Fonds object wrapped as a FondsHateoas object
      */
     @Override
-    public FondsHateoas findSingleFonds(String fondsSystemId,
-                                        String outgoingAddress) {
+    public FondsHateoas findSingleFonds(String fondsSystemId) {
         Fonds existingFonds = getFondsOrThrow(fondsSystemId);
 
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.
                 save(existingFonds));
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation(), outgoingAddress);
+        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         return fondsHateoas;
     }
 
@@ -311,7 +310,7 @@ public class FondsService
      * @return the list of Fonds object wrapped as a FondsCreatorHateoas object
      */
     @Override
-    public FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip, String outgoingAddress) {
+    public FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip) {
 
         if (top == null || top > 10) {
             top = 10;
@@ -334,7 +333,7 @@ public class FondsService
         FondsHateoas fondsHateoas = new
                 FondsHateoas((List<INikitaEntity>)
                 (List) typedQuery.getResultList());
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation(), outgoingAddress);
+        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         return fondsHateoas;
     }
 
@@ -351,7 +350,7 @@ public class FondsService
      * @return the Series object wrapped as a SeriesHateoas object
      */
     @Override
-    public SeriesHateoas generateDefaultSeries(@NotNull String fondsSystemId, String outgoingAddress) {
+    public SeriesHateoas generateDefaultSeries(@NotNull String fondsSystemId) {
         Series defaultSeries = new Series();
         defaultSeries.setSeriesStatus(STATUS_OPEN);
         defaultSeries.setDocumentMedium(DOCUMENT_MEDIUM_ELECTRONIC);
@@ -360,7 +359,7 @@ public class FondsService
                 fondsSystemId);
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(defaultSeries);
-        seriesHateoasHandler.addLinksOnNew(seriesHateoas, new Authorisation(), outgoingAddress);
+        seriesHateoasHandler.addLinksOnNew(seriesHateoas, new Authorisation());
         return seriesHateoas;
     }
 
@@ -379,13 +378,13 @@ public class FondsService
      * @return the Fonds object wrapped as a FondsHateoas object
      */
     @Override
-    public FondsHateoas generateDefaultFonds(String fondsSystemId, String outgoingAddress) {
+    public FondsHateoas generateDefaultFonds(String fondsSystemId) {
         Fonds defaultFonds = new Fonds();
         defaultFonds.setTitle(TEST_TITLE);
         defaultFonds.setDescription(TEST_DESCRIPTION);
         defaultFonds.setDocumentMedium(DOCUMENT_MEDIUM_ELECTRONIC);
         FondsHateoas fondsHateoas = new FondsHateoas(defaultFonds);
-        fondsHateoasHandler.addLinksOnNew(fondsHateoas, new Authorisation(), outgoingAddress);
+        fondsHateoasHandler.addLinksOnNew(fondsHateoas, new Authorisation());
         return fondsHateoas;
     }
 
@@ -415,7 +414,7 @@ public class FondsService
     @Override
     public FondsHateoas handleUpdate(@NotNull String fondsSystemId,
                                      @NotNull Long version,
-                                     @NotNull Fonds incomingFonds, String outgoingAddress) {
+                                     @NotNull Fonds incomingFonds) {
 
         Fonds existingFonds = getFondsOrThrow(fondsSystemId);
 
@@ -436,7 +435,7 @@ public class FondsService
 
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.
                 save(existingFonds));
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation(), outgoingAddress);
+        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, existingFonds));
         return fondsHateoas;

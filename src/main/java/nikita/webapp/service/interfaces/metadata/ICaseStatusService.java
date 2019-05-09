@@ -11,20 +11,18 @@ import java.util.Optional;
 
 public interface ICaseStatusService {
 
-    MetadataHateoas createNewCaseStatus(CaseStatus caseStatus,
-                                        String outgoingAddress);
+    MetadataHateoas createNewCaseStatus(CaseStatus caseStatus);
 
-    MetadataHateoas find(String systemId, String outgoingAddress);
+    MetadataHateoas find(String systemId);
 
-    MetadataHateoas findAll(String outgoingAddress);
+    MetadataHateoas findAll();
 
-    MetadataHateoas findByDescription(String description,
-                                      String outgoingAddress);
+    MetadataHateoas findByDescription(String description);
 
-    MetadataHateoas findByCode(String code, String outgoingAddress);
+    MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version,
-                                 CaseStatus caseStatus, String outgoingAddress);
+    MetadataHateoas handleUpdate(String systemId, Long version, CaseStatus
+            caseStatus);
 
     CaseStatus generateDefaultCaseStatus();
 

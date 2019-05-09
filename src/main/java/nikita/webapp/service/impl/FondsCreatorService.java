@@ -68,7 +68,7 @@ public class FondsCreatorService implements IFondsCreatorService {
     }
 
     @Override
-    public Iterable<FondsCreator> findAll(String outgoingAddress) {
+    public Iterable<FondsCreator> findAll() {
         return fondsCreatorRepository.findAll();
     }
 

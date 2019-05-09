@@ -62,7 +62,7 @@ public class CountryService
      */
     @Override
     public MetadataHateoas createNewCountry(
-            Country country, String outgoingAddress) {
+            Country country) {
 
         country.setDeleted(false);
         country.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,7 @@ public class CountryService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 countryRepository.save(country));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -83,11 +83,11 @@ public class CountryService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll(String outgoingAddress) {
+    public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         countryRepository.findAll(), COUNTRY);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -100,12 +100,11 @@ public class CountryService
      * @return single Country object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId, String outgoingAddress) {
+    public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 countryRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -120,14 +119,12 @@ public class CountryService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description,
-                                             String outgoingAddress) {
+    public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         countryRepository
                                 .findByDescription(description), COUNTRY);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -141,12 +138,11 @@ public class CountryService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code, String outgoingAddress) {
+    public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         countryRepository.findByCode(code), COUNTRY);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -179,7 +175,7 @@ public class CountryService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, Country country, String outgoingAddress) {
+            version, Country country) {
 
         Country existingCountry = getCountryOrThrow(systemId);
 
@@ -199,7 +195,7 @@ public class CountryService
                 countryRepository.save(existingCountry));
 
         metadataHateoasHandler.addLinks(countryHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

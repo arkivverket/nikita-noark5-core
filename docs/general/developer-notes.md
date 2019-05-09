@@ -1,26 +1,5 @@
 # Nikita developer notes
 
-
-## 2018-05-07
-
--  On multi-threaded nature of Spring
-
-### On multi-threaded nature of Spring
-Every now and again I wonder if nikita really is thread-safe. My fear is
-that there will be subtle concurrency bugs that only will manifest
-themselves under high load. I think every developed really should fear
-this and be sure that their application is thread-safe. So where is this
-an issue. 
-
-Every incoming HTTP request will result in a new thread. We follow the
-standard @Controller (HTTP), @Service (business logic), @Repository(db)
-setup in Spring. The Controller layer is very basis, it just takes a
-request and passes the payload on to the service layer. It sets the
-status code and ETAG and that's pretty much it. Everything else happens
-at the service level.
-
-
-
 ## 2018-11-28
 
   - OData parsing

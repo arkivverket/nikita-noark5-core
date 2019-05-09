@@ -19,21 +19,21 @@ import static nikita.common.config.N5ResourceMappings.FONDS_CREATOR;
 public class FondsCreatorHateoasHandler extends HateoasHandler implements IFondsCreatorHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        addFonds(entity, hateoasNoarkObject, outgoingAddress);
-        addNewFonds(entity, hateoasNoarkObject, outgoingAddress);
+    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        addFonds(entity, hateoasNoarkObject);
+        addNewFonds(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS + SLASH + entity.getSystemId() + SLASH +
                 FONDS + SLASH, REL_FONDS_STRUCTURE_FONDS, false));
     }
 
     @Override
-    public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS_CREATOR + SLASH + entity.getSystemId() + SLASH +
                 NEW_FONDS + SLASH, REL_FONDS_STRUCTURE_NEW_FONDS, false));
     }

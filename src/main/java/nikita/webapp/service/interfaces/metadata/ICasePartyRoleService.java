@@ -9,19 +9,18 @@ import nikita.common.model.noark5.v4.metadata.CasePartyRole;
 
 public interface ICasePartyRoleService {
 
-    MetadataHateoas createNewCasePartyRole(CasePartyRole casePartyRole, String outgoingAddress);
+    MetadataHateoas createNewCasePartyRole(CasePartyRole casePartyRole);
 
-    MetadataHateoas find(String systemId, String outgoingAddress);
+    MetadataHateoas find(String systemId);
 
-    MetadataHateoas findAll(String outgoingAddress);
+    MetadataHateoas findAll();
 
-    MetadataHateoas findByDescription(String description, String outgoingAddress);
+    MetadataHateoas findByDescription(String description);
 
-    MetadataHateoas findByCode(String code, String outgoingAddress);
+    MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(
-            String systemId, Long version,
-            CasePartyRole casePartyRole, String outgoingAddress);
+    MetadataHateoas handleUpdate(String systemId, Long version, CasePartyRole
+            casePartyRole);
 
     CasePartyRole generateDefaultCasePartyRole();
 }

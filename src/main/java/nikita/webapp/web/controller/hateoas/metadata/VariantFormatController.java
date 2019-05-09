@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v4.metadata.VariantFormat;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IVariantFormatService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +31,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class VariantFormatController
-        extends NoarkController {
+public class VariantFormatController {
 
     private IVariantFormatService variantFormatService;
 
@@ -86,8 +84,7 @@ public class VariantFormatController
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
-                variantFormatService.createNewVariantFormat(variantFormat,
-                        getAddress(request));
+                variantFormatService.createNewVariantFormat(variantFormat);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -129,7 +126,7 @@ public class VariantFormatController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(variantFormatService.findAll(getAddress(request)));
+                .body(variantFormatService.findAll());
     }
 
     // Retrieves a given variantFormat identified by a systemId
@@ -175,7 +172,7 @@ public class VariantFormatController
             @PathVariable("systemID") final String systemId,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = variantFormatService.find(systemId, getAddress(request));
+        MetadataHateoas metadataHateoas = variantFormatService.find(systemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -272,7 +269,7 @@ public class VariantFormatController
                 (systemID,
                         CommonUtils.Validation.parseETAG(
                                 request.getHeader(ETAG)),
-                        variantFormat, getAddress(request));
+                        variantFormat);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

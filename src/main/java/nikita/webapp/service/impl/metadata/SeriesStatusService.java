@@ -46,7 +46,7 @@ public class SeriesStatusService implements ISeriesStatusService {
      * @return
      */
     @Override
-    public Iterable<SeriesStatus> findAll(String outgoingAddress) {
+    public Iterable<SeriesStatus> findAll() {
         return seriesStatusRepository.findAll();
     }
 

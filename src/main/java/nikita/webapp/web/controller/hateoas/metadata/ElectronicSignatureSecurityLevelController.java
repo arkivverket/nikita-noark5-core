@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v4.metadata.ElectronicSignatureSecurityLevel;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IElectronicSignatureSecurityLevelService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +33,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON,
                 NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class ElectronicSignatureSecurityLevelController
-        extends NoarkController {
+public class ElectronicSignatureSecurityLevelController {
 
     private IElectronicSignatureSecurityLevelService
             electronicSignatureSecurityLevelService;
@@ -99,8 +97,7 @@ public class ElectronicSignatureSecurityLevelController
         MetadataHateoas metadataHateoas =
                 electronicSignatureSecurityLevelService.
                         createNewElectronicSignatureSecurityLevel(
-                                electronicSignatureSecurityLevel,
-                                getAddress(request));
+                                electronicSignatureSecurityLevel);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -142,7 +139,7 @@ public class ElectronicSignatureSecurityLevelController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(electronicSignatureSecurityLevelService.findAll(getAddress(request)));
+                .body(electronicSignatureSecurityLevelService.findAll());
     }
 
     // Retrieves a given ElectronicSignatureSecurityLevel identified by a
@@ -193,7 +190,7 @@ public class ElectronicSignatureSecurityLevelController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                electronicSignatureSecurityLevelService.find(systemId, getAddress(request));
+                electronicSignatureSecurityLevelService.find(systemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -297,8 +294,7 @@ public class ElectronicSignatureSecurityLevelController
                                 (systemID,
                                         CommonUtils.Validation.
                                                 parseETAG(request.getHeader(ETAG)),
-                                        electronicSignatureSecurityLevel,
-                                        getAddress(request));
+                                        electronicSignatureSecurityLevel);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

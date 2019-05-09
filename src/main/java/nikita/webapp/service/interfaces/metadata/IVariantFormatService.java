@@ -9,18 +9,18 @@ import nikita.common.model.noark5.v4.metadata.VariantFormat;
 
 public interface IVariantFormatService {
 
-    MetadataHateoas createNewVariantFormat(VariantFormat variantFormat, String outgoingAddress);
+    MetadataHateoas createNewVariantFormat(VariantFormat variantFormat);
 
-    MetadataHateoas find(String systemId, String outgoingAddress);
+    MetadataHateoas find(String systemId);
 
-    MetadataHateoas findAll(String outgoingAddress);
+    MetadataHateoas findAll();
 
-    MetadataHateoas findByDescription(String description, String outgoingAddress);
+    MetadataHateoas findByDescription(String description);
 
-    MetadataHateoas findByCode(String code, String outgoingAddress);
+    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(String systemId, Long version, VariantFormat
-            variantFormat, String outgoingAddress);
+            variantFormat);
 
     VariantFormat generateDefaultVariantFormat();
 }

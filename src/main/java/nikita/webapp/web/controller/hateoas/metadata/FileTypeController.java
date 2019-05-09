@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v4.metadata.FileType;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IFileTypeService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +31,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class FileTypeController
-        extends NoarkController {
+public class FileTypeController {
 
     private IFileTypeService fileTypeService;
 
@@ -86,7 +84,7 @@ public class FileTypeController
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
-                fileTypeService.createNewFileType(fileType, getAddress(request));
+                fileTypeService.createNewFileType(fileType);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -128,7 +126,7 @@ public class FileTypeController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fileTypeService.findAll(getAddress(request)));
+                .body(fileTypeService.findAll());
     }
 
     // Retrieves a given fileType identified by a systemId
@@ -174,7 +172,7 @@ public class FileTypeController
             @PathVariable("systemID") final String systemId,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = fileTypeService.find(systemId, getAddress(request));
+        MetadataHateoas metadataHateoas = fileTypeService.find(systemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -271,7 +269,7 @@ public class FileTypeController
                 (systemID,
                         CommonUtils.Validation.parseETAG(
                                 request.getHeader(ETAG)),
-                        fileType, getAddress(request));
+                        fileType);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

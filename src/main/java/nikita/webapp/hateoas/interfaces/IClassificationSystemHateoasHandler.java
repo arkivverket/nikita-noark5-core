@@ -10,17 +10,17 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface IClassificationSystemHateoasHandler extends IHateoasHandler {
 
-    void addSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClassificationType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addClassificationType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 }

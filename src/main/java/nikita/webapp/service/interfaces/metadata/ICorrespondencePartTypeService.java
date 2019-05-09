@@ -12,7 +12,7 @@ public interface ICorrespondencePartTypeService {
 
     CorrespondencePartType createNewCorrespondencePartType(CorrespondencePartType correspondencePartType);
 
-    Iterable<CorrespondencePartType> findAll(String outgoingAddress);
+    Iterable<CorrespondencePartType> findAll();
 
     List<CorrespondencePartType> findAllAsList();
 

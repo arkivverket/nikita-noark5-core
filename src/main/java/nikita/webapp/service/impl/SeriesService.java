@@ -97,12 +97,10 @@ public class SeriesService
 
     @Override
     public ClassificationSystemHateoas createClassificationSystem(
-            String systemId, ClassificationSystem classificationSystem,
-            String outgoingAddress) {
+            String systemId, ClassificationSystem classificationSystem) {
         Series series = getSeriesOrThrow(systemId);
         series.setReferenceClassificationSystem(classificationSystem);
-        return classificationSystemService.save(classificationSystem,
-                outgoingAddress);
+        return classificationSystemService.save(classificationSystem);
     }
 
     // All READ operations
@@ -110,22 +108,22 @@ public class SeriesService
     // probably be replaced by a single CriteriaBuilder approach, but for the
     // moment, they will be left here.
     @Override
-    public List<Series> findAll(String outgoingAddress) {
+    public List<Series> findAll() {
         return seriesRepository.findAll();
     }
 
     @Override
-    public HateoasNoarkObject
-    findPagedCaseFilesBySeries(String systemId, Integer skip, Integer top,
-                               String outgoingAddress) {
+    public HateoasNoarkObject findPagedCaseFilesBySeries(String systemId,
+                                                         Integer skip,
+                                                         Integer top) {
         Series series = getSeriesOrThrow(systemId);
         return packResults(caseFileService.findByReferenceSeries(series,
-                PageRequest.of(skip, top)), outgoingAddress);
+                PageRequest.of(skip, top)));
     }
 
     @Override
     public HateoasNoarkObject findCaseFilesBySeriesWithOData(
-            String systemId, CharStream oDataString, String outgoingAddress) {
+            String systemId, CharStream oDataString) {
         Series series = getSeriesOrThrow(systemId);
         NikitaODataToHQLWalker oDataToHQLWalker =
                 getHQLFromODataString(oDataString);
@@ -133,26 +131,22 @@ public class SeriesService
                 toString());
         List<NoarkEntity> caseFiles =
                 executeHQL(oDataToHQLWalker);
-        return packResults((List<INikitaEntity>) (List) caseFiles,
-                outgoingAddress);
+        return packResults((List<INikitaEntity>) (List) caseFiles);
     }
 
     @Override
-    protected HateoasNoarkObject packResults(
-            List<INikitaEntity> caseFileList, String outgoingAddress) {
+    protected HateoasNoarkObject packResults(List<INikitaEntity> caseFileList) {
 
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(caseFileList);
         caseFileHateoasHandler.addLinksOnRead(caseFileHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
 
         return caseFileHateoas;
     }
 
-    protected HateoasNoarkObject packResults(Page<CaseFile> caseFiles,
-                                             String outgoingAddress) {
-        return packResults((List<INikitaEntity>) (List) caseFiles.getContent(),
-                outgoingAddress);
+    protected HateoasNoarkObject packResults(Page<CaseFile> caseFiles) {
+        return packResults((List<INikitaEntity>) (List) caseFiles.getContent());
     }
 
     // id

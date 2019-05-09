@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v4.metadata.RegistryEntryStatus;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryStatusService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +31,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class RegistryEntryStatusController
-        extends NoarkController {
+public class RegistryEntryStatusController {
 
     private IRegistryEntryStatusService registryEntryStatusService;
 
@@ -88,7 +86,7 @@ public class RegistryEntryStatusController
 
         MetadataHateoas metadataHateoas =
                 registryEntryStatusService.createNewRegistryEntryStatus(
-                        registryEntryStatus, getAddress(request));
+                        registryEntryStatus);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -130,7 +128,7 @@ public class RegistryEntryStatusController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryStatusService.findAll(getAddress(request)));
+                .body(registryEntryStatusService.findAll());
     }
 
     // Retrieves a given RegistryEntryStatus identified by a systemId
@@ -177,7 +175,7 @@ public class RegistryEntryStatusController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = registryEntryStatusService.find
-                (systemId, getAddress(request));
+                (systemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -268,13 +266,14 @@ public class RegistryEntryStatusController
                     value = "systemId of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
-            @RequestBody RegistryEntryStatus registryEntryStatus,
+            @RequestBody RegistryEntryStatus RegistryEntryStatus,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = registryEntryStatusService
                 .handleUpdate
-                        (systemID, parseETAG(request.getHeader(ETAG)),
-                                registryEntryStatus, getAddress(request));
+                        (systemID,
+                                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                                RegistryEntryStatus);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

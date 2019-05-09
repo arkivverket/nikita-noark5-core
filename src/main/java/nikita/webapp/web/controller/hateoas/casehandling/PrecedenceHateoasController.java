@@ -46,7 +46,7 @@ public class PrecedenceHateoasController {
             @PathVariable("systemID") final String precedenceSystemId) {
         Precedence precedence = precedenceService.findBySystemId(precedenceSystemId);
         PrecedenceHateoas precedenceHateoas = new PrecedenceHateoas(precedence);
-        precedenceHateoasHandler.addLinks(precedenceHateoas, new Authorisation(), getAddress(request));
+        precedenceHateoasHandler.addLinks(precedenceHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .eTag(precedence.getVersion().toString())
                 .body(precedenceHateoas);

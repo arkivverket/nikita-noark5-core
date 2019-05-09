@@ -10,20 +10,18 @@ import nikita.common.model.noark5.v4.metadata.RegistryEntryType;
 public interface IRegistryEntryTypeService {
 
     MetadataHateoas createNewRegistryEntryType(RegistryEntryType
-                                                       registryEntryType,
-                                               String outgoingAddress);
+                                                       registryEntryType);
 
-    MetadataHateoas find(String systemId, String outgoingAddress);
+    MetadataHateoas find(String systemId);
 
-    MetadataHateoas findAll(String outgoingAddress);
+    MetadataHateoas findAll();
 
-    MetadataHateoas findByDescription(String description, String outgoingAddress);
+    MetadataHateoas findByDescription(String description);
 
-    MetadataHateoas findByCode(String code, String outgoingAddress);
+    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(String systemId, Long version,
-                                 RegistryEntryType registryEntryType,
-                                 String outgoingAddress);
+                                 RegistryEntryType registryEntryType);
 
     RegistryEntryType generateDefaultRegistryEntryType();
 }

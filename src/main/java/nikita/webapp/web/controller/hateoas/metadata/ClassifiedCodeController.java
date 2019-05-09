@@ -8,9 +8,9 @@ import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.ClassifiedCode;
+import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IClassifiedCodeService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +34,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON,
                 NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class ClassifiedCodeController
-        extends NoarkController {
+public class ClassifiedCodeController {
 
     private IClassifiedCodeService classifiedCodeService;
 
@@ -89,7 +88,7 @@ public class ClassifiedCodeController
 
         MetadataHateoas metadataHateoas =
                 classifiedCodeService.createNewClassifiedCode(
-                        classifiedCode, getAddress(request));
+                        classifiedCode);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -130,7 +129,7 @@ public class ClassifiedCodeController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(classifiedCodeService.findAll(getAddress(request)));
+                .body(classifiedCodeService.findAll());
     }
 
     // Retrieves a given classifiedCode identified by a systemId
@@ -177,7 +176,7 @@ public class ClassifiedCodeController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                classifiedCodeService.find(systemId, getAddress(request));
+                classifiedCodeService.find(systemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(
@@ -271,8 +270,10 @@ public class ClassifiedCodeController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = classifiedCodeService.handleUpdate
-                (systemID, parseETAG(request.getHeader(ETAG)), classifiedCode
-                        , getAddress(request));
+                (systemID,
+                        CommonUtils.Validation.parseETAG(
+                                request.getHeader(ETAG)),
+                        classifiedCode);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(

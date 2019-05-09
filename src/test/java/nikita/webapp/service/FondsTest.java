@@ -70,8 +70,7 @@ public class FondsTest
         fonds.setDescription(TEST_DESCRIPTION);
         fonds.setTitle(TEST_TITLE);
         when(fondsRepository.save(fonds)).thenReturn(fonds);
-        FondsHateoas fondsHateoas = fondsService.createNewFonds(fonds, "NOT " +
-                "APPLICABLE");
+        FondsHateoas fondsHateoas = fondsService.createNewFonds(fonds);
         INoarkGeneralEntity noarkEntity =
                 (INoarkGeneralEntity) fondsHateoas.getList().get(0);
         checkCreatedVariablesNotNull(noarkEntity);
@@ -96,8 +95,7 @@ public class FondsTest
         fonds.setDescription(TEST_DESCRIPTION);
         fonds.setTitle(TEST_TITLE);
         when(fondsRepository.save(fonds)).thenReturn(fonds);
-        FondsHateoas fondsHateoas = fondsService.createNewFonds(fonds, "NOT " +
-                "APPLICABLE");
+        FondsHateoas fondsHateoas = fondsService.createNewFonds(fonds);
         checkLinks(fondsHateoas.getLinks(fonds));
     }
 

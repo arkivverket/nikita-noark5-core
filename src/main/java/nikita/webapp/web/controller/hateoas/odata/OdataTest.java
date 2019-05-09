@@ -157,7 +157,7 @@ public class OdataTest {
                 break;
         }
 
-        handler.addLinks(noarkObject, new Authorisation(), contextPath);
+        handler.addLinks(noarkObject, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(noarkObject);
     }

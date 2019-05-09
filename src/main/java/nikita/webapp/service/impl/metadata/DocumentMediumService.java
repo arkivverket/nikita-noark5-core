@@ -45,7 +45,7 @@ public class DocumentMediumService implements IDocumentMediumService {
      * @return
      */
     @Override
-    public Iterable<DocumentMedium> findAll(String outgoingAddress) {
+    public Iterable<DocumentMedium> findAll() {
         return documentMediumRepository.findAll();
     }
 

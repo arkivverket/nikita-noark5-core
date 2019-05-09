@@ -82,7 +82,7 @@ public class ClassificationSystemHateoasController
             throws NikitaException {
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.
-                        save(classificationSystem, getAddress(request));
+                        save(classificationSystem);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classificationSystem.getVersion().toString())
@@ -135,7 +135,7 @@ public class ClassificationSystemHateoasController
         ClassHateoas classHateoas =
                 classificationSystemService.
                         createClassAssociatedWithClassificationSystem(
-                                systemID, klass, getAddress(request));
+                                systemID, klass);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(klass.getVersion().toString())
@@ -155,8 +155,7 @@ public class ClassificationSystemHateoasController
             @PathVariable("systemID") final String systemID) {
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.
-                        findSingleClassificationSystem(systemID,
-                                getAddress(request));
+                        findSingleClassificationSystem(systemID);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classificationSystemHateoas.getEntityVersion().toString())
@@ -182,7 +181,7 @@ public class ClassificationSystemHateoasController
     findAllClassificationSystem(
             HttpServletRequest request) {
         ClassificationSystemHateoas classificationSystemHateoas =
-                classificationSystemService.findAllClassificationSystem(getAddress(request));
+                classificationSystemService.findAllClassificationSystem();
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemHateoas);
@@ -225,7 +224,7 @@ public class ClassificationSystemHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.
                         findAllClassAssociatedWithClassificationSystem(
-                                systemID, getAddress(request)));
+                                systemID));
     }
 
     // Return a Class object with default values
@@ -260,8 +259,7 @@ public class ClassificationSystemHateoasController
             @PathVariable("systemID") final String systemID) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(classificationSystemService.generateDefaultClass(systemID,
-                        getAddress(request)));
+                .body(classificationSystemService.generateDefaultClass(systemID));
     }
 
     // Delete a ClassificationSystem identified by systemID
@@ -342,7 +340,7 @@ public class ClassificationSystemHateoasController
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)),
-                        classificationSystem, getAddress(request));
+                        classificationSystem);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classificationSystemHateoas.getEntityVersion().toString())

@@ -15,7 +15,7 @@ public interface IFileService {
     // -- All CREATE operations
     File createFile(File file);
 
-    FileHateoas save(File file, String outgoingAddress);
+    FileHateoas save(File file);
 
     Record createRecordAssociatedWithFile(String fileSystemId, Record record);
 
@@ -23,7 +23,7 @@ public interface IFileService {
             String fileSystemId, BasicRecord basicRecord);
 
     // -- All READ operations
-    List<File> findAll(String outgoingAddress);
+    List<File> findAll();
 
     Optional<File> findById(Long id);
 
@@ -39,5 +39,5 @@ public interface IFileService {
     // -- All DELETE operations
     void deleteEntity(@NotNull String systemId);
 
-    FileHateoas generateDefaultFile(String outgoingAddress);
+    FileHateoas generateDefaultFile();
 }

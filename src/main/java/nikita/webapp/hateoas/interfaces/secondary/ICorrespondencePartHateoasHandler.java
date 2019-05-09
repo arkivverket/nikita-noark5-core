@@ -13,6 +13,5 @@ public interface ICorrespondencePartHateoasHandler
         extends IHateoasHandler {
 
     void addCorrespondencePartType(INikitaEntity entity,
-                                   IHateoasNoarkObject hateoasNoarkObject,
-                                   String outgoingAddress);
+                                   IHateoasNoarkObject hateoasNoarkObject);
 }

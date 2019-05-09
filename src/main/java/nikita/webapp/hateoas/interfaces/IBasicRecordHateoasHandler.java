@@ -10,23 +10,23 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface IBasicRecordHateoasHandler extends IRecordHateoasHandler {
 
-    void addStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addKeyword(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addKeyword(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewKeyword(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewKeyword(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 }

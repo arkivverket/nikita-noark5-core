@@ -57,8 +57,7 @@ public class DocumentTypeService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas createNewDocumentType(DocumentType documentType,
-                                                 String outgoingAddress) {
+    public MetadataHateoas createNewDocumentType(DocumentType documentType) {
 
         documentType.setDeleted(false);
         documentType.setOwnedBy(
@@ -67,8 +66,7 @@ public class DocumentTypeService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 documentTypeRepository.save(documentType));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -80,12 +78,11 @@ public class DocumentTypeService
      * @return list of documentType objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll(String outgoingAddress) {
+    public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         documentTypeRepository.findAll(), DOCUMENT_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -98,12 +95,11 @@ public class DocumentTypeService
      * @return single documentType object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId, String outgoingAddress) {
+    public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 documentTypeRepository.save(
                         documentTypeRepository.findBySystemId(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -117,13 +113,12 @@ public class DocumentTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
+    public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         documentTypeRepository.findByDescription(description),
                 DOCUMENT_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -137,13 +132,12 @@ public class DocumentTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code, String outgoingAddress) {
+    public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         documentTypeRepository.findByCode(code),
                 DOCUMENT_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -172,7 +166,7 @@ public class DocumentTypeService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, DocumentType documentType, String outgoingAddress) {
+            version, DocumentType documentType) {
 
         DocumentType existingDocumentType = getDocumentTypeOrThrow(systemId);
 
@@ -191,7 +185,7 @@ public class DocumentTypeService
         MetadataHateoas documentTypeHateoas = new MetadataHateoas(
                 documentTypeRepository.save(existingDocumentType));
         metadataHateoasHandler.addLinks(documentTypeHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this,
                         existingDocumentType));

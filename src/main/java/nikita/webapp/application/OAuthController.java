@@ -1,6 +1,5 @@
 package nikita.webapp.application;
 
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,8 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  */
 @Controller
-public class OAuthController
-        extends NoarkController {
+public class OAuthController {
 
     private static final Logger logger =
             LoggerFactory.getLogger(OAuthController.class);

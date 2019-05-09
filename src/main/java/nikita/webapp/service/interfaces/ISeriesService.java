@@ -27,18 +27,16 @@ public interface ISeriesService {
 
     ClassificationSystemHateoas createClassificationSystem(
             String systemId,
-            ClassificationSystem classificationSystem, String outgoingAddress);
+            ClassificationSystem classificationSystem);
 
     // -- All READ operations
-    List<Series> findAll(String outgoingAddress);
+    List<Series> findAll();
 
     HateoasNoarkObject findPagedCaseFilesBySeries(String systemId, Integer skip,
-                                                  Integer top,
-                                                  String outgoingAddress);
+                                                  Integer top);
 
     HateoasNoarkObject findCaseFilesBySeriesWithOData(String systemId,
-                                                      CharStream oDataString,
-                                                      String outgoingAddress);
+                                                      CharStream oDataString);
 
     // id
     Optional<Series> findById(Long id);

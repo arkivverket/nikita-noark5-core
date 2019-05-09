@@ -13,7 +13,7 @@ public interface IFondsStatusService {
 
     FondsStatus createNewFondsStatus(FondsStatus fondsStatus);
 
-    ArrayList<INikitaEntity> findAll(String outgoingAddress);
+    ArrayList<INikitaEntity> findAll();
 
     FondsStatus findBySystemId(String systemId);
 

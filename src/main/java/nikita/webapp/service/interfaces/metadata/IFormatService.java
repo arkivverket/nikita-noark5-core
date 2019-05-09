@@ -9,19 +9,17 @@ import nikita.common.model.noark5.v4.metadata.Format;
 
 public interface IFormatService {
 
-    MetadataHateoas createNewFormat(Format format, String outgoingAddress);
+    MetadataHateoas createNewFormat(Format format);
 
-    MetadataHateoas find(String systemId, String outgoingAddress);
+    MetadataHateoas find(String systemId);
 
-    MetadataHateoas findAll(String outgoingAddress);
+    MetadataHateoas findAll();
 
-    MetadataHateoas findByDescription(String description,
-                                      String outgoingAddress);
+    MetadataHateoas findByDescription(String description);
 
-    MetadataHateoas findByCode(String code, String outgoingAddress);
+    MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, Format format,
-                                 String outgoingAddress);
+    MetadataHateoas handleUpdate(String systemId, Long version, Format format);
 
     Format generateDefaultFormat();
 }

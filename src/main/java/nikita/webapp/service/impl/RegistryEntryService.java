@@ -83,7 +83,7 @@ public class RegistryEntryService
     @Override
     public CorrespondencePartPersonHateoas
     getCorrespondencePartPersonAssociatedWithRegistryEntry(
-            final String systemID, String outgoingAddress) {
+            final String systemID) {
         return new CorrespondencePartPersonHateoas(
                 (List<INikitaEntity>) (List) getRegistryEntryOrThrow(systemID).
                         getReferenceCorrespondencePartPerson());
@@ -92,7 +92,7 @@ public class RegistryEntryService
     @Override
     public CorrespondencePartInternalHateoas
     getCorrespondencePartInternalAssociatedWithRegistryEntry(
-            final String systemID, String outgoingAddress) {
+            final String systemID) {
         return new CorrespondencePartInternalHateoas(
                 (List<INikitaEntity>) (List) getRegistryEntryOrThrow(systemID).
                         getReferenceCorrespondencePartInternal());
@@ -100,7 +100,7 @@ public class RegistryEntryService
 
     @Override
     public CorrespondencePartUnitHateoas
-    getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID, String outgoingAddress) {
+    getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID) {
         return new CorrespondencePartUnitHateoas(
                 (List<INikitaEntity>) (List) getRegistryEntryOrThrow(systemID).
                         getReferenceCorrespondencePartUnit());
@@ -120,11 +120,10 @@ public class RegistryEntryService
     public CorrespondencePartPersonHateoas
     createCorrespondencePartPersonAssociatedWithRegistryEntry(
             @NotNull final String systemID,
-            @NotNull final CorrespondencePartPerson correspondencePart,
-            String outgoingAddress) {
+            @NotNull final CorrespondencePartPerson correspondencePart) {
         return correspondencePartService.
                 createNewCorrespondencePartPerson(correspondencePart,
-                        getRegistryEntryOrThrow(systemID), outgoingAddress);
+                        getRegistryEntryOrThrow(systemID));
     }
 
     /**
@@ -140,10 +139,10 @@ public class RegistryEntryService
     @Override
     public CorrespondencePartInternalHateoas
     createCorrespondencePartInternalAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartInternal correspondencePart, String outgoingAddress) {
+            String systemID, CorrespondencePartInternal correspondencePart) {
         return correspondencePartService.
                 createNewCorrespondencePartInternal(correspondencePart,
-                        getRegistryEntryOrThrow(systemID), outgoingAddress);
+                        getRegistryEntryOrThrow(systemID));
     }
 
     /**
@@ -159,10 +158,10 @@ public class RegistryEntryService
     @Override
     public CorrespondencePartUnitHateoas
     createCorrespondencePartUnitAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartUnit correspondencePart, String outgoingAddress) {
+            String systemID, CorrespondencePartUnit correspondencePart) {
         return correspondencePartService.
                 createNewCorrespondencePartUnit(correspondencePart,
-                        getRegistryEntryOrThrow(systemID), outgoingAddress);
+                        getRegistryEntryOrThrow(systemID));
     }
 
     /**
@@ -181,9 +180,9 @@ public class RegistryEntryService
     @Override
     public CorrespondencePartInternalHateoas
     generateDefaultCorrespondencePartInternal(
-            String registryEntrySystemId, String outgoingAddress) {
+            String registryEntrySystemId) {
         return correspondencePartService.
-                generateDefaultCorrespondencePartInternal(registryEntrySystemId, outgoingAddress);
+                generateDefaultCorrespondencePartInternal(registryEntrySystemId);
     }
 
     /**
@@ -202,9 +201,9 @@ public class RegistryEntryService
     @Override
     public CorrespondencePartPersonHateoas
     generateDefaultCorrespondencePartPerson(
-            String registryEntrySystemId, String outgoingAddress) {
+            String registryEntrySystemId) {
         return correspondencePartService.
-                generateDefaultCorrespondencePartPerson(registryEntrySystemId, outgoingAddress);
+                generateDefaultCorrespondencePartPerson(registryEntrySystemId);
     }
 
     /**
@@ -222,10 +221,10 @@ public class RegistryEntryService
      */
     @Override
     public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String registryEntrySystemId, String outgoingAddress) {
+            String registryEntrySystemId) {
         return correspondencePartService.
                 generateDefaultCorrespondencePartUnit(
-                        registryEntrySystemId, outgoingAddress);
+                        registryEntrySystemId);
     }
 
     // All READ operations
@@ -294,7 +293,7 @@ public class RegistryEntryService
     @Override
     public RegistryEntry handleUpdate(
             @NotNull String systemId, @NotNull Long version,
-            @NotNull RegistryEntry incomingRegistryEntry, String outgoingAddress) {
+            @NotNull RegistryEntry incomingRegistryEntry) {
         RegistryEntry existingRegistryEntry = getRegistryEntryOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         if (null != incomingRegistryEntry.getDescription()) {

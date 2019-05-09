@@ -65,8 +65,7 @@ public class ElectronicSignatureVerifiedService
      */
     @Override
     public MetadataHateoas createNewElectronicSignatureVerified(
-            ElectronicSignatureVerified electronicSignatureVerified,
-            String outgoingAddress) {
+            ElectronicSignatureVerified electronicSignatureVerified) {
 
         electronicSignatureVerified.setDeleted(false);
         electronicSignatureVerified.setOwnedBy(
@@ -76,8 +75,7 @@ public class ElectronicSignatureVerifiedService
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 electronicSignatureVerifiedRepository.save
                         (electronicSignatureVerified));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -90,12 +88,12 @@ public class ElectronicSignatureVerifiedService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll(String outgoingAddress) {
+    public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         electronicSignatureVerifiedRepository.findAll()
                 , ELECTRONIC_SIGNATURE_VERIFIED);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -111,12 +109,12 @@ public class ElectronicSignatureVerifiedService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId, String outgoingAddress) {
+    public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 electronicSignatureVerifiedRepository.save(
                         electronicSignatureVerifiedRepository
                                 .findBySystemId(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -132,13 +130,13 @@ public class ElectronicSignatureVerifiedService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
+    public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         electronicSignatureVerifiedRepository
                                 .findByDescription(description),
                 ELECTRONIC_SIGNATURE_VERIFIED);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -152,13 +150,13 @@ public class ElectronicSignatureVerifiedService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByCode(String code, String outgoingAddress) {
+    public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         electronicSignatureVerifiedRepository.findByCode
                                 (code),
                 ELECTRONIC_SIGNATURE_VERIFIED);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -200,10 +198,8 @@ public class ElectronicSignatureVerifiedService
      * @return the updated electronicSignatureVerified
      */
     @Override
-    public MetadataHateoas handleUpdate(
-            String systemId, Long version,
-            ElectronicSignatureVerified electronicSignatureVerified,
-            String outgoingAddress) {
+    public MetadataHateoas handleUpdate(String systemId, Long
+            version, ElectronicSignatureVerified electronicSignatureVerified) {
 
         ElectronicSignatureVerified
                 existingElectronicSignatureVerified =
@@ -229,7 +225,7 @@ public class ElectronicSignatureVerifiedService
                                 (existingElectronicSignatureVerified));
 
         metadataHateoasHandler.addLinks(electronicSignatureVerifiedHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
 
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this,

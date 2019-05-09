@@ -102,8 +102,7 @@ public class RegistryEntryHateoasController extends NoarkController {
         CorrespondencePartPersonHateoas createdCorrespondencePartPerson =
                 registryEntryService.
                         createCorrespondencePartPersonAssociatedWithRegistryEntry(
-                                systemID, correspondencePartPerson,
-                                getAddress(request));
+                                systemID, correspondencePartPerson);
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdCorrespondencePartPerson.getEntityVersion().toString())
@@ -145,8 +144,7 @@ public class RegistryEntryHateoasController extends NoarkController {
         CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
                 registryEntryService.
                         createCorrespondencePartInternalAssociatedWithRegistryEntry(
-                                systemID, correspondencePartInternal,
-                                getAddress(request));
+                                systemID, correspondencePartInternal);
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(correspondencePartInternalHateoas.getEntityVersion().toString())
@@ -188,8 +186,7 @@ public class RegistryEntryHateoasController extends NoarkController {
         CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
                 registryEntryService.
                         createCorrespondencePartUnitAssociatedWithRegistryEntry(
-                                systemID, correspondencePartUnit,
-                                getAddress(request));
+                                systemID, correspondencePartUnit);
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(correspondencePartUnitHateoas.getEntityVersion().toString())
@@ -233,7 +230,7 @@ public class RegistryEntryHateoasController extends NoarkController {
                 registryEntryService.createPrecedenceAssociatedWithRecord(systemID, Precedence);
         PrecedenceHateoas precedenceHateoas =
                 new PrecedenceHateoas(createdPrecedence);
-        precedenceHateoasHandler.addLinks(PrecedenceHateoas, new Authorisation(), getAddress(request));
+        precedenceHateoasHandler.addLinks(PrecedenceHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdPrecedence));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -279,7 +276,7 @@ public class RegistryEntryHateoasController extends NoarkController {
                 recordService.createSignOffAssociatedWithRecord(systemID, signOff);
         SignOffHateoas signOffHateoas =
                 new SignOffHateoas(createdSignOff);
-        signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation(), getAddress(request));
+        signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdSignOff));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -326,7 +323,7 @@ public class RegistryEntryHateoasController extends NoarkController {
                 new DocumentObjectHateoas(
                         recordService.createDocumentObjectAssociatedWithRecord(systemID,
                                 documentObject));
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation(), getAddress(request));
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
            return ResponseEntity.status(HttpStatus.CREATED)
                 .header(ETAG, .getVersion().toString())
@@ -362,7 +359,7 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.
                         getCorrespondencePartPersonAssociatedWithRegistryEntry(
-                                systemID, getAddress(request)));
+                                systemID));
     }
 
     // Retrieve all CorrespondencePartUnit associated with a RegistryEntry identified by systemId
@@ -391,7 +388,7 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.
                         getCorrespondencePartUnitAssociatedWithRegistryEntry(
-                                systemID, getAddress(request)));
+                                systemID));
     }
 
     // Retrieve all CorrespondencePartInternal associated with a RegistryEntry identified by systemId
@@ -421,7 +418,7 @@ TODO: Temp disabled!
                 registryEntryService.getCorrespondencePartInternalAssociatedWithRegistryEntry(systemID);
         CorrespondencePartInternalHateoas correspondencePartHateoas =
                 new CorrespondencePartInternalHateoas((List<INikitaEntity>) (List) correspondencePartInternal);
-        correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation(), getAddress(request));
+        correspondencePartHateoasHandler.addLinksOnTemplate(correspondencePartHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(correspondencePartHateoas);
@@ -454,8 +451,7 @@ TODO: Temp disabled!
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.
-                        generateDefaultCorrespondencePartPerson(systemID,
-                                getAddress(request)));
+                        generateDefaultCorrespondencePartPerson(systemID));
     }
 
     // Create a suggested CorrespondencePartUnit (like a template) object with default values (nothing persisted)
@@ -482,8 +478,7 @@ TODO: Temp disabled!
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.
-                        generateDefaultCorrespondencePartUnit(systemID,
-                                getAddress(request)));
+                        generateDefaultCorrespondencePartUnit(systemID));
     }
 
     // Create a suggested CorrespondencePartInternal (like a template) object with default values (nothing persisted)
@@ -510,8 +505,7 @@ TODO: Temp disabled!
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(correspondencePartService.
-                        generateDefaultCorrespondencePartUnit(systemID,
-                                getAddress(request)));
+                        generateDefaultCorrespondencePartUnit(systemID));
     }
 
     // Retrieve all SignOff associated with a RegistryEntry identified by systemId
@@ -540,7 +534,7 @@ TODO: Temp disabled!
         }
         SignOffHateoas documentDescriptionHateoas = new
                 SignOffHateoas((List<INikitaEntity>) (List)record.getReferenceSignOff()));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation(), getAddress(request));
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
@@ -574,7 +568,7 @@ TODO: Temp disabled!
         }
         PrecedenceHateoas documentDescriptionHateoas = new
                 PrecedenceHateoas((List<INikitaEntity>) (List)record.getReferencePrecedence()));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation(), getAddress(request));
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
@@ -608,7 +602,7 @@ TODO: Temp disabled!
         }
         DocumentFlowHateoas documentDescriptionHateoas = new
                 DocumentFlowHateoas((List<INikitaEntity>) (List)record.getReferenceDocumentFlow()));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation(), getAddress(request));
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
@@ -638,7 +632,7 @@ TODO: Temp disabled!
 
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas(registryEntry);
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation(), getAddress(request));
+        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(registryEntry.getVersion().toString())
@@ -669,7 +663,7 @@ TODO: Temp disabled!
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas((List<INikitaEntity>) (List)
                 registryEntryService.findRegistryEntryByOwnerPaginated(top, skip));
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation(), getAddress(request));
+        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryHateoas);
@@ -731,12 +725,9 @@ TODO: Temp disabled!
             @RequestBody RegistryEntry registryEntry) throws NikitaException {
         validateForUpdate(registryEntry);
 
-        RegistryEntry updatedRegistryEntry =
-                registryEntryService.handleUpdate(systemID,
-                        parseETAG(request.getHeader(ETAG)), registryEntry,
-                        getAddress(request));
+        RegistryEntry updatedRegistryEntry = registryEntryService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), registryEntry);
         RegistryEntryHateoas registryEntryHateoas = new RegistryEntryHateoas(updatedRegistryEntry);
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation(), getAddress(request));
+        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedRegistryEntry));
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))

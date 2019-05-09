@@ -115,7 +115,7 @@ public class SeriesHateoasController
         validateForCreate(classificationSystem);
         ClassificationSystemHateoas classificationSystemHateoas =
                 seriesService.createClassificationSystem(systemID,
-                        classificationSystem, getAddress(request));
+                        classificationSystem);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classificationSystemHateoas.getEntityVersion().toString())
@@ -156,7 +156,7 @@ public class SeriesHateoasController
         validateForCreate(file);
         File createdFile = seriesService.createFileAssociatedWithSeries(systemID, file);
         FileHateoas fileHateoas = new FileHateoas(createdFile);
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation(), getAddress(request));
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdFile));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -197,7 +197,7 @@ public class SeriesHateoasController
         validateForCreate(caseFile);
         CaseFile createdCaseFile = seriesService.createCaseFileAssociatedWithSeries(systemID, caseFile);
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(createdCaseFile);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation(), getAddress(request));
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdCaseFile));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -236,7 +236,7 @@ public class SeriesHateoasController
             @RequestBody Record record) throws NikitaException {
         //  validateForCreate(record);
         //RecordHateoas recordHateoas = new RecordHateoas(seriesService.createRecordAssociatedWithSeries(systemID, record));
-        //recordHateoasHandler.addLinks(recordHateoas, new Authorisation(), getAddress(request));
+        //recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
         //  return ResponseEntity.status(HttpStatus.CREATED)
         //.eTag(createdRecord.getVersion().toString())
@@ -281,7 +281,7 @@ public class SeriesHateoasController
         //      (id);
 //        SeriesHateoas seriesHateoas = new
 //                SeriesHateoas(seriesService.associateSeriesWithSeriesSuccessor(seriesPrecursorSys temId, urlToSeriesSuccessor));
-//        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), getAddress(request));
+//        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         //applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdtedEvent(this, ));
 //   return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(series.getVersion().toString())
@@ -323,7 +323,7 @@ public class SeriesHateoasController
         //            (id);
 //        SeriesHateoas seriesHateoas = new
 //                SeriesHateoas(seriesService.associateSeriesWithSeriesSuccessor(systemID, caseFile));
-//        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), getAddress(request));
+//        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
 //        applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, ));
 //   return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(series.getVersion().toString())
@@ -365,7 +365,7 @@ public class SeriesHateoasController
         //      handleResolutionOfIncomingURLInternalGetSystemId(id);
 //        ClassificationSystemHateoas classificationSystemHateoas = new
 //                ClassificationSystemHateoas(classificationSystemService.associateClassificationSystemWithClassificationSystemSuccessor(classificationSystemSystemId, caseFile));
-//        classificationSystemHateoasHandler.addLinks(classificationSystemHateoas, new Authorisation(), getAddress(request));
+//        classificationSystemHateoasHandler.addLinks(classificationSystemHateoas, new Authorisation());
 //        applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, ));
 //   return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(classificationSystem.getVersion().toString())
@@ -405,7 +405,7 @@ public class SeriesHateoasController
         validateForUpdate(series);
         Series updatedSeries = seriesService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), series);
         SeriesHateoas seriesHateoas = new SeriesHateoas(updatedSeries);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), getAddress(request));
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedSeries));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -438,7 +438,7 @@ public class SeriesHateoasController
         }
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(series);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), getAddress(request));
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(series.getVersion().toString())
@@ -462,7 +462,7 @@ public class SeriesHateoasController
             HttpServletRequest request, final HttpServletResponse response) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fileService.generateDefaultFile(getAddress(request)));
+                .body(fileService.generateDefaultFile());
     }
 
     // Create a CaseFile object with default values
@@ -482,7 +482,7 @@ public class SeriesHateoasController
 
 
         CaseFileHateoas caseFileHateoas =
-                caseFileService.generateDefaultCaseFile(getAddress(request));
+                caseFileService.generateDefaultCaseFile();
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -514,7 +514,7 @@ public class SeriesHateoasController
         }
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(series);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), getAddress(request));*/
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());*/
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
@@ -546,7 +546,7 @@ public class SeriesHateoasController
         }
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(series);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), getAddress(request));*/
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());*/
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
@@ -579,7 +579,7 @@ public class SeriesHateoasController
         }
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(series);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), getAddress(request));
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         */
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(series.getVersion().toString())
@@ -613,7 +613,7 @@ public class SeriesHateoasController
         }
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(series);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation(), getAddress(request));
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         */
 //   return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(classificationSystem.getVersion().toString())
@@ -647,7 +647,7 @@ public class SeriesHateoasController
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas((List<INikitaEntity>) (List)
                 seriesService.findByOwnedBy(ownedBy));
-        seriesHateoasHandler.addLinksOnRead(seriesHateoas, new Authorisation(), getAddress(request));
+        seriesHateoasHandler.addLinksOnRead(seriesHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(seriesHateoas);
@@ -681,7 +681,7 @@ public class SeriesHateoasController
             @PathVariable("systemID") final String systemID) {
         Series series = seriesService.findBySystemId(systemID);
         RecordHateoas recordHateoas = new RecordHateoas((List<INikitaEntity>) (List) series.getReferenceRecord());
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation(), getAddress(request));
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
@@ -720,7 +720,7 @@ public class SeriesHateoasController
         }
         FileHateoas fileHateoas = new FileHateoas((List<INikitaEntity>)
                 (List) series.getReferenceFile());
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation(), getAddress(request));
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileHateoas);
@@ -754,15 +754,13 @@ public class SeriesHateoasController
             return ResponseEntity.status(HttpStatus.OK)
                     .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                     .body((CaseFileHateoas) seriesService.
-                            findPagedCaseFilesBySeries(systemID, 0, 10,
-                                    getAddress(request)));
+                            findPagedCaseFilesBySeries(systemID, 0, 10));
         } else {
             return ResponseEntity.status(HttpStatus.OK)
                     .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                     .body((CaseFileHateoas) seriesService.
                             findCaseFilesBySeriesWithOData(systemID,
-                                    getODataString(request),
-                                    getAddress(request)));
+                                    getODataString(request)));
         }
     }
 
@@ -790,7 +788,7 @@ public class SeriesHateoasController
         Series series = seriesService.findBySystemId(systemID);
         Fonds fonds = series.getReferenceFonds();
         FondsHateoas fondsHateoas = new FondsHateoas(fonds);
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation(), getAddress(request));
+        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         seriesService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, fonds));
         return ResponseEntity.status(HttpStatus.OK)

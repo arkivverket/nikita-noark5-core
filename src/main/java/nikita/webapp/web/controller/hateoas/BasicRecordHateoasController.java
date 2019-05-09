@@ -81,7 +81,7 @@ public class BasicRecordHateoasController extends NoarkController {
             @PathVariable("systemID") final String basicRecordSystemId) {
         BasicRecord createdBasicRecord = basicRecordService.findBySystemId(basicRecordSystemId);
         BasicRecordHateoas basicRecordHateoas = new BasicRecordHateoas(createdBasicRecord);
-        basicRecordHateoasHandler.addLinks(basicRecordHateoas, new Authorisation(), getAddress(request));
+        basicRecordHateoasHandler.addLinks(basicRecordHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdBasicRecord.getVersion().toString())
@@ -110,7 +110,7 @@ public class BasicRecordHateoasController extends NoarkController {
         BasicRecordHateoas basicRecordHateoas = new
                 BasicRecordHateoas((List<INikitaEntity>) (List)
                 basicRecordService.findAllBasicRecordByOwner());
-        basicRecordHateoasHandler.addLinks(basicRecordHateoas, new Authorisation(), getAddress(request));
+        basicRecordHateoasHandler.addLinks(basicRecordHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(basicRecordHateoas);
@@ -140,15 +140,15 @@ public class BasicRecordHateoasController extends NoarkController {
         HateoasNoarkObject hateoasNoarkObject;
         if (parentEntity instanceof Series) {
             hateoasNoarkObject = new SeriesHateoas(parentEntity);
-            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation(), getAddress(request));
+            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
         }
         else if (parentEntity instanceof File) {
             hateoasNoarkObject = new FileHateoas(parentEntity);
-            fileHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation(), getAddress(request));
+            fileHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
         }
         else if (parentEntity instanceof Class) {
             hateoasNoarkObject = new ClassHateoas(parentEntity);
-            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation(), getAddress(request));
+            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
         }
         else {
             throw new NikitaException("Internal error. Could not process"
@@ -194,7 +194,7 @@ public class BasicRecordHateoasController extends NoarkController {
 
         BasicRecord updatedBasicRecord = basicRecordService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), basicRecord);
         BasicRecordHateoas basicRecordHateoas = new BasicRecordHateoas(updatedBasicRecord);
-        basicRecordHateoasHandler.addLinks(basicRecordHateoas, new Authorisation(), getAddress(request));
+        basicRecordHateoasHandler.addLinks(basicRecordHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedBasicRecord));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

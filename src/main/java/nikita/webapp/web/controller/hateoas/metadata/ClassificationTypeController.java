@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v4.metadata.ClassificationType;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IClassificationTypeService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +33,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON,
                 NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class ClassificationTypeController
-        extends NoarkController {
+public class ClassificationTypeController {
 
     private IClassificationTypeService classificationTypeService;
 
@@ -90,7 +88,7 @@ public class ClassificationTypeController
 
         MetadataHateoas metadataHateoas =
                 classificationTypeService.createNewClassificationType(
-                        classificationType, getAddress(request));
+                        classificationType);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -132,7 +130,7 @@ public class ClassificationTypeController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(classificationTypeService.findAll(getAddress(request)));
+                .body(classificationTypeService.findAll());
     }
 
     // Retrieves a given classificationType identified by a systemId
@@ -179,7 +177,7 @@ public class ClassificationTypeController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                classificationTypeService.find(systemId, getAddress(request));
+                classificationTypeService.find(systemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -273,8 +271,10 @@ public class ClassificationTypeController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = classificationTypeService.handleUpdate
-                (systemID, parseETAG(request.getHeader(ETAG)),
-                        classificationType, getAddress(request));
+                (systemID,
+                        CommonUtils.Validation.parseETAG(
+                                request.getHeader(ETAG)),
+                        classificationType);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

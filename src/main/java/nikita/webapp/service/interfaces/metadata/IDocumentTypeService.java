@@ -5,18 +5,18 @@ import nikita.common.model.noark5.v4.metadata.DocumentType;
 
 public interface IDocumentTypeService {
 
-    MetadataHateoas createNewDocumentType(DocumentType documentType, String outgoingAddress);
+    MetadataHateoas createNewDocumentType(DocumentType documentType);
 
-    MetadataHateoas find(String systemId, String outgoingAddress);
+    MetadataHateoas find(String systemId);
 
-    MetadataHateoas findAll(String outgoingAddress);
+    MetadataHateoas findAll();
 
-    MetadataHateoas findByDescription(String description, String outgoingAddress);
+    MetadataHateoas findByDescription(String description);
 
-    MetadataHateoas findByCode(String code, String outgoingAddress);
+    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(String systemId, Long version, DocumentType
-            documentType, String outgoingAddress);
+            documentType);
 
     DocumentType generateDefaultDocumentType();
 }

@@ -15,26 +15,22 @@ import static nikita.common.config.Constants.*;
  * Used to add hateoas links for metadata entities with specific information
  */
 @Component()
-public class MetadataHateoasHandler
-        extends HateoasHandler
-        implements IMetadataHateoasHandler {
+public class MetadataHateoasHandler extends HateoasHandler implements IMetadataHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
-                               IHateoasNoarkObject hateoasNoarkObject,
-                               String outgoingAddress) {
-        addCode(entity, hateoasNoarkObject, outgoingAddress);
+    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        addCode(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemId() + SLASH,
                 REL_METADATA + entity.getBaseTypeName() + SLASH, false));
     }
     @Override
-    public void addNewCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + NEW + DASH + entity.getBaseTypeName(),
                 NIKITA_CONFORMANCE_REL + NEW + DASH + entity.getBaseTypeName() + SLASH, false));
     }

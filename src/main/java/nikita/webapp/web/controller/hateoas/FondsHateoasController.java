@@ -81,8 +81,7 @@ public class FondsHateoasController extends NoarkController {
                     required = true)
             @RequestBody Fonds fonds) throws NikitaException {
         validateForCreate(fonds);
-        FondsHateoas fondsHateoas = fondsService.createNewFonds(fonds,
-                getAddress(request));
+        FondsHateoas fondsHateoas = fondsService.createNewFonds(fonds);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
@@ -135,8 +134,7 @@ public class FondsHateoasController extends NoarkController {
             throws NikitaException {
         validateForCreate(fonds);
         FondsHateoas fondsHateoas = fondsService
-                .createFondsAssociatedWithFonds(systemID, fonds,
-                        getAddress(request));
+                .createFondsAssociatedWithFonds(systemID, fonds);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
@@ -201,8 +199,7 @@ public class FondsHateoasController extends NoarkController {
             throws NikitaException {
         validateForCreate(series);
         SeriesHateoas seriesHateoas =
-                fondsService.createSeriesAssociatedWithFonds(systemID, series
-                        , getAddress(request));
+                fondsService.createSeriesAssociatedWithFonds(systemID, series);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
@@ -269,8 +266,7 @@ public class FondsHateoasController extends NoarkController {
 
         validateForCreate(fondsCreator);
         FondsCreatorHateoas fondsCreatorHateoas = fondsService
-                .createFondsCreatorAssociatedWithFonds(systemID, fondsCreator
-                        , getAddress(request));
+                .createFondsCreatorAssociatedWithFonds(systemID, fondsCreator);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(
@@ -305,8 +301,7 @@ public class FondsHateoasController extends NoarkController {
                     value = "systemId of fonds to retrieve.",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        FondsHateoas fondsHateoas = fondsService.findSingleFonds(systemID,
-                getAddress(request));
+        FondsHateoas fondsHateoas = fondsService.findSingleFonds(systemID);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(
@@ -346,8 +341,7 @@ public class FondsHateoasController extends NoarkController {
             @PathVariable("systemID") final String systemID) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fondsService.generateDefaultSeries(systemID,
-                        getAddress(request)));
+                .body(fondsService.generateDefaultSeries(systemID));
     }
 
     // Get all fondsCreators associated with fonds identified by systemId
@@ -382,7 +376,7 @@ public class FondsHateoasController extends NoarkController {
             @PathVariable("systemID") final String systemID) {
 
         FondsCreatorHateoas fondsCreatorHateoas = fondsService
-                .findFondsCreatorAssociatedWithFonds(systemID, getAddress(request));
+                .findFondsCreatorAssociatedWithFonds(systemID);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsCreatorHateoas);
@@ -421,8 +415,7 @@ public class FondsHateoasController extends NoarkController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fondsService.findSeriesAssociatedWithFonds(systemID,
-                        getAddress(request)));
+                .body(fondsService.findSeriesAssociatedWithFonds(systemID));
     }
 
     // Get all Sub-fonds associated with a Fonds identified by systemId
@@ -497,7 +490,7 @@ public class FondsHateoasController extends NoarkController {
             @RequestParam(name = "skip", required = false) Integer skip) {
 
         FondsHateoas fondsHateoas = fondsService.
-                findFondsByOwnerPaginated(top, skip, getAddress(request));
+                findFondsByOwnerPaginated(top, skip);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -538,8 +531,7 @@ public class FondsHateoasController extends NoarkController {
     ) throws NikitaException {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fondsService.generateDefaultFonds(systemID,
-                        getAddress(request)));
+                .body(fondsService.generateDefaultFonds(systemID));
     }
 
     // Create a suggested sub-fonds (like a template) object with default values
@@ -571,7 +563,7 @@ public class FondsHateoasController extends NoarkController {
     ) throws NikitaException {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fondsService.generateDefaultFonds(null, getAddress(request)));
+                .body(fondsService.generateDefaultFonds(null));
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -624,8 +616,7 @@ public class FondsHateoasController extends NoarkController {
         validateForUpdate(fonds);
         FondsHateoas fondsHateoas =
                 fondsService.handleUpdate(systemID,
-                        parseETAG(request.getHeader(ETAG)), fonds,
-                        getAddress(request));
+                        parseETAG(request.getHeader(ETAG)), fonds);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))

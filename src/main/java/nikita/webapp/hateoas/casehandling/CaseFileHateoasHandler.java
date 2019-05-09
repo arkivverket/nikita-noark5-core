@@ -28,120 +28,120 @@ import static nikita.common.config.N5ResourceMappings.*;
 public class CaseFileHateoasHandler extends FileHateoasHandler implements ICaseFileHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        // Not calling  super.addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
+    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        // Not calling  super.addEntityLinks(entity, hateoasNoarkObject);
         // because addExpandToCaseFile, addExpandToMeetingFile, addSubFile, addNewSubFile
         // are not applicable. Instead we invoke the methods directly here.
         // Methods from base class
-        addEndFile(entity, hateoasNoarkObject, outgoingAddress);
-        addRegistration(entity, hateoasNoarkObject, outgoingAddress);
-        addNewRegistration(entity, hateoasNoarkObject, outgoingAddress);
-        addBasicRecord(entity, hateoasNoarkObject, outgoingAddress);
-        addNewBasicRecord(entity, hateoasNoarkObject, outgoingAddress);
-        addComment(entity, hateoasNoarkObject, outgoingAddress);
-        addNewComment(entity, hateoasNoarkObject, outgoingAddress);
-        addCrossReference(entity, hateoasNoarkObject, outgoingAddress);
-        addNewCrossReference(entity, hateoasNoarkObject, outgoingAddress);
-        addClass(entity, hateoasNoarkObject, outgoingAddress);
-        addNewClass(entity, hateoasNoarkObject, outgoingAddress);
-        addReferenceSeries(entity, hateoasNoarkObject, outgoingAddress);
-        addNewReferenceSeries(entity, hateoasNoarkObject, outgoingAddress);
-        addReferenceSecondaryClassification(entity, hateoasNoarkObject, outgoingAddress);
-        addNewReferenceSecondaryClassification(entity, hateoasNoarkObject, outgoingAddress);
+        addEndFile(entity, hateoasNoarkObject);
+        addRegistration(entity, hateoasNoarkObject);
+        addNewRegistration(entity, hateoasNoarkObject);
+        addBasicRecord(entity, hateoasNoarkObject);
+        addNewBasicRecord(entity, hateoasNoarkObject);
+        addComment(entity, hateoasNoarkObject);
+        addNewComment(entity, hateoasNoarkObject);
+        addCrossReference(entity, hateoasNoarkObject);
+        addNewCrossReference(entity, hateoasNoarkObject);
+        addClass(entity, hateoasNoarkObject);
+        addNewClass(entity, hateoasNoarkObject);
+        addReferenceSeries(entity, hateoasNoarkObject);
+        addNewReferenceSeries(entity, hateoasNoarkObject);
+        addReferenceSecondaryClassification(entity, hateoasNoarkObject);
+        addNewReferenceSecondaryClassification(entity, hateoasNoarkObject);
         // Methods from this class
-        //addClass(entity, hateoasNoarkObject, outgoingAddress);
-        addNewPrecedence(entity, hateoasNoarkObject, outgoingAddress);
-        //addPrecedence(entity, hateoasNoarkObject, outgoingAddress);
-        addNewCaseParty(entity, hateoasNoarkObject, outgoingAddress);
-        //addCaseParty(entity, hateoasNoarkObject, outgoingAddress);
-        addNewCaseStatus(entity, hateoasNoarkObject, outgoingAddress);
-        //addCaseStatus(entity, hateoasNoarkObject, outgoingAddress);
-        addNewRegistryEntry(entity, hateoasNoarkObject, outgoingAddress);
-        addRegistryEntry(entity, hateoasNoarkObject, outgoingAddress);
-        //addSecondaryClassification(entity, hateoasNoarkObject, outgoingAddress);
+        //addClass(entity, hateoasNoarkObject);
+        addNewPrecedence(entity, hateoasNoarkObject);
+        //addPrecedence(entity, hateoasNoarkObject);
+        addNewCaseParty(entity, hateoasNoarkObject);
+        //addCaseParty(entity, hateoasNoarkObject);
+        addNewCaseStatus(entity, hateoasNoarkObject);
+        //addCaseStatus(entity, hateoasNoarkObject);
+        addNewRegistryEntry(entity, hateoasNoarkObject);
+        addRegistryEntry(entity, hateoasNoarkObject);
+        //addSecondaryClassification(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CLASS
                 + SLASH, REL_CASE_HANDLING_NEW_CLASS,
                 false));
     }
 
     @Override
-    public void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CLASS +
                 SLASH, REL_CASE_HANDLING_CLASS, false));
     }
 
     @Override
-    public void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_PRECEDENCE
                 + SLASH, REL_CASE_HANDLING_NEW_PRECEDENCE, false));
     }
 
     @Override
-    public void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 PRECEDENCE + SLASH, REL_CASE_HANDLING_PRECEDENCE, false));
     }
 
     @Override
-    public void addNewCaseParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewCaseParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_PARTY
                 + SLASH, REL_CASE_HANDLING_NEW_CASE_PARTY, false));
     }
 
     @Override
-    public void addCaseParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addCaseParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CASE_PARTY
                 + SLASH, REL_CASE_HANDLING_CASE_PARTY, false));
     }
 
     @Override
-    public void addCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CASE_STATUS
                 + SLASH, REL_METADATA_CASE_STATUS, false));
     }
 
     @Override
-    public void addNewCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_STATUS
                 + SLASH, REL_METADATA_CASE_STATUS, false));
     }
 
     @Override
-    public void addSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 SECONDARY_CLASSIFICATION + SLASH, REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
-    public void addNewSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 NEW_SECONDARY_CLASSIFICATION + SLASH, REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
-    public void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 REGISTRY_ENTRY + SLASH, REL_CASE_HANDLING_REGISTRY_ENTRY, false));
     }
 
     @Override
-    public void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
-        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
+    public void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 NEW_REGISTRY_ENTRY + SLASH, REL_CASE_HANDLING_NEW_REGISTRY_ENTRY, false));
     }

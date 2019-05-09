@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v4.metadata.SignOffMethod;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.ISignOffMethodService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +31,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class SignOffMethodController
-        extends NoarkController {
+public class SignOffMethodController {
 
     private ISignOffMethodService signOffMethodService;
 
@@ -88,7 +86,7 @@ public class SignOffMethodController
 
         MetadataHateoas metadataHateoas =
                 signOffMethodService.createNewSignOffMethod(
-                        signOffMethod, getAddress(request));
+                        signOffMethod);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -130,7 +128,7 @@ public class SignOffMethodController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(signOffMethodService.findAll(getAddress(request)));
+                .body(signOffMethodService.findAll());
     }
 
     // Retrieves a given SignOffMethod identified by a systemId
@@ -177,7 +175,7 @@ public class SignOffMethodController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = signOffMethodService.find
-                (systemId, getAddress(request));
+                (systemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -268,13 +266,14 @@ public class SignOffMethodController
                     value = "systemId of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
-            @RequestBody SignOffMethod signOffMethod,
+            @RequestBody SignOffMethod SignOffMethod,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = signOffMethodService
                 .handleUpdate
-                        (systemID, parseETAG(request.getHeader(ETAG)),
-                                signOffMethod, getAddress(request));
+                        (systemID,
+                                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                                SignOffMethod);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

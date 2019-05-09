@@ -16,8 +16,7 @@ public interface ICaseFileService {
 
     CaseFile save(@NotNull CaseFile caseFile);
 
-    CaseFileHateoas saveHateoas(@NotNull CaseFile caseFile,
-                                @NotNull String outgoingAddress);
+    CaseFileHateoas saveHateoas(@NotNull CaseFile caseFile);
 
     RegistryEntry createRegistryEntryAssociatedWithCaseFile(
             @NotNull String fileSystemId, @NotNull RegistryEntry registryEntry);
@@ -34,7 +33,7 @@ public interface ICaseFileService {
     CaseFile handleUpdate(@NotNull String systemId, @NotNull Long version,
                           @NotNull CaseFile incomingCaseFile);
 
-    CaseFileHateoas generateDefaultCaseFile(@NotNull String outgoingAddress);
+    CaseFileHateoas generateDefaultCaseFile();
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);

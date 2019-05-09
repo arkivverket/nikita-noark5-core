@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v4.metadata.Format;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IFormatService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +33,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON,
                 NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class FormatController
-        extends NoarkController {
+public class FormatController {
 
     private IFormatService
             formatService;
@@ -94,7 +92,9 @@ public class FormatController
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
-                formatService.createNewFormat(format, getAddress(request));
+                formatService.
+                        createNewFormat(
+                                format);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -136,7 +136,7 @@ public class FormatController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(formatService.findAll(getAddress(request)));
+                .body(formatService.findAll());
     }
 
     // Retrieves a given Format identified by a
@@ -185,7 +185,7 @@ public class FormatController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                formatService.find(systemId, getAddress(request));
+                formatService.find(systemId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -283,9 +283,12 @@ public class FormatController
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                formatService.handleUpdate
-                        (systemID, parseETAG(request.getHeader(ETAG)),
-                                format, getAddress(request));
+                formatService
+                        .handleUpdate
+                                (systemID, CommonUtils.Validation.
+                                                parseETAG(request.getHeader
+                                                        (ETAG)),
+                                        format);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

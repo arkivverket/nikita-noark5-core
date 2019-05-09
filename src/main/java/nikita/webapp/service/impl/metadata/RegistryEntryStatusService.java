@@ -58,7 +58,7 @@ public class RegistryEntryStatusService
      */
     @Override
     public MetadataHateoas createNewRegistryEntryStatus(
-            RegistryEntryStatus RegistryEntryStatus, String outgoingAddress) {
+            RegistryEntryStatus RegistryEntryStatus) {
 
         RegistryEntryStatus.setDeleted(false);
         RegistryEntryStatus.setOwnedBy(
@@ -67,8 +67,7 @@ public class RegistryEntryStatusService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 RegistryEntryStatusRepository.save(RegistryEntryStatus));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -80,11 +79,11 @@ public class RegistryEntryStatusService
      * @return list of RegistryEntryStatus objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll(String outgoingAddress) {
+    public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         RegistryEntryStatusRepository.findAll(), REGISTRY_ENTRY_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -97,11 +96,11 @@ public class RegistryEntryStatusService
      * @return single RegistryEntryStatus object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId, String outgoingAddress) {
+    public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 RegistryEntryStatusRepository.save(
                         RegistryEntryStatusRepository.findBySystemId(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -115,12 +114,12 @@ public class RegistryEntryStatusService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
+    public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         RegistryEntryStatusRepository.findByDescription(description),
                 REGISTRY_ENTRY_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -134,12 +133,12 @@ public class RegistryEntryStatusService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code, String outgoingAddress) {
+    public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         RegistryEntryStatusRepository.findByCode(code),
                 REGISTRY_ENTRY_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -168,11 +167,9 @@ public class RegistryEntryStatusService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, RegistryEntryStatus RegistryEntryStatus,
-                                        String outgoingAddress) {
+            version, RegistryEntryStatus RegistryEntryStatus) {
 
-        RegistryEntryStatus existingRegistryEntryStatus =
-                getRegistryEntryStatusOrThrow(systemId);
+        RegistryEntryStatus existingRegistryEntryStatus = getRegistryEntryStatusOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         if (null != existingRegistryEntryStatus.getCode()) {
@@ -189,7 +186,7 @@ public class RegistryEntryStatusService
         MetadataHateoas RegistryEntryStatusHateoas = new MetadataHateoas(
                 RegistryEntryStatusRepository.save(existingRegistryEntryStatus));
         metadataHateoasHandler.addLinks(RegistryEntryStatusHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this,
                         existingRegistryEntryStatus));

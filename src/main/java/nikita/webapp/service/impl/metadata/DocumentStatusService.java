@@ -47,7 +47,7 @@ public class DocumentStatusService implements IDocumentStatusService {
      * @return
      */
     @Override
-    public Iterable<DocumentStatus> findAll(String outgoingAddress) {
+    public Iterable<DocumentStatus> findAll() {
         return documentStatusRepository.findAll();
     }
 

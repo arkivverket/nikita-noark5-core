@@ -10,19 +10,18 @@ import nikita.common.model.noark5.v4.metadata.ScreeningMetadata;
 public interface IScreeningMetadataService {
 
     MetadataHateoas createNewScreeningMetadata(
-            ScreeningMetadata screeningMetadata, String outgoingAddress);
+            ScreeningMetadata screeningMetadata);
 
-    MetadataHateoas find(String systemId, String outgoingAddress);
+    MetadataHateoas find(String systemId);
 
-    MetadataHateoas findAll(String outgoingAddress);
+    MetadataHateoas findAll();
 
-    MetadataHateoas findByDescription(String description, String outgoingAddress);
+    MetadataHateoas findByDescription(String description);
 
-    MetadataHateoas findByCode(String code, String outgoingAddress);
+    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(String systemId, Long version,
-                                 ScreeningMetadata screeningMetadata,
-                                 String outgoingAddress);
+                                 ScreeningMetadata screeningMetadata);
 
     ScreeningMetadata generateDefaultScreeningMetadata();
 }

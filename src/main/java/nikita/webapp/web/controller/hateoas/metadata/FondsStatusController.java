@@ -12,7 +12,6 @@ import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.metadata.IFondsStatusService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +25,7 @@ import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
-public class FondsStatusController
-        extends NoarkController {
+public class FondsStatusController {
 
     private IFondsStatusService fondsStatusService;
     private IMetadataHateoasHandler metadataHateoasHandler;
@@ -63,7 +61,7 @@ public class FondsStatusController
             throws NikitaException {
         fondsStatusService.createNewFondsStatus(fondsStatus);
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fondsStatus.getVersion().toString())
@@ -86,9 +84,9 @@ public class FondsStatusController
     @RequestMapping(method = RequestMethod.GET, value = FONDS_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                fondsStatusService.findAll(getAddress(request)),
+                fondsStatusService.findAll(),
                 FONDS_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -117,7 +115,7 @@ public class FondsStatusController
                                                           HttpServletRequest request) {
         FondsStatus fondsStatus = fondsStatusService.findBySystemId(systemId);
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fondsStatus.getVersion().toString())
@@ -168,7 +166,7 @@ public class FondsStatusController
             throws NikitaException {
         fondsStatusService.update(fondsStatus);
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);

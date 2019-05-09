@@ -10,28 +10,28 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface ICaseFileHateoasHandler extends IHateoasHandler {
 
-    void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCaseParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewCaseParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCaseParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addCaseParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+    void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
 }

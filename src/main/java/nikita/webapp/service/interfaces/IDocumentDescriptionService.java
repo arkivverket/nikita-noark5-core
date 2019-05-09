@@ -18,7 +18,7 @@ public interface IDocumentDescriptionService {
             DocumentObject documentObject);
 
     // -- All READ operations
-    List<DocumentDescription> findAll(String outgoingAddress);
+    List<DocumentDescription> findAll();
 
     Optional<DocumentDescription> findById(Long id);
 

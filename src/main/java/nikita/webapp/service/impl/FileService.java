@@ -49,12 +49,12 @@ public class FileService
         this.fileHateoasHandler = fileHateoasHandler;
     }
 
-    public FileHateoas save(File file, String outgoingAddress) {
+    public FileHateoas save(File file) {
         checkDocumentMediumValid(file);
         setNoarkEntityValues(file);
         setFinaliseEntityValues(file);
         FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation(), outgoingAddress);
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, file));
         return fileHateoas;
@@ -102,7 +102,7 @@ public class FileService
     }
 
     // All READ operations
-    public List<File> findAll(String outgoingAddress) {
+    public List<File> findAll() {
         return fileRepository.findAll();
     }
 
@@ -164,12 +164,12 @@ public class FileService
      * @return the File object wrapped as a FileHateoas object
      */
     @Override
-    public FileHateoas generateDefaultFile(String outgoingAddress) {
+    public FileHateoas generateDefaultFile() {
         File defaultFile = new File();
         defaultFile.setTitle(TEST_TITLE);
         defaultFile.setDescription(TEST_DESCRIPTION);
         FileHateoas fondsHateoas = new FileHateoas(defaultFile);
-        fileHateoasHandler.addLinksOnNew(fondsHateoas, new Authorisation(), outgoingAddress);
+        fileHateoasHandler.addLinksOnNew(fondsHateoas, new Authorisation());
         return fondsHateoas;
     }
 

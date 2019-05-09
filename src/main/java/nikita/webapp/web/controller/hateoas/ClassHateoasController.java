@@ -88,8 +88,9 @@ public class ClassHateoasController
             @RequestBody Class klass)
             throws NikitaException {
         ClassHateoas classHateoas = classService.
-                createClassAssociatedWithClass(systemID, klass,
-                        getAddress(request));
+                createClassAssociatedWithClass(systemID
+
+                        , klass);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classHateoas.getEntityVersion().toString())
@@ -140,8 +141,7 @@ public class ClassHateoasController
             @RequestBody File file)
             throws NikitaException {
         FileHateoas fileHateoas = classService.
-                createFileAssociatedWithClass(systemID, file,
-                        getAddress(request));
+                createFileAssociatedWithClass(systemID, file);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fileHateoas.getEntityVersion().toString())
@@ -192,8 +192,7 @@ public class ClassHateoasController
             @RequestBody CaseFile caseFile)
             throws NikitaException {
         CaseFileHateoas caseFileHateoas = classService.
-                createCaseFileAssociatedWithClass(systemID, caseFile,
-                        getAddress(request));
+                createCaseFileAssociatedWithClass(systemID, caseFile);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(caseFileHateoas.getEntityVersion().toString())
@@ -244,8 +243,7 @@ public class ClassHateoasController
             @RequestBody Record record)
             throws NikitaException {
         RecordHateoas recordHateoas = classService.
-                createRecordAssociatedWithClass(systemID, record,
-                        getAddress(request));
+                createRecordAssociatedWithClass(systemID, record);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(recordHateoas.getEntityVersion().toString())
@@ -263,9 +261,7 @@ public class ClassHateoasController
                     value = "systemId of class to retrieve.",
                     required = true)
             @PathVariable("systemID") final String classSystemId) {
-        ClassHateoas classHateoas =
-                classService.findSingleClass(classSystemId,
-                        getAddress(request));
+        ClassHateoas classHateoas = classService.findSingleClass(classSystemId);
         return ResponseEntity.status(OK)
                 .eTag(classHateoas.getEntityVersion().toString())
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -290,8 +286,7 @@ public class ClassHateoasController
             HttpServletRequest request) {
         String ownedBy = SecurityContextHolder.getContext().getAuthentication()
                 .getName();
-        ClassHateoas classHateoas = classService.findAll(ownedBy,
-                getAddress(request));
+        ClassHateoas classHateoas = classService.findAll(ownedBy);
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classHateoas);
@@ -317,8 +312,7 @@ public class ClassHateoasController
                     value = "systemID of the class to delete",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
-        ClassHateoas classHateoas = classService.findAllChildren(systemID,
-                getAddress(request));
+        ClassHateoas classHateoas = classService.findAllChildren(systemID);
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classHateoas);
@@ -356,8 +350,7 @@ public class ClassHateoasController
             @PathVariable("systemID") final String systemID) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(classService.generateDefaultSubClass(systemID,
-                        getAddress(request)));
+                .body(classService.generateDefaultSubClass(systemID));
     }
 
     // Delete a Class identified by systemID
@@ -384,8 +377,7 @@ public class ClassHateoasController
                     value = "systemID of the class to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        HateoasNoarkObject parentObject = classService.deleteEntity(systemID,
-                getAddress(request));
+        HateoasNoarkObject parentObject = classService.deleteEntity(systemID);
         if (parentObject != null) {
             return ResponseEntity.status(OK)
                     .allow(getMethodsForRequestOrThrow(
@@ -438,7 +430,7 @@ public class ClassHateoasController
             throws NikitaException {
         validateForUpdate(klass);
         ClassHateoas classHateoas = classService.handleUpdate(systemID,
-                parseETAG(request.getHeader(ETAG)), klass, getAddress(request));
+                parseETAG(request.getHeader(ETAG)), klass);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classHateoas.getEntityVersion().toString())

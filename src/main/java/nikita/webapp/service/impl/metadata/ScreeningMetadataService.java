@@ -62,7 +62,7 @@ public class ScreeningMetadataService
      */
     @Override
     public MetadataHateoas createNewScreeningMetadata(
-            ScreeningMetadata screeningMetadata, String outgoingAddress) {
+            ScreeningMetadata screeningMetadata) {
 
         screeningMetadata.setDeleted(false);
         screeningMetadata.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,8 +70,7 @@ public class ScreeningMetadataService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 screeningMetadataRepository.save(screeningMetadata));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -84,13 +83,12 @@ public class ScreeningMetadataService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll(String outgoingAddress) {
+    public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         screeningMetadataRepository.findAll(),
                 SCREENING_METADATA);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -100,16 +98,14 @@ public class ScreeningMetadataService
      * Retrieve a single ScreeningMetadata object identified by systemId
      *
      * @param systemId systemId of the ScreeningMetadata you wish to retrieve
-     * @return single ScreeningMetadata object wrapped as a MetadataHateoas
-     * object
+     * @return single ScreeningMetadata object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId, String outgoingAddress) {
+    public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 screeningMetadataRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -124,15 +120,13 @@ public class ScreeningMetadataService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description,
-                                             String outgoingAddress) {
+    public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         screeningMetadataRepository
                                 .findByDescription(description),
                 SCREENING_METADATA);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -146,21 +140,19 @@ public class ScreeningMetadataService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code, String outgoingAddress) {
+    public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         screeningMetadataRepository.findByCode(code),
                 SCREENING_METADATA);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
     /**
      * Generate a default ScreeningMetadata object
      *
-     * @return the ScreeningMetadata object wrapped as a
-     * ScreeningMetadataHateoas object
+     * @return the ScreeningMetadata object wrapped as a ScreeningMetadataHateoas object
      */
     @Override
     public ScreeningMetadata generateDefaultScreeningMetadata() {
@@ -177,25 +169,22 @@ public class ScreeningMetadataService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId          The systemId of the screeningMetadata object
-     *                          you wish to update
-     * @param screeningMetadata The updated screeningMetadata object. Note the
-     *                          values you are allowed to change are copied
-     *                          from this object. This object is not persisted.
+     * @param systemId          The systemId of the screeningMetadata object you wish to
+     *                          update
+     * @param screeningMetadata The updated screeningMetadata object. Note the values
+     *                          you are allowed to change are copied from this
+     *                          object. This object is not persisted.
      * @return the updated screeningMetadata
      */
     @Override
-    public MetadataHateoas handleUpdate(
-            String systemId, Long version,
-            ScreeningMetadata screeningMetadata, String outgoingAddress) {
+    public MetadataHateoas handleUpdate(String systemId, Long
+            version, ScreeningMetadata screeningMetadata) {
 
-        ScreeningMetadata existingScreeningMetadata =
-                getScreeningMetadataOrThrow(systemId);
+        ScreeningMetadata existingScreeningMetadata = getScreeningMetadataOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         if (null != existingScreeningMetadata.getCode()) {
-            existingScreeningMetadata.setCode(
-                    existingScreeningMetadata.getCode());
+            existingScreeningMetadata.setCode(existingScreeningMetadata.getCode());
         }
         if (null != existingScreeningMetadata.getDescription()) {
             existingScreeningMetadata.setDescription(
@@ -209,7 +198,7 @@ public class ScreeningMetadataService
                 screeningMetadataRepository.save(existingScreeningMetadata));
 
         metadataHateoasHandler.addLinks(screeningMetadataHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,
@@ -220,15 +209,14 @@ public class ScreeningMetadataService
     /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid ScreeningMetadata object back. If
-     * there is no ScreeningMetadata object, a NoarkEntityNotFoundException
-     * exceptionis thrown
+     * that you will only ever get a valid ScreeningMetadata object back. If there
+     * is no ScreeningMetadata object, a NoarkEntityNotFoundException exception
+     * is thrown
      *
      * @param systemId The systemId of the ScreeningMetadata object to retrieve
      * @return the ScreeningMetadata object
      */
-    private ScreeningMetadata getScreeningMetadataOrThrow(
-            @NotNull String systemId) {
+    private ScreeningMetadata getScreeningMetadataOrThrow(@NotNull String systemId) {
         ScreeningMetadata screeningMetadata = screeningMetadataRepository.
                 findBySystemId(systemId);
         if (screeningMetadata == null) {

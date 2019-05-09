@@ -67,8 +67,7 @@ public class UserController
             HttpServletRequest request,
             @RequestBody User user)
             throws NikitaException {
-        UserHateoas userHateoas = userService.createNewUser(user,
-                getAddress(request));
+        UserHateoas userHateoas = userService.createNewUser(user);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -96,7 +95,7 @@ public class UserController
     @Counted
     @RequestMapping(method = RequestMethod.GET, value = USER)
     public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
-        UserHateoas userHateoas = userService.findAll(getAddress(request));
+        UserHateoas userHateoas = userService.findAll();
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
@@ -126,8 +125,7 @@ public class UserController
     public ResponseEntity<UserHateoas>
     findBySystemId(@PathVariable("username") final String username,
                    HttpServletRequest request) {
-        UserHateoas userHateoas = userService.findByUsername(username,
-                getAddress(request));
+        UserHateoas userHateoas = userService.findByUsername(username);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
@@ -203,7 +201,7 @@ public class UserController
                @RequestBody User user)
             throws NikitaException {
         UserHateoas userHateoas = userService.handleUpdate(systemID,
-                parseETAG(request.getHeader(ETAG)), user, getAddress(request));
+                parseETAG(request.getHeader(ETAG)), user);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))

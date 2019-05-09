@@ -27,15 +27,15 @@ public interface ICorrespondencePartService {
 
     CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             @NotNull CorrespondencePartUnit correspondencePartUnit,
-            @NotNull RegistryEntry registryEntry, String outgoingAddress);
+            @NotNull RegistryEntry registryEntry);
 
     CorrespondencePartInternalHateoas createNewCorrespondencePartInternal(
             @NotNull CorrespondencePartInternal correspondencePartUnit,
-            @NotNull RegistryEntry registryEntry, String outgoingAddress);
+            @NotNull RegistryEntry registryEntry);
 
     CorrespondencePartPersonHateoas createNewCorrespondencePartPerson(
             @NotNull CorrespondencePartPerson correspondencePartPerson,
-            @NotNull RegistryEntry registryEntry, String outgoingAddress);
+            @NotNull RegistryEntry registryEntry);
 
     CorrespondencePart findBySystemId(@NotNull String systemID);
 
@@ -46,11 +46,11 @@ public interface ICorrespondencePartService {
     void deleteCorrespondencePartInternal(@NotNull String systemID);
 
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String registryEntrySystemId, String outgoingAddress);
+            String registryEntrySystemId);
 
     CorrespondencePartPersonHateoas generateDefaultCorrespondencePartPerson(
-            String registryEntrySystemId, String outgoingAddress);
+            String registryEntrySystemId);
 
     CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
-            String registryEntrySystemId, String outgoingAddress);
+            String registryEntrySystemId);
 }

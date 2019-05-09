@@ -58,7 +58,7 @@ public class SignOffMethodService
      */
     @Override
     public MetadataHateoas createNewSignOffMethod(
-            SignOffMethod SignOffMethod, String outgoingAddress) {
+            SignOffMethod SignOffMethod) {
 
         SignOffMethod.setDeleted(false);
         SignOffMethod.setOwnedBy(
@@ -67,8 +67,7 @@ public class SignOffMethodService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 SignOffMethodRepository.save(SignOffMethod));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -80,11 +79,11 @@ public class SignOffMethodService
      * @return list of SignOffMethod objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll(String outgoingAddress) {
+    public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         SignOffMethodRepository.findAll(), SIGN_OFF_METHOD);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -97,12 +96,11 @@ public class SignOffMethodService
      * @return single SignOffMethod object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId, String outgoingAddress) {
+    public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 SignOffMethodRepository.save(
                         SignOffMethodRepository.findBySystemId(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -116,13 +114,12 @@ public class SignOffMethodService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description,
-                                             String outgoingAddress) {
+    public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         SignOffMethodRepository.findByDescription(description),
                 SIGN_OFF_METHOD);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -136,13 +133,12 @@ public class SignOffMethodService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code, String outgoingAddress) {
+    public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         SignOffMethodRepository.findByCode(code),
                 SIGN_OFF_METHOD);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -166,12 +162,12 @@ public class SignOffMethodService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param signOffMethod
+     * @param SignOffMethod
      * @return the updated SignOffMethod
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, SignOffMethod signOffMethod, String outgoingAddress) {
+            version, SignOffMethod SignOffMethod) {
 
         SignOffMethod existingSignOffMethod = getSignOffMethodOrThrow(systemId);
 
@@ -190,7 +186,7 @@ public class SignOffMethodService
         MetadataHateoas SignOffMethodHateoas = new MetadataHateoas(
                 SignOffMethodRepository.save(existingSignOffMethod));
         metadataHateoasHandler.addLinks(SignOffMethodHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this,
                         existingSignOffMethod));

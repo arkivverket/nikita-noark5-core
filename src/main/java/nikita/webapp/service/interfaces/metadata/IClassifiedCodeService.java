@@ -9,20 +9,18 @@ import nikita.common.model.noark5.v4.metadata.ClassifiedCode;
 
 public interface IClassifiedCodeService {
 
-    MetadataHateoas createNewClassifiedCode(ClassifiedCode classificationType,
-                                            String outgoingAddress);
+    MetadataHateoas createNewClassifiedCode(ClassifiedCode classificationType);
 
-    MetadataHateoas find(String systemId, String outgoingAddress);
+    MetadataHateoas find(String systemId);
 
-    MetadataHateoas findAll(String outgoingAddress);
+    MetadataHateoas findAll();
 
-    MetadataHateoas findByDescription(String description, String outgoingAddress);
+    MetadataHateoas findByDescription(String description);
 
-    MetadataHateoas findByCode(String code, String outgoingAddress);
+    MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version,
-                                 ClassifiedCode classificationType,
-                                 String outgoingAddress);
+    MetadataHateoas handleUpdate(String systemId, Long version, ClassifiedCode
+            classificationType);
 
     ClassifiedCode generateDefaultClassifiedCode();
 }

@@ -65,8 +65,7 @@ public class ElectronicSignatureSecurityLevelService
      */
     @Override
     public MetadataHateoas createNewElectronicSignatureSecurityLevel(
-            ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel,
-            String outgoingAddress) {
+            ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel) {
 
         electronicSignatureSecurityLevel.setDeleted(false);
         electronicSignatureSecurityLevel.setOwnedBy(
@@ -76,8 +75,7 @@ public class ElectronicSignatureSecurityLevelService
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 electronicSignatureSecurityLevelRepository.save
                         (electronicSignatureSecurityLevel));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -90,12 +88,12 @@ public class ElectronicSignatureSecurityLevelService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll(String outgoingAddress) {
+    public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         electronicSignatureSecurityLevelRepository.findAll()
                 , ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -111,13 +109,12 @@ public class ElectronicSignatureSecurityLevelService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId, String outgoingAddress) {
+    public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 electronicSignatureSecurityLevelRepository.save(
                         electronicSignatureSecurityLevelRepository
                                 .findBySystemId(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -133,15 +130,13 @@ public class ElectronicSignatureSecurityLevelService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByDescription(String description,
-                                             String outgoingAddress) {
+    public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         electronicSignatureSecurityLevelRepository
                                 .findByDescription(description),
                 ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -155,14 +150,13 @@ public class ElectronicSignatureSecurityLevelService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByCode(String code, String outgoingAddress) {
+    public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         electronicSignatureSecurityLevelRepository.findByCode
                                 (code),
                 ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
-                outgoingAddress);
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
@@ -203,10 +197,9 @@ public class ElectronicSignatureSecurityLevelService
      * @return the updated electronicSignatureSecurityLevel
      */
     @Override
-    public MetadataHateoas handleUpdate(
-            String systemId, Long version,
-            ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel,
-            String outgoingAddress) {
+    public MetadataHateoas handleUpdate(String systemId, Long
+            version, ElectronicSignatureSecurityLevel
+                                                electronicSignatureSecurityLevel) {
 
         ElectronicSignatureSecurityLevel
                 existingElectronicSignatureSecurityLevel =
@@ -232,7 +225,7 @@ public class ElectronicSignatureSecurityLevelService
                                 (existingElectronicSignatureSecurityLevel));
 
         metadataHateoasHandler.addLinks(electronicSignatureSecurityLevelHateoas,
-                new Authorisation(), outgoingAddress);
+                new Authorisation());
 
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this,
