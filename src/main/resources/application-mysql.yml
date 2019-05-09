@@ -32,7 +32,7 @@ spring:
   application:
     name: OsloMet Noark 5 Core (using MySQL)
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/nikita_noark5_prod?serverTimezone=Europe/Oslo
     username: INSERT-USERNAME-HERE
     password: INSERT-PASSWORD-HERE
