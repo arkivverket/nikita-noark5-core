@@ -43,7 +43,6 @@ spring:
     properties:
       hibernate.hbm2ddl.auto: validate
       hibernate.discriminator.ignore_explicit_for_joined: true
-
   profiles:
     active: security-oauth2-authentication, mysql
 
