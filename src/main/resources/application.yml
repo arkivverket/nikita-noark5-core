@@ -25,11 +25,6 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     database: h2
     show-sql: false
-    hibernate:
-      ddl-auto: create-drop
-      naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
     properties:
       hibernate.hbm2ddl.auto: create-drop
       hibernate.discriminator.ignore_explicit_for_joined: true

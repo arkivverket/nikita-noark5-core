@@ -20,11 +20,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
     show-sql: false
-    hibernate:
-      ddl-auto: none
-      naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
     properties:
       hibernate.hbm2ddl.auto: validate
       hibernate.discriminator.ignore_explicit_for_joined: true
