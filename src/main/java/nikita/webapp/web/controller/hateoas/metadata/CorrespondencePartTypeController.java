@@ -64,7 +64,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             throws NikitaException {
         correspondencePartTypeService.createNewCorrespondencePartType(correspondencePartType);
         MetadataHateoas metadataHateoas = new MetadataHateoas(correspondencePartType);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(correspondencePartType.getVersion().toString())
@@ -87,9 +87,9 @@ public class CorrespondencePartTypeController extends NoarkController {
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>)
-                        (List) correspondencePartTypeService.findAll(),
+                        (List) correspondencePartTypeService.findAll(getAddress(request)),
                 CORRESPONDENCE_PART_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
@@ -118,7 +118,7 @@ public class CorrespondencePartTypeController extends NoarkController {
                                                           HttpServletRequest request) {
         CorrespondencePartType correspondencePartType = correspondencePartTypeService.findBySystemId(systemId);
         MetadataHateoas metadataHateoas = new MetadataHateoas(correspondencePartType);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(correspondencePartType.getVersion().toString())
@@ -171,7 +171,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             throws NikitaException {
         CorrespondencePartType updatedCorrespondencePartType = correspondencePartTypeService.update(correspondencePartType);
         MetadataHateoas metadataHateoas = new MetadataHateoas(updatedCorrespondencePartType);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(correspondencePartType.getVersion().toString())

@@ -62,7 +62,7 @@ public class PostalCodeService
      */
     @Override
     public MetadataHateoas createNewPostalCode(
-            PostalCode postalCode) {
+            PostalCode postalCode, String outgoingAddress) {
 
         postalCode.setDeleted(false);
         postalCode.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,8 @@ public class PostalCodeService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 postalCodeRepository.save(postalCode));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,11 +84,12 @@ public class PostalCodeService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         postalCodeRepository.findAll(), POST_CODE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -100,11 +102,12 @@ public class PostalCodeService
      * @return single PostalCode object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 postalCodeRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -119,12 +122,13 @@ public class PostalCodeService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description,
+                                             String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         postalCodeRepository
                                 .findByDescription(description), POST_CODE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -138,11 +142,12 @@ public class PostalCodeService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         postalCodeRepository.findByCode(code), POST_CODE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -175,7 +180,7 @@ public class PostalCodeService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, PostalCode postalCode) {
+            version, PostalCode postalCode, String outgoingAddress) {
 
         PostalCode existingPostalCode = getPostalCodeOrThrow(systemId);
 
@@ -195,7 +200,7 @@ public class PostalCodeService
                 postalCodeRepository.save(existingPostalCode));
 
         metadataHateoasHandler.addLinks(postalCodeHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

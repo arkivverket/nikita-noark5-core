@@ -12,27 +12,31 @@ public interface IClassificationSystemService {
 
 	// -- All CREATE operations
     ClassificationSystemHateoas save(
-            @NotNull ClassificationSystem classificationSystem);
+            @NotNull ClassificationSystem classificationSystem,
+            String outgoingAddress);
 
     ClassHateoas createClassAssociatedWithClassificationSystem(
-            @NotNull String systemId, @NotNull Class klass);
+            @NotNull String systemId, @NotNull Class klass,
+            String outgoingAddress);
 
-    ClassHateoas generateDefaultClass(@NotNull String classSystemId);
+    ClassHateoas generateDefaultClass(@NotNull String classSystemId,
+                                      String outgoingAddress);
 
     // -- All READ operations
     ClassificationSystemHateoas findSingleClassificationSystem(
-            @NotNull String classificationSystemSystemId);
+            @NotNull String classificationSystemSystemId, String outgoingAddress);
 
-    ClassificationSystemHateoas findAllClassificationSystem();
+    ClassificationSystemHateoas findAllClassificationSystem(String outgoingAddress);
 
     ClassHateoas findAllClassAssociatedWithClassificationSystem(
-            @NotNull String classificationSystemSystemId);
+            @NotNull String classificationSystemSystemId, String outgoingAddress);
 
     // All UPDATE operations
     ClassificationSystemHateoas handleUpdate(
             @NotNull String systemId,
             @NotNull Long version,
-            @NotNull ClassificationSystem incomingClassificationSystem);
+            @NotNull ClassificationSystem incomingClassificationSystem,
+            String outgoingAddress);
 
     // All DELETE operations
     void deleteEntity(@NotNull String classificationSystemSystemId);

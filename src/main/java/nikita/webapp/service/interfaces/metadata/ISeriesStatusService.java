@@ -11,7 +11,7 @@ public interface ISeriesStatusService {
 
     SeriesStatus createNewSeriesStatus(SeriesStatus seriesStatus);
 
-    Iterable<SeriesStatus> findAll();
+    Iterable<SeriesStatus> findAll(String outgoingAddress);
 
     SeriesStatus findBySystemId(String systemId);
 

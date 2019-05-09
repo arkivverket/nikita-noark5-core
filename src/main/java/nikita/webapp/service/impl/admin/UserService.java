@@ -58,7 +58,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserHateoas createNewUser(final User user)
+    public UserHateoas createNewUser(final User user, String outgoingAddress)
             throws UsernameExistsException {
         if (userExists(user.getUsername())) {
             throw new UsernameExistsException("There is an account with that " +
@@ -75,7 +75,7 @@ public class UserService implements IUserService {
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
         UserHateoas userHateoas = new UserHateoas(userRepository.save(user));
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
+        userHateoasHandler.addLinks(userHateoas, new Authorisation(), outgoingAddress);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, user));
 
@@ -96,10 +96,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserHateoas findByUsername(String username) {
+    public UserHateoas findByUsername(String username, String outgoingAddress) {
         User user = getUserOrThrow(username);
         UserHateoas userHateoas = new UserHateoas(user);
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
+        userHateoasHandler.addLinks(userHateoas, new Authorisation(), outgoingAddress);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, user));
         return userHateoas;
@@ -107,18 +107,19 @@ public class UserService implements IUserService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public UserHateoas findAll() {
+    public UserHateoas findAll(String outgoingAddress) {
         UserHateoas userHateoas = new UserHateoas(
                 (List<INikitaEntity>)
                         (List) userRepository.findAll());
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
+        userHateoasHandler.addLinks(userHateoas, new Authorisation(), outgoingAddress);
         return userHateoas;
     }
 
     @Override
     public UserHateoas handleUpdate(@NotNull String userSystemId,
                                     @NotNull Long version,
-                                    @NotNull User incomingUser) {
+                                    @NotNull User incomingUser,
+                                    @NotNull String outgoingAddress) {
 
         User existingUser = getUserOrThrow(userSystemId);
 
@@ -136,7 +137,7 @@ public class UserService implements IUserService {
 
         UserHateoas userHateoas = new UserHateoas(userRepository.
                 save(existingUser));
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
+        userHateoasHandler.addLinks(userHateoas, new Authorisation(), outgoingAddress);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, existingUser));
         return userHateoas;

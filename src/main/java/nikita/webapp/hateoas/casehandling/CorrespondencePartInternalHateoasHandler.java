@@ -17,7 +17,7 @@ public class CorrespondencePartInternalHateoasHandler
     @Override
     public void addEntityLinksOnTemplate(INikitaEntity entity,
                                          IHateoasNoarkObject
-                                                 hateoasNoarkObject) {
-        addCorrespondencePartType(entity, hateoasNoarkObject);
+                                                 hateoasNoarkObject, String outgoingAddress) {
+        addCorrespondencePartType(entity, hateoasNoarkObject, outgoingAddress);
     }
 }

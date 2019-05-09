@@ -35,13 +35,13 @@ public class HateoasHandler implements IHateoasHandler {
 
     @Override
     public void addLinks(IHateoasNoarkObject hateoasNoarkObject,
-                         IAuthorisation authorisation) {
+                         IAuthorisation authorisation, String outgoingAddress) {
         this.authorisation = authorisation;
 
         Iterable<INikitaEntity> entities = hateoasNoarkObject.getList();
         for (INikitaEntity entity : entities) {
-            addSelfLink(entity, hateoasNoarkObject);
-            addEntityLinks(entity, hateoasNoarkObject);
+            addSelfLink(entity, hateoasNoarkObject, outgoingAddress);
+            addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
         }
         // If hateoasNoarkObject is a list add a self link.
         // { "entity": [], "_links": [] }
@@ -54,55 +54,55 @@ public class HateoasHandler implements IHateoasHandler {
 
     @Override
     public void addLinksOnCreate(IHateoasNoarkObject hateoasNoarkObject,
-                                 IAuthorisation authorisation) {
-        addLinks(hateoasNoarkObject, authorisation);
+                                 IAuthorisation authorisation, String outgoingAddress) {
+        addLinks(hateoasNoarkObject, authorisation, outgoingAddress);
     }
 
     @Override
     public void addLinksOnNew(IHateoasNoarkObject hateoasNoarkObject,
-                              IAuthorisation authorisation) {
+                              IAuthorisation authorisation, String outgoingAddress) {
         this.authorisation = authorisation;
 
         Iterable<INikitaEntity> entities = hateoasNoarkObject.getList();
         for (INikitaEntity entity : entities) {
-            addEntityLinksOnNew(entity, hateoasNoarkObject);
+            addEntityLinksOnNew(entity, hateoasNoarkObject, outgoingAddress);
         }
     }
 
     @Override
     public void addLinksOnRead(IHateoasNoarkObject hateoasNoarkObject,
-                               IAuthorisation authorisation) {
-        addLinks(hateoasNoarkObject, authorisation);
+                               IAuthorisation authorisation, String outgoingAddress) {
+        addLinks(hateoasNoarkObject, authorisation, outgoingAddress);
     }
 
     @Override
     public void addLinksOnUpdate(IHateoasNoarkObject hateoasNoarkObject,
-                                 IAuthorisation authorisation) {
-        addLinks(hateoasNoarkObject, authorisation);
+                                 IAuthorisation authorisation, String outgoingAddress) {
+        addLinks(hateoasNoarkObject, authorisation, outgoingAddress);
     }
 
     @Override
     public void addLinksOnDelete(IHateoasNoarkObject hateoasNoarkObject,
-                                 IAuthorisation authorisation) {
-        addLinks(hateoasNoarkObject, authorisation);
+                                 IAuthorisation authorisation, String outgoingAddress) {
+        addLinks(hateoasNoarkObject, authorisation, outgoingAddress);
     }
 
     @Override
     public void addLinksOnTemplate(IHateoasNoarkObject hateoasNoarkObject,
-                                   IAuthorisation authorisation) {
+                                   IAuthorisation authorisation, String outgoingAddress) {
         this.authorisation = authorisation;
 
         Iterable<INikitaEntity> entities = hateoasNoarkObject.getList();
         for (INikitaEntity entity : entities) {
-            addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+            addEntityLinksOnTemplate(entity, hateoasNoarkObject, outgoingAddress);
         }
     }
 
     @Override
     public void addSelfLink(INikitaEntity entity,
-                            IHateoasNoarkObject hateoasNoarkObject) {
+                            IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
         String systemId = entity.getSystemId();
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress +
                 HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
                 SLASH + entity.getBaseTypeName() + SLASH + systemId + SLASH,
                 getRelSelfLink(), false));
@@ -110,8 +110,8 @@ public class HateoasHandler implements IHateoasHandler {
 
     @Override
     public void addDocumentMedium(INikitaEntity entity,
-                                  IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+                                  IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress +
                 HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH +
                 DOCUMENT_MEDIUM, REL_METADATA_DOCUMENT_MEDIUM, false));
     }
@@ -119,33 +119,33 @@ public class HateoasHandler implements IHateoasHandler {
     // Sub class should handle this, empty links otherwise!
     @Override
     public void addEntityLinks(INikitaEntity entity,
-                               IHateoasNoarkObject hateoasNoarkObject) {
+                               IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
     public void addEntityLinksOnCreate(INikitaEntity entity,
-                                       IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
+                                       IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
     public void addEntityLinksOnTemplate(INikitaEntity entity,
-                                         IHateoasNoarkObject hateoasNoarkObject) {
+                                         IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
     public void addEntityLinksOnNew(INikitaEntity entity,
-                                    IHateoasNoarkObject hateoasNoarkObject) {
+                                    IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
     public void addEntityLinksOnRead(INikitaEntity entity,
-                                     IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
+                                     IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     protected String getRelSelfLink() {

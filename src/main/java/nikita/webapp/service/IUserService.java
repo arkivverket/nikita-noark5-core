@@ -7,14 +7,14 @@ import nikita.webapp.util.exceptions.UsernameExistsException;
 
 public interface IUserService {
 
-    UserHateoas createNewUser(User user) throws UsernameExistsException;
+    UserHateoas createNewUser(User user, String outgoingAddress) throws UsernameExistsException;
 
-    UserHateoas findAll();
+    UserHateoas findAll(String outgoingAddress);
 
-    UserHateoas findByUsername(String username);
+    UserHateoas findByUsername(String username, String outgoingAddress);
 
-    UserHateoas handleUpdate(String userSystemId, Long version, User
-            incomingUser);
+    UserHateoas handleUpdate(String userSystemId, Long version,
+                             User incomingUser, String outgoingAddress);
 
     boolean userExists(String username);
 

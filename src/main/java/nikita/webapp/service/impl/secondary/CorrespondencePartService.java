@@ -170,7 +170,7 @@ public class CorrespondencePartService
     public CorrespondencePartPersonHateoas
     createNewCorrespondencePartPerson(
             CorrespondencePartPerson correspondencePart,
-            RegistryEntry registryEntry) {
+            RegistryEntry registryEntry, String outgoingAddress) {
 
         setCorrespondencePartType(correspondencePart);
 
@@ -212,7 +212,7 @@ public class CorrespondencePartService
                 new CorrespondencePartPersonHateoas(correspondencePart);
         correspondencePartHateoasHandler.addLinks(
                 correspondencePartPersonHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this,
                         correspondencePart));
@@ -223,7 +223,7 @@ public class CorrespondencePartService
     @Override
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePart,
-            RegistryEntry registryEntry) {
+            RegistryEntry registryEntry, String outgoingAddress) {
 
         setCorrespondencePartType(correspondencePart);
 
@@ -268,7 +268,7 @@ public class CorrespondencePartService
         CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
                 new CorrespondencePartUnitHateoas(correspondencePart);
         correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this,
                         correspondencePart));
@@ -281,7 +281,7 @@ public class CorrespondencePartService
     public CorrespondencePartInternalHateoas
     createNewCorrespondencePartInternal(
             CorrespondencePartInternal correspondencePart,
-            RegistryEntry registryEntry) {
+            RegistryEntry registryEntry, String outgoingAddress) {
 
         setCorrespondencePartType(correspondencePart);
 
@@ -294,7 +294,7 @@ public class CorrespondencePartService
                 new CorrespondencePartInternalHateoas(correspondencePart);
         correspondencePartHateoasHandler.addLinks(
                 correspondencePartInternalHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this,
                         correspondencePart));
@@ -493,7 +493,7 @@ public class CorrespondencePartService
      */
     @Override
     public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            final String registryEntrySystemId) {
+            final String registryEntrySystemId, String outgoingAddress) {
         CorrespondencePartUnit suggestedCorrespondencePart =
                 new CorrespondencePartUnit();
 
@@ -508,7 +508,7 @@ public class CorrespondencePartService
         CorrespondencePartUnitHateoas correspondencePartHateoas =
                 new CorrespondencePartUnitHateoas(suggestedCorrespondencePart);
         correspondencePartHateoasHandler.addLinksOnTemplate(
-                correspondencePartHateoas, new Authorisation());
+                correspondencePartHateoas, new Authorisation(), outgoingAddress);
         return correspondencePartHateoas;
     }
 
@@ -527,7 +527,8 @@ public class CorrespondencePartService
      */
     @Override
     public CorrespondencePartPersonHateoas
-    generateDefaultCorrespondencePartPerson(final String registryEntrySystemId) {
+    generateDefaultCorrespondencePartPerson(final String registryEntrySystemId,
+                                            String outgoingAddress) {
         CorrespondencePartPerson suggestedCorrespondencePart =
                 new CorrespondencePartPerson();
 
@@ -544,7 +545,7 @@ public class CorrespondencePartService
         CorrespondencePartPersonHateoas correspondencePartHateoas =
                 new CorrespondencePartPersonHateoas(suggestedCorrespondencePart);
         correspondencePartHateoasHandler.addLinksOnTemplate(
-                correspondencePartHateoas, new Authorisation());
+                correspondencePartHateoas, new Authorisation(), outgoingAddress);
         return correspondencePartHateoas;
     }
 
@@ -564,7 +565,7 @@ public class CorrespondencePartService
     @Override
     public CorrespondencePartInternalHateoas
     generateDefaultCorrespondencePartInternal(
-            final String registryEntrySystemId) {
+            final String registryEntrySystemId, String outgoingAddress) {
         CorrespondencePartInternal suggestedCorrespondencePart =
                 new CorrespondencePartInternal();
 
@@ -575,7 +576,7 @@ public class CorrespondencePartService
                 new CorrespondencePartInternalHateoas(
                         suggestedCorrespondencePart);
         correspondencePartHateoasHandler.addLinksOnTemplate(
-                correspondencePartHateoas, new Authorisation());
+                correspondencePartHateoas, new Authorisation(), outgoingAddress);
         return correspondencePartHateoas;
     }
 

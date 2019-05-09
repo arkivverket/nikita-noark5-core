@@ -19,24 +19,24 @@ public interface IRegistryEntryService {
 
     CorrespondencePartPersonHateoas
     createCorrespondencePartPersonAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartPerson correspondencePart);
+            String systemID, CorrespondencePartPerson correspondencePart, String outgoingAddress);
 
     CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
-            String registryEntrySystemId);
+            String registryEntrySystemId, String outgoingAddress);
 
     CorrespondencePartPersonHateoas generateDefaultCorrespondencePartPerson(
-            String registryEntrySystemId);
+            String registryEntrySystemId, String outgoingAddress);
 
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String registryEntrySystemId);
+            String registryEntrySystemId, String outgoingAddress);
 
     CorrespondencePartUnitHateoas
     createCorrespondencePartUnitAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartUnit correspondencePart);
+            String systemID, CorrespondencePartUnit correspondencePart, String outgoingAddress);
 
     CorrespondencePartInternalHateoas
     createCorrespondencePartInternalAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartInternal correspondencePart);
+            String systemID, CorrespondencePartInternal correspondencePart, String outgoingAddress);
 
     Precedence createPrecedenceAssociatedWithRecord(
             String registryEntrysystemID, Precedence precedence);
@@ -47,17 +47,17 @@ public interface IRegistryEntryService {
     List<RegistryEntry> findRegistryEntryByOwnerPaginated(Integer top, Integer skip);
 
     CorrespondencePartPersonHateoas
-    getCorrespondencePartPersonAssociatedWithRegistryEntry(String systemID);
+    getCorrespondencePartPersonAssociatedWithRegistryEntry(String systemID, String outgoingAddress);
 
     CorrespondencePartInternalHateoas
-    getCorrespondencePartInternalAssociatedWithRegistryEntry(String systemID);
+    getCorrespondencePartInternalAssociatedWithRegistryEntry(String systemID, String outgoingAddress);
 
     CorrespondencePartUnitHateoas
-    getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID);
+    getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID, String outgoingAddress);
 
     // All UPDATE operations
     RegistryEntry handleUpdate(@NotNull String systemId, @NotNull Long version,
-                               @NotNull RegistryEntry incomingRegistryEntry);
+                               @NotNull RegistryEntry incomingRegistryEntry, String outgoingAddress);
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);

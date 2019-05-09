@@ -105,7 +105,7 @@ public class CaseFileHateoasController extends NoarkController {
         RegistryEntry createdRegistryEntry = caseFileService.createRegistryEntryAssociatedWithCaseFile(systemID,
                 registryEntry);
         RegistryEntryHateoas registryEntryHateoas = new RegistryEntryHateoas(createdRegistryEntry);
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
+        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation(), getAddress(request));
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdRegistryEntry));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -145,7 +145,7 @@ public class CaseFileHateoasController extends NoarkController {
 
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas(defaultRegistryEntry);
-        registryEntryHateoasHandler.addLinksOnNew(registryEntryHateoas, new Authorisation());
+        registryEntryHateoasHandler.addLinksOnNew(registryEntryHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryHateoas);
@@ -174,7 +174,7 @@ public class CaseFileHateoasController extends NoarkController {
         }
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(caseFile);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(caseFile.getVersion().toString())
@@ -207,7 +207,7 @@ public class CaseFileHateoasController extends NoarkController {
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas((List<INikitaEntity>)
                 (List) (caseFile.getReferenceRecord()));
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
+        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryHateoas);
@@ -236,7 +236,7 @@ public class CaseFileHateoasController extends NoarkController {
                 CaseFileHateoas((List<INikitaEntity>) (List)
                 caseFileService.findCaseFileByOwnerPaginated(top, skip));
 
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(caseFileHateoas);
@@ -266,12 +266,12 @@ public class CaseFileHateoasController extends NoarkController {
         HateoasNoarkObject hateoasNoarkObject;
         if (parentEntity instanceof Series) {
             hateoasNoarkObject = new SeriesHateoas(parentEntity);
-            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
+            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation(), getAddress(request));
         }
         // TODO: Can a casefile have a Class as parent???
         else if (parentEntity instanceof Class) {
             hateoasNoarkObject = new ClassHateoas(parentEntity);
-            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
+            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation(), getAddress(request));
         }
         else {
             throw new NikitaException("Internal error. Could not process " + request.getRequestURI());
@@ -315,7 +315,7 @@ public class CaseFileHateoasController extends NoarkController {
 
         CaseFile updatedCaseFile = caseFileService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), caseFile);
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(updatedCaseFile);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation(), getAddress(request));
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedCaseFile));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

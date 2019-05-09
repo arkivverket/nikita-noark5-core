@@ -12,44 +12,58 @@ import nikita.webapp.security.IAuthorisation;
 public interface IHateoasHandler {
 
     void addLinks(IHateoasNoarkObject hateoasNoarkObject,
-                  IAuthorisation authorisation);
+                  IAuthorisation authorisation,
+                  String outgoingAddress);
 
     void addLinksOnCreate(IHateoasNoarkObject hateoasNoarkObject,
-                          IAuthorisation authorisation);
+                          IAuthorisation authorisation,
+                          String outgoingAddress);
 
     void addLinksOnTemplate(IHateoasNoarkObject hateoasNoarkObject,
-                            IAuthorisation authorisation);
+                            IAuthorisation authorisation,
+                            String outgoingAddress);
 
     void addLinksOnRead(IHateoasNoarkObject hateoasNoarkObject,
-                        IAuthorisation authorisation);
+                        IAuthorisation authorisation,
+                        String outgoingAddress);
 
     void addLinksOnUpdate(IHateoasNoarkObject hateoasNoarkObject,
-                          IAuthorisation authorisation);
+                          IAuthorisation authorisation,
+                          String outgoingAddress);
 
     void addLinksOnDelete(IHateoasNoarkObject hateoasNoarkObject,
-                          IAuthorisation authorisation);
+                          IAuthorisation authorisation,
+                          String outgoingAddress);
 
     void addLinksOnNew(IHateoasNoarkObject hateoasNoarkObject,
-                       IAuthorisation authorisation);
+                       IAuthorisation authorisation,
+                       String outgoingAddress);
 
     void addSelfLink(INikitaEntity entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
+                     IHateoasNoarkObject hateoasNoarkObject,
+                     String outgoingAddress);
 
     void addEntityLinks(INikitaEntity entity,
-                        IHateoasNoarkObject hateoasNoarkObject);
+                        IHateoasNoarkObject hateoasNoarkObject,
+                        String outgoingAddress);
 
     void addEntityLinksOnCreate(INikitaEntity entity,
-                                IHateoasNoarkObject hateoasNoarkObject);
+                                IHateoasNoarkObject hateoasNoarkObject,
+                                String outgoingAddress);
 
     void addEntityLinksOnTemplate(INikitaEntity entity,
-                                  IHateoasNoarkObject hateoasNoarkObject);
+                                  IHateoasNoarkObject hateoasNoarkObject,
+                                  String outgoingAddress);
 
     void addEntityLinksOnRead(INikitaEntity entity,
-                              IHateoasNoarkObject hateoasNoarkObject);
+                              IHateoasNoarkObject hateoasNoarkObject,
+                              String outgoingAddress);
 
     void addEntityLinksOnNew(INikitaEntity entity,
-                             IHateoasNoarkObject hateoasNoarkObject);
+                             IHateoasNoarkObject hateoasNoarkObject,
+                             String outgoingAddress);
 
     void addDocumentMedium(INikitaEntity entity,
-                           IHateoasNoarkObject hateoasNoarkObject);
+                           IHateoasNoarkObject hateoasNoarkObject,
+                           String outgoingAddress);
 }

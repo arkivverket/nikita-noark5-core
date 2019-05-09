@@ -23,14 +23,14 @@ public class CorrespondencePartHateoasHandler
 
     @Override
     public void addEntityLinksOnTemplate(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        addCorrespondencePartType(entity, hateoasNoarkObject);
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addCorrespondencePartType(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     @Override
     public void addCorrespondencePartType(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress +
                 HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH +
                 CORRESPONDENCE_PART_TYPE, REL_METADATA_CORRESPONDENCE_PART_TYPE,
                 false));

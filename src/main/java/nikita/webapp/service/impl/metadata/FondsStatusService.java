@@ -48,7 +48,7 @@ public class FondsStatusService implements IFondsStatusService {
      * @return
      */
     @Override
-    public ArrayList<INikitaEntity> findAll() {
+    public ArrayList<INikitaEntity> findAll(String outgoingAddress) {
         return (ArrayList<INikitaEntity>)
                 (ArrayList) fondsStatusRepository
                         .findAll();

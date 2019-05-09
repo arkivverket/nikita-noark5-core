@@ -1,5 +1,6 @@
 package nikita.webapp.web.controller.browser;
 
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,7 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("BrowserApplicationController")
 @RequestMapping(value = "/")
-public class BrowserApplicationController {
+public class BrowserApplicationController
+        extends NoarkController {
 /*
     @RequestMapping(method = {RequestMethod.GET})
     public ModelAndView identifyForBrowser(HttpServletRequest request) {

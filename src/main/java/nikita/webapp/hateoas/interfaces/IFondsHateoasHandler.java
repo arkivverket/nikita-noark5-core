@@ -10,22 +10,22 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface IFondsHateoasHandler extends IHateoasHandler {
 
-    void addFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addFondsStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFondsStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
 }

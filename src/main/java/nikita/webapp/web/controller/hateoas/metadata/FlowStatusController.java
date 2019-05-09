@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v4.metadata.FlowStatus;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IFlowStatusService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON,
                 NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class FlowStatusController {
+public class FlowStatusController
+        extends NoarkController {
 
     private IFlowStatusService flowStatusService;
 
@@ -90,7 +92,7 @@ public class FlowStatusController {
         MetadataHateoas metadataHateoas =
                 flowStatusService.
                         createNewFlowStatus(
-                                flowStatus);
+                                flowStatus, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -132,7 +134,7 @@ public class FlowStatusController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(flowStatusService.findAll());
+                .body(flowStatusService.findAll(getAddress(request)));
     }
 
     // Retrieves a given FlowStatus identified by a
@@ -181,7 +183,7 @@ public class FlowStatusController {
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                flowStatusService.find(systemId);
+                flowStatusService.find(systemId, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -281,7 +283,8 @@ public class FlowStatusController {
                         .handleUpdate
                                 (systemID, CommonUtils.Validation.
                                         parseETAG(request.getHeader
-                                                (ETAG)), flowStatus);
+                                                (ETAG)), flowStatus,
+                                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

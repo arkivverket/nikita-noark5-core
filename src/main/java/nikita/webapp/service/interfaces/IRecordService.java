@@ -12,15 +12,16 @@ import java.util.Optional;
 public interface IRecordService {
 
 	// -- All CREATE operations
-    RecordHateoas save(Record record);
+    RecordHateoas save(Record record, String outgoingAddress);
 
     Record create(Record record);
 
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
-            String systemID, DocumentDescription documentDescription);
+            String systemID, DocumentDescription documentDescription,
+            String outgoingAddress);
 
     // -- All READ operations
-    List<Record> findAll();
+    List<Record> findAll(String outgoingAddress);
 
     Optional<Record> findById(Long id);
     Record findBySystemId(String systemId);

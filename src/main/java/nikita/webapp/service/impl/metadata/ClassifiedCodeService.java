@@ -62,7 +62,7 @@ public class ClassifiedCodeService
      */
     @Override
     public MetadataHateoas createNewClassifiedCode(
-            ClassifiedCode classifiedCode) {
+            ClassifiedCode classifiedCode, String outgoingAddress) {
 
         classifiedCode.setDeleted(false);
         classifiedCode.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,8 @@ public class ClassifiedCodeService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classifiedCodeRepository.save(classifiedCode));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,12 +84,13 @@ public class ClassifiedCodeService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         classifiedCodeRepository.findAll(),
                 CLASSIFIED_CODE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -102,11 +104,12 @@ public class ClassifiedCodeService
      * object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classifiedCodeRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -121,13 +124,15 @@ public class ClassifiedCodeService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description,
+                                             String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         classifiedCodeRepository
                                 .findByDescription(description),
                 CLASSIFIED_CODE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -141,12 +146,13 @@ public class ClassifiedCodeService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         classifiedCodeRepository.findByCode(code),
                 CLASSIFIED_CODE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -181,8 +187,9 @@ public class ClassifiedCodeService
      * @return the updated classifiedCode
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, ClassifiedCode classifiedCode) {
+    public MetadataHateoas handleUpdate(
+            String systemId, Long version,
+            ClassifiedCode classifiedCode, String outgoingAddress) {
 
         ClassifiedCode existingClassifiedCode =
                 getClassifiedCodeOrThrow(systemId);
@@ -204,7 +211,7 @@ public class ClassifiedCodeService
                 classifiedCodeRepository.save(existingClassifiedCode));
 
         metadataHateoasHandler.addLinks(classifiedCodeHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

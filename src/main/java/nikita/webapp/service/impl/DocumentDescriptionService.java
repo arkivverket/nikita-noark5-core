@@ -91,7 +91,7 @@ public class DocumentDescriptionService
     }
 
     // All READ operations
-    public List<DocumentDescription> findAll() {
+    public List<DocumentDescription> findAll(String outgoingAddress) {
         return documentDescriptionRepository.findAll();
     }
 

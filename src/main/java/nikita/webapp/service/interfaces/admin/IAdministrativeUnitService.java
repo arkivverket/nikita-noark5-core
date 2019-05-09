@@ -19,5 +19,5 @@ public interface IAdministrativeUnitService {
 
     AdministrativeUnit findBySystemId(String administrativeUnitSystemId);
 
-    List<AdministrativeUnit> findAll();
+    List<AdministrativeUnit> findAll(String outgoingAddress);
 }

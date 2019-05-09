@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v4.metadata.ElectronicSignatureVerified;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IElectronicSignatureVerifiedService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON,
                 NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class ElectronicSignatureVerifiedController {
+public class ElectronicSignatureVerifiedController
+        extends NoarkController {
 
     private IElectronicSignatureVerifiedService
             electronicSignatureVerifiedService;
@@ -97,7 +99,7 @@ public class ElectronicSignatureVerifiedController {
         MetadataHateoas metadataHateoas =
                 electronicSignatureVerifiedService.
                         createNewElectronicSignatureVerified(
-                                electronicSignatureVerified);
+                                electronicSignatureVerified, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -139,7 +141,7 @@ public class ElectronicSignatureVerifiedController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(electronicSignatureVerifiedService.findAll());
+                .body(electronicSignatureVerifiedService.findAll(getAddress(request)));
     }
 
     // Retrieves a given ElectronicSignatureVerified identified by a
@@ -190,7 +192,7 @@ public class ElectronicSignatureVerifiedController {
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                electronicSignatureVerifiedService.find(systemId);
+                electronicSignatureVerifiedService.find(systemId, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -291,10 +293,9 @@ public class ElectronicSignatureVerifiedController {
         MetadataHateoas metadataHateoas =
                 electronicSignatureVerifiedService
                         .handleUpdate
-                                (systemID,
-                                        CommonUtils.Validation.parseETAG(
-                                                request.getHeader(ETAG)),
-                                        electronicSignatureVerified);
+                                (systemID, parseETAG(request.getHeader(ETAG)),
+                                        electronicSignatureVerified,
+                                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

@@ -15,7 +15,7 @@ public interface IFondsCreatorService {
     Fonds createFondsAssociatedWithFondsCreator(String fondsCreatorSystemId, Fonds fonds);
 
     // -- All READ operations
-    Iterable<FondsCreator> findAll();
+    Iterable<FondsCreator> findAll(String outgoingAddress);
 
     List<FondsCreator> findByOwnedBy(String ownedBy);
 

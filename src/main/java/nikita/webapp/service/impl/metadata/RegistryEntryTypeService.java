@@ -62,7 +62,7 @@ public class RegistryEntryTypeService
      */
     @Override
     public MetadataHateoas createNewRegistryEntryType(
-            RegistryEntryType registryEntryType) {
+            RegistryEntryType registryEntryType, String outgoingAddress) {
 
         registryEntryType.setDeleted(false);
         registryEntryType.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,8 @@ public class RegistryEntryTypeService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 formatRepository.save(registryEntryType));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,11 +84,12 @@ public class RegistryEntryTypeService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         formatRepository.findAll(), REGISTRY_ENTRY_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -100,11 +102,12 @@ public class RegistryEntryTypeService
      * @return single RegistryEntryType object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 formatRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -119,13 +122,15 @@ public class RegistryEntryTypeService
      * @return A list of RegistryEntryType objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description,
+                                             String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         formatRepository
                                 .findByDescription(description),
                 REGISTRY_ENTRY_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -138,13 +143,14 @@ public class RegistryEntryTypeService
      * @return A list of RegistryEntryType objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         formatRepository.findByCode
                                 (code),
                 REGISTRY_ENTRY_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -175,17 +181,18 @@ public class RegistryEntryTypeService
      * @return the updated format
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, RegistryEntryType format) {
+    public MetadataHateoas handleUpdate(
+            String systemId, Long version,
+            RegistryEntryType registryEntryType, String outgoingAddress) {
 
         RegistryEntryType existingRegistryEntryType = getRegistryEntryTypeOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != existingRegistryEntryType.getCode()) {
-            existingRegistryEntryType.setCode(existingRegistryEntryType.getCode());
+        if (null != registryEntryType.getCode()) {
+            existingRegistryEntryType.setCode(registryEntryType.getCode());
         }
-        if (null != existingRegistryEntryType.getDescription()) {
-            existingRegistryEntryType.setDescription(existingRegistryEntryType.getDescription());
+        if (null != registryEntryType.getDescription()) {
+            existingRegistryEntryType.setDescription(registryEntryType.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception
@@ -194,7 +201,7 @@ public class RegistryEntryTypeService
         MetadataHateoas formatHateoas = new MetadataHateoas(formatRepository
                 .save(existingRegistryEntryType));
 
-        metadataHateoasHandler.addLinks(formatHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(formatHateoas, new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this, existingRegistryEntryType));

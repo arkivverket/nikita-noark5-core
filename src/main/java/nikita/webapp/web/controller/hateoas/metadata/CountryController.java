@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v4.metadata.Country;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.ICountryService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class CountryController {
+public class CountryController
+        extends NoarkController {
 
     private ICountryService countryService;
 
@@ -83,7 +85,7 @@ public class CountryController {
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
-                countryService.createNewCountry(country);
+                countryService.createNewCountry(country, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -125,7 +127,7 @@ public class CountryController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(countryService.findAll());
+                .body(countryService.findAll(getAddress(request)));
     }
 
     // Retrieves a given country identified by a systemId
@@ -171,7 +173,7 @@ public class CountryController {
             @PathVariable("systemID") final String systemId,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = countryService.find(systemId);
+        MetadataHateoas metadataHateoas = countryService.find(systemId, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -265,10 +267,8 @@ public class CountryController {
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = countryService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        country);
+                (systemID, parseETAG(request.getHeader(ETAG)), country,
+                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

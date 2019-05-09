@@ -17,8 +17,10 @@ public class CorrespondencePartPersonHateoasHandler
     @Override
     public void addEntityLinksOnTemplate(INikitaEntity entity,
                                          IHateoasNoarkObject
-                                                 hateoasNoarkObject) {
-        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+                                                 hateoasNoarkObject,
+                                         String outgoingAddress) {
+        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject,
+                outgoingAddress);
     }
 
 

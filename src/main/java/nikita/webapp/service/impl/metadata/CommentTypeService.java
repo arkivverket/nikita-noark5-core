@@ -62,7 +62,7 @@ public class CommentTypeService
      */
     @Override
     public MetadataHateoas createNewCommentType(
-            CommentType commentType) {
+            CommentType commentType, String outgoingAddress) {
 
         commentType.setDeleted(false);
         commentType.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,8 @@ public class CommentTypeService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 commentTypeRepository.save(commentType));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,11 +84,12 @@ public class CommentTypeService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         commentTypeRepository.findAll(), COMMENT_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -100,11 +102,12 @@ public class CommentTypeService
      * @return single CommentType object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 commentTypeRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -119,12 +122,14 @@ public class CommentTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description,
+                                             String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         commentTypeRepository
                                 .findByDescription(description), COMMENT_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -138,11 +143,12 @@ public class CommentTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         commentTypeRepository.findByCode(code), COMMENT_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -175,7 +181,7 @@ public class CommentTypeService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, CommentType commentType) {
+            version, CommentType commentType, String outgoingAddress) {
 
         CommentType existingCommentType = getCommentTypeOrThrow(systemId);
 
@@ -195,7 +201,7 @@ public class CommentTypeService
                 commentTypeRepository.save(existingCommentType));
 
         metadataHateoasHandler.addLinks(commentTypeHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

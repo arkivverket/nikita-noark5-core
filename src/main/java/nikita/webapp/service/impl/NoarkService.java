@@ -52,7 +52,8 @@ public class NoarkService {
         return query.getResultList();
     }
 
-    protected HateoasNoarkObject packResults(List<INikitaEntity> caseFileList) {
+    protected HateoasNoarkObject packResults(List<INikitaEntity> caseFileList,
+                                             String outgoingAddress) {
         logger.error("Default HateoasNoarkObject packResults called. ");
         return null;
     }

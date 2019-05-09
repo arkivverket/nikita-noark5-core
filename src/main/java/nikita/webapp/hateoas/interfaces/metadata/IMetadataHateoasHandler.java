@@ -8,7 +8,11 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
  * Created by tsodring on 4/3/17.
  */
 public interface IMetadataHateoasHandler extends IHateoasHandler {
-    void addNewCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCode(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject,
+                    String outgoingAddress);
+
+    void addCode(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject,
+                 String outgoingAddress);
 }

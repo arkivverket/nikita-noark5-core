@@ -62,7 +62,7 @@ public class FlowStatusService
      */
     @Override
     public MetadataHateoas createNewFlowStatus(
-            FlowStatus flowStatus) {
+            FlowStatus flowStatus, String outgoingAddress) {
 
         flowStatus.setDeleted(false);
         flowStatus.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,7 @@ public class FlowStatusService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 flowStatusRepository.save(flowStatus));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,11 +83,11 @@ public class FlowStatusService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         flowStatusRepository.findAll(), FLOW_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -100,11 +100,11 @@ public class FlowStatusService
      * @return single FlowStatus object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 flowStatusRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -118,12 +118,12 @@ public class FlowStatusService
      * @return A list of FlowStatus objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         flowStatusRepository
                                 .findByDescription(description), FLOW_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -136,11 +136,11 @@ public class FlowStatusService
      * @return A list of FlowStatus objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         flowStatusRepository.findByCode(code), FLOW_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -172,7 +172,7 @@ public class FlowStatusService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, FlowStatus flowStatus) {
+            version, FlowStatus flowStatus, String outgoingAddress) {
 
         FlowStatus existingFlowStatus = getFlowStatusOrThrow(systemId);
 
@@ -191,7 +191,7 @@ public class FlowStatusService
         MetadataHateoas flowStatusHateoas = new MetadataHateoas(
                 flowStatusRepository.save(existingFlowStatus));
 
-        metadataHateoasHandler.addLinks(flowStatusHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(flowStatusHateoas, new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this, existingFlowStatus));

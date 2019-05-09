@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v4.metadata.CasePartyRole;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.ICasePartyRoleService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class CasePartyRoleController {
+public class CasePartyRoleController
+        extends NoarkController {
 
     private ICasePartyRoleService casePartyRoleService;
 
@@ -84,7 +86,8 @@ public class CasePartyRoleController {
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
-                casePartyRoleService.createNewCasePartyRole(casePartyRole);
+                casePartyRoleService.createNewCasePartyRole(casePartyRole,
+                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -126,7 +129,7 @@ public class CasePartyRoleController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(casePartyRoleService.findAll());
+                .body(casePartyRoleService.findAll(getAddress(request)));
     }
 
     // Retrieves a given casePartyRole identified by a systemId
@@ -172,7 +175,7 @@ public class CasePartyRoleController {
             @PathVariable("systemID") final String systemId,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = casePartyRoleService.find(systemId);
+        MetadataHateoas metadataHateoas = casePartyRoleService.find(systemId, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -266,10 +269,8 @@ public class CasePartyRoleController {
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = casePartyRoleService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        casePartyRole);
+                (systemID, parseETAG(request.getHeader(ETAG)), casePartyRole,
+                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

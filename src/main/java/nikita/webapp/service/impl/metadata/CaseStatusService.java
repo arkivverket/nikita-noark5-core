@@ -63,7 +63,7 @@ public class CaseStatusService
      */
     @Override
     public MetadataHateoas createNewCaseStatus(
-            CaseStatus caseStatus) {
+            CaseStatus caseStatus, String outgoingAddress) {
 
         caseStatus.setDeleted(false);
         caseStatus.setOwnedBy(SecurityContextHolder.getContext().
@@ -71,7 +71,8 @@ public class CaseStatusService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 caseStatusRepository.save(caseStatus));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -84,11 +85,11 @@ public class CaseStatusService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         caseStatusRepository.findAll(), CASE_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -101,11 +102,11 @@ public class CaseStatusService
      * @return single CaseStatus object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 caseStatusRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -120,12 +121,12 @@ public class CaseStatusService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         caseStatusRepository
                                 .findByDescription(description), CASE_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -139,11 +140,11 @@ public class CaseStatusService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         caseStatusRepository.findByCode(code), CASE_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -176,7 +177,7 @@ public class CaseStatusService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, CaseStatus caseStatus) {
+            version, CaseStatus caseStatus, String outgoingAddress) {
 
         CaseStatus existingCaseStatus = getCaseStatusOrThrow(systemId);
 
@@ -196,7 +197,7 @@ public class CaseStatusService
                 caseStatusRepository.save(existingCaseStatus));
 
         metadataHateoasHandler.addLinks(caseStatusHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

@@ -10,18 +10,19 @@ import nikita.common.model.noark5.v4.metadata.PrecedenceStatus;
 public interface IPrecedenceStatusService {
 
     MetadataHateoas createNewPrecedenceStatus(PrecedenceStatus
-                                                      precedenceStatus);
+                                                      precedenceStatus,
+                                              String outgoingAddress);
 
-    MetadataHateoas find(String systemId);
+    MetadataHateoas find(String systemId, String outgoingAddress);
 
-    MetadataHateoas findAll();
+    MetadataHateoas findAll(String outgoingAddress);
 
-    MetadataHateoas findByDescription(String description);
+    MetadataHateoas findByDescription(String description, String outgoingAddress);
 
-    MetadataHateoas findByCode(String code);
+    MetadataHateoas findByCode(String code, String outgoingAddress);
 
     MetadataHateoas handleUpdate(String systemId, Long version,
-                                 PrecedenceStatus precedenceStatus);
+                                 PrecedenceStatus precedenceStatus, String outgoingAddress);
 
     PrecedenceStatus generateDefaultPrecedenceStatus();
 }

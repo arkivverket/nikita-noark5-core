@@ -62,7 +62,7 @@ public class FormatService
      */
     @Override
     public MetadataHateoas createNewFormat(
-            Format format) {
+            Format format, String outgoingAddress) {
 
         format.setDeleted(false);
         format.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,8 @@ public class FormatService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 formatRepository.save(format));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,11 +84,12 @@ public class FormatService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         formatRepository.findAll(), FORMAT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -100,12 +102,13 @@ public class FormatService
      * @return single Format object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 formatRepository.save(
                         formatRepository
                                 .findBySystemId(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -120,13 +123,15 @@ public class FormatService
      * @return A list of Format objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description,
+                                             String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         formatRepository
                                 .findByDescription(description),
                 FORMAT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -139,13 +144,14 @@ public class FormatService
      * @return A list of Format objects wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         formatRepository.findByCode
                                 (code),
                 FORMAT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -177,17 +183,18 @@ public class FormatService
      * @return the updated format
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, Format format) {
+    public MetadataHateoas handleUpdate(
+            String systemId, Long version, Format format,
+            String outgoingAddress) {
 
         Format existingFormat = getFormatOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         if (null != existingFormat.getCode()) {
-            existingFormat.setCode(existingFormat.getCode());
+            existingFormat.setCode(format.getCode());
         }
         if (null != existingFormat.getDescription()) {
-            existingFormat.setDescription(existingFormat.getDescription());
+            existingFormat.setDescription(format.getDescription());
         }
         // Note this can potentially result in a NoarkConcurrencyException
         // exception
@@ -196,7 +203,8 @@ public class FormatService
         MetadataHateoas formatHateoas = new MetadataHateoas(formatRepository
                 .save(existingFormat));
 
-        metadataHateoasHandler.addLinks(formatHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(formatHateoas, new Authorisation(),
+                outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this, existingFormat));

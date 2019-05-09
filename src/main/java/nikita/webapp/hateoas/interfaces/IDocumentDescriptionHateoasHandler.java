@@ -10,47 +10,47 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface IDocumentDescriptionHateoasHandler extends IHateoasHandler {
 
-    void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDocumentObject(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDocumentObject(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewDocumentObject(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDocumentObject(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDocumentType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDocumentType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDocumentStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDocumentStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
 }
 

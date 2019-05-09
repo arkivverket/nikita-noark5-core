@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v4.metadata.ScreeningDocument;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IScreeningDocumentService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class ScreeningDocumentController {
+public class ScreeningDocumentController
+        extends NoarkController {
 
     private IScreeningDocumentService postalCodeService;
 
@@ -83,7 +85,8 @@ public class ScreeningDocumentController {
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
-                postalCodeService.createNewScreeningDocument(postalCode);
+                postalCodeService.createNewScreeningDocument(postalCode,
+                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -125,7 +128,7 @@ public class ScreeningDocumentController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(postalCodeService.findAll());
+                .body(postalCodeService.findAll(getAddress(request)));
     }
 
     // Retrieves a given postalCode identified by a systemId
@@ -171,7 +174,7 @@ public class ScreeningDocumentController {
             @PathVariable("systemID") final String systemId,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = postalCodeService.find(systemId);
+        MetadataHateoas metadataHateoas = postalCodeService.find(systemId, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -265,10 +268,8 @@ public class ScreeningDocumentController {
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = postalCodeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        postalCode);
+                (systemID, parseETAG(request.getHeader(ETAG)), postalCode,
+                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

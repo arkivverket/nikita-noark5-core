@@ -50,7 +50,7 @@ public class CorrespondencePartTypeService implements ICorrespondencePartTypeSer
      * @return
      */
     @Override
-    public Iterable<CorrespondencePartType> findAll() {
+    public Iterable<CorrespondencePartType> findAll(String outgoingAddress) {
         return correspondencePartTypeRepository.findAll();
     }
 

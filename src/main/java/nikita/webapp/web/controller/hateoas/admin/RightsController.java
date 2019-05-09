@@ -47,7 +47,7 @@ public class RightsController extends NoarkController {
             throws NikitaException {
         administrativeUnitService.createNewUser(administrativeUnit);
         UserHateoas adminHateoas = new UserHateoas(administrativeUnit);
-        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
+        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(administrativeUnit.getVersion().toString())
@@ -70,8 +70,8 @@ public class RightsController extends NoarkController {
     @RequestMapping(method = RequestMethod.GET, value = ADMINISTRATIVE_UNIT)
     public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
         UserHateoas adminHateoas = new UserHateoas(
-                (List<INikitaEntity>) (List) administrativeUnitService.findAll());
-        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
+                (List<INikitaEntity>) (List) administrativeUnitService.findAll(getAddress(request)));
+        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation(), getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -101,7 +101,7 @@ public class RightsController extends NoarkController {
                                                                                    HttpServletRequest request) {
         User administrativeUnit = administrativeUnitService.findBySystemId(systemId);
         UserHateoas adminHateoas = new UserHateoas(administrativeUnit);
-        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
+        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(administrativeUnit.getVersion().toString())
@@ -162,7 +162,7 @@ public class RightsController extends NoarkController {
         User newUser = administrativeUnitService.update(systemID,
                 parseETAG(request.getHeader(ETAG)), administrativeUnit);
         UserHateoas adminHateoas = new UserHateoas(administrativeUnit);
-        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
+        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(adminHateoas);

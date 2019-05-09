@@ -26,36 +26,36 @@ public class UserHateoasHandler
 
     @Override
     public void addEntityLinks(INikitaEntity entity,
-                               IHateoasNoarkObject hateoasNoarkObject) {
-        addAdministrativeUnit(entity, hateoasNoarkObject);
-        addNewAdministrativeUnit(entity, hateoasNoarkObject);
+                               IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addAdministrativeUnit(entity, hateoasNoarkObject, outgoingAddress);
+        addNewAdministrativeUnit(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     @Override
     public void addEntityLinksOnCreate(INikitaEntity entity,
-                                       IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
+                                       IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     @Override
     public void addEntityLinksOnRead(INikitaEntity entity,
-                                     IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
+                                     IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     public void addNewAdministrativeUnit(INikitaEntity entity,
-                                         IHateoasNoarkObject hateoasNoarkObject) {
+                                         IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
         hateoasNoarkObject.addLink(entity,
-                new Link(contextPath + HATEOAS_API_PATH + SLASH +
+                new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                         NOARK_ADMINISTRATION_PATH + SLASH + entity.getSystemId() + SLASH +
                         NEW_ADMINISTRATIVE_UNIT + SLASH,
                         REL_ADMIN_NEW_ADMINISTRATIVE_UNIT, false));
     }
 
     public void addAdministrativeUnit(INikitaEntity entity,
-                                      IHateoasNoarkObject hateoasNoarkObject) {
+                                      IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
         hateoasNoarkObject.addLink(entity,
-                new Link(contextPath + HATEOAS_API_PATH + SLASH +
+                new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                         NOARK_ADMINISTRATION_PATH + SLASH + entity
                         .getSystemId() + SLASH + ADMINISTRATIVE_UNIT +
                         SLASH, REL_ADMIN_ADMINISTRATIVE_UNIT, false));

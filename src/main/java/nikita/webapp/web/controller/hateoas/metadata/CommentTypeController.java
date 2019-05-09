@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v4.metadata.CommentType;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.ICommentTypeService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class CommentTypeController {
+public class CommentTypeController
+        extends NoarkController {
 
     private ICommentTypeService commentTypeService;
 
@@ -84,7 +86,8 @@ public class CommentTypeController {
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
-                commentTypeService.createNewCommentType(commentType);
+                commentTypeService.createNewCommentType(commentType,
+                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -126,7 +129,7 @@ public class CommentTypeController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(commentTypeService.findAll());
+                .body(commentTypeService.findAll(getAddress(request)));
     }
 
     // Retrieves a given commentType identified by a systemId
@@ -172,7 +175,7 @@ public class CommentTypeController {
             @PathVariable("systemID") final String systemId,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = commentTypeService.find(systemId);
+        MetadataHateoas metadataHateoas = commentTypeService.find(systemId, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -266,10 +269,8 @@ public class CommentTypeController {
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = commentTypeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        commentType);
+                (systemID, parseETAG(request.getHeader(ETAG)), commentType,
+                        getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

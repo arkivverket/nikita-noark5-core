@@ -62,7 +62,7 @@ public class VariantFormatService
      */
     @Override
     public MetadataHateoas createNewVariantFormat(
-            VariantFormat variantFormat) {
+            VariantFormat variantFormat, String outgoingAddress) {
 
         variantFormat.setDeleted(false);
         variantFormat.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,7 @@ public class VariantFormatService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 variantFormatRepository.save(variantFormat));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,11 +83,11 @@ public class VariantFormatService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         variantFormatRepository.findAll(), VARIANT_FORMAT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -100,11 +100,11 @@ public class VariantFormatService
      * @return single VariantFormat object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 variantFormatRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -119,12 +119,12 @@ public class VariantFormatService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         variantFormatRepository
                                 .findByDescription(description), VARIANT_FORMAT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -138,11 +138,11 @@ public class VariantFormatService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         variantFormatRepository.findByCode(code), VARIANT_FORMAT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -175,7 +175,7 @@ public class VariantFormatService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, VariantFormat variantFormat) {
+            version, VariantFormat variantFormat, String outgoingAddress) {
 
         VariantFormat existingVariantFormat = getVariantFormatOrThrow(systemId);
 
@@ -195,7 +195,7 @@ public class VariantFormatService
                 variantFormatRepository.save(existingVariantFormat));
 
         metadataHateoasHandler.addLinks(variantFormatHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

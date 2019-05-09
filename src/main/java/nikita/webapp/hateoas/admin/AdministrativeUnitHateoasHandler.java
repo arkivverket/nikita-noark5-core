@@ -23,23 +23,23 @@ import static nikita.common.config.N5ResourceMappings.NEW_ADMINISTRATIVE_UNIT;
 public class AdministrativeUnitHateoasHandler extends HateoasHandler implements IAdministrativeUnitHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
 
     }
 
     @Override
-    public void addEntityLinksOnCreate(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
+    public void addEntityLinksOnCreate(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     @Override
-    public void addEntityLinksOnRead(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
+    public void addEntityLinksOnRead(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
     }
 
 
-    public void addChildAdministrativeUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+    public void addChildAdministrativeUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                 NOARK_ADMINISTRATION_PATH + SLASH + ADMINISTRATIVE_UNIT + SLASH + entity.getSystemId() + SLASH +
                 NEW_ADMINISTRATIVE_UNIT + SLASH, REL_ADMIN_ADMINISTRATIVE_UNIT, false));
     }

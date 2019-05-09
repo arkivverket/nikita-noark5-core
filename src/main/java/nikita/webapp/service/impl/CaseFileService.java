@@ -117,11 +117,11 @@ public class CaseFileService
     }
 
     @Override
-    public CaseFileHateoas saveHateoas(CaseFile caseFile) {
+    public CaseFileHateoas saveHateoas(CaseFile caseFile, String outgoingAddress) {
         CaseFile caseFileNew = save(caseFile);
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(caseFileNew);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation(), outgoingAddress);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(
                         this, caseFileNew));
@@ -258,7 +258,7 @@ public class CaseFileService
         return numberGeneratorService.getNextSequenceNumber(administrativeUnit);
     }
 
-    public CaseFileHateoas generateDefaultCaseFile() {
+    public CaseFileHateoas generateDefaultCaseFile(String outgoingAddress) {
         CaseFile defaultCaseFile = new CaseFile();
         defaultCaseFile.setReferenceCaseFileStatus(
                 caseStatusService.generateDefaultCaseStatus());
@@ -273,7 +273,7 @@ public class CaseFileService
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(defaultCaseFile);
         caseFileHateoasHandler.addLinksOnNew(caseFileHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
         return caseFileHateoas;
     }
 

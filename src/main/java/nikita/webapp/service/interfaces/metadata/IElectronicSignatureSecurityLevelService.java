@@ -10,19 +10,21 @@ import nikita.common.model.noark5.v4.metadata.ElectronicSignatureSecurityLevel;
 public interface IElectronicSignatureSecurityLevelService {
 
     MetadataHateoas createNewElectronicSignatureSecurityLevel(
-            ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel);
+            ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel,
+            String outgoingAddress);
 
-    MetadataHateoas find(String systemId);
+    MetadataHateoas find(String systemId, String outgoingAddress);
 
-    MetadataHateoas findAll();
+    MetadataHateoas findAll(String outgoingAddress);
 
-    MetadataHateoas findByDescription(String description);
+    MetadataHateoas findByDescription(String description, String outgoingAddress);
 
-    MetadataHateoas findByCode(String code);
+    MetadataHateoas findByCode(String code, String outgoingAddress);
 
     MetadataHateoas handleUpdate(String systemId, Long version,
                                  ElectronicSignatureSecurityLevel
-                                         electronicSignatureSecurityLevel);
+                                         electronicSignatureSecurityLevel,
+                                 String outgoingAddress);
 
     ElectronicSignatureSecurityLevel
     generateDefaultElectronicSignatureSecurityLevel();

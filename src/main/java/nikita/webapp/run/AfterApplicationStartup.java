@@ -1166,7 +1166,7 @@ public class AfterApplicationStartup {
             admin.addAuthority(adminAuthority);
             administrativeUnit.addUser(admin);
             admin.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(admin);
+            userService.createNewUser(admin, "NOT APPLICABLE");
         }
 
         User recordKeeper = new User();
@@ -1178,7 +1178,7 @@ public class AfterApplicationStartup {
             recordKeeper.addAuthority(recordsKeeperAuthority);
             administrativeUnit.addUser(recordKeeper);
             recordKeeper.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(recordKeeper);
+            userService.createNewUser(recordKeeper, "NOT APPLICABLE");
         }
 
         User caseHandler = new User();
@@ -1190,7 +1190,7 @@ public class AfterApplicationStartup {
             caseHandler.addAuthority(caseHandlerAuthority);
             administrativeUnit.addUser(caseHandler);
             caseHandler.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(caseHandler);
+            userService.createNewUser(caseHandler, "NOT APPLICABLE");
         }
 
         User leader = new User();
@@ -1202,7 +1202,7 @@ public class AfterApplicationStartup {
             leader.addAuthority(leaderAuthority);
             administrativeUnit.addUser(leader);
             leader.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(leader);
+            userService.createNewUser(leader, "NOT APPLICABLE");
         }
 
         User guest = new User();
@@ -1214,7 +1214,7 @@ public class AfterApplicationStartup {
             guest.addAuthority(guestAuthority);
             administrativeUnit.addUser(guest);
             guest.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(guest);
+            userService.createNewUser(guest, "NOT APPLICABLE");
         }
 
         administrativeUnitService.createNewAdministrativeUnitBySystem(
@@ -1225,16 +1225,16 @@ public class AfterApplicationStartup {
 
         Fonds fonds = new Fonds();
         fonds.setTitle("Test fonds");
-        fondsService.createNewFonds(fonds);
+        fondsService.createNewFonds(fonds, "NOT APPLICABLE");
         fonds.setOwnedBy("admin@example.com");
         fondsService.handleUpdate(fonds.getSystemId(),
-                fonds.getVersion(), fonds);
+                fonds.getVersion(), fonds, "NOT APPLICABLE");
 
         Series series = new Series();
         series.setTitle("Test series");
         series.setSeriesStatus("Opprettet");
         fondsService.createSeriesAssociatedWithFonds(
-                fonds.getSystemId(), series);
+                fonds.getSystemId(), series, "NOT APPLICABLE");
 
         series.setOwnedBy("admin@example.com");
         seriesService.handleUpdate(series.getSystemId(),
@@ -1242,7 +1242,7 @@ public class AfterApplicationStartup {
 
 
         fondsService.createSeriesAssociatedWithFonds(
-                fonds.getSystemId(), series);
+                fonds.getSystemId(), series, "NOT APPLICABLE");
 
         CaseFile caseFile = new CaseFile();
 
@@ -1270,6 +1270,7 @@ public class AfterApplicationStartup {
         documentDescription.addReferenceRecord(registryEntry);
 
         recordService.createDocumentDescriptionAssociatedWithRecord(
-                registryEntry.getSystemId(), documentDescription);
+                registryEntry.getSystemId(), documentDescription,
+                "NOT APPLICABLE");
     }
 }

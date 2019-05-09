@@ -31,100 +31,100 @@ public class FondsHateoasHandler extends HateoasHandler
 
     @Override
     public void addEntityLinks(INikitaEntity entity,
-                               IHateoasNoarkObject hateoasNoarkObject) {
-        addDocumentMedium(entity, hateoasNoarkObject);
-        addFondsCreator(entity, hateoasNoarkObject);
-        addSeries(entity, hateoasNoarkObject);
+                               IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addDocumentMedium(entity, hateoasNoarkObject, outgoingAddress);
+        addFondsCreator(entity, hateoasNoarkObject, outgoingAddress);
+        addSeries(entity, hateoasNoarkObject, outgoingAddress);
         // It's not clear why addFonds would be part of this
-        //addFonds(entity, hateoasNoarkObject);
-        addNewFondsCreator(entity, hateoasNoarkObject);
-        addSubFonds(entity, hateoasNoarkObject);
-        addNewSubFonds(entity, hateoasNoarkObject);
-        addFondsStatus(entity, hateoasNoarkObject);
-        addNewSeries(entity, hateoasNoarkObject);
-        //addNewFonds(entity, hateoasNoarkObject);
+        //addFonds(entity, hateoasNoarkObject, outgoingAddress);
+        addNewFondsCreator(entity, hateoasNoarkObject, outgoingAddress);
+        addSubFonds(entity, hateoasNoarkObject, outgoingAddress);
+        addNewSubFonds(entity, hateoasNoarkObject, outgoingAddress);
+        addFondsStatus(entity, hateoasNoarkObject, outgoingAddress);
+        addNewSeries(entity, hateoasNoarkObject, outgoingAddress);
+        //addNewFonds(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     @Override
     public void addEntityLinksOnCreate(INikitaEntity entity,
-                                       IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
+                                       IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     @Override
     public void addEntityLinksOnRead(INikitaEntity entity,
-                                     IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
+                                     IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addEntityLinks(entity, hateoasNoarkObject, outgoingAddress);
     }
 
     @Override
     public void addEntityLinksOnNew(INikitaEntity entity,
-                                    IHateoasNoarkObject hateoasNoarkObject) {
-        addDocumentMedium(entity, hateoasNoarkObject);
+                                    IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        addDocumentMedium(entity, hateoasNoarkObject, outgoingAddress);
     }
 
 
     public void addFondsCreator(INikitaEntity entity,
-                                IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+                                IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress +
                 HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH +
                 SLASH + FONDS + SLASH + entity.getSystemId() + SLASH +
                 FONDS_CREATOR + SLASH, REL_FONDS_STRUCTURE_FONDS_CREATOR, false));
     }
 
     public void addSeries(INikitaEntity entity,
-                          IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath +
+                          IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress +
                 HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
                 FONDS + SLASH + entity.getSystemId() + SLASH + SERIES +
                 SLASH, REL_FONDS_STRUCTURE_SERIES, false));
     }
 
-    public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+    public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                 SLASH + entity.getSystemId() + SLASH + FONDS + SLASH, REL_FONDS_STRUCTURE_FONDS, false));
     }
 
-    public void addNewFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
         if (authorisation.canCreateFonds()) {
-            hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+            hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                     SLASH + entity.getSystemId() + SLASH + NEW_FONDS_CREATOR + SLASH, REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR,
                     false));
         }
     }
 
-    public void addSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+    public void addSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                 SLASH + entity.getSystemId() + SLASH + SUB_FONDS + SLASH, REL_FONDS_STRUCTURE_SUB_FONDS, false));
 
     }
 
-    public void addNewSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+    public void addNewSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS + SLASH + entity.getSystemId() + SLASH + NEW_SUB_FONDS +
                 SLASH, REL_FONDS_STRUCTURE_NEW_SUB_FONDS, false));
 
     }
 
-    public void addFondsStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH
+    public void addFondsStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
+        hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH
                 + FONDS_STATUS, REL_METADATA_FONDS_STATUS, false));
     }
 
-    public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
         if (authorisation.canCreateFonds()) {
-            hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+            hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                     SLASH + entity.getSystemId() + SLASH + NEW_FONDS + SLASH, REL_FONDS_STRUCTURE_NEW_FONDS, false));
         }
     }
 
-    public void addNewSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress) {
         if (authorisation.canCreateSeries()) {
-            hateoasNoarkObject.addLink(entity, new Link(contextPath + HATEOAS_API_PATH + SLASH +
+            hateoasNoarkObject.addLink(entity, new Link(outgoingAddress + HATEOAS_API_PATH + SLASH +
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                     SLASH + entity.getSystemId() + SLASH + NEW_SERIES + SLASH, REL_FONDS_STRUCTURE_NEW_SERIES, false));
         }

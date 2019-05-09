@@ -98,7 +98,7 @@ public class DocumentDescriptionHateoasController extends NoarkController {
         DocumentObject createdDocumentObject = documentDescriptionService.createDocumentObjectAssociatedWithDocumentDescription(
                 systemID, documentObject);
         DocumentObjectHateoas documentObjectHateoas = new DocumentObjectHateoas(documentObject);
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation(), getAddress(request));
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdDocumentObject));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -130,7 +130,7 @@ public class DocumentDescriptionHateoasController extends NoarkController {
         }
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas(documentDescription);
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(documentDescription.getVersion().toString())
@@ -160,7 +160,7 @@ public class DocumentDescriptionHateoasController extends NoarkController {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas((List<INikitaEntity>) (List)
                 documentDescriptionService.findByOwnedBy(ownedBy));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
@@ -190,7 +190,7 @@ public class DocumentDescriptionHateoasController extends NoarkController {
 
         DocumentObjectHateoas documentObjectHateoas = new
                 DocumentObjectHateoas(defaultDocumentObject);
-        documentObjectHateoasHandler.addLinksOnNew(documentObjectHateoas, new Authorisation());
+        documentObjectHateoasHandler.addLinksOnNew(documentObjectHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
@@ -226,7 +226,7 @@ public class DocumentDescriptionHateoasController extends NoarkController {
                 (List) documentDescription
                         .getReferenceDocumentObject());
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
+                new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(
                         request.getServletPath()))
@@ -264,7 +264,7 @@ public class DocumentDescriptionHateoasController extends NoarkController {
                         (List)record); */
         //RecordHateoas recordHateoas = new RecordHateoas(
         //(List<INikitaEntity>) (List)record);
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation(), getAddress(request));
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, documentDescription));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -305,7 +305,7 @@ public class DocumentDescriptionHateoasController extends NoarkController {
 
         DocumentDescription updatedDocumentDescription = documentDescriptionService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), documentDescription);
         DocumentDescriptionHateoas documentDescriptionHateoas = new DocumentDescriptionHateoas(updatedDocumentDescription);
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation(), getAddress(request));
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedDocumentDescription));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

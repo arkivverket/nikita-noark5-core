@@ -10,32 +10,32 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface IRegistryEntryHateoasHandler extends IBasicRecordHateoasHandler {
 
-    void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addCorrespondencePartPerson(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCorrespondencePartPerson(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewCorrespondencePartPerson(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCorrespondencePartPerson(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
 }

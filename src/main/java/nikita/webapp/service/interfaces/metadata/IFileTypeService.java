@@ -9,18 +9,20 @@ import nikita.common.model.noark5.v4.metadata.FileType;
 
 public interface IFileTypeService {
 
-    MetadataHateoas createNewFileType(FileType fileType);
+    MetadataHateoas createNewFileType(FileType fileType,
+                                      String outgoingAddress);
 
-    MetadataHateoas find(String systemId);
+    MetadataHateoas find(String systemId, String outgoingAddress);
 
-    MetadataHateoas findAll();
+    MetadataHateoas findAll(String outgoingAddress);
 
-    MetadataHateoas findByDescription(String description);
+    MetadataHateoas findByDescription(String description,
+                                      String outgoingAddress);
 
-    MetadataHateoas findByCode(String code);
+    MetadataHateoas findByCode(String code, String outgoingAddress);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, FileType
-            fileType);
+    MetadataHateoas handleUpdate(String systemId, Long version,
+                                 FileType fileType, String outgoingAddress);
 
     FileType generateDefaultFileType();
 }

@@ -64,7 +64,7 @@ public class RecordService
 
     // All CREATE operations
     @Override
-    public RecordHateoas save(Record record) {
+    public RecordHateoas save(Record record, String outgoingAddress) {
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
 
@@ -76,7 +76,8 @@ public class RecordService
 
         RecordHateoas recordHateoas =
                 new RecordHateoas(recordRepository.save(record));
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation(),
+                outgoingAddress);
         return recordHateoas;
     }
 
@@ -96,7 +97,8 @@ public class RecordService
 
     public DocumentDescriptionHateoas
     createDocumentDescriptionAssociatedWithRecord(
-            String systemID, DocumentDescription documentDescription) {
+            String systemID, DocumentDescription documentDescription,
+            String outgoingAddress) {
 
         Record record = getRecordOrThrow(systemID);
 
@@ -113,7 +115,7 @@ public class RecordService
                 new DocumentDescriptionHateoas(
                         documentDescriptionService.save(documentDescription));
         documentDescriptionHateoasHandler.addLinks(
-                documentDescriptionHateoas, new Authorisation());
+                documentDescriptionHateoas, new Authorisation(), outgoingAddress);
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityCreatedEvent(this, documentDescription));
 
@@ -121,7 +123,7 @@ public class RecordService
     }
 
     // All READ operations
-    public List<Record> findAll() {
+    public List<Record> findAll(String outgoingAddress) {
         return recordRepository.findAll();
     }
 

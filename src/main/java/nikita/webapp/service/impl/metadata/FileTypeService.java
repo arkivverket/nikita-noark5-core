@@ -62,7 +62,7 @@ public class FileTypeService
      */
     @Override
     public MetadataHateoas createNewFileType(
-            FileType fileType) {
+            FileType fileType, String outgoingAddress) {
 
         fileType.setDeleted(false);
         fileType.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,8 @@ public class FileTypeService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 fileTypeRepository.save(fileType));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,11 +84,12 @@ public class FileTypeService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         fileTypeRepository.findAll(), FILE_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -100,11 +102,12 @@ public class FileTypeService
      * @return single FileType object wrapped as a MetadataHateoas object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 fileTypeRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -119,12 +122,14 @@ public class FileTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description,
+                                             String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         fileTypeRepository
                                 .findByDescription(description), FILE_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -138,11 +143,12 @@ public class FileTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         fileTypeRepository.findByCode(code), FILE_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -175,7 +181,7 @@ public class FileTypeService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, FileType fileType) {
+            version, FileType fileType, String outgoingAddress) {
 
         FileType existingFileType = getFileTypeOrThrow(systemId);
 
@@ -195,7 +201,7 @@ public class FileTypeService
                 fileTypeRepository.save(existingFileType));
 
         metadataHateoasHandler.addLinks(fileTypeHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

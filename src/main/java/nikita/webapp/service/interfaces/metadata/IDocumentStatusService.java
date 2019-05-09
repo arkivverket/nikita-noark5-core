@@ -11,7 +11,7 @@ public interface IDocumentStatusService {
 
     DocumentStatus createNewDocumentStatus(DocumentStatus documentStatus);
 
-    Iterable<DocumentStatus> findAll();
+    Iterable<DocumentStatus> findAll(String outgoingAddress);
 
     List<DocumentStatus> findAllAsList();
 

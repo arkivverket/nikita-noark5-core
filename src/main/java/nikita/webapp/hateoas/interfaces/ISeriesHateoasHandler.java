@@ -10,58 +10,58 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface ISeriesHateoasHandler extends IHateoasHandler {
 
-    void addNewRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addSeriesPrecursor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeriesPrecursor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewSeriesPrecursor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSeriesPrecursor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addSeriesStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeriesStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
 }

@@ -11,12 +11,18 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
  */
 public interface IPrecedenceHateoasHandler extends IHateoasHandler {
 
-    void addPrecedenceStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addPrecedenceStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+
+    void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+
+    void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+
+    void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+
+    void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+
+    void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
+
+    void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
 }

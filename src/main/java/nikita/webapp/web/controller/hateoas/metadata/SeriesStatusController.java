@@ -12,6 +12,7 @@ import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.metadata.ISeriesStatusService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,8 @@ import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
-public class SeriesStatusController {
+public class SeriesStatusController
+        extends NoarkController {
 
     private ISeriesStatusService seriesStatusService;
     private IMetadataHateoasHandler metadataHateoasHandler;
@@ -61,7 +63,7 @@ public class SeriesStatusController {
             throws NikitaException {
         seriesStatusService.createNewSeriesStatus(seriesStatus);
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(seriesStatus.getVersion().toString())
@@ -87,7 +89,7 @@ public class SeriesStatusController {
         /*MetadataHateoas metadataHateoas = new MetadataHateoas(new
                 List<>(seriesStatusService.findAllAsList()),
                 FONDS_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -116,7 +118,7 @@ public class SeriesStatusController {
                                                           HttpServletRequest request) {
         SeriesStatus seriesStatus = seriesStatusService.findBySystemId(systemId);
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(seriesStatus.getVersion().toString())
@@ -167,7 +169,7 @@ public class SeriesStatusController {
             throws NikitaException {
         seriesStatusService.update(seriesStatus);
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), getAddress(request));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);

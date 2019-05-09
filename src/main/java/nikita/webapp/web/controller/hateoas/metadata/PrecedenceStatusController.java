@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v4.metadata.PrecedenceStatus;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IPrecedenceStatusService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON,
                 NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class PrecedenceStatusController {
+public class PrecedenceStatusController
+        extends NoarkController {
 
     private IPrecedenceStatusService PrecedenceStatusService;
 
@@ -85,13 +87,13 @@ public class PrecedenceStatusController {
     createPrecedenceStatus(
             HttpServletRequest request,
             @RequestBody PrecedenceStatus
-                    PrecedenceStatus)
+                    precedenceStatus)
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
                 PrecedenceStatusService.
                         createNewPrecedenceStatus(
-                                PrecedenceStatus);
+                                precedenceStatus, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -133,7 +135,7 @@ public class PrecedenceStatusController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(PrecedenceStatusService.findAll());
+                .body(PrecedenceStatusService.findAll(getAddress(request)));
     }
 
     // Retrieves a given PrecedenceStatus identified by a
@@ -182,7 +184,7 @@ public class PrecedenceStatusController {
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                PrecedenceStatusService.find(systemId);
+                PrecedenceStatusService.find(systemId, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -280,9 +282,8 @@ public class PrecedenceStatusController {
         MetadataHateoas metadataHateoas =
                 PrecedenceStatusService
                         .handleUpdate
-                                (systemID, CommonUtils.Validation.
-                                        parseETAG(request.getHeader
-                                                (ETAG)), PrecedenceStatus);
+                                (systemID, parseETAG(request.getHeader(ETAG)),
+                                        PrecedenceStatus, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

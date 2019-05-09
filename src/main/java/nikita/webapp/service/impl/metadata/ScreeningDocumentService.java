@@ -62,7 +62,7 @@ public class ScreeningDocumentService
      */
     @Override
     public MetadataHateoas createNewScreeningDocument(
-            ScreeningDocument screeningDocument) {
+            ScreeningDocument screeningDocument, String outgoingAddress) {
 
         screeningDocument.setDeleted(false);
         screeningDocument.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,8 @@ public class ScreeningDocumentService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 screeningDocumentRepository.save(screeningDocument));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,12 +84,13 @@ public class ScreeningDocumentService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         screeningDocumentRepository.findAll(),
                 SCREENING_DOCUMENT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -102,11 +104,12 @@ public class ScreeningDocumentService
      * object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 screeningDocumentRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -121,13 +124,14 @@ public class ScreeningDocumentService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         screeningDocumentRepository
                                 .findByDescription(description),
                 SCREENING_DOCUMENT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -141,12 +145,12 @@ public class ScreeningDocumentService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         screeningDocumentRepository.findByCode(code),
                 SCREENING_DOCUMENT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -181,7 +185,8 @@ public class ScreeningDocumentService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, ScreeningDocument screeningDocument) {
+            version, ScreeningDocument screeningDocument,
+                                        String outgoingAddress) {
 
         ScreeningDocument existingScreeningDocument =
                 getScreeningDocumentOrThrow(systemId);
@@ -203,7 +208,7 @@ public class ScreeningDocumentService
                 screeningDocumentRepository.save(existingScreeningDocument));
 
         metadataHateoasHandler.addLinks(screeningMetadataHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

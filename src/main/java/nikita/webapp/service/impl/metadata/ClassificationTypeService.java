@@ -62,7 +62,7 @@ public class ClassificationTypeService
      */
     @Override
     public MetadataHateoas createNewClassificationType(
-            ClassificationType classificationType) {
+            ClassificationType classificationType, String outgoingAddress) {
 
         classificationType.setDeleted(false);
         classificationType.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,8 @@ public class ClassificationTypeService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classificationTypeRepository.save(classificationType));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,12 +84,13 @@ public class ClassificationTypeService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         classificationTypeRepository.findAll(),
                 CLASSIFICATION_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -102,11 +104,12 @@ public class ClassificationTypeService
      * object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classificationTypeRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -121,13 +124,15 @@ public class ClassificationTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description,
+                                             String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         classificationTypeRepository
                                 .findByDescription(description),
                 CLASSIFICATION_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -141,12 +146,13 @@ public class ClassificationTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         classificationTypeRepository.findByCode(code),
                 CLASSIFICATION_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(),
+                outgoingAddress);
         return metadataHateoas;
     }
 
@@ -181,8 +187,9 @@ public class ClassificationTypeService
      * @return the updated classificationType
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, ClassificationType classificationType) {
+    public MetadataHateoas handleUpdate(String systemId, Long version,
+                                        ClassificationType classificationType,
+                                        String outgoingAddress) {
 
         ClassificationType existingClassificationType =
                 getClassificationTypeOrThrow(systemId);
@@ -204,7 +211,7 @@ public class ClassificationTypeService
                 classificationTypeRepository.save(existingClassificationType));
 
         metadataHateoasHandler.addLinks(classificationTypeHateoas,
-                new Authorisation());
+                new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

@@ -62,7 +62,7 @@ public class PrecedenceStatusService
      */
     @Override
     public MetadataHateoas createNewPrecedenceStatus(
-            PrecedenceStatus precedenceStatus) {
+            PrecedenceStatus precedenceStatus, String outgoingAddress) {
 
         precedenceStatus.setDeleted(false);
         precedenceStatus.setOwnedBy(SecurityContextHolder.getContext().
@@ -70,7 +70,7 @@ public class PrecedenceStatusService
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 precedenceStatusRepository.save(precedenceStatus));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -83,11 +83,11 @@ public class PrecedenceStatusService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findAll() {
+    public MetadataHateoas findAll(String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         precedenceStatusRepository.findAll(), PRECEDENCE_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -101,11 +101,11 @@ public class PrecedenceStatusService
      * object
      */
     @Override
-    public MetadataHateoas find(String systemId) {
+    public MetadataHateoas find(String systemId, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 precedenceStatusRepository
                         .findBySystemId(systemId));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -121,13 +121,13 @@ public class PrecedenceStatusService
      * object
      */
     @Override
-    public MetadataHateoas findByDescription(String description) {
+    public MetadataHateoas findByDescription(String description, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         precedenceStatusRepository
                                 .findByDescription(description),
                 PRECEDENCE_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -141,12 +141,12 @@ public class PrecedenceStatusService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
+    public MetadataHateoas findByCode(String code, String outgoingAddress) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
                         precedenceStatusRepository.findByCode
                                 (code), PRECEDENCE_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation(), outgoingAddress);
         return metadataHateoas;
     }
 
@@ -179,7 +179,7 @@ public class PrecedenceStatusService
      */
     @Override
     public MetadataHateoas handleUpdate(String systemId, Long
-            version, PrecedenceStatus precedenceStatus) {
+            version, PrecedenceStatus precedenceStatus, String outgoingAddress) {
 
         PrecedenceStatus existingPrecedenceStatus =
                 getPrecedenceStatusOrThrow(systemId);
@@ -199,7 +199,7 @@ public class PrecedenceStatusService
         MetadataHateoas precedenceStatusHateoas = new MetadataHateoas(precedenceStatusRepository
                 .save(existingPrecedenceStatus));
 
-        metadataHateoasHandler.addLinks(precedenceStatusHateoas, new Authorisation());
+        metadataHateoasHandler.addLinks(precedenceStatusHateoas, new Authorisation(), outgoingAddress);
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,

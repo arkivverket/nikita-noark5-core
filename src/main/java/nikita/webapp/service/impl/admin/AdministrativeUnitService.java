@@ -99,7 +99,7 @@ public class AdministrativeUnitService
      * @return list of all administrativeUnit
      */
     @Override
-    public List<AdministrativeUnit> findAll() {
+    public List<AdministrativeUnit> findAll(String outgoingAddress) {
         return administrativeUnitRepository.findAll();
     }
 

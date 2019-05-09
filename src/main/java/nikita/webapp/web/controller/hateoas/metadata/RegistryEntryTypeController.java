@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v4.metadata.RegistryEntryType;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryTypeService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
         produces = {NOARK5_V4_CONTENT_TYPE_JSON,
                 NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class RegistryEntryTypeController {
+public class RegistryEntryTypeController
+        extends NoarkController {
 
     private IRegistryEntryTypeService registryEntryTypeService;
 
@@ -91,7 +93,7 @@ public class RegistryEntryTypeController {
         MetadataHateoas metadataHateoas =
                 registryEntryTypeService.
                         createNewRegistryEntryType(
-                                registryEntryType);
+                                registryEntryType, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(CommonUtils.WebUtils.
@@ -133,7 +135,7 @@ public class RegistryEntryTypeController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryTypeService.findAll());
+                .body(registryEntryTypeService.findAll(getAddress(request)));
     }
 
     // Retrieves a given RegistryEntryType identified by a
@@ -182,7 +184,7 @@ public class RegistryEntryTypeController {
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                registryEntryTypeService.find(systemId);
+                registryEntryTypeService.find(systemId, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -280,9 +282,8 @@ public class RegistryEntryTypeController {
         MetadataHateoas metadataHateoas =
                 registryEntryTypeService
                         .handleUpdate
-                                (systemID, CommonUtils.Validation.
-                                        parseETAG(request.getHeader
-                                                (ETAG)), registryEntryType);
+                                (systemID, parseETAG(request.getHeader(ETAG)),
+                                        registryEntryType, getAddress(request));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.

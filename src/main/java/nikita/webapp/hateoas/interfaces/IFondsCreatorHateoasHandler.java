@@ -10,8 +10,8 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface IFondsCreatorHateoasHandler extends IHateoasHandler {
 
-    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
-    void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject, String outgoingAddress);
 
 }

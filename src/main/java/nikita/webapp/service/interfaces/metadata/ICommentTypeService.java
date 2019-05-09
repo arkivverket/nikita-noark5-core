@@ -9,18 +9,21 @@ import nikita.common.model.noark5.v4.metadata.CommentType;
 
 public interface ICommentTypeService {
 
-    MetadataHateoas createNewCommentType(CommentType commentType);
+    MetadataHateoas createNewCommentType(CommentType commentType,
+                                         String outgoingAddress);
 
-    MetadataHateoas find(String systemId);
+    MetadataHateoas find(String systemId, String outgoingAddress);
 
-    MetadataHateoas findAll();
+    MetadataHateoas findAll(String outgoingAddress);
 
-    MetadataHateoas findByDescription(String description);
+    MetadataHateoas findByDescription(String description,
+                                      String outgoingAddress);
 
-    MetadataHateoas findByCode(String code);
+    MetadataHateoas findByCode(String code, String outgoingAddress);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, CommentType
-            commentType);
+    MetadataHateoas handleUpdate(String systemId, Long version,
+                                 CommentType commentType,
+                                 String outgoingAddress);
 
     CommentType generateDefaultCommentType();
 }

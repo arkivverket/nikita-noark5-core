@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import nikita.common.util.CommonUtils;
 import nikita.webapp.application.*;
 import nikita.webapp.service.application.ApplicationService;
+import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,8 @@ import static nikita.common.config.Constants.*;
 @RestController("ApplicationController")
 @RequestMapping(produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
 @Api(value = "Application", description = "Links to where the various interfaces can be accessed from")
-public class ApplicationController {
+public class ApplicationController
+        extends NoarkController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
 
