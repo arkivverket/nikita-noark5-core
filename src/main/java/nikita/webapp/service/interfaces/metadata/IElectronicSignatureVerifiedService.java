@@ -3,6 +3,8 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.ElectronicSignatureVerified;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by tsodring on 19/02/18.
  */
@@ -20,9 +22,11 @@ public interface IElectronicSignatureVerifiedService {
 
     MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version,
-                                 ElectronicSignatureVerified
-                                         electronicSignatureVerified);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final ElectronicSignatureVerified
+                    incomingElectronicSignatureVerified);
 
     ElectronicSignatureVerified generateDefaultElectronicSignatureVerified();
 }

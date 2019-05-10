@@ -7,6 +7,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 @Service
 @Transactional
 public class DocumentDescriptionService
+        extends NoarkService
         implements IDocumentDescriptionService {
 
     private static final Logger logger =
@@ -31,15 +33,15 @@ public class DocumentDescriptionService
 
     private DocumentObjectService documentObjectService;
     private IDocumentDescriptionRepository documentDescriptionRepository;
-    private EntityManager entityManager;
 
     public DocumentDescriptionService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             DocumentObjectService documentObjectService,
-            IDocumentDescriptionRepository documentDescriptionRepository,
-            EntityManager entityManager) {
+            IDocumentDescriptionRepository documentDescriptionRepository) {
+        super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
-        this.entityManager = entityManager;
     }
 
     // All CREATE operations
@@ -119,37 +121,43 @@ public class DocumentDescriptionService
     }
 
     // -- All UPDATE operations
+
+    /**
+     * Updates a DocumentDescription object in the database. First we try to locate the
+     * DocumentDescription object. If the DocumentDescription object does not exist a
+     * NoarkEntityNotFoundException exception is thrown that the caller has
+     * to deal with.
+     * <br>
+     * After this the values you are allowed to update are copied from the
+     * incomingDocumentDescription object to the existingDocumentDescription object and the
+     * existingDocumentDescription object will be persisted to the database when the
+     * transaction boundary is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the DocumentDescription object from
+     * the database a NoarkConcurrencyException is thrown. Note. This happens
+     * when the call to DocumentDescription.setVersion() occurs.
+     *
+     * @param systemId                    systemId of the incoming documentDescription object
+     * @param version
+     * @param incomingDocumentDescription the incoming documentDescription
+     * @return the updated documentDescription after it is persisted
+     */
     @Override
     public DocumentDescription handleUpdate(
             @NotNull String systemId, @NotNull Long version,
             @NotNull DocumentDescription incomingDocumentDescription) {
         DocumentDescription existingDocumentDescription =
                 getDocumentDescriptionOrThrow(systemId);
-        // Copy all the values you are allowed to copy ....
-        if (null != incomingDocumentDescription.getDescription()) {
-            existingDocumentDescription.setDescription(
-                    incomingDocumentDescription.getDescription());
-        }
-        if (null != incomingDocumentDescription.getTitle()) {
-            existingDocumentDescription.setTitle(
-                    incomingDocumentDescription.getTitle());
-        }
-        if (null != incomingDocumentDescription.getDocumentMedium()) {
-            existingDocumentDescription.setDocumentMedium(
-                    incomingDocumentDescription.getDocumentMedium());
-        }
-        if (null != incomingDocumentDescription.getAssociatedWithRecordAs()) {
-            existingDocumentDescription.setAssociatedWithRecordAs(
-                    incomingDocumentDescription.getAssociatedWithRecordAs());
-        }
-        if (null != incomingDocumentDescription.getDocumentNumber()) {
-            existingDocumentDescription.setDocumentNumber(
-                    incomingDocumentDescription.getDocumentNumber());
-        }
-
+        updateTitleAndDescription(incomingDocumentDescription,
+                existingDocumentDescription);
+        updateDocumentDescription(incomingDocumentDescription,
+                existingDocumentDescription);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingDocumentDescription.setVersion(version);
-        documentDescriptionRepository.save(existingDocumentDescription);
-        return existingDocumentDescription;
+        return documentDescriptionRepository.save(existingDocumentDescription);
     }
 
     // All DELETE operations
@@ -171,6 +179,21 @@ public class DocumentDescriptionService
     }
 
     // All HELPER operations
+
+    private void updateDocumentDescription(
+            @NotNull final DocumentDescription incomingDocumentDescription,
+            @NotNull final DocumentDescription existingDocumentDescription) {
+        if (null != incomingDocumentDescription.getDocumentMedium()) {
+            existingDocumentDescription.setDocumentMedium(
+                    incomingDocumentDescription.getDocumentMedium());
+        }
+        if (null != incomingDocumentDescription.getAssociatedWithRecordAs()) {
+            existingDocumentDescription.setAssociatedWithRecordAs(
+                    incomingDocumentDescription.getAssociatedWithRecordAs());
+        }
+        existingDocumentDescription.setDocumentNumber(
+                incomingDocumentDescription.getDocumentNumber());
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in

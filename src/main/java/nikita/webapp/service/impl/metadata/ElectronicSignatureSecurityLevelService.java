@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IElectronicSignatureSecurityLevelR
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IElectronicSignatureSecurityLevelService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_SECUR
 @Transactional
 @SuppressWarnings("unchecked")
 public class ElectronicSignatureSecurityLevelService
+        extends NoarkService
         implements IElectronicSignatureSecurityLevelService {
 
     private static final Logger logger =
@@ -39,18 +42,17 @@ public class ElectronicSignatureSecurityLevelService
     private IElectronicSignatureSecurityLevelRepository
             electronicSignatureSecurityLevelRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public ElectronicSignatureSecurityLevelService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             IElectronicSignatureSecurityLevelRepository
                     electronicSignatureSecurityLevelRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.electronicSignatureSecurityLevelRepository =
                 electronicSignatureSecurityLevelRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -186,7 +188,8 @@ public class ElectronicSignatureSecurityLevelService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId                         The systemId of the electronicSignatureSecurityLevel
+     * @param systemId                         The systemId of the
+     *                                         electronicSignatureSecurityLevel
      *                                         object you wish to update
      * @param electronicSignatureSecurityLevel The updated
      *                                         electronicSignatureSecurityLevel
@@ -197,26 +200,19 @@ public class ElectronicSignatureSecurityLevelService
      * @return the updated electronicSignatureSecurityLevel
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, ElectronicSignatureSecurityLevel
-                                                electronicSignatureSecurityLevel) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final ElectronicSignatureSecurityLevel
+                    electronicSignatureSecurityLevel) {
 
         ElectronicSignatureSecurityLevel
                 existingElectronicSignatureSecurityLevel =
                 getElectronicSignatureSecurityLevelOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != electronicSignatureSecurityLevel.getCode()) {
-            existingElectronicSignatureSecurityLevel.
-                    setCode(electronicSignatureSecurityLevel.getCode());
-        }
-        if (null != electronicSignatureSecurityLevel.getDescription()) {
-            existingElectronicSignatureSecurityLevel.
-                    setDescription(electronicSignatureSecurityLevel.
-                            getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(electronicSignatureSecurityLevel,
+                existingElectronicSignatureSecurityLevel);
+        // Note setVersion can potentially result in a
+        // NoarkConcurrencyException exception as it checks the ETAG value
         existingElectronicSignatureSecurityLevel.setVersion(version);
 
         MetadataHateoas electronicSignatureSecurityLevelHateoas =

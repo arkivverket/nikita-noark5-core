@@ -6,6 +6,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.IBasicRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,17 +23,20 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
 @Transactional
-public class BasicRecordService implements IBasicRecordService {
+public class BasicRecordService
+        extends NoarkService
+        implements IBasicRecordService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(BasicRecordService.class);
 
-    private EntityManager entityManager;
     private IBasicRecordRepository basicRecordRepository;
 
     public BasicRecordService(EntityManager entityManager,
+                              ApplicationEventPublisher
+                                      applicationEventPublisher,
                               IBasicRecordRepository basicRecordRepository) {
-        this.entityManager = entityManager;
+        super(entityManager, applicationEventPublisher);
         this.basicRecordRepository = basicRecordRepository;
     }
 
@@ -59,22 +63,43 @@ public class BasicRecordService implements IBasicRecordService {
     }
 
     // All UPDATE operations
+
+    /**
+     * Updates a BasicRecord object in the database. First we try to locate the
+     * BasicRecord object. If the BasicRecord object does not exist a
+     * NoarkEntityNotFoundException exception is thrown that the caller has
+     * to deal with.
+     * <br>
+     * After this the values you are allowed to update are copied from the
+     * incomingBasicRecord object to the existingBasicRecord object and the
+     * existingBasicRecord object will be persisted to the database when the
+     * transaction boundary is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the BasicRecord object from
+     * the database a NoarkConcurrencyException is thrown. Note. This happens
+     * when the call to BasicRecord.setVersion() occurs.
+     *
+     * @param systemId            systemId of the incoming basicRecord object
+     * @param version             ETag version
+     * @param incomingBasicRecord the incoming basicRecord
+     * @return the updated basicRecord object after it is persisted
+     */
     @Override
-    public BasicRecord handleUpdate(@NotNull String systemId,
-                                    @NotNull Long version,
-                                    @NotNull BasicRecord incomingBasicRecord) {
+    public BasicRecord handleUpdate(@NotNull final String systemId,
+                                    @NotNull final Long version,
+                                    @NotNull final
+                                    BasicRecord incomingBasicRecord) {
         BasicRecord existingBasicRecord = getBasicRecordOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
-        if (null != incomingBasicRecord.getDescription()) {
-            existingBasicRecord.setDescription(incomingBasicRecord.getDescription());
-        }
-        if (null != incomingBasicRecord.getTitle()) {
-            existingBasicRecord.setTitle(incomingBasicRecord.getTitle());
-        }
+        updateTitleAndDescription(incomingBasicRecord, existingBasicRecord);
         if (null != incomingBasicRecord.getDocumentMedium()) {
             existingBasicRecord.setDocumentMedium(
                     incomingBasicRecord.getDocumentMedium());
         }
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingBasicRecord.setVersion(version);
         basicRecordRepository.save(existingBasicRecord);
         return existingBasicRecord;

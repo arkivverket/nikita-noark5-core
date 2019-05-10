@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IRegistryEntryStatusRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_STATUS;
 @Service
 @Transactional
 public class RegistryEntryStatusService
+        extends NoarkService
         implements IRegistryEntryStatusService {
 
     private static final Logger logger =
@@ -37,14 +40,15 @@ public class RegistryEntryStatusService
 
     private IRegistryEntryStatusRepository RegistryEntryStatusRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
-    public RegistryEntryStatusService(IRegistryEntryStatusRepository RegistryEntryStatusRepository,
-                                      IMetadataHateoasHandler metadataHateoasHandler,
-                                      ApplicationEventPublisher applicationEventPublisher) {
-        this.RegistryEntryStatusRepository = RegistryEntryStatusRepository;
+    public RegistryEntryStatusService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IRegistryEntryStatusRepository registryEntryStatusRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        RegistryEntryStatusRepository = registryEntryStatusRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -162,25 +166,27 @@ public class RegistryEntryStatusService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param registryEntryStatus
-     * @return the updated RegistryEntryStatus
+     * @param systemId        The systemId of the registryEntryStatus object
+     *                        you wish to update
+     * @param incomingRegistryEntryStatus The updated registryEntryStatus
+     *                                    object. Note the values you are
+     *                                    allowed to change are copied from
+     *                                    this object. This object is not
+     *                                    persisted.
+     * @return the updated registryEntryStatus
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, RegistryEntryStatus registryEntryStatus) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final RegistryEntryStatus incomingRegistryEntryStatus) {
 
-        RegistryEntryStatus existingRegistryEntryStatus = getRegistryEntryStatusOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != registryEntryStatus.getCode()) {
-            existingRegistryEntryStatus.setCode(registryEntryStatus.getCode());
-        }
-        if (null != registryEntryStatus.getDescription()) {
-            existingRegistryEntryStatus.setDescription(registryEntryStatus.
-                    getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        RegistryEntryStatus existingRegistryEntryStatus =
+                getRegistryEntryStatusOrThrow(systemId);
+        updateCodeAndDescription(incomingRegistryEntryStatus,
+                existingRegistryEntryStatus);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingRegistryEntryStatus.setVersion(version);
 
         MetadataHateoas RegistryEntryStatusHateoas = new MetadataHateoas(

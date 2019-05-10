@@ -137,6 +137,8 @@ public class AdministrativeUnitService
             existingAdministrativeUnit.setShortName(
                     incomingAdministrativeUnit.getShortName());
         }
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingAdministrativeUnit.setVersion(version);
         administrativeUnitRepository.save(existingAdministrativeUnit);
         return administrativeUnitRepository.save(incomingAdministrativeUnit);

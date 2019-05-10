@@ -43,6 +43,7 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 @Transactional
 @SuppressWarnings("unchecked")
 public class FondsService
+        extends NoarkService
         implements IFondsService {
 
     private static final Logger logger =
@@ -51,21 +52,20 @@ public class FondsService
     private IFondsRepository fondsRepository;
     private SeriesService seriesService;
     private IFondsCreatorService fondsCreatorService;
-    private EntityManager entityManager;
     private IFondsHateoasHandler fondsHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
-    public FondsService(IFondsRepository fondsRepository,
+    public FondsService(EntityManager entityManager,
+                        ApplicationEventPublisher applicationEventPublisher,
+                        IFondsRepository fondsRepository,
                         SeriesService seriesService,
                         IFondsCreatorService fondsCreatorService,
-                        EntityManager entityManager,
                         IFondsHateoasHandler fondsHateoasHandler,
                         ISeriesHateoasHandler seriesHateoasHandler,
-                        IFondsCreatorHateoasHandler fondsCreatorHateoasHandler,
-                        ApplicationEventPublisher applicationEventPublisher) {
-
+                        IFondsCreatorHateoasHandler
+                                fondsCreatorHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.fondsRepository = fondsRepository;
         this.seriesService = seriesService;
         this.fondsCreatorService = fondsCreatorService;
@@ -73,7 +73,6 @@ public class FondsService
         this.fondsHateoasHandler = fondsHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.fondsCreatorHateoasHandler = fondsCreatorHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -419,18 +418,12 @@ public class FondsService
         Fonds existingFonds = getFondsOrThrow(fondsSystemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != incomingFonds.getDescription()) {
-            existingFonds.setDescription(incomingFonds.getDescription());
-        }
-        if (null != incomingFonds.getTitle()) {
-            existingFonds.setTitle(incomingFonds.getTitle());
-        }
+        updateTitleAndDescription(incomingFonds, existingFonds);
         if (null != incomingFonds.getDocumentMedium()) {
             existingFonds.setDocumentMedium(incomingFonds.getDocumentMedium());
         }
-
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingFonds.setVersion(version);
 
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.

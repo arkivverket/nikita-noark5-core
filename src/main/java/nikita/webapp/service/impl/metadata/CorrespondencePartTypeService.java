@@ -3,13 +3,16 @@ package nikita.webapp.service.impl.metadata;
 import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -18,12 +21,19 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
 @Transactional
-public class CorrespondencePartTypeService implements ICorrespondencePartTypeService {
+public class CorrespondencePartTypeService
+        extends NoarkService
+        implements ICorrespondencePartTypeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CorrespondencePartTypeService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(CorrespondencePartTypeService.class);
     private ICorrespondencePartTypeRepository correspondencePartTypeRepository;
 
-    public CorrespondencePartTypeService(ICorrespondencePartTypeRepository correspondencePartTypeRepository) {
+    public CorrespondencePartTypeService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            ICorrespondencePartTypeRepository correspondencePartTypeRepository) {
+        super(entityManager, applicationEventPublisher);
         this.correspondencePartTypeRepository = correspondencePartTypeRepository;
     }
 

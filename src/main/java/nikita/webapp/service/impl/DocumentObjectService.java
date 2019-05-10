@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -74,13 +75,13 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 @Transactional
 @EnableConfigurationProperties(WebappProperties.class)
 public class DocumentObjectService
+        extends NoarkService
         implements IDocumentObjectService {
 
     private final Logger logger =
             LoggerFactory.getLogger(DocumentObjectService.class);
 
     private IDocumentObjectRepository documentObjectRepository;
-    private EntityManager entityManager;
     @Value("${nikita.startup.directory-store-name}")
     private String directoryStoreName = "/data/nikita/storage";
     @Value("${nikita.startup.incoming-directory}")
@@ -89,10 +90,11 @@ public class DocumentObjectService
     private String defaultChecksumAlgorithm = "SHA-256";
 
     public DocumentObjectService(
-            IDocumentObjectRepository documentObjectRepository,
-            EntityManager entityManager) {
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IDocumentObjectRepository documentObjectRepository) {
+        super(entityManager, applicationEventPublisher);
         this.documentObjectRepository = documentObjectRepository;
-        this.entityManager = entityManager;
     }
 
     // All CREATE operations
@@ -282,7 +284,7 @@ public class DocumentObjectService
     /**
      * @param documentObject the documentObject you want a archive version
      *                       mimeType for.
-     * @return
+     * @return the documents mimeType
      */
 
     private String getArchiveFileExtension(DocumentObject documentObject) {
@@ -421,27 +423,47 @@ public class DocumentObjectService
 
 
     // All UPDATE operations
+
+    /**
+     * Updates a DocumentDescription object in the database. First we try to
+     * locate the DocumentDescription object. If the DocumentDescription object
+     * does not exist a NoarkEntityNotFoundException exception is thrown that
+     * the caller has to deal with.
+     * <br>
+     * After this the values you are allowed to update are copied from the
+     * incomingDocumentDescription object to the existingDocumentDescription
+     * object and the existingDocumentDescription object will be persisted to
+     * the database when the transaction boundary is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the DocumentDescription
+     * object from the database a NoarkConcurrencyException is thrown. Note.
+     * This happens when the call to DocumentDescription.setVersion() occurs.
+     * <p>
+     * Note: variantFormat amd versionNumber are not nullable
+     *
+     * @param systemId               systemId of the incoming documentObject
+     *                               object
+     * @param version                ETag version
+     * @param incomingDocumentObject the incoming documentObject
+     * @return the updated documentObject after it is persisted
+     */
     @Override
     public DocumentObject handleUpdate(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull DocumentObject incomingDocumentObject) {
+            @NotNull final String systemId, @NotNull final Long version,
+            @NotNull final DocumentObject incomingDocumentObject) {
 
         DocumentObject existingDocumentObject =
                 getDocumentObjectOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != incomingDocumentObject.getFormat()) {
-            existingDocumentObject.setFormat(
-                    incomingDocumentObject.getFormat());
-        }
-        if (null != incomingDocumentObject.getFormatDetails()) {
-            existingDocumentObject.setFormatDetails(
-                    incomingDocumentObject.getFormatDetails());
-        }
-        if (null != incomingDocumentObject.getOriginalFilename()) {
-            existingDocumentObject.setOriginalFilename
-                    (incomingDocumentObject.getOriginalFilename());
-        }
+        existingDocumentObject.setFormat(
+                incomingDocumentObject.getFormat());
+        existingDocumentObject.setFormatDetails(
+                incomingDocumentObject.getFormatDetails());
+        existingDocumentObject.setOriginalFilename
+                (incomingDocumentObject.getOriginalFilename());
         if (null != incomingDocumentObject.getVariantFormat()) {
             existingDocumentObject.setVariantFormat(
                     incomingDocumentObject.getVariantFormat());
@@ -450,6 +472,8 @@ public class DocumentObjectService
             existingDocumentObject.setVersionNumber(
                     incomingDocumentObject.getVersionNumber());
         }
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingDocumentObject.setVersion(version);
         documentObjectRepository.save(existingDocumentObject);
         return existingDocumentObject;
@@ -482,9 +506,7 @@ public class DocumentObjectService
      *
      * @param file A Path object pointing to the file
      * @return the actual mime-type
-     * @throws IOException if there is a problem with the file
      */
-
     private String getMimeType(Path file) {
 
         MediaType mediaType;

@@ -23,6 +23,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,7 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityVal
 @Service
 @Transactional
 public class ClassService
+        extends NoarkService
         implements IClassService {
 
     private static final Logger logger =
@@ -52,14 +54,15 @@ public class ClassService
     private ICaseFileService caseFileService;
     private IRecordService recordService;
     private IClassHateoasHandler classHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
-    public ClassService(IClassRepository classRepository,
+    public ClassService(EntityManager entityManager,
+                        ApplicationEventPublisher applicationEventPublisher,
+                        IClassRepository classRepository,
                         IFileService fileService,
                         ICaseFileService caseFileService,
                         IRecordService recordService,
-                        IClassHateoasHandler classHateoasHandler,
-                        ApplicationEventPublisher applicationEventPublisher) {
+                        IClassHateoasHandler classHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.classRepository = classRepository;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
@@ -269,16 +272,13 @@ public class ClassService
      */
     @Override
     public ClassHateoas handleUpdate(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Class incomingClass) {
+            @NotNull final String systemId, @NotNull final Long version,
+            @NotNull final Class incomingClass) {
         Class existingClass = getClassOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
-        if (null != incomingClass.getDescription()) {
-            existingClass.setDescription(incomingClass.getDescription());
-        }
-        if (null != incomingClass.getTitle()) {
-            existingClass.setTitle(incomingClass.getTitle());
-        }
+        updateTitleAndDescription(incomingClass, existingClass);
+        classRepository.save(existingClass);
+
         ClassHateoas classHateoas = new
                 ClassHateoas(classRepository.save(
                 classRepository.save(existingClass)));

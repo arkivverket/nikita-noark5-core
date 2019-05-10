@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IClassifiedCodeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IClassifiedCodeService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.CLASSIFIED_CODE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class ClassifiedCodeService
+        extends NoarkService
         implements IClassifiedCodeService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class ClassifiedCodeService
 
     private IClassifiedCodeRepository classifiedCodeRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public ClassifiedCodeService(
-            IClassifiedCodeRepository
-                    classifiedCodeRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.classifiedCodeRepository =
-                classifiedCodeRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IClassifiedCodeRepository classifiedCodeRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.classifiedCodeRepository = classifiedCodeRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -172,32 +172,26 @@ public class ClassifiedCodeService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId       The systemId of the classifiedCode object you wish to
-     *                       update
-     * @param classifiedCode The updated classifiedCode object. Note
-     *                       the values you are allowed to change are
-     *                       copied from this object. This object is not
-     *                       persisted.
+     * @param systemId       The systemId of the classifiedCode object you
+     *                       wish to update
+     * @param incomingClassifiedCode The updated classifiedCode object. Note
+     *                               the values you are allowed to change are
+     *                               copied from this object. This object is
+     *                               not persisted.
      * @return the updated classifiedCode
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, ClassifiedCode classifiedCode) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final ClassifiedCode incomingClassifiedCode) {
 
         ClassifiedCode existingClassifiedCode =
                 getClassifiedCodeOrThrow(systemId);
+        updateCodeAndDescription(incomingClassifiedCode, existingClassifiedCode);
 
-        // Copy all the values you are allowed to copy ....
-        if (null != classifiedCode.getCode()) {
-            existingClassifiedCode.setCode(
-                    classifiedCode.getCode());
-        }
-        if (null != classifiedCode.getDescription()) {
-            existingClassifiedCode.setDescription(
-                    classifiedCode.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingClassifiedCode.setVersion(version);
 
         MetadataHateoas classifiedCodeHateoas = new MetadataHateoas(

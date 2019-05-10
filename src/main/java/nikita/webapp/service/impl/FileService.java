@@ -11,7 +11,7 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.util.NoarkUtils;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
+import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 @Service
 @Transactional
 public class FileService
+        extends NoarkService
         implements IFileService {
 
     private static final Logger logger =
@@ -37,15 +39,15 @@ public class FileService
     private IRecordService recordService;
     private IFileRepository fileRepository;
     private IFileHateoasHandler fileHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
-    public FileService(IRecordService recordService,
+    public FileService(EntityManager entityManager,
+                       ApplicationEventPublisher applicationEventPublisher,
+                       IRecordService recordService,
                        IFileRepository fileRepository,
-                       IFileHateoasHandler fileHateoasHandler,
-                       ApplicationEventPublisher applicationEventPublisher) {
+                       IFileHateoasHandler fileHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.recordService = recordService;
         this.fileRepository = fileRepository;
-        this.applicationEventPublisher = applicationEventPublisher;
         this.fileHateoasHandler = fileHateoasHandler;
     }
 
@@ -56,7 +58,7 @@ public class FileService
         FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, file));
+                new AfterNoarkEntityCreatedEvent(this, file));
         return fileHateoas;
     }
 
@@ -129,19 +131,40 @@ public class FileService
     }
 
     // All UPDATE operations
+
+    /**
+     * Updates a DocumentDescription object in the database. First we try to
+     * locate the DocumentDescription object. If the DocumentDescription object
+     * does not exist a NoarkEntityNotFoundException exception is thrown that
+     * the caller has to deal with.
+     * <br>
+     * After this the values you are allowed to update are copied from the
+     * incomingDocumentDescription object to the existingDocumentDescription
+     * object and the existingDocumentDescription object will be persisted to
+     * the database when the transaction boundary is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the DocumentDescription
+     * object from the database a NoarkConcurrencyException is thrown. Note.
+     * This happens when the call to DocumentDescription.setVersion() occurs.
+     * <p>
+     * Note: title is not nullable
+     *
+     * @param systemId     systemId of File to update
+     * @param version      ETAG value
+     * @param incomingFile the incoming file
+     * @return the updated File object after it is persisted
+     */
     @Override
-    public File handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull File incomingFile) {
+    public File handleUpdate(@NotNull String systemId, @NotNull Long version,
+                             @NotNull File incomingFile) {
         File existingFile = getFileOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
-        if (null != existingFile.getDescription()) {
-            existingFile.setDescription(incomingFile.getDescription());
-        }
-        if (null != incomingFile.getTitle()) {
-            existingFile.setTitle(incomingFile.getTitle());
-        }
-        if (null != incomingFile.getDocumentMedium()) {
-            existingFile.setDocumentMedium(incomingFile.getDocumentMedium());
-        }
+        updateTitleAndDescription(incomingFile, existingFile);
+        existingFile.setDocumentMedium(incomingFile.getDocumentMedium());
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingFile.setVersion(version);
         fileRepository.save(existingFile);
         return existingFile;

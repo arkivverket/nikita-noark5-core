@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IElectronicSignatureVerifiedReposi
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IElectronicSignatureVerifiedService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_VERIF
 @Transactional
 @SuppressWarnings("unchecked")
 public class ElectronicSignatureVerifiedService
+        extends NoarkService
         implements IElectronicSignatureVerifiedService {
 
     private static final Logger logger =
@@ -39,18 +42,17 @@ public class ElectronicSignatureVerifiedService
     private IElectronicSignatureVerifiedRepository
             electronicSignatureVerifiedRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public ElectronicSignatureVerifiedService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             IElectronicSignatureVerifiedRepository
                     electronicSignatureVerifiedRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.electronicSignatureVerifiedRepository =
                 electronicSignatureVerifiedRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -189,34 +191,27 @@ public class ElectronicSignatureVerifiedService
      * @param systemId                    The systemId of the
      *                                    electronicSignatureVerified
      *                                    object you wish to update
-     * @param electronicSignatureVerified The updated
-     *                                    electronicSignatureVerified
-     *                                    object. Note the values you
-     *                                    are allowed to change are
-     *                                    copied from this object. This
-     *                                    object is not persisted.
+     * @param incomingElectronicSignatureVerified The updated
+     *                                            electronicSignatureVerified
+     *                                            object. Note the values you
+     *                                            are allowed to change are
+     *                                            copied from this object.
+     *                                            This object is not persisted.
      * @return the updated electronicSignatureVerified
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, ElectronicSignatureVerified electronicSignatureVerified) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final ElectronicSignatureVerified
+                    incomingElectronicSignatureVerified) {
 
         ElectronicSignatureVerified
                 existingElectronicSignatureVerified =
                 getElectronicSignatureVerifiedOrThrow(systemId);
 
-        // Copy all the values you are allowed to copy ....
-        if (null != electronicSignatureVerified.getCode()) {
-            existingElectronicSignatureVerified.
-                    setCode(electronicSignatureVerified.getCode());
-        }
-        if (null != electronicSignatureVerified.getDescription()) {
-            existingElectronicSignatureVerified.
-                    setDescription(electronicSignatureVerified.
-                            getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingElectronicSignatureVerified.setVersion(version);
 
         MetadataHateoas electronicSignatureVerifiedHateoas =

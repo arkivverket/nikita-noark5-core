@@ -39,8 +39,9 @@ public interface IClassService {
     ClassHateoas findAllChildren(@NotNull String classSystemId);
 
     // All UPDATE operations
-    ClassHateoas handleUpdate(@NotNull String systemId, @NotNull Long version,
-                              @NotNull Class klass);
+    ClassHateoas handleUpdate(@NotNull final String systemId,
+                              @NotNull final Long version,
+                              @NotNull final Class klass);
 
 	// All DELETE operations
     HateoasNoarkObject deleteEntity(@NotNull String systemId);

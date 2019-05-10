@@ -9,6 +9,7 @@ import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.util.NoarkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,19 +24,23 @@ import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 
 @Service
 @Transactional
-public class FondsCreatorService implements IFondsCreatorService {
+public class FondsCreatorService
+        extends NoarkService
+        implements IFondsCreatorService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FondsCreatorService.class);
+    private static final Logger logger = LoggerFactory.
+            getLogger(FondsCreatorService.class);
     private IFondsCreatorRepository fondsCreatorRepository;
     private IFondsRepository fondsRepository;
-    private EntityManager entityManager;
 
-    public FondsCreatorService(IFondsCreatorRepository fondsCreatorRepository,
-                               IFondsRepository fondsRepository,
-                               EntityManager entityManager) {
+    public FondsCreatorService(EntityManager entityManager,
+                               ApplicationEventPublisher
+                                       applicationEventPublisher,
+                               IFondsCreatorRepository fondsCreatorRepository,
+                               IFondsRepository fondsRepository) {
+        super(entityManager, applicationEventPublisher);
         this.fondsCreatorRepository = fondsCreatorRepository;
         this.fondsRepository = fondsRepository;
-        this.entityManager = entityManager;
     }
 
     // All CREATE operations
@@ -88,19 +93,50 @@ public class FondsCreatorService implements IFondsCreatorService {
     }
 
     // All UPDATE operations
+
+    /**
+     * Updates a FondsCreator object in the database. First we try to locate the
+     * FondsCreator object. If the FondsCreator object does not exist a
+     * NoarkEntityNotFoundException exception is thrown that the caller has
+     * to deal with.
+     * <br>
+     * After this the values you are allowed to update are copied from the
+     * incomingFondsCreator object to the existingFondsCreator object and the
+     * existingFondsCreator object will be persisted to the database when the
+     * transaction boundary is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the FondsCreator object
+     * from the database a NoarkConcurrencyException is thrown. Note. This
+     * happens when the call to FondsCreator.setVersion() occurs.
+     * <p>
+     * Note: fondsCreatorName and fondsCreatorId are not nullable
+     *
+     * @param systemId             systemId of the incoming fondsCreator object
+     * @param version              ETag version
+     * @param incomingFondsCreator the incoming fondsCreator
+     * @return the updated fondsCreator object after it is persisted
+     */
     @Override
-    public FondsCreator handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull FondsCreator incomingFondsCreator) {
+    public FondsCreator handleUpdate(@NotNull final String systemId,
+                                     @NotNull final Long version,
+                                     @NotNull final FondsCreator
+                                             incomingFondsCreator) {
         FondsCreator existingFondsCreator = getFondsCreatorOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
-        if (null != incomingFondsCreator.getDescription()) {
-            existingFondsCreator.setDescription(incomingFondsCreator.getDescription());
-        }
+        existingFondsCreator.setDescription(
+                incomingFondsCreator.getDescription());
         if (null != incomingFondsCreator.getFondsCreatorId()) {
-            existingFondsCreator.setFondsCreatorId(incomingFondsCreator.getFondsCreatorId());
+            existingFondsCreator.setFondsCreatorId(
+                    incomingFondsCreator.getFondsCreatorId());
         }
         if (null != incomingFondsCreator.getFondsCreatorName()) {
-            existingFondsCreator.setFondsCreatorName(incomingFondsCreator.getFondsCreatorName());
+            existingFondsCreator.setFondsCreatorName(
+                    incomingFondsCreator.getFondsCreatorName());
         }
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingFondsCreator.setVersion(version);
         fondsCreatorRepository.save(existingFondsCreator);
         return existingFondsCreator;

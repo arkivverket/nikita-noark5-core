@@ -48,6 +48,7 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityVal
 @Service
 @Transactional
 public class CaseFileService
+        extends NoarkService
         implements ICaseFileService {
 
     private static final Logger logger =
@@ -60,20 +61,17 @@ public class CaseFileService
     private IUserRepository userRepository;
     private ICaseStatusService caseStatusService;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
-    private EntityManager entityManager;
-    private ApplicationEventPublisher applicationEventPublisher;
 
-    public CaseFileService(
-            IRegistryEntryService registryEntryService,
-            ICaseFileRepository caseFileRepository,
-            ISequenceNumberGeneratorService numberGeneratorService,
-            IAdministrativeUnitRepository administrativeUnitRepository,
-            IUserRepository userRepository,
-            ICaseStatusService caseStatusService,
-            ICaseFileHateoasHandler caseFileHateoasHandler,
-            EntityManager entityManager,
-            ApplicationEventPublisher applicationEventPublisher) {
-
+    public CaseFileService(EntityManager entityManager,
+                           ApplicationEventPublisher applicationEventPublisher,
+                           IRegistryEntryService registryEntryService,
+                           ICaseFileRepository caseFileRepository,
+                           ISequenceNumberGeneratorService numberGeneratorService,
+                           IAdministrativeUnitRepository administrativeUnitRepository,
+                           IUserRepository userRepository,
+                           ICaseStatusService caseStatusService,
+                           ICaseFileHateoasHandler caseFileHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.registryEntryService = registryEntryService;
         this.caseFileRepository = caseFileRepository;
         this.numberGeneratorService = numberGeneratorService;
@@ -81,8 +79,6 @@ public class CaseFileService
         this.userRepository = userRepository;
         this.caseStatusService = caseStatusService;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
-        this.entityManager = entityManager;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -176,38 +172,40 @@ public class CaseFileService
     }
 
     // All UPDATE operations
+
+    /**
+     * Updates a CaseFile object in the database. First we try to locate the
+     * CaseFile object. If the CaseFile object does not exist a
+     * NoarkEntityNotFoundException exception is thrown that the caller has
+     * to deal with.
+     * <br>
+     * After this the values you are allowed to update are copied from the
+     * incomingCaseFile object to the existingCaseFile object and the
+     * existingCaseFile object will be persisted to the database when the
+     * transaction boundary is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the CaseFile object from
+     * the database a NoarkConcurrencyException is thrown. Note. This happens
+     * when the call to CaseFile.setVersion() occurs.
+     *
+     * @param systemId         systemId of the incoming caseFile object
+     * @param version          ETAG value
+     * @param incomingCaseFile the incoming caseFile
+     * @return the updated caseFile object after it is persisted
+     */
     @Override
-    public CaseFile handleUpdate(
-            @NotNull String systemId,
-            @NotNull Long version,
-            @NotNull CaseFile incomingCaseFile) {
+    public CaseFile handleUpdate(@NotNull final String systemId,
+                                 @NotNull final Long version,
+                                 @NotNull final CaseFile incomingCaseFile) {
         CaseFile existingCaseFile = getCaseFileOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
-        if (null != incomingCaseFile.getDescription()) {
-            existingCaseFile.setDescription(incomingCaseFile.getDescription());
-        }
-        if (null != incomingCaseFile.getTitle()) {
-            existingCaseFile.setTitle(incomingCaseFile.getTitle());
-        }
-        if (null != incomingCaseFile.getRecordsManagementUnit()) {
-            existingCaseFile.setRecordsManagementUnit(
-                    incomingCaseFile.getRecordsManagementUnit());
-        }
-        if (null != incomingCaseFile.getCaseResponsible()) {
-            existingCaseFile.setCaseResponsible(
-                    incomingCaseFile.getCaseResponsible());
-        }
-        if (null != incomingCaseFile.getOfficialTitle()) {
-            existingCaseFile.setOfficialTitle(
-                    incomingCaseFile.getOfficialTitle());
-        }
-        if (null != incomingCaseFile.getCaseStatus()) {
-            existingCaseFile.setCaseStatus(
-                    incomingCaseFile.getCaseStatus());
-        }
-
+        updateTitleAndDescription(incomingCaseFile, existingCaseFile);
+        updateValues(incomingCaseFile, existingCaseFile);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingCaseFile.setVersion(version);
-
         return caseFileRepository.save(existingCaseFile);
     }
 
@@ -386,6 +384,28 @@ public class CaseFileService
         return caseFileRepository.findByReferenceSeries(series, page);
     }
 
+
+    /**
+     * Update values of an existing CaseFile object.
+     * <p>
+     * Note: caseStatus is not nullable
+     *
+     * @param incomingCaseFile the incoming caseFile
+     * @param existingCaseFile the existing caseFile
+     */
+    private void updateValues(@NotNull final CaseFile incomingCaseFile,
+                              @NotNull final CaseFile existingCaseFile) {
+        existingCaseFile.setRecordsManagementUnit(
+                incomingCaseFile.getRecordsManagementUnit());
+        existingCaseFile.setCaseResponsible(
+                incomingCaseFile.getCaseResponsible());
+        existingCaseFile.setOfficialTitle(
+                incomingCaseFile.getOfficialTitle());
+        if (null != incomingCaseFile.getCaseStatus()) {
+            existingCaseFile.setCaseStatus(
+                    incomingCaseFile.getCaseStatus());
+        }
+    }
 
     private void checkCaseStatusUponCreation(CaseFile caseFile) {
 

@@ -130,8 +130,8 @@ public class UserService implements IUserService {
             existingUser.setLastname(incomingUser.getLastname());
         }
 
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingUser.setVersion(version);
 
         UserHateoas userHateoas = new UserHateoas(userRepository.

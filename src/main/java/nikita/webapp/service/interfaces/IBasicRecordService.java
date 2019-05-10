@@ -13,8 +13,9 @@ public interface IBasicRecordService {
     BasicRecord findBySystemId(String basicRecordSystemId);
 
     // All UPDATE operations
-    BasicRecord handleUpdate(@NotNull String systemId, @NotNull Long version,
-                             @NotNull BasicRecord incomingBasicRecord);
+    BasicRecord handleUpdate(@NotNull final String systemId,
+                             @NotNull final Long version,
+                             @NotNull final BasicRecord incomingBasicRecord);
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);

@@ -56,8 +56,9 @@ public interface IRegistryEntryService {
     getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID);
 
     // All UPDATE operations
-    RegistryEntry handleUpdate(@NotNull String systemId, @NotNull Long version,
-                               @NotNull RegistryEntry incomingRegistryEntry);
+    RegistryEntry handleUpdate(@NotNull final String systemId,
+                               @NotNull final Long version,
+                               @NotNull final RegistryEntry incomingRegistryEntry);
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);

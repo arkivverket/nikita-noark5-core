@@ -15,9 +15,6 @@ import java.util.Optional;
 
 public interface ISeriesService {
 
-    // All UPDATE operations
-    Series handleUpdate(@NotNull String systemId, @NotNull Long version,
-                        @NotNull Series incomingSeries);
 
     // -- All CREATE operations
     Series save(Series series);
@@ -46,6 +43,12 @@ public interface ISeriesService {
 
     // ownedBy
     List<Series> findByOwnedBy(String ownedBy);
+
+    // All UPDATE operations
+    Series handleUpdate(@NotNull final String systemId,
+                        @NotNull final Long version,
+                        @NotNull final Series incomingSeries);
+
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);

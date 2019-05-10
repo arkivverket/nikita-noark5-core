@@ -49,8 +49,9 @@ public interface IDocumentObjectService {
     DocumentObject findBySystemId(String systemId);
 
 	// All UPDATE operations
-    DocumentObject handleUpdate(@NotNull String systemId, @NotNull Long version,
-                                @NotNull DocumentObject documentObject);
+    DocumentObject handleUpdate(@NotNull final String systemId,
+                                @NotNull final Long version,
+                                @NotNull final DocumentObject documentObject);
 
 	// All DELETE operations
 	void deleteEntity(@NotNull String systemId);

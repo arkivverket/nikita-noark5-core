@@ -3,26 +3,41 @@ package nikita.webapp.service.impl.metadata;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v4.metadata.FondsStatus;
 import nikita.common.repository.n5v4.metadata.IFondsStatusRepository;
+import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IFondsStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
 @Transactional
-public class FondsStatusService implements IFondsStatusService {
+public class FondsStatusService
+        extends NoarkService
+        implements IFondsStatusService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FondsStatusService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(FondsStatusService.class);
+
     private IFondsStatusRepository fondsStatusRepository;
+    private IMetadataHateoasHandler metadataHateoasHandler;
 
-    public FondsStatusService(IFondsStatusRepository fondsStatusRepository) {
+    public FondsStatusService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IFondsStatusRepository fondsStatusRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.fondsStatusRepository = fondsStatusRepository;
+        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations

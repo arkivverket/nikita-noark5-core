@@ -106,7 +106,8 @@ public class CorrespondencePartService
         updateCorrespondencePartPostalAddressCreateIfNull(
                 existingCorrespondencePart, incomingCorrespondencePart);
 
-        // Check the ETAG
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
         return existingCorrespondencePart;
@@ -129,6 +130,8 @@ public class CorrespondencePartService
         //      (incomingCorrespondencePart.getReferenceAdministrativeUnit());
 //        existingCorrespondencePart.setReferenceUser(incomingCorrespondencePart
 //                .getReferenceUser());
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
         return existingCorrespondencePart;
@@ -160,7 +163,8 @@ public class CorrespondencePartService
         // Postal address
         updateCorrespondencePartPostalAddressCreateIfNull(
                 existingCorrespondencePart, incomingCorrespondencePart);
-        // Check the ETAG
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingCorrespondencePart.setVersion(version);
         correspondencePartRepository.save(existingCorrespondencePart);
         return existingCorrespondencePart;

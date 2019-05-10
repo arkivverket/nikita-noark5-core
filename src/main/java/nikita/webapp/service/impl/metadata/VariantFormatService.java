@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IVariantFormatRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IVariantFormatService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.VARIANT_FORMAT;
 @Transactional
 @SuppressWarnings("unchecked")
 public class VariantFormatService
+        extends NoarkService
         implements IVariantFormatService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class VariantFormatService
 
     private IVariantFormatRepository variantFormatRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public VariantFormatService(
-            IVariantFormatRepository
-                    variantFormatRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.variantFormatRepository =
-                variantFormatRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IVariantFormatRepository variantFormatRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.variantFormatRepository = variantFormatRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -168,27 +168,21 @@ public class VariantFormatService
      *
      * @param systemId      The systemId of the variantFormat object you wish to
      *                      update
-     * @param variantFormat The updated variantFormat object. Note the values
-     *                      you are allowed to change are copied from this
-     *                      object. This object is not persisted.
+     * @param incomingVariantFormat The updated variantFormat object. Note
+     *                              the values you are allowed to change are
+     *                              copied from this object. This object is
+     *                              not persisted.
      * @return the updated variantFormat
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, VariantFormat variantFormat) {
-
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final VariantFormat incomingVariantFormat) {
         VariantFormat existingVariantFormat = getVariantFormatOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != variantFormat.getCode()) {
-            existingVariantFormat.setCode(variantFormat.getCode());
-        }
-        if (null != variantFormat.getDescription()) {
-            existingVariantFormat.setDescription(
-                    variantFormat.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingVariantFormat, existingVariantFormat);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingVariantFormat.setVersion(version);
 
         MetadataHateoas variantFormatHateoas = new MetadataHateoas(

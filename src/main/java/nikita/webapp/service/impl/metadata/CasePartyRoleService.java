@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.ICasePartyRoleRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ICasePartyRoleService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.CASE_PARTY_ROLE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class CasePartyRoleService
+        extends NoarkService
         implements ICasePartyRoleService {
 
     private static final Logger logger =
@@ -37,18 +40,16 @@ public class CasePartyRoleService
 
     private ICasePartyRoleRepository casePartyRoleRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public CasePartyRoleService(
-            ICasePartyRoleRepository
-                    casePartyRoleRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            ICasePartyRoleRepository casePartyRoleRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.casePartyRoleRepository =
                 casePartyRoleRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -171,27 +172,22 @@ public class CasePartyRoleService
      *
      * @param systemId      The systemId of the casePartyRole object you wish to
      *                      update
-     * @param casePartyRole The updated casePartyRole object. Note the values
-     *                      you are allowed to change are copied from this
-     *                      object. This object is not persisted.
+     * @param incomingCasePartyRole The updated casePartyRole object. Note
+     *                              the values you are allowed to change are
+     *                              copied from this object. This object is
+     *                              not persisted.
      * @return the updated casePartyRole
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, CasePartyRole casePartyRole) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final CasePartyRole incomingCasePartyRole) {
 
         CasePartyRole existingCasePartyRole = getCasePartyRoleOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != casePartyRole.getCode()) {
-            existingCasePartyRole.setCode(casePartyRole.getCode());
-        }
-        if (null != casePartyRole.getDescription()) {
-            existingCasePartyRole.setDescription(
-                    casePartyRole.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingCasePartyRole, existingCasePartyRole);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingCasePartyRole.setVersion(version);
 
         MetadataHateoas casePartyRoleHateoas = new MetadataHateoas(

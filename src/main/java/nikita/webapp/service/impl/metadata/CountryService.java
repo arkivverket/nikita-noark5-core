@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.ICountryRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ICountryService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.COUNTRY;
 @Transactional
 @SuppressWarnings("unchecked")
 public class CountryService
+        extends NoarkService
         implements ICountryService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class CountryService
 
     private ICountryRepository countryRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public CountryService(
-            ICountryRepository
-                    countryRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.countryRepository =
-                countryRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            ICountryRepository countryRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.countryRepository = countryRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -168,27 +168,21 @@ public class CountryService
      *
      * @param systemId The systemId of the country object you wish to
      *                 update
-     * @param country  The updated country object. Note the values
-     *                 you are allowed to change are copied from this
-     *                 object. This object is not persisted.
+     * @param incomingCountry  The updated country object. Note the values
+     *                         you are allowed to change are copied from this
+     *                         object. This object is not persisted.
      * @return the updated country
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, Country country) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final Country incomingCountry) {
 
         Country existingCountry = getCountryOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != country.getCode()) {
-            existingCountry.setCode(country.getCode());
-        }
-        if (null != country.getDescription()) {
-            existingCountry.setDescription(
-                    country.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingCountry, existingCountry);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingCountry.setVersion(version);
 
         MetadataHateoas countryHateoas = new MetadataHateoas(

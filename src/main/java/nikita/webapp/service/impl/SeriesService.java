@@ -22,6 +22,7 @@ import nikita.webapp.service.interfaces.ISeriesService;
 import org.antlr.v4.runtime.CharStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,12 +57,13 @@ public class SeriesService
 
     public SeriesService(
             EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             ICaseFileHateoasHandler caseFileHateoasHandler,
             IClassificationSystemService classificationSystemService,
             IFileService fileService,
             ICaseFileService caseFileService,
             ISeriesRepository seriesRepository) {
-        super(entityManager);
+        super(entityManager, applicationEventPublisher);
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
@@ -170,20 +172,29 @@ public class SeriesService
     }
 
     // All UPDATE operations
+
+    /**
+     * Update an existing Series object.
+     * <p>
+     * Note: title is not nullable
+     *
+     * @param systemId       systemId of Series to update
+     * @param version        ETAG value
+     * @param incomingSeries the incoming series
+     * @return the updated series object after it is persisted
+     */
     @Override
-    public Series handleUpdate(@NotNull String systemId, @NotNull Long version,
-                               @NotNull Series incomingSeries) {
+    public Series handleUpdate(@NotNull final String systemId,
+                               @NotNull final Long version,
+                               @NotNull final Series incomingSeries) {
         Series existingSeries = getSeriesOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
-        if (null != existingSeries.getDescription()) {
-            existingSeries.setDescription(incomingSeries.getDescription());
-        }
-        if (null != incomingSeries.getTitle()) {
-            existingSeries.setTitle(incomingSeries.getTitle());
-        }
+        updateTitleAndDescription(incomingSeries, existingSeries);
         if (null != incomingSeries.getDocumentMedium()) {
             existingSeries.setDocumentMedium(incomingSeries.getDocumentMedium());
         }
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingSeries.setVersion(version);
         seriesRepository.save(existingSeries);
         return existingSeries;

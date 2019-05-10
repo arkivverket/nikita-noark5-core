@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IScreeningDocumentRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IScreeningDocumentService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.SCREENING_DOCUMENT;
 @Transactional
 @SuppressWarnings("unchecked")
 public class ScreeningDocumentService
+        extends NoarkService
         implements IScreeningDocumentService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class ScreeningDocumentService
 
     private IScreeningDocumentRepository screeningDocumentRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public ScreeningDocumentService(
-            IScreeningDocumentRepository
-                    screeningDocumentRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.screeningDocumentRepository =
-                screeningDocumentRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IScreeningDocumentRepository screeningDocumentRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.screeningDocumentRepository = screeningDocumentRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -173,30 +173,24 @@ public class ScreeningDocumentService
      *
      * @param systemId          The systemId of the screeningDocument object you wish
      *                          to update
-     * @param screeningDocument The updated screeningDocument object. Note the
-     *                          values
-     *                          you are allowed to change are copied from this
-     *                          object. This object is not persisted.
+     * @param incomingScreeningDocument The updated screeningDocument object.
+     *                                  Note the values you are allowed to
+     *                                  change are copied from this object.
+     *                                  This object is not persisted.
      * @return the updated screeningDocument
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, ScreeningDocument screeningDocument) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final ScreeningDocument incomingScreeningDocument) {
 
         ScreeningDocument existingScreeningDocument =
                 getScreeningDocumentOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != screeningDocument.getCode()) {
-            existingScreeningDocument.setCode(
-                    screeningDocument.getCode());
-        }
-        if (null != screeningDocument.getDescription()) {
-            existingScreeningDocument.setDescription(
-                    screeningDocument.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingScreeningDocument,
+                existingScreeningDocument);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingScreeningDocument.setVersion(version);
 
         MetadataHateoas screeningMetadataHateoas = new MetadataHateoas(

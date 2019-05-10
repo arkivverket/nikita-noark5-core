@@ -2,25 +2,40 @@ package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v4.metadata.SeriesStatus;
 import nikita.common.repository.n5v4.metadata.ISeriesStatusRepository;
+import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ISeriesStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 
 @Service
 @Transactional
-public class SeriesStatusService implements ISeriesStatusService {
+public class SeriesStatusService
+        extends NoarkService
+        implements ISeriesStatusService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SeriesStatusService.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(SeriesStatusService.class);
+
     private ISeriesStatusRepository seriesStatusRepository;
+    private IMetadataHateoasHandler metadataHateoasHandler;
 
-    public SeriesStatusService(ISeriesStatusRepository seriesStatusRepository) {
+    public SeriesStatusService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            ISeriesStatusRepository seriesStatusRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.seriesStatusRepository = seriesStatusRepository;
+        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -95,6 +110,8 @@ public class SeriesStatusService implements ISeriesStatusService {
      */
     @Override
     public SeriesStatus update(SeriesStatus seriesStatus) {
+
+
         return seriesStatusRepository.save(seriesStatus);
     }
 }

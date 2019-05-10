@@ -3,6 +3,8 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.CommentType;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by tsodring on 04/03/18.
  */
@@ -19,8 +21,10 @@ public interface ICommentTypeService {
 
     MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, CommentType
-            commentType);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final CommentType incomingCommentType);
 
     CommentType generateDefaultCommentType();
 }

@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.ISignOffMethodRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ISignOffMethodService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,21 +32,23 @@ import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
 @Service
 @Transactional
 public class SignOffMethodService
+        extends NoarkService
         implements ISignOffMethodService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(SignOffMethodService.class);
 
-    private ISignOffMethodRepository SignOffMethodRepository;
+    private ISignOffMethodRepository signOffMethodRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
-    public SignOffMethodService(ISignOffMethodRepository SignOffMethodRepository,
-                                IMetadataHateoasHandler metadataHateoasHandler,
-                                ApplicationEventPublisher applicationEventPublisher) {
-        this.SignOffMethodRepository = SignOffMethodRepository;
+    public SignOffMethodService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            ISignOffMethodRepository signOffMethodRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.signOffMethodRepository = signOffMethodRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -66,7 +70,7 @@ public class SignOffMethodService
                         getAuthentication().getName());
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                SignOffMethodRepository.save(SignOffMethod));
+                signOffMethodRepository.save(SignOffMethod));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -82,7 +86,7 @@ public class SignOffMethodService
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
-                        SignOffMethodRepository.findAll(), SIGN_OFF_METHOD);
+                        signOffMethodRepository.findAll(), SIGN_OFF_METHOD);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -98,8 +102,8 @@ public class SignOffMethodService
     @Override
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                SignOffMethodRepository.save(
-                        SignOffMethodRepository.findBySystemId(systemId)));
+                signOffMethodRepository.save(
+                        signOffMethodRepository.findBySystemId(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -117,7 +121,7 @@ public class SignOffMethodService
     public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
-                        SignOffMethodRepository.findByDescription(description),
+                        signOffMethodRepository.findByDescription(description),
                 SIGN_OFF_METHOD);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
@@ -136,7 +140,7 @@ public class SignOffMethodService
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
-                        SignOffMethodRepository.findByCode(code),
+                        signOffMethodRepository.findByCode(code),
                 SIGN_OFF_METHOD);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
@@ -162,29 +166,28 @@ public class SignOffMethodService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param signOffMethod
-     * @return the updated SignOffMethod
+     * @param systemId          The systemId of the signOffMethod object you wish to
+     *                          update
+     * @param incomingSignOffMethod The updated signOffMethod object.
+     *                                  Note the values you are allowed to
+     *                                  change are copied from this object.
+     *                                  This object is not persisted.
+     * @return the updated signOffMethod
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, SignOffMethod signOffMethod) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final SignOffMethod incomingSignOffMethod) {
 
         SignOffMethod existingSignOffMethod = getSignOffMethodOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != signOffMethod.getCode()) {
-            existingSignOffMethod.setCode(signOffMethod.getCode());
-        }
-        if (null != signOffMethod.getDescription()) {
-            existingSignOffMethod.setDescription(
-                    signOffMethod.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingSignOffMethod, existingSignOffMethod);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingSignOffMethod.setVersion(version);
 
         MetadataHateoas SignOffMethodHateoas = new MetadataHateoas(
-                SignOffMethodRepository.save(existingSignOffMethod));
+                signOffMethodRepository.save(existingSignOffMethod));
         metadataHateoasHandler.addLinks(SignOffMethodHateoas,
                 new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -204,7 +207,7 @@ public class SignOffMethodService
      * @return the SignOffMethod object
      */
     private SignOffMethod getSignOffMethodOrThrow(@NotNull String systemId) {
-        SignOffMethod SignOffMethod = SignOffMethodRepository.findBySystemId
+        SignOffMethod SignOffMethod = signOffMethodRepository.findBySystemId
                 (systemId);
         if (SignOffMethod == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " SignOffMethod, using " +

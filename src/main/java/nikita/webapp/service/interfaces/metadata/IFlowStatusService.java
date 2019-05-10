@@ -3,13 +3,15 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.FlowStatus;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by tsodring on 17/02/18.
  */
 
 public interface IFlowStatusService {
 
-    MetadataHateoas createNewFlowStatus(FlowStatus FlowStatus);
+    MetadataHateoas createNewFlowStatus(FlowStatus flowStatus);
 
     MetadataHateoas find(String systemId);
 
@@ -19,7 +21,10 @@ public interface IFlowStatusService {
 
     MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, FlowStatus FlowStatus);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final FlowStatus incomingFlowStatus);
 
     FlowStatus generateDefaultFlowStatus();
 }

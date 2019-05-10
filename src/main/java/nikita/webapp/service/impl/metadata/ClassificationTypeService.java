@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IClassificationTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IClassificationTypeService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class ClassificationTypeService
+        extends NoarkService
         implements IClassificationTypeService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class ClassificationTypeService
 
     private IClassificationTypeRepository classificationTypeRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public ClassificationTypeService(
-            IClassificationTypeRepository
-                    classificationTypeRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.classificationTypeRepository =
-                classificationTypeRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IClassificationTypeRepository classificationTypeRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.classificationTypeRepository = classificationTypeRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -172,32 +172,27 @@ public class ClassificationTypeService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId           The systemId of the classificationType object you wish to
-     *                           update
-     * @param classificationType The updated classificationType object. Note
-     *                           the values you are allowed to change are
-     *                           copied from this object. This object is not
-     *                           persisted.
+     * @param systemId           The systemId of the classificationType
+     *                           object you wish to update
+     * @param incomingClassificationType The updated classificationType
+     *                                   object. Note the values you are
+     *                                   allowed to change are copied from
+     *                                   this object. This object is not
+     *                                   persisted.
      * @return the updated classificationType
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, ClassificationType classificationType) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final ClassificationType incomingClassificationType) {
 
         ClassificationType existingClassificationType =
                 getClassificationTypeOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != classificationType.getCode()) {
-            existingClassificationType.setCode(
-                    classificationType.getCode());
-        }
-        if (null != classificationType.getDescription()) {
-            existingClassificationType.setDescription(
-                    classificationType.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingClassificationType,
+                existingClassificationType);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingClassificationType.setVersion(version);
 
         MetadataHateoas classificationTypeHateoas = new MetadataHateoas(

@@ -3,6 +3,8 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.DocumentType;
 
+import javax.validation.constraints.NotNull;
+
 public interface IDocumentTypeService {
 
     MetadataHateoas createNewDocumentType(DocumentType documentType);
@@ -15,8 +17,10 @@ public interface IDocumentTypeService {
 
     MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, DocumentType
-            documentType);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final DocumentType incomingDocumentType);
 
     DocumentType generateDefaultDocumentType();
 }

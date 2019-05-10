@@ -14,12 +14,14 @@ import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityEvent;
+import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -40,6 +42,7 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityVal
 @Service
 @Transactional
 public class ClassificationSystemService
+        extends NoarkService
         implements IClassificationSystemService {
 
     private static final Logger logger = LoggerFactory.getLogger(
@@ -50,22 +53,22 @@ public class ClassificationSystemService
     private IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
-    public ClassificationSystemService(IClassService classService,
+    public ClassificationSystemService(EntityManager entityManager,
+                                       ApplicationEventPublisher
+                                               applicationEventPublisher,
+                                       IClassService classService,
                                        IClassificationSystemRepository
                                                classificationSystemRepository,
                                        IClassificationSystemHateoasHandler
                                                classificationSystemHateoasHandler,
-                                       IClassHateoasHandler classHateoasHandler,
-                                       ApplicationEventPublisher
-                                               applicationEventPublisher) {
+                                       IClassHateoasHandler classHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.classService = classService;
         this.classificationSystemRepository = classificationSystemRepository;
         this.classificationSystemHateoasHandler =
                 classificationSystemHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -193,6 +196,7 @@ public class ClassificationSystemService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ClassHateoas findAllClassAssociatedWithClassificationSystem(
             @NotNull String classificationSystemSystemId) {
         ClassificationSystem classificationSystem =
@@ -237,28 +241,27 @@ public class ClassificationSystemService
      */
     @Override
     public ClassificationSystemHateoas
-    handleUpdate(@NotNull String systemId, @NotNull Long version,
-                 @NotNull ClassificationSystem incomingClassificationSystem) {
+    handleUpdate(@NotNull final String systemId, @NotNull final Long version,
+                 @NotNull final ClassificationSystem
+                         incomingClassificationSystem) {
         ClassificationSystem existingClassificationSystem =
                 getClassificationSystemOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        if (null != incomingClassificationSystem.getDescription()) {
-            existingClassificationSystem.setDescription(
-                    incomingClassificationSystem.getDescription());
-        }
-        if (null != incomingClassificationSystem.getTitle()) {
-            existingClassificationSystem.setTitle(
-                    incomingClassificationSystem.getTitle());
-        }
+        updateTitleAndDescription(incomingClassificationSystem,
+                existingClassificationSystem);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingClassificationSystem.setVersion(version);
+
         classificationSystemRepository.save(existingClassificationSystem);
+
         ClassificationSystemHateoas classificationSystemHateoas = new
                 ClassificationSystemHateoas(existingClassificationSystem);
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this,
+                new AfterNoarkEntityUpdatedEvent(this,
                         existingClassificationSystem));
         return classificationSystemHateoas;
     }

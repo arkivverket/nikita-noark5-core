@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IFlowStatusRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IFlowStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.FLOW_STATUS;
 @Transactional
 @SuppressWarnings("unchecked")
 public class FlowStatusService
+        extends NoarkService
         implements IFlowStatusService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class FlowStatusService
 
     private IFlowStatusRepository flowStatusRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public FlowStatusService(
-            IFlowStatusRepository
-                    flowStatusRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.flowStatusRepository =
-                flowStatusRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IFlowStatusRepository flowStatusRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.flowStatusRepository = flowStatusRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -165,27 +165,21 @@ public class FlowStatusService
      * Copy the values you are allowed to change, code and description
      *
      * @param systemId The systemId of the flowStatus object you wish to update
-     * @param flowStatus    The updated flowStatus object. Note the values you
-     *                      are allowed to change are copied from this object.
-     *                      This object is not persisted.
+     * @param incomingFlowStatus The updated flowStatus object. Note the
+     *                           values you are allowed to change are copied
+     *                           from this object. This object is not persisted.
      * @return the updated flowStatus
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, FlowStatus flowStatus) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final FlowStatus incomingFlowStatus) {
 
         FlowStatus existingFlowStatus = getFlowStatusOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != flowStatus.getCode()) {
-            existingFlowStatus.setCode(flowStatus.getCode());
-        }
-        if (null != flowStatus.getDescription()) {
-            existingFlowStatus.setDescription(
-                    flowStatus.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingFlowStatus, existingFlowStatus);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingFlowStatus.setVersion(version);
 
         MetadataHateoas flowStatusHateoas = new MetadataHateoas(

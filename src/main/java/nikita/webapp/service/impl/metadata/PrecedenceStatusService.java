@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IPrecedenceStatusRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IPrecedenceStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.PRECEDENCE_STATUS;
 @Transactional
 @SuppressWarnings("unchecked")
 public class PrecedenceStatusService
+        extends NoarkService
         implements IPrecedenceStatusService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class PrecedenceStatusService
 
     private IPrecedenceStatusRepository precedenceStatusRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public PrecedenceStatusService(
-            IPrecedenceStatusRepository
-                    precedenceStatusRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.precedenceStatusRepository =
-                precedenceStatusRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IPrecedenceStatusRepository precedenceStatusRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.precedenceStatusRepository = precedenceStatusRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -172,32 +172,30 @@ public class PrecedenceStatusService
      *
      * @param systemId         The systemId of the precedenceStatus object you wish to
      *                         update
-     * @param precedenceStatus The updated precedenceStatus object. Note the
-     *                         values you are allowed to change are copied
-     *                         from this object. This object is not persisted.
+     * @param incomingPrecedenceStatus The updated precedenceStatus object.
+     *                                 Note the values you are allowed to
+     *                                 change are copied from this object.
+     *                                 This object is not persisted.
      * @return the updated precedenceStatus
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, PrecedenceStatus precedenceStatus) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final PrecedenceStatus incomingPrecedenceStatus) {
 
         PrecedenceStatus existingPrecedenceStatus =
                 getPrecedenceStatusOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != precedenceStatus.getCode()) {
-            existingPrecedenceStatus.setCode(precedenceStatus.getCode());
-        }
-        if (null != precedenceStatus.getDescription()) {
-            existingPrecedenceStatus.setDescription(
-                    precedenceStatus.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingPrecedenceStatus,
+                existingPrecedenceStatus);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingPrecedenceStatus.setVersion(version);
 
-        MetadataHateoas precedenceStatusHateoas = new MetadataHateoas(precedenceStatusRepository
-                .save(existingPrecedenceStatus));
+        MetadataHateoas precedenceStatusHateoas =
+                new MetadataHateoas(
+                        precedenceStatusRepository.
+                                save(existingPrecedenceStatus));
 
         metadataHateoasHandler.addLinks(precedenceStatusHateoas, new Authorisation());
 

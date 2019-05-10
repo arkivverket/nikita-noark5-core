@@ -3,6 +3,8 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.ClassificationType;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by tsodring on 11/03/18.
  */
@@ -19,8 +21,10 @@ public interface IClassificationTypeService {
 
     MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, ClassificationType
-            classificationType);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final ClassificationType incomingClassificationType);
 
     ClassificationType generateDefaultClassificationType();
 }

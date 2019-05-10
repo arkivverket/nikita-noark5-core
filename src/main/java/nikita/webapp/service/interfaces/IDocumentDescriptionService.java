@@ -27,9 +27,9 @@ public interface IDocumentDescriptionService {
     List<DocumentDescription> findByOwnedBy(String ownedBy);
 
     // -- All UPDATE operations
-    DocumentDescription handleUpdate(@NotNull String systemId,
-                                     @NotNull Long version,
-                                     @NotNull DocumentDescription
+    DocumentDescription handleUpdate(@NotNull final String systemId,
+                                     @NotNull final Long version,
+                                     @NotNull final DocumentDescription
                                              documentDescription);
 
     // -- All DELETE operations

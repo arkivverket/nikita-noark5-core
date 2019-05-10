@@ -30,8 +30,9 @@ public interface ICaseFileService {
     List<CaseFile> findCaseFileByOwnerPaginated(
             Integer top, Integer skip);
     // All UPDATE operations
-    CaseFile handleUpdate(@NotNull String systemId, @NotNull Long version,
-                          @NotNull CaseFile incomingCaseFile);
+    CaseFile handleUpdate(@NotNull final String systemId,
+                          @NotNull final Long version,
+                          @NotNull final CaseFile incomingCaseFile);
 
     CaseFileHateoas generateDefaultCaseFile();
 

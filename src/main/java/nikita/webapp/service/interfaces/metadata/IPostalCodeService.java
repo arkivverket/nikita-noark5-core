@@ -3,13 +3,15 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.PostalCode;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by tsodring on 16/03/18.
  */
 
 public interface IPostalCodeService {
 
-    MetadataHateoas createNewPostalCode(PostalCode PostalCode);
+    MetadataHateoas createNewPostalCode(PostalCode postalCode);
 
     MetadataHateoas find(String systemId);
 
@@ -19,8 +21,10 @@ public interface IPostalCodeService {
 
     MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, PostalCode
-            PostalCode);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final PostalCode incomingPostalCode);
 
     PostalCode generateDefaultPostalCode();
 }

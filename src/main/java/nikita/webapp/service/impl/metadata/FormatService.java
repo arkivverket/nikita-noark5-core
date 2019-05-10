@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IFormatRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IFormatService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.FORMAT;
 @Transactional
 @SuppressWarnings("unchecked")
 public class FormatService
+        extends NoarkService
         implements IFormatService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class FormatService
 
     private IFormatRepository formatRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public FormatService(
-            IFormatRepository
-                    formatRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.formatRepository =
-                formatRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IFormatRepository formatRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.formatRepository = formatRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -171,26 +171,22 @@ public class FormatService
      * Copy the values you are allowed to change, code and description
      *
      * @param systemId The systemId of the format object you wish to update
-     * @param format   The updated format object. Note the values you are
-     *                 allowed to change are copied from this object. This
-     *                 object is not persisted.
+     * @param incomingFormat The updated format object. Note the values you
+     *                       are allowed to change are copied from this
+     *                       object. This object is not persisted.
      * @return the updated format
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, Format format) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final Format incomingFormat) {
 
         Format existingFormat = getFormatOrThrow(systemId);
+        updateCodeAndDescription(incomingFormat, existingFormat);
 
-        // Copy all the values you are allowed to copy ....
-        if (null != format.getCode()) {
-            existingFormat.setCode(format.getCode());
-        }
-        if (null != format.getDescription()) {
-            existingFormat.setDescription(format.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingFormat.setVersion(version);
 
         MetadataHateoas formatHateoas = new MetadataHateoas(formatRepository

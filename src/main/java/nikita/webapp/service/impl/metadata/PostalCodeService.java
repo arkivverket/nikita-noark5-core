@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IPostalCodeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IPostalCodeService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.POST_CODE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class PostalCodeService
+        extends NoarkService
         implements IPostalCodeService {
 
     private static final Logger logger =
@@ -37,20 +40,16 @@ public class PostalCodeService
 
     private IPostalCodeRepository postalCodeRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public PostalCodeService(
-            IPostalCodeRepository
-                    postalCodeRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.postalCodeRepository =
-                postalCodeRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IPostalCodeRepository postalCodeRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.postalCodeRepository = postalCodeRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
-
     // All CREATE operations
 
     /**
@@ -168,27 +167,21 @@ public class PostalCodeService
      *
      * @param systemId   The systemId of the postalCode object you wish to
      *                   update
-     * @param postalCode The updated postalCode object. Note the values
-     *                   you are allowed to change are copied from this
-     *                   object. This object is not persisted.
+     * @param incomingPostalCode The updated postalCode object. Note the
+     *                           values you are allowed to change are copied
+     *                           from this object. This object is not persisted.
      * @return the updated postalCode
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, PostalCode postalCode) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final PostalCode incomingPostalCode) {
 
         PostalCode existingPostalCode = getPostalCodeOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != postalCode.getCode()) {
-            existingPostalCode.setCode(postalCode.getCode());
-        }
-        if (null != postalCode.getDescription()) {
-            existingPostalCode.setDescription(
-                    postalCode.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingPostalCode, existingPostalCode);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingPostalCode.setVersion(version);
 
         MetadataHateoas postalCodeHateoas = new MetadataHateoas(

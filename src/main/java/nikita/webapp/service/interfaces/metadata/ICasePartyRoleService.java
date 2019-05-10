@@ -3,6 +3,8 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.CasePartyRole;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by tsodring on 21/02/18.
  */
@@ -19,8 +21,10 @@ public interface ICasePartyRoleService {
 
     MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version, CasePartyRole
-            casePartyRole);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final CasePartyRole incomingCasePartyRole);
 
     CasePartyRole generateDefaultCasePartyRole();
 }

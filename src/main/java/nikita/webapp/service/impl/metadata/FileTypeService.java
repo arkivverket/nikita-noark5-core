@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.IFileTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IFileTypeService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.FILE_TYPE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class FileTypeService
+        extends NoarkService
         implements IFileTypeService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class FileTypeService
 
     private IFileTypeRepository fileTypeRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public FileTypeService(
-            IFileTypeRepository
-                    fileTypeRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.fileTypeRepository =
-                fileTypeRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IFileTypeRepository fileTypeRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.fileTypeRepository = fileTypeRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -168,27 +168,21 @@ public class FileTypeService
      *
      * @param systemId The systemId of the fileType object you wish to
      *                 update
-     * @param fileType The updated fileType object. Note the values
-     *                 you are allowed to change are copied from this
-     *                 object. This object is not persisted.
+     * @param incomingFileType The updated fileType object. Note the values
+     *                         you are allowed to change are copied from this
+     *                         object. This object is not persisted.
      * @return the updated fileType
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, FileType fileType) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final FileType incomingFileType) {
 
         FileType existingFileType = getFileTypeOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != fileType.getCode()) {
-            existingFileType.setCode(fileType.getCode());
-        }
-        if (null != fileType.getDescription()) {
-            existingFileType.setDescription(
-                    fileType.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingFileType, existingFileType);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingFileType.setVersion(version);
 
         MetadataHateoas fileTypeHateoas = new MetadataHateoas(

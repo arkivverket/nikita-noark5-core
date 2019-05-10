@@ -30,9 +30,9 @@ public interface IClassificationSystemService {
 
     // All UPDATE operations
     ClassificationSystemHateoas handleUpdate(
-            @NotNull String systemId,
-            @NotNull Long version,
-            @NotNull ClassificationSystem incomingClassificationSystem);
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final ClassificationSystem incomingClassificationSystem);
 
     // All DELETE operations
     void deleteEntity(@NotNull String classificationSystemSystemId);

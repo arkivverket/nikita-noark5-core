@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.ICommentTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ICommentTypeService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class CommentTypeService
+        extends NoarkService
         implements ICommentTypeService {
 
     private static final Logger logger =
@@ -37,18 +40,15 @@ public class CommentTypeService
 
     private ICommentTypeRepository commentTypeRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public CommentTypeService(
-            ICommentTypeRepository
-                    commentTypeRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
-        this.commentTypeRepository =
-                commentTypeRepository;
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            ICommentTypeRepository commentTypeRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
+        this.commentTypeRepository = commentTypeRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -168,27 +168,22 @@ public class CommentTypeService
      *
      * @param systemId    The systemId of the commentType object you wish to
      *                    update
-     * @param commentType The updated commentType object. Note the values
-     *                    you are allowed to change are copied from this
-     *                    object. This object is not persisted.
+     * @param incomingCommentType The updated commentType object. Note the
+     *                            values you are allowed to change are copied
+     *                            from this object. This object is not
+     *                            persisted.
      * @return the updated commentType
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, CommentType commentType) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final CommentType incomingCommentType) {
 
         CommentType existingCommentType = getCommentTypeOrThrow(systemId);
-
-        // Copy all the values you are allowed to copy ....
-        if (null != commentType.getCode()) {
-            existingCommentType.setCode(commentType.getCode());
-        }
-        if (null != commentType.getDescription()) {
-            existingCommentType.setDescription(
-                    commentType.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingCommentType, existingCommentType);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingCommentType.setVersion(version);
 
         MetadataHateoas commentTypeHateoas = new MetadataHateoas(

@@ -23,7 +23,9 @@ public interface IFondsCreatorService {
     FondsCreator findBySystemId(String systemId);
 
     // -- All UPDATE operations
-    FondsCreator handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull FondsCreator fondsCreator);
+    FondsCreator handleUpdate(@NotNull final String systemId,
+                              @NotNull final Long version,
+                              @NotNull final FondsCreator fondsCreator);
 
     // -- All DELETE operations
     void deleteEntity(@NotNull String systemId);

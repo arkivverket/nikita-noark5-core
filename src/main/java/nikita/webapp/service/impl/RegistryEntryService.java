@@ -39,6 +39,7 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 @Transactional
 @SuppressWarnings("unchecked")
 public class RegistryEntryService
+        extends NoarkService
         implements IRegistryEntryService {
 
     private static final Logger logger =
@@ -46,20 +47,17 @@ public class RegistryEntryService
     private ICorrespondencePartService correspondencePartService;
     private IPrecedenceService precedenceService;
     private IRegistryEntryRepository registryEntryRepository;
-    private ApplicationEventPublisher applicationEventPublisher;
-    private EntityManager entityManager;
 
     public RegistryEntryService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             ICorrespondencePartService correspondencePartService,
             IPrecedenceService precedenceService,
-            IRegistryEntryRepository registryEntryRepository,
-            ApplicationEventPublisher applicationEventPublisher,
-            EntityManager entityManager) {
+            IRegistryEntryRepository registryEntryRepository) {
+        super(entityManager, applicationEventPublisher);
         this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
         this.registryEntryRepository = registryEntryRepository;
-        this.applicationEventPublisher = applicationEventPublisher;
-        this.entityManager = entityManager;
     }
 
     @Override
@@ -127,11 +125,11 @@ public class RegistryEntryService
     }
 
     /**
-     * Create a CorrespondencePartInternal object and associate it with the 
-     * identified registryEntry 
+     * Create a CorrespondencePartInternal object and associate it with the
+     * identified registryEntry
      *
-     * @param systemID The systemId of the registryEntry object you want to 
-     *                 create an associated correspondencePartInternal for   
+     * @param systemID           The systemId of the registryEntry object you want to
+     *                           create an associated correspondencePartInternal for
      * @param correspondencePart The incoming correspondencePartInternal
      * @return The persisted CorrespondencePartInternal object wrapped as a
      * CorrespondencePartInternalHateoas object
@@ -146,11 +144,11 @@ public class RegistryEntryService
     }
 
     /**
-     * Create a CorrespondencePartUnit object and associate it with the 
-     * identified registryEntry 
+     * Create a CorrespondencePartUnit object and associate it with the
+     * identified registryEntry
      *
-     * @param systemID The systemId of the registryEntry object you want to 
-     *                 create an associated correspondencePartUnit for   
+     * @param systemID           The systemId of the registryEntry object you want to
+     *                           create an associated correspondencePartUnit for
      * @param correspondencePart The incoming correspondencePartUnit
      * @return The persisted CorrespondencePartUnit object wrapped as a
      * CorrespondencePartUnitHateoas object
@@ -276,33 +274,41 @@ public class RegistryEntryService
     // All UPDATE operations
 
     /**
-     * Update a RegistryEntry identified by the given systemId
+     * Updates a Record object in the database. First we try to locate the
+     * Record object. If the Record object does not exist a
+     * NoarkEntityNotFoundException exception is thrown that the caller has
+     * to deal with.
      * <p>
-     * Copy the values you are allowed to change, title, description, dueDate,
+     * After this the values you are allowed to update are copied from the
+     * incomingRecord object to the existingRecord object and the existingRecord
+     * object will be persisted to the database when the transaction boundary
+     * is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the Record object from
+     * the database a NoarkConcurrencyException is thrown. Note. This happens
+     * <p>
+     * Copies the values you are allowed to change, title, description, dueDate,
      * freedomAssessmentDate, loanedDate, loanedTo
      *
-     * @param systemId The systemId of the registryEntry object you wish to
-     *                 update
-     * @param incomingRegistryEntry  The updated registryEntry object. Note
-     *                               the values you are allowed to change are
-     *                               copied from this object. This object is
-     *                               not persisted.
-     * @param version The last known version number (derived from an ETAG)
+     * @param systemId              The systemId of the registryEntry object
+     *                              you wish to update
+     * @param incomingRegistryEntry The updated registryEntry object. Note
+     *                              the values you are allowed to change are
+     *                              copied from this object. This object is
+     *                              not persisted.
+     * @param version               The last known version number (derived
+     *                              from an ETAG)
      * @return the updated registryEntry after being persisted to the database
      */
     @Override
     public RegistryEntry handleUpdate(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull RegistryEntry incomingRegistryEntry) {
+            @NotNull final String systemId, @NotNull final Long version,
+            @NotNull final RegistryEntry incomingRegistryEntry) {
         RegistryEntry existingRegistryEntry = getRegistryEntryOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
-        if (null != incomingRegistryEntry.getDescription()) {
-            existingRegistryEntry.setDescription(
-                    incomingRegistryEntry.getDescription());
-        }
-        if (null != incomingRegistryEntry.getTitle()) {
-            existingRegistryEntry.setTitle(incomingRegistryEntry.getTitle());
-        }
+        updateTitleAndDescription(incomingRegistryEntry, existingRegistryEntry);
         if (null != incomingRegistryEntry.getDocumentMedium()) {
             existingRegistryEntry.setDocumentMedium(
                     incomingRegistryEntry.getDocumentMedium());
@@ -327,6 +333,8 @@ public class RegistryEntryService
             existingRegistryEntry.setLoanedTo(
                     incomingRegistryEntry.getLoanedTo());
         }
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingRegistryEntry.setVersion(version);
         registryEntryRepository.save(existingRegistryEntry);
         applicationEventPublisher.publishEvent(

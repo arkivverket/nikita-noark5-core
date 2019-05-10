@@ -31,6 +31,7 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 @Service
 @Transactional
 public class RecordService
+        extends NoarkService
         implements IRecordService {
 
     private static final Logger logger =
@@ -38,28 +39,28 @@ public class RecordService
 
     private DocumentDescriptionService documentDescriptionService;
     private IRecordRepository recordRepository;
-    private EntityManager entityManager;
     private IRecordHateoasHandler recordHateoasHandler;
     private IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
     private IDocumentDescriptionRepository documentDescriptionRepository;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public RecordService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             DocumentDescriptionService documentDescriptionService,
             IRecordRepository recordRepository,
-            EntityManager entityManager,
             IRecordHateoasHandler recordHateoasHandler,
-            IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler,
-            IDocumentDescriptionRepository documentDescriptionRepository,
-            ApplicationEventPublisher applicationEventPublisher) {
+            IDocumentDescriptionHateoasHandler
+                    documentDescriptionHateoasHandler,
+            IDocumentDescriptionRepository documentDescriptionRepository) {
+        super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
         this.entityManager = entityManager;
         this.recordHateoasHandler = recordHateoasHandler;
-        this.documentDescriptionHateoasHandler = documentDescriptionHateoasHandler;
+        this.documentDescriptionHateoasHandler =
+                documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // All CREATE operations
@@ -149,14 +150,45 @@ public class RecordService
     }
 
     // All UPDATE operations
+
+    /**
+     * Updates a Record object in the database. First we try to locate the
+     * Record object. If the Record object does not exist a
+     * NoarkEntityNotFoundException exception is thrown that the caller has
+     * to deal with.
+     * <p>
+     * After this the values you are allowed to update are copied from the
+     * incomingRecord object to the existingRecord object and the existingRecord
+     * object will be persisted to the database when the transaction boundary
+     * is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the Record object from
+     * the database a NoarkConcurrencyException is thrown. Note. This happens
+     * when the call to Record.setVersion() occurs.
+     * <p>
+     * It's a little unclear if it's possible to update this as it has no
+     * fields that are updatable. It's also unclear how to set the archivedBy
+     * value.
+     *
+     * @param recordSystemId The systemId of the record object to retrieve
+     * @param version        The last known version number (derived from an ETAG)
+     * @param incomingRecord The incoming record object
+     * @return The updatedRecord after it is persisted
+     */
     @Override
-    public Record handleUpdate(@NotNull String systemId, @NotNull Long version,
-                               @NotNull Record incomingRecord) {
-        Record existingRecord = getRecordOrThrow(systemId);
+    public Record handleUpdate(@NotNull final String recordSystemId,
+                               @NotNull final Long version,
+                               @NotNull final Record incomingRecord) {
+        Record existingRecord = getRecordOrThrow(recordSystemId);
         // Here copy all the values you are allowed to copy ....
         // TODO: FIND ALL VALUES
         // This might be a class that can only have values set via parameter
         // values rather than request bodies
+
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingRecord.setVersion(version);
         recordRepository.save(existingRecord);
         return existingRecord;

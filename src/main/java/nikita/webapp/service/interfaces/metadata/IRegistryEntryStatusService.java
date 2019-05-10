@@ -3,6 +3,8 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.metadata.RegistryEntryStatus;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by tsodring on 12/02/18.
  */
@@ -20,8 +22,10 @@ public interface IRegistryEntryStatusService {
 
     MetadataHateoas findByCode(String code);
 
-    MetadataHateoas handleUpdate(String systemId, Long version,
-                                 RegistryEntryStatus RegistryEntryStatus);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final RegistryEntryStatus incomingRegistryEntryStatus);
 
     RegistryEntryStatus generateDefaultRegistryEntryStatus();
 }

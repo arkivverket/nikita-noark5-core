@@ -7,6 +7,7 @@ import nikita.common.repository.n5v4.metadata.ICaseStatusRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,7 @@ import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
 @Transactional
 @SuppressWarnings("unchecked")
 public class CaseStatusService
+        extends NoarkService
         implements ICaseStatusService {
 
     private static final Logger logger =
@@ -38,14 +41,14 @@ public class CaseStatusService
 
     private ICaseStatusRepository caseStatusRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     public CaseStatusService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             ICaseStatusRepository
                     caseStatusRepository,
-            IMetadataHateoasHandler metadataHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
-
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher);
         this.caseStatusRepository =
                 caseStatusRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
@@ -169,29 +172,24 @@ public class CaseStatusService
      *
      * @param systemId   The systemId of the caseStatus object you wish to
      *                   update
-     * @param caseStatus The updated caseStatus object. Note the values
-     *                   you are allowed to change are copied from this
-     *                   object. This object is not persisted.
+     * @param incomingCaseStatus  The incoming caseStatus object. Note the
+     *                            values you are allowed to change are copied
+     *                            from this object. This object is not
+     *                            persisted.
      * @return the updated caseStatus
      */
     @Override
-    public MetadataHateoas handleUpdate(String systemId, Long
-            version, CaseStatus caseStatus) {
+    public MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final CaseStatus incomingCaseStatus) {
 
         CaseStatus existingCaseStatus = getCaseStatusOrThrow(systemId);
-
         // Copy all the values you are allowed to copy ....
-        if (null != caseStatus.getCode()) {
-            existingCaseStatus.setCode(caseStatus.getCode());
-        }
-        if (null != caseStatus.getDescription()) {
-            existingCaseStatus.setDescription(
-                    caseStatus.getDescription());
-        }
-        // Note this can potentially result in a NoarkConcurrencyException
-        // exception
+        updateCodeAndDescription(incomingCaseStatus, existingCaseStatus);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
         existingCaseStatus.setVersion(version);
-
         MetadataHateoas caseStatusHateoas = new MetadataHateoas(
                 caseStatusRepository.save(existingCaseStatus));
 
