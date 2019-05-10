@@ -15,7 +15,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,12 +36,9 @@ public class OdataTest {
 
 
     private EntityManager entityManager;
-    private ConfigurableApplicationContext context;
 
-    public OdataTest(EntityManager entityManager,
-                     ConfigurableApplicationContext context) {
+    public OdataTest(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.context = context;
     }
 
     @RequestMapping(
