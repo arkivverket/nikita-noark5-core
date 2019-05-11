@@ -15,7 +15,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  * Used to add FondsHateoas links with Fonds specific information
  * <p>
  * Not sure if there is a difference in what should be returned of links for
- * various CRUD operations so keeping themseparate calls at the moment.
+ * various CRUD operations so keeping them separate calls at the moment.
  */
 @Component
 public class FondsHateoasHandler extends HateoasHandler
