@@ -220,7 +220,7 @@ public class HQLStatementBuilder {
             case ODATA_GE:
                 return HQL_GE;
             case ODATA_LT:
-                return HQL_LE;
+                return HQL_LT;
             case ODATA_LE:
                 return HQL_LE;
             case ODATA_NE:
