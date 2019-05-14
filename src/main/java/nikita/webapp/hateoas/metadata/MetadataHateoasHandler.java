@@ -1,4 +1,4 @@
-package nikita.webapp.handlers.hateoas.metadata;
+package nikita.webapp.hateoas.metadata;
 
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;

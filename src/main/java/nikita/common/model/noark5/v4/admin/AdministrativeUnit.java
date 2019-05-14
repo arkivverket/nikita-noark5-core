@@ -5,8 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
+import nikita.common.model.noark5.v4.hateoas.admin.AdministrativeUnitHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.admin.IAdministrativeUnitEntity;
 import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
+import nikita.webapp.handlers.hateoas.admin.AdministrativeUnitHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -25,6 +29,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @Entity
 @Table(name = TABLE_NIKITA_ADMINISTRATIVE_UNIT)
 @JsonDeserialize(using = AdministrativeUnitDeserializer.class)
+@HateoasPacker(using = AdministrativeUnitHateoasHandler.class)
+@HateoasObject(using = AdministrativeUnitHateoas.class)
 @AttributeOverride(name = "id",
         column = @Column(name = PRIMARY_KEY_ADMINISTRATIVE_UNIT))
 public class AdministrativeUnit

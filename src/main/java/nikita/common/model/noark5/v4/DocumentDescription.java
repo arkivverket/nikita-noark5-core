@@ -2,11 +2,15 @@ package nikita.common.model.noark5.v4;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v4.interfaces.*;
 import nikita.common.model.noark5.v4.interfaces.entities.INoarkCreateEntity;
 import nikita.common.model.noark5.v4.interfaces.entities.INoarkTitleDescriptionEntity;
 import nikita.common.model.noark5.v4.secondary.*;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
+import nikita.webapp.hateoas.DocumentDescriptionHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -29,6 +33,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 // @Where(clause="deleted <> true")
 //@Indexed(index = "document_description")
 @JsonDeserialize(using = DocumentDescriptionDeserializer.class)
+@HateoasPacker(using = DocumentDescriptionHateoasHandler.class)
+@HateoasObject(using = DocumentDescriptionHateoas.class)
 @AttributeOverride(name = "id",
         column = @Column(name = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
 public class DocumentDescription

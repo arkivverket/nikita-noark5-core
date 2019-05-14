@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v4;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v4.interfaces.IClassified;
 import nikita.common.model.noark5.v4.interfaces.ICrossReference;
 import nikita.common.model.noark5.v4.interfaces.IDisposal;
@@ -9,6 +10,9 @@ import nikita.common.model.noark5.v4.interfaces.IScreening;
 import nikita.common.model.noark5.v4.secondary.*;
 import nikita.common.util.deserialisers.ClassDeserializer;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.ClassHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -24,6 +28,8 @@ import java.util.List;
 // @Where(clause="deleted <> true")
 //@Indexed(index = "class")
 @JsonDeserialize(using = ClassDeserializer.class)
+@HateoasPacker(using = ClassHateoasHandler.class)
+@HateoasObject(using = ClassHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_class_id"))
 public class Class extends NoarkGeneralEntity implements IDisposal, IScreening, IClassified, ICrossReference {
 

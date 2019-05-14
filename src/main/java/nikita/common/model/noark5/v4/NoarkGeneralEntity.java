@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v4;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,6 +20,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  * Created by tsodring on 5/8/17.
  */
 @MappedSuperclass
+@HateoasPacker
 public class NoarkGeneralEntity
         extends NoarkEntity
         implements INoarkGeneralEntity {

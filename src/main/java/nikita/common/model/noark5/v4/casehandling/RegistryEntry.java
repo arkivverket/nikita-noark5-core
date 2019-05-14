@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v4.BasicRecord;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v4.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v4.interfaces.IDocumentFlow;
 import nikita.common.model.noark5.v4.interfaces.IElectronicSignature;
 import nikita.common.model.noark5.v4.interfaces.IPrecedence;
@@ -14,6 +15,9 @@ import nikita.common.model.noark5.v4.interfaces.ISignOff;
 import nikita.common.model.noark5.v4.secondary.ElectronicSignature;
 import nikita.common.model.noark5.v4.secondary.SignOff;
 import nikita.common.util.deserialisers.casehandling.RegistryEntryDeserializer;
+import nikita.webapp.hateoas.casehandling.RegistryEntryHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -33,6 +37,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @Table(name = "registry_entry")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonDeserialize(using = RegistryEntryDeserializer.class)
+@HateoasPacker(using = RegistryEntryHateoasHandler.class)
+@HateoasObject(using = RegistryEntryHateoas.class)
 public class RegistryEntry
         extends BasicRecord implements
         IElectronicSignature,

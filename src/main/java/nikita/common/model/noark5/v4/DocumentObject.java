@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v4;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v4.interfaces.IConversion;
 import nikita.common.model.noark5.v4.interfaces.IElectronicSignature;
 import nikita.common.model.noark5.v4.interfaces.entities.INoarkCreateEntity;
@@ -9,6 +10,9 @@ import nikita.common.model.noark5.v4.secondary.Conversion;
 import nikita.common.model.noark5.v4.secondary.ElectronicSignature;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.DocumentObjectHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -30,6 +34,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 // @Where(clause="deleted <> true")
 //@Indexed(index = "document_object")
 @JsonDeserialize(using = DocumentObjectDeserializer.class)
+@HateoasPacker(using = DocumentObjectHateoasHandler.class)
+@HateoasObject(using = DocumentObjectHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_document_object_id"))
 public class DocumentObject
         extends NoarkEntity

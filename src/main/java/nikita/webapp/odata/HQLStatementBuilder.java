@@ -4,12 +4,14 @@ import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.lang.System.out;
 import static nikita.common.config.ODataConstants.*;
 
 /**
@@ -27,35 +29,65 @@ import static nikita.common.config.ODataConstants.*;
 
 public class HQLStatementBuilder {
 
-    private String select;
-    private ArrayList<String> whereList;
-    private Map<String, String> orderByMap;
-    private Integer limitHowMany;
-    private Integer limitOffset;
+    private final Logger logger =
+            LoggerFactory.getLogger(HQLStatementBuilder.class);
 
-    public HQLStatementBuilder() {
-        select = "";
-        whereList = new ArrayList<>();
-        orderByMap = new HashMap<>();
+    private final StringBuilder select;
+    private final ArrayList<String> whereList = new ArrayList<>();
+    private final Map<String, String> orderByMap = new HashMap<>();
+    // Setting a hard limit of 1000 unless overridden
+    private final AtomicInteger limitHowMany = new AtomicInteger(1000);
+    // Always start at offset 0 unless overridden
+    private final AtomicInteger limitOffset = new AtomicInteger(0);
+    private String parentId = "";
+
+    public HQLStatementBuilder(String command) {
+        select = new StringBuilder();
+        select.append(command);
     }
 
+    /**
+     * Add the select part of the query.
+     * <p>
+     * This can handle something like
+     * $top=1$skip=1$filter=contains(tittel,'Title')$orderby=tittel desc
+     * <p>
+     * $filter=contains(tittel,'Title')$orderby=tittel desc
+     * <p>
+     * gets converted to:
+     * <p>
+     * where ownedBy ='admin@example.com' and title LIKE '%Title%
+     *
+     * @param entity
+     * @param ownerColumn
+     * @param loggedInUser
+     */
     public void addSelect(String entity, String ownerColumn, String
             loggedInUser) {
-        String objectName = entity;
-        select = "FROM " + objectName + " where " + ownerColumn + " ='" +
-                loggedInUser + "'";
+        select.append(" from ");
+        select.append(entity);
+        select.append(" where ");
+        select.append(ownerColumn);
+        select.append(" ='");
+        select.append(loggedInUser);
+        select.append("'");
     }
 
     public void addSelectWithForeignKey
             (String parentResource, String resource, String ownerColumn,
              String loggedInUser) {
-        String objectName = getNameObject(resource);
-        select = "FROM " + objectName + " where ";
-        String foreignKeyIdentifier = "reference" +
-                getNameObject(parentResource);
-        select += foreignKeyIdentifier + "= 'PARENT_ID' and ";
-        select += ownerColumn + " = '" + loggedInUser + "'";
-        System.out.println(select);
+        select.append(" from ");
+        select.append(getNameObject(resource));
+        select.append(" where reference");
+        select.append(getNameObject(parentResource));
+        select.append(" in (select id from ");
+        select.append(getNameObject(parentResource));
+        select.append(" where systemId = 'PARENT_ID') and ");
+        select.append(ownerColumn);
+        select.append(" = '");
+        select.append(loggedInUser);
+        select.append("'");
+        logger.info(select.toString());
     }
 
     /**
@@ -87,11 +119,11 @@ public class HQLStatementBuilder {
     }
 
     public void addLimitby_skip(Integer skip) {
-        limitOffset = skip;
+        limitOffset.set(skip);
     }
 
     public void addLimitby_top(Integer top) {
-        limitHowMany = top;
+        limitHowMany.set(top);
     }
 
     public Query buildHQLStatement(Session session) {
@@ -108,8 +140,9 @@ public class HQLStatementBuilder {
         }
 
         hqlStatement.append(" ");
-
-        Query query = session.createQuery(hqlStatement.toString());
+        String finalHQLStatement = hqlStatement.toString().
+                replace("PARENT_ID", parentId);
+        Query query = session.createQuery(finalHQLStatement);
 
         // take care of the orderBy part
         boolean firstOrderBy = false;
@@ -123,19 +156,15 @@ public class HQLStatementBuilder {
             hqlStatement.append(entry.getKey() + " " + entry.getValue());
         }
 
-        if (limitOffset != null) {
-            query.setFirstResult(limitOffset);
-        }
-        if (limitHowMany != null) {
-            query.setMaxResults(limitHowMany);
-        }
-        String queryString = query.getQueryString();
-        out.println("HQL Query string is " + queryString);
+        query.setFirstResult(limitOffset.get());
+        query.setMaxResults(limitHowMany.get());
+
+        logger.info("HQL Query string is " + query.getQueryString());
         return query;
     }
 
-    public void replaceParentIdWithPrimaryKey(String primaryKey) {
-        select = select.replace("PARENT_ID", primaryKey);
+    public void setParentIdPrimaryKey(String primaryKey) {
+        parentId = primaryKey;
     }
 
 

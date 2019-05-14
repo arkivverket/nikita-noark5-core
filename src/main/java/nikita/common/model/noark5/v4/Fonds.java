@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v4.interfaces.IDocumentMedium;
 import nikita.common.model.noark5.v4.interfaces.IFondsCreator;
 import nikita.common.model.noark5.v4.interfaces.IStorageLocation;
 import nikita.common.model.noark5.v4.secondary.StorageLocation;
 import nikita.common.util.deserialisers.FondsDeserializer;
+import nikita.webapp.hateoas.FondsHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -21,6 +25,8 @@ import java.util.List;
 @Table(name = Constants.TABLE_FONDS)
 //@Indexed(index = "fonds")
 @JsonDeserialize(using = FondsDeserializer.class)
+@HateoasPacker(using = FondsHateoasHandler.class)
+@HateoasObject(using = FondsHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = Constants.PRIMARY_KEY_FONDS))
 public class Fonds extends NoarkGeneralEntity implements IStorageLocation,
         IDocumentMedium, IFondsCreator {

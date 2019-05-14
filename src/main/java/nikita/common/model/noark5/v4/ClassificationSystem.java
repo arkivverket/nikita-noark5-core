@@ -2,7 +2,11 @@ package nikita.common.model.noark5.v4;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
 import nikita.common.util.deserialisers.ClassifiactionSystemDeserializer;
+import nikita.webapp.hateoas.ClassificationSystemHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -18,6 +22,8 @@ import java.util.List;
 // @Where(clause="deleted <> true")
 //@Indexed(index = "classification_system")
 @JsonDeserialize(using = ClassifiactionSystemDeserializer.class)
+@HateoasPacker(using = ClassificationSystemHateoasHandler.class)
+@HateoasObject(using = ClassificationSystemHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_classification_system_id"))
 public class ClassificationSystem extends NoarkGeneralEntity {
 

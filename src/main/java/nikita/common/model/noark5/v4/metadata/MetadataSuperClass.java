@@ -1,6 +1,10 @@
 package nikita.common.model.noark5.v4.metadata;
 
+import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.IMetadataEntity;
+import nikita.webapp.hateoas.metadata.MetadataHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -12,6 +16,8 @@ import javax.persistence.MappedSuperclass;
  * Created by tsodring on 3/23/17.
  */
 @MappedSuperclass
+@HateoasPacker(using = MetadataHateoasHandler.class)
+@HateoasObject(using = MetadataHateoas.class)
 public class MetadataSuperClass
         extends MetadataSuperClassBase
         implements IMetadataEntity {

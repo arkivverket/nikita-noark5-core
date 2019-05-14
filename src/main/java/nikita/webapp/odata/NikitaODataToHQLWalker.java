@@ -17,12 +17,12 @@ public class NikitaODataToHQLWalker
 
     HQLStatementBuilder hqlStatement;
 
-    public NikitaODataToHQLWalker() {
-        this.hqlStatement = new HQLStatementBuilder();
+    public NikitaODataToHQLWalker(String command) {
+        this.hqlStatement = new HQLStatementBuilder(command);
     }
 
-    public void replaceParentIdWithPrimaryKey(String primaryKey) {
-        hqlStatement.replaceParentIdWithPrimaryKey(primaryKey);
+    public void setParentIdPrimaryKey(String primaryKey) {
+        hqlStatement.setParentIdPrimaryKey(primaryKey);
     }
 
     /**

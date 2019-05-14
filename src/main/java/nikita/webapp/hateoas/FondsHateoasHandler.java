@@ -4,10 +4,14 @@ import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.model.noark5.v4.admin.AuthorityName.RECORDS_KEEPER;
+import static nikita.common.model.noark5.v4.admin.AuthorityName.RECORDS_MANAGER;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -124,5 +128,16 @@ public class FondsHateoasHandler extends HateoasHandler
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
                     SLASH + entity.getSystemId() + SLASH + NEW_SERIES + SLASH, REL_FONDS_STRUCTURE_NEW_SERIES, false));
         }
+    }
+
+    private boolean isRecordsManager() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals(RECORDS_KEEPER))
+                ||
+                authentication.getAuthorities().stream()
+                        .anyMatch(r -> r.getAuthority().
+                                equals(RECORDS_MANAGER));
     }
 }

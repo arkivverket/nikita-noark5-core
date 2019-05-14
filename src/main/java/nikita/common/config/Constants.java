@@ -1,5 +1,9 @@
 package nikita.common.config;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
@@ -18,9 +22,15 @@ public final class Constants {
 
     public static final String SPRING_ENDPOINT_DELIMITER = "||";
 
+    public static final String[] ODATA_SET_VALUES =
+            new String[]{"$top", "$skip", "$filter"};
+    public static final Set<String> ODATA_QUERY_PARAMS =
+            new HashSet<>(Arrays.asList(ODATA_SET_VALUES));
 
     public static final String USERNAME_ADMIN = "admin";
     public static final String PASSWORD_ADMIN = "password";
+    public static final String REGEX_UUID = "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4" +
+            "}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
 
     // Definition of Authorities / Roles
     // Equivalent of the Arkivansvarlig role
@@ -202,7 +212,10 @@ public final class Constants {
     public static final String NOARK_ADMINISTRATION_PATH = "admin";
     public static final String NOARK_CASE_HANDLING_PATH = "sakarkiv";
     public static final String NOARK_LOGGING_PATH = "loggingogpsoring";
-
+    public static final String ODATA_PATH =
+            "/odata" + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH;
+    public static final int ODATA_OFFSET_LENGTH =
+            (NOARK_FONDS_STRUCTURE_PATH + SLASH).length();
     public static final String LOGIN_REL_PATH = "login";
     public static final String LOGOUT_REL_PATH = "logout";
     public static final String LOGIN_PATH = "oauth/token";

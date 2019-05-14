@@ -6,11 +6,15 @@ import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.interfaces.ICaseParty;
 import nikita.common.model.noark5.v4.interfaces.IPrecedence;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v4.metadata.CaseStatus;
 import nikita.common.util.deserialisers.casehandling.CaseFileDeserializer;
+import nikita.webapp.hateoas.casehandling.CaseFileHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -38,6 +42,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 // @Where(clause="deleted <> true")
 //@Indexed(index = "case_file")
 @JsonDeserialize(using = CaseFileDeserializer.class)
+@HateoasPacker(using = CaseFileHateoasHandler.class)
+@HateoasObject(using = CaseFileHateoas.class)
 public class CaseFile extends File implements Serializable, INikitaEntity,
         IPrecedence, ICaseParty {
 

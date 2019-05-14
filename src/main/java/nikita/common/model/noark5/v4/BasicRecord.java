@@ -2,10 +2,14 @@ package nikita.common.model.noark5.v4;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.BasicRecordHateoas;
 import nikita.common.model.noark5.v4.interfaces.*;
 import nikita.common.model.noark5.v4.interfaces.entities.INoarkTitleDescriptionEntity;
 import nikita.common.model.noark5.v4.secondary.*;
 import nikita.common.util.deserialisers.BasicRecordDeserializer;
+import nikita.webapp.hateoas.BasicRecordHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -23,6 +27,8 @@ import java.util.List;
 // @Where(clause="deleted <> true")
 //@Indexed(index = "basic_record")
 @JsonDeserialize(using = BasicRecordDeserializer.class)
+@HateoasPacker(using = BasicRecordHateoasHandler.class)
+@HateoasObject(using = BasicRecordHateoas.class)
 public class BasicRecord extends Record implements IDocumentMedium, INoarkTitleDescriptionEntity,
         IStorageLocation, IKeyword, IComment, ICrossReference, IAuthor {
 

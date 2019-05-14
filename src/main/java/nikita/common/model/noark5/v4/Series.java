@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v4.interfaces.*;
 import nikita.common.model.noark5.v4.secondary.*;
 import nikita.common.util.deserialisers.SeriesDeserializer;
+import nikita.webapp.hateoas.SeriesHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -27,6 +31,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 // @Where(clause="deleted <> true")
 //@Indexed(index = "series")
 @JsonDeserialize(using = SeriesDeserializer.class)
+@HateoasPacker(using = SeriesHateoasHandler.class)
+@HateoasObject(using = SeriesHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_series_id"))
 public class Series extends NoarkGeneralEntity implements IStorageLocation, IDocumentMedium, IClassified, IScreening,
         IDisposal, IDisposalUndertaken, IDeletion {

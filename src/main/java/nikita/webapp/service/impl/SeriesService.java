@@ -129,7 +129,7 @@ public class SeriesService
         Series series = getSeriesOrThrow(systemId);
         NikitaODataToHQLWalker oDataToHQLWalker =
                 getHQLFromODataString(oDataString);
-        oDataToHQLWalker.replaceParentIdWithPrimaryKey(series.getId().
+        oDataToHQLWalker.setParentIdPrimaryKey(series.getId().
                 toString());
         List<NoarkEntity> caseFiles =
                 executeHQL(oDataToHQLWalker);

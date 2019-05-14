@@ -3,8 +3,12 @@ package nikita.common.model.noark5.v4;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.IFondsCreatorEntity;
 import nikita.common.util.deserialisers.FondsCreatorDeserializer;
+import nikita.webapp.hateoas.FondsCreatorHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -20,6 +24,8 @@ import java.util.List;
 // @SQLDelete(sql = "UPDATE fonds_creator SET deleted = true WHERE pk_fonds_creator_id = ? and version = ?")
 // @Where(clause = "deleted <> true")
 @JsonDeserialize(using = FondsCreatorDeserializer.class)
+@HateoasPacker(using = FondsCreatorHateoasHandler.class)
+@HateoasObject(using = FondsCreatorHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = Constants.PRIMARY_KEY_FONDS_CREATOR))
 public class FondsCreator extends NoarkEntity implements IFondsCreatorEntity {
 

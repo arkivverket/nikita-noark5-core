@@ -3,10 +3,14 @@ package nikita.common.model.noark5.v4;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
 import nikita.common.model.noark5.v4.interfaces.*;
 import nikita.common.model.noark5.v4.secondary.*;
 import nikita.common.util.deserialisers.FileDeserializer;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.FileHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -21,6 +25,8 @@ import static nikita.common.config.Constants.*;
 @Table(name = "file")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonDeserialize(using = FileDeserializer.class)
+@HateoasPacker(using = FileHateoasHandler.class)
+@HateoasObject(using = FileHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = PRIMARY_KEY_FILE))
 public class File
         extends NoarkGeneralEntity

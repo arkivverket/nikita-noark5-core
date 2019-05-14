@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v4;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v4.interfaces.IClassified;
 import nikita.common.model.noark5.v4.interfaces.IDisposal;
 import nikita.common.model.noark5.v4.interfaces.IScreening;
@@ -11,6 +12,9 @@ import nikita.common.model.noark5.v4.secondary.Disposal;
 import nikita.common.model.noark5.v4.secondary.Screening;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.RecordHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -32,6 +36,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 // @Where(clause = "deleted <> true")
 //@Indexed(index = "record")
 @JsonDeserialize(using = RecordDeserializer.class)
+@HateoasPacker(using = RecordHateoasHandler.class)
+@HateoasObject(using = RecordHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_record_id"))
 public class Record
         extends NoarkEntity

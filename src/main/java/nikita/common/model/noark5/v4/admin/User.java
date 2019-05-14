@@ -3,8 +3,12 @@ package nikita.common.model.noark5.v4.admin;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.NoarkEntity;
+import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.admin.IUserEntity;
 import nikita.common.util.deserialisers.admin.UserDeserializer;
+import nikita.webapp.hateoas.admin.UserHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -26,6 +30,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
         column = @Column(
                 name = PRIMARY_KEY_USER))
 @JsonDeserialize(using = UserDeserializer.class)
+@HateoasPacker(using = UserHateoasHandler.class)
+@HateoasObject(using = UserHateoas.class)
 public class User
         extends NoarkEntity
         implements IUserEntity {

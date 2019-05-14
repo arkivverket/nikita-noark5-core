@@ -3,8 +3,12 @@ package nikita.common.model.noark5.v4.casehandling.secondary;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.casehandling.ICorrespondencePartPersonEntity;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartPersonDeserializer;
+import nikita.webapp.hateoas.casehandling.CorrespondencePartPersonHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -16,6 +20,8 @@ import java.util.List;
 @Entity
 @Table(name = "correspondence_part_person")
 @JsonDeserialize(using = CorrespondencePartPersonDeserializer.class)
+@HateoasPacker(using = CorrespondencePartPersonHateoasHandler.class)
+@HateoasObject(using = CorrespondencePartPersonHateoas.class)
 public class CorrespondencePartPerson
         extends CorrespondencePart
         implements ICorrespondencePartPersonEntity {
