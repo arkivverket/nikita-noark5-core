@@ -46,7 +46,7 @@ public class NoarkService {
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // Make the HQL Statement
-        NikitaODataToHQLWalker hqlWalker = new NikitaODataToHQLWalker();
+        NikitaODataToHQLWalker hqlWalker = new NikitaODataToHQLWalker("select");
         walker.walk(hqlWalker, tree);
         return hqlWalker;
     }
