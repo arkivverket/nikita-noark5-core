@@ -34,4 +34,6 @@ public interface IDocumentDescriptionService {
 
     // -- All DELETE operations
     void deleteEntity(@NotNull String systemId);
+
+    long deleteAllByOwnedBy();
 }

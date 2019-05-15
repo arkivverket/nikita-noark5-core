@@ -178,6 +178,16 @@ public class FileService
     }
 
     /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return fileRepository.deleteByOwnedBy(getUser());
+    }
+
+    /**
      * Generate a Default File object
      * <br>
      * Note. Ideally this method would be configurable based on the logged in

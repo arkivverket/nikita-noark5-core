@@ -487,6 +487,16 @@ public class DocumentObjectService
         documentObjectRepository.delete(documentObject);
     }
 
+
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return documentObjectRepository.deleteByOwnedBy(getUser());
+    }
     @Override
     //TODO: How do we handle if the document has already been converted?
     // Related metadata is a one:one. So we either overwrite that the

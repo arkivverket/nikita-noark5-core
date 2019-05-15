@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
@@ -27,6 +28,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -387,6 +389,25 @@ public class ClassHateoasController
             return ResponseEntity.status(OK)
                     .body(null);
         }
+    }
+
+    // Delete all Class
+    // DELETE [contextPath][api]/arkivstruktur/klasse/
+    @ApiOperation(value = "Deletes all Class", response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Deleted all Class",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllClass() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(classService.deleteAllByOwnedBy()));
     }
 
     // API - All PUT Requests (CRUD - UPDATE)

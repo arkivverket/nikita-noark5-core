@@ -36,4 +36,6 @@ public interface IClassificationSystemService {
 
     // All DELETE operations
     void deleteEntity(@NotNull String classificationSystemSystemId);
+
+    long deleteAllByOwnedBy();
 }

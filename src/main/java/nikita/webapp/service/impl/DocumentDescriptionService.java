@@ -178,6 +178,16 @@ public class DocumentDescriptionService
         entityManager.clear();
     }
 
+
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return documentDescriptionRepository.deleteByOwnedBy(getUser());
+    }
     // All HELPER operations
 
     private void updateDocumentDescription(

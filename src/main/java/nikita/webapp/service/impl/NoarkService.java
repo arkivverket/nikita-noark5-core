@@ -5,6 +5,9 @@ import nikita.common.model.noark5.v4.interfaces.entities.INoarkTitleDescriptionE
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
@@ -41,4 +44,14 @@ public class NoarkService {
         }
         existingEntity.setDescription(incomingEntity.getDescription());
     }
+
+    protected String getUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    protected String getServletPath() {
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getRequest().toString();
+    }
+
 }

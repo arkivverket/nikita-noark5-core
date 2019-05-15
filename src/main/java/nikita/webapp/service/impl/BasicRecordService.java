@@ -107,9 +107,20 @@ public class BasicRecordService
 
     // All DELETE operations
     @Override
-    public void deleteEntity(@NotNull String basicRecordSystemId) {
-        BasicRecord basicRecord = getBasicRecordOrThrow(basicRecordSystemId);
-        basicRecordRepository.delete(basicRecord);
+    public int deleteEntity(@NotNull String basicRecordSystemId) {
+        basicRecordRepository.
+                delete(getBasicRecordOrThrow(basicRecordSystemId));
+        return 1;
+    }
+
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return basicRecordRepository.deleteByOwnedBy(getUser());
     }
 
     // All HELPER operations

@@ -40,4 +40,6 @@ public interface IFileService {
     void deleteEntity(@NotNull String systemId);
 
     FileHateoas generateDefaultFile();
+
+    long deleteAllByOwnedBy();
 }

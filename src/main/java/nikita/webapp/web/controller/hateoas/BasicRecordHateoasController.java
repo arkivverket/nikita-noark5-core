@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.*;
 import nikita.common.model.noark5.v4.hateoas.*;
@@ -34,6 +35,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.BASIC_RECORD;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + BASIC_RECORD,
@@ -115,52 +117,6 @@ public class BasicRecordHateoasController extends NoarkController {
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(basicRecordHateoas);
     }
-
-    // Delete a Record identified by systemID
-    // DELETE [contextPath][api]/arkivstruktur/registrering/{systemId}/
-    @ApiOperation(value = "Deletes a single Record entity identified by systemID", response = HateoasNoarkObject.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent entity (DocumentDescription or Record) returned", response = HateoasNoarkObject.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
-    public ResponseEntity<HateoasNoarkObject> deleteRecordBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the record to delete",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-
-        BasicRecord basicRecord = basicRecordService.findBySystemId(systemID);
-        NoarkEntity parentEntity = basicRecord.chooseParent();
-        HateoasNoarkObject hateoasNoarkObject;
-        if (parentEntity instanceof Series) {
-            hateoasNoarkObject = new SeriesHateoas(parentEntity);
-            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else if (parentEntity instanceof File) {
-            hateoasNoarkObject = new FileHateoas(parentEntity);
-            fileHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else if (parentEntity instanceof Class) {
-            hateoasNoarkObject = new ClassHateoas(parentEntity);
-            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else {
-            throw new NikitaException("Internal error. Could not process"
-                    + request.getRequestURI());
-        }
-        basicRecordService.deleteEntity(systemID);
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, basicRecord));
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(hateoasNoarkObject);
-    }
-
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a BasicRecord
     // PUT [contextPath][api]/arkivstruktur/basisregistrering/{systemID}
@@ -200,5 +156,71 @@ public class BasicRecordHateoasController extends NoarkController {
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedBasicRecord.getVersion().toString())
                 .body(basicRecordHateoas);
+    }
+
+
+    // Delete a Record identified by systemID
+    // DELETE [contextPath][api]/arkivstruktur/registrering/{systemId}/
+    @ApiOperation(value = "Deletes a single Record entity identified by systemID", response = HateoasNoarkObject.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Parent entity (DocumentDescription or Record) returned", response = HateoasNoarkObject.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+
+    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+            method = RequestMethod.DELETE)
+    public ResponseEntity<HateoasNoarkObject> deleteRecordBySystemId(
+            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the record to delete",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+
+        BasicRecord basicRecord = basicRecordService.findBySystemId(systemID);
+        NoarkEntity parentEntity = basicRecord.chooseParent();
+        HateoasNoarkObject hateoasNoarkObject;
+        if (parentEntity instanceof Series) {
+            hateoasNoarkObject = new SeriesHateoas(parentEntity);
+            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
+        } else if (parentEntity instanceof File) {
+            hateoasNoarkObject = new FileHateoas(parentEntity);
+            fileHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
+        } else if (parentEntity instanceof Class) {
+            hateoasNoarkObject = new ClassHateoas(parentEntity);
+            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
+        } else {
+            throw new NikitaException("Internal error. Could not process"
+                    + request.getRequestURI());
+        }
+        basicRecordService.deleteEntity(systemID);
+        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, basicRecord));
+        return ResponseEntity.status(NO_CONTENT)
+                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(hateoasNoarkObject);
+    }
+
+    // Delete all BasicRecord
+    // DELETE [contextPath][api]/arkivstruktur/basisregistrering/
+    @ApiOperation(value = "Deletes all BasicRecord", response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Deleted all BasicRecord",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllBasicRecord() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(basicRecordService.deleteAllByOwnedBy()));
     }
 }

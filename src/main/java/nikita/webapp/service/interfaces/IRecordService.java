@@ -31,4 +31,6 @@ public interface IRecordService {
 
     // -- All DELETE operations
 	void deleteEntity(@NotNull String systemId);
+
+    long deleteAllByOwnedBy();
 }

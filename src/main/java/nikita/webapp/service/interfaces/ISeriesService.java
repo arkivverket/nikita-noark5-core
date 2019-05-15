@@ -48,8 +48,8 @@ public interface ISeriesService {
                         @NotNull final Long version,
                         @NotNull final Series incomingSeries);
 
-
     // All DELETE operations
     int deleteEntity(@NotNull String systemId);
-    long deleteAll();
+
+    long deleteAllByOwnedBy();
 }

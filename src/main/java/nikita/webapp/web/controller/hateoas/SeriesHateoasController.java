@@ -800,6 +800,6 @@ public class SeriesHateoasController
     @DeleteMapping
     public ResponseEntity<Count> deleteAllSeries() {
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(seriesService.deleteAll()));
+                body(new Count(seriesService.deleteAllByOwnedBy()));
     }
 }

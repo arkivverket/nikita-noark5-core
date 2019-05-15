@@ -35,4 +35,6 @@ public interface ICaseFileService {
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);
+
+    long deleteAllByOwnedBy();
 }

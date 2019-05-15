@@ -164,8 +164,13 @@ public class SeriesService
         return 1;
     }
 
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
     @Override
-    public long deleteAll() {
+    public long deleteAllByOwnedBy() {
         long count = seriesRepository.count();
         seriesRepository.deleteAll();
         logger.info("Deleted [" + count + "] Series objects");

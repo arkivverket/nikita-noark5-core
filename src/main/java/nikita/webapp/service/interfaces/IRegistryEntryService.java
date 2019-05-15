@@ -62,4 +62,6 @@ public interface IRegistryEntryService {
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);
+
+    long deleteAllByOwnedBy();
 }

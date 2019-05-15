@@ -46,4 +46,6 @@ public interface IFondsService  {
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);
+
+    long deleteAllByOwnedBy();
 }

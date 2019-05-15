@@ -274,6 +274,16 @@ public class ClassificationSystemService
         classificationSystemRepository.delete(classificationSystem);
     }
 
+
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return classificationSystemRepository.deleteByOwnedBy(getUser());
+    }
     // All HELPER operations
 
     /**

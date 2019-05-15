@@ -45,4 +45,6 @@ public interface IClassService {
 
 	// All DELETE operations
     HateoasNoarkObject deleteEntity(@NotNull String systemId);
+
+    long deleteAllByOwnedBy();
 }

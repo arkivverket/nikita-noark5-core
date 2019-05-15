@@ -358,6 +358,16 @@ public class RegistryEntryService
                 getRegistryEntryOrThrow(registryEntrySystemId));
     }
 
+
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return registryEntryRepository.deleteByOwnedBy(getUser());
+    }
     // All helper methods
 
     /**

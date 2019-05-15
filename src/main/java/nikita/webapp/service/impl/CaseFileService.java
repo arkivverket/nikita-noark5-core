@@ -27,8 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -226,6 +224,16 @@ public class CaseFileService
         caseFileRepository.delete(caseFile);
     }
 
+
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return caseFileRepository.deleteByOwnedBy(getUser());
+    }
     // All HELPER operations
 
     /**
@@ -409,11 +417,6 @@ public class CaseFileService
             existingCaseFile.setCaseStatus(
                     incomingCaseFile.getCaseStatus());
         }
-    }
-
-    private String getServletPath() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-                .getRequest().toString();
     }
 
     private void checkCaseStatusUponCreation(CaseFile caseFile) {

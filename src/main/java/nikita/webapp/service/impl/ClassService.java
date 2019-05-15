@@ -330,6 +330,16 @@ public class ClassService
         return null;
     }
 
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return classRepository.deleteByOwnedBy(getUser());
+    }
+
     // All HELPER operations
 
     /**

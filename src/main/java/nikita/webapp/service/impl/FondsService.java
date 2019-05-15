@@ -479,6 +479,15 @@ public class FondsService
         entityManager.clear();
     }
 
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return fondsRepository.deleteByOwnedBy(getUser());
+    }
     // All HELPER operations
 
     /**
