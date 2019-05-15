@@ -2,6 +2,7 @@ package nikita.webapp.web.controller.hateoas;
 
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.*;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.*;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.*;
@@ -31,6 +32,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
@@ -458,7 +460,7 @@ public class SeriesHateoasController
             method = RequestMethod.GET)
     public ResponseEntity<FileHateoas> createDefaultFile(
             HttpServletRequest request, final HttpServletResponse response) {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileService.generateDefaultFile());
     }
@@ -482,7 +484,7 @@ public class SeriesHateoasController
         CaseFileHateoas caseFileHateoas =
                 caseFileService.generateDefaultCaseFile();
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(caseFileHateoas);
     }
@@ -646,7 +648,7 @@ public class SeriesHateoasController
                 SeriesHateoas((List<INikitaEntity>) (List)
                 seriesService.findByOwnedBy(ownedBy));
         seriesHateoasHandler.addLinksOnRead(seriesHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(seriesHateoas);
     }
@@ -680,7 +682,7 @@ public class SeriesHateoasController
         Series series = seriesService.findBySystemId(systemID);
         RecordHateoas recordHateoas = new RecordHateoas((List<INikitaEntity>) (List) series.getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
     }
@@ -719,7 +721,7 @@ public class SeriesHateoasController
         FileHateoas fileHateoas = new FileHateoas((List<INikitaEntity>)
                 (List) series.getReferenceFile());
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileHateoas);
     }
@@ -777,9 +779,27 @@ public class SeriesHateoasController
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         seriesService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, fonds));
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(fonds.getVersion().toString())
                 .body(fondsHateoas);
     }
+
+    // Delete all Series
+    // DELETE [contextPath][api]/arkivstruktur/arkivdel/
+    @ApiOperation(value = "Deletes all single Series entity identified by " +
+            "systemID", response = FondsHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Parent Fonds returned", response = FondsHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllSeries(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(new Count(seriesService.deleteAll()));
+    }
+
 }

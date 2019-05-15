@@ -164,6 +164,13 @@ public class SeriesService
         seriesRepository.delete(series);
     }
 
+    @Override
+    public long deleteAll() {
+        long count = seriesRepository.count();
+        seriesRepository.deleteAll();
+        return count;
+    }
+
     // Helper methods
 
     /**
