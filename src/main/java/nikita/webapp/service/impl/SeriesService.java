@@ -159,15 +159,16 @@ public class SeriesService
 
     // All DELETE operations
     @Override
-    public void deleteEntity(@NotNull String seriesSystemId) {
-        Series series = getSeriesOrThrow(seriesSystemId);
-        seriesRepository.delete(series);
+    public int deleteEntity(@NotNull String seriesSystemId) {
+        seriesRepository.delete(getSeriesOrThrow(seriesSystemId));
+        return 1;
     }
 
     @Override
     public long deleteAll() {
         long count = seriesRepository.count();
         seriesRepository.deleteAll();
+        logger.info("Deleted [" + count + "] Series objects");
         return count;
     }
 

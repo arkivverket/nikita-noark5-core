@@ -5,7 +5,10 @@ import io.swagger.annotations.*;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.*;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.*;
+import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.util.exceptions.NikitaException;
@@ -16,7 +19,6 @@ import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -756,50 +759,47 @@ public class SeriesHateoasController
 
     // Delete a Series identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/arkivdel/{systemId}/
-    @ApiOperation(value = "Deletes a single Series entity identified by systemID", response = FondsHateoas.class)
+    @ApiOperation(value = "Deletes a single Series entity identified by " +
+            "systemID", response = Count.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent Fonds returned", response = FondsHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204, message = "Deleted Series",
+                    response = Count.class),
+            @ApiResponse(code = 401, message =
+                    API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message =
+                    API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
-    public ResponseEntity<FondsHateoas> deleteSeriesBySystemId(
+    @DeleteMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            RIGHT_PARENTHESIS)
+    public ResponseEntity<Count> deleteSeriesBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the series to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
 
-        Series series = seriesService.findBySystemId(systemID);
-        Fonds fonds = series.getReferenceFonds();
-        FondsHateoas fondsHateoas = new FondsHateoas(fonds);
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-        seriesService.deleteEntity(systemID);
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, fonds));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fondsHateoas);
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(seriesService.deleteEntity(systemID)));
     }
 
     // Delete all Series
     // DELETE [contextPath][api]/arkivstruktur/arkivdel/
-    @ApiOperation(value = "Deletes all single Series entity identified by " +
-            "systemID", response = FondsHateoas.class)
+    @ApiOperation(value = "Deletes all Series", response = Count.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent Fonds returned", response = FondsHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204, message = "Deleted all Series",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllSeries(
-            HttpServletRequest request) {
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(new Count(seriesService.deleteAll()));
+    public ResponseEntity<Count> deleteAllSeries() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(seriesService.deleteAll()));
     }
-
 }

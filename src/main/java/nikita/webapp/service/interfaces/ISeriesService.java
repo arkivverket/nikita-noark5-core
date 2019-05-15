@@ -50,7 +50,6 @@ public interface ISeriesService {
 
 
     // All DELETE operations
-    void deleteEntity(@NotNull String systemId);
-
+    int deleteEntity(@NotNull String systemId);
     long deleteAll();
 }

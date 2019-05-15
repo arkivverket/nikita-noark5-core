@@ -1,5 +1,6 @@
 package nikita.webapp.web.controller.hateoas.odata;
 
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class ODataController {
     }
 
     @DeleteMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**")
-    public ResponseEntity<String>
+    public ResponseEntity<Count>
     deleteViaOData(HttpServletRequest request)
             throws Exception {
         return oDataService.processODataQueryDelete(request);
