@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.ClassificationSystem;
 import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
@@ -23,6 +24,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
@@ -291,6 +293,28 @@ public class ClassificationSystemHateoasController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(applicationService.getFondsStructureDetails());
+    }
+
+
+    // Delete all ClassificationSystem
+    // DELETE [contextPath][api]/arkivstruktur/klassifikasjonsystem/
+    @ApiOperation(value = "Deletes all ClassificationSystem",
+            response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204,
+                    message = "Deleted all ClassificationSystem",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllClassificationSystem() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(classificationSystemService.deleteAllByOwnedBy()));
     }
 
     // API - All PUT Requests (CRUD - UPDATE)

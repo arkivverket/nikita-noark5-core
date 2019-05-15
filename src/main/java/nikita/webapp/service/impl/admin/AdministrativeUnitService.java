@@ -4,13 +4,16 @@ import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.repository.n5v4.admin.IAdministrativeUnitRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -28,6 +31,7 @@ import static nikita.common.config.Constants.SYSTEM;
 @Service
 @Transactional
 public class AdministrativeUnitService
+        extends NoarkService
         implements IAdministrativeUnitService {
 
     private static final Logger logger =
@@ -36,8 +40,11 @@ public class AdministrativeUnitService
     private ISequenceNumberGeneratorService numberGeneratorService;
 
     public AdministrativeUnitService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             IAdministrativeUnitRepository administrativeUnitRepository,
             ISequenceNumberGeneratorService numberGeneratorService) {
+        super(entityManager, applicationEventPublisher);
         this.administrativeUnitRepository = administrativeUnitRepository;
         this.numberGeneratorService = numberGeneratorService;
     }
@@ -142,6 +149,27 @@ public class AdministrativeUnitService
         existingAdministrativeUnit.setVersion(version);
         administrativeUnitRepository.save(existingAdministrativeUnit);
         return administrativeUnitRepository.save(incomingAdministrativeUnit);
+    }
+
+    /**
+     * Delete a administrativeUnit identified by the given systemID from the database.
+     *
+     * @param systemId systemId of the administrativeUnit to delete
+     */
+    @Override
+    public void deleteEntity(@NotNull String systemId) {
+        administrativeUnitRepository.delete(
+                getAdministrativeUnitOrThrow(systemId));
+    }
+
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return administrativeUnitRepository.deleteByOwnedBy(getUser());
     }
 
     // All HELPER methods

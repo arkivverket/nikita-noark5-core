@@ -39,12 +39,16 @@ public interface ICorrespondencePartService {
 
     CorrespondencePart findBySystemId(@NotNull String systemID);
 
+    // All DELETE operations
+    long deleteAllByOwnedBy();
+
     void deleteCorrespondencePartUnit(@NotNull String systemID);
 
     void deleteCorrespondencePartPerson(@NotNull String systemID);
 
     void deleteCorrespondencePartInternal(@NotNull String systemID);
 
+    // All template operations
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
             String registryEntrySystemId);
 
@@ -53,4 +57,6 @@ public interface ICorrespondencePartService {
 
     CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
             String registryEntrySystemId);
+
+
 }

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ICorrespondencePartRepository extends
         NoarkEntityRepository<CorrespondencePart, Long> {
+
+    int deleteByOwnedBy(String ownedBy);
 }

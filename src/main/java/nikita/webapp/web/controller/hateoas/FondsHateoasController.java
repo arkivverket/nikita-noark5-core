@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.Fonds;
 import nikita.common.model.noark5.v4.FondsCreator;
 import nikita.common.model.noark5.v4.Series;
@@ -25,6 +26,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH +
@@ -659,5 +661,25 @@ public class FondsHateoasController extends NoarkController {
         fondsService.deleteEntity(systemID);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("{\"status\" : \"Success\"}");
+    }
+
+
+    // Delete all Fonds
+    // DELETE [contextPath][api]/arkivstruktur/arkiv/
+    @ApiOperation(value = "Deletes all Fonds", response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Deleted all Fonds",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllFonds() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(fondsService.deleteAllByOwnedBy()));
     }
 }

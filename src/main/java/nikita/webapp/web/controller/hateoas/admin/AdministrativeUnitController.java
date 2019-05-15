@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.hateoas.admin.AdministrativeUnitHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
@@ -25,6 +26,7 @@ import java.util.List;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
@@ -152,7 +154,7 @@ public class AdministrativeUnitController extends NoarkController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a administrativtenhet
-    // PUT [contextPath][api]/metatdata/administrativtenhet/{systemID}
+    // PUT [contextPath][api]/admin/administrativtenhet/{systemID}
     @ApiOperation(value = "Updates a AdministrativeUnit object", notes = "Returns the newly" +
             " updated AdministrativeUnit object after it is persisted to the database",
             response = AdministrativeUnit.class)
@@ -185,5 +187,24 @@ public class AdministrativeUnitController extends NoarkController {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(adminHateoas);
+    }
+
+    // Delete all AdministrativeUnit
+    // DELETE [contextPath][api]/admin/administrativtenhet/
+    @ApiOperation(value = "Deletes all AdministrativeUnit", response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Deleted all AdministrativeUnit",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllAdministrativeUnit() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(administrativeUnitService.deleteAllByOwnedBy()));
     }
 }

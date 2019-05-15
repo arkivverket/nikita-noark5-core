@@ -35,4 +35,6 @@ public interface IAdministrativeUnitRepository
 
     Optional<AdministrativeUnit> findByUsersInAndDefaultAdministrativeUnit(
             Set<User> user, Boolean defaultAdministrativeUnit);
+
+    int deleteByOwnedBy(String ownedBy);
 }

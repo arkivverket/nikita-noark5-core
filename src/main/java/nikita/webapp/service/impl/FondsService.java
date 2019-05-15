@@ -488,6 +488,7 @@ public class FondsService
     public long deleteAllByOwnedBy() {
         return fondsRepository.deleteByOwnedBy(getUser());
     }
+
     // All HELPER operations
 
     /**

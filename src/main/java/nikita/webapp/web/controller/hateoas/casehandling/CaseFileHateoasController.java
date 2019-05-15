@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.Series;
@@ -44,6 +45,7 @@ import java.util.List;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE,
@@ -74,7 +76,7 @@ public class CaseFileHateoasController extends NoarkController {
     // API - All POST Requests (CRUD - CREATE)
 
     // Create a RegistryEntry entity
-    // POST [contextPath][api]/casehandling/{systemId}/ny-journalpost
+    // POST [contextPath][api]/sakarkiv/{systemId}/ny-journalpost
     @ApiOperation(value = "Persists a RegistryEntry object associated with the given Series systemId",
             notes = "Returns the newly created record object after it was associated with a File object and " +
                     "persisted to the database", response = RegistryEntryHateoas.class)
@@ -116,7 +118,7 @@ public class CaseFileHateoasController extends NoarkController {
     // API - All GET Requests (CRUD - READ)
 
     // Create a RegistryEntry object with default values
-    // GET [contextPath][api]/casehandling/mappe/SYSTEM_ID/ny-journalpost
+    // GET [contextPath][api]/sakarkiv/mappe/SYSTEM_ID/ny-journalpost
     @ApiOperation(value = "Create a RegistryEntry with default values", response = RegistryEntry.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "RegistryEntry returned", response = RegistryEntry.class),
@@ -152,7 +154,7 @@ public class CaseFileHateoasController extends NoarkController {
     }
 
     // Retrieve a single casefile identified by systemId
-    // GET [contextPath][api]/casehandling/saksmappe/{systemID}
+    // GET [contextPath][api]/sakarkiv/saksmappe/{systemID}
     @ApiOperation(value = "Retrieves a single CaseFile entity given a systemId", response = CaseFile.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CaseFile returned", response = CaseFile.class),
@@ -182,7 +184,7 @@ public class CaseFileHateoasController extends NoarkController {
     }
 
     // Retrieve all RegistryEntry associated with a casefile identified by systemId
-    // GET [contextPath][api]/casehandling/saksmappe/{systemID}/journalpost
+    // GET [contextPath][api]/sakarkiv/saksmappe/{systemID}/journalpost
     @ApiOperation(value = "Retrieves all RegistryEntry associated with a CaseFile identified by systemId",
             response = RegistryEntry.class)
     @ApiResponses(value = {
@@ -243,7 +245,7 @@ public class CaseFileHateoasController extends NoarkController {
     }
     
     // Delete a CaseFile identified by systemID
-    // DELETE [contextPath][api]/casehandling/saksmappe/{systemId}/
+    // DELETE [contextPath][api]/sakarkiv/saksmappe/{systemId}/
     @ApiOperation(value = "Deletes a single CaseFile entity identified by systemID", response = HateoasNoarkObject.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Parent entity (DocumentDescription or CaseFile) returned", response = HateoasNoarkObject.class),
@@ -283,8 +285,27 @@ public class CaseFileHateoasController extends NoarkController {
                 .body(hateoasNoarkObject);
     }
 
+    // Delete all CaseFile
+    // DELETE [contextPath][api]/sakarkiv/saksmappe/
+    @ApiOperation(value = "Deletes all CaseFile", response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Deleted all CaseFile",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllCaseFile() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(caseFileService.deleteAllByOwnedBy()));
+    }
+
     // Update a CaseFile with given values
-    // PUT [contextPath][api]/casehandling/saksmappe/{systemId}
+    // PUT [contextPath][api]/sakarkiv/saksmappe/{systemId}
     @ApiOperation(value = "Updates a CaseFile identified by a given systemId", notes = "Returns the newly updated caseFile",
             response = CaseFileHateoas.class)
     @ApiResponses(value = {

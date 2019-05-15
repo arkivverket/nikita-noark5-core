@@ -5,6 +5,8 @@ import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
 import nikita.webapp.util.exceptions.UsernameExistsException;
 
+import javax.validation.constraints.NotNull;
+
 public interface IUserService {
 
     UserHateoas createNewUser(User user) throws UsernameExistsException;
@@ -19,4 +21,9 @@ public interface IUserService {
     boolean userExists(String username);
 
     boolean authorityExists(AuthorityName authority);
+
+    // All DELETE operations
+    void deleteEntity(@NotNull String systemId);
+
+    long deleteAllByUsername();
 }

@@ -14,6 +14,7 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -23,6 +24,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -34,6 +36,7 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setSystemIdEntity
 @Service
 @Transactional
 public class CorrespondencePartService
+        extends NoarkService
         implements ICorrespondencePartService {
 
     private static final Logger logger =
@@ -48,11 +51,13 @@ public class CorrespondencePartService
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public CorrespondencePartService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
             ICorrespondencePartRepository correspondencePartRepository,
             ICorrespondencePartTypeRepository correspondencePartTypeRepository,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
-            ICorrespondencePartTypeService correspondencePartTypeService,
-            ApplicationEventPublisher applicationEventPublisher) {
+            ICorrespondencePartTypeService correspondencePartTypeService) {
+        super(entityManager, applicationEventPublisher);
         this.correspondencePartRepository = correspondencePartRepository;
         this.correspondencePartTypeRepository = correspondencePartTypeRepository;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
@@ -334,6 +339,15 @@ public class CorrespondencePartService
                 getCorrespondencePartOrThrow(systemId));
     }
 
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByOwnedBy() {
+        return correspondencePartRepository.deleteByOwnedBy(getUser());
+    }
     // Internal helper methods
 
     /**

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.casehandling.DocumentFlow;
 import nikita.common.model.noark5.v4.casehandling.Precedence;
@@ -40,8 +41,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY,
@@ -695,6 +695,24 @@ TODO: Temp disabled!
                 .body(CommonUtils.WebUtils.getSuccessStatusStringForDelete());
     }
 
+    // Delete all RegistryEntry
+    // DELETE [contextPath][api]/arkivstruktur/journalpost/
+    @ApiOperation(value = "Deletes all RegistryEntry", response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Deleted all RegistryEntry",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllRegistryEntry() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(registryEntryService.deleteAllByOwnedBy()));
+    }
 
     // Update a RegistryEntry with given values
     // PUT [contextPath][api]/casehandling/journalpost/{systemId}

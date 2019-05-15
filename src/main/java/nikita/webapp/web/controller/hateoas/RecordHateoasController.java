@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
+import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.Record;
@@ -38,6 +39,7 @@ import java.util.List;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION,
@@ -394,6 +396,26 @@ public class RecordHateoasController extends NoarkController {
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
+
+    // Delete all Record
+    // DELETE [contextPath][api]/arkivstruktur/registrering/
+    @ApiOperation(value = "Deletes all Record", response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Deleted all Record",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping
+    public ResponseEntity<Count> deleteAllRecord() {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(recordService.deleteAllByOwnedBy()));
+    }
+    
     // API - All GET Requests (CRUD - READ)
 
     // Retrieve a Record identified by a systemId

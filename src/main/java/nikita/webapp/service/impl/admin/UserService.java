@@ -11,6 +11,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.IUserService;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.util.exceptions.UsernameExistsException;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
@@ -31,7 +33,9 @@ import static nikita.common.config.Constants.SYSTEM;
 
 @Service
 @Transactional
-public class UserService implements IUserService {
+public class UserService
+        extends NoarkService
+        implements IUserService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(UserService.class);
@@ -39,16 +43,17 @@ public class UserService implements IUserService {
     private IUserRepository userRepository;
     private AuthorityRepository authorityRepository;
     private IUserHateoasHandler userHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
     private PasswordEncoder encoder;
     private AdministrativeUnitService administrativeUnitService;
 
-    public UserService(IUserRepository userRepository,
+    public UserService(EntityManager entityManager,
+                       ApplicationEventPublisher applicationEventPublisher,
+                       IUserRepository userRepository,
                        AuthorityRepository authorityRepository,
                        IUserHateoasHandler userHateoasHandler,
-                       ApplicationEventPublisher applicationEventPublisher,
                        PasswordEncoder encoder,
                        AdministrativeUnitService administrativeUnitService) {
+        super(entityManager, applicationEventPublisher);
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.userHateoasHandler = userHateoasHandler;
@@ -166,6 +171,28 @@ public class UserService implements IUserService {
     @Override
     public boolean authorityExists(AuthorityName authority) {
         return authorityRepository.findByAuthorityName(authority) != null;
+    }
+
+    // All DELETE operations
+
+    /**
+     * Delete a user identified by the given systemID from the database.
+     *
+     * @param systemId systemId of the user to delete
+     */
+    @Override
+    public void deleteEntity(@NotNull String systemId) {
+        userRepository.delete(getUserOrThrow(systemId));
+    }
+
+    /**
+     * Delete all objects belonging to the user identified by username
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteAllByUsername() {
+        return userRepository.deleteByUsername(getUser());
     }
 
     /**

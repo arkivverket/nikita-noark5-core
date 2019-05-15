@@ -14,4 +14,6 @@ public interface IUserRepository
     Optional<User> findById(String id);
 
     Optional<User> findBySystemId(String systemId);
+
+    int deleteByUsername(String username);
 }

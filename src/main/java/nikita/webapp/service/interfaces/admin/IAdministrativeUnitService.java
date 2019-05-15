@@ -4,6 +4,7 @@ package nikita.webapp.service.interfaces.admin;
 import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v4.admin.User;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface IAdministrativeUnitService {
@@ -20,4 +21,9 @@ public interface IAdministrativeUnitService {
     AdministrativeUnit findBySystemId(String administrativeUnitSystemId);
 
     List<AdministrativeUnit> findAll();
+
+    // All DELETE operations
+    void deleteEntity(@NotNull String systemId);
+
+    long deleteAllByOwnedBy();
 }
