@@ -29,6 +29,8 @@ public interface IDocumentObjectRepository extends
     // ownedBy
     List<DocumentObject> findByOwnedBy(String ownedBy);
 
+    long deleteByOwnedBy(String ownedBy);
+
     Long countByReferenceDocumentDescriptionAndVariantFormat(
             DocumentDescription documentDescription, String variantFormat);
 }

@@ -29,5 +29,7 @@ public interface IDocumentDescriptionRepository extends
     // ownedBy
     List<DocumentDescription> findByOwnedBy(String ownedBy);
 
+    long deleteByOwnedBy(String ownedBy);
+
     Long countByReferenceRecord(Record record);
 }

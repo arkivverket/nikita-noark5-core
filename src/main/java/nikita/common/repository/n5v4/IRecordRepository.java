@@ -27,4 +27,6 @@ public interface IRecordRepository extends
 
     // ownedBy
     List<Record> findByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
 }

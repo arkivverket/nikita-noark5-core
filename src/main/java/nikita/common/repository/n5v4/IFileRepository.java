@@ -27,4 +27,6 @@ public interface IFileRepository extends
 
     // ownedBy
     List<File> findByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
 }

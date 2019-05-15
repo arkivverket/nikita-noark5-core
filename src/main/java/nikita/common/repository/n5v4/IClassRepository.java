@@ -18,4 +18,6 @@ public interface IClassRepository
 
     // ownedBy
     List<Class> findByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
 }

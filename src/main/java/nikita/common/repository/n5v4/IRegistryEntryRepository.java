@@ -16,4 +16,6 @@ public interface IRegistryEntryRepository extends
     RegistryEntry findBySystemId(String systemId);
 
     Long countByReferenceFile(File file);
+
+    long deleteByOwnedBy(String ownedBy);
 }

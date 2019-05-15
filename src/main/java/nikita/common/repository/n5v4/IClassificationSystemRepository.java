@@ -27,4 +27,6 @@ public interface IClassificationSystemRepository extends
 
     // ownedBy
     List<ClassificationSystem> findByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
 }

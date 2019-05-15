@@ -27,4 +27,8 @@ public interface IBasicRecordRepository extends
 
     // ownedBy
     List<BasicRecord> findByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
 }

@@ -23,4 +23,6 @@ public interface IFondsCreatorRepository extends
     FondsCreator findBySystemId(String systemId);
 
     List<FondsCreator> findByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
 }

@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ISeriesRepository extends PagingAndSortingRepository<Series, Long> {
+public interface ISeriesRepository
+        extends PagingAndSortingRepository<Series, Long> {
 
     // -- All SAVE operations
     @Override
@@ -26,4 +27,6 @@ public interface ISeriesRepository extends PagingAndSortingRepository<Series, Lo
 
     // ownedBy
     List<Series> findByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
 }

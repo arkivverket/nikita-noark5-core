@@ -22,4 +22,6 @@ public interface IFondsRepository extends
     Optional<Fonds> findById(Long id);
     Fonds findBySystemId(String systemId);
     List<Fonds> findByOwnedBy(String ownedBy);
+
+    long deleteByOwnedBy(String ownedBy);
 }
