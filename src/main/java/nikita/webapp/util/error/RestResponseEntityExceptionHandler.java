@@ -4,6 +4,7 @@ package nikita.webapp.util.error;
 import nikita.common.util.exceptions.*;
 import nikita.webapp.util.exceptions.UsernameExistsException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
 
 /**
  * This is an implementation of a global exception handler extending the
@@ -48,7 +52,7 @@ public class RestResponseEntityExceptionHandler
             final HttpMessageNotReadableException ex, final HttpHeaders headers,
             final HttpStatus status, final WebRequest request) {
         return handleExceptionInternal(ex, message(status, ex),
-                headers, HttpStatus.BAD_REQUEST, request);
+                headers, BAD_REQUEST, request);
     }
 
     // If there is a problem with incoming arguments i.e null value where
@@ -58,15 +62,15 @@ public class RestResponseEntityExceptionHandler
             final MethodArgumentNotValidException ex, final HttpHeaders
             headers, final HttpStatus status, final WebRequest request) {
         return handleExceptionInternal(ex, message(status, ex), headers,
-                HttpStatus.BAD_REQUEST, request);
+                BAD_REQUEST, request);
     }
 
     @ExceptionHandler({ DataIntegrityViolationException.class })
     public ResponseEntity<Object> handleBadRequest(
             final DataIntegrityViolationException ex,
             final WebRequest request) {
-        return handleExceptionInternal(ex, message(HttpStatus.BAD_REQUEST, ex),
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, message(BAD_REQUEST, ex),
+                new HttpHeaders(), BAD_REQUEST, request);
     }
 
     // 403
@@ -104,8 +108,8 @@ public class RestResponseEntityExceptionHandler
     @ExceptionHandler(value = {NikitaMalformedInputDataException.class})
     protected ResponseEntity<Object> handleMalformedDataInput(
             final RuntimeException ex, final WebRequest request) {
-        return handleExceptionInternal(ex, message(HttpStatus.BAD_REQUEST, ex),
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, message(BAD_REQUEST, ex),
+                new HttpHeaders(), BAD_REQUEST, request);
     }
 
     // 500
@@ -123,10 +127,19 @@ public class RestResponseEntityExceptionHandler
     @ExceptionHandler(StorageException.class)
     public ResponseEntity<Object> handleStorageException(
             final RuntimeException ex, final WebRequest request) {
-        logger.error("500 Status Code", ex);
+        logger.error(BAD_REQUEST + "Status Code", ex);
         logger.error(request.getDescription(true), ex);
-        return handleExceptionInternal(ex, message(HttpStatus.BAD_REQUEST, ex),
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, message(BAD_REQUEST, ex),
+                new HttpHeaders(), BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintException(
+            final RuntimeException ex, final WebRequest request) {
+        logger.error(CONFLICT + " (Conflict) Status Code", ex);
+        logger.error(request.getDescription(true), ex);
+        return handleExceptionInternal(ex, message(CONFLICT, ex),
+                new HttpHeaders(), CONFLICT, request);
     }
 
     @ExceptionHandler(NikitaMalformedHeaderException.class)
@@ -134,8 +147,8 @@ public class RestResponseEntityExceptionHandler
             final RuntimeException ex, final WebRequest request) {
         logger.error("400 Status Code", ex);
         logger.error(request.getDescription(true), ex);
-        return handleExceptionInternal(ex, message(HttpStatus.BAD_REQUEST, ex),
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, message(BAD_REQUEST, ex),
+                new HttpHeaders(), BAD_REQUEST, request);
     }
 
     private ApiError message(final HttpStatus httpStatus, final Exception ex) {
