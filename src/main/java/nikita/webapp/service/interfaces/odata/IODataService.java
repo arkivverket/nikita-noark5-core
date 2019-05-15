@@ -11,7 +11,7 @@ public interface IODataService {
     processODataQueryGet(HttpServletRequest request)
             throws Exception;
 
-    ResponseEntity<HateoasNoarkObject>
+    ResponseEntity<String>
     processODataQueryDelete(HttpServletRequest request)
             throws Exception;
 }

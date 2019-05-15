@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl.odata;
 
+import io.micrometer.core.lang.Nullable;
 import nikita.common.model.noark5.v4.NoarkGeneralEntity;
 import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
 import nikita.webapp.hateoas.HateoasHandler;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
@@ -50,18 +52,19 @@ public class ODataService
         this.entityManager = entityManager;
     }
 
-    public ResponseEntity<HateoasNoarkObject> processODataQueryDelete
+    public ResponseEntity<String> processODataQueryDelete
             (HttpServletRequest request) throws UnsupportedEncodingException {
         Query query = convertODataToHQL(request, "delete");
         int result = query.executeUpdate();
         logger.info(result + " records deleted for OData Query [" +
                 query.getQueryString() + "]");
-        return null;
+        return ResponseEntity.status(OK)
+                .body("{ count: " + result + " }");
     }
 
     public ResponseEntity<HateoasNoarkObject> processODataQueryGet
             (HttpServletRequest request) throws Exception {
-        Query query = convertODataToHQL(request, "select");
+        Query query = convertODataToHQL(request, null);
         return packAsHateoasObject(query.getResultList());
     }
 
@@ -101,7 +104,8 @@ public class ODataService
      * @return
      * @throws UnsupportedEncodingException
      */
-    private Query convertODataToHQL(HttpServletRequest request, String command)
+    private Query convertODataToHQL(@NotNull HttpServletRequest request,
+                                    @Nullable String command)
             throws UnsupportedEncodingException {
 
         StringBuffer originalRequest = request.getRequestURL();

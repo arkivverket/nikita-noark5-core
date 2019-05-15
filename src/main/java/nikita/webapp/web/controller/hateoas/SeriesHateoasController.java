@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -121,7 +120,6 @@ public class SeriesHateoasController
                 .eTag(classificationSystemHateoas.getEntityVersion().toString())
                 .body(classificationSystemHateoas);
     }
-
 
 
     // Create a new file
@@ -397,11 +395,11 @@ public class SeriesHateoasController
             @ApiParam(name = "systemID",
                     value = "systemId of fonds to update.",
                     required = true)
-                @PathVariable("systemID") String systemID,
+            @PathVariable("systemID") String systemID,
             @ApiParam(name = "series",
                     value = "Incoming series object",
                     required = true)
-                @RequestBody Series series) throws NikitaException {
+            @RequestBody Series series) throws NikitaException {
         validateForUpdate(series);
         Series updatedSeries = seriesService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), series);
         SeriesHateoas seriesHateoas = new SeriesHateoas(updatedSeries);
@@ -748,20 +746,8 @@ public class SeriesHateoasController
             @ApiParam(name = "systemID",
                     value = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID)
-            throws UnsupportedEncodingException {
-        if (null == request.getQueryString()) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                    .body((CaseFileHateoas) seriesService.
-                            findPagedCaseFilesBySeries(systemID, 0, 10));
-        } else {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                    .body((CaseFileHateoas) seriesService.
-                            findCaseFilesBySeriesWithOData(systemID,
-                                    getODataString(request)));
-        }
+            @PathVariable("systemID") final String systemID) {
+        return seriesService.findCaseFilesBySeries(systemID);
     }
 
     // API - All DELETE Requests (CRUD - DELETE)

@@ -6,8 +6,8 @@ import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import org.antlr.v4.runtime.CharStream;
+import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -18,7 +18,9 @@ public interface ISeriesService {
 
     // -- All CREATE operations
     Series save(Series series);
+
     File createFileAssociatedWithSeries(String seriesSystemId, File file);
+
     CaseFile createCaseFileAssociatedWithSeries(String seriesSystemId,
                                                 CaseFile caseFile);
 
@@ -29,11 +31,8 @@ public interface ISeriesService {
     // -- All READ operations
     List<Series> findAll();
 
-    HateoasNoarkObject findPagedCaseFilesBySeries(String systemId, Integer skip,
-                                                  Integer top);
-
-    HateoasNoarkObject findCaseFilesBySeriesWithOData(String systemId,
-                                                      CharStream oDataString);
+    ResponseEntity<CaseFileHateoas>
+    findCaseFilesBySeries(@NotNull String systemId);
 
     // id
     Optional<Series> findById(Long id);

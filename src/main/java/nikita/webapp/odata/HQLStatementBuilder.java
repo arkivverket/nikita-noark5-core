@@ -1,5 +1,6 @@
 package nikita.webapp.odata;
 
+import io.micrometer.core.lang.Nullable;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.hibernate.Session;
@@ -41,9 +42,11 @@ public class HQLStatementBuilder {
     private final AtomicInteger limitOffset = new AtomicInteger(0);
     private String parentId = "";
 
-    public HQLStatementBuilder(String command) {
+    public HQLStatementBuilder(@Nullable String command) {
         select = new StringBuilder();
-        select.append(command);
+        if (null != command) {
+            select.append(command);
+        }
     }
 
     /**

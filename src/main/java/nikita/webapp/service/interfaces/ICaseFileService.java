@@ -5,8 +5,7 @@ import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -21,9 +20,7 @@ public interface ICaseFileService {
     RegistryEntry createRegistryEntryAssociatedWithCaseFile(
             @NotNull String fileSystemId, @NotNull RegistryEntry registryEntry);
 
-    List<CaseFile> findAllCaseFileBySeries(@NotNull Series series);
-
-    Page<CaseFile> findByReferenceSeries(@NotNull Series series, Pageable page);
+    ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(@NotNull Series series);
 
     CaseFile findBySystemId(@NotNull String systemId);
 

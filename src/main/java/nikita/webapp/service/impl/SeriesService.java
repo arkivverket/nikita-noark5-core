@@ -2,29 +2,21 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.ClassificationSystem;
 import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.ISeriesRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
-import nikita.webapp.odata.NikitaODataToHQLWalker;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
-import org.antlr.v4.runtime.CharStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,18 +45,15 @@ public class SeriesService
     private ICaseFileService caseFileService;
     private IClassificationSystemService classificationSystemService;
     private ISeriesRepository seriesRepository;
-    private ICaseFileHateoasHandler caseFileHateoasHandler;
 
     public SeriesService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            ICaseFileHateoasHandler caseFileHateoasHandler,
             IClassificationSystemService classificationSystemService,
             IFileService fileService,
             ICaseFileService caseFileService,
             ISeriesRepository seriesRepository) {
         super(entityManager, applicationEventPublisher);
-        this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
         this.seriesRepository = seriesRepository;
@@ -115,40 +104,8 @@ public class SeriesService
     }
 
     @Override
-    public HateoasNoarkObject findPagedCaseFilesBySeries(String systemId,
-                                                         Integer skip,
-                                                         Integer top) {
-        Series series = getSeriesOrThrow(systemId);
-        return packResults(caseFileService.findByReferenceSeries(series,
-                PageRequest.of(skip, top)));
-    }
-
-    @Override
-    public HateoasNoarkObject findCaseFilesBySeriesWithOData(
-            String systemId, CharStream oDataString) {
-        Series series = getSeriesOrThrow(systemId);
-        NikitaODataToHQLWalker oDataToHQLWalker =
-                getHQLFromODataString(oDataString);
-        oDataToHQLWalker.setParentIdPrimaryKey(series.getId().
-                toString());
-        List<NoarkEntity> caseFiles =
-                executeHQL(oDataToHQLWalker);
-        return packResults((List<INikitaEntity>) (List) caseFiles);
-    }
-
-    @Override
-    protected HateoasNoarkObject packResults(List<INikitaEntity> caseFileList) {
-
-        CaseFileHateoas caseFileHateoas = new
-                CaseFileHateoas(caseFileList);
-        caseFileHateoasHandler.addLinksOnRead(caseFileHateoas,
-                new Authorisation());
-
-        return caseFileHateoas;
-    }
-
-    protected HateoasNoarkObject packResults(Page<CaseFile> caseFiles) {
-        return packResults((List<INikitaEntity>) (List) caseFiles.getContent());
+    public ResponseEntity<CaseFileHateoas> findCaseFilesBySeries(@NotNull String systemId) {
+        return caseFileService.findAllCaseFileBySeries(getSeriesOrThrow(systemId));
     }
 
     // id

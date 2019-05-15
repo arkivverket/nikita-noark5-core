@@ -283,24 +283,6 @@ public final class CommonUtils {
          */
         public static HttpMethod[] getMethodsForRequest(@NotNull String servletPath) {
 
-            /*
-            TODO; Remove this later!
-            The following if statement is a temporary addition so that odata
-            searches work from browser. The Odata code is experimental and
-            will be moved from /odata/arkivstruktur/*** to
-            /hateoas-api/arkivstruktur/** in the future. So this code should
-            not cause a proble if it's forgotten but it should be removed
-
-            The problem is that a request e.g. /odata/arkivstruktur/arkiv will
-            result in a null value for methods as the only endpoint registered
-            is /odata/arkivstruktur. So we "reset" servletPath to something that
-            is usable for OPTIONS.
-            */
-
-            if (servletPath.startsWith("/odata/arkivstruktur/")) {
-                servletPath = "/odata/arkivstruktur/{\\w*}/";
-            }
-
             // Adding a trailing slash as the map is setup with a trailing slash
             if (false == servletPath.endsWith("/")) {
                 servletPath += SLASH;

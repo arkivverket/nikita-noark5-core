@@ -39,7 +39,8 @@ public class ODataController {
 
     @DeleteMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**")
     public ResponseEntity<String>
-    deleteViaOData(HttpServletRequest request) {
-        return null;
+    deleteViaOData(HttpServletRequest request)
+            throws Exception {
+        return oDataService.processODataQueryDelete(request);
     }
 }

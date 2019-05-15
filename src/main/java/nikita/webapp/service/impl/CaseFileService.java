@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v4.admin.User;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v4.metadata.CaseStatus;
 import nikita.common.repository.n5v4.ICaseFileRepository;
 import nikita.common.repository.n5v4.admin.IAdministrativeUnitRepository;
@@ -22,11 +23,12 @@ import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -42,8 +44,10 @@ import java.util.Set;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
@@ -167,8 +171,14 @@ public class CaseFileService
     }
 
     @Override
-    public List<CaseFile> findAllCaseFileBySeries(Series series) {
-        return caseFileRepository.findByReferenceSeries(series);
+    public ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(Series series) {
+        CaseFileHateoas caseFileHateoas = new CaseFileHateoas(
+                (List<INikitaEntity>)
+                        (List) caseFileRepository.findByReferenceSeries(series));
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(caseFileHateoas);
     }
 
     // All UPDATE operations
@@ -379,12 +389,6 @@ public class CaseFileService
         }
     }
 
-    public Page<CaseFile> findByReferenceSeries(@NotNull Series series,
-                                                @NotNull Pageable page) {
-        return caseFileRepository.findByReferenceSeries(series, page);
-    }
-
-
     /**
      * Update values of an existing CaseFile object.
      * <p>
@@ -405,6 +409,11 @@ public class CaseFileService
             existingCaseFile.setCaseStatus(
                     incomingCaseFile.getCaseStatus());
         }
+    }
+
+    private String getServletPath() {
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getRequest().toString();
     }
 
     private void checkCaseStatusUponCreation(CaseFile caseFile) {
