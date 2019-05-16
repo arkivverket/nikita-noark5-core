@@ -14,6 +14,7 @@ public final class Constants {
     public static final String NEW = "ny";
     public static final String DASH = "-";
     public static final String SUB = "under";
+    public static final String PARENT = "forelder";
 
     // Spring profile for development and production
     public static final String SPRING_PROFILE_PRODUCTION = "prod";
@@ -422,6 +423,7 @@ public final class Constants {
 
     // Class
     public static final String REL_FONDS_STRUCTURE_CLASS = REL_FONDS_STRUCTURE + CLASS + SLASH;
+    public static final String REL_FONDS_STRUCTURE_PARENT_CLASS = NIKITA_CONFORMANCE_REL + PARENT + CLASS + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_CLASS = REL_FONDS_STRUCTURE + NEW_CLASS + SLASH;
 
     public static final String REL_FONDS_STRUCTURE_SUB_CLASS = REL_FONDS_STRUCTURE + SUB + CLASS + SLASH;

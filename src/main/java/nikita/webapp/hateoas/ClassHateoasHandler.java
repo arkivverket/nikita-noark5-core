@@ -66,7 +66,7 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
     public void addParentClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + PARENT_CLASS +
-                SLASH, REL_FONDS_STRUCTURE_CLASS, false));
+                SLASH, REL_FONDS_STRUCTURE_PARENT_CLASS, false));
     }
 
     @Override
