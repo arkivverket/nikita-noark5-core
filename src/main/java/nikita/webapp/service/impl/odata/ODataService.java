@@ -82,20 +82,29 @@ public class ODataService
     packAsHateoasObject(List<NoarkGeneralEntity> list)
             throws Exception {
 
-        Class<? extends NoarkGeneralEntity> cls = list.get(0).getClass();
+        HateoasNoarkObject noarkObject;
+        HateoasHandler handler;
 
-        HateoasPacker packer = cls.getAnnotation(HateoasPacker.class);
-        HateoasObject hateoasObject = cls.getAnnotation(HateoasObject.class);
+        if (list.size() > 0) {
+            Class<? extends NoarkGeneralEntity> cls = list.get(0).getClass();
 
-        HateoasNoarkObject noarkObject =
-                hateoasObject.using().getDeclaredConstructor(List.class)
-                        .newInstance(list);
+            HateoasPacker packer = cls.getAnnotation(HateoasPacker.class);
+            HateoasObject hateoasObject = cls.getAnnotation(HateoasObject.class);
 
-        HateoasHandler handler =
-                packer.using().getConstructor().newInstance();
+            noarkObject =
+                    hateoasObject.using().getDeclaredConstructor(List.class)
+                            .newInstance(list);
+
+            handler =
+                    packer.using().getConstructor().newInstance();
+
+
+        } else {
+            noarkObject = new HateoasNoarkObject();
+            handler = new HateoasHandler();
+        }
 
         handler.addLinks(noarkObject, new Authorisation());
-
         return ResponseEntity.status(OK)
                 .body(noarkObject);
     }
