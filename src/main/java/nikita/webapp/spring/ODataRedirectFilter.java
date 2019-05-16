@@ -57,7 +57,9 @@ public class ODataRedirectFilter
         HttpServletResponse response = (HttpServletResponse) res;
 
         if (null != request.getQueryString() &&
-                !request.getQueryString().contains("grant_type")) {
+                (request.getQueryString().contains("filter")
+                        || request.getQueryString().contains("skip")
+                        || request.getQueryString().contains("top"))) {
             String path = ODATA_PATH +
                     getEntity(request.getRequestURL());
             request.getRequestDispatcher(path).
