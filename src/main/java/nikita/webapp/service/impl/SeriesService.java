@@ -5,10 +5,18 @@ import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.ISeriesRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
+import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
@@ -17,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +36,14 @@ import java.util.Optional;
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.STATUS_CLOSED;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
+@SuppressWarnings("unchecked")
 public class SeriesService
         extends NoarkService
         implements ISeriesService {
@@ -45,6 +55,9 @@ public class SeriesService
     private ICaseFileService caseFileService;
     private IClassificationSystemService classificationSystemService;
     private ISeriesRepository seriesRepository;
+    private ISeriesHateoasHandler seriesHateoasHandler;
+    private IRecordHateoasHandler recordHateoasHandler;
+    private IFileHateoasHandler fileHateoasHandler;
 
     public SeriesService(
             EntityManager entityManager,
@@ -52,12 +65,19 @@ public class SeriesService
             IClassificationSystemService classificationSystemService,
             IFileService fileService,
             ICaseFileService caseFileService,
-            ISeriesRepository seriesRepository) {
+            ISeriesRepository seriesRepository,
+            ISeriesHateoasHandler seriesHateoasHandler,
+            IRecordHateoasHandler recordHateoasHandler,
+            IFileHateoasHandler fileHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.fileService = fileService;
         this.caseFileService = caseFileService;
         this.seriesRepository = seriesRepository;
         this.classificationSystemService = classificationSystemService;
+        this.seriesHateoasHandler = seriesHateoasHandler;
+        this.recordHateoasHandler = recordHateoasHandler;
+        this.fileHateoasHandler = fileHateoasHandler;
+
     }
 
     // All CREATE operations
@@ -95,17 +115,46 @@ public class SeriesService
     }
 
     // All READ operations
-    // NOTE: I am leaving these methods here for another while. They will
-    // probably be replaced by a single CriteriaBuilder approach, but for the
-    // moment, they will be left here.
     @Override
-    public List<Series> findAll() {
-        return seriesRepository.findAll();
+    public ResponseEntity<SeriesHateoas> findAll() {
+        SeriesHateoas seriesHateoas = new
+                SeriesHateoas((List<INikitaEntity>) (List)
+                seriesRepository.findByOwnedBy(getUser()));
+        seriesHateoasHandler.addLinksOnRead(seriesHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(seriesHateoas);
     }
 
     @Override
-    public ResponseEntity<CaseFileHateoas> findCaseFilesBySeries(@NotNull String systemId) {
-        return caseFileService.findAllCaseFileBySeries(getSeriesOrThrow(systemId));
+    public ResponseEntity<CaseFileHateoas> findCaseFilesBySeries(
+            @NotNull String systemId) {
+        return caseFileService.findAllCaseFileBySeries(
+                getSeriesOrThrow(systemId));
+    }
+
+    @Override
+    public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
+            String systemId) {
+        RecordHateoas recordHateoas = new RecordHateoas(
+                (List<INikitaEntity>) (List)
+                        getSeriesOrThrow(systemId).getReferenceRecord());
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(recordHateoas);
+    }
+
+    @Override
+    public ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
+            String systemId) {
+        FileHateoas fileHateoas = new FileHateoas(
+                (List<INikitaEntity>) (List)
+                        getSeriesOrThrow(systemId).getReferenceFile());
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(fileHateoas);
     }
 
     // id
@@ -116,17 +165,16 @@ public class SeriesService
 
     // systemId
     @Override
-    public Series findBySystemId(String systemId) {
-        return getSeriesOrThrow(systemId);
+    public ResponseEntity<SeriesHateoas> findBySystemId(String systemId) {
+        SeriesHateoas seriesHateoas =
+                new SeriesHateoas(getSeriesOrThrow(systemId));
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(seriesHateoas.getEntityVersion().toString())
+                .body(seriesHateoas);
     }
 
-    // ownedBy
-    @Override
-    public List<Series> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().
-                getAuthentication().getName() : ownedBy;
-        return seriesRepository.findByOwnedBy(ownedBy);
-    }
 
     // All UPDATE operations
 

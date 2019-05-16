@@ -10,10 +10,10 @@ import nikita.common.model.noark5.v4.hateoas.FileHateoas;
 import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.*;
+import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IFileService;
@@ -23,12 +23,10 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -51,18 +49,14 @@ public class SeriesHateoasController
     private ISeriesService seriesService;
     private ICaseFileService caseFileService;
     private IFileService fileService;
-    private IFondsHateoasHandler fondsHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
-    private IRecordHateoasHandler recordHateoasHandler;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
     private IFileHateoasHandler fileHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
 
     public SeriesHateoasController(ISeriesService seriesService,
                                    ICaseFileService caseFileService,
-                                   IFondsHateoasHandler fondsHateoasHandler,
                                    ISeriesHateoasHandler seriesHateoasHandler,
-                                   IRecordHateoasHandler recordHateoasHandler,
                                    ICaseFileHateoasHandler caseFileHateoasHandler,
                                    IFileHateoasHandler fileHateoasHandler,
                                    IFileService fileService,
@@ -70,9 +64,7 @@ public class SeriesHateoasController
 
         this.seriesService = seriesService;
         this.caseFileService = caseFileService;
-        this.fondsHateoasHandler = fondsHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
-        this.recordHateoasHandler = recordHateoasHandler;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
         this.fileService = fileService;
@@ -419,33 +411,28 @@ public class SeriesHateoasController
 
     // Retrieve a Series given a systemId
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/
-    @ApiOperation(value = "Retrieves a single Series entity given a systemId", response = Series.class)
+    @ApiOperation(value = "Retrieves a single Series entity identified " +
+            "by the given a systemId", response = SeriesHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Series returned", response = Series.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200,
+                    message = "Series returned",
+                    response = SeriesHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.GET)
-    public ResponseEntity<SeriesHateoas> findOneSeriesbySystemId(
+    @GetMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            RIGHT_PARENTHESIS)
+    public ResponseEntity<SeriesHateoas> findOneSeriesBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the series to retrieve",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        Series series = seriesService.findBySystemId(systemID);
-        if (series == null) {
-            throw new NoarkEntityNotFoundException("Could not find series object with systemID " + systemID);
-        }
-        SeriesHateoas seriesHateoas = new
-                SeriesHateoas(series);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(series.getVersion().toString())
-                .body(seriesHateoas);
+        return seriesService.findBySystemId(systemID);
     }
 
     // Create a File object with default values
@@ -640,20 +627,8 @@ public class SeriesHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<SeriesHateoas> findAllSeries(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip) {
-        String ownedBy = SecurityContextHolder.getContext().getAuthentication()
-                .getName();
-
-        SeriesHateoas seriesHateoas = new
-                SeriesHateoas((List<INikitaEntity>) (List)
-                seriesService.findByOwnedBy(ownedBy));
-        seriesHateoasHandler.addLinksOnRead(seriesHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(seriesHateoas);
+    public ResponseEntity<SeriesHateoas> findAllSeries() {
+        return seriesService.findAll();
     }
 
     // Retrieve all Records associated with a Series (paginated)
@@ -672,61 +647,40 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + REGISTRATION,
-            method = RequestMethod.GET)
+    @GetMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            RIGHT_PARENTHESIS + SLASH + REGISTRATION)
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip,
             @ApiParam(name = "systemID",
-                    value = "systemID of the series to retrieve",
+                    value = "systemID of the series to find associated records",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        Series series = seriesService.findBySystemId(systemID);
-        RecordHateoas recordHateoas = new RecordHateoas((List<INikitaEntity>) (List) series.getReferenceRecord());
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordHateoas);
+        return seriesService.findAllRecordAssociatedWithSeries(systemID);
     }
 
     // Retrieve all Files associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/mappe/
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/mappe/?top=5&skip=1
-    @ApiOperation(value = "Retrieves a list of Files associated with a Series", notes = "The field skip" +
-            "tells how many File rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves a list of Files associated with a Series",
             response = FileHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "File list found",
                     response = FileHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code =
+                    500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + FILE,
-            method = RequestMethod.GET)
+    @GetMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            RIGHT_PARENTHESIS + SLASH + FILE)
     public ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip,
             @ApiParam(name = "systemID",
                     value = "systemID of the series to retrieve",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-
-        Series series = seriesService.findBySystemId(systemID);
-        if (series == null) {
-            throw new NoarkEntityNotFoundException("Could not find series object with systemID " + systemID);
-        }
-        FileHateoas fileHateoas = new FileHateoas((List<INikitaEntity>)
-                (List) series.getReferenceFile());
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fileHateoas);
+        return seriesService.findAllFileAssociatedWithSeries(systemID);
     }
 
     // Retrieve all CaseFiles associated with a Series (paginated)

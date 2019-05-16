@@ -6,11 +6,13 @@ import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Optional;
 
 public interface ISeriesService {
@@ -29,7 +31,7 @@ public interface ISeriesService {
             ClassificationSystem classificationSystem);
 
     // -- All READ operations
-    List<Series> findAll();
+    ResponseEntity<SeriesHateoas> findAll();
 
     ResponseEntity<CaseFileHateoas>
     findCaseFilesBySeries(@NotNull String systemId);
@@ -38,10 +40,13 @@ public interface ISeriesService {
     Optional<Series> findById(Long id);
 
     // systemId
-    Series findBySystemId(String systemId);
+    ResponseEntity<SeriesHateoas> findBySystemId(@NotNull String systemId);
 
-    // ownedBy
-    List<Series> findByOwnedBy(String ownedBy);
+    ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
+            String systemId);
+
+    ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
+            String systemId);
 
     // All UPDATE operations
     Series handleUpdate(@NotNull final String systemId,
