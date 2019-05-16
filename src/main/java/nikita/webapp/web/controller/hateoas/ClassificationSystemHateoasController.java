@@ -301,8 +301,7 @@ public class ClassificationSystemHateoasController
     @ApiOperation(value = "Deletes all ClassificationSystem",
             response = Count.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204,
-                    message = "Deleted all ClassificationSystem",
+            @ApiResponse(code = 204, message = "Deleted all ClassificationSystem",
                     response = Count.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
