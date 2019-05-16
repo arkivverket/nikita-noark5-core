@@ -16,10 +16,6 @@ public interface IRecordHateoasHandler extends IHateoasHandler {
 
     void addDocumentDescription(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewDocumentObject(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
-    void addDocumentObject(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addNewReferenceSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);

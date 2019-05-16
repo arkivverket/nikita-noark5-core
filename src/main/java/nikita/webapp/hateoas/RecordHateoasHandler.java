@@ -18,7 +18,9 @@ import static nikita.common.config.N5ResourceMappings.*;
  * separate calls at the moment.
  */
 @Component("recordHateoasHandler")
-public class RecordHateoasHandler extends HateoasHandler implements IRecordHateoasHandler {
+public class RecordHateoasHandler
+        extends HateoasHandler
+        implements IRecordHateoasHandler {
 
     public RecordHateoasHandler() {
     }
@@ -29,8 +31,6 @@ public class RecordHateoasHandler extends HateoasHandler implements IRecordHateo
         addReferenceSeries(entity, hateoasNoarkObject);
         addNewDocumentDescription(entity, hateoasNoarkObject);
         addDocumentDescription(entity, hateoasNoarkObject);
-        addNewDocumentObject(entity, hateoasNoarkObject);
-        addDocumentObject(entity, hateoasNoarkObject);
         addNewReferenceSeries(entity, hateoasNoarkObject);
         addClassified(entity, hateoasNoarkObject);
         addNewClassified(entity, hateoasNoarkObject);
@@ -63,20 +63,6 @@ public class RecordHateoasHandler extends HateoasHandler implements IRecordHateo
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION + SLASH + entity.getSystemId() + SLASH +
                 DOCUMENT_DESCRIPTION + SLASH, REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION, false));
-    }
-
-    @Override
-    public void addNewDocumentObject(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION + SLASH + entity.getSystemId() + SLASH +
-                NEW_DOCUMENT_OBJECT + SLASH, REL_FONDS_STRUCTURE_NEW_DOCUMENT_OBJECT, false));
-    }
-
-    @Override
-    public void addDocumentObject(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION + SLASH + entity.getSystemId() + SLASH
-                + DOCUMENT_OBJECT + SLASH, REL_FONDS_STRUCTURE_DOCUMENT_OBJECT, false));
     }
 
     @Override
