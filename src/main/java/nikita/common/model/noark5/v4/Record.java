@@ -96,10 +96,6 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
     private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
 
-    // Links to DocumentObjects
-    @OneToMany(mappedBy = "referenceRecord", fetch = FetchType.LAZY)
-    private List<DocumentObject> referenceDocumentObject = new ArrayList<>();
-
     // Links to Classified
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "record_classified_id", referencedColumnName = "pk_classified_id")
@@ -188,15 +184,6 @@ public class Record
     public void addReferenceDocumentDescription(
             DocumentDescription referenceDocumentDescription) {
         this.referenceDocumentDescription.add(referenceDocumentDescription);
-    }
-
-    public List<DocumentObject> getReferenceDocumentObject() {
-        return referenceDocumentObject;
-    }
-
-    public void setReferenceDocumentObject(
-            List<DocumentObject> referenceDocumentObject) {
-        this.referenceDocumentObject = referenceDocumentObject;
     }
 
     @Override

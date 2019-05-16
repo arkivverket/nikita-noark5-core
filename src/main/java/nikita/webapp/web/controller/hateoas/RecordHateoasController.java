@@ -8,17 +8,18 @@ import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.hateoas.*;
+import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v4.secondary.*;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
@@ -26,7 +27,6 @@ import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -48,21 +48,17 @@ public class RecordHateoasController extends NoarkController {
 
     private IRecordService recordService;
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
-    private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
 
     public RecordHateoasController(IRecordService recordService,
                                    IDocumentDescriptionHateoasHandler
                                            documentDescriptionHateoasHandler,
-                                   IDocumentObjectHateoasHandler
-                                           documentObjectHateoasHandler,
                                    IRecordHateoasHandler recordHateoasHandler,
                                    ApplicationEventPublisher
                                            applicationEventPublisher) {
         this.recordService = recordService;
         this.documentDescriptionHateoasHandler = documentDescriptionHateoasHandler;
-        this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
     }
@@ -115,52 +111,6 @@ public class RecordHateoasController extends NoarkController {
                         .eTag(documentDescriptionHateoas.getEntityVersion().toString())
                         .body(documentDescriptionHateoas);
         return body;
-    }
-
-    // Create a new DocumentObject and associate it with the given Record
-    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-dokumentobjekt
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-dokumentobjekt/
-    @ApiOperation(value = "Persists a DocumentObject associated with the given Record systemId",
-            notes = "Returns the newly created DocumentObject after it was associated with a " +
-                    "Record and persisted to the database. A DocumentObject should not be associated with both a " +
-                    "Record and a DocumentDescription. Choose one!", response = DocumentObjectHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DocumentObject " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = DocumentObjectHateoas.class),
-            @ApiResponse(code = 201, message = "DocumentObject " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = DocumentObjectHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type DocumentObject"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_DOCUMENT_OBJECT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
-    public ResponseEntity<String> createDocumentObjectAssociatedWithRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
-            @ApiParam(name = "systemID",
-                    value = "systemId of record to associate the documentObject with.",
-                    required = true)
-            @PathVariable String systemID,
-            @ApiParam(name = "documentObject",
-                    value = "Incoming documentObject object",
-                    required = true)
-            @RequestBody DocumentObject documentObject)
-            throws NikitaException {
-        /*
-        DocumentObjectHateoas documentObjectHateoas =
-                new DocumentObjectHateoas(
-                        recordService.createDocumentObjectAssociatedWithRecord(systemID,
-                                documentObject));
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-           return ResponseEntity.status(HttpStatus.CREATED)
-                .eTag(createdDocumentObject.getVersion().toString())
-                .body(documentObjectHateoas);
-        */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
     // Add a reference to a secondary Series associated with the Record
@@ -529,34 +479,7 @@ public class RecordHateoasController extends NoarkController {
                 .body(documentDescriptionHateoas);
     }
 
-    // Create a DocumentObject with default values
-    // GET [contextPath][api]/arkivstruktur/resgistrering/{systemId}/ny-dokumentobjekt
-    @ApiOperation(value = "Create a DocumentObject with default values", response = DocumentObjectHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DocumentObject returned", response = DocumentObjectHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            NEW_DOCUMENT_OBJECT, method = RequestMethod.GET)
-    public ResponseEntity<DocumentObjectHateoas> createDefaultDocumentObject(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response) {
-
-        DocumentObject defaultDocumentObject = new DocumentObject();
-        // This is just temporary code as this will have to be replaced if this ever goes into production
-        defaultDocumentObject.setMimeType(MediaType.APPLICATION_XML.toString());
-        defaultDocumentObject.setVariantFormat(PRODUCTION_VERSION);
-        defaultDocumentObject.setFormat("XML");
-
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas(defaultDocumentObject);
-        documentObjectHateoasHandler.addLinksOnNew(documentObjectHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentObjectHateoas);
-    }
 
     // Retrieve all DocumentDescriptions associated with a Record identified by systemId
     // GET [contextPath][api]/arkivstruktur/resgistrering/{systemId}/dokumentbeskrivelse

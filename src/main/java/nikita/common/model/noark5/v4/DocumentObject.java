@@ -9,7 +9,6 @@ import nikita.common.model.noark5.v4.interfaces.entities.INoarkCreateEntity;
 import nikita.common.model.noark5.v4.secondary.Conversion;
 import nikita.common.model.noark5.v4.secondary.ElectronicSignature;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.DocumentObjectHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
@@ -128,11 +127,6 @@ public class DocumentObject
     @JoinColumn(name = "document_object_document_description_id",
             referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION)
     private DocumentDescription referenceDocumentDescription;
-
-    // Link to Record
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "document_object_record_id", referencedColumnName = "pk_record_id")
-    private Record referenceRecord;
 
     // Links to Conversion
     @OneToMany(mappedBy = "referenceDocumentObject")
@@ -253,14 +247,6 @@ public class DocumentObject
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
-    public Record getReferenceRecord() {
-        return referenceRecord;
-    }
-
-    public void setReferenceRecord(Record referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
     public List<Conversion> getReferenceConversion() {
         return referenceConversion;
     }
@@ -279,16 +265,6 @@ public class DocumentObject
 
     public void setReferenceElectronicSignature(ElectronicSignature referenceElectronicSignature) {
         this.referenceElectronicSignature = referenceElectronicSignature;
-    }
-
-    public NoarkEntity chooseParent() {
-        if (null != referenceDocumentDescription) {
-            return referenceDocumentDescription;
-        } else if (null != referenceRecord) {
-            return referenceRecord;
-        } else { // This should be impossible, a documentObject cannot exist without a parent
-            throw new NoarkEntityNotFoundException("Could not find parent object for " + this.toString());
-        }
     }
 
     @Override
