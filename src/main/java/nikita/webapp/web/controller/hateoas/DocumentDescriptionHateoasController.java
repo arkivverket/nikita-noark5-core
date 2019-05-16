@@ -30,7 +30,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +43,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH +
         SLASH + DOCUMENT_DESCRIPTION, produces = {NOARK5_V4_CONTENT_TYPE_JSON
         , NOARK5_V4_CONTENT_TYPE_JSON_XML})
+@SuppressWarnings("unchecked")
 public class DocumentDescriptionHateoasController
         extends NoarkController {
 
@@ -148,13 +148,15 @@ public class DocumentDescriptionHateoasController
                     value = "systemID of the documentDescription to retrieve",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        DocumentDescription documentDescription = documentDescriptionService.findBySystemId(systemID);
+        DocumentDescription documentDescription = documentDescriptionService.
+                findBySystemId(systemID);
         if (documentDescription == null) {
             throw new NoarkEntityNotFoundException(systemID);
         }
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas(documentDescription);
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
+                new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(documentDescription.getVersion().toString())
@@ -176,9 +178,7 @@ public class DocumentDescriptionHateoasController
     @Counted
     @GetMapping
     public ResponseEntity<DocumentDescriptionHateoas> findAllDocumentDescription(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip) {
+            HttpServletRequest request) {
         String ownedBy = SecurityContextHolder.getContext().getAuthentication()
                 .getName();
         DocumentDescriptionHateoas documentDescriptionHateoas = new
@@ -192,20 +192,26 @@ public class DocumentDescriptionHateoasController
 
     // Create a DocumentObject with default values
     // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-dokumentobjekt
-    @ApiOperation(value = "Create a DocumentObject with default values", response = DocumentObjectHateoas.class)
+    @ApiOperation(value = "Create a DocumentObject with default values",
+            response = DocumentObjectHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DocumentObject returned", response = DocumentObjectHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200, message = "DocumentObject returned",
+                    response = DocumentObjectHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
     @GetMapping(value = SYSTEM_ID_PARAMETER + NEW_DOCUMENT_OBJECT)
     public ResponseEntity<DocumentObjectHateoas> createDefaultDocumentObject(
-            HttpServletRequest request, final HttpServletResponse response) {
+            HttpServletRequest request) {
 
         DocumentObject defaultDocumentObject = new DocumentObject();
-        // This is just temporary code as this will have to be replaced if this ever goes into production
+        // This is just temporary code as this will have to be replaced if
+        // this ever goes into production
         defaultDocumentObject.setMimeType(MediaType.APPLICATION_XML.toString());
         defaultDocumentObject.setVariantFormat(PRODUCTION_VERSION);
         defaultDocumentObject.setFormat("XML");
@@ -213,13 +219,15 @@ public class DocumentDescriptionHateoasController
 
         DocumentObjectHateoas documentObjectHateoas = new
                 DocumentObjectHateoas(defaultDocumentObject);
-        documentObjectHateoasHandler.addLinksOnNew(documentObjectHateoas, new Authorisation());
+        documentObjectHateoasHandler.addLinksOnNew(documentObjectHateoas,
+                new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
     }
 
-    // Retrieve all DocumentObjects associated with a DocumentDescription identified by systemId
+    // Retrieve all DocumentObjects associated with a DocumentDescription
+    // identified by systemId
     // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/dokumentobjekt
     @ApiOperation(value = "Retrieves a list of DocumentObjects associated " +
             "with a DocumentDescription",
@@ -247,7 +255,8 @@ public class DocumentDescriptionHateoasController
         DocumentDescription documentDescription =
                 documentDescriptionService.findBySystemId(systemID);
         if (documentDescription == null) {
-            throw new NoarkEntityNotFoundException("Could not find DocumentDescription object with systemID " +
+            throw new NoarkEntityNotFoundException("Could not find " +
+                    "DocumentDescription object with systemID " +
                     systemID);
         }
         DocumentObjectHateoas documentObjectHateoas = new
@@ -278,7 +287,7 @@ public class DocumentDescriptionHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SYSTEM_ID_PARAMETER)
-    public ResponseEntity<RecordHateoas> deleteDocumentDescriptionBySystemId(
+    public ResponseEntity<RecordHateoas> deleteAllDocumentDescriptionBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the documentDescription to delete",
@@ -288,7 +297,7 @@ public class DocumentDescriptionHateoasController
         DocumentDescription documentDescription =
                 documentDescriptionService.findBySystemId(systemID);
         List<Record> record = new ArrayList<>();
-        record.addAll(documentDescription.getReferenceRecord());
+        documentDescription.getReferenceRecord().addAll(record);
         documentDescriptionService.deleteEntity(systemID);
         RecordHateoas recordHateoas = new RecordHateoas((List)
                 record);
