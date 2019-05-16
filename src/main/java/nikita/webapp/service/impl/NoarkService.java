@@ -50,8 +50,7 @@ public class NoarkService {
     }
 
     protected String getServletPath() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-                .getRequest().toString();
+        return ((ServletRequestAttributes) RequestContextHolder.
+                getRequestAttributes()).getRequest().getServletPath();
     }
-
 }

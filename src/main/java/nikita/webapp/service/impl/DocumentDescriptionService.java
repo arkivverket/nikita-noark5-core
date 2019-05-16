@@ -2,12 +2,19 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +24,11 @@ import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
@@ -33,15 +41,23 @@ public class DocumentDescriptionService
 
     private DocumentObjectService documentObjectService;
     private IDocumentDescriptionRepository documentDescriptionRepository;
+    private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
+    private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
 
     public DocumentDescriptionService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             DocumentObjectService documentObjectService,
-            IDocumentDescriptionRepository documentDescriptionRepository) {
+            IDocumentDescriptionRepository documentDescriptionRepository,
+            IDocumentDescriptionHateoasHandler
+                    documentDescriptionHateoasHandler,
+            IDocumentObjectHateoasHandler documentObjectHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
+        this.documentDescriptionHateoasHandler =
+                documentDescriptionHateoasHandler;
+        this.documentObjectHateoasHandler = documentObjectHateoasHandler;
     }
 
     // All CREATE operations
@@ -51,23 +67,12 @@ public class DocumentDescriptionService
             String documentDescriptionSystemId, DocumentObject documentObject) {
         DocumentObject persistedDocumentObject;
         DocumentDescription documentDescription =
-                documentDescriptionRepository.
-                        findBySystemId(documentDescriptionSystemId);
-        if (documentDescription == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " DocumentDescription, " +
-                    "using documentDescriptionSystemId " +
-                    documentDescriptionSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        } else {
+                getDocumentDescriptionOrThrow(documentDescriptionSystemId);
             documentObject.setReferenceDocumentDescription(documentDescription);
             List<DocumentObject> documentObjects = documentDescription
                     .getReferenceDocumentObject();
             documentObjects.add(documentObject);
-            persistedDocumentObject =
-                    documentObjectService.save(documentObject);
-        }
-        return persistedDocumentObject;
+        return documentObjectService.save(documentObject);
     }
 
     /**
@@ -92,32 +97,45 @@ public class DocumentDescriptionService
         return documentDescriptionRepository.save(documentDescription);
     }
 
-    // All READ operations
-    public List<DocumentDescription> findAll() {
-        return documentDescriptionRepository.findAll();
-    }
-
-    // id
-    public Optional<DocumentDescription> findById(Long id) {
-        return documentDescriptionRepository.findById(id);
-    }
-
     // systemId
-    public DocumentDescription findBySystemId(String systemId) {
-        return getDocumentDescriptionOrThrow(systemId);
+    public ResponseEntity<DocumentDescriptionHateoas>
+    findBySystemId(String systemId) {
+        DocumentDescriptionHateoas documentDescriptionHateoas = new
+                DocumentDescriptionHateoas(
+                getDocumentDescriptionOrThrow(systemId));
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
+                .body(documentDescriptionHateoas);
     }
 
-    // ownedBy
-    public List<DocumentDescription> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ?
-                SecurityContextHolder.getContext().getAuthentication().getName()
-                : ownedBy;
-        return documentDescriptionRepository.findByOwnedBy(ownedBy);
+    public ResponseEntity<DocumentDescriptionHateoas> findAll() {
+        DocumentDescriptionHateoas documentDescriptionHateoas = new
+                DocumentDescriptionHateoas((List<INikitaEntity>)
+                (List) documentDescriptionRepository.findByOwnedBy(getUser()));
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
+                .body(documentDescriptionHateoas);
     }
 
-    // -- All UPDATE operations
-    public DocumentDescription update(DocumentDescription documentDescription) {
-        return documentDescriptionRepository.save(documentDescription);
+    @Override
+    public ResponseEntity<DocumentObjectHateoas>
+    findAllDocumentObjectWithDocumentDescriptionBySystemId(
+            @NotNull String systemId) {
+        DocumentObjectHateoas documentObjectHateoas = new
+                DocumentObjectHateoas((List<INikitaEntity>)
+                (List) getDocumentDescriptionOrThrow(systemId)
+                        .getReferenceDocumentObject());
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(documentObjectHateoas);
     }
 
     // -- All UPDATE operations
@@ -162,7 +180,7 @@ public class DocumentDescriptionService
 
     // All DELETE operations
     @Override
-    public void deleteEntity(@NotNull String documentDescriptionSystemId) {
+    public int deleteEntity(@NotNull String documentDescriptionSystemId) {
         // See issue for a description of why this code was written this way
         // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
         DocumentDescription documentDescription =
@@ -176,6 +194,7 @@ public class DocumentDescriptionService
         entityManager.remove(documentDescription);
         entityManager.flush();
         entityManager.clear();
+        return 1;
     }
 
 

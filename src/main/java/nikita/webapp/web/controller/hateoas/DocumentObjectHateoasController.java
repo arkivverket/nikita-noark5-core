@@ -11,8 +11,6 @@ import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.DocumentDescriptionHateoasHandler;
-import nikita.webapp.hateoas.RecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
@@ -46,22 +44,14 @@ public class DocumentObjectHateoasController
     private IDocumentObjectService documentObjectService;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
-    private DocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
-    private RecordHateoasHandler recordHateoasHandler;
 
     public DocumentObjectHateoasController(
             IDocumentObjectService documentObjectService,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher,
-            DocumentDescriptionHateoasHandler documentDescriptionHateoasHandler,
-            RecordHateoasHandler recordHateoasHandler) {
-
+            ApplicationEventPublisher applicationEventPublisher) {
         this.documentObjectService = documentObjectService;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
-        this.documentDescriptionHateoasHandler =
-                documentDescriptionHateoasHandler;
-        this.recordHateoasHandler = recordHateoasHandler;
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -81,7 +71,8 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER)
+    @GetMapping(value = SYSTEM_ID_PARAMETER,
+            produces = NOARK5_V4_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> findOneDocumentObjectBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",

@@ -2,10 +2,11 @@ package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Optional;
 
 public interface IDocumentDescriptionService {
 
@@ -18,22 +19,22 @@ public interface IDocumentDescriptionService {
             DocumentObject documentObject);
 
     // -- All READ operations
-    List<DocumentDescription> findAll();
+    ResponseEntity<DocumentDescriptionHateoas> findAll();
 
-    Optional<DocumentDescription> findById(Long id);
+    ResponseEntity<DocumentDescriptionHateoas> findBySystemId(
+            @NotNull String systemId);
 
-    DocumentDescription findBySystemId(String systemId);
-
-    List<DocumentDescription> findByOwnedBy(String ownedBy);
+    ResponseEntity<DocumentObjectHateoas>
+    findAllDocumentObjectWithDocumentDescriptionBySystemId(
+            @NotNull String systemId);
 
     // -- All UPDATE operations
     DocumentDescription handleUpdate(@NotNull final String systemId,
                                      @NotNull final Long version,
                                      @NotNull final DocumentDescription
                                              documentDescription);
-
     // -- All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    int deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
 }
