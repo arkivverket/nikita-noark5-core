@@ -23,6 +23,8 @@ import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
 import nikita.common.model.noark5.v4.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedHeaderException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 
 import javax.validation.constraints.NotNull;
@@ -202,6 +204,9 @@ public final class CommonUtils {
 
     public static final class WebUtils {
 
+        private static final Logger logger =
+                LoggerFactory.getLogger(WebUtils.class);
+
         public static void addNorToEnglishNameMap(
                 @NotNull String norwegianName,
                 @NotNull String englishNameDatabase,
@@ -270,6 +275,7 @@ public final class CommonUtils {
 
             HttpMethod[] methods = getMethodsForRequest(servletPath);
             if (null == methods) {
+                logger.error("Error servletPath [" + servletPath + "] has no known HTTP methods");
                 throw new NikitaException("Error servletPath [" + servletPath + "] has no known HTTP methods");
             }
             return methods;
