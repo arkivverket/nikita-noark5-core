@@ -1,5 +1,6 @@
 package nikita.webapp.hateoas;
 
+import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
@@ -12,13 +13,13 @@ import static nikita.common.config.N5ResourceMappings.*;
 /**
  * Created by tsodring on 2/6/17.
  * <p>
- * Used to add DocumentObjectHateoas links with DocumentObject specific information
- * <p>
- * Not sure if there is a difference in what should be returned of links for various CRUD operations so keeping them
- * separate calls at the moment.
+ * Used to add DocumentObjectHateoas links with DocumentObject specific
+ * information
  */
 @Component("documentObjectHateoasHandler")
-public class DocumentObjectHateoasHandler extends HateoasHandler implements IDocumentObjectHateoasHandler {
+public class DocumentObjectHateoasHandler
+        extends HateoasHandler
+        implements IDocumentObjectHateoasHandler {
 
     public DocumentObjectHateoasHandler() {
     }
@@ -27,8 +28,6 @@ public class DocumentObjectHateoasHandler extends HateoasHandler implements IDoc
     public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
 
         // links for primary entities
-        // link to record/documentdescription is one or the other
-        addRecord(entity, hateoasNoarkObject);
         addDocumentDescription(entity, hateoasNoarkObject);
         // links for secondary entities
         addConversion(entity, hateoasNoarkObject);
@@ -71,16 +70,27 @@ public class DocumentObjectHateoasHandler extends HateoasHandler implements IDoc
 
     @Override
     public void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
-                NEW_ELECTRONIC_SIGNATURE + SLASH, REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE, false));
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
+                        NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
+                        NEW_ELECTRONIC_SIGNATURE + SLASH, REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE, false));
     }
 
+    /**
+     * Create a REL/HREF pair for the parent documentDescription associated
+     * with the given DocumentObject
+     *
+     * @param entity             documentObject
+     * @param hateoasNoarkObject hateoasDocumentObject
+     */
     @Override
-    public void addDocumentDescription(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
-                DOCUMENT_DESCRIPTION + SLASH, REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION, false));
+    public void addDocumentDescription(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(
+                entity, new Link(getOutgoingAddress() +
+                        HREF_BASE_DOCUMENT_DESCRIPTION +
+                        getDocumentDescriptionSystemId(entity),
+                        REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION));
     }
 
     @Override
@@ -100,5 +110,23 @@ public class DocumentObjectHateoasHandler extends HateoasHandler implements IDoc
     public void addFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + FORMAT, REL_METADATA_FORMAT, false));
+    }
+
+    // Internal helper methods
+
+    /**
+     * Cast the INikitaEntity entity to a DocumentObject and retrieve the
+     * systemId of the associated DocumentDescription
+     *
+     * @param entity the DocumentObject
+     * @return systemId of the associated DocumentDescription
+     */
+    private String getDocumentDescriptionSystemId(INikitaEntity entity) {
+        if (((DocumentObject) entity).getReferenceDocumentDescription()
+                != null) {
+            return ((DocumentObject) entity).getReferenceDocumentDescription()
+                    .getSystemId();
+        }
+        return null;
     }
 }

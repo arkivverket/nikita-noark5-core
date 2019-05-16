@@ -731,6 +731,11 @@ public final class Constants {
     public static final String DM_OWNED_BY = "ownedBy";
     public static final String SYSTEM = "system";
 
+
+    public static final String HREF_BASE_DOCUMENT_DESCRIPTION =
+            HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
+                    DOCUMENT_OBJECT + SLASH;
+
     private Constants() {
     }
 }

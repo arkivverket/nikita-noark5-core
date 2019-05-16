@@ -2,14 +2,14 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v4.secondary.Conversion;
 import nikita.common.repository.n5v4.IDocumentObjectRepository;
 import nikita.common.util.CommonUtils;
-import nikita.common.util.exceptions.NikitaMalformedInputDataException;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.common.util.exceptions.StorageException;
-import nikita.common.util.exceptions.StorageFileNotFoundException;
+import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
+import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -26,6 +26,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -46,7 +49,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -57,7 +59,10 @@ import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT_FILE_NAME;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpStatus.CREATED;
 
 /**
  * The following methods
@@ -88,13 +93,16 @@ public class DocumentObjectService
     private String incomingDirectoryName = "/data/nikita/storage/incoming";
     @Value("${nikita.application.checksum-algorithm}")
     private String defaultChecksumAlgorithm = "SHA-256";
+    private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
 
     public DocumentObjectService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IDocumentObjectRepository documentObjectRepository) {
+            IDocumentObjectRepository documentObjectRepository,
+            IDocumentObjectHateoasHandler documentObjectHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectRepository = documentObjectRepository;
+        this.documentObjectHateoasHandler = documentObjectHateoasHandler;
     }
 
     // All CREATE operations
@@ -369,32 +377,57 @@ public class DocumentObjectService
 
 
     @Override
-    public Resource loadAsResource(DocumentObject documentObject) {
-        String filename = documentObject.getReferenceDocumentFile();
-        try {
+    public Resource loadAsResource(String systemId, HttpServletRequest request,
+                                   HttpServletResponse response) {
+        DocumentObject documentObject =
+                getDocumentObjectOrThrow(systemId);
 
+        String acceptType = request.getHeader(ACCEPT);
+        if (acceptType != null &&
+                !acceptType.equalsIgnoreCase(documentObject.getMimeType())) {
+            if (!acceptType.equals("*/*")) {
+                throw new NoarkNotAcceptableException("The request [" +
+                        request.getRequestURI() + "] is not acceptable. "
+                        + "You have issued an Accept: " + acceptType +
+                        ", while the mimeType you are trying to retrieve "
+                        + "is [" + documentObject.getMimeType() + "].");
+            }
+        }
+        response.setContentType(documentObject.getMimeType());
+        response.setContentLength(documentObject.getFileSize().intValue());
+        response.addHeader("Content-disposition",
+                "inline; filename=" + documentObject.getOriginalFilename());
+        response.addHeader("Content-Type", documentObject.getMimeType());
+
+        try {
             Path file = getToFile(documentObject);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
                 throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
+                        "Could not read file: " +
+                                documentObject.getReferenceDocumentFile());
             }
         } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException(
-                    "Could not read file: " + filename);
+                    "Could not read file: " +
+                            documentObject.getReferenceDocumentFile());
         }
     }
 
-    // id
-    public Optional<DocumentObject> findById(Long id) {
-        return documentObjectRepository.findById(id);
-    }
+    @Override
+    public ResponseEntity<DocumentObjectHateoas> findBySystemId(
+            String systemId) {
+        DocumentObjectHateoas documentObjectHateoas = new
+                DocumentObjectHateoas(getDocumentObjectOrThrow(systemId));
 
-    // systemId
-    public DocumentObject findBySystemId(String systemId) {
-        return getDocumentObjectOrThrow(systemId);
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
+                new Authorisation());
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(documentObjectHateoas.getEntityVersion().toString())
+                .body(documentObjectHateoas);
     }
 
     // All UPDATE operations
@@ -481,10 +514,9 @@ public class DocumentObjectService
 
     // All DELETE operations
     @Override
-    public void deleteEntity(@NotNull String documentObjectSystemId) {
-        DocumentObject documentObject =
-                getDocumentObjectOrThrow(documentObjectSystemId);
-        documentObjectRepository.delete(documentObject);
+    public int deleteEntity(@NotNull String systemId) {
+        documentObjectRepository.delete(getDocumentObjectOrThrow(systemId));
+        return 1;
     }
 
 
@@ -497,17 +529,28 @@ public class DocumentObjectService
     public long deleteAllByOwnedBy() {
         return documentObjectRepository.deleteByOwnedBy(getUser());
     }
+
     @Override
     //TODO: How do we handle if the document has already been converted?
     // Related metadata is a one:one. So we either overwrite that the
     // original conversion happened or throw an Exception
     // Probably need administrator rights to reconvert document.
-    public DocumentObject convertDocumentToPDF(String documentObjectSystemId) {
+    public ResponseEntity<DocumentObjectHateoas>
+    convertDocumentToPDF(String documentObjectSystemId) {
         DocumentObject originalDocumentObject =
                 getDocumentObjectOrThrow(documentObjectSystemId);
-        return convertDocumentToPDF(originalDocumentObject);
-    }
 
+        DocumentObjectHateoas documentObjectHateoas = new
+                DocumentObjectHateoas(
+                convertDocumentToPDF(originalDocumentObject));
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
+                new Authorisation());
+
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(documentObjectHateoas.getEntityVersion().toString())
+                .body(documentObjectHateoas);
+    }
 
     // All HELPER operations
 
@@ -704,6 +747,63 @@ public class DocumentObjectService
             logger.warn(msg);
             throw new StorageException(msg);
         }
+    }
+
+    @Override
+    public ResponseEntity<DocumentObjectHateoas>
+    handleIncomingFile(String systemID, HttpServletRequest request)
+            throws IOException {
+
+        DocumentObject documentObject = getDocumentObjectOrThrow(systemID);
+        // Following will be needed for uploading file in chunks
+        // String headerContentRange = request.getHeader("content-range");
+        // Content-Range:bytes 737280-819199/845769
+
+        // Check that content-length is set, > 0 and in agreement with the
+        // value set in documentObject
+        Long contentLength = 0L;
+        if (request.getHeader("content-length") == null) {
+            throw new StorageException("Attempt to upload a document without " +
+                    "content-length set. The document was attempted to be " +
+                    "associated with " + documentObject);
+        }
+        contentLength = (long) request.getIntHeader("content-length");
+        if (contentLength < 1) {
+            throw new StorageException("Attempt to upload a document with 0 " +
+                    "or negative content-length set. Actual value was (" +
+                    contentLength + "). The document was attempted to be " +
+                    "associated with " + documentObject);
+        }
+
+
+        // Check that if the content-type is set it should be in agreement
+        // with mimeType value in documentObject
+            /*
+            String headerContentType = request.getHeader("content-type");
+            if (documentObject.getMimeType() != null && !headerContentType.equals(documentObject.getMimeType())) {
+                throw new StorageException("Attempt to upload a document with a content-type set in the header ("
+                        + contentLength + ") that is not the same as the mimeType in documentObject (" +
+                        documentObject.getMimeType() + ").  The document was attempted to be associated with "
+                        + documentObject);
+            }
+*/
+        String originalFilename = request.getHeader("X-File-Name");
+
+        if (null != originalFilename) {
+            documentObject.setOriginalFilename(originalFilename);
+        }
+
+        storeAndCalculateChecksum(request.getInputStream(), documentObject);
+
+        // We need to update the documentObject in the database as checksum
+        // and checksum algorithm are set after the document has been uploaded
+        update(documentObject);
+        DocumentObjectHateoas documentObjectHateoas = new
+                DocumentObjectHateoas(documentObject);
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
+                new Authorisation());
+        return new ResponseEntity<>(documentObjectHateoas, CREATED);
+
     }
 
     /**

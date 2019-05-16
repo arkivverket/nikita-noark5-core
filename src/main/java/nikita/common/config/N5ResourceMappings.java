@@ -1,8 +1,7 @@
 package nikita.common.config;
 
 
-import static nikita.common.config.Constants.DASH;
-import static nikita.common.config.Constants.NEW;
+import static nikita.common.config.Constants.*;
 
 public final class N5ResourceMappings {
 
@@ -59,6 +58,10 @@ public final class N5ResourceMappings {
     public static final String FINALISED_BY = "avsluttetAv";
     public static final String DOCUMENT_MEDIUM = "dokumentmedium";
     public static final String NEW_DOCUMENT_MEDIUM = NEW + Constants.DASH + DOCUMENT_MEDIUM;
+    public static final String SYSTEM_ID_PARAMETER =
+            SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
+
+
 
     // Fonds
     public static final String FONDS_STATUS = "arkivstatus";

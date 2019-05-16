@@ -2,13 +2,16 @@ package nikita.webapp.service.interfaces;
 
 
 import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Optional;
 
 public interface IDocumentObjectService {
 
@@ -25,13 +28,15 @@ public interface IDocumentObjectService {
      * original documentObject
      *
      **/
-    DocumentObject convertDocumentToPDF(String documentObjectSystemId)
+    ResponseEntity<DocumentObjectHateoas>
+    convertDocumentToPDF(String documentObjectSystemId)
             throws Exception;
 
     List<DocumentObject> findDocumentObjectByOwner();
 
-    Resource loadAsResource(DocumentObject documentObject);
-
+    Resource loadAsResource(@NotNull String systemId,
+                            @NotNull HttpServletRequest request,
+                            @NotNull HttpServletResponse response);
 	// -- All CREATE operations
 	DocumentObject save(DocumentObject documentObject);
 
@@ -42,11 +47,13 @@ public interface IDocumentObjectService {
     List<DocumentObject> findDocumentObjectByAnyColumn(String column,
                                                        String value);
 
-	// id
-    Optional<DocumentObject> findById(Long id);
+    ResponseEntity<DocumentObjectHateoas>
+    handleIncomingFile(@NotNull String systemId,
+                       @NotNull HttpServletRequest request) throws IOException;
 
 	// systemId
-    DocumentObject findBySystemId(String systemId);
+    ResponseEntity<DocumentObjectHateoas> findBySystemId(
+            @NotNull String systemId);
 
 	// All UPDATE operations
     DocumentObject handleUpdate(@NotNull final String systemId,
@@ -54,7 +61,7 @@ public interface IDocumentObjectService {
                                 @NotNull final DocumentObject documentObject);
 
 	// All DELETE operations
-	void deleteEntity(@NotNull String systemId);
+    int deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
 }

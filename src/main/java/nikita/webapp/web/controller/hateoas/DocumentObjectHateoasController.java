@@ -6,31 +6,20 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
-import nikita.common.model.noark5.v4.NoarkEntity;
-import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.common.util.exceptions.NoarkNotAcceptableException;
-import nikita.common.util.exceptions.StorageException;
 import nikita.webapp.hateoas.DocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.RecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
-import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,10 +32,10 @@ import java.io.InputStream;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH +
@@ -78,33 +67,28 @@ public class DocumentObjectHateoasController
     // API - All GET Requests (CRUD - READ)
     // Get a documentObject identified by systemID
     // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}
-    @ApiOperation(value = "Retrieves a single DocumentObject entity given a systemId", response = DocumentObject.class)
+    @ApiOperation(value = "Retrieves a single DocumentObject entity " +
+            "identified by given a systemId",
+            response = DocumentObjectHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DocumentObject returned", response = DocumentObject.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200,
+                    message = "DocumentObject returned",
+                    response = DocumentObjectHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = RequestMethod.GET,
-            produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+    @GetMapping(value = SYSTEM_ID_PARAMETER)
     public ResponseEntity<DocumentObjectHateoas> findOneDocumentObjectBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the documentObject to retrieve",
                     required = true)
             @PathVariable("systemID") final String documentObjectSystemId) {
-        DocumentObject createdDocumentObject = documentObjectService.findBySystemId(documentObjectSystemId);
-        if (createdDocumentObject == null) {
-            throw new NoarkEntityNotFoundException(documentObjectSystemId);
-        }
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas(createdDocumentObject);
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdDocumentObject.getVersion().toString())
-                .body(documentObjectHateoas);
+        return documentObjectService.findBySystemId(documentObjectSystemId);
     }
 
     // Get all documentObject
@@ -151,48 +135,38 @@ public class DocumentObjectHateoasController
                     documentObjectService.findDocumentObjectByOwner());
         }
         documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
     }
 
     // Get a file identified by systemID retrievable with referanseFile
     // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/referanseFil
-    @ApiOperation(value = "Downloads a file associated with the documentObject identified by a systemId",
-            response = DocumentObjectHateoas.class)
+    @ApiOperation(value = "Downloads a file associated with the documentObject" +
+            " identified by a systemId", response = DocumentObjectHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "File uploaded successfully", response = DocumentObjectHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200,
+                    message = "File download successful",
+                    response = DocumentObjectHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + REFERENCE_FILE,
-            method = RequestMethod.GET)
+    @GetMapping(value = SYSTEM_ID_PARAMETER + REFERENCE_FILE)
     public void handleFileDownload(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request, HttpServletResponse response,
             @ApiParam(name = "systemID",
-                    value = "systemID of the documentObject that has a file associated with it",
+                    value = "systemID of the documentObject that has a file " +
+                            "associated with it",
                     required = true)
-            @PathVariable("systemID") final String documentObjectSystemId) throws IOException {
-        DocumentObject documentObject = documentObjectService.findBySystemId(documentObjectSystemId);
-        if (documentObject == null) {
-            throw new NoarkEntityNotFoundException(documentObjectSystemId);
-        }
-        Resource fileResource = documentObjectService.loadAsResource(documentObject);
-        String acceptType = request.getHeader(HttpHeaders.ACCEPT);
-        if (acceptType != null &&
-                !acceptType.equalsIgnoreCase(documentObject.getMimeType())) {
-            if (!acceptType.equals("*/*")) {
-                throw new NoarkNotAcceptableException("The request [" + request.getRequestURI() + "] is not acceptable. "
-                        + "You have issued an Accept: " + acceptType + ", while the mimeType you are trying to retrieve "
-                        + "is [" + documentObject.getMimeType() + "].");
-            }
-        }
-        response.setContentType(documentObject.getMimeType());
-        response.setContentLength(documentObject.getFileSize().intValue());
-        response.addHeader("Content-disposition", "inline; filename=" + documentObject.getOriginalFilename());
-        response.addHeader("Content-Type", documentObject.getMimeType());
+            @PathVariable("systemID") final String documentObjectSystemId)
+            throws IOException {
+
+        Resource fileResource = documentObjectService.loadAsResource(
+                documentObjectSystemId, request, response);
 
         InputStream filestream = fileResource.getInputStream();
         try {
@@ -220,72 +194,29 @@ public class DocumentObjectHateoasController
     @ApiOperation(value = "Uploads a file and associates it with the documentObject identified by a systemId",
             response = DocumentObjectHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "File uploaded successfully", response = DocumentObjectHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 201,
+                    message = "File uploaded successfully",
+                    response = DocumentObjectHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + REFERENCE_FILE,
-            method = RequestMethod.POST, headers = "Accept=*/*", produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+    @PostMapping(value = SYSTEM_ID_PARAMETER + REFERENCE_FILE,
+            headers = "Accept=*/*",
+            produces = {NOARK5_V4_CONTENT_TYPE_JSON,
+                    NOARK5_V4_CONTENT_TYPE_JSON_XML})
     public ResponseEntity<DocumentObjectHateoas> handleFileUpload(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
-                    value = "systemID of the documentObject you wish to associate a file with",
+                    value = "systemID of the documentObject you wish to " +
+                            "associate a file with",
                     required = true)
-            @PathVariable("systemID") final String documentObjectSystemId) {
-        try {
-            DocumentObject documentObject = documentObjectService.findBySystemId(documentObjectSystemId);
-            if (documentObject == null) {
-                throw new NoarkEntityNotFoundException(documentObjectSystemId);
-            }
-            InputStream inputStream;
-            // Following will be needed for uploading file in chunks
-            //String headerContentRange = request.getHeader("content-range");//Content-Range:bytes 737280-819199/845769
-
-            // Check that content-length is set, > 0 and in agreement with the value set in documentObject
-            Long contentLength = 0L;
-            if (request.getHeader("content-length") == null) {
-                throw new StorageException("Attempt to upload a document without content-length set. The document " +
-                        "was attempted to be associated with " + documentObject);
-            }
-            contentLength = (long) request.getIntHeader("content-length");
-            if (contentLength < 1) {
-                throw new StorageException("Attempt to upload a document with 0 or negative content-length set. "
-                        + "Actual value was (" + contentLength + "). The document  was attempted to be associated with "
-                        + documentObject);
-            }
-
-
-            // Check that if the content-type is set it should be in agreement
-            // with mimeType value in documentObject
-            /*
-            String headerContentType = request.getHeader("content-type");
-            if (documentObject.getMimeType() != null && !headerContentType.equals(documentObject.getMimeType())) {
-                throw new StorageException("Attempt to upload a document with a content-type set in the header ("
-                        + contentLength + ") that is not the same as the mimeType in documentObject (" +
-                        documentObject.getMimeType() + ").  The document was attempted to be associated with "
-                        + documentObject);
-            }
-*/
-            String originalFilename = request.getHeader("X-File-Name");
-
-            if (null != originalFilename) {
-                documentObject.setOriginalFilename(originalFilename);
-            }
-
-            documentObjectService.storeAndCalculateChecksum(request.getInputStream(), documentObject);
-
-            // We need to update the documentObject in the database as checksum and checksum algorithm are set after
-            // the document has been uploaded
-            documentObjectService.update(documentObject);
-            DocumentObjectHateoas documentObjectHateoas = new
-                    DocumentObjectHateoas(documentObject);
-            documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
-            return new ResponseEntity<>(documentObjectHateoas, HttpStatus.OK);
-        } catch (IOException e) {
-            throw new StorageException(e.toString());
-        }
+            @PathVariable("systemID") final String systemID)
+            throws IOException {
+        return documentObjectService.handleIncomingFile(systemID, request);
     }
 
     // konverterFil
@@ -301,7 +232,6 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
             RIGHT_PARENTHESIS + SLASH + "konverterFil",
             method = RequestMethod.PUT, headers = "Accept=*/*", produces =
@@ -314,61 +244,35 @@ public class DocumentObjectHateoasController
                     required = true)
             @PathVariable("systemID") final String documentObjectSystemId)
             throws Exception {
-
-        DocumentObject documentObject = documentObjectService.
+        return documentObjectService.
                 convertDocumentToPDF(documentObjectSystemId);
-        DocumentObjectHateoas documentObjectHateoas = new
-
-                DocumentObjectHateoas(documentObject);
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(
-                        request.getServletPath()))
-                .eTag(documentObject.getVersion().toString())
-                .body(documentObjectHateoas);
     }
-
 
     // Delete a DocumentObject identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}/
-    @ApiOperation(value = "Deletes a single DocumentObject entity identified by systemID", response = HateoasNoarkObject.class)
+    @ApiOperation(value = "Deletes a single DocumentObject entity identified " +
+            "by systemID", response = Count.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent entity (DocumentDescription or Record) returned", response = HateoasNoarkObject.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204, message = "Delete DocumentObject",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
-    public ResponseEntity<HateoasNoarkObject> deleteDocumentObjectBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+    @DeleteMapping(value = SYSTEM_ID_PARAMETER)
+    public ResponseEntity<Count> deleteDocumentObjectBySystemId(
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the documentObject to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-
-        DocumentObject documentObject = documentObjectService.findBySystemId(systemID);
-        NoarkEntity parentEntity = documentObject.chooseParent();
-        documentObjectService.deleteEntity(systemID);
-        HateoasNoarkObject hateoasNoarkObject;
-        if (parentEntity instanceof DocumentDescription) {
-            hateoasNoarkObject = new DocumentDescriptionHateoas(parentEntity);
-            documentDescriptionHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        } else if (parentEntity instanceof Record) {
-            hateoasNoarkObject = new RecordHateoas(parentEntity);
-            recordHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        } else {
-            throw new NikitaException("Internal error. Could process" + request.getRequestURI());
-        }
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, documentObject));
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(hateoasNoarkObject);
+        return ResponseEntity.
+                status(NO_CONTENT).
+                body(new Count(documentObjectService.deleteEntity(systemID)));
     }
-
 
     // Delete all DocumentObject
     // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/
@@ -388,8 +292,8 @@ public class DocumentObjectHateoasController
         return ResponseEntity.status(NO_CONTENT).
                 body(new Count(documentObjectService.deleteAllByOwnedBy()));
     }
-    
-    
+
+
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a DocumentObject
     // PUT [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}
