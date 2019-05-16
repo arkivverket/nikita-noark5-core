@@ -341,10 +341,10 @@ public final class Constants {
     public static final String API_MESSAGE_MALFORMED_PAYLOAD = "Incoming data is malformed";
 
 
-    public static final String REL_METADATA = "http://rel.arkivverket.no/noark5/v4/api/metadata/";
-    public static final String REL_ADMINISTRATION = "http://rel.arkivverket.no/noark5/v4/api/administrasjon/";
-    public static final String REL_FONDS_STRUCTURE = "http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/";
-    public static final String REL_CASE_HANDLING = "http://rel.arkivverket.no/noark5/v4/api/sakarkiv/";
+    public static final String REL_METADATA = "https://rel.arkivverket.no/noark5/v4/api/metadata/";
+    public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v4/api/administrasjon/";
+    public static final String REL_FONDS_STRUCTURE = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/";
+    public static final String REL_CASE_HANDLING = "https://rel.arkivverket.no/noark5/v4/api/sakarkiv/";
 
     // FondsHateoas REL links
 
