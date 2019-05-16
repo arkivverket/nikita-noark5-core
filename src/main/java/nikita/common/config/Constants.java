@@ -204,8 +204,10 @@ public final class Constants {
     public static final String REFERENCE_FILE = "referanseFil";
 
     // namespace definition
-    public static final String NOARK_CONFORMANCE_REL = "http://rel.arkivverket.no/noark5/v4/api/";
-    public static final String NIKITA_CONFORMANCE_REL = "http://nikita.arkivlab.no/noark5/v4/";
+    public static final String NOARK_CONFORMANCE_REL = "https://rel" +
+            ".arkivverket.no/noark5/v4/api/";
+    public static final String NIKITA_CONFORMANCE_REL = "https://nikita" +
+            ".arkivlab.no/noark5/v4/";
 
     public static final String NOARK_FONDS_STRUCTURE_PATH = "arkivstruktur";
     public static final String NOARK_METADATA_PATH = "metadata";
