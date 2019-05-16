@@ -310,7 +310,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping
+    @DeleteMapping(CLASSIFICATION_SYSTEM)
     public ResponseEntity<Count> deleteAllClassificationSystem() {
         return ResponseEntity.status(NO_CONTENT).
                 body(new Count(classificationSystemService.deleteAllByOwnedBy()));

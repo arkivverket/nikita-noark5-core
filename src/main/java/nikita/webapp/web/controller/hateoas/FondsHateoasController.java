@@ -677,7 +677,7 @@ public class FondsHateoasController extends NoarkController {
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping
+    @DeleteMapping(FONDS)
     public ResponseEntity<Count> deleteAllFonds() {
         return ResponseEntity.status(NO_CONTENT).
                 body(new Count(fondsService.deleteAllByOwnedBy()));
