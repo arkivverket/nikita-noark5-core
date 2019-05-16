@@ -26,7 +26,9 @@ public class APIDetailsSerializer extends StdSerializer<APIDetails> {
             jgen.writeStartObject();
             jgen.writeStringField("href", apiDetail.getHref());
             jgen.writeStringField("rel", apiDetail.getRel());
-            jgen.writeBooleanField("templated", apiDetail.getTemplated());
+            if (apiDetail.getTemplated()) {
+                jgen.writeBooleanField("templated", apiDetail.getTemplated());
+            }
             jgen.writeEndObject();
         }
         jgen.writeEndArray();
