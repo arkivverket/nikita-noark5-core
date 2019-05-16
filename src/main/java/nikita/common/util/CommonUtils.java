@@ -315,9 +315,9 @@ public final class CommonUtils {
                             .toFormatter();
 
             public static ZonedDateTime deserializeDate(String fieldname,
-                                               ObjectNode objectNode,
-                                               StringBuilder errors,
-                                               boolean required) {
+                                                        ObjectNode objectNode,
+                                                        StringBuilder errors,
+                                                        boolean required) {
                 ZonedDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
@@ -1419,7 +1419,10 @@ public final class CommonUtils {
                         jgen.writeStartObject(link.getLinkName());
                         jgen.writeStringField(HREF, link.getHref());
                         jgen.writeStringField(REL, link.getRel());
-                        jgen.writeBooleanField(TEMPLATED, link.getTemplated());
+                        if (link.getTemplated()) {
+                            jgen.writeBooleanField(TEMPLATED,
+                                    link.getTemplated());
+                        }
                         jgen.writeEndObject();
                     }
                     jgen.writeEndArray();
