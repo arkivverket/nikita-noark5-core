@@ -12,12 +12,24 @@ public class Link implements Comparable<Link> {
     private String linkName;
     private String href;
     private String rel;
-    private Boolean templated;
+    private Boolean templated = false;
 
-    public Link(@NotNull String href, @NotNull String rel, @NotNull Boolean templated) {
+    public Link(@NotNull String href, @NotNull String rel,
+                @NotNull Boolean templated) {
         this.href = href;
         this.rel = rel;
         this.templated = templated;
+    }
+
+    /**
+     * Default templated to false
+     *
+     * @param href HTTP address
+     * @param rel  REL key
+     */
+    public Link(@NotNull String href, @NotNull String rel) {
+        this.href = href;
+        this.rel = rel;
     }
 
     public Link(String linkName, @NotNull String href, @NotNull String rel, @NotNull Boolean templated) {
