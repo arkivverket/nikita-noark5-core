@@ -83,7 +83,7 @@ public class DocumentDescriptionService
      * @param documentDescription
      * @return
      */
-
+    @Override
     public DocumentDescription save(DocumentDescription documentDescription) {
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
@@ -97,7 +97,7 @@ public class DocumentDescriptionService
         return documentDescriptionRepository.save(documentDescription);
     }
 
-    // systemId
+    @Override
     public ResponseEntity<DocumentDescriptionHateoas>
     findBySystemId(String systemId) {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
@@ -111,6 +111,7 @@ public class DocumentDescriptionService
                 .body(documentDescriptionHateoas);
     }
 
+    @Override
     public ResponseEntity<DocumentDescriptionHateoas> findAll() {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas((List<INikitaEntity>)
