@@ -10,7 +10,6 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
-import nikita.webapp.util.NoarkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -27,6 +26,7 @@ import java.util.Optional;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -65,8 +65,8 @@ public class FondsCreatorService
      */
     @Override
     public FondsCreator createNewFondsCreator(FondsCreator fondsCreator) {
-        NoarkUtils.NoarkEntity.Create.setNikitaEntityValues(fondsCreator);
-        NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues(fondsCreator);
+        setNikitaEntityValues(fondsCreator);
+        setSystemIdEntityValues(fondsCreator);
         return fondsCreatorRepository.save(fondsCreator);
     }
 
@@ -75,10 +75,10 @@ public class FondsCreatorService
             String fondsCreatorSystemId, Fonds fonds) {
         FondsCreator fondsCreator =
                 getFondsCreatorOrThrow(fondsCreatorSystemId);
-        NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid(fonds);
-        NoarkUtils.NoarkEntity.Create.setNoarkEntityValues(fonds);
+        checkDocumentMediumValid(fonds);
+        setNoarkEntityValues(fonds);
         fonds.setFondsStatus(STATUS_OPEN);
-        NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues(fonds);
+        setFinaliseEntityValues(fonds);
         fonds.getReferenceFondsCreator().add(fondsCreator);
         fondsCreator.getReferenceFonds().add(fonds);
         fondsRepository.save(fonds);
