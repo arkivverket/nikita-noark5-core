@@ -10,8 +10,6 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  */
 public interface IDocumentObjectHateoasHandler extends IHateoasHandler {
 
-    void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addDocumentDescription(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
