@@ -171,7 +171,7 @@ public class RecordService
      * the records systemId.
      *
      * @param systemId systemId of the record
-     * @return The list of File packed as a ResponseEntity
+     * @return The parent File packed as a ResponseEntity
      */
     @Override
     public ResponseEntity<FileHateoas>
