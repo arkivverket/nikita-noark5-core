@@ -4,7 +4,10 @@ package nikita.webapp.service.interfaces;
 import nikita.common.model.noark5.v4.BasicRecord;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v4.hateoas.FileHateoas;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -30,6 +33,12 @@ public interface IFileService {
     File findBySystemId(String systemId);
 
     List<File> findByOwnedBy(String ownedBy);
+
+    ResponseEntity<ClassHateoas>
+    findClassAssociatedWithFile(@NotNull final String systemId);
+
+    ResponseEntity<SeriesHateoas>
+    findSeriesAssociatedWithFile(@NotNull final String systemId);
 
     // -- All UPDATE operations
     File handleUpdate(@NotNull String systemId,

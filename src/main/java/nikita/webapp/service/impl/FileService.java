@@ -3,10 +3,14 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v4.BasicRecord;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v4.hateoas.FileHateoas;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.repository.n5v4.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
@@ -15,6 +19,7 @@ import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +30,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
@@ -39,16 +46,22 @@ public class FileService
     private IRecordService recordService;
     private IFileRepository fileRepository;
     private IFileHateoasHandler fileHateoasHandler;
+    private ISeriesHateoasHandler seriesHateoasHandler;
+    private IClassHateoasHandler classHateoasHandler;
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
                        IRecordService recordService,
                        IFileRepository fileRepository,
-                       IFileHateoasHandler fileHateoasHandler) {
+                       IFileHateoasHandler fileHateoasHandler,
+                       ISeriesHateoasHandler seriesHateoasHandler,
+                       IClassHateoasHandler classHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.recordService = recordService;
         this.fileRepository = fileRepository;
         this.fileHateoasHandler = fileHateoasHandler;
+        this.seriesHateoasHandler = seriesHateoasHandler;
+        this.classHateoasHandler = classHateoasHandler;
     }
 
     public FileHateoas save(File file) {
@@ -128,6 +141,48 @@ public class FileService
     @Override
     public File findBySystemId(String systemId) {
         return getFileOrThrow(systemId);
+    }
+
+    /**
+     * Retrieve all Class associated with the file identified by
+     * the files systemId.
+     *
+     * @param systemId systemId of the file
+     * @return The parent Class packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<ClassHateoas>
+    findClassAssociatedWithFile(@NotNull final String systemId) {
+        ClassHateoas classHateoas = new ClassHateoas(
+                fileRepository.findBySystemId(systemId).
+                        getReferenceClass());
+
+        classHateoasHandler.addLinks(classHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(classHateoas.getEntityVersion().toString())
+                .body(classHateoas);
+    }
+
+    /**
+     * Retrieve all Series associated with the file identified by
+     * the files systemId.
+     *
+     * @param systemId systemId of the file
+     * @return The parent Series packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<SeriesHateoas>
+    findSeriesAssociatedWithFile(@NotNull final String systemId) {
+        SeriesHateoas seriesHateoas = new SeriesHateoas(
+                fileRepository.findBySystemId(systemId).
+                        getReferenceSeries());
+
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(seriesHateoas.getEntityVersion().toString())
+                .body(seriesHateoas);
     }
 
     // All UPDATE operations

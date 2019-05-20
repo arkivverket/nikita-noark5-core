@@ -437,6 +437,55 @@ public class FileHateoasController
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
+    // Retrieve all Series associated with File identified by a systemId
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/arkivdel
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
+    @ApiOperation(value = "Retrieves a single Series entity given a systemId",
+            response = SeriesHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Series returned", response = SeriesHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + SERIES)
+    public ResponseEntity<SeriesHateoas> findParentSeriesByFileSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the series to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return fileService.findSeriesAssociatedWithFile(systemID);
+    }
+
+    // Retrieve all Class associated with File identified by a systemId
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
+    @ApiOperation(value = "Retrieves a single Class entity given a systemId",
+            response = ClassHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Class returned", response = ClassHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CLASS)
+    public ResponseEntity<ClassHateoas> findParentClassByFileSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the class to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return fileService.findClassAssociatedWithFile(systemID);
+    }
+    
+    
     // Retrieve all BasicRecords associated with File identified by systemId
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/undermappe
     // REL http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/undermappe/
