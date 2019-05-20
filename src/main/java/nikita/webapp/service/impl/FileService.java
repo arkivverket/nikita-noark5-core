@@ -14,7 +14,6 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
-import nikita.webapp.util.NoarkUtils;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,9 +76,9 @@ public class FileService
 
     @Override
     public File createFile(File file) {
-        NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid(file);
-        NoarkUtils.NoarkEntity.Create.setNoarkEntityValues(file);
-        NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues(file);
+        checkDocumentMediumValid(file);
+        setNoarkEntityValues(file);
+        setFinaliseEntityValues(file);
         return fileRepository.save(file);
     }
 
