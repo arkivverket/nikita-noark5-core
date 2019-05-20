@@ -16,9 +16,6 @@ import static nikita.common.config.N5ResourceMappings.*;
  * Created by tsodring on 2/6/17.
  * <p>
  * Used to add RecordHateoas links with Record specific information
- * <p>
- * Not sure if there is a difference in what should be returned of links for various CRUD operations so keeping them
- * separate calls at the moment.
  */
 @Component("recordHateoasHandler")
 public class RecordHateoasHandler
@@ -31,15 +28,14 @@ public class RecordHateoasHandler
     @Override
     public void addEntityLinks(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
-
+        // Add the child links
+        addDocumentDescription(entity, hateoasNoarkObject);
+        addNewDocumentDescription(entity, hateoasNoarkObject);
         // Add the parent links
         addReferenceSeries(entity, hateoasNoarkObject);
         addReferenceFile(entity, hateoasNoarkObject);
         addReferenceClass(entity, hateoasNoarkObject);
-
-        addNewDocumentDescription(entity, hateoasNoarkObject);
-        addDocumentDescription(entity, hateoasNoarkObject);
-        addNewReferenceSeries(entity, hateoasNoarkObject);
+        // Add the secondary entity links
         addClassified(entity, hateoasNoarkObject);
         addNewClassified(entity, hateoasNoarkObject);
         addDisposal(entity, hateoasNoarkObject);
