@@ -1,5 +1,6 @@
 package nikita.webapp.hateoas;
 
+import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
@@ -18,7 +19,9 @@ import static nikita.common.config.N5ResourceMappings.*;
  * separate calls at the moment.
  */
 @Component("documentDescriptionHateoasHandler")
-public class DocumentDescriptionHateoasHandler extends HateoasHandler implements IDocumentDescriptionHateoasHandler {
+public class DocumentDescriptionHateoasHandler
+        extends HateoasHandler
+        implements IDocumentDescriptionHateoasHandler {
 
     public DocumentDescriptionHateoasHandler() {
     }
@@ -49,11 +52,22 @@ public class DocumentDescriptionHateoasHandler extends HateoasHandler implements
         addDocumentStatus(entity, hateoasNoarkObject);
     }
 
+    /**
+     * Create a REL/HREF pair for the parent Record associated
+     * with the given DocumentDescription
+     * <p>
+     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/registrering"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/registrering/"
+     *
+     * @param entity             documentDescription
+     * @param hateoasNoarkObject hateoasDocumentObject
+     */
     @Override
-    public void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH +
-                REGISTRATION + SLASH, REL_FONDS_STRUCTURE_RECORD, false));
+    public void addRecord(INikitaEntity entity,
+                          IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_DOCUMENT_DESCRIPTION + entity.getSystemId() + SLASH +
+                REGISTRATION, REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override
@@ -193,4 +207,20 @@ public class DocumentDescriptionHateoasHandler extends HateoasHandler implements
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + DOCUMENT_TYPE, REL_METADATA_DOCUMENT_TYPE, false));
     }
+
+    /**
+     * Cast the INikitaEntity entity to a DocumentObject and retrieve the
+     * systemId of the associated DocumentDescription
+     *
+     * @param entity the DocumentObject
+     * @return systemId of the associated DocumentDescription
+     */
+    private String getRecordSystemId(INikitaEntity entity) {
+        if (((DocumentDescription) entity).getReferenceRecord() != null) {
+            return ((DocumentDescription) entity).getReferenceDocumentDescription()
+                    .getSystemId();
+        }
+        return null;
+    }
+
 }
