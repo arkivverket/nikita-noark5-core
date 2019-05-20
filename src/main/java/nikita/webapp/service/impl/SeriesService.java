@@ -171,7 +171,7 @@ public class SeriesService
      */
     @Override
     public ResponseEntity<ClassificationSystemHateoas>
-    findClassificationSystemAssociatedWithClass(
+    findClassificationSystemAssociatedWithSeries(
             @NotNull final String systemId) {
         ClassificationSystemHateoas classificationSystemHateoas =
                 new ClassificationSystemHateoas(
@@ -181,7 +181,6 @@ public class SeriesService
                 new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(classificationSystemHateoas.getEntityVersion().toString())
                 .body(classificationSystemHateoas);
     }
 

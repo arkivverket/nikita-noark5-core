@@ -640,7 +640,7 @@ public class SeriesHateoasController
                     value = "systemID of the Series ",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        return seriesService.findClassificationSystemAssociatedWithClass(
+        return seriesService.findClassificationSystemAssociatedWithSeries(
                 systemID);
     }
 

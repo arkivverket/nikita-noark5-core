@@ -46,7 +46,7 @@ public interface ISeriesService {
             String systemId);
 
     ResponseEntity<ClassificationSystemHateoas>
-    findClassificationSystemAssociatedWithClass(String systemId);
+    findClassificationSystemAssociatedWithSeries(String systemId);
 
     ResponseEntity<FondsHateoas> findFondsAssociatedWithSeries(
             @NotNull final String systemId);
