@@ -4,18 +4,13 @@ import nikita.common.model.noark5.v4.ClassificationSystem;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
-import nikita.common.model.noark5.v4.hateoas.FileHateoas;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.ISeriesRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
-import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
+import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
@@ -58,6 +53,9 @@ public class SeriesService
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
     private IFileHateoasHandler fileHateoasHandler;
+    private IFondsHateoasHandler fondsHateoasHandler;
+    private IClassificationSystemHateoasHandler
+            classificationSystemHateoasHandler;
 
     public SeriesService(
             EntityManager entityManager,
@@ -68,7 +66,10 @@ public class SeriesService
             ISeriesRepository seriesRepository,
             ISeriesHateoasHandler seriesHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
-            IFileHateoasHandler fileHateoasHandler) {
+            IFileHateoasHandler fileHateoasHandler,
+            IFondsHateoasHandler fondsHateoasHandler,
+            IClassificationSystemHateoasHandler
+                    classificationSystemHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.fileService = fileService;
         this.caseFileService = caseFileService;
@@ -77,7 +78,9 @@ public class SeriesService
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
-
+        this.fondsHateoasHandler = fondsHateoasHandler;
+        this.classificationSystemHateoasHandler =
+                classificationSystemHateoasHandler;
     }
 
     // All CREATE operations
@@ -155,6 +158,54 @@ public class SeriesService
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(fileHateoas);
+    }
+
+
+    /**
+     * Retrieve the list of ClassificationSystemHateoas object associated with
+     * the Series object identified by systemId
+     *
+     * @param systemId The systemId of the Series object to retrieve the
+     *                 associated ClassificationSystemHateoas
+     * @return A ClassificationSystemHateoas list packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<ClassificationSystemHateoas>
+    findClassificationSystemAssociatedWithClass(
+            @NotNull final String systemId) {
+        ClassificationSystemHateoas classificationSystemHateoas =
+                new ClassificationSystemHateoas(
+                        getSeriesOrThrow(systemId).
+                                getReferenceClassificationSystem());
+        classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(classificationSystemHateoas.getEntityVersion().toString())
+                .body(classificationSystemHateoas);
+    }
+
+    /**
+     * Retrieve the list of FondsHateoas object associated with
+     * the Series object identified by systemId
+     *
+     * @param systemId The systemId of the Series object to retrieve the
+     *                 associated FondsHateoas
+     * @return A FondsHateoas list packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<FondsHateoas> findFondsAssociatedWithSeries(
+            @NotNull final String systemId) {
+        FondsHateoas fondsHateoas =
+                new FondsHateoas(
+                        getSeriesOrThrow(systemId).
+                                getReferenceFonds());
+        fondsHateoasHandler.addLinks(fondsHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(fondsHateoas.getEntityVersion().toString())
+                .body(fondsHateoas);
     }
 
     // id

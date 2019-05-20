@@ -10,6 +10,7 @@ import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.ClassificationSystem;
 import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.application.FondsStructureDetails;
 import nikita.webapp.service.application.ApplicationService;
@@ -164,6 +165,36 @@ public class ClassificationSystemHateoasController
                 .body(classificationSystemHateoas);
     }
 
+
+    // Retrieve all Series associated with the ClassificationSystem
+    // identified by the given systemId
+    // GET [contextPath][api]/arkivstruktur/klassifikasjonssystem/{systemId}/arkivdel
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
+    @ApiOperation(value = "Retrieves a a list of Series that are parents of " +
+            " the ClassificationSystem entity identified by systemId",
+            response = ClassificationSystemHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "ClassificationSystem returned",
+                    response = ClassificationSystemHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + SERIES)
+    public ResponseEntity<SeriesHateoas>
+    findParentClassificationSystemByFileSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the classificationSystem",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return classificationSystemService.
+                findSeriesAssociatedWithClassificationSystem(systemID);
+    }
+
     @ApiOperation(value = "Retrieves multiple ClassificationSystem entities " +
             "limited by ownership rights",
             response = ClassificationSystemHateoas.class)
@@ -265,7 +296,7 @@ public class ClassificationSystemHateoasController
     }
 
     // Delete a ClassificationSystem identified by systemID
-    // DELETE [contextPath][api]/arkivstruktur/klassifikasjonsystem/{systemId}/
+    // DELETE [contextPath][api]/arkivstruktur/klassifikasjonssystem/{systemId}/
     @ApiOperation(value = "Deletes a single ClassificationSystem entity " +
             "identified by systemID", response = FondsStructureDetails.class)
     @ApiResponses(value = {
@@ -297,7 +328,7 @@ public class ClassificationSystemHateoasController
 
 
     // Delete all ClassificationSystem
-    // DELETE [contextPath][api]/arkivstruktur/klassifikasjonsystem/
+    // DELETE [contextPath][api]/arkivstruktur/klassifikasjonssystem/
     @ApiOperation(value = "Deletes all ClassificationSystem",
             response = Count.class)
     @ApiResponses(value = {
@@ -318,7 +349,7 @@ public class ClassificationSystemHateoasController
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a ClassificationSystem
-    // PUT [contextPath][api]/arkivstruktur/klassifikasjonsystem/{systemID}
+    // PUT [contextPath][api]/arkivstruktur/klassifikasjonssystem/{systemID}
     @ApiOperation(value = "Updates a ClassificationSystem object",
             notes = "Returns the newly updated ClassificationSystem object " +
                     "after it is persisted to the database",

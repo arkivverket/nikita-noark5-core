@@ -683,6 +683,36 @@ public class SeriesHateoasController
         return seriesService.findAllFileAssociatedWithSeries(systemID);
     }
 
+    // Retrieve all ClassificationSystem associated with Series identified by a
+    // systemId
+    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/klassifikasjonsystem
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klassifikasjonsystem/
+    @ApiOperation(value = "Retrieves a single ClassificationSystem that is " +
+            "the parent of the Series entity identified by systemId",
+            response = ClassificationSystemHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "ClassificationSystem returned",
+                    response = ClassificationSystemHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CLASSIFICATION_SYSTEM)
+    public ResponseEntity<ClassificationSystemHateoas>
+    findParentClassificationSystemByFileSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the Series ",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return seriesService.findClassificationSystemAssociatedWithClass(
+                systemID);
+    }
+
+
     // Retrieve all CaseFiles associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/saksmappe/
     @ApiOperation(value = "Retrieves a list of CaseFiles associated with a Series", notes = "The field skip" +

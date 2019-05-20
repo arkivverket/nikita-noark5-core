@@ -4,11 +4,9 @@ import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v4.hateoas.FileHateoas;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 
@@ -37,6 +35,12 @@ public interface IClassService {
     ClassHateoas findSingleClass(String classSystemId);
 
     ClassHateoas findAllChildren(@NotNull String classSystemId);
+
+    ResponseEntity<ClassHateoas>
+    findClassAssociatedWithClass(@NotNull final String systemId);
+
+    ResponseEntity<ClassificationSystemHateoas>
+    findClassificationSystemAssociatedWithClass(@NotNull final String systemId);
 
     // All UPDATE operations
     ClassHateoas handleUpdate(@NotNull final String systemId,

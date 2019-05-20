@@ -10,6 +10,7 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.IClassRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassService;
@@ -20,6 +21,7 @@ import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +31,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Service class for Class
@@ -54,6 +58,8 @@ public class ClassService
     private ICaseFileService caseFileService;
     private IRecordService recordService;
     private IClassHateoasHandler classHateoasHandler;
+    private IClassificationSystemHateoasHandler
+            classificationSystemHateoasHandler;
 
     public ClassService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -61,14 +67,17 @@ public class ClassService
                         IFileService fileService,
                         ICaseFileService caseFileService,
                         IRecordService recordService,
-                        IClassHateoasHandler classHateoasHandler) {
+                        IClassHateoasHandler classHateoasHandler,
+                        IClassificationSystemHateoasHandler
+                                classificationSystemHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.classRepository = classRepository;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
         this.recordService = recordService;
         this.classHateoasHandler = classHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
+        this.classificationSystemHateoasHandler =
+                classificationSystemHateoasHandler;
     }
 
     // All CREATE operations
@@ -229,20 +238,64 @@ public class ClassService
     }
 
     /**
-     * Retrieve a list of children class beloning to the class object identified
-     * by systemId
+     * Retrieve a list of children class belonging to the class object
+     * identified by systemId
      *
      * @param classSystemId The systemId of the Class object to retrieve its
      *                      children
-     * @return A ClassHateoas object containing the chidlren class's
+     * @return A ClassHateoas object containing the children class's
      */
     @Override
+    @SuppressWarnings("unchecked")
     public ClassHateoas findAllChildren(@NotNull String classSystemId) {
         ClassHateoas classHateoas = new
                 ClassHateoas((List<INikitaEntity>)
                 (List) getClassOrThrow(classSystemId).getReferenceChildClass());
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
+    }
+
+    /**
+     * Retrieve the parent Class object associated with the Class object
+     * identified by systemId
+     *
+     * @param systemId The systemId of the Class object to retrieve its parent
+     *                 Class
+     * @return A ClassHateoas object packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<ClassHateoas>
+    findClassAssociatedWithClass(@NotNull final String systemId) {
+        ClassHateoas classHateoas = new ClassHateoas(
+                getClassOrThrow(systemId).getReferenceParentClass());
+        classHateoasHandler.addLinks(classHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(classHateoas.getEntityVersion().toString())
+                .body(classHateoas);
+    }
+
+
+    /**
+     * Retrieve the ClassificationSystemHateoas object associated with the
+     * Class object identified by systemId
+     *
+     * @param systemId The systemId of the Class object to retrieve the
+     *                 associated ClassificationSystemHateoas
+     * @return A ClassificationSystemHateoas object packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<ClassificationSystemHateoas>
+    findClassificationSystemAssociatedWithClass(@NotNull final String systemId) {
+        ClassificationSystemHateoas classificationSystemHateoas =
+                new ClassificationSystemHateoas(
+                        getClassOrThrow(systemId).getReferenceClassificationSystem());
+        classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(classificationSystemHateoas.getEntityVersion().toString())
+                .body(classificationSystemHateoas);
     }
 
     // All UPDATE operations

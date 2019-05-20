@@ -10,10 +10,7 @@ import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v4.hateoas.FileHateoas;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.IClassService;
@@ -320,6 +317,60 @@ public class ClassHateoasController
                 .body(classHateoas);
     }
 
+    // Retrieve all ClassificationSystem associated with Class identified by a
+    // systemId
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/klassifikasjonsystem
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klassifikasjonsystem/
+    @ApiOperation(value = "Retrieves a single ClassificationSystem that is " +
+            "the parent of the Class entity identified by systemId",
+            response = ClassificationSystemHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "ClassificationSystem returned",
+                    response = ClassificationSystemHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CLASSIFICATION_SYSTEM)
+    public ResponseEntity<ClassificationSystemHateoas>
+    findParentClassificationSystemByFileSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the classificationSystem to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return classService.findClassificationSystemAssociatedWithClass(
+                systemID);
+    }
+
+    // Retrieve all Class associated with Class identified by a systemId
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/klasse
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
+    @ApiOperation(value = "Retrieves a single Class that is  the parent of " +
+            "the Class entity identified by systemId",
+            response = ClassificationSystemHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Class returned", response = ClassHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CLASS)
+    public ResponseEntity<ClassHateoas> findParentClassByClassSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the class to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return classService.findClassAssociatedWithClass(systemID);
+    }
+    
     // Return a Class object with default values
     //GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-underklasse
     @ApiOperation(
@@ -339,7 +390,6 @@ public class ClassHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @GetMapping(value =
             LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CLASS
     )

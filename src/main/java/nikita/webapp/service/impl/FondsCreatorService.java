@@ -2,14 +2,19 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.Fonds;
 import nikita.common.model.noark5.v4.FondsCreator;
+import nikita.common.model.noark5.v4.hateoas.FondsHateoas;
+import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.IFondsCreatorRepository;
 import nikita.common.repository.n5v4.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.util.NoarkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +26,8 @@ import java.util.Optional;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
@@ -32,15 +39,18 @@ public class FondsCreatorService
             getLogger(FondsCreatorService.class);
     private IFondsCreatorRepository fondsCreatorRepository;
     private IFondsRepository fondsRepository;
+    private IFondsHateoasHandler fondsHateoasHandler;
 
-    public FondsCreatorService(EntityManager entityManager,
-                               ApplicationEventPublisher
-                                       applicationEventPublisher,
-                               IFondsCreatorRepository fondsCreatorRepository,
-                               IFondsRepository fondsRepository) {
+    public FondsCreatorService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IFondsCreatorRepository fondsCreatorRepository,
+            IFondsRepository fondsRepository,
+            IFondsHateoasHandler fondsHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.fondsCreatorRepository = fondsCreatorRepository;
         this.fondsRepository = fondsRepository;
+        this.fondsHateoasHandler = fondsHateoasHandler;
     }
 
     // All CREATE operations
@@ -90,6 +100,31 @@ public class FondsCreatorService
     @Override
     public FondsCreator findBySystemId(String systemId) {
         return getFondsCreatorOrThrow(systemId);
+    }
+
+    /**
+     * Retrieve the list of FondsHateoas object associated with
+     * the FondsCreator object identified by systemId
+     *
+     * @param systemId The systemId of the FondsCreator object to retrieve the
+     *                 associated FondsHateoas
+     * @return A FondsHateoas list packed as a ResponseEntity
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public ResponseEntity<FondsHateoas> findFondsAssociatedWithFondsCreator(
+            @NotNull final String systemId) {
+        FondsHateoas fondsHateoas =
+                new FondsHateoas(
+                        (List<INikitaEntity>) (List)
+                                getFondsCreatorOrThrow(systemId).
+                                        getReferenceFonds());
+        fondsHateoasHandler.addLinks(fondsHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(fondsHateoas.getEntityVersion().toString())
+                .body(fondsHateoas);
     }
 
     // All UPDATE operations

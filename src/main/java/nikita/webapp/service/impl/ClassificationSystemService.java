@@ -4,11 +4,13 @@ import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.ClassificationSystem;
 import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.IClassificationSystemRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
+import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
@@ -18,6 +20,7 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +29,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Service class for ClassificationSystem.
@@ -53,22 +58,24 @@ public class ClassificationSystemService
     private IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
+    private ISeriesHateoasHandler seriesHateoasHandler;
 
-    public ClassificationSystemService(EntityManager entityManager,
-                                       ApplicationEventPublisher
-                                               applicationEventPublisher,
-                                       IClassService classService,
-                                       IClassificationSystemRepository
-                                               classificationSystemRepository,
-                                       IClassificationSystemHateoasHandler
-                                               classificationSystemHateoasHandler,
-                                       IClassHateoasHandler classHateoasHandler) {
+    public ClassificationSystemService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IClassService classService,
+            IClassificationSystemRepository classificationSystemRepository,
+            IClassificationSystemHateoasHandler
+                    classificationSystemHateoasHandler,
+            IClassHateoasHandler classHateoasHandler,
+            ISeriesHateoasHandler seriesHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.classService = classService;
         this.classificationSystemRepository = classificationSystemRepository;
         this.classificationSystemHateoasHandler =
                 classificationSystemHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
+        this.seriesHateoasHandler = seriesHateoasHandler;
     }
 
     // All CREATE operations
@@ -206,6 +213,20 @@ public class ClassificationSystemService
                 (List) classificationSystem.getReferenceClass());
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
+    }
+
+    @Override
+    public ResponseEntity<SeriesHateoas>
+    findSeriesAssociatedWithClassificationSystem(@NotNull final String systemId) {
+        SeriesHateoas seriesHateoas = new
+                SeriesHateoas((List<INikitaEntity>)
+                (List) getClassificationSystemOrThrow(systemId).
+                        getReferenceSeries());
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(seriesHateoas.getEntityVersion().toString())
+                .body(seriesHateoas);
     }
 
     // All UPDATE operations

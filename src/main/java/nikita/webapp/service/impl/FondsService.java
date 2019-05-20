@@ -22,6 +22,7 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,9 @@ import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
@@ -199,33 +202,6 @@ public class FondsService
     // All READ operations
 
     /**
-     * Retrieve a list of FondsCreator objects associated with a given Fonds
-     * from the database. First we try to locate the Fonds object. If the
-     * Fonds object does not exist a NoarkEntityNotFoundException exception
-     * is thrown that the caller has to deal with.
-     * <p>
-     * If any FondsCreator objects exist, they are wrapped in a
-     * FondsCreatorHateoas object and returned to the caller.
-     *
-     * @param fondsSystemId The systemId of the Fonds object that you want to
-     *                      retrieve associated FondsCreator objects
-     * @return the fondsCreator objects wrapped as a FondsCreatorHateoas object
-     */
-    @Override
-    public FondsCreatorHateoas findFondsCreatorAssociatedWithFonds(
-            @NotNull String fondsSystemId) {
-
-        Fonds fonds = getFondsOrThrow(fondsSystemId);
-
-        FondsCreatorHateoas fondsCreatorHateoas = new
-                FondsCreatorHateoas((List<INikitaEntity>)
-                (List) fonds.getReferenceFondsCreator());
-        fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas,
-                new Authorisation());
-        return fondsCreatorHateoas;
-    }
-
-    /**
      * Retrieve a list of Series objects associated with a given Fonds
      * from the database. First we try to locate the Fonds object. If the
      * Fonds object does not exist a NoarkEntityNotFoundException exception
@@ -334,6 +310,34 @@ public class FondsService
                 (List) typedQuery.getResultList());
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         return fondsHateoas;
+    }
+
+    /**
+     * Retrieve a list of FondsCreator objects associated with a given Fonds
+     * from the database. First we try to locate the Fonds object. If the
+     * Fonds object does not exist a NoarkEntityNotFoundException exception
+     * is thrown that the caller has to deal with.
+     * <p>
+     * If any FondsCreator objects exist, they are wrapped in a
+     * FondsCreatorHateoas object and returned to the caller.
+     *
+     * @param systemId The systemId of the Fonds object that you want to
+     *                 retrieve associated FondsCreator objects
+     * @return the fondsCreator objects wrapped as a FondsCreatorHateoas object
+     */
+    @Override
+    public ResponseEntity<FondsCreatorHateoas>
+    findFondsCreatorAssociatedWithFonds(@NotNull final String systemId) {
+        FondsCreatorHateoas fondsCreatorHateoas =
+                new FondsCreatorHateoas(
+                        (List<INikitaEntity>) (List)
+                                getFondsOrThrow(systemId).
+                                        getReferenceFondsCreator());
+        fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(fondsCreatorHateoas);
     }
 
     /**

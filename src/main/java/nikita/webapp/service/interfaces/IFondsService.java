@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v4.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,8 +26,6 @@ public interface IFondsService  {
                                                               FondsCreator fondsCreator);
 
     // -- All READ operations
-    FondsCreatorHateoas findFondsCreatorAssociatedWithFonds(String systemId);
-
     // TODO: Finish implementing this. I think StorageLocation is not an own
     // but rather an embedded object
     //StorageLocationHateoas findStorageLocationAssociatedWithFonds(String systemId);
@@ -35,6 +34,9 @@ public interface IFondsService  {
     FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip);
 
     SeriesHateoas findSeriesAssociatedWithFonds(String fondsSystemId);
+
+    ResponseEntity<FondsCreatorHateoas>
+    findFondsCreatorAssociatedWithFonds(@NotNull final String systemId);
 
     SeriesHateoas generateDefaultSeries(String fondsSystemId);
 

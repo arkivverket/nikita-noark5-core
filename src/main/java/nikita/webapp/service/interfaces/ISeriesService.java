@@ -5,10 +5,7 @@ import nikita.common.model.noark5.v4.ClassificationSystem;
 import nikita.common.model.noark5.v4.File;
 import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
-import nikita.common.model.noark5.v4.hateoas.FileHateoas;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import org.springframework.http.ResponseEntity;
 
@@ -47,6 +44,12 @@ public interface ISeriesService {
 
     ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
             String systemId);
+
+    ResponseEntity<ClassificationSystemHateoas>
+    findClassificationSystemAssociatedWithClass(String systemId);
+
+    ResponseEntity<FondsHateoas> findFondsAssociatedWithSeries(
+            @NotNull final String systemId);
 
     // All UPDATE operations
     Series handleUpdate(@NotNull final String systemId,
