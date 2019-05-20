@@ -3,7 +3,10 @@ package nikita.webapp.web.controller.hateoas;
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.*;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.*;
+import nikita.common.model.noark5.v4.ClassificationSystem;
+import nikita.common.model.noark5.v4.File;
+import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
 import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
@@ -534,40 +537,6 @@ public class SeriesHateoasController
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(series);
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());*/
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .eTag(series.getVersion().toString())
-//                .body(seriesHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    // Retrieve the Fonds associated with a Series given a systemId of the Series
-    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/arkiv/
-    @ApiOperation(value = "Retrieves the Fonds associated wth a Series given a systemId of the Series",
-            response = Fonds.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Fonds returned", response = Fonds.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + FONDS,
-            method = RequestMethod.GET)
-    public ResponseEntity<String> findFondsAssociatedWithSeriesBySystemId(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the Series",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-
-        /*Series series = seriesService.findBySystemId(systemID);
-        if (series == null) {
-            throw new NoarkEntityNotFoundException("Could not find series object with systemID " + systemID);
-        }
-        SeriesHateoas seriesHateoas = new
-                SeriesHateoas(series);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        */
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
