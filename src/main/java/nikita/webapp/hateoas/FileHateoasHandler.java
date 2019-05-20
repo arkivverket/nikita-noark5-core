@@ -56,7 +56,6 @@ public class FileHateoasHandler
         addNewReferenceSecondaryClassification(entity, hateoasNoarkObject);
     }
 
-
     /**
      * Create a REL/HREF pair for the parent Series associated with the given
      * File. Checks if the File is actually associated with a Series. Note every
