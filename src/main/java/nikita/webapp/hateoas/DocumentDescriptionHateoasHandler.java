@@ -1,6 +1,5 @@
 package nikita.webapp.hateoas;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
@@ -207,20 +206,4 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + DOCUMENT_TYPE, REL_METADATA_DOCUMENT_TYPE, false));
     }
-
-    /**
-     * Cast the INikitaEntity entity to a DocumentObject and retrieve the
-     * systemId of the associated DocumentDescription
-     *
-     * @param entity the DocumentObject
-     * @return systemId of the associated DocumentDescription
-     */
-    private String getRecordSystemId(INikitaEntity entity) {
-        if (((DocumentDescription) entity).getReferenceRecord() != null) {
-            return ((DocumentDescription) entity).getReferenceDocumentDescription()
-                    .getSystemId();
-        }
-        return null;
-    }
-
 }
