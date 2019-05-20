@@ -2,12 +2,14 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v4.secondary.Conversion;
 import nikita.common.repository.n5v4.IDocumentObjectRepository;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
+import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
@@ -57,12 +59,12 @@ import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT_FILE_NAME;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * The following methods
@@ -93,16 +95,22 @@ public class DocumentObjectService
     private String incomingDirectoryName = "/data/nikita/storage/incoming";
     @Value("${nikita.application.checksum-algorithm}")
     private String defaultChecksumAlgorithm = "SHA-256";
+
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
+    private IDocumentDescriptionHateoasHandler
+            documentDescriptionHateoasHandler;
 
     public DocumentObjectService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IDocumentObjectRepository documentObjectRepository,
-            IDocumentObjectHateoasHandler documentObjectHateoasHandler) {
+            IDocumentObjectHateoasHandler documentObjectHateoasHandler,
+            IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectRepository = documentObjectRepository;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
+        this.documentDescriptionHateoasHandler =
+                documentDescriptionHateoasHandler;
     }
 
     // All CREATE operations
@@ -424,39 +432,31 @@ public class DocumentObjectService
 
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(documentObjectHateoas.getEntityVersion().toString())
                 .body(documentObjectHateoas);
     }
 
-    // All UPDATE operations
-    public DocumentObject update(DocumentObject documentObject) {
-        return documentObjectRepository.save(documentObject);
-    }
-
-    // All READ operations
     @Override
-    public List<DocumentObject> findDocumentObjectByAnyColumn(String column, String value) {
-        String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<DocumentObject> criteriaQuery = criteriaBuilder.createQuery(DocumentObject.class);
-        Root<DocumentObject> from = criteriaQuery.from(DocumentObject.class);
-        CriteriaQuery<DocumentObject> select = criteriaQuery.select(from);
+    public ResponseEntity<DocumentDescriptionHateoas>
+    findByDocumentDescription(String systemId) {
 
-        if (column.equalsIgnoreCase(DOCUMENT_OBJECT_FILE_NAME)) {
-            column = "originalFilename";
-        }
+        DocumentDescriptionHateoas documentDescriptionHateoas = new
+                DocumentDescriptionHateoas(
+                getDocumentObjectOrThrow(systemId).
+                        getReferenceDocumentDescription());
 
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), loggedInUser));
-        criteriaQuery.where(criteriaBuilder.equal(from.get(column), value));
-        TypedQuery<DocumentObject> typedQuery = entityManager.createQuery(select);
-        return typedQuery.getResultList();
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
+                .body(documentDescriptionHateoas);
     }
 
 
     // All UPDATE operations
-
     /**
      * Updates a DocumentDescription object in the database. First we try to
      * locate the DocumentDescription object. If the DocumentDescription object
@@ -519,14 +519,13 @@ public class DocumentObjectService
         return 1;
     }
 
-
     /**
      * Delete all objects belonging to the user identified by ownedBy
      *
      * @return the number of objects deleted
      */
     @Override
-    public long deleteAllByOwnedBy() {
+    public long deleteAll() {
         return documentObjectRepository.deleteByOwnedBy(getUser());
     }
 
@@ -797,7 +796,7 @@ public class DocumentObjectService
 
         // We need to update the documentObject in the database as checksum
         // and checksum algorithm are set after the document has been uploaded
-        update(documentObject);
+        documentObjectRepository.save(documentObject);
         DocumentObjectHateoas documentObjectHateoas = new
                 DocumentObjectHateoas(documentObject);
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,

@@ -2,6 +2,7 @@ package nikita.webapp.service.interfaces;
 
 
 import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,34 @@ import java.util.List;
 
 public interface IDocumentObjectService {
 
+    // -- All CREATE operations
+    DocumentObject save(@NotNull DocumentObject documentObject);
+
+    // -- All READ operations
+    List<DocumentObject> findDocumentObjectByOwner();
+
+    ResponseEntity<DocumentDescriptionHateoas>
+    findByDocumentDescription(@NotNull String systemId);
+
+    // systemId
+    ResponseEntity<DocumentObjectHateoas> findBySystemId(
+            @NotNull String systemId);
+
+    // All UPDATE operations
+    DocumentObject handleUpdate(@NotNull final String systemId,
+                                @NotNull final Long version,
+                                @NotNull final DocumentObject documentObject);
+
+    // All DELETE operations
+    int deleteEntity(@NotNull String systemId);
+
+    long deleteAll();
+
     // -- File handling operations
 
     void storeAndCalculateChecksum(InputStream inputStream,
                                    DocumentObject documentObject)
             throws IOException;
-
-
     /**
      * Given an systemId for a documentObject, find the documentObject and
      * create a new documentObject with an archive version of the the
@@ -32,36 +54,13 @@ public interface IDocumentObjectService {
     convertDocumentToPDF(String documentObjectSystemId)
             throws Exception;
 
-    List<DocumentObject> findDocumentObjectByOwner();
-
-    Resource loadAsResource(@NotNull String systemId,
-                            @NotNull HttpServletRequest request,
-                            @NotNull HttpServletResponse response);
-	// -- All CREATE operations
-	DocumentObject save(DocumentObject documentObject);
-
-    // -- ALL UPDATE operations
-    DocumentObject update(DocumentObject documentObject);
-
-	// -- All READ operations
-    List<DocumentObject> findDocumentObjectByAnyColumn(String column,
-                                                       String value);
 
     ResponseEntity<DocumentObjectHateoas>
     handleIncomingFile(@NotNull String systemId,
                        @NotNull HttpServletRequest request) throws IOException;
 
-	// systemId
-    ResponseEntity<DocumentObjectHateoas> findBySystemId(
-            @NotNull String systemId);
+    Resource loadAsResource(@NotNull String systemId,
+                            @NotNull HttpServletRequest request,
+                            @NotNull HttpServletResponse response);
 
-	// All UPDATE operations
-    DocumentObject handleUpdate(@NotNull final String systemId,
-                                @NotNull final Long version,
-                                @NotNull final DocumentObject documentObject);
-
-	// All DELETE operations
-    int deleteEntity(@NotNull String systemId);
-
-    long deleteAllByOwnedBy();
 }

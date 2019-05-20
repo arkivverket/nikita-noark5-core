@@ -28,6 +28,8 @@ public interface IDocumentDescriptionService {
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId);
 
+    DocumentDescription findDocumentDescriptionBySystemId(
+            @NotNull String systemId);
     // -- All UPDATE operations
     DocumentDescription handleUpdate(@NotNull final String systemId,
                                      @NotNull final Long version,

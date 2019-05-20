@@ -68,10 +68,10 @@ public class DocumentDescriptionService
         DocumentObject persistedDocumentObject;
         DocumentDescription documentDescription =
                 getDocumentDescriptionOrThrow(documentDescriptionSystemId);
-            documentObject.setReferenceDocumentDescription(documentDescription);
-            List<DocumentObject> documentObjects = documentDescription
-                    .getReferenceDocumentObject();
-            documentObjects.add(documentObject);
+        documentObject.setReferenceDocumentDescription(documentDescription);
+        List<DocumentObject> documentObjects = documentDescription
+                .getReferenceDocumentObject();
+        documentObjects.add(documentObject);
         return documentObjectService.save(documentObject);
     }
 
@@ -109,6 +109,12 @@ public class DocumentDescriptionService
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(documentDescriptionHateoas.getEntityVersion().toString())
                 .body(documentDescriptionHateoas);
+    }
+
+    @Override
+    public DocumentDescription findDocumentDescriptionBySystemId(
+            String systemId) {
+        return getDocumentDescriptionOrThrow(systemId);
     }
 
     @Override

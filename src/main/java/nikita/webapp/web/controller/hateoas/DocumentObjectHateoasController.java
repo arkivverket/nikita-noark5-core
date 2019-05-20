@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
@@ -100,14 +101,40 @@ public class DocumentObjectHateoasController
     public ResponseEntity<DocumentObjectHateoas> findAllDocumentObject(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request) {
         DocumentObjectHateoas documentObjectHateoas = new
-                    DocumentObjectHateoas((List<INikitaEntity>) (List)
-                    documentObjectService.findDocumentObjectByOwner());
+                DocumentObjectHateoas((List<INikitaEntity>) (List)
+                documentObjectService.findDocumentObjectByOwner());
         documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
     }
 
+    // Get a file identified by systemID retrievable with referanseFile
+    // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/dokumentbeskrivelse
+    @ApiOperation(value = "Retrieve the parent documentDescription",
+            response = DocumentDescriptionHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "File download successful",
+                    response = DocumentDescriptionHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + REFERENCE_FILE)
+    public ResponseEntity<DocumentDescriptionHateoas>
+    findDocumentDescriptionAssociatedWithDocumentObject(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the documentObject that has a " +
+                            "documentDescription associated with it",
+                    required = true)
+            @PathVariable("systemID") final String documentObjectSystemId) {
+        return documentObjectService.
+                findByDocumentDescription(documentObjectSystemId);
+    }
 
     // Get a file identified by systemID retrievable with referanseFile
     // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/referanseFil
@@ -259,7 +286,7 @@ public class DocumentObjectHateoasController
     @DeleteMapping
     public ResponseEntity<Count> deleteAllDocumentObject() {
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(documentObjectService.deleteAllByOwnedBy()));
+                body(new Count(documentObjectService.deleteAll()));
     }
 
 
