@@ -369,19 +369,13 @@ public class FondsHateoasController extends NoarkController {
             RIGHT_PARENTHESIS + SLASH + FONDS_CREATOR + SLASH)
     public ResponseEntity<FondsCreatorHateoas>
     findFondsCreatorAssociatedWithFonds(
-            HttpServletRequest request,
             @ApiParam(
                     name = "systemID",
                     value = "systemId of fonds you want retrieve associated " +
                             "FondsCreator objects for.",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-
-        FondsCreatorHateoas fondsCreatorHateoas = fondsService
-                .findFondsCreatorAssociatedWithFonds(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fondsCreatorHateoas);
+        return fondsService.findFondsCreatorAssociatedWithFonds(systemID);
     }
 
     // Get all Series associated with Fonds identified by systemId
