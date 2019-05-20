@@ -3,11 +3,14 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
 import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v4.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
@@ -15,6 +18,8 @@ import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +32,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
+@SuppressWarnings("unchecked")
 public class RecordService
         extends NoarkService
         implements IRecordService {
@@ -40,6 +48,7 @@ public class RecordService
     private DocumentDescriptionService documentDescriptionService;
     private IRecordRepository recordRepository;
     private IRecordHateoasHandler recordHateoasHandler;
+    private IFileHateoasHandler fileHateoasHandler;
     private IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
     private IDocumentDescriptionRepository documentDescriptionRepository;
@@ -50,6 +59,7 @@ public class RecordService
             DocumentDescriptionService documentDescriptionService,
             IRecordRepository recordRepository,
             IRecordHateoasHandler recordHateoasHandler,
+            IFileHateoasHandler fileHateoasHandler,
             IDocumentDescriptionHateoasHandler
                     documentDescriptionHateoasHandler,
             IDocumentDescriptionRepository documentDescriptionRepository) {
@@ -58,6 +68,7 @@ public class RecordService
         this.recordRepository = recordRepository;
         this.entityManager = entityManager;
         this.recordHateoasHandler = recordHateoasHandler;
+        this.fileHateoasHandler = fileHateoasHandler;
         this.documentDescriptionHateoasHandler =
                 documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
@@ -131,6 +142,51 @@ public class RecordService
         return recordRepository.findById(id);
     }
 
+    /**
+     * Retrieve all record associated with the documentDescription identified by
+     * the documentDescriptions systemId.
+     *
+     * @param systemId systemId of the associated documentDescription
+     * @return The list of record packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<RecordHateoas>
+    findByReferenceDocumentDescription(@NotNull final String systemId) {
+        RecordHateoas recordHateoas = new RecordHateoas(
+                (List<INikitaEntity>) (List)
+                        recordRepository.
+                                findAllByReferenceDocumentDescription(
+                                        documentDescriptionService.
+                                                findDocumentDescriptionBySystemId(
+                                                        systemId)));
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(recordHateoas);
+    }
+
+
+    /**
+     * Retrieve all File associated with the record identified by
+     * the records systemId.
+     *
+     * @param systemId systemId of the record
+     * @return The list of File packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<FileHateoas>
+    findFileAssociatedWithRecord(@NotNull final String systemId) {
+        FileHateoas fileHateoas = new FileHateoas(
+                recordRepository.findBySystemId(systemId).
+                        getReferenceFile());
+
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(fileHateoas.getEntityVersion().toString())
+                .body(fileHateoas);
+    }
+
     // systemId
     public Record findBySystemId(String systemId) {
         return getRecordOrThrow(systemId);
@@ -145,7 +201,7 @@ public class RecordService
     }
 
     // All UPDATE operations
-    public Record update(Record record){
+    public Record update(Record record) {
         return recordRepository.save(record);
     }
 
@@ -221,6 +277,7 @@ public class RecordService
         return recordRepository.deleteByOwnedBy(getUser());
     }
     // All HELPER operations
+
     /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. If you call this, be aware

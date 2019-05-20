@@ -3,7 +3,9 @@ package nikita.webapp.service.interfaces;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v4.hateoas.FileHateoas;
 import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -21,6 +23,12 @@ public interface IRecordService {
 
     // -- All READ operations
     List<Record> findAll();
+
+    ResponseEntity<RecordHateoas>
+    findByReferenceDocumentDescription(@NotNull final String systemId);
+
+    ResponseEntity<FileHateoas>
+    findFileAssociatedWithRecord(@NotNull final String systemId);
 
     Optional<Record> findById(Long id);
     Record findBySystemId(String systemId);

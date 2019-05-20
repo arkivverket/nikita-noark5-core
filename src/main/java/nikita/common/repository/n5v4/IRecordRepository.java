@@ -1,5 +1,6 @@
 package nikita.common.repository.n5v4;
 
+import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,9 @@ public interface IRecordRepository extends
     // -- All READ operations
     @Override
     List<Record> findAll();
+
+    List<Record> findAllByReferenceDocumentDescription(
+            DocumentDescription documentDescription);
 
     // id
     Optional<Record> findById(Long id);

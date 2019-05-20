@@ -10,10 +10,7 @@ import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v4.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
@@ -394,6 +391,31 @@ public class RecordHateoasController extends NoarkController {
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(record.getVersion().toString())
                 .body(recordHateoas);
+    }
+
+    // Retrieve a Record identified by a systemId
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/mapperegistrering/
+    @ApiOperation(value = "Retrieves a single File entity given a systemId",
+            response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "File returned", response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + FILE)
+    public ResponseEntity<FileHateoas> findParentFileByRecordSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return recordService.findFileAssociatedWithRecord(systemID);
+
     }
 
     // Retrieve all Records
