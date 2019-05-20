@@ -63,7 +63,9 @@ public class HateoasNoarkObject implements IHateoasNoarkObject {
     }
 
     public HateoasNoarkObject(INikitaEntity entity) {
-        entityList.add(entity);
+        if (entity != null) {
+            entityList.add(entity);
+        }
     }
 
     public HateoasNoarkObject(List<INikitaEntity> entityList,
