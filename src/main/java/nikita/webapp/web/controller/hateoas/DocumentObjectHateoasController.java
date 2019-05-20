@@ -96,40 +96,18 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @RequestMapping(method = RequestMethod.GET, produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
     public ResponseEntity<DocumentObjectHateoas> findAllDocumentObject(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip,
-            @RequestParam(name = "filter", required = false) String filter) {
-
-        String reg = " ";
-        String[] pieces;
-        DocumentObjectHateoas documentObjectHateoas = null;
-
-        if (filter != null) {
-            pieces = filter.split(reg);
-
-            if (pieces.length == 3 && pieces[1].equalsIgnoreCase("eq")) {
-                pieces[2] = pieces[2].replace("\'", "");
-                documentObjectHateoas = new
-                        DocumentObjectHateoas((List<INikitaEntity>) (List)
-                        documentObjectService.findDocumentObjectByAnyColumn(pieces[0], pieces[2]));
-
-            }
-        }
-
-        if (null == documentObjectHateoas) {
-            documentObjectHateoas = new
+            final UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+        DocumentObjectHateoas documentObjectHateoas = new
                     DocumentObjectHateoas((List<INikitaEntity>) (List)
                     documentObjectService.findDocumentObjectByOwner());
-        }
         documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
     }
+
 
     // Get a file identified by systemID retrievable with referanseFile
     // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/referanseFil
@@ -327,23 +305,3 @@ public class DocumentObjectHateoasController
     }
 
 }
-/*
-
-properties check
-    public void checkForObligatoryDocumentObjectValues(DocumentObject documentObject) {
-        if (documentObject.getVersionNumber() == null) {
-            throw new NikitaMalformedInputDataException("The dokumentobjekt you tried to create is " +
-                    "malformed. The versjonsnummer field is mandatory, and you have submitted an empty value.");
-        }
-        if (documentObject.getVariantFormat() == null) {
-            throw new NikitaMalformedInputDataException("The dokumentobjekt you tried to create is " +
-                    "malformed. The variantformat field is mandatory, and you have submitted an empty value.");
-        }
-        if (documentObject.getFormat() == null) {
-            throw new NikitaMalformedInputDataException("The dokumentobjekt you tried to create is " +
-                    "malformed. The format field is mandatory, and you have submitted an empty value.");
-        }
-    }
-
-
- */
