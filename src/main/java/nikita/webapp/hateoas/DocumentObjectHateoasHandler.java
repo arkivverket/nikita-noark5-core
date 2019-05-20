@@ -72,6 +72,9 @@ public class DocumentObjectHateoasHandler
     /**
      * Create a REL/HREF pair for the parent documentDescription associated
      * with the given DocumentObject
+     * <p>
+     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/registrering/"
      *
      * @param entity             documentObject
      * @param hateoasNoarkObject hateoasDocumentObject
@@ -82,8 +85,7 @@ public class DocumentObjectHateoasHandler
         hateoasNoarkObject.addLink(
                 entity, new Link(getOutgoingAddress() +
                         HREF_BASE_DOCUMENT_DESCRIPTION +
-                        getDocumentDescriptionSystemId(entity) + SLASH +
-                        DOCUMENT_DESCRIPTION,
+                        getDocumentDescriptionSystemId(entity),
                         REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION));
     }
 
