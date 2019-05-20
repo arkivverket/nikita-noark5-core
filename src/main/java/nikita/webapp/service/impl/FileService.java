@@ -83,36 +83,17 @@ public class FileService
     }
 
     @Override
-    public Record createRecordAssociatedWithFile(String fileSystemId, Record record) {
-        Record persistedRecord;
-        File file = fileRepository.findBySystemId(fileSystemId);
-        if (file == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " File, using fileSystemId " + fileSystemId;
-            logger.info(info) ;
-            throw new NoarkEntityNotFoundException(info);
-        }
-        else {
-            record.setReferenceFile(file);
-            persistedRecord = recordService.create(record);
-        }
-        return persistedRecord;        
+    public Record createRecordAssociatedWithFile(
+            String fileSystemId, Record record) {
+        record.setReferenceFile(getFileOrThrow(fileSystemId));
+        return recordService.create(record);
     }
 
     @Override
-    public BasicRecord createBasicRecordAssociatedWithFile(String fileSystemId, BasicRecord basicRecord) {
-        BasicRecord persistedBasicRecord;
-        File file = fileRepository.findBySystemId(fileSystemId);
-        if (file == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " File, using fileSystemId " + fileSystemId;
-            logger.info(info) ;
-            throw new NoarkEntityNotFoundException(info);
-        }
-        else {
-            basicRecord.setReferenceFile(file);
-            persistedBasicRecord =
-                    (BasicRecord) recordService.create(basicRecord);
-        }
-        return persistedBasicRecord;
+    public BasicRecord createBasicRecordAssociatedWithFile(
+            String fileSystemId, BasicRecord basicRecord) {
+        basicRecord.setReferenceFile(getFileOrThrow(fileSystemId));
+        return (BasicRecord) recordService.create(basicRecord);
     }
 
     // All READ operations
@@ -127,12 +108,13 @@ public class FileService
 
     // ownedBy
     public List<File> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().getAuthentication().getName():ownedBy;
+        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().
+                getAuthentication().getName() : ownedBy;
         return fileRepository.findByOwnedBy(ownedBy);
     }
 
     // All UPDATE operations
-    public File update(File file){
+    public File update(File file) {
         return fileRepository.save(file);
     }
 
@@ -261,9 +243,11 @@ public class FileService
     }
 
     // All HELPER operations
+
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid File back. If there is no valid
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. Note. If you call this, be aware
+     * that you will only ever get a valid File back. If there is no valid
      * File, an exception is thrown
      *
      * @param fileSystemId systemId of the file object you are looking for
@@ -272,7 +256,8 @@ public class FileService
     private File getFileOrThrow(@NotNull String fileSystemId) {
         File file = fileRepository.findBySystemId(fileSystemId);
         if (file == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " File, using systemId " + fileSystemId;
+            String info = INFO_CANNOT_FIND_OBJECT + " File, using systemId " +
+                    fileSystemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
