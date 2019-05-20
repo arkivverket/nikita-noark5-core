@@ -577,40 +577,6 @@ public class SeriesHateoasController
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
-    // Retrieve the ClassificationSystem associated with a Series given a systemId of the Series
-    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/klassifikasjonssystem/
-    @ApiOperation(value = "Retrieves the ClassificationSystem associated wth a Series given a systemId of " +
-            "the Series", response = ClassificationSystem.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Series returned", response = ClassificationSystem.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + CLASSIFICATION_SYSTEM
-            , method = RequestMethod.GET)
-    public ResponseEntity<String> findClassificationSystemAssociatedWithSeriesBySystemId(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the series to retrieve",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-
-        /*Series series = seriesService.findBySystemId(systemID);
-        if (series == null) {
-            throw new NoarkEntityNotFoundException("Could not find series object with systemID " + systemID);
-        }
-        SeriesHateoas seriesHateoas = new
-                SeriesHateoas(series);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        */
-//   return ResponseEntity.status(HttpStatus.CREATED)
-//                .eTag(classificationSystem.getVersion().toString())
-//                .body(classificationSystemHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
-    }
-
     // Retrieve all Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/klassifikasjonssystem/
     @ApiOperation(value = "Retrieves multiple Series entities limited by ownership rights", notes = "The field skip" +

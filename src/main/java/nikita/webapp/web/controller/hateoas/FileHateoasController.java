@@ -666,29 +666,6 @@ public class FileHateoasController
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
-    // Retrieve the Class associated with a File
-    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/klasse
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
-    @ApiOperation(value = "Retrieves the Class associated with a File identified by a systemId",
-            response = FileHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "File returned", response = FileHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + CLASS,
-            method = RequestMethod.GET)
-    public ResponseEntity<String> findClassAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the File to retrieve a Class for",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
-    }
-
     // Retrieve all Class associated with a File as secondary classification
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/sekundaerklassifikasjon
     // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/sekundaerklassifikasjon/
