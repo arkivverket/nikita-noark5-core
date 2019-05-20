@@ -1,10 +1,13 @@
 package nikita.webapp.hateoas;
 
+import nikita.common.model.noark5.v4.Class;
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.NotNull;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -48,11 +51,51 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
         // Class has no metadata entities
     }
 
+    /**
+     * Create a REL/HREF pair for the parent ClassificationSystem associated
+     * with the given Class. Checks if the Class is actually associated with
+     * a ClassificationSystem. Note every Class should actually be associated
+     * with a ClassificationSystem, but we are not doing that check here.
+     * <p>
+     * "../hateoas-api/arkivstruktur/klassifikasjonssystem/1234"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/"
+     *
+     * @param entity             class
+     * @param hateoasNoarkObject hateoasClass
+     */
     @Override
-    public void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + PARENT_CLASS +
-                SLASH, REL_FONDS_STRUCTURE_CLASS, false));
+    public void addClassificationSystem(INikitaEntity entity,
+                                        IHateoasNoarkObject hateoasNoarkObject) {
+        Class klass = getClass(entity);
+        if (klass.getReferenceClassificationSystem() != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() +
+                            HREF_BASE_CLASSIFICATION_SYSTEM +
+                            klass.getReferenceClassificationSystem().getSystemId(),
+                            REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM));
+        }
+    }
+
+    /**
+     * Create a REL/HREF pair for the parent Class associated with the given
+     * Class. Checks if the Class is actually associated with a Class.
+     * <p>
+     * "../hateoas-api/arkivstruktur/klasse/1234"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/"
+     *
+     * @param entity             class
+     * @param hateoasNoarkObject hateoasClass
+     */
+    @Override
+    public void addClass(INikitaEntity entity,
+                         IHateoasNoarkObject hateoasNoarkObject) {
+        Class klass = getClass(entity);
+        if (klass.getReferenceParentClass() != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() + HREF_BASE_CLASS +
+                            klass.getReferenceParentClass().getSystemId(),
+                            REL_FONDS_STRUCTURE_CLASS, true));
+        }
     }
 
     @Override
@@ -74,14 +117,6 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + SUB_CLASS +
                 SLASH, REL_FONDS_STRUCTURE_SUB_CLASS, false));
-    }
-
-    @Override
-    public void addClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS +
-                SLASH + entity.getSystemId() + SLASH + CLASSIFICATION_SYSTEM + SLASH,
-                REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM, false));
     }
 
     @Override
@@ -178,5 +213,15 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH +
                 NEW_CROSS_REFERENCE + SLASH, REL_FONDS_STRUCTURE_NEW_CROSS_REFERENCE, false));
+    }
+
+    /**
+     * Cast the INikitaEntity entity to a Class
+     *
+     * @param entity the Class
+     * @return a Class object
+     */
+    private Class getClass(@NotNull INikitaEntity entity) {
+        return (Class) entity;
     }
 }
