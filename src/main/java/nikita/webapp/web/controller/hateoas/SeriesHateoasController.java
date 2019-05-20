@@ -662,7 +662,7 @@ public class SeriesHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CLASSIFICATION_SYSTEM)
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + FONDS)
     public ResponseEntity<FondsHateoas> findParentFondsAssociatedWithSeries(
             @ApiParam(name = "systemID",
                     value = "systemID of the Series ",
