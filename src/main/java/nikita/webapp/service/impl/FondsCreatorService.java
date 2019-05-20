@@ -56,8 +56,9 @@ public class FondsCreatorService
     // All CREATE operations
 
     /**
-     * Persists a new fondsCreator object to the database. Some values are set in the incoming payload (e.g. title)
-     * and some are set by the core. owner, createdBy, createdDate are automatically set by the core.
+     * Persists a new fondsCreator object to the database. Some values are set
+     * in the incoming payload (e.g. title) and some are set by the core.
+     * owner, createdBy, createdDate are automatically set by the core.
      *
      * @param fondsCreator fondsCreator object with some values set
      * @return the newly persisted fondsCreator object
@@ -70,8 +71,10 @@ public class FondsCreatorService
     }
 
     @Override
-    public Fonds createFondsAssociatedWithFondsCreator(String fondsCreatorSystemId, Fonds fonds) {
-        FondsCreator fondsCreator = getFondsCreatorOrThrow(fondsCreatorSystemId);
+    public Fonds createFondsAssociatedWithFondsCreator(
+            String fondsCreatorSystemId, Fonds fonds) {
+        FondsCreator fondsCreator =
+                getFondsCreatorOrThrow(fondsCreatorSystemId);
         NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid(fonds);
         NoarkUtils.NoarkEntity.Create.setNoarkEntityValues(fonds);
         fonds.setFondsStatus(STATUS_OPEN);
@@ -183,7 +186,8 @@ public class FondsCreatorService
         FondsCreator fondsCreator = getFondsCreatorOrThrow(fondsCreatorSystemId);
         // See issue for a description of why this code was written this way
         // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
-        Query q = entityManager.createNativeQuery("DELETE FROM fonds_fonds_creator WHERE f_pk_fonds_creator_id = :id ;");
+        Query q = entityManager.createNativeQuery(
+                "DELETE FROM fonds_fonds_creator WHERE f_pk_fonds_creator_id = :id ;");
         q.setParameter("id", fondsCreator.getId());
         q.executeUpdate();
 
