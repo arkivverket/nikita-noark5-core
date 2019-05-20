@@ -4,11 +4,13 @@ import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import org.slf4j.Logger;
@@ -43,6 +45,7 @@ public class DocumentDescriptionService
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
+    private IRecordHateoasHandler recordHateoasHandler;
 
     public DocumentDescriptionService(
             EntityManager entityManager,
@@ -51,13 +54,15 @@ public class DocumentDescriptionService
             IDocumentDescriptionRepository documentDescriptionRepository,
             IDocumentDescriptionHateoasHandler
                     documentDescriptionHateoasHandler,
-            IDocumentObjectHateoasHandler documentObjectHateoasHandler) {
+            IDocumentObjectHateoasHandler documentObjectHateoasHandler,
+            IRecordHateoasHandler recordHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.documentDescriptionHateoasHandler =
                 documentDescriptionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
+        this.recordHateoasHandler = recordHateoasHandler;
     }
 
     // All CREATE operations
@@ -145,6 +150,20 @@ public class DocumentDescriptionService
                 .body(documentObjectHateoas);
     }
 
+    @Override
+    public ResponseEntity<RecordHateoas>
+    findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId) {
+        RecordHateoas recordHateoas = new
+                RecordHateoas((List<INikitaEntity>)
+                (List) getDocumentDescriptionOrThrow(systemId)
+                        .getReferenceRecord());
+        recordHateoasHandler.addLinks(recordHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(recordHateoas);
+    }
+
     // -- All UPDATE operations
 
     /**
@@ -204,7 +223,6 @@ public class DocumentDescriptionService
         return 1;
     }
 
-
     /**
      * Delete all objects belonging to the user identified by ownedBy
      *
@@ -214,6 +232,7 @@ public class DocumentDescriptionService
     public long deleteAllByOwnedBy() {
         return documentDescriptionRepository.deleteByOwnedBy(getUser());
     }
+
     // All HELPER operations
 
     private void updateDocumentDescription(

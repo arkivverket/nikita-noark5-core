@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.DocumentObject;
 import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -24,6 +25,9 @@ public interface IDocumentDescriptionService {
     ResponseEntity<DocumentDescriptionHateoas> findBySystemId(
             @NotNull String systemId);
 
+    ResponseEntity<RecordHateoas>
+    findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId);
+
     ResponseEntity<DocumentObjectHateoas>
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId);
@@ -31,6 +35,7 @@ public interface IDocumentDescriptionService {
     DocumentDescription findDocumentDescriptionBySystemId(
             @NotNull String systemId);
     // -- All UPDATE operations
+
     DocumentDescription handleUpdate(@NotNull final String systemId,
                                      @NotNull final Long version,
                                      @NotNull final DocumentDescription
