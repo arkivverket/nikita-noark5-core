@@ -82,7 +82,8 @@ public class DocumentObjectHateoasHandler
         hateoasNoarkObject.addLink(
                 entity, new Link(getOutgoingAddress() +
                         HREF_BASE_DOCUMENT_DESCRIPTION +
-                        getDocumentDescriptionSystemId(entity),
+                        getDocumentDescriptionSystemId(entity) + SLASH +
+                        DOCUMENT_DESCRIPTION,
                         REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION));
     }
 
