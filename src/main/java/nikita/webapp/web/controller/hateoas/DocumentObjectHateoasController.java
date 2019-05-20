@@ -133,7 +133,7 @@ public class DocumentObjectHateoasController
                     required = true)
             @PathVariable("systemID") final String documentObjectSystemId) {
         return documentObjectService.
-                findByDocumentDescription(documentObjectSystemId);
+                findAssociatedDocumentDescription(documentObjectSystemId);
     }
 
     // Get a file identified by systemID retrievable with referanseFile

@@ -440,7 +440,7 @@ public class DocumentObjectService
 
     @Override
     public ResponseEntity<DocumentDescriptionHateoas>
-    findByDocumentDescription(String systemId) {
+    findAssociatedDocumentDescription(String systemId) {
 
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas(

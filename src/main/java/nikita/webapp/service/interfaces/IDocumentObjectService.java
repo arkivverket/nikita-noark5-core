@@ -23,7 +23,7 @@ public interface IDocumentObjectService {
     List<DocumentObject> findDocumentObjectByOwner();
 
     ResponseEntity<DocumentDescriptionHateoas>
-    findByDocumentDescription(@NotNull String systemId);
+    findAssociatedDocumentDescription(@NotNull String systemId);
 
     // systemId
     ResponseEntity<DocumentObjectHateoas> findBySystemId(
