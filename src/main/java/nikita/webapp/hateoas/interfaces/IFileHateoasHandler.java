@@ -8,8 +8,12 @@ import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
  * <p>
  * Describe Hateoas links handler
  */
-public interface IFileHateoasHandler extends IHateoasHandler {
+public interface IFileHateoasHandler
+        extends IHateoasHandler {
 
+
+    void addSeries(INikitaEntity entity,
+                   IHateoasNoarkObject hateoasNoarkObject);
 
     void addEndFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
