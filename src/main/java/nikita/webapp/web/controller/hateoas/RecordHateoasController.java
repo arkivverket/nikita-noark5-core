@@ -417,8 +417,9 @@ public class RecordHateoasController extends NoarkController {
         return recordService.findFileAssociatedWithRecord(systemID);
     }
 
-    // Retrieve all Series associated with Record identified by a systemId
-    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
+    // Retrieve the parent Series associated with the Record identified by the
+    // given systemId
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/arkivdel
     // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
     @ApiOperation(value = "Retrieves a single Series entity given a systemId",
             response = SeriesHateoas.class)
@@ -441,8 +442,9 @@ public class RecordHateoasController extends NoarkController {
         return recordService.findSeriesAssociatedWithRecord(systemID);
     }
 
-    // Retrieve all Class associated with Record identified by a systemId
-    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
+    // Retrieve the parent Class associated with the Record identified by the
+    // given systemId
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/klasse
     // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
     @ApiOperation(value = "Retrieves a single Class entity given a systemId",
             response = ClassHateoas.class)
