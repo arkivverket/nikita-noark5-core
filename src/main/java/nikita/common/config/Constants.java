@@ -746,6 +746,15 @@ public final class Constants {
     public static final String HREF_BASE_RECORD =
             HREF_BASE_FONDS_STRUCTURE + REGISTRATION + SLASH;
 
+    public static final String HREF_BASE_FILE =
+            HREF_BASE_FONDS_STRUCTURE + FILE + SLASH;
+
+    public static final String HREF_BASE_SERIES =
+            HREF_BASE_FONDS_STRUCTURE + SERIES + SLASH;
+
+    public static final String HREF_BASE_CLASS =
+            HREF_BASE_FONDS_STRUCTURE + CLASS + SLASH;
+
     private Constants() {
     }
 }

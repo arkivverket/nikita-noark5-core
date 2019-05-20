@@ -1,10 +1,13 @@
 package nikita.webapp.hateoas;
 
+import nikita.common.model.noark5.v4.Record;
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.NotNull;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -26,9 +29,14 @@ public class RecordHateoasHandler
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
 
+        // Add the parent links
         addReferenceSeries(entity, hateoasNoarkObject);
+        addReferenceFile(entity, hateoasNoarkObject);
+        addReferenceClass(entity, hateoasNoarkObject);
+
         addNewDocumentDescription(entity, hateoasNoarkObject);
         addDocumentDescription(entity, hateoasNoarkObject);
         addNewReferenceSeries(entity, hateoasNoarkObject);
@@ -44,17 +52,76 @@ public class RecordHateoasHandler
         addNewScreening(entity, hateoasNoarkObject);
     }
 
+    /**
+     * Create a REL/HREF pair for the parent Series associated with the given
+     * Record. Checks if the Record is actually associated with a Series.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkivdel/1234"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/"
+     *
+     * @param entity             record
+     * @param hateoasNoarkObject hateoasRecord
+     */
     @Override
-    public void addReferenceSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION + SLASH + entity.getSystemId() + SLASH + 
-                REFERENCE_SERIES + SLASH, REL_FONDS_STRUCTURE_REFERENCE_SERIES, false));
+    public void addReferenceSeries(INikitaEntity entity,
+                                   IHateoasNoarkObject hateoasNoarkObject) {
+        Record record = getRecord(entity);
+        if (record.getReferenceSeries() != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() + HREF_BASE_SERIES +
+                            record.getReferenceSeries().getSystemId(),
+                            REL_FONDS_STRUCTURE_SERIES, true));
+        }
+    }
+
+    /**
+     * Create a REL/HREF pair for the parent File associated with the given
+     * Record. Checks if the Record is actually associated with a File.
+     * <p>
+     * "../hateoas-api/arkivstruktur/mappe/1234"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/mappe/"
+     *
+     * @param entity             record
+     * @param hateoasNoarkObject hateoasRecord
+     */
+    @Override
+    public void addReferenceFile(INikitaEntity entity,
+                                 IHateoasNoarkObject hateoasNoarkObject) {
+        Record record = getRecord(entity);
+        if (record.getReferenceFile() != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() + HREF_BASE_FILE +
+                            record.getReferenceFile().getSystemId(),
+                            REL_FONDS_STRUCTURE_FILE, true));
+        }
+    }
+
+    /**
+     * Create a REL/HREF pair for the parent Class associated with the given
+     * Record. Checks if the Record is actually associated with a Class.
+     * <p>
+     * "../hateoas-api/arkivstruktur/klasse/1234"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/"
+     *
+     * @param entity             record
+     * @param hateoasNoarkObject hateoasRecord
+     */
+    @Override
+    public void addReferenceClass(INikitaEntity entity,
+                                  IHateoasNoarkObject hateoasNoarkObject) {
+        Record record = getRecord(entity);
+        if (record.getReferenceClass() != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() + HREF_BASE_CLASS +
+                            record.getReferenceClass().getSystemId(),
+                            REL_FONDS_STRUCTURE_CLASS, true));
+        }
     }
 
     @Override
     public void addNewDocumentDescription(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION + SLASH + entity.getSystemId() + SLASH + 
+                NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION + SLASH + entity.getSystemId() + SLASH +
                 NEW_DOCUMENT_DESCRIPTION + SLASH, REL_FONDS_STRUCTURE_NEW_DOCUMENT_DESCRIPTION, false));
     }
 
@@ -140,5 +207,15 @@ public class RecordHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION + SLASH + entity.getSystemId() + SLASH +
                 NEW_SCREENING + SLASH, REL_FONDS_STRUCTURE_NEW_SCREENING, false));
+    }
+
+    /**
+     * Cast the INikitaEntity entity to a Record
+     *
+     * @param entity the Record
+     * @return a Record object
+     */
+    private Record getRecord(@NotNull INikitaEntity entity) {
+        return (Record) entity;
     }
 }
