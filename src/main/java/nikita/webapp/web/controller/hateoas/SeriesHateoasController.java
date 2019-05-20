@@ -5,10 +5,7 @@ import io.swagger.annotations.*;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.*;
 import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
-import nikita.common.model.noark5.v4.hateoas.FileHateoas;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
@@ -676,6 +673,33 @@ public class SeriesHateoasController
             @PathVariable("systemID") final String systemID) {
         return seriesService.findClassificationSystemAssociatedWithClass(
                 systemID);
+    }
+
+    // Retrieve the Fonds associated with the Series identified by the given
+    // systemId
+    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/arkiv
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv/
+    @ApiOperation(value = "Retrieves a single Fonds that is " +
+            "the parent of the Series entity identified by systemId",
+            response = FondsHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Fonds returned",
+                    response = FondsHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CLASSIFICATION_SYSTEM)
+    public ResponseEntity<FondsHateoas> findParentFondsAssociatedWithSeries(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the Series ",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return seriesService.findFondsAssociatedWithSeries(systemID);
     }
 
 
