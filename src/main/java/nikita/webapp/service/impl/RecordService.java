@@ -2,23 +2,18 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v4.DocumentDescription;
 import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
-import nikita.common.model.noark5.v4.hateoas.FileHateoas;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v4.hateoas.*;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v4.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
+import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -49,6 +44,8 @@ public class RecordService
     private IRecordRepository recordRepository;
     private IRecordHateoasHandler recordHateoasHandler;
     private IFileHateoasHandler fileHateoasHandler;
+    private ISeriesHateoasHandler seriesHateoasHandler;
+    private IClassHateoasHandler classHateoasHandler;
     private IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
     private IDocumentDescriptionRepository documentDescriptionRepository;
@@ -60,6 +57,8 @@ public class RecordService
             IRecordRepository recordRepository,
             IRecordHateoasHandler recordHateoasHandler,
             IFileHateoasHandler fileHateoasHandler,
+            ISeriesHateoasHandler seriesHateoasHandler,
+            IClassHateoasHandler classHateoasHandler,
             IDocumentDescriptionHateoasHandler
                     documentDescriptionHateoasHandler,
             IDocumentDescriptionRepository documentDescriptionRepository) {
@@ -69,6 +68,8 @@ public class RecordService
         this.entityManager = entityManager;
         this.recordHateoasHandler = recordHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
+        this.seriesHateoasHandler = seriesHateoasHandler;
+        this.classHateoasHandler = classHateoasHandler;
         this.documentDescriptionHateoasHandler =
                 documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
@@ -165,7 +166,6 @@ public class RecordService
                 .body(recordHateoas);
     }
 
-
     /**
      * Retrieve all File associated with the record identified by
      * the records systemId.
@@ -181,17 +181,58 @@ public class RecordService
                         getReferenceFile());
 
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(fileHateoas.getEntityVersion().toString())
                 .body(fileHateoas);
+    }
+
+    /**
+     * Retrieve all Class associated with the record identified by
+     * the records systemId.
+     *
+     * @param systemId systemId of the record
+     * @return The parent Class packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<ClassHateoas>
+    findClassAssociatedWithRecord(@NotNull final String systemId) {
+        ClassHateoas classHateoas = new ClassHateoas(
+                recordRepository.findBySystemId(systemId).
+                        getReferenceClass());
+
+        classHateoasHandler.addLinks(classHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(classHateoas.getEntityVersion().toString())
+                .body(classHateoas);
+    }
+
+    /**
+     * Retrieve all Series associated with the record identified by
+     * the records systemId.
+     *
+     * @param systemId systemId of the record
+     * @return The parent Series packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<SeriesHateoas>
+    findSeriesAssociatedWithRecord(@NotNull final String systemId) {
+        SeriesHateoas seriesHateoas = new SeriesHateoas(
+                recordRepository.findBySystemId(systemId).
+                        getReferenceSeries());
+
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(seriesHateoas.getEntityVersion().toString())
+                .body(seriesHateoas);
     }
 
     // systemId
     public Record findBySystemId(String systemId) {
         return getRecordOrThrow(systemId);
     }
-
 
     // ownedBy
     public List<Record> findByOwnedBy(String ownedBy) {
@@ -265,7 +306,6 @@ public class RecordService
         entityManager.flush();
         entityManager.clear();
     }
-
 
     /**
      * Delete all objects belonging to the user identified by ownedBy

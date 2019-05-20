@@ -363,7 +363,7 @@ public class RecordHateoasController extends NoarkController {
         return ResponseEntity.status(NO_CONTENT).
                 body(new Count(recordService.deleteAllByOwnedBy()));
     }
-    
+
     // API - All GET Requests (CRUD - READ)
 
     // Retrieve a Record identified by a systemId
@@ -393,9 +393,9 @@ public class RecordHateoasController extends NoarkController {
                 .body(recordHateoas);
     }
 
-    // Retrieve a Record identified by a systemId
+    // Retrieve all File associated with Record identified by a systemId
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/mapperegistrering/
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/mappe/
     @ApiOperation(value = "Retrieves a single File entity given a systemId",
             response = FileHateoas.class)
     @ApiResponses(value = {
@@ -415,7 +415,54 @@ public class RecordHateoasController extends NoarkController {
                     required = true)
             @PathVariable("systemID") final String systemID) {
         return recordService.findFileAssociatedWithRecord(systemID);
+    }
 
+    // Retrieve all Series associated with Record identified by a systemId
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
+    @ApiOperation(value = "Retrieves a single Series entity given a systemId",
+            response = SeriesHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Series returned", response = SeriesHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + SERIES)
+    public ResponseEntity<SeriesHateoas> findParentSeriesByRecordSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the series to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return recordService.findSeriesAssociatedWithRecord(systemID);
+    }
+
+    // Retrieve all Class associated with Record identified by a systemId
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
+    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
+    @ApiOperation(value = "Retrieves a single Class entity given a systemId",
+            response = ClassHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Class returned", response = ClassHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CLASS)
+    public ResponseEntity<ClassHateoas> findParentClassByRecordSystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the class to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return recordService.findClassAssociatedWithRecord(systemID);
     }
 
     // Retrieve all Records
@@ -501,7 +548,6 @@ public class RecordHateoasController extends NoarkController {
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
     }
-
 
 
     // Retrieve all DocumentDescriptions associated with a Record identified by systemId
