@@ -222,11 +222,42 @@ public class DocumentDescriptionHateoasController
     findAllDocumentDescriptionAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated Record",
+                    value = "systemID of the DocumentDescription to retrieve " +
+                            "associated DocumentObject",
                     required = true)
             @PathVariable("systemID") final String systemID) {
         return documentDescriptionService.
                 findAllDocumentObjectWithDocumentDescriptionBySystemId(
+                        systemID);
+    }
+
+    // Retrieve all Record associated with a DocumentDescription identified
+    // by systemId
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/registrering
+    @ApiOperation(value = "Retrieves a list of Record(s) associated " +
+            "with a DocumentDescription",
+            response = RecordHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Record returned",
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + REGISTRATION)
+    public ResponseEntity<RecordHateoas>
+    findAllRecordAssociatedWithDocumentDescription(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the DocumentDescription to retrieve " +
+                            "associated Records",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return documentDescriptionService.
+                findAllRecordWithDocumentDescriptionBySystemId(
                         systemID);
     }
 
