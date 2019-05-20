@@ -734,9 +734,17 @@ public final class Constants {
     public static final String SYSTEM = "system";
 
 
+    public static final String HREF_BASE_FONDS_STRUCTURE =
+            HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH;
+
     public static final String HREF_BASE_DOCUMENT_DESCRIPTION =
-            HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
-                    DOCUMENT_OBJECT + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH;
+
+    public static final String HREF_BASE_DOCUMENT_OBJECT =
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH;
+
+    public static final String HREF_BASE_RECORD =
+            HREF_BASE_FONDS_STRUCTURE + REGISTRATION + SLASH;
 
     private Constants() {
     }
