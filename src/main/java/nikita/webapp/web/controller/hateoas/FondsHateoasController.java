@@ -366,7 +366,7 @@ public class FondsHateoasController extends NoarkController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + FONDS_CREATOR + SLASH)
+            RIGHT_PARENTHESIS + SLASH + FONDS_CREATOR)
     public ResponseEntity<FondsCreatorHateoas>
     findFondsCreatorAssociatedWithFonds(
             @ApiParam(
@@ -399,7 +399,7 @@ public class FondsHateoasController extends NoarkController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + SERIES + SLASH)
+            RIGHT_PARENTHESIS + SLASH + SERIES)
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithFonds(
             HttpServletRequest request,
@@ -439,7 +439,7 @@ public class FondsHateoasController extends NoarkController {
     })
     @Counted
     @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + SUB_FONDS + SLASH)
+            RIGHT_PARENTHESIS + SLASH + SUB_FONDS)
     public ResponseEntity<String> findSubfondsAssociatedWithFonds(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
