@@ -1,10 +1,13 @@
 package nikita.webapp.hateoas;
 
+import nikita.common.model.noark5.v4.Series;
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.NotNull;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -22,7 +25,6 @@ import static nikita.common.config.N5ResourceMappings.*;
  * StorageLocation should only be possible if documentMedium is not electronic
  * <p>
  * StorageLocation supports addOne, addAll, findAll
- *
  */
 @Component("seriesHateoasHandler")
 public class SeriesHateoasHandler extends HateoasHandler
@@ -76,15 +78,27 @@ public class SeriesHateoasHandler extends HateoasHandler
                         REL_METADATA_SERIES_STATUS, true));
     }
 
-    @Override
     /**
-     * Get the successor Series (GET)
+     * Create a REL/HREF pair for the Series associated with the given Series
+     * as the given Series successor. Checks if the Series actually has an
+     * associated successor. In the example below 5431 is the systemID of the
+     * successor Series object.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/5431"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/nestearkivdel/"
+     *
+     * @param entity             series
+     * @param hateoasNoarkObject hateoasSeries
      */
-    public void addSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH + entity.getSystemId() + SLASH
-                + SERIES_ASSOCIATE_AS_SUCCESSOR + SLASH, REL_FONDS_STRUCTURE_SUCCESSOR,
-                false));
+    @Override
+    public void addSeriesSuccessor(INikitaEntity entity,
+                                   IHateoasNoarkObject hateoasNoarkObject) {
+        Series series = getSeries(entity);
+        if (series.getReferenceSuccessor() != null) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_SERIES + series.getReferenceSuccessor().getSystemId(),
+                    REL_FONDS_STRUCTURE_SUCCESSOR));
+        }
     }
 
     @Override
@@ -93,22 +107,35 @@ public class SeriesHateoasHandler extends HateoasHandler
      * successor to (B). A is identified first, B is identified through a ref link (PUT)
      */
     public void addNewSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH + entity.getSystemId() + SLASH
-                + NEW_SERIES_SUCCESSOR + SLASH, REL_FONDS_STRUCTURE_NEW_SUCCESSOR,
-                false));
-
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() +
+                        HREF_BASE_SERIES + entity.getSystemId() + SLASH
+                        + NEW_SERIES_SUCCESSOR + SLASH, REL_FONDS_STRUCTURE_NEW_SUCCESSOR,
+                        false));
     }
 
-    @Override
     /**
-     * Get the precursor Series object (GET)
+     * Create a REL/HREF pair for the Series associated with the given Series
+     * as the given Series precursor. Checks if the Series actually has an
+     * associated precursor. In the example below 2345 is the systemID of the
+     * precursor Series object.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkivdel/2345"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/forrigearkivdel/"
+     *
+     * @param entity             series
+     * @param hateoasNoarkObject hateoasSeries
      */
-    public void addSeriesPrecursor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH + entity.getSystemId() + SLASH +
-                SERIES_PRECURSOR + SLASH, REL_FONDS_STRUCTURE_PRECURSOR,
-                false));
+    @Override
+    public void addSeriesPrecursor(INikitaEntity entity,
+                                   IHateoasNoarkObject hateoasNoarkObject) {
+        Series series = getSeries(entity);
+        if (series.getReferencePrecursor() != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() + HREF_BASE_SERIES +
+                            series.getReferencePrecursor().getSystemId(),
+                            REL_FONDS_STRUCTURE_PRECURSOR));
+        }
     }
 
     @Override
@@ -159,6 +186,7 @@ public class SeriesHateoasHandler extends HateoasHandler
                     + NEW_CASE_FILE + SLASH, REL_FONDS_STRUCTURE_NEW_CASE_FILE, false));
         }
     }
+
     @Override
     /**
      * Associate an existing ClassificationSystem as the precursor of an existing Series (PUT)
@@ -219,13 +247,27 @@ public class SeriesHateoasHandler extends HateoasHandler
 
     @Override
     /**
-     * Get the Fonds associated with the Series (GET)
+     * Create a REL/HREF pair for the Fonds associated with the
+     * given Series. Checks if the Fonds is actually associated with a
+     * Series. It should not be possible to have a series without a parent
+     * Fonds. Note as this has to exist, we return a link to the actual parent
+     * identified by its systemId
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv/"
+     *
+     * @param entity             series
+     * @param hateoasNoarkObject hateoasSeries
      */
-    public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES +
-                SLASH + entity.getSystemId() + SLASH + FONDS + SLASH,
-                REL_FONDS_STRUCTURE_FONDS, false));
+    public void addFonds(INikitaEntity entity,
+                         IHateoasNoarkObject hateoasNoarkObject) {
+        Series series = getSeries(entity);
+        if (series.getReferenceFonds() != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() + HREF_BASE_FONDS +
+                            series.getReferenceFonds().getSystemId(),
+                            REL_FONDS_STRUCTURE_FONDS));
+        }
     }
 
     @Override
@@ -356,5 +398,15 @@ public class SeriesHateoasHandler extends HateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH + entity.getSystemId() + SLASH +
                 NEW_STORAGE_LOCATIONS + SLASH, REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION_LIST, false));
+    }
+
+    /**
+     * Cast the INikitaEntity entity to a Series
+     *
+     * @param entity the Series
+     * @return a Series object
+     */
+    private Series getSeries(@NotNull INikitaEntity entity) {
+        return (Series) entity;
     }
 }
