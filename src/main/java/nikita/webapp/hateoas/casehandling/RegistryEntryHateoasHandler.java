@@ -19,11 +19,12 @@ import static nikita.common.config.N5ResourceMappings.*;
  * separate calls at the moment.
  */
 @Component("registryEntryHateoasHandler")
-public class RegistryEntryHateoasHandler extends BasicRecordHateoasHandler implements IRegistryEntryHateoasHandler {
+public class RegistryEntryHateoasHandler
+        extends BasicRecordHateoasHandler
+        implements IRegistryEntryHateoasHandler {
 
     @Override
     public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-
         super.addEntityLinks(entity, hateoasNoarkObject);
         addElectronicSignature(entity, hateoasNoarkObject);
         addNewElectronicSignature(entity, hateoasNoarkObject);
