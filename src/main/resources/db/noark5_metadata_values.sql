@@ -17,12 +17,12 @@ VALUES (3, '00d21eea-c231-4542-8e3a-964f441fbbd3',
 /* fonds_status / arkivstatus */
 INSERT INTO fonds_status (pk_fonds_status_id, system_id, code,
                           description, deleted, version)
-VALUES (1, '9ed3f5d3-9934-446d-85b8-b2ada9498aa7', 'Opprettet',
-        NULL, FALSE, 0);
+VALUES (1, '9ed3f5d3-9934-446d-85b8-b2ada9498aa7', 'O',
+        'Opprettet', FALSE, 0);
 INSERT INTO fonds_status (pk_fonds_status_id, system_id, code,
                           description, deleted, version)
-VALUES (2, 'b94eb9cf-e71f-4d68-964b-b68c7f9962b6', 'Avsluttet',
-        NULL, FALSE, 0);
+VALUES (2, 'b94eb9cf-e71f-4d68-964b-b68c7f9962b6', 'A',
+        'Avsluttet', FALSE, 0);
 
 /* series_status / arkivdelstatus*/
 INSERT INTO series_status (pk_series_status_id, system_id, code,
