@@ -202,11 +202,10 @@ public class FondsHateoasHandler
     }
 
     /**
-     * Create a REL/HREF pair to create a new (sub) Fonds associated with
-     * the given Fonds. This link should only be generated if the user is
-     * authorised to create a sub fonds.
+     * Create a REL/HREF pair to get parent Fonds associated with
+     * the given Fonds. Checks if parent fonds exists first.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234/forelderarkiv"
+     * "../hateoas-api/arkivstruktur/arkiv/9856"
      * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/forelderarkiv/"
      *
      * @param entity             fonds
@@ -215,9 +214,13 @@ public class FondsHateoasHandler
     @Override
     public void addParentFonds(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS + entity.getSystemId() + SLASH + PARENT_FONDS,
-                REL_FONDS_STRUCTURE_PARENT_FONDS));
+        Fonds fonds = getFonds(entity).getReferenceParentFonds();
+        if (fonds != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() +
+                            HREF_BASE_FONDS + fonds.getSystemId(),
+                            REL_FONDS_STRUCTURE_PARENT_FONDS));
+        }
     }
 
     /**
