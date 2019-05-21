@@ -216,7 +216,7 @@ public class FondsHateoasHandler
     public void addParentFonds(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS + entity.getSystemId() + SLASH + NEW_SUB_FONDS,
+                HREF_BASE_FONDS + entity.getSystemId() + SLASH + PARENT_FONDS,
                 REL_FONDS_STRUCTURE_PARENT_FONDS));
     }
 
