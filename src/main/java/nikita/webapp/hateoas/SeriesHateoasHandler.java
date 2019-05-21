@@ -68,9 +68,12 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Get a list of Series status values (GET)
      */
-    public void addSeriesStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_METADATA_PATH + SLASH + FONDS_STATUS, REL_METADATA_FONDS_STATUS, false));
+    public void addSeriesStatus(INikitaEntity entity,
+                                IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() +
+                        HREF_METADATA_PATH + SERIES_STATUS,
+                        REL_METADATA_SERIES_STATUS, true));
     }
 
     @Override
