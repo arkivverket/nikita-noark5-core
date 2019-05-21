@@ -2,7 +2,7 @@ var app = angular.module('nikita', []);
 
 var postliste = app.controller('PostlisteController', ['$scope', '$http', function ($scope, $http) {
   // FIXME find href for rel
-  // 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkiv/'
+  // 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv/'
   // dynamically
   url = base_url + "/hateoas-api/arkivstruktur/arkiv";
   token = GetUserToken();
@@ -26,7 +26,7 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
     for (rel in fonds.links) {
       href = fonds.links[rel].href;
       relation = fonds.links[rel].rel;
-      if (relation == 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivdel/') {
+      if (relation == 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/') {
         console.log("fetching " + href);
         $http({
           method: 'GET',
@@ -48,7 +48,7 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
     for (rel in series.links) {
       href = series.links[rel].href;
       relation = series.links[rel].rel;
-      if (relation == 'http://rel.kxml.no/noark5/v4/api/sakarkiv/saksmappe/') {
+      if (relation == 'https://rel.arkivverket.no/noark5/v4/api/sakarkiv/saksmappe/') {
         console.log("fetching " + href);
         $http({
           method: 'GET',
@@ -70,7 +70,7 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
     }
     for (rel in file.links) {
       relation = file.links[rel].rel;
-      if (relation == 'http://rel.kxml.no/noark5/v4/api/sakarkiv/journalpost/') {
+      if (relation == 'https://rel.arkivverket.no/noark5/v4/api/sakarkiv/journalpost/') {
         href = file.links[rel].href;
         console.log("fetching " + href);
         $http({
@@ -83,7 +83,7 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
             for (rel in record.links) {
               relation = record.links[rel].rel;
               console.log("found " + relation);
-              if (relation == 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/dokumentbeskrivelse/') {
+              if (relation == 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/dokumentbeskrivelse/') {
                 href = record.links[rel].href;
                 console.log("fetching " + href);
                 $http({

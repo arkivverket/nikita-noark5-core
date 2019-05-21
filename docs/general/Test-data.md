@@ -22,7 +22,7 @@ one you probably are looking for. This is the Noark 5v4 interface.
     {
       "_links" : [ {
         "href" : "http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/",
-        "rel" : "http://rel.kxml.no/noark5/v4/api/arkivstruktur"
+        "rel" : "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur"
       } ]
     }
 
@@ -52,7 +52,7 @@ next/previous link at the moment
     {
       "_links" : [ {
         "href" : "http://localhost:8092/noark5v4/hateoas-api/arkiv/",
-        "rel" : "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkiv",
+        "rel" : "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv",
         "templated" : true
       } ]
      }

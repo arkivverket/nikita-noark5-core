@@ -6,10 +6,10 @@ var app = angular.module('nikita', []);
  * This file provides the following functionality:
  *
  *  1. When the page loads the nikita core is called to retrieve the login URL
- *    - In this case, we look for a OAUTH2 REL (http://nikita.arkivlab.no/noark5/v4/login/rfc6749)
+ *    - In this case, we look for a OAUTH2 REL (https://nikita.arkivlab.no/noark5/v4/login/rfc6749)
  *  2. When a successful login occurs, the user is pushed to the correct html page
  *   - This process will also issue a GET to the root of the application and
- *     retrieve and GET the content behind http://rel.kxml.no/noark5/v4/api/arkivstruktur/.
+ *     retrieve and GET the content behind https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/.
  *     This object is then stored in localstorage so the application knows how to retrieve
  *     fonds objects and create them.
  *

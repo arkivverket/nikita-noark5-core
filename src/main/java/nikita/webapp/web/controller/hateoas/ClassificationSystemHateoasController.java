@@ -169,7 +169,7 @@ public class ClassificationSystemHateoasController
     // Retrieve all Series associated with the ClassificationSystem
     // identified by the given systemId
     // GET [contextPath][api]/arkivstruktur/klassifikasjonssystem/{systemId}/arkivdel
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
     @ApiOperation(value = "Retrieves a a list of Series that are parents of " +
             " the ClassificationSystem entity identified by systemId",
             response = ClassificationSystemHateoas.class)

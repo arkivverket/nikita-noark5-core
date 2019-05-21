@@ -14,31 +14,31 @@ var oauthClientId = "nikita-client";
  These should probably be implemented as a 2D-array where we can easily pull out the required value
  */
 
-var REL_NEW_REGISTRY_ENTRY = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/ny-journalpost/';
-var REL_REGISTRY_ENTRY = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/journalpost/';
-var REL_NEW_DOCUMENT_DESCRIPTION = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-dokumentbeskrivelse/';
-var REL_DOCUMENT_DESCRIPTION = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/dokumentbeskrivelse/';
-var REL_DOCUMENT_OBJECT = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/dokumentobjekt/';
-var REL_NEW_DOCUMENT_OBJECT = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-dokumentobjekt/';
-var REL_NEW_CORRESPONDENCE_PART_PERSON = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/ny-korrespondansepartperson/';
-var REL_CORRESPONDENCE_PART_PERSON = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/korrespondansepartperson/';
-var REL_CASE_FILE = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/saksmappe/';
-var REL_NEW_CASE_FILE = 'http://rel.kxml.no/noark5/v4/api/sakarkiv/ny-saksmappe/';
-var REL_DOCUMENT_FILE = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/fil/';
-var REL_SERIES = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivdel/";
-var REL_FONDS_STRUCTURE = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/';
-var REL_FONDS_STRUCTURE_FONDS = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkiv/';
-var REL_FONDS_STRUCTURE_NEW_FONDS = 'http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-arkiv/';
-var REL_FONDS_CREATOR = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivskaper/";
-var REL_SERIES = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivdel/";
-var REL_NEW_SERIES = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-arkivdel/";
-var REL_NEW_FONDS_CREATOR = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/ny-arkivskaper/";
-var REL_FONDS_CREATOR = "http://rel.kxml.no/noark5/v4/api/arkivstruktur/arkivskaper/";
+var REL_NEW_REGISTRY_ENTRY = 'https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-journalpost/';
+var REL_REGISTRY_ENTRY = 'https://rel.arkivverket.no/noark5/v4/api/sakarkiv/journalpost/';
+var REL_NEW_DOCUMENT_DESCRIPTION = 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-dokumentbeskrivelse/';
+var REL_DOCUMENT_DESCRIPTION = 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/dokumentbeskrivelse/';
+var REL_DOCUMENT_OBJECT = 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/dokumentobjekt/';
+var REL_NEW_DOCUMENT_OBJECT = 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-dokumentobjekt/';
+var REL_NEW_CORRESPONDENCE_PART_PERSON = 'https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepartperson/';
+var REL_CORRESPONDENCE_PART_PERSON = 'https://rel.arkivverket.no/noark5/v4/api/sakarkiv/korrespondansepartperson/';
+var REL_CASE_FILE = 'https://rel.arkivverket.no/noark5/v4/api/sakarkiv/saksmappe/';
+var REL_NEW_CASE_FILE = 'https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-saksmappe/';
+var REL_DOCUMENT_FILE = 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/fil/';
+var REL_SERIES = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/";
+var REL_FONDS_STRUCTURE = 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/';
+var REL_FONDS_STRUCTURE_FONDS = 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv/';
+var REL_FONDS_STRUCTURE_NEW_FONDS = 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkiv/';
+var REL_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivskaper/";
+var REL_SERIES = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/";
+var REL_NEW_SERIES = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkivdel/";
+var REL_NEW_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkivskaper/";
+var REL_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivskaper/";
 var REL_SELF = 'self';
-var REL_LOGIN_OAUTH2 = 'http://nikita.arkivlab.no/noark5/v4/login/rfc6749/';
-var REL_LOGOUT_OAUTH2 = 'http://nikita.arkivlab.no/noark5/v4/logout/rfc6749/';
-var REL_CHECK_TOKEN = 'http://nikita.arkivlab.no/noark5/v4/oauth/check_token/rfc6749/';
-var REL_ADMIN_NEW_USER = 'http://rel.kxml.no/noark5/v4/api/administrasjon/ny-bruker/';
+var REL_LOGIN_OAUTH2 = 'https://nikita.arkivlab.no/noark5/v4/login/rfc6749/';
+var REL_LOGOUT_OAUTH2 = 'https://nikita.arkivlab.no/noark5/v4/logout/rfc6749/';
+var REL_CHECK_TOKEN = 'https://nikita.arkivlab.no/noark5/v4/oauth/check_token/rfc6749/';
+var REL_ADMIN_NEW_USER = 'https://rel.arkivverket.no/noark5/v4/api/administrasjon/ny-bruker/';
 
 
 

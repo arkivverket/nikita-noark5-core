@@ -65,7 +65,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Create a new DocumentDescription and associate it with the given Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-dokumentobjekt
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-dokumentobjekt/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-dokumentobjekt/
     @ApiOperation(value = "Persists a DocumentDescription object associated with the given Record systemId",
             notes = "Returns the newly created DocumentDescription object after it was associated with a " +
                     "Record object and persisted to the database", response = DocumentDescriptionHateoas.class)
@@ -113,7 +113,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Add a reference to a secondary Series associated with the Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-referanseArkivdel
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-referanseArkivdel/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-referanseArkivdel/
     @ApiOperation(value = "Associates a secondary Series with a Record identified by systemID",
             notes = "Returns the Record after the secondary Series is successfully associated with it." +
                     "Note a secondary series allows a Record to be associated with another Series.",
@@ -152,7 +152,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Add a Classified (gradering) to a Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-gradering
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-gradering/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-gradering/
     @ApiOperation(value = "Associates a Classified with a Record identified by systemID",
             notes = "Returns the Record after the Classified is successfully associated with it." +
                     "Note a Record can only have one Classified. Update via PUT",
@@ -190,7 +190,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Add a Disposal to a Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-kassasjon
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-kassasjon/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-kassasjon/
     @ApiOperation(value = "Associates a Disposal with a Record identified by systemID",
             notes = "Returns the Record after the Disposal is successfully associated with it." +
                     "Note a Record can only have one Disposal. Update via PUT",
@@ -229,7 +229,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Add a screening (skjerming) to a Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-skjerming
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-skjerming/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-skjerming/
     @ApiOperation(value = "Associates a Screening with a Record identified by systemID",
             notes = "Returns the Record after the Screening is successfully associated with it." +
                     "Note a Record can only have one Screening. Update via PUT",
@@ -268,7 +268,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Add a disposalUndertaken (utfoertKassasjon) to a Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-utfoertKassasjon
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-utfoertKassasjon/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-utfoertKassasjon/
     @ApiOperation(value = "Associates a DisposalUndertaken with a Record identified by systemID",
             notes = "Returns the Record after the DisposalUndertaken is successfully associated with it." +
                     "Note a Record can only have one DisposalUndertaken. Update via PUT",
@@ -307,7 +307,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Add a Deletion  to a Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-sletting
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-sletting/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-sletting/
     @ApiOperation(value = "Associates a Deletion with a Record identified by systemID",
             notes = "Returns the Record after the Deletion is successfully associated with it." +
                     "Note a Record can only have one Deletion. Update via PUT",
@@ -368,7 +368,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Retrieve a Record identified by a systemId
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/registrering/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/registrering/
     @ApiOperation(value = "Retrieves a single Record entity given a systemId", response = Record.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Record returned", response = Record.class),
@@ -395,7 +395,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Retrieve all File associated with Record identified by a systemId
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/mappe/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/mappe/
     @ApiOperation(value = "Retrieves a single File entity given a systemId",
             response = FileHateoas.class)
     @ApiResponses(value = {
@@ -420,7 +420,7 @@ public class RecordHateoasController extends NoarkController {
     // Retrieve the parent Series associated with the Record identified by the
     // given systemId
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/arkivdel
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
     @ApiOperation(value = "Retrieves a single Series entity given a systemId",
             response = SeriesHateoas.class)
     @ApiResponses(value = {
@@ -445,7 +445,7 @@ public class RecordHateoasController extends NoarkController {
     // Retrieve the parent Class associated with the Record identified by the
     // given systemId
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/klasse
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
     @ApiOperation(value = "Retrieves a single Class entity given a systemId",
             response = ClassHateoas.class)
     @ApiResponses(value = {
@@ -469,7 +469,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Retrieve all Records
     // GET [contextPath][api]/arkivstruktur/registrering
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/registrering/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/registrering/
     @ApiOperation(value = "Retrieves multiple Record entities limited by ownership rights",
             notes = "The field skip tells how many Record rows of the result set to ignore (starting at 0), " +
                     "while top tells how many rows after skip to return. Note if the value of top is greater than " +
@@ -501,7 +501,7 @@ public class RecordHateoasController extends NoarkController {
 
     // Retrieve all secondary Series associated with a Record
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/referanseArkivdel
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/referanseArkivdel/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/referanseArkivdel/
     @ApiOperation(value = "Retrieves all secondary Series associated with a Record identified by a systemId",
             response = SeriesHateoas.class)
     @ApiResponses(value = {

@@ -68,7 +68,7 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // Create a new CorrespondencePartPerson and associate it with the given journalpost
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartperson
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepartperson/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepartperson/
     @ApiOperation(value = "Persists a CorrespondencePartPerson object associated with the given Record systemId",
             notes = "Returns the newly created CorrespondencePartPerson object after it was associated with a " +
                     "Record object and persisted to the database", response = CorrespondencePartPersonHateoas.class)
@@ -111,7 +111,7 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // Create a new CorrespondencePartInternal and associate it with the given journalpost
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartintern
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepartintern/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepartintern/
     @ApiOperation(value = "Persists a CorrespondencePartInternal object associated with the given Record systemId",
             notes = "Returns the newly created CorrespondencePartInternal object after it was associated with a " +
                     "Record object and persisted to the database", response = CorrespondencePartInternalHateoas.class)
@@ -153,7 +153,7 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // Create a new CorrespondencePartUnit and associate it with the given journalpost
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartenhet
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepartenhet/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepartenhet/
     @ApiOperation(value = "Persists a CorrespondencePartUnit object associated with the given Record systemId",
             notes = "Returns the newly created CorrespondencePartUnit object after it was associated with a " +
                     "Record object and persisted to the database", response = CorrespondencePartUnitHateoas.class)
@@ -196,7 +196,7 @@ public class RegistryEntryHateoasController extends NoarkController {
     /*
     // Create a new Precedence and associate it with the given journalpost
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-presedens
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-presedens/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-presedens/
     @ApiOperation(value = "Persists a Precedence object associated with the given Record systemId",
             notes = "Returns the newly created Precedence object after it was associated with a " +
                     "Record object and persisted to the database", response = PrecedenceHateoas.class)
@@ -241,7 +241,7 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // Create a new SignOff and associate it with the given journalpost
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-avskrivning
-    //  http://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-avskrivning/
+    //  https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-avskrivning/
     @ApiOperation(value = "Persists a SignOff object associated with the given Record systemId",
             notes = "Returns the newly created SignOff object after it was associated with a " +
                     "Record object and persisted to the database", response = SignOffHateoas.class)
@@ -287,7 +287,7 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // Create a new CorrespondencePart and associate it with the given RegistryEntry
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepart
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepart/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/ny-korrespondansepart/
     @ApiOperation(value = "Persists a DocumentObject associated with the given Record systemId",
             notes = "Returns the newly created DocumentObject after it was associated with a " +
                     "Record and persisted to the database. A DocumentObject should not be associated with both a " +
@@ -334,7 +334,7 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // Retrieve all CorrespondencePartPerson associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/korrespondansepartperson/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/korrespondansepartperson/
     @ApiOperation(value = "Retrieves a list of CorrespondencePartPersons associated with a RegistryEntry",
             response = CorrespondencePartPersonHateoas.class)
     @ApiResponses(value = {
@@ -364,7 +364,7 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // Retrieve all CorrespondencePartUnit associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/korrespondansepartperson/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/korrespondansepartperson/
     @ApiOperation(value = "Retrieves a list of CorrespondencePartUnits associated with a RegistryEntry",
             response = CorrespondencePartUnitHateoas.class)
     @ApiResponses(value = {
@@ -393,7 +393,7 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // Retrieve all CorrespondencePartInternal associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/korrespondansepartperson/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/korrespondansepartperson/
     @ApiOperation(value = "Retrieves a list of CorrespondencePartInternals associated with a RegistryEntry",
             response = CorrespondencePartInternalHateoas.class)
     @ApiResponses(value = {
@@ -510,7 +510,7 @@ TODO: Temp disabled!
 
     // Retrieve all SignOff associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/avskrivning
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/avskrivning/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/avskrivning/
     @ApiOperation(value = "Retrieves a list of SignOffs associated with a RegistryEntry",
             response = SignOff.class)
     @ApiResponses(value = {
@@ -544,7 +544,7 @@ TODO: Temp disabled!
 
     // Retrieve all Precedence associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/presedens
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/presedens/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/presedens/
     @ApiOperation(value = "Retrieves a list of Precedences associated with a RegistryEntry",
             response = Precedence.class)
     @ApiResponses(value = {
@@ -578,7 +578,7 @@ TODO: Temp disabled!
 
     // Retrieve all DocumentFlow associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/dokumentflyt
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/dokumentflyt/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/dokumentflyt/
     @ApiOperation(value = "Retrieves a list of DocumentFlows associated with a RegistryEntry",
             response = DocumentFlow.class)
     @ApiResponses(value = {
@@ -641,7 +641,7 @@ TODO: Temp disabled!
 
     // Get all registryEntry
     // GET [contextPath][api]/casehandling/journalpost/
-    // http://rel.arkivverket.no/noark5/v4/api/sakarkiv/journalpost/
+    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/journalpost/
     @ApiOperation(value = "Retrieves multiple RegistryEntry entities limited by ownership rights", notes = "The field skip" +
             "tells how many RegistryEntry rows of the result set to ignore (starting at 0), while  top tells how many rows" +
             " after skip to return. Note if the value of top is greater than system value " +

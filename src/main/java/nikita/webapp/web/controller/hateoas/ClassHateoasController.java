@@ -320,7 +320,7 @@ public class ClassHateoasController
     // Retrieve all ClassificationSystem associated with Class identified by a
     // systemId
     // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/klassifikasjonsystem
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klassifikasjonsystem/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klassifikasjonsystem/
     @ApiOperation(value = "Retrieves a single ClassificationSystem that is " +
             "the parent of the Class entity identified by systemId",
             response = ClassificationSystemHateoas.class)
@@ -348,7 +348,7 @@ public class ClassHateoasController
 
     // Retrieve all Class associated with Class identified by a systemId
     // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/klasse
-    // http://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
+    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
     @ApiOperation(value = "Retrieves a single Class that is  the parent of " +
             "the Class entity identified by systemId",
             response = ClassificationSystemHateoas.class)

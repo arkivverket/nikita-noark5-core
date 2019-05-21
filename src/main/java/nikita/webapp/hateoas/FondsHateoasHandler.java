@@ -226,7 +226,7 @@ public class FondsHateoasHandler
      * Series.
      * <p>
      * "../hateoas-api/metadata/arkivstatus"
-     * "http://rel.kxml.no/noark5/v4/api/metadata/arkivstatus/"
+     * "https://rel.arkivverket.no/noark5/v4/api/metadata/arkivstatus/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
