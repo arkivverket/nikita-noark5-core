@@ -354,6 +354,10 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_FONDS = REL_FONDS_STRUCTURE + FONDS + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR = REL_FONDS_STRUCTURE + NEW_FONDS_CREATOR + SLASH;
     public static final String REL_FONDS_STRUCTURE_SUB_FONDS = NIKITA_CONFORMANCE_REL + SUB_FONDS + SLASH;
+
+    public static final String REL_FONDS_STRUCTURE_PARENT_FONDS =
+            NIKITA_CONFORMANCE_REL + PARENT_FONDS + SLASH;
+
     public static final String REL_FONDS_STRUCTURE_NEW_SUB_FONDS = NIKITA_CONFORMANCE_REL + NEW_SUB_FONDS + SLASH;
     public static final String REL_FONDS_STRUCTURE_FONDS_STATUS = REL_METADATA + SLASH + FONDS_STATUS + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_FONDS = REL_FONDS_STRUCTURE + NEW_FONDS + SLASH;
@@ -757,6 +761,12 @@ public final class Constants {
 
     public static final String HREF_BASE_CLASSIFICATION_SYSTEM =
             HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH;
+
+    public static final String HREF_BASE_FONDS =
+            HREF_BASE_FONDS_STRUCTURE + FONDS + SLASH;
+
+    public static final String HREF_METADATA_PATH =
+            HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH;
 
     private Constants() {
     }

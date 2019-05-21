@@ -16,6 +16,8 @@ public interface IFondsHateoasHandler extends IHateoasHandler {
 
     void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
+    void addParentFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+
     void addNewSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
@@ -24,8 +26,5 @@ public interface IFondsHateoasHandler extends IHateoasHandler {
 
     void addFondsStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addNewSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
 }

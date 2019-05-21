@@ -1,28 +1,25 @@
 package nikita.webapp.hateoas;
 
+import nikita.common.model.noark5.v4.Fonds;
 import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.NotNull;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.model.noark5.v4.admin.AuthorityName.RECORDS_KEEPER;
-import static nikita.common.model.noark5.v4.admin.AuthorityName.RECORDS_MANAGER;
 
 /**
  * Created by tsodring on 2/6/17.
  * <p>
  * Used to add FondsHateoas links with Fonds specific information
- * <p>
- * Not sure if there is a difference in what should be returned of links for
- * various CRUD operations so keeping them separate calls at the moment.
  */
 @Component
-public class FondsHateoasHandler extends HateoasHandler
+public class FondsHateoasHandler
+        extends HateoasHandler
         implements IFondsHateoasHandler {
 
     public FondsHateoasHandler() {
@@ -32,17 +29,21 @@ public class FondsHateoasHandler extends HateoasHandler
     @Override
     public void addEntityLinks(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
-        addDocumentMedium(entity, hateoasNoarkObject);
-        addFondsCreator(entity, hateoasNoarkObject);
+        // link for object identity
+        addFonds(entity, hateoasNoarkObject);
+        // links for child entities
         addSeries(entity, hateoasNoarkObject);
-        // It's not clear why addFonds would be part of this
-        //addFonds(entity, hateoasNoarkObject);
-        addNewFondsCreator(entity, hateoasNoarkObject);
+        addNewSeries(entity, hateoasNoarkObject);
         addSubFonds(entity, hateoasNoarkObject);
         addNewSubFonds(entity, hateoasNoarkObject);
+        // links for parent entities
+        addParentFonds(entity, hateoasNoarkObject);
+        addFondsCreator(entity, hateoasNoarkObject);
+        addNewFondsCreator(entity, hateoasNoarkObject);
+        // links for secondary entities
+        // links for metadata entities
+        addDocumentMedium(entity, hateoasNoarkObject);
         addFondsStatus(entity, hateoasNoarkObject);
-        addNewSeries(entity, hateoasNoarkObject);
-        //addNewFonds(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -63,81 +64,190 @@ public class FondsHateoasHandler extends HateoasHandler
         addDocumentMedium(entity, hateoasNoarkObject);
     }
 
-
+    /**
+     * Create a REL/HREF pair for the list of FondsCreator associated with the
+     * given Fonds. Checks if the Fonds has any FondsCreator associated with
+     * it.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234/arkivskaper"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivskaper/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
     public void addFondsCreator(INikitaEntity entity,
                                 IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH +
-                SLASH + FONDS + SLASH + entity.getSystemId() + SLASH +
-                FONDS_CREATOR + SLASH, REL_FONDS_STRUCTURE_FONDS_CREATOR, false));
+        if (getFonds(entity).getReferenceFondsCreator().size() > 0) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() + HREF_BASE_FONDS +
+                            entity.getSystemId() + SLASH + FONDS_CREATOR,
+                            REL_FONDS_STRUCTURE_FONDS_CREATOR, true));
+        }
     }
 
+    /**
+     * Create a REL/HREF pair for the list of Series associated with the
+     * given Fonds. Checks if the Fonds has any Series associated with it.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234/arkivdel"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
     public void addSeries(INikitaEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
+        if (getFonds(entity).getReferenceSeries() != null) {
+            hateoasNoarkObject.addLink(entity,
+                    new Link(getOutgoingAddress() + HREF_BASE_FONDS +
+                            entity.getSystemId() + SLASH + SERIES,
+                            REL_FONDS_STRUCTURE_SERIES, true));
+        }
+    }
+
+    /**
+     * Create a REL/HREF pair for the given Fonds associated. This is the
+     * equivalent to the self rel, but in addition identifies the object type.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
+    public void addFonds(INikitaEntity entity,
+                         IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
-                FONDS + SLASH + entity.getSystemId() + SLASH + SERIES +
-                SLASH, REL_FONDS_STRUCTURE_SERIES, false));
+                HREF_BASE_FONDS + entity.getSystemId(),
+                REL_FONDS_STRUCTURE_FONDS, true));
     }
 
-    public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
-                SLASH + entity.getSystemId() + SLASH + FONDS + SLASH, REL_FONDS_STRUCTURE_FONDS, false));
+    /**
+     * Create a REL/HREF pair for the list of sub (fonds) associated with the
+     * given Fonds. Checks if the Fonds is actually associated with any sub
+     * fonds.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234/underarkiv"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/underarkiv/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
+    public void addSubFonds(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS + entity.getSystemId() + SLASH + SUB_FONDS,
+                REL_FONDS_STRUCTURE_SUB_FONDS, true));
     }
 
-    public void addNewFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        if (authorisation.canCreateFonds()) {
-            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                    NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
-                    SLASH + entity.getSystemId() + SLASH + NEW_FONDS_CREATOR + SLASH, REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR,
-                    false));
-        }
+    /**
+     * Create a REL/HREF pair to create a new Series associated with the
+     * given Fonds. This link should only be generated if the user is
+     * authorised to create a Series.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkivdel"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkivdel/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
+    public void addNewSeries(INikitaEntity entity,
+                             IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS + entity.getSystemId() + SLASH + NEW_SERIES,
+                REL_FONDS_STRUCTURE_NEW_SERIES));
     }
 
-    public void addSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
-                SLASH + entity.getSystemId() + SLASH + SUB_FONDS + SLASH, REL_FONDS_STRUCTURE_SUB_FONDS, false));
-
+    /**
+     * Create a REL/HREF pair to create a new FondsCreator associated with the
+     * given Fonds. This link should only be generated if the user is
+     * authorised to create a FondsCreator.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkivskaper"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkivskaper/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
+    public void addNewFondsCreator(INikitaEntity entity,
+                                   IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS + entity.getSystemId() + SLASH +
+                NEW_FONDS_CREATOR, REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR));
     }
 
-    public void addNewSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS + SLASH + entity.getSystemId() + SLASH + NEW_SUB_FONDS +
-                SLASH, REL_FONDS_STRUCTURE_NEW_SUB_FONDS, false));
-
+    /**
+     * Create a REL/HREF pair to create a new (sub) Fonds associated with
+     * the given Fonds. This link should only be generated if the user is
+     * authorised to create a sub fonds.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkiv"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkiv/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
+    public void addNewSubFonds(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS + entity.getSystemId() + SLASH + NEW_SUB_FONDS,
+                REL_FONDS_STRUCTURE_NEW_SUB_FONDS));
     }
 
-    public void addFondsStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH
-                + FONDS_STATUS, REL_METADATA_FONDS_STATUS, false));
+    /**
+     * Create a REL/HREF pair to create a new (sub) Fonds associated with
+     * the given Fonds. This link should only be generated if the user is
+     * authorised to create a sub fonds.
+     * <p>
+     * "../hateoas-api/arkivstruktur/arkiv/1234/forelderarkiv"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/forelderarkiv/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
+    public void addParentFonds(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS + entity.getSystemId() + SLASH + NEW_SUB_FONDS,
+                REL_FONDS_STRUCTURE_PARENT_FONDS));
     }
 
-    public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        if (authorisation.canCreateFonds()) {
-            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                    NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
-                    SLASH + entity.getSystemId() + SLASH + NEW_FONDS + SLASH, REL_FONDS_STRUCTURE_NEW_FONDS, false));
-        }
+    /**
+     * Create a REL/HREF pair for the Series associated with the
+     * given Fonds. Checks if the Fonds is actually associated with a
+     * Series.
+     * <p>
+     * "../hateoas-api/metadata/arkivstatus"
+     * "http://rel.kxml.no/noark5/v4/api/metadata/arkivstatus/"
+     *
+     * @param entity             fonds
+     * @param hateoasNoarkObject hateoasFonds
+     */
+    @Override
+    public void addFondsStatus(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_METADATA_PATH + FONDS_STATUS,
+                REL_METADATA_FONDS_STATUS, true));
     }
 
-    public void addNewSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        if (authorisation.canCreateSeries()) {
-            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                    NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS +
-                    SLASH + entity.getSystemId() + SLASH + NEW_SERIES + SLASH, REL_FONDS_STRUCTURE_NEW_SERIES, false));
-        }
-    }
+    // Internal helper methods
 
-    private boolean isRecordsManager() {
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals(RECORDS_KEEPER))
-                ||
-                authentication.getAuthorities().stream()
-                        .anyMatch(r -> r.getAuthority().
-                                equals(RECORDS_MANAGER));
+    /**
+     * Cast the INikitaEntity entity to a Fonds
+     *
+     * @param entity the Fonds
+     * @return a Fonds object
+     */
+    private Fonds getFonds(@NotNull INikitaEntity entity) {
+        return (Fonds) entity;
     }
 }
