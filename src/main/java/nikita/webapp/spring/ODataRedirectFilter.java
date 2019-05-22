@@ -1,5 +1,6 @@
 package nikita.webapp.spring;
 
+import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -62,8 +63,17 @@ public class ODataRedirectFilter
                         || request.getQueryString().contains("top"))) {
             String path = ODATA_PATH +
                     getEntity(request.getRequestURL());
-            request.getRequestDispatcher(path).
-                    forward(request, response);
+            RequestDispatcher requestDispatcher = request.
+                    getRequestDispatcher(path);
+
+            if (requestDispatcher == null) {
+                throw new NikitaMisconfigurationException(
+                        "Unable to redirect request [" +
+                        request.getRequestURL() + "/" +
+                                request.getQueryString()+ "] for OData " +
+                                "processing");
+            }
+            requestDispatcher.forward(request, response);
             return;
         }
         chain.doFilter(req, res);
