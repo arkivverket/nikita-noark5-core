@@ -3,9 +3,44 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
-Release 0.4 2019-0X-XX
+Release 0.4 2019-05-22 ()
 ----------------------
+ * Roll out OData handling to all endpoints where applicable
  * Changed the relation key for "ny-journalpost" to the official one.
+ * Better link generation on outgoing links. 
+ * Tidy up code and make code and approaches more consistent throughout
+   the codebase
+ * Update rels to be in compliance with updated version in the
+   interface standard
+ * Avoid printing links on empty objects as they can't have links
+ * Small bug fixes and improvements
+ * Start moving generation of outgoing links to @Service layer so access
+   control can be used when generating links
+ * Log exception that was being swallowed so it's traceable
+ * Fix name mapping problem
+ * Update templated printing so templated should only be printed if it
+   is set true. Requires more work to roll out across entire
+   application.
+ * Remove Record->DocumentObject as per domain model of n5v4
+ * Add ability to delete lists filtered with OData
+ * Return NO_CONTENT (204) on delete as per interface standard
+ * Introduce support for ConstraintViolationException exception 
+ * Make Service classes extend NoarkService
+ * Make code base respect X-Forwarded-Host, X-Forwarded-Proto and
+   X-Forwarded-Port
+ * Update CorrespondencePart* code to be more in line with Single
+   Responsibility Principle
+ * Make package name follow directory structure
+ * Make sure Document number starts at 1, not 0
+ * Fix isues discovered by FindBugs
+ * Update from Date to ZonedDateTime
+ * Fix wrong tablename
+ * Introduce Service layer tests
+ * Improvements to CorrespondencePart
+ * Continued work on Class / Classificationsystem
+ * Fix feature where authors were stored as storageLocations
+ * Update HQL builder for OData
+ * Update OData search capability from webpage 
 
 Release 0.3 2019-03-22 (commit 7d712e2e796ab86013915c027db17bb6f3416f16)
 ----------------------
