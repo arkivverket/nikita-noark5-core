@@ -4,9 +4,11 @@ import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +86,7 @@ public class HQLStatementBuilder {
         select.append(getNameObject(parentResource));
         select.append(" in (select id from ");
         select.append(getNameObject(parentResource));
-        select.append(" where systemId = 'PARENT_ID') and ");
+        select.append(" where systemId = :parentId ) and ");
         select.append(ownerColumn);
         select.append(" = '");
         select.append(loggedInUser);
@@ -142,9 +144,10 @@ public class HQLStatementBuilder {
         }
 
         hqlStatement.append(" ");
-        String finalHQLStatement = hqlStatement.toString().
-                replace("PARENT_ID", parentId);
-        Query query = session.createQuery(finalHQLStatement);
+        Query query = session.createQuery(hqlStatement.toString());
+        if (parentId != "") {
+            query.setParameter("parentId", parentId);
+        }
 
         // take care of the orderBy part
         boolean firstOrderBy = false;
