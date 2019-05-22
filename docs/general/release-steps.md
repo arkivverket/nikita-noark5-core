@@ -1,6 +1,6 @@
 # Release steps
 
-This guide shows the steps required to update to version 0.4
+This guide shows the steps required to update to version 0.4.
 
 ## 1. Update NEWS.md
 
@@ -14,8 +14,7 @@ Add
 ``` 
 Release 0.4 2019-05-22 ()
 ----------------------
-``` 
-   
+```  
 
 ## 1. Update pom.xml
 
@@ -38,8 +37,8 @@ to:
 ## 2. Tag a new version
 
     git tag -a 0.4 -m "0.4 RELEASE" 
-    git push --tags
     git push
+    git push --tags
 
 ## 3. Update NEWS.md with commit 
 
@@ -53,12 +52,7 @@ Release 0.4 2019-05-22 (2a803f1a203fc14921081d519ab13bc623116a14)
 ----------------------
 ``` 
 
-## 4. Update description on gitlab
-Go the the Project
-[description](https://gitlab.com/OsloMet-ABI/nikita-noark5-core/edit)
-and change the version number.
+## 4. Send mail to mailing list
 
-
-## 5. Send mail to mailing list
-
-Inform mailing list nikita-noark@nuug.no about the new release.
+Post a copy of the NEWS entry with links to the project and latest
+release to the mailing list nikita-noark@nuug.no.
