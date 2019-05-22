@@ -5,48 +5,49 @@ These are the highlevel changes.  For details, see the git history.
 
 Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
 ----------------------
- * Roll out OData handling to all endpoints where applicable
+ * Roll out OData handling to all endpoints where applicable.
  * Changed the relation key for "ny-journalpost" to the official one.
- * Better link generation on outgoing links. 
+ * Better link generation on outgoing links.
  * Tidy up code and make code and approaches more consistent throughout
-   the codebase
+   the codebase.
  * Update rels to be in compliance with updated version in the
-   interface standard
- * Avoid printing links on empty objects as they can't have links
- * Small bug fixes and improvements
- * Start moving generation of outgoing links to @Service layer so access
-   control can be used when generating links
- * Log exception that was being swallowed so it's traceable
- * Fix name mapping problem
+   interface standard.
+ * Avoid printing links on empty objects as they can't have links.
+ * Small bug fixes and improvements.
+ * Start moving generation of outgoing links to @Service layer so
+   access control can be used when generating links.
+ * Log exception that was being swallowed so it's traceable.
+ * Fix name mapping problem.
  * Update templated printing so templated should only be printed if it
    is set true. Requires more work to roll out across entire
    application.
- * Remove Record->DocumentObject as per domain model of n5v4
- * Add ability to delete lists filtered with OData
- * Return NO_CONTENT (204) on delete as per interface standard
- * Introduce support for ConstraintViolationException exception 
- * Make Service classes extend NoarkService
+ * Remove Record->DocumentObject as per domain model of n5v4.
+ * Add ability to delete lists filtered with OData.
+ * Return NO_CONTENT (204) on delete as per interface standard.
+ * Introduce support for ConstraintViolationException exception.
+ * Make Service classes extend NoarkService.
  * Make code base respect X-Forwarded-Host, X-Forwarded-Proto and
-   X-Forwarded-Port
+   X-Forwarded-Port.
  * Update CorrespondencePart* code to be more in line with Single
-   Responsibility Principle
- * Make package name follow directory structure
- * Make sure Document number starts at 1, not 0
- * Fix isues discovered by FindBugs
- * Update from Date to ZonedDateTime
- * Fix wrong tablename
- * Introduce Service layer tests
- * Improvements to CorrespondencePart
- * Continued work on Class / Classificationsystem
- * Fix feature where authors were stored as storageLocations
- * Update HQL builder for OData
- * Update OData search capability from webpage 
+   Responsibility Principle.
+ * Make package name follow directory structure.
+ * Make sure Document number starts at 1, not 0.
+ * Fix isues discovered by FindBugs.
+ * Update from Date to ZonedDateTime.
+ * Fix wrong tablename.
+ * Introduce Service layer tests.
+ * Improvements to CorrespondencePart.
+ * Continued work on Class / Classificationsystem.
+ * Fix feature where authors were stored as storageLocations.
+ * Update HQL builder for OData.
+ * Update OData search capability from webpage.
 
 Release 0.3 2019-03-22 (commit 7d712e2e796ab86013915c027db17bb6f3416f16)
 ----------------------
  * Tidied up inconsistencies in how ClassificationSystem and Class are  
    developed.
- * Tidied up known inconsistencies between domain model and hateaos links.
+ * Tidied up known inconsistencies between domain model and hateaos
+   links.
  * Added experimental code for blockchain integration. 	
  * Make token expiry time configurable at upstart from properties file.
  * Continued work on OData search syntax.
@@ -69,7 +70,7 @@ Release 0.3 2019-03-22 (commit 7d712e2e796ab86013915c027db17bb6f3416f16)
 
 Release 0.2.1 2018-11-02 (commit 2bf7dfb7f39067c09b9db1d473b4b2c42cd602de)
 ----------------------
- * Fixed bug resulting in a class cast exception
+ * Fixed bug resulting in a class cast exception.
  * Corrected handling of administrativEnhet.
  * Fixed bug in some \_links href entries containing double slashes.
  * Reintroduce Allow headers for OPTIONS.
@@ -79,26 +80,27 @@ Release 0.2.1 2018-11-02 (commit 2bf7dfb7f39067c09b9db1d473b4b2c42cd602de)
 
 Release 0.2 2018-10-17 (commit d7c3feaa945e2b0cfc19055a201091c7b3840b89)
 ------------------------
- * Fix typos in REL names
- * Tidy up error message reporting
- * Fix issue where we used Integer.valueOf(), not Integer.getInteger()
- * Change some String handling to StringBuffer
- * Fix error reporting
- * Code tidy-up
- * Fix issue using static non-synchronized SimpleDateFormat to avoid 
-   race conditions
- * Fix problem where deserialisers were treating integers as strings
- * Update methods to make them null-safe
- * Fix many issues reported by coverity
- * Improve equals(), compareTo() and hash() in domain model
- * Improvements to the domain model for metadata classes
- * Fix CORS issues when downloading document
- * Implementation of case-handling with registryEntry and document upload
- * Better support in Javascript for OPTIONS
- * Adding concept description of mail integration
- * Improve setting of default values for GET on ny-journalpost
- * Better handling of required values during deserialisation 
- * Changed tilknyttetDato (M620) from date to dateTime
+ * Fix typos in REL names.
+ * Tidy up error message reporting.
+ * Fix issue where we used Integer.valueOf(), not Integer.getInteger().
+ * Change some String handling to StringBuffer.
+ * Fix error reporting.
+ * Code tidy-up.
+ * Fix issue using static non-synchronized SimpleDateFormat to avoid
+   race conditions.
+ * Fix problem where deserialisers were treating integers as strings.
+ * Update methods to make them null-safe.
+ * Fix many issues reported by coverity.
+ * Improve equals(), compareTo() and hash() in domain model.
+ * Improvements to the domain model for metadata classes.
+ * Fix CORS issues when downloading document.
+ * Implementation of case-handling with registryEntry and document
+   upload.
+ * Better support in Javascript for OPTIONS.
+ * Adding concept description of mail integration.
+ * Improve setting of default values for GET on ny-journalpost.
+ * Better handling of required values during deserialisation.
+ * Changed tilknyttetDato (M620) from date to dateTime.
  * Corrected some opprettetDato (M600) (de)serialisation errors.
  * Improve parse error reporting.
  * Started on OData search and filtering.
@@ -121,10 +123,12 @@ Release 0.2 2018-10-17 (commit d7c3feaa945e2b0cfc19055a201091c7b3840b89)
 
 Release 0.1.1 2017-06-09 (commit a3932c87b22aee272e2a0385bb8a7d029a73faf4)
 --------------------------------------------------------------------------
- * Continued work on the angularjs GUI, including document upload
- * Implemented correspondencepartPerson, correspondencepartUnit and correspondencepartInternal
- * Applied for coverity coverage and started submitting code on regular basis
- * Started fixing bugs reported by coverity
+ * Continued work on the angularjs GUI, including document upload.
+ * Implemented correspondencepartPerson, correspondencepartUnit and
+   correspondencepartInternal.
+ * Applied for coverity coverage and started submitting code on regular
+   basis.
+ * Started fixing bugs reported by coverity.
  * Corrected and completed HATEOAS links to make sure entire API is
    available via URLs in \_links.
  * Corrected all relation URLs to use trailing slash.
@@ -141,7 +145,8 @@ Release 0.1.1 2017-06-09 (commit a3932c87b22aee272e2a0385bb8a7d029a73faf4)
  * Added support for 'arkivskaper', 'saksmappe' and 'journalpost'.
  * Added support for some metadata codelists.
  * Added support for Cross-origin resource sharing (CORS).
- * Changed login method from Basic Auth to JSON Web Token (RFC 7519) style.
+ * Changed login method from Basic Auth to JSON Web Token (RFC 7519)
+   style.
  * Added support for GET-ing ny-* URLs.
  * Added support for modifying entities using PUT and eTag.
  * Added support for returning XML output on request.
