@@ -14,12 +14,8 @@ import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,20 +39,14 @@ public class DocumentDescriptionHateoasController
     private IDocumentDescriptionService documentDescriptionService;
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
-    private IRecordHateoasHandler recordHateoasHandler;
 
     public DocumentDescriptionHateoasController(
             IDocumentDescriptionService documentDescriptionService,
             IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler,
-            IDocumentObjectHateoasHandler documentObjectHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher,
-            IRecordHateoasHandler recordHateoasHandler) {
+            IDocumentObjectHateoasHandler documentObjectHateoasHandler) {
         this.documentDescriptionService = documentDescriptionService;
         this.documentDescriptionHateoasHandler = documentDescriptionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
-        this.recordHateoasHandler = recordHateoasHandler;
     }
 
     // API - All POST Requests (CRUD - CREATE)
@@ -110,9 +100,6 @@ public class DocumentDescriptionHateoasController
                 new DocumentObjectHateoas(documentObject);
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityCreatedEvent(this,
-                createdDocumentObject));
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdDocumentObject.getVersion().toString())
@@ -359,9 +346,6 @@ public class DocumentDescriptionHateoasController
                 new DocumentDescriptionHateoas(updatedDocumentDescription);
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
                 new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        updatedDocumentDescription));
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedDocumentDescription.getVersion().toString())
