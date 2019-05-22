@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl.odata;
 
 import nikita.common.model.nikita.Count;
+import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.NoarkGeneralEntity;
 import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
 import nikita.webapp.hateoas.HateoasHandler;
@@ -79,26 +80,18 @@ public class ODataService
      * @throws Exception
      */
     private ResponseEntity<HateoasNoarkObject>
-    packAsHateoasObject(List<NoarkGeneralEntity> list)
+    packAsHateoasObject(List<NoarkEntity> list)
             throws Exception {
-
         HateoasNoarkObject noarkObject;
         HateoasHandler handler;
-
         if (list.size() > 0) {
-            Class<? extends NoarkGeneralEntity> cls = list.get(0).getClass();
-
+            Class<? extends NoarkEntity> cls = list.get(0).getClass();
             HateoasPacker packer = cls.getAnnotation(HateoasPacker.class);
             HateoasObject hateoasObject = cls.getAnnotation(HateoasObject.class);
-
             noarkObject =
                     hateoasObject.using().getDeclaredConstructor(List.class)
                             .newInstance(list);
-
-            handler =
-                    packer.using().getConstructor().newInstance();
-
-
+            handler = packer.using().getConstructor().newInstance();
         } else {
             noarkObject = new HateoasNoarkObject();
             handler = new HateoasHandler();
