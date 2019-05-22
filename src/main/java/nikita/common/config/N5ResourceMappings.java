@@ -369,11 +369,11 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG = "tilknyttetregistreringsom";
     public static final String AUTHOR_ENG = "forfatter";
-    public static final String BASIC_RECORD_ENG = "basisregistrering";
+    public static final String BASIC_RECORD_ENG = "basicRecord";
     public static final String BASIC_RECORD_ID_ENG = "registreringsID";
     public static final String BUSINESS_ADDRESS_ENG = "forretningsadresse";
     public static final String CASE_DATE_ENG = "saksdato";
-    public static final String CASE_FILE_ENG = "case_file";
+    public static final String CASE_FILE_ENG = "caseFile";
     public static final String CASE_HANDLER_ENG = "saksbehandler";
     public static final String CASE_LOANED_DATE_ENG = "utlaantDato";
     public static final String CASE_LOANED_TO_ENG = "utlaantTil";
@@ -447,7 +447,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_DATE_ENG = "tilknyttetDato";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG = "dokumentnummer";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG = "dokumenttype";
-    public static final String DOCUMENT_DESCRIPTION_ENG = "dokumentbeskrivelse";
+    public static final String DOCUMENT_DESCRIPTION_ENG = "documentDescrption";
     public static final String DOCUMENT_DESCRIPTION_STATUS_ENG = "dokumentstatus";
     public static final String DOCUMENT_FLOW_ENG = "dokumentflyt";
     public static final String DOCUMENT_FLOW_FLOW_COMMENT_ENG = "flytMerknad";
@@ -459,7 +459,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_MEDIUM_ENG = "dokumentmedium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG = "sjekksumAlgoritme";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ENG = "sjekksum";
-    public static final String DOCUMENT_OBJECT_ENG = "dokumentobjekt";
+    public static final String DOCUMENT_OBJECT_ENG = "documentObject";
     public static final String DOCUMENT_OBJECT_FILE_NAME_ENG = "filnavn";
     public static final String DOCUMENT_OBJECT_FILE_SIZE_ENG = "filstoerrelse";
     public static final String DOCUMENT_OBJECT_FORMAT_DETAILS_ENG = "formatDetaljer";
@@ -484,7 +484,7 @@ public final class N5ResourceMappings {
     public static final String FINALISED_BY_ENG = "avsluttetAv";
     public static final String FINALISED_DATE_ENG = "avsluttetDato";
     public static final String FLOW_STATUS_ENG = "flytstatus";
-    public static final String FONDS_CREATOR_ENG = "arkivskaper";
+    public static final String FONDS_CREATOR_ENG = "fondsCreator";
     public static final String FONDS_CREATOR_ID_ENG = "fondsCreatorId";
     public static final String FONDS_CREATOR_NAME_ENG = "fondsCreatorName";
     public static final String FONDS_ENG = "fonds";
@@ -520,11 +520,11 @@ public final class N5ResourceMappings {
     public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG = "referanseAdministratitivEnhet";
     public static final String REFERENCE_CASE_HANDLER_ENG = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG = "referanseArkivdel";
-    public static final String REGISTRATION_ENG = "registrering";
+    public static final String REGISTRATION_ENG = "record";
     public static final String REGISTRY_ENTRY_DATE_ENG = "journaldato";
     public static final String REGISTRY_ENTRY_DOCUMENT_DATE_ENG = "dokumentetsDato";
     public static final String REGISTRY_ENTRY_DUE_DATE_ENG = "forfallsdato";
-    public static final String REGISTRY_ENTRY_ENG = "journalpost";
+    public static final String REGISTRY_ENTRY_ENG = "registryEntry";
     public static final String REGISTRY_ENTRY_NUMBER_ENG = "journalpostnummer";
     public static final String REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS_ENG = "antallVedlegg";
     public static final String REGISTRY_ENTRY_RECEIVED_DATE_ENG = "mottattDato";
@@ -581,7 +581,7 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG_OBJECT = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT = "tilknyttetregistreringsom";
     public static final String AUTHOR_ENG_OBJECT = "forfatter";
-    public static final String BASIC_RECORD_ENG_OBJECT = "basisregistrering";
+    public static final String BASIC_RECORD_ENG_OBJECT = "BasicRecord";
     public static final String BASIC_RECORD_ID_ENG_OBJECT = "registreringsID";
     public static final String BUSINESS_ADDRESS_ENG_OBJECT = "forretningsadresse";
     public static final String CASE_DATE_ENG_OBJECT = "saksdato";
@@ -659,7 +659,8 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_DATE_ENG_OBJECT = "tilknyttetDato";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG_OBJECT = "dokumentnummer";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG_OBJECT = "dokumenttype";
-    public static final String DOCUMENT_DESCRIPTION_ENG_OBJECT = "dokumentbeskrivelse";
+    public static final String DOCUMENT_DESCRIPTION_ENG_OBJECT =
+            "DocumentDescription";
     public static final String DOCUMENT_DESCRIPTION_STATUS_ENG_OBJECT = "dokumentstatus";
     public static final String DOCUMENT_FLOW_ENG_OBJECT = "dokumentflyt";
     public static final String DOCUMENT_FLOW_FLOW_COMMENT_ENG_OBJECT = "flytMerknad";
@@ -671,7 +672,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_MEDIUM_ENG_OBJECT = "dokumentmedium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG_OBJECT = "sjekksumAlgoritme";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ENG_OBJECT = "sjekksum";
-    public static final String DOCUMENT_OBJECT_ENG_OBJECT = "dokumentobjekt";
+    public static final String DOCUMENT_OBJECT_ENG_OBJECT = "DocumentObject";
     public static final String DOCUMENT_OBJECT_FILE_NAME_ENG_OBJECT = "filnavn";
     public static final String DOCUMENT_OBJECT_FILE_SIZE_ENG_OBJECT = "filstoerrelse";
     public static final String DOCUMENT_OBJECT_FORMAT_DETAILS_ENG_OBJECT = "formatDetaljer";
@@ -696,7 +697,7 @@ public final class N5ResourceMappings {
     public static final String FINALISED_BY_ENG_OBJECT = "avsluttetAv";
     public static final String FINALISED_DATE_ENG_OBJECT = "avsluttetDato";
     public static final String FLOW_STATUS_ENG_OBJECT = "flytstatus";
-    public static final String FONDS_CREATOR_ENG_OBJECT = "arkivskaper";
+    public static final String FONDS_CREATOR_ENG_OBJECT = "FondsCreator";
     public static final String FONDS_CREATOR_ID_ENG_OBJECT = "fondsCreatorId";
     public static final String FONDS_CREATOR_NAME_ENG_OBJECT = "fondsCreatorName";
     public static final String FONDS_ENG_OBJECT = "Fonds";
@@ -732,11 +733,11 @@ public final class N5ResourceMappings {
     public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG_OBJECT = "referanseAdministratitivEnhet";
     public static final String REFERENCE_CASE_HANDLER_ENG_OBJECT = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG_OBJECT = "referanseArkivdel";
-    public static final String REGISTRATION_ENG_OBJECT = "registrering";
+    public static final String REGISTRATION_ENG_OBJECT = "Record";
     public static final String REGISTRY_ENTRY_DATE_ENG_OBJECT = "journaldato";
     public static final String REGISTRY_ENTRY_DOCUMENT_DATE_ENG_OBJECT = "dokumentetsDato";
     public static final String REGISTRY_ENTRY_DUE_DATE_ENG_OBJECT = "forfallsdato";
-    public static final String REGISTRY_ENTRY_ENG_OBJECT = "journalpost";
+    public static final String REGISTRY_ENTRY_ENG_OBJECT = "RegistryEntry";
     public static final String REGISTRY_ENTRY_NUMBER_ENG_OBJECT = "journalpostnummer";
     public static final String REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS_ENG_OBJECT = "antallVedlegg";
     public static final String REGISTRY_ENTRY_RECEIVED_DATE_ENG_OBJECT = "mottattDato";
