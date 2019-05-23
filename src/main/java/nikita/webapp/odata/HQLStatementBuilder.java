@@ -145,7 +145,7 @@ public class HQLStatementBuilder {
 
         hqlStatement.append(" ");
         Query query = session.createQuery(hqlStatement.toString());
-        if (parentId != "") {
+        if (!parentId.equals("")) {
             query.setParameter("parentId", parentId);
         }
 
