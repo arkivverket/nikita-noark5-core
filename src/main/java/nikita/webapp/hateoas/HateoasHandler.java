@@ -173,7 +173,8 @@ public class HateoasHandler implements IHateoasHandler {
      * @return the outgoing address
      */
     protected String getOutgoingAddress() {
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        RequestAttributes requestAttributes = RequestContextHolder.
+                getRequestAttributes();
         HttpServletRequest request  =
                 ((ServletRequestAttributes) requestAttributes).getRequest();
 
