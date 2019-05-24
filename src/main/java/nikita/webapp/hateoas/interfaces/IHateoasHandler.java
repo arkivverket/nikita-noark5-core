@@ -52,4 +52,10 @@ public interface IHateoasHandler {
 
     void addDocumentMedium(INikitaEntity entity,
                            IHateoasNoarkObject hateoasNoarkObject);
+
+
+    // The following are required ti give @Value during reflection
+    void setPublicAddress(String publicAddress);
+
+    void setContextPath(String contextPath);
 }
