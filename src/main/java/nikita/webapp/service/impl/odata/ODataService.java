@@ -21,6 +21,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,13 @@ public class ODataService
     private final Pattern pairRegex = Pattern.compile(REGEX_UUID);
 
     private final EntityManager entityManager;
+
+    @Value("${nikita.server.hateoas.publicAddress}")
+    protected String publicAddress;
+
+    @Value("${server.servlet.context-path}")
+    protected String contextPath;
+
 
     public ODataService(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -92,6 +100,8 @@ public class ODataService
                     hateoasObject.using().getDeclaredConstructor(List.class)
                             .newInstance(list);
             handler = packer.using().getConstructor().newInstance();
+            handler.setPublicAddress(publicAddress);
+            handler.setContextPath(contextPath);
         } else {
             noarkObject = new HateoasNoarkObject();
             handler = new HateoasHandler();
