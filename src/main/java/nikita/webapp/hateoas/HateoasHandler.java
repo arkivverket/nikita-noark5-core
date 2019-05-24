@@ -5,11 +5,14 @@ import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 import nikita.webapp.security.IAuthorisation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +27,9 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
  */
 @Component
 public class HateoasHandler implements IHateoasHandler {
+
+ private static final Logger logger =
+            LoggerFactory.getLogger(HateoasHandler.class);
 
     protected IAuthorisation authorisation;
 
@@ -167,11 +173,10 @@ public class HateoasHandler implements IHateoasHandler {
      * @return the outgoing address
      */
     protected String getOutgoingAddress() {
-        RequestAttributes attribs = RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = null;
-        if (attribs instanceof NativeWebRequest) {
-            request = (HttpServletRequest) ((NativeWebRequest) attribs).getNativeRequest();
-        }
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request  =
+                ((ServletRequestAttributes) requestAttributes).getRequest();
+
         if (request != null) {
             String address = request.getHeader("X-Forwarded-Host");
             String protocol = request.getHeader("X-Forwarded-Proto");
@@ -182,13 +187,19 @@ public class HateoasHandler implements IHateoasHandler {
                     return protocol + "://" + address + ":" + port +
                             contextPath + SLASH;
                 } else {
-                    return protocol + "://" + address + SLASH + contextPath + SLASH;
+                    return protocol + "://" + address + contextPath + SLASH;
                 }
-            } else {
-                return publicAddress + contextPath + SLASH;
             }
         }
         return publicAddress + contextPath + SLASH;
+    }
+
+    public void setPublicAddress(String publicAddress) {
+        this.publicAddress = publicAddress;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 }
 

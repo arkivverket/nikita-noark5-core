@@ -73,7 +73,7 @@ public class ODataRedirectFilter
                                 request.getQueryString()+ "] for OData " +
                                 "processing");
             }
-            requestDispatcher.forward(request, response);
+            requestDispatcher.include(request, response);
             return;
         }
         chain.doFilter(req, res);
