@@ -464,6 +464,8 @@ public class FileHateoasController
         Record defaultRecord = new Record();
         defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
         defaultRecord.setArchivedDate(ZonedDateTime.now());
+        defaultRecord.setTitle(TEST_TITLE);
+        defaultRecord.setDescription(TEST_DESCRIPTION);
         RecordHateoas recordHateoas = new
                 RecordHateoas(defaultRecord);
         recordHateoasHandler.addLinksOnNew(recordHateoas, new Authorisation());
