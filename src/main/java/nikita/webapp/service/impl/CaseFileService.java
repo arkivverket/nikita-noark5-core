@@ -1,15 +1,15 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.metadata.CaseStatus;
-import nikita.common.repository.n5v4.ICaseFileRepository;
-import nikita.common.repository.n5v4.admin.IAdministrativeUnitRepository;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.metadata.CaseStatus;
+import nikita.common.repository.n5v5.ICaseFileRepository;
+import nikita.common.repository.n5v5.admin.IAdministrativeUnitRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;

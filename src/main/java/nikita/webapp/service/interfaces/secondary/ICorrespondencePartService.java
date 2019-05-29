@@ -1,13 +1,13 @@
 package nikita.webapp.service.interfaces.secondary;
 
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePart;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 
 import javax.validation.constraints.NotNull;
 

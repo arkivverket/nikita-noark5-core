@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces.imprt;
 
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 
 
 public interface ICaseFileImportService extends IFileImportService{

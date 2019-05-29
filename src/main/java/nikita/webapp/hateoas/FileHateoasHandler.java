@@ -1,9 +1,9 @@
 package nikita.webapp.hateoas;
 
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import org.springframework.stereotype.Component;
 

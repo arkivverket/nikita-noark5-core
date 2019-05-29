@@ -319,7 +319,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               url: urlCaseFile,
               method: "PUT",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
                 'ETag': $scope.caseFileETag
               },
@@ -357,7 +357,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               url: urlRegistryEntry,
               method: "PUT",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
                 'ETag': $scope.registryEntryETag
               },
@@ -399,7 +399,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               url: $scope.document._links[rel].href,
               method: "PUT",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
                 'ETAG': $scope.documentETag
               },
@@ -437,7 +437,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               url: $scope.registryEntry._links[rel].href,
               method: "POST",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
               },
               data: {
@@ -483,7 +483,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               url: $scope.documentDescription._links[rel].href,
               method: "POST",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
               },
               data: {
@@ -523,7 +523,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               url: href,
               method: "POST",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
               },
               data: {
@@ -587,7 +587,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
               url: $scope.caseFile._links[rel].href,
               method: "POST",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
               },
               data: {
@@ -624,7 +624,7 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
           url: $scope.hrefNewCaseFile,
           method: "POST",
           headers: {
-            'Content-Type': 'application/vnd.noark5-v4+json',
+            'Content-Type': 'application/vnd.noark5-v5+json',
             'Authorization': $scope.token,
           },
           data: {

@@ -1,8 +1,8 @@
 package nikita.webapp.service.interfaces;
 
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.FondsCreator;
-import nikita.common.model.noark5.v4.hateoas.FondsHateoas;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.FondsCreator;
+import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;

@@ -7,17 +7,17 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.DocumentObject;
-import nikita.common.model.noark5.v4.casehandling.DocumentFlow;
-import nikita.common.model.noark5.v4.casehandling.Precedence;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
-import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.*;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.secondary.SignOff;
+import nikita.common.model.noark5.v5.DocumentObject;
+import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
+import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.*;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
@@ -45,7 +45,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class RegistryEntryHateoasController extends NoarkController {
 
     private final IRegistryEntryService registryEntryService;
@@ -85,7 +85,7 @@ public class RegistryEntryHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_CORRESPONDENCE_PART_PERSON, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_CORRESPONDENCE_PART_PERSON, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CorrespondencePartPersonHateoas>
     createCorrespondencePartPersonAssociatedWithRecord(
             HttpServletRequest request,
@@ -128,7 +128,7 @@ public class RegistryEntryHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_CORRESPONDENCE_PART_INTERNAL, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_CORRESPONDENCE_PART_INTERNAL, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CorrespondencePartInternalHateoas> createCorrespondencePartInternalAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -170,7 +170,7 @@ public class RegistryEntryHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_CORRESPONDENCE_PART_UNIT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_CORRESPONDENCE_PART_UNIT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CorrespondencePartUnitHateoas> createCorrespondencePartUnitAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -213,7 +213,7 @@ public class RegistryEntryHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_PRECEDENCE, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_PRECEDENCE, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<PrecedenceHateoas> createPrecedenceAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -258,7 +258,7 @@ public class RegistryEntryHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_DOCUMENT_DESCRIPTION, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_DOCUMENT_DESCRIPTION, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<SignOffHateoas>
     createSignOffAssociatedWithRecord(
             HttpServletRequest request,
@@ -305,7 +305,7 @@ public class RegistryEntryHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_DOCUMENT_OBJECT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_DOCUMENT_OBJECT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String>
     createDocumentObjectAssociatedWithRegistryEntry(
             HttpServletRequest request,
@@ -730,7 +730,7 @@ TODO: Temp disabled!
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = RequestMethod.PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<RegistryEntryHateoas> updateRegistryEntry(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",

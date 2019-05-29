@@ -6,11 +6,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.DocumentObject;
-import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
-import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v4.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.DocumentObject;
+import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -30,8 +30,8 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH +
-        SLASH + DOCUMENT_DESCRIPTION, produces = {NOARK5_V4_CONTENT_TYPE_JSON
-        , NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        SLASH + DOCUMENT_DESCRIPTION, produces = {NOARK5_V5_CONTENT_TYPE_JSON
+        , NOARK5_V5_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
 public class DocumentDescriptionHateoasController
         extends NoarkController {
@@ -78,7 +78,7 @@ public class DocumentDescriptionHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_OBJECT,
-            consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<DocumentObjectHateoas>
     createDocumentObjectAssociatedWithDocumentDescription(
             HttpServletRequest request,
@@ -325,7 +325,7 @@ public class DocumentDescriptionHateoasController
     @Counted
 
     @PutMapping(value = SYSTEM_ID_PARAMETER,
-            consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<DocumentDescriptionHateoas> updateDocumentDescription(
             HttpServletRequest request,
             @ApiParam(name = "systemID",

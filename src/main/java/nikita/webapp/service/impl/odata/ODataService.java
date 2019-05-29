@@ -1,23 +1,14 @@
 package nikita.webapp.service.impl.odata;
 
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.NoarkEntity;
-import nikita.common.model.noark5.v4.NoarkGeneralEntity;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.webapp.hateoas.HateoasHandler;
-import nikita.webapp.odata.NikitaODataToHQLWalker;
-import nikita.webapp.odata.ODataLexer;
-import nikita.webapp.odata.ODataParser;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import nikita.webapp.web.controller.hateoas.odata.ODataController;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +23,6 @@ import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static nikita.common.config.Constants.REGEX_UUID;
@@ -127,7 +117,7 @@ public class ODataService
         originalRequest.append("?");
         originalRequest.append(
                 URLDecoder.decode(request.getQueryString(), UTF_8));
-
+/*
         ODataLexer lexer = new ODataLexer(
                 CharStreams.fromString(originalRequest.toString()));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -147,5 +137,8 @@ public class ODataService
         }
 
         return hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
+        */
+        return null;
+
     }
 }

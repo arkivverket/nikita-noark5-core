@@ -1,6 +1,6 @@
 package nikita.webapp.service.interfaces;
 
-import nikita.common.model.noark5.v4.BasicRecord;
+import nikita.common.model.noark5.v5.BasicRecord;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

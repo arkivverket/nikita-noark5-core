@@ -193,7 +193,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               url: urlFonds,
               method: "PUT",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
                 'ETag': $scope.fondsETag
               },
@@ -231,7 +231,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               url: urlSeries,
               method: "PUT",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
                 'ETag': $scope.seriesETag
               },
@@ -273,7 +273,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               url: $scope.fondsCreator._links[rel].href,
               method: "PUT",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
                 'ETAG': $scope.fondsCreatorETag
               },
@@ -312,7 +312,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               url: $scope.fonds._links[rel].href,
               method: "POST",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
               },
               data: {
@@ -352,7 +352,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
               url: $scope.fonds._links[rel].href,
               method: "POST",
               headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': $scope.token,
               },
               data: {
@@ -403,7 +403,7 @@ var fondsController = app.controller('ArkivarController', ['$scope', '$http',
           url: $scope.hrefNewFonds,
           method: "POST",
           headers: {
-            'Content-Type': 'application/vnd.noark5-v4+json',
+            'Content-Type': 'application/vnd.noark5-v5+json',
             'Authorization': $scope.token,
           },
           data: {

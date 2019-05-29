@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces.imprt;
 
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.Series;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.Series;
 
 public interface IFondsImportService {
     // -- All CREATE operations

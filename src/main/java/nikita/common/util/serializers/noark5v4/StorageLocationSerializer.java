@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import nikita.common.model.noark5.v4.secondary.StorageLocation;
+import nikita.common.model.noark5.v5.secondary.StorageLocation;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

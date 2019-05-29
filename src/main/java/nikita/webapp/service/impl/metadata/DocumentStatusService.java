@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
-import nikita.common.model.noark5.v4.metadata.DocumentStatus;
-import nikita.common.repository.n5v4.metadata.IDocumentStatusRepository;
+import nikita.common.model.noark5.v5.metadata.DocumentStatus;
+import nikita.common.repository.n5v5.metadata.IDocumentStatusRepository;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;

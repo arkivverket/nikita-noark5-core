@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
-import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
-import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
+import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
+import nikita.common.repository.n5v5.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;

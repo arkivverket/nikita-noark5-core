@@ -1,9 +1,9 @@
 package nikita.webapp.service.impl.metadata;
 
-import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.metadata.ClassificationType;
-import nikita.common.repository.n5v4.metadata.IClassificationTypeRepository;
+import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.metadata.ClassificationType;
+import nikita.common.repository.n5v5.metadata.IClassificationTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;

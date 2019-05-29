@@ -1,9 +1,9 @@
 package nikita.webapp.web.controller.hateoas;
 
 
-import nikita.common.model.noark5.v4.FondsCreator;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
+import nikita.common.model.noark5.v5.FondsCreator;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;

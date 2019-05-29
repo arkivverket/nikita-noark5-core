@@ -1,8 +1,8 @@
 package nikita.webapp.service.impl.admin;
 
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.repository.n5v4.admin.IAdministrativeUnitRepository;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.repository.n5v5.admin.IAdministrativeUnitRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;

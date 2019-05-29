@@ -1,8 +1,8 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
-import nikita.common.repository.n5v4.casehandling.ISequenceNumberGeneratorRepository;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
+import nikita.common.repository.n5v5.casehandling.ISequenceNumberGeneratorRepository;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import org.slf4j.Logger;

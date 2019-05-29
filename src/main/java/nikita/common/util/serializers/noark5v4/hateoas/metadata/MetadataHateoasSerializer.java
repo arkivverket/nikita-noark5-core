@@ -1,9 +1,9 @@
 package nikita.common.util.serializers.noark5v4.hateoas.metadata;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v4.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.serializers.noark5v4.hateoas.HateoasSerializer;
@@ -34,7 +34,7 @@ public class MetadataHateoasSerializer extends HateoasSerializer
 
         if (!(noarkSystemIdEntity instanceof IMetadataEntity)) {
             throw new NikitaException("Internal error when serialising " + noarkSystemIdEntity +
-                    " Not castable to nikita.common.model.noark5.v4.interfaces.entities.IMetadataEntity");
+                    " Not castable to nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity");
         }
 
         IMetadataEntity metadataEntity = (IMetadataEntity) noarkSystemIdEntity;

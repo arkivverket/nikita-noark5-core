@@ -1,14 +1,14 @@
 package nikita.webapp.service.impl.secondary;
 
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.secondary.*;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartUnitHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.casehandling.*;
-import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
-import nikita.common.repository.n5v4.metadata.ICorrespondencePartTypeRepository;
-import nikita.common.repository.n5v4.secondary.ICorrespondencePartRepository;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.casehandling.secondary.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.casehandling.*;
+import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
+import nikita.common.repository.n5v5.metadata.ICorrespondencePartTypeRepository;
+import nikita.common.repository.n5v5.secondary.ICorrespondencePartRepository;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;

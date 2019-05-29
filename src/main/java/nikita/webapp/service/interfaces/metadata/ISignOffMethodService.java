@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces.metadata;
 
-import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v4.metadata.SignOffMethod;
+import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
+import nikita.common.model.noark5.v5.metadata.SignOffMethod;
 
 import javax.validation.constraints.NotNull;
 

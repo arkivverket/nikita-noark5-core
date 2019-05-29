@@ -1,6 +1,6 @@
 package nikita.webapp.service.interfaces.metadata;
 
-import nikita.common.model.noark5.v4.metadata.DocumentMedium;
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 
 import java.util.List;
 

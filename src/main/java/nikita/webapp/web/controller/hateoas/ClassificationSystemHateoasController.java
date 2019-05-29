@@ -6,11 +6,11 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.Class;
-import nikita.common.model.noark5.v4.ClassificationSystem;
-import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.ClassificationSystem;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.application.FondsStructureDetails;
 import nikita.webapp.service.application.ApplicationService;
@@ -31,8 +31,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(value =
         HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON,
-                NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON,
+                NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class ClassificationSystemHateoasController
         extends NoarkController {
 
@@ -74,7 +74,7 @@ public class ClassificationSystemHateoasController
     @Counted
     @RequestMapping(method = POST,
             value = NEW_CLASSIFICATION_SYSTEM,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystem(
             HttpServletRequest request,
@@ -121,7 +121,7 @@ public class ClassificationSystemHateoasController
             value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS +
                     "systemID" + RIGHT_PARENTHESIS + SLASH +
                     NEW_CLASS,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas>
     createClassAssociatedWithClassificationSystem(
             HttpServletRequest request,
@@ -377,7 +377,7 @@ public class ClassificationSystemHateoasController
     @RequestMapping(method = PUT,
             value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS +
                     SYSTEM_ID + RIGHT_PARENTHESIS,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     updateClassificationSystem(
             HttpServletRequest request,

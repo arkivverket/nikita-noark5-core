@@ -1,8 +1,8 @@
 package nikita.webapp.service.interfaces.admin;
 
 
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.User;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

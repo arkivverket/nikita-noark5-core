@@ -1,6 +1,6 @@
 package nikita.webapp.service.interfaces;
 
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 
 /**
  * Created by tsodring on 4/6/17.

@@ -1,7 +1,7 @@
 package nikita.webapp.web.controller.hateoas.odata;
 
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

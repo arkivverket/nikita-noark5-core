@@ -1,7 +1,7 @@
 package nikita.webapp;
 
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 
 import java.util.List;
 import java.util.Set;

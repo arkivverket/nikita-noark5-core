@@ -1,6 +1,6 @@
 package nikita.webapp.service.interfaces.imprt;
 
-import nikita.common.model.noark5.v4.Class;
+import nikita.common.model.noark5.v5.Class;
 
 public interface IClassImportService {
 	// -- All CREATE operations

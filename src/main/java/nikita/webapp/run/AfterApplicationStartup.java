@@ -1,14 +1,14 @@
 package nikita.webapp.run;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.Authority;
-import nikita.common.model.noark5.v4.admin.AuthorityName;
-import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.Authority;
+import nikita.common.model.noark5.v5.admin.AuthorityName;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
@@ -43,7 +43,7 @@ import static nikita.common.config.FileConstants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_HANDLER;
 import static nikita.common.config.N5ResourceMappings.REFERENCE_ADMINISTRATIVE_UNIT;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.model.noark5.v4.admin.AuthorityName.*;
+import static nikita.common.model.noark5.v5.admin.AuthorityName.*;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
 import static nikita.common.util.CommonUtils.FileUtils.setDefaultMimeTypesAsConvertible;
 

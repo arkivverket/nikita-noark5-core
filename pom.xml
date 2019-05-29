@@ -470,6 +470,27 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>4.5.3</version>
+        <configuration>
+          <arguments>
+            <argument>-package</argument>
+            <argument>nikita.webapp.odata.base</argument>
+          </arguments>
+          <sourceDirectory>${basedir}/src/main/antlr</sourceDirectory>
+          <outputDirectory>${basedir}/src/main/java/nikita/webapp/odata/base</outputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>antlr</id>
+            <goals>
+              <goal>antlr4</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
       <!--      <plugin>
         <groupId>org.asciidoctor</groupId>

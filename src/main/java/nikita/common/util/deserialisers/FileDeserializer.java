@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.Series;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Series;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 

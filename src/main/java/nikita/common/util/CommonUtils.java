@@ -5,22 +5,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v4.FondsCreator;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.model.noark5.v4.casehandling.CaseParty;
-import nikita.common.model.noark5.v4.casehandling.DocumentFlow;
-import nikita.common.model.noark5.v4.casehandling.Precedence;
-import nikita.common.model.noark5.v4.casehandling.secondary.*;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.*;
-import nikita.common.model.noark5.v4.interfaces.entities.*;
-import nikita.common.model.noark5.v4.interfaces.entities.admin.IAdministrativeUnitEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.admin.IUserEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.casehandling.*;
-import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
-import nikita.common.model.noark5.v4.secondary.*;
+import nikita.common.model.noark5.v5.FondsCreator;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.casehandling.CaseParty;
+import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
+import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.model.noark5.v5.casehandling.secondary.*;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.*;
+import nikita.common.model.noark5.v5.interfaces.entities.*;
+import nikita.common.model.noark5.v5.interfaces.entities.admin.IAdministrativeUnitEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.admin.IUserEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.casehandling.*;
+import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedHeaderException;
 import org.slf4j.Logger;
@@ -1626,7 +1626,7 @@ public final class CommonUtils {
             }
 
             /*
-            Temporarily out. n5v4 has a new way of dealing with correspondenceparts, but this also likely includes
+            Temporarily out. n5v5 has a new way of dealing with correspondenceparts, but this also likely includes
             listing correspondenceparts via the parent entity CorrespondencePart
             public static void printCorrespondenceParts(JsonGenerator jgen, ICorrespondencePart correspondencePartObject)
                     throws IOException {

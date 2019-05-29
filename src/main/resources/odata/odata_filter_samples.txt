@@ -1,0 +1,12 @@
+$filter=round(Decimal) eq 100
+$filter=day(DateTime) eq 21
+$filter=year(DateTime) eq 2010
+$filter=floor(Decimal) eq 0
+$filter=second(DateTime) eq 55
+$filter=month(DateTime) eq 2
+$filter=hour(DateTime) eq 1
+$filter=minute(DateTime) eq 42
+$filter=round(Decimal) eq 100
+$filter=ceiling(Decimal) eq 1
+
+$filter=(filnavn eq '<20180803044936.GA20015@mail.bluemosh.com>' and year(dokumentDato) eq 2018) or month(dokumentDato) eq 2

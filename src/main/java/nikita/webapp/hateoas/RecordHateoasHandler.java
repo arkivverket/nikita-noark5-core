@@ -1,9 +1,9 @@
 package nikita.webapp.hateoas;
 
-import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +53,7 @@ public class RecordHateoasHandler
      * Record. Checks if the Record is actually associated with a Series.
      * <p>
      * "../hateoas-api/arkivstruktur/arkivdel/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/"
      *
      * @param entity             record
      * @param hateoasNoarkObject hateoasRecord
@@ -75,7 +75,7 @@ public class RecordHateoasHandler
      * Record. Checks if the Record is actually associated with a File.
      * <p>
      * "../hateoas-api/arkivstruktur/mappe/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/mappe/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/mappe/"
      *
      * @param entity             record
      * @param hateoasNoarkObject hateoasRecord
@@ -97,7 +97,7 @@ public class RecordHateoasHandler
      * Record. Checks if the Record is actually associated with a Class.
      * <p>
      * "../hateoas-api/arkivstruktur/klasse/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/"
      *
      * @param entity             record
      * @param hateoasNoarkObject hateoasRecord

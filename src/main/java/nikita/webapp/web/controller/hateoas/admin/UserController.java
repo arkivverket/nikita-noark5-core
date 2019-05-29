@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.IUserService;
@@ -27,7 +27,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH +
         NOARK_ADMINISTRATION_PATH + SLASH,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON})
 public class UserController
         extends NoarkController {
 

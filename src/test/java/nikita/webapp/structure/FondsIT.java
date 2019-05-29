@@ -27,11 +27,11 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/*import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.NoarkGeneralEntity;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
+/*import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.NoarkGeneralEntity;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.util.deserialisers.hateoas.HateoasDeserializer;
 import nikita.webapp.model.Token;
 import nikita.webapp.model.User;
@@ -73,10 +73,10 @@ public class FondsIT {
 
         ResultActions actions =
                 mockMvc.perform(get("/")
-                .accept(NOARK5_V4_CONTENT_TYPE_JSON))
+                        .accept(NOARK5_V5_CONTENT_TYPE_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType
-                        (NOARK5_V4_CONTENT_TYPE_JSON+";charset=UTF-8"))
+                        (NOARK5_V5_CONTENT_TYPE_JSON + ";charset=UTF-8"))
                 .andDo(document("home",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -95,10 +95,10 @@ public class FondsIT {
 
         ResultActions actions =
                 mockMvc.perform(get("/")
-                        .accept(NOARK5_V4_CONTENT_TYPE_JSON))
+                        .accept(NOARK5_V5_CONTENT_TYPE_JSON))
                         .andExpect(status().isOk())
                         .andExpect(content().contentType
-                                (NOARK5_V4_CONTENT_TYPE_JSON + ";charset=UTF-8"))
+                                (NOARK5_V5_CONTENT_TYPE_JSON + ";charset=UTF-8"))
                         .andDo(document("home",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
@@ -198,8 +198,8 @@ responseFields(subsectionWithPath("_links").
             assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
             assertNotNull(token);
             headers = new HttpHeaders();
-            headers.add("Accept", "application/vnd.noark5-v4+json");
-            headers.add("Content-Type", "application/vnd.noark5-v4+json");
+            headers.add("Accept", "application/vnd.noark5-v5+json");
+            headers.add("Content-Type", "application/vnd.noark5-v5+json");
             headers.add("Authorization", token.getToken());
             return true;
         }

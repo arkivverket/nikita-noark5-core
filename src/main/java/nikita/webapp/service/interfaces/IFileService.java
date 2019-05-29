@@ -1,12 +1,12 @@
 package nikita.webapp.service.interfaces;
 
 
-import nikita.common.model.noark5.v4.BasicRecord;
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v4.hateoas.FileHateoas;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.BasicRecord;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;

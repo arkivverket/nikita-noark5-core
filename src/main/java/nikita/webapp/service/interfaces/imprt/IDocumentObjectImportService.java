@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces.imprt;
 
 
-import nikita.common.model.noark5.v4.DocumentObject;
+import nikita.common.model.noark5.v5.DocumentObject;
 
 /**
  * This service only supports the importing of documentObjects

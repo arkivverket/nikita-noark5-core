@@ -1,11 +1,11 @@
 package nikita.webapp.util;
 
 
-import nikita.common.model.noark5.v4.interfaces.IDocumentMedium;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkCreateEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkFinaliseEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
+import nikita.common.model.noark5.v5.interfaces.IDocumentMedium;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkFinaliseEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.util.exceptions.NikitaException;
 import org.springframework.security.core.context.SecurityContextHolder;
 

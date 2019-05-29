@@ -1,16 +1,16 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.casehandling.Precedence;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartUnitHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.repository.n5v4.IRegistryEntryRepository;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.repository.n5v5.IRegistryEntryRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;

@@ -64,7 +64,7 @@ var fileController = app.controller('FileController', ['$scope', '$http', functi
             url: url,
             method: "POST",
             headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+              'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': token,
             },
             data: formdata,

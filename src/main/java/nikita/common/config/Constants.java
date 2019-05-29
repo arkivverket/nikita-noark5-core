@@ -195,7 +195,7 @@ public final class Constants {
     public static final String SKIP = "skip";
     public static final String DOLLAR = "$";
 
-    // Strings relating to conformity to Noark 5v4 standard
+    // Strings relating to conformity to Noark 5v5 standard
     public static final String NOARK_CONFORMANCE_LEVEL_0 = "Nivå 0 – Basiskrav";
     public static final String NOARK_CONFORMANCE_LEVEL_1 = "Nivå 1 – Arkivstruktur - obligatoriske krav";
     public static final String NOARK_CONFORMANCE_LEVEL_1_1 = "Nivå 1.1 – Arkivstruktur - valgfrie krav";
@@ -205,8 +205,8 @@ public final class Constants {
     public static final String REFERENCE_FILE = "referanseFil";
 
     // namespace definition
-    public static final String NOARK_CONFORMANCE_REL = "https://rel.arkivverket.no/noark5/v4/api/";
-    public static final String NIKITA_CONFORMANCE_REL = "https://nikita.arkivlab.no/noark5/v4/";
+    public static final String NOARK_CONFORMANCE_REL = "https://rel.arkivverket.no/noark5/v5/api/";
+    public static final String NIKITA_CONFORMANCE_REL = "https://nikita.arkivlab.no/noark5/v5/";
 
     public static final String NOARK_FONDS_STRUCTURE_PATH = "arkivstruktur";
     public static final String NOARK_METADATA_PATH = "metadata";
@@ -227,8 +227,8 @@ public final class Constants {
     public static final String LOGIN_OAUTH = "rfc6749";
     public static final String LOGIN_OAUTH2_PATH = "/oauth/token";
 
-    public static final String NOARK5_V4_CONTENT_TYPE_JSON = "application/vnd.noark5-v4+json";
-    public static final String NOARK5_V4_CONTENT_TYPE_JSON_XML = "application/vnd.noark5-v4+xml";
+    public static final String NOARK5_V5_CONTENT_TYPE_JSON = "application/vnd.noark5-v5+json";
+    public static final String NOARK5_V5_CONTENT_TYPE_JSON_XML = "application/vnd.noark5-v5+xml";
 
     public static final String INFO_CANNOT_CREATE_OBJECT = "Cannot create ";
     public static final String INFO_CANNOT_FIND_OBJECT = "Cannot find object of type ";
@@ -342,10 +342,10 @@ public final class Constants {
     public static final String API_MESSAGE_MALFORMED_PAYLOAD = "Incoming data is malformed";
 
 
-    public static final String REL_METADATA = "https://rel.arkivverket.no/noark5/v4/api/metadata/";
-    public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v4/api/administrasjon/";
-    public static final String REL_FONDS_STRUCTURE = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/";
-    public static final String REL_CASE_HANDLING = "https://rel.arkivverket.no/noark5/v4/api/sakarkiv/";
+    public static final String REL_METADATA = "https://rel.arkivverket.no/noark5/v5/api/metadata/";
+    public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v5/api/administrasjon/";
+    public static final String REL_FONDS_STRUCTURE = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/";
+    public static final String REL_CASE_HANDLING = "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/";
 
     // FondsHateoas REL links
 

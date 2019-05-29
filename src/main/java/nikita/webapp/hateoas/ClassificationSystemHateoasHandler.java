@@ -1,8 +1,8 @@
 package nikita.webapp.hateoas;
 
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +39,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  ny-klassifikasjon and ny-sekundaerklassifiikasjon should be visible of the root
 
  What is the purpose of this REL?
- https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkivdel/
+ https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivdel/
  It must be a 'helper'. Normally you create a arkivdel and assign classificationsystem
  Here ,it must just be a shortcut, but how do you assign the arkivdel to its arkiv? This must be wrong!!
  */

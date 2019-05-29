@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.BasicRecord;
-import nikita.common.repository.n5v4.IBasicRecordRepository;
+import nikita.common.model.noark5.v5.BasicRecord;
+import nikita.common.repository.n5v5.IBasicRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.IBasicRecordService;
 import org.slf4j.Logger;

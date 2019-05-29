@@ -7,17 +7,17 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.Class;
-import nikita.common.model.noark5.v4.NoarkEntity;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.RegistryEntryHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -49,7 +49,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class CaseFileHateoasController extends NoarkController {
 
     private ICaseFileService caseFileService;
@@ -93,7 +93,7 @@ public class CaseFileHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_REGISTRY_ENTRY, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_REGISTRY_ENTRY, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<RegistryEntryHateoas> createRegistryEntryAssociatedWithFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -321,7 +321,7 @@ public class CaseFileHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CaseFileHateoas> updateCaseFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",

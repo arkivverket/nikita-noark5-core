@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkTitleDescriptionEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

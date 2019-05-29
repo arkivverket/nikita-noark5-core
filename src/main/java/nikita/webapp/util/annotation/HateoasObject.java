@@ -1,6 +1,6 @@
 package nikita.webapp.util.annotation;
 
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

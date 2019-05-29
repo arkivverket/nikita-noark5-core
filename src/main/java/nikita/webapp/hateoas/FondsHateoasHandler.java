@@ -1,9 +1,9 @@
 package nikita.webapp.hateoas;
 
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +70,7 @@ public class FondsHateoasHandler
      * it.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/1234/arkivskaper"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivskaper/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivskaper/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
@@ -91,7 +91,7 @@ public class FondsHateoasHandler
      * given Fonds. Checks if the Fonds has any Series associated with it.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/1234/arkivdel"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
@@ -112,7 +112,7 @@ public class FondsHateoasHandler
      * equivalent to the self rel, but in addition identifies the object type.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
@@ -131,7 +131,7 @@ public class FondsHateoasHandler
      * fonds.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/1234/underarkiv"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/underarkiv/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/underarkiv/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
@@ -150,7 +150,7 @@ public class FondsHateoasHandler
      * authorised to create a Series.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkivdel"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkivdel/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivdel/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
@@ -169,7 +169,7 @@ public class FondsHateoasHandler
      * authorised to create a FondsCreator.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkivskaper"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkivskaper/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivskaper/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
@@ -188,7 +188,7 @@ public class FondsHateoasHandler
      * authorised to create a sub fonds.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkiv"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-arkiv/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkiv/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
@@ -206,7 +206,7 @@ public class FondsHateoasHandler
      * the given Fonds. Checks if parent fonds exists first.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/9856"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/forelderarkiv/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/forelderarkiv/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds
@@ -229,7 +229,7 @@ public class FondsHateoasHandler
      * Series.
      * <p>
      * "../hateoas-api/metadata/arkivstatus"
-     * "https://rel.arkivverket.no/noark5/v4/api/metadata/arkivstatus/"
+     * "https://rel.arkivverket.no/noark5/v5/api/metadata/arkivstatus/"
      *
      * @param entity             fonds
      * @param hateoasNoarkObject hateoasFonds

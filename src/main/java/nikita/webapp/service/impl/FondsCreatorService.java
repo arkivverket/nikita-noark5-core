@@ -1,11 +1,11 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.FondsCreator;
-import nikita.common.model.noark5.v4.hateoas.FondsHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.repository.n5v4.IFondsCreatorRepository;
-import nikita.common.repository.n5v4.IFondsRepository;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.FondsCreator;
+import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.repository.n5v5.IFondsCreatorRepository;
+import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import nikita.webapp.security.Authorisation;

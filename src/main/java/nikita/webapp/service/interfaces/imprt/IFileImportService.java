@@ -1,8 +1,8 @@
 package nikita.webapp.service.interfaces.imprt;
 
-import nikita.common.model.noark5.v4.BasicRecord;
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.Record;
+import nikita.common.model.noark5.v5.BasicRecord;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
 
 public interface IFileImportService {
 	// -- All CREATE operations

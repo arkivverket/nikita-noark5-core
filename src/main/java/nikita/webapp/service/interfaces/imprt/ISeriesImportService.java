@@ -1,8 +1,8 @@
 package nikita.webapp.service.interfaces.imprt;
 
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 
 public interface ISeriesImportService {
 

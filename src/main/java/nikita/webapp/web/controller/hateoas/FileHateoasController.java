@@ -7,13 +7,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.Class;
-import nikita.common.model.noark5.v4.*;
-import nikita.common.model.noark5.v4.hateoas.*;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.ICrossReferenceEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.secondary.Comment;
+import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.*;
+import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
@@ -42,7 +42,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class FileHateoasController
         extends NoarkController {
 
@@ -75,7 +75,7 @@ public class FileHateoasController
 
     // Create a Record
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-registrering
-    // REL https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-registrering/
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-registrering/
     @ApiOperation(value = "Persists a Record associated with the given Series systemId",
             notes = "Returns the newly created record after it was associated with a File and " +
                     "persisted to the database", response = RecordHateoas.class)
@@ -92,7 +92,7 @@ public class FileHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_RECORD, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_RECORD, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "fileSystemId",
@@ -115,7 +115,7 @@ public class FileHateoasController
 
     // Create a BasicRecord
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-basisregistrering
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-basisregistrering/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-basisregistrering/
     @ApiOperation(value = "Persists a BasicRecord associated with the given Series systemId",
             notes = "Returns the newly created basicRecord after it was associated with a File and " +
                     "persisted to the database", response = BasicRecordHateoas.class)
@@ -132,7 +132,7 @@ public class FileHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_BASIC_RECORD, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_BASIC_RECORD, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<BasicRecordHateoas> createBasicRecordAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -155,7 +155,7 @@ public class FileHateoasController
 
     // Create a CrossReference
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-kryssreferanse
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-kryssreferanse/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-kryssreferanse/
     @ApiOperation(value = "Persists a BasicRecord associated with the given Series systemId",
             notes = "Returns the newly created basicRecord after it was associated with a File and " +
                     "persisted to the database", response = BasicRecordHateoas.class)
@@ -172,7 +172,7 @@ public class FileHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_CROSS_REFERENCE, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_CROSS_REFERENCE, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> createCrossReferenceAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -195,7 +195,7 @@ public class FileHateoasController
 
     // Create a (sub) File
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-undermappe
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-undermappe/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-undermappe/
     @ApiOperation(value = "Create a new File and associate it, with the given File identified by systemId, as a " +
             "(sub)File", notes = "Returns the newly created (sub)File after it was associated with a File and " +
             "persisted to the database", response = FileHateoas.class)
@@ -212,7 +212,7 @@ public class FileHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_SUB_FILE, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_SUB_FILE, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> createSubFileAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -232,7 +232,7 @@ public class FileHateoasController
 
     // Add a Comment to a File
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-merknad
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-merknad/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-merknad/
     @ApiOperation(value = "Associates a Comment with a File identified by systemID",
             notes = "Returns the File with the comment associated with it", response = FileHateoas.class)
     @ApiResponses(value = {
@@ -248,7 +248,7 @@ public class FileHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_COMMENT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_COMMENT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addCommentToFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -269,7 +269,7 @@ public class FileHateoasController
 
     // Add a Class to a File
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-klasse
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-klasse/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-klasse/
     @ApiOperation(value = "Associates a Class with a File identified by systemID",
             notes = "Returns the File with the Class associated with it", response = FileHateoas.class)
     @ApiResponses(value = {
@@ -285,7 +285,7 @@ public class FileHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_CLASS, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_CLASS, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addClassToFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -305,7 +305,7 @@ public class FileHateoasController
 
     // Add a reference to a secondary Series associated with the File
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-referanseArkivdel
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-referanseArkivdel/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-referanseArkivdel/
     @ApiOperation(value = "Associates a Secondary Series with a File identified by systemID",
             notes = "Returns the File after the secondary Series is successfully associated with it." +
                     "Note a secondary series allows a File to be associated with another Series.",
@@ -323,7 +323,7 @@ public class FileHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_REFERENCE_SERIES, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_REFERENCE_SERIES, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addReferenceSeriesToFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -344,7 +344,7 @@ public class FileHateoasController
 
     // Add a secondary Class to a File
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-sekundaerklassifikasjon
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-sekundaerklassifikasjon/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-sekundaerklassifikasjon/
     @ApiOperation(value = "Associates a Class with a File identified by systemID as secondary Class",
             notes = "Returns the File with the Class associated with it. Note a File can only have one Class " +
                     "associated with it, but can have multiple secondary Class associated with it. An example" +
@@ -363,7 +363,7 @@ public class FileHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_SECONDARY_CLASSIFICATION, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_SECONDARY_CLASSIFICATION, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addReferenceToSecondaryClassToFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -382,7 +382,7 @@ public class FileHateoasController
 
     // Retrieve all Records associated with File identified by systemId
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/registrering
-    // REL https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/registrering/
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/registrering/
     @ApiOperation(value = "Retrieve all Record associated with a File identified by systemId",
             response = RecordHateoas.class)
     @ApiResponses(value = {
@@ -416,7 +416,7 @@ public class FileHateoasController
 
     // Retrieve all BasicRecords associated with File identified by systemId
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/basisregistrering
-    // REL https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/basisregistrering/
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/basisregistrering/
     @ApiOperation(value = "Retrieve all BasicRecord associated with a File identified by systemId",
             response = BasicRecordHateoas.class)
     @ApiResponses(value = {
@@ -439,7 +439,7 @@ public class FileHateoasController
 
     // Retrieve all Series associated with File identified by a systemId
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/arkivdel
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/
     @ApiOperation(value = "Retrieves a single Series entity given a systemId",
             response = SeriesHateoas.class)
     @ApiResponses(value = {
@@ -463,7 +463,7 @@ public class FileHateoasController
 
     // Retrieve all Class associated with File identified by a systemId
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/
     @ApiOperation(value = "Retrieves a single Class entity given a systemId",
             response = ClassHateoas.class)
     @ApiResponses(value = {
@@ -488,7 +488,7 @@ public class FileHateoasController
     
     // Retrieve all BasicRecords associated with File identified by systemId
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/undermappe
-    // REL https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/undermappe/
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/undermappe/
     @ApiOperation(value = "Retrieve all (sub) File associated with a File identified by systemId",
             response = BasicRecordHateoas.class)
     @ApiResponses(value = {
@@ -621,7 +621,7 @@ public class FileHateoasController
 
     // Retrieve all Comments associated with a File
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/merknad
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/merknad/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/merknad/
     @ApiOperation(value = "Retrieves all Comments associated with a File identified by a systemId",
             response = FileHateoas.class)
     @ApiResponses(value = {
@@ -645,7 +645,7 @@ public class FileHateoasController
 
     // Retrieve all CrossReference associated with a File
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/kryssreferanse
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/kryssreferanse/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/kryssreferanse/
     @ApiOperation(value = "Retrieves all CrossReference associated with a File identified by a systemId",
             response = FileHateoas.class)
     @ApiResponses(value = {
@@ -668,7 +668,7 @@ public class FileHateoasController
 
     // Retrieve all Class associated with a File as secondary classification
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/sekundaerklassifikasjon
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/sekundaerklassifikasjon/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/sekundaerklassifikasjon/
     @ApiOperation(value = "Retrieves all secondary Class associated with a File identified by a systemId",
             response = FileHateoas.class)
     @ApiResponses(value = {
@@ -694,7 +694,7 @@ public class FileHateoasController
 
     // Retrieve all secondary Series associated with a File
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/referanseArkivdel
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/referanseArkivdel/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/referanseArkivdel/
     @ApiOperation(value = "Retrieves all secondary Series associated with a File identified by a systemId",
             response = SeriesHateoas.class)
     @ApiResponses(value = {
@@ -733,7 +733,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = RequestMethod.PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<FileHateoas> updateFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -758,7 +758,7 @@ public class FileHateoasController
 
     // Finalise a File
     // PUT [contextPath][api]/arkivstruktur/mappe/{systemId}/avslutt-mappe
-    // REL https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/avslutt-mappe/
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/avslutt-mappe/
     @ApiOperation(value = "Updates a File identified by a given systemId", notes = "Returns the newly updated file",
             response = FileHateoas.class)
     @ApiResponses(value = {
@@ -795,7 +795,7 @@ public class FileHateoasController
 
     // Expand a File to a CaseFile
     // PUT [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-saksmappe
-    // REL https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/utvid-til-saksmappe/
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-saksmappe/
     @ApiOperation(value = "Expands a File identified by a systemId to a CaseFile", notes = "Returns the newly updated " +
             "CaseFile",
             response = CaseFileHateoas.class)
@@ -833,7 +833,7 @@ public class FileHateoasController
 
     // Expand a File to a MeetingFile
     // PUT [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-moetemappe
-    // REL https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/utvid-til-moetemappe/
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-moetemappe/
     // TODO: At implementation time, we are missing MeetingFileHateoas. Leaving as CaseFileHateoas
     // just to allow continued compilation
     @ApiOperation(value = "Expands a File identified by a systemId to a MeetingFile", notes = "Returns the newly " +

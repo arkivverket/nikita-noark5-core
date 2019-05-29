@@ -7,12 +7,12 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v4.casehandling.secondary.CorrespondencePartUnit;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
@@ -40,7 +40,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class CorrespondencePartHateoasController extends NoarkController {
 
     private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
@@ -166,7 +166,7 @@ public class CorrespondencePartHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CorrespondencePartUnitHateoas> updateCorrespondencePartUnit(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -210,7 +210,7 @@ public class CorrespondencePartHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CorrespondencePartPersonHateoas> updateCorrespondencePartPerson(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -254,7 +254,7 @@ public class CorrespondencePartHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CorrespondencePartInternalHateoas> updateCorrespondencePartInternal(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
