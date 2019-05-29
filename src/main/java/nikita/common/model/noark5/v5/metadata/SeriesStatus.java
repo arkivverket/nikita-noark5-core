@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 arkvdelstatus
+// Noark 5v5 arkvdelstatus
 @Entity
 @Table(name = "series_status")
 // Enable soft delete

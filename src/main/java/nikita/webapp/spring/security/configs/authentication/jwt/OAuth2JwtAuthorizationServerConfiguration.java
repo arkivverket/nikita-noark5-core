@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
@@ -29,7 +28,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
  * login to nikita with oauth2 support via curl:
  * <p>
  * curl -v -X POST  -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ='
- * http://127.0.1.1:8092/noark5v4/oauth/token -d grant_type=password -d
+ * http://127.0.1.1:8092/noark5v5/oauth/token -d grant_type=password -d
  * username=admin -d password=password
  * <p>
  * bmlraXRhLWNsaWVudDpzZWNyZXQ= is 'nikita-client:secret' base64 encoded.

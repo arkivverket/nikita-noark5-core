@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 variantformat
+// Noark 5v5 variantformat
 @Entity
 @Table(name = "variant_format")
 // Enable soft delete

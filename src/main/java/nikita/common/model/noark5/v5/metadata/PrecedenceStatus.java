@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Presedensstatus
+// Noark 5v5 Presedensstatus
 @Entity
 @Table(name = "precedence_status")
 // Enable soft delete

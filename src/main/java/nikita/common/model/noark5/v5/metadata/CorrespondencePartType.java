@@ -7,7 +7,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.util.List;
 
-// Noark 5v4 korrespondanseparttype
+// Noark 5v5 korrespondanseparttype
 @Entity
 @Table(name = "correspondence_part_type")
 @AttributeOverride(name = "id", column = @Column(name = "pk_correspondence_part_type_id"))

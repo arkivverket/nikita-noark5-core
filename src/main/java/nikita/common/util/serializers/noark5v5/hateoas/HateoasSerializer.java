@@ -1,4 +1,4 @@
-package nikita.common.util.serializers.noark5v4.hateoas;
+package nikita.common.util.serializers.noark5v5.hateoas;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;

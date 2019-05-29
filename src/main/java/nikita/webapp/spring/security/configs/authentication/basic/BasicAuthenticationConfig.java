@@ -25,7 +25,7 @@ import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
  * and a BCyrpt encoded password.
  * <p>
  * This can be tested using:
- * curl -i --user admin:password http://localhost:8092/noark5v4/
+ * curl -i --user admin:password http://localhost:8092/noark5v5/
  */
 
 @Profile("security-http-basic-authentication")
@@ -66,7 +66,7 @@ public class BasicAuthenticationConfig
                 // POST GET [api]/arkivstruktur/ny-*, need admin
                 .antMatchers(HttpMethod.POST, PATTERN_NEW_FONDS_STRUCTURE_ALL).hasAuthority(ROLE_RECORDS_MANAGER)
                 .antMatchers(HttpMethod.GET, PATTERN_NEW_FONDS_STRUCTURE_ALL).hasAuthority(ROLE_RECORDS_MANAGER)
-                .antMatchers(HttpMethod.OPTIONS, "/noark5v4/hateoas-api/arkivstruktur/ny-arkivskaper").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/noark5v5/hateoas-api/arkivstruktur/ny-arkivskaper").permitAll()
                 // POST PUT PATCH [api]/arkivstruktur/**, need admin
                 .antMatchers(HttpMethod.PUT, FONDS + SLASH + "**").hasAuthority(ROLE_RECORDS_MANAGER)
                 .antMatchers(HttpMethod.PATCH, FONDS + SLASH + "**").hasAuthority(ROLE_RECORDS_MANAGER)

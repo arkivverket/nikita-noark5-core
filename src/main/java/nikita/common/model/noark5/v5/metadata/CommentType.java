@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Merknadstype
+// Noark 5v5 Merknadstype
 @Entity
 @Table(name = "comment_type")
 // Enable soft delete

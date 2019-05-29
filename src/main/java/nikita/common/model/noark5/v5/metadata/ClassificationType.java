@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Klassifikasjonstype
+// Noark 5v5 Klassifikasjonstype
 @Entity
 @Table(name = "classification_type")
 // Enable soft delete

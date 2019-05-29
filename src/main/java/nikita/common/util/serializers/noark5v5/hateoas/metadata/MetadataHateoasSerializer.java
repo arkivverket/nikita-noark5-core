@@ -1,4 +1,4 @@
-package nikita.common.util.serializers.noark5v4.hateoas.metadata;
+package nikita.common.util.serializers.noark5v5.hateoas.metadata;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
@@ -6,8 +6,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.common.util.serializers.noark5v4.hateoas.HateoasSerializer;
-import nikita.common.util.serializers.noark5v4.hateoas.interfaces.IHateoasSerializer;
+import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
+import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
 

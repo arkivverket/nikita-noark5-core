@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 format
+// Noark 5v5 format
 @Entity
 @Table(name = "format")
 // Enable soft delete

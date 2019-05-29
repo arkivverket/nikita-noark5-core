@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 dokumentmedium
+// Noark 5v5 dokumentmedium
 @Entity
 @Table(name = "document_medium")
 // Enable soft delete of DocumentMedium

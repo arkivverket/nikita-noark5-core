@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Tilgangskategori
+// Noark 5v5 Tilgangskategori
 @Entity
 @Table(name = "access_category")
 // Enable soft delete

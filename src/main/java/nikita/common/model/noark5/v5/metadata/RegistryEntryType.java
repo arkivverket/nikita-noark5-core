@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 journaltype
+// Noark 5v5 journaltype
 @Entity
 @Table(name = "registry_entry_type")
 // Enable soft delete

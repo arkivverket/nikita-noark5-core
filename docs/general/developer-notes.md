@@ -9,16 +9,16 @@
 We have added further support for OData including parent/child searches like 
 the following:
 
-    http://localhost/noark5v4/api/arkivstruktur/arkivdel/123456789/saksmappe?$top=2$skip=4$filter=tittel
+    http://localhost/noark5v5/api/arkivstruktur/arkivdel/123456789/saksmappe?$top=2$skip=4$filter=tittel
 
 We also included $count as a parameter for search, but it is unclear how the 
-results should be formatted. $count is not even mentioned in the noark5v4 
+results should be formatted. $count is not even mentioned in the noark5v5 
 interface standard.
 
 Note! If you want to test OData from command-line, remember you have to 
 URL-escape the URL.     
 
-    curl -v  --header Accept:application/vnd.noark5-v4+json --header Content-Type:application/vnd.noark5-v4+json --2bcd-91e7-45d2-ab19-e020d5d9c49a" -X  GET http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/arkivdel/c45c6d1b-a108-4db3-8a60-a8f8fc41e798/saksmappe?%24top=2%24skip=4%24filter=tittel+eq+%27hello+goodbye%27
+    curl -v  --header Accept:application/vnd.noark5-v4+json --header Content-Type:application/vnd.noark5-v4+json --2bcd-91e7-45d2-ab19-e020d5d9c49a" -X  GET http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/c45c6d1b-a108-4db3-8a60-a8f8fc41e798/saksmappe?%24top=2%24skip=4%24filter=tittel+eq+%27hello+goodbye%27
 
 ## 2018-08-03
   
@@ -41,14 +41,14 @@ assigned in the application.yml file hateoas.publicAddress
 ### Login from root of application
  A GET on the root of the application:
  
-    curl  -v   --header Accept:application/vnd.noark5-v4+json  -X GET http://localhost:8092/noark5v4/  
+    curl  -v   --header Accept:application/vnd.noark5-v4+json  -X GET http://localhost:8092/noark5v5/  
     
 will return the following js:
     
     {
       "links": [
        {
-         "href": "http://localhost:8092/noark5v4/oauth",
+         "href": "http://localhost:8092/noark5v5/oauth",
          "rel": "http://nikita.arkivlab.no/noark5/v4/login/rfc6749/"
        }
       ]
@@ -56,7 +56,7 @@ will return the following js:
 
 You can then login in as follows:
 
-    curl -v -H 'Content-Type: application/json' -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=' -X POST "http://localhost:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password"
+    curl -v -H 'Content-Type: application/json' -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=' -X POST "http://localhost:8092/noark5v5/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password"
 
 
 ### Something strange about CORS
@@ -228,13 +228,13 @@ makes sense.
 OData support continues. The code is now able to create simple SQL/HQL 
 statements from simple OData syntax. The following examples are supported:
 
-    http://localhost/noark5v4/api/arkivstruktur/arkiv?$filter=contains(tittel, 'Oslo') and tittel eq 'goodbye'$top=2$skip=4$orderby=tittel desc
-    http://localhost/noark5v4/api/arkivstruktur/arkiv?$filter=tittel eq 'hello'$top=2$orderby=tittel desc
-    http://localhost/noark5v4/api/arkivstruktur/arkiv?$top=2$skip=4$filter=tittel eq 'hello'$orderby=beskrivelse desc
-    http://localhost/noark5v4/api/arkivstruktur/mappe?$filter=tittel lt 'hello'
-    http://localhost/noark5v4/api/arkivstruktur/arkiv?$filter=startsWith(tittel, 'hello')
-    http://localhost/noark5v4/api/arkivstruktur/arkiv?$filter=contains(beskrivelse, 'hello')
-    http://localhost/noark5v4/api/arkivstruktur/mappe?$filter=tittel eq 'hello'
+    http://localhost/noark5v5/api/arkivstruktur/arkiv?$filter=contains(tittel, 'Oslo') and tittel eq 'goodbye'$top=2$skip=4$orderby=tittel desc
+    http://localhost/noark5v5/api/arkivstruktur/arkiv?$filter=tittel eq 'hello'$top=2$orderby=tittel desc
+    http://localhost/noark5v5/api/arkivstruktur/arkiv?$top=2$skip=4$filter=tittel eq 'hello'$orderby=beskrivelse desc
+    http://localhost/noark5v5/api/arkivstruktur/mappe?$filter=tittel lt 'hello'
+    http://localhost/noark5v5/api/arkivstruktur/arkiv?$filter=startsWith(tittel, 'hello')
+    http://localhost/noark5v5/api/arkivstruktur/arkiv?$filter=contains(beskrivelse, 'hello')
+    http://localhost/noark5v5/api/arkivstruktur/mappe?$filter=tittel eq 'hello'
 
 There is still a bit more work to be done and quality control. But this is a 
 good start. Going forward, we will integrate this to the controller, service and

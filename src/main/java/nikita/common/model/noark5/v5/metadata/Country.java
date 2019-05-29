@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Land
+// Noark 5v5 Land
 @Entity
 @Table(name = "country")
 @AttributeOverride(name = "id", column = @Column(name = "pk_country_id"))

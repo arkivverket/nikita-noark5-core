@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Skjermingdokument
+// Noark 5v5 Skjermingdokument
 @Entity
 @Table(name = "screening_document")
 // Enable soft delete

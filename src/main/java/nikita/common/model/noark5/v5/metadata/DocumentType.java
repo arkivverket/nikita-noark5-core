@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 dokumenttype
+// Noark 5v5 dokumenttype
 @Entity
 @Table(name = "document_type")
 // Enable soft delete

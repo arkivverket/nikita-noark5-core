@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
-import nikita.common.util.serializers.noark5v4.hateoas.metadata.MetadataHateoasSerializer;
+import nikita.common.util.serializers.noark5v5.hateoas.metadata.MetadataHateoasSerializer;
 
 import java.util.List;
 

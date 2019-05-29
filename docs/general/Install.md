@@ -56,7 +56,7 @@ exceptions. (Please let us know if there are any exceptions).
  	Application 'OsloMet Noark 5 Core (Demo mode)' is running! Access URLs:
  	Local: 			http://localhost:8092
  	External: 		http://127.0.1.1:8092
- 	contextPath: 	http://127.0.1.1:8092/noark5v4
+ 	contextPath: 	http://127.0.1.1:8092/noark5v5
  	Application is running with following profile(s): [security-oauth2-authentication] 
 
 ## Docker

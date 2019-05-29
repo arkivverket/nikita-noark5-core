@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 arkivstatus
+// Noark 5v5 arkivstatus
 @Entity
 @Table(name = "fonds_status")
 // Enable soft delete of FondsStatus

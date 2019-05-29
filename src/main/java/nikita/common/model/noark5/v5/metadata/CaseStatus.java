@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import static nikita.common.config.Constants.PRIMARY_KEY_CASE_FILE_STATUS;
 
-// Noark 5v4 saksstatus
+// Noark 5v5 saksstatus
 @Entity
 @Table(name = "case_status")
 // Enable soft delete

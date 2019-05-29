@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Tilknyttet registrering som
+// Noark 5v5 Tilknyttet registrering som
 @Entity
 @Table(name = "associated_with_record_as")
 // Enable soft delete

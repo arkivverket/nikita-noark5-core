@@ -29,11 +29,11 @@ import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
  * This can be tested using:
  * <p>
  * curl -i -X POST -d username=admin -d password=password -c /tmp/cookies.txt
- * http://localhost:8092/noark5v4/login
+ * http://localhost:8092/noark5v5/login
  * <p>
  * <p>
  * curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5-v5+json
- * -X GET http://localhost:8092/noark5v4/
+ * -X GET http://localhost:8092/noark5v5/
  */
 
 @Profile("security-form-authentication")

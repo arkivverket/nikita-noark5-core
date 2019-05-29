@@ -7,7 +7,7 @@
        src="https://scan.coverity.com/projects/12784/badge.svg"/>
 </a>
 
-This is an open source Noark 5v4 core.  This implement a REST based web API for
+This is an open source Noark 5v5 core.  This implement a REST based web API for
 storing and retrieving documents and metadata based on the Norwegian archive
 standard NOARK 5.
 

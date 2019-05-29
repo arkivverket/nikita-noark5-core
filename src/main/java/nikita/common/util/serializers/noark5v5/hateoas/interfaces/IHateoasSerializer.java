@@ -1,4 +1,4 @@
-package nikita.common.util.serializers.noark5v4.hateoas.interfaces;
+package nikita.common.util.serializers.noark5v5.hateoas.interfaces;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;

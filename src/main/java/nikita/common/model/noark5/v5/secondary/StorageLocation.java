@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.*;
-import nikita.common.util.serializers.noark5v4.StorageLocationSerializer;
+import nikita.common.util.serializers.noark5v5.StorageLocationSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;

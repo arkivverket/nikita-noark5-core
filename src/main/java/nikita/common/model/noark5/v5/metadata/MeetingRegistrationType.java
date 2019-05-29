@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Møteregistreringstype
+// Noark 5v5 Møteregistreringstype
 @Entity
 @Table(name = "meeting_registration_type")
 // Enable soft delete

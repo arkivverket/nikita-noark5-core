@@ -50,7 +50,7 @@ Primary entities are the entities that make up the fondsstructure (arkivstruktur
       "tittel": "Jan Jansen : Klage på barnehage tildeling",
       "offentligTittel": "***** *****: Klage på barnehage tildeling ",
       _links [
-      "href": "http://localhost/noark5v4/hateoas-api/arkivstruktur/sakarkiv/sakspart/a7b447ae-f559-4f47-afc4-a5b2a4b0219e"
+      "href": "http://localhost/noark5v5/hateoas-api/arkivstruktur/sakarkiv/sakspart/a7b447ae-f559-4f47-afc4-a5b2a4b0219e"
       "rel": https://rel.arkivverket.no/noark5/v4/api/sakarkiv/saksparter/
       ]
    }
@@ -110,14 +110,14 @@ Primary entities are the entities that make up the fondsstructure (arkivstruktur
   * ElectronicSignature (elektronisksignatur) [1:1]
  
  ## 4. Codes/list entities
- The final set of entities are new as entities in Noark5v4. In Noark 5v3, they would have typically been single string 
+ The final set of entities are new as entities in Noark5v5. In Noark 5v3, they would have typically been single string 
  fields (a simpleType), as a field as part of a primary entity, but have become complexTypes (using the context 
  description from XML/XSD). In many ways this goes back to the Noark 4 thinking, where these codes would have existed 
  as values in their own tables, something that fell away in Noark 5. 
     
   ```
    {
-    "href" : "http://localhost:8092/noark5v4/hateoas-api/metadata/dokumentmedium/",
+    "href" : "http://localhost:8092/noark5v5/hateoas-api/metadata/dokumentmedium/",
     "rel" : "https://rel.arkivverket.no/noark5/v4/api/metadata/dokumentmedium/"
    }
   ```  

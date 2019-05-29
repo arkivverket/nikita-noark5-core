@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Møtedeltakerfunksjon
+// Noark 5v5 Møtedeltakerfunksjon
 @Entity
 @Table(name = "meeting_participant_function")
 // Enable soft delete

@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 graderingskode
+// Noark 5v5 graderingskode
 @Entity
 @Table(name = "classified_code")
 // Enable soft delete

@@ -10,7 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 postnummer
+// Noark 5v5 postnummer
 @Entity
 @Table(name = "postal_code")
 

@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Avskrivningsmaate
+// Noark 5v5 Avskrivningsmaate
 @Entity
 @Table(name = "sign_off_method")
 // Enable soft delete

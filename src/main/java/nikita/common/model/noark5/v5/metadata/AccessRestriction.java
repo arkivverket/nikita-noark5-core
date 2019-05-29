@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Noark 5v4 Tilgangsrestriksjon
+// Noark 5v5 Tilgangsrestriksjon
 @Entity
 @Table(name = "access_restriction")
 // Enable soft delete
