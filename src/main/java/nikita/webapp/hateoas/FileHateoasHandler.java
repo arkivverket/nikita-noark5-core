@@ -30,8 +30,6 @@ public class FileHateoasHandler
                                IHateoasNoarkObject hateoasNoarkObject) {
 
         // Add the child links
-        addRegistration(entity, hateoasNoarkObject);
-        addNewRegistration(entity, hateoasNoarkObject);
         addRecord(entity, hateoasNoarkObject);
         addNewRecord(entity, hateoasNoarkObject);
         // Add the parent links
@@ -122,20 +120,6 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH +
                 FILE_EXPAND_TO_MEETING_FILE + SLASH, REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE, false));
-    }
-
-    @Override
-    public void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH +
-                RECORD + SLASH, REL_FONDS_STRUCTURE_RECORD, false));
-    }
-
-    @Override
-    public void addNewRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH +
-                NEW_RECORD + SLASH, REL_FONDS_STRUCTURE_NEW_RECORD, false));
     }
 
     @Override

@@ -34,8 +34,6 @@ public class CaseFileHateoasHandler extends FileHateoasHandler implements ICaseF
         // are not applicable. Instead we invoke the methods directly here.
         // Methods from base class
         addEndFile(entity, hateoasNoarkObject);
-        addRegistration(entity, hateoasNoarkObject);
-        addNewRegistration(entity, hateoasNoarkObject);
         addRecord(entity, hateoasNoarkObject);
         addNewRecord(entity, hateoasNoarkObject);
         addComment(entity, hateoasNoarkObject);

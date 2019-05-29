@@ -21,10 +21,6 @@ public interface IFileHateoasHandler
 
     void addExpandToMeetingFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
