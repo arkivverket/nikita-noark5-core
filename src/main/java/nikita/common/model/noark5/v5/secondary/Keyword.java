@@ -1,10 +1,10 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.BasicRecord;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.Record;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -36,9 +36,9 @@ public class Keyword extends NoarkEntity {
     @ManyToMany(mappedBy = "referenceKeyword")
     private List<File> referenceFile = new ArrayList<>();
 
-    // Links to BasicRecord
+    // Links to Record
     @ManyToMany(mappedBy = "referenceKeyword")
-    private List<BasicRecord> referenceBasicRecord = new ArrayList<>();
+    private List<Record> referenceRecord = new ArrayList<>();
 
     public String getKeyword() {
         return keyword;
@@ -69,12 +69,12 @@ public class Keyword extends NoarkEntity {
         this.referenceFile = referenceFile;
     }
 
-    public List<BasicRecord> getReferenceBasicRecord() {
-        return referenceBasicRecord;
+    public List<Record> getReferenceRecord() {
+        return referenceRecord;
     }
 
-    public void setReferenceBasicRecord(List<BasicRecord> referenceBasicRecord) {
-        this.referenceBasicRecord = referenceBasicRecord;
+    public void setReferenceRecord(List<Record> referenceRecord) {
+        this.referenceRecord = referenceRecord;
     }
 
     @Override

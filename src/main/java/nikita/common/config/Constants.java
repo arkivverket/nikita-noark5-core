@@ -66,8 +66,7 @@ public final class Constants {
     public static final String NEW_CLASS = NEW + DASH + CLASS;
     public static final String NEW_SUB_CLASS = NEW + DASH + SUB_CLASS;
     public static final String NEW_FILE = NEW + DASH + FILE;
-    public static final String NEW_RECORD = NEW + DASH + REGISTRATION;
-    public static final String NEW_BASIC_RECORD = NEW + DASH + BASIC_RECORD;
+    public static final String NEW_RECORD = NEW + DASH + RECORD;
     public static final String NEW_DOCUMENT_DESCRIPTION = NEW + DASH + DOCUMENT_DESCRIPTION;
     public static final String NEW_DOCUMENT_OBJECT = NEW + DASH + DOCUMENT_OBJECT;
     public static final String NEW_REFERENCE_SERIES = NEW + DASH + REFERENCE_SERIES;
@@ -367,8 +366,8 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_SERIES = REL_FONDS_STRUCTURE + SERIES + SLASH;
 
     // Common SeriesHateoas/FileHateoas/RegistrationHateoas REL links
-    public static final String REL_FONDS_STRUCTURE_NEW_REGISTRATION = REL_FONDS_STRUCTURE + NEW_RECORD + SLASH;
-    public static final String REL_FONDS_STRUCTURE_REGISTRATION = REL_FONDS_STRUCTURE + REGISTRATION + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_RECORD = REL_FONDS_STRUCTURE + NEW_RECORD + SLASH;
+    public static final String REL_FONDS_STRUCTURE_RECORD = REL_FONDS_STRUCTURE + RECORD + SLASH;
 
     // Common SeriesHateoas/FileHateoas REL links
     public static final String REL_FONDS_STRUCTURE_NEW_FILE = REL_FONDS_STRUCTURE + NEW_FILE + SLASH;
@@ -412,8 +411,6 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE = NIKITA_CONFORMANCE_REL + FILE_EXPAND_TO_CASE_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE = NIKITA_CONFORMANCE_REL + FILE_EXPAND_TO_MEETING_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_END_FILE = NIKITA_CONFORMANCE_REL + FILE_END + SLASH;
-    public static final String REL_FONDS_STRUCTURE_BASIC_RECORD = REL_FONDS_STRUCTURE + BASIC_RECORD + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_BASIC_RECORD = REL_FONDS_STRUCTURE + NEW_BASIC_RECORD + SLASH;
 
     // Comment
     public static final String REL_FONDS_STRUCTURE_COMMENT = REL_FONDS_STRUCTURE + COMMENT + SLASH;
@@ -465,11 +462,6 @@ public final class Constants {
     // Deletion
     public static final String REL_FONDS_STRUCTURE_DELETION = NIKITA_CONFORMANCE_REL + DELETION + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_DELETION = NIKITA_CONFORMANCE_REL + NEW_DELETION + SLASH;
-
-    // Record
-    public static final String REL_FONDS_STRUCTURE_RECORD = REL_FONDS_STRUCTURE + REGISTRATION + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_RECORD = REL_FONDS_STRUCTURE + NEW_RECORD + SLASH;
-
 
     // Author
     public static final String REL_FONDS_STRUCTURE_AUTHOR = NIKITA_CONFORMANCE_REL + AUTHOR + SLASH;
@@ -748,7 +740,7 @@ public final class Constants {
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH;
 
     public static final String HREF_BASE_RECORD =
-            HREF_BASE_FONDS_STRUCTURE + REGISTRATION + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + RECORD + SLASH;
 
     public static final String HREF_BASE_FILE =
             HREF_BASE_FONDS_STRUCTURE + FILE + SLASH;

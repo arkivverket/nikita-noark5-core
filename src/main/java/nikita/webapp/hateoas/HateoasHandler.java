@@ -174,22 +174,27 @@ public class HateoasHandler implements IHateoasHandler {
     protected String getOutgoingAddress() {
         RequestAttributes requestAttributes = RequestContextHolder.
                 getRequestAttributes();
-        HttpServletRequest request  =
-                ((ServletRequestAttributes) requestAttributes).getRequest();
 
-        if (request != null) {
-            String address = request.getHeader("X-Forwarded-Host");
-            String protocol = request.getHeader("X-Forwarded-Proto");
-            String port = request.getHeader("X-Forwarded-Port");
+        if (requestAttributes != null) {
+            HttpServletRequest request =
+                    ((ServletRequestAttributes) requestAttributes).getRequest();
+            if (request != null) {
+                String address = request.getHeader("X-Forwarded-Host");
+                String protocol = request.getHeader("X-Forwarded-Proto");
+                String port = request.getHeader("X-Forwarded-Port");
 
-            if (address != null && protocol != null) {
-                if (port != null) {
-                    return protocol + "://" + address + ":" + port +
-                            contextPath + SLASH;
-                } else {
-                    return protocol + "://" + address + contextPath + SLASH;
+                if (address != null && protocol != null) {
+                    if (port != null) {
+                        return protocol + "://" + address + ":" + port +
+                                contextPath + SLASH;
+                    } else {
+                        return protocol + "://" + address + contextPath + SLASH;
+                    }
                 }
             }
+        } else {
+            logger.warn("Request is null. This likely means we are serving " +
+                    "from localhost. Make sure this is intended!");
         }
         return publicAddress + contextPath + SLASH;
     }

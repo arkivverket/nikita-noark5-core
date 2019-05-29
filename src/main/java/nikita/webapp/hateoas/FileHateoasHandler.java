@@ -32,8 +32,8 @@ public class FileHateoasHandler
         // Add the child links
         addRegistration(entity, hateoasNoarkObject);
         addNewRegistration(entity, hateoasNoarkObject);
-        addBasicRecord(entity, hateoasNoarkObject);
-        addNewBasicRecord(entity, hateoasNoarkObject);
+        addRecord(entity, hateoasNoarkObject);
+        addNewRecord(entity, hateoasNoarkObject);
         // Add the parent links
         addSeries(entity, hateoasNoarkObject);
         addClass(entity, hateoasNoarkObject);
@@ -128,28 +128,28 @@ public class FileHateoasHandler
     public void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH +
-                REGISTRATION + SLASH, REL_FONDS_STRUCTURE_REGISTRATION, false));
+                RECORD + SLASH, REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override
     public void addNewRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH +
-                NEW_RECORD + SLASH, REL_FONDS_STRUCTURE_NEW_REGISTRATION, false));
+                NEW_RECORD + SLASH, REL_FONDS_STRUCTURE_NEW_RECORD, false));
     }
 
     @Override
-    public void addBasicRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH + BASIC_RECORD
-                + SLASH, REL_FONDS_STRUCTURE_BASIC_RECORD, false));
+                NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH + RECORD
+                + SLASH, REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override
-    public void addNewBasicRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH + NEW_BASIC_RECORD
-                + SLASH, REL_FONDS_STRUCTURE_NEW_BASIC_RECORD, false));
+                NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH + NEW_RECORD
+                + SLASH, REL_FONDS_STRUCTURE_NEW_RECORD, false));
     }
 
     @Override

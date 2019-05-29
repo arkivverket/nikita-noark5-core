@@ -1,9 +1,9 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.BasicRecord;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.Record;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -26,9 +26,9 @@ public class Author extends NoarkEntity {
     @Column(name = "author")
     @Audited
     private String author;
-    // Links to BasicRecords
+    // Links to Records
     @ManyToMany(mappedBy = "referenceAuthor")
-    private List<BasicRecord> referenceBasicRecord = new ArrayList<>();
+    private List<Record> referenceRecord = new ArrayList<>();
     // Links to DocumentDescriptions
     @ManyToMany(mappedBy = "referenceAuthor")
     private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
@@ -46,12 +46,12 @@ public class Author extends NoarkEntity {
         return N5ResourceMappings.AUTHOR;
     }
 
-    public List<BasicRecord> getReferenceBasicRecord() {
-        return referenceBasicRecord;
+    public List<Record> getReferenceRecord() {
+        return referenceRecord;
     }
 
-    public void setReferenceBasicRecord(List<BasicRecord> referenceBasicRecord) {
-        this.referenceBasicRecord = referenceBasicRecord;
+    public void setReferenceRecord(List<Record> referenceRecord) {
+        this.referenceRecord = referenceRecord;
     }
 
     public List<DocumentDescription> getReferenceDocumentDescription() {

@@ -1,10 +1,10 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.BasicRecord;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.interfaces.entities.ICommentEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -63,9 +63,9 @@ public class Comment
     @ManyToMany(mappedBy = "referenceComment")
     private List<File> referenceFile = new ArrayList<>();
 
-    // Links to BasicRecord
+    // Links to Record
     @ManyToMany(mappedBy = "referenceComment")
-    private List<BasicRecord> referenceRecord = new ArrayList<>();
+    private List<Record> referenceRecord = new ArrayList<>();
 
     // Link to DocumentDescription
     @ManyToMany(mappedBy = "referenceComment")
@@ -116,11 +116,11 @@ public class Comment
         this.referenceFile = referenceFile;
     }
 
-    public List<BasicRecord> getReferenceRecord() {
+    public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<BasicRecord> referenceRecord) {
+    public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
     }
 

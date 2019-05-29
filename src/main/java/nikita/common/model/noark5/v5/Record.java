@@ -3,13 +3,10 @@ package nikita.common.model.noark5.v5;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
-import nikita.common.model.noark5.v5.interfaces.IClassified;
-import nikita.common.model.noark5.v5.interfaces.IDisposal;
-import nikita.common.model.noark5.v5.interfaces.IScreening;
+import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
-import nikita.common.model.noark5.v5.secondary.Classified;
-import nikita.common.model.noark5.v5.secondary.Disposal;
-import nikita.common.model.noark5.v5.secondary.Screening;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.RecordHateoasHandler;
@@ -21,6 +18,7 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,17 +29,15 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @Entity
 @Table(name = "record")
 @Inheritance(strategy = InheritanceType.JOINED)
-// Enable soft delete of Record
-// @SQLDelete(sql = "UPDATE record SET deleted = true WHERE pk_record_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-//@Indexed(index = "record")
 @JsonDeserialize(using = RecordDeserializer.class)
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_record_id"))
 public class Record
         extends NoarkEntity
-        implements INoarkCreateEntity, IClassified, IScreening, IDisposal {
+        implements INoarkCreateEntity, IClassified, IScreening, IDisposal,
+        IDocumentMedium, INoarkTitleDescriptionEntity, IStorageLocation,
+        IKeyword, IComment, ICrossReference, IAuthor {
 
     /**
      * M600 - opprettetDato (xs:dateTime)
@@ -72,6 +68,51 @@ public class Record
     @Column(name = "archived_by")
     @Audited
     private String archivedBy;
+
+
+    /**
+     * M004 - registreringsID (xs:string)
+     */
+    @Column(name = "record_id")
+    @Audited
+
+    protected String recordId;
+
+    /**
+     * M020 - tittel (xs:string)
+     */
+    @NotNull
+    @Column(name = "title", nullable = false)
+    @Audited
+
+    protected String title;
+
+    /**
+     * M025 - offentligTittel (xs:string)
+     */
+    @Column(name = "official_title")
+    @Audited
+    protected String officialTitle;
+
+    /**
+     * M021 - beskrivelse (xs:string)
+     */
+    @Column(name = "description")
+    @Audited
+
+    protected String description;
+
+    /**
+     * M300 - dokumentmedium (xs:string)
+     */
+    @Column(name = "document_medium")
+    @Audited
+
+    protected String documentMedium;
+
+    @Column(name = "owned_by")
+    @Audited
+    protected String ownedBy;
 
     // Link to File
     @ManyToOne(fetch = FetchType.LAZY)
@@ -111,6 +152,40 @@ public class Record
     @JoinColumn(name = "record_screening_id", referencedColumnName = "pk_screening_id")
     private Screening referenceScreening;
 
+
+    // Link to StorageLocation
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "basic_record_storage_location", joinColumns = @JoinColumn(name = "f_pk_basic_record_id",
+            referencedColumnName = "pk_record_id"), inverseJoinColumns = @JoinColumn(name = "f_pk_storage_location_id",
+            referencedColumnName = "pk_storage_location_id"))
+    protected List<StorageLocation> referenceStorageLocation = new ArrayList<>();
+
+    // Links to Keywords
+    @ManyToMany
+    @JoinTable(name = "basic_record_keyword", joinColumns = @JoinColumn(name = "f_pk_record_id",
+            referencedColumnName = "pk_record_id"),
+            inverseJoinColumns = @JoinColumn(name = "f_pk_keyword_id", referencedColumnName = "pk_keyword_id"))
+    protected List<Keyword> referenceKeyword = new ArrayList<>();
+    // Links to Authors
+    @ManyToMany
+    @JoinTable(name = "basic_record_author", joinColumns = @JoinColumn(name = "f_pk_record_id",
+            referencedColumnName = "pk_record_id"),
+            inverseJoinColumns = @JoinColumn(name = "f_pk_author_id", referencedColumnName = "pk_author_id"))
+    protected List<Author> referenceAuthor = new ArrayList<>();
+    // Links to Comments
+    @ManyToMany
+    @JoinTable(name = "basic_record_comment", joinColumns = @JoinColumn(name = "f_pk_record_id",
+            referencedColumnName = "pk_record_id"),
+            inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id", referencedColumnName = "pk_comment_id"))
+    protected List<Comment> referenceComment = new ArrayList<>();
+    // Links to CrossReference
+    @OneToMany(mappedBy = "referenceRecord")
+    protected List<CrossReference> referenceCrossReference;
+
+    // Used for soft delete.
+    @Column(name = "deleted")
+    @Audited
+
     public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
@@ -143,9 +218,59 @@ public class Record
         this.archivedBy = archivedBy;
     }
 
+    public String getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(String recordId) {
+        this.recordId = recordId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getOfficialTitle() {
+        return officialTitle;
+    }
+
+    public void setOfficialTitle(String officialTitle) {
+        this.officialTitle = officialTitle;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDocumentMedium() {
+        return documentMedium;
+    }
+
+    public void setDocumentMedium(String documentMedium) {
+        this.documentMedium = documentMedium;
+    }
+
+    @Override
+    public String getOwnedBy() {
+        return ownedBy;
+    }
+
+    @Override
+    public void setOwnedBy(String ownedBy) {
+        this.ownedBy = ownedBy;
+    }
+
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.REGISTRATION;
+        return N5ResourceMappings.RECORD;
     }
 
     public File getReferenceFile() {
@@ -216,6 +341,48 @@ public class Record
         this.referenceScreening = referenceScreening;
     }
 
+    @Override
+    public List<StorageLocation> getReferenceStorageLocation() {
+        return referenceStorageLocation;
+    }
+
+    public void setReferenceStorageLocation(List<StorageLocation> referenceStorageLocation) {
+        this.referenceStorageLocation = referenceStorageLocation;
+    }
+
+    public List<Keyword> getReferenceKeyword() {
+        return referenceKeyword;
+    }
+
+    public void setReferenceKeyword(List<Keyword> referenceKeyword) {
+        this.referenceKeyword = referenceKeyword;
+    }
+
+    public List<Author> getReferenceAuthor() {
+        return referenceAuthor;
+    }
+
+    public void setReferenceAuthor(List<Author> referenceAuthor) {
+        this.referenceAuthor = referenceAuthor;
+    }
+
+    public List<Comment> getReferenceComment() {
+        return referenceComment;
+    }
+
+    public void setReferenceComment(List<Comment> referenceComment) {
+        this.referenceComment = referenceComment;
+    }
+
+    @Override
+    public List<CrossReference> getReferenceCrossReference() {
+        return referenceCrossReference;
+    }
+
+    public void setReferenceCrossReference(List<CrossReference> referenceCrossReference) {
+        this.referenceCrossReference = referenceCrossReference;
+    }
+
     /**
      * Identify who is the parent of this object.
      */
@@ -238,6 +405,11 @@ public class Record
                 ", archivedDate=" + archivedDate +
                 ", createdBy='" + createdBy + '\'' +
                 ", createdDate=" + createdDate +
+                ", description='" + description + '\'' +
+                ", officialTitle='" + officialTitle + '\'' +
+                ", title='" + title + '\'' +
+                ", recordId='" + recordId + '\'' +
+                ", ownedBy='" + ownedBy + '\'' +
                 '}';
     }
 
@@ -259,6 +431,12 @@ public class Record
                 .append(archivedDate, rhs.archivedDate)
                 .append(createdBy, rhs.createdBy)
                 .append(createdDate, rhs.createdDate)
+                .append(recordId, rhs.recordId)
+                .append(title, rhs.title)
+                .append(officialTitle, rhs.officialTitle)
+                .append(description, rhs.description)
+                .append(documentMedium, rhs.documentMedium)
+                .append(ownedBy, rhs.ownedBy)
                 .isEquals();
     }
 
@@ -270,6 +448,12 @@ public class Record
                 .append(archivedDate)
                 .append(createdBy)
                 .append(createdDate)
+                .append(recordId)
+                .append(title)
+                .append(officialTitle)
+                .append(description)
+                .append(documentMedium)
+                .append(ownedBy)
                 .toHashCode();
     }
 }

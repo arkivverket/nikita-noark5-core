@@ -347,7 +347,7 @@ public class CorrespondencePartHateoasController extends NoarkController {
     }
 
     // Delete all CorrespondencePart
-    // DELETE [contextPath][api]/arkivstruktur/basisregistrering/
+    // DELETE [contextPath][api]/arkivstruktur/registrering/
     @ApiOperation(value = "Deletes all CorrespondencePart",
             response = Count.class)
     @ApiResponses(value = {

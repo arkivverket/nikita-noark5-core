@@ -66,7 +66,7 @@ public class DocumentDescriptionHateoasHandler
                           IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + entity.getSystemId() + SLASH +
-                REGISTRATION, REL_FONDS_STRUCTURE_RECORD, false));
+                RECORD, REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override

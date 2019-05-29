@@ -52,10 +52,10 @@ public class CrossReference extends NoarkEntity implements ICrossReferenceEntity
     @JoinColumn(name = "cross_reference_file_id", referencedColumnName = "pk_file_id")
     private File referenceFile;
 
-    // Link to BasicRecord
+    // Link to Record
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cross_reference_basic_record_id", referencedColumnName = "pk_record_id")
-    private Record referenceBasicRecord;
+    private Record referenceRecord;
 
     @Override
     public String getBaseTypeName() {
@@ -105,12 +105,12 @@ public class CrossReference extends NoarkEntity implements ICrossReferenceEntity
         this.referenceFile = referenceFile;
     }
 
-    public Record getReferenceBasicRecord() {
-        return referenceBasicRecord;
+    public Record getReferenceRecord() {
+        return referenceRecord;
     }
 
-    public void setReferenceBasicRecord(Record referenceBasicRecord) {
-        this.referenceBasicRecord = referenceBasicRecord;
+    public void setReferenceRecord(Record referenceRecord) {
+        this.referenceRecord = referenceRecord;
     }
 
     @Override

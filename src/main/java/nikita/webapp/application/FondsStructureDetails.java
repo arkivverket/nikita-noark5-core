@@ -76,15 +76,15 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add Registration
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION + SLASH,
+                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD,
+                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD + SLASH,
                 true
         ));
 
         // Add BasicRegistration
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + BASIC_RECORD,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + BASIC_RECORD + SLASH,
+                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD,
+                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD + SLASH,
                 true
         ));
 

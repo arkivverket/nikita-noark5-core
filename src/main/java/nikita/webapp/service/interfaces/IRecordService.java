@@ -41,10 +41,13 @@ public interface IRecordService {
     List<Record> findByOwnedBy(String ownedBy);
 
     // -- All UPDATE operations
-    Record handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull Record record);
+    Record handleUpdate(@NotNull String systemId,
+                        @NotNull Long version, @NotNull Record record);
 
     // -- All DELETE operations
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
+
 }

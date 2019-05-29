@@ -21,7 +21,7 @@ public class RecordHateoas extends HateoasNoarkObject implements IHateoasNoarkOb
     }
 
     public RecordHateoas(List<INikitaEntity> entityList) {
-        super(entityList, N5ResourceMappings.REGISTRATION);
+        super(entityList, N5ResourceMappings.RECORD);
     }
 
 }

@@ -6,12 +6,13 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
+
+import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -52,30 +53,53 @@ public class RecordDeserializer extends JsonDeserializer {
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general properties
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity(record, objectNode, errors);
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkCreateEntity(record, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(record, objectNode, errors);
+        deserialiseNoarkCreateEntity(record, objectNode, errors);
         // Deserialize archivedBy
-        JsonNode currentNode = objectNode.get(N5ResourceMappings.RECORD_ARCHIVED_BY);
+        JsonNode currentNode = objectNode.get(RECORD_ARCHIVED_BY);
         if (currentNode != null) {
             record.setArchivedBy(currentNode.textValue());
-            objectNode.remove(N5ResourceMappings.RECORD_ARCHIVED_BY);
+            objectNode.remove(RECORD_ARCHIVED_BY);
         }
         // Deserialize archivedDate
-        record.setArchivedDate(CommonUtils.Hateoas.Deserialize.deserializeDateTime(N5ResourceMappings.RECORD_ARCHIVED_DATE, objectNode, errors));
+        record.setArchivedDate(deserializeDateTime(
+                RECORD_ARCHIVED_DATE, objectNode, errors));
 
-        // TODO: Handle deserialize of referanseArkivdel
-        // You need a minor change to the domain model to handle this
-        // Something like referenceSecondarySeries
-        // You have the main fonds structure you link it to, but you also need to be able to link it to other
-        // series objects
-        //CommonCommonUtils.Hateoas.Deserialize.deserialiseReferenceMultipleSeries(objectNode);
+        // Deserialize general Record properties
+        // Deserialize recordId
+        currentNode = objectNode.get(RECORD_ID);
+        if (null != currentNode) {
+            record.setRecordId(currentNode.textValue());
+            objectNode.remove(RECORD_ID);
+        }
+        // Deserialize title (not using utils to preserve order)
+        currentNode = objectNode.get(TITLE);
+        if (null != currentNode) {
+            record.setTitle(currentNode.textValue());
+            objectNode.remove(TITLE);
+        }
+        // Deserialize  officialTitle
+        currentNode = objectNode.get(FILE_PUBLIC_TITLE);
+        if (null != currentNode) {
+            record.setOfficialTitle(currentNode.textValue());
+            objectNode.remove(FILE_PUBLIC_TITLE);
+        }
+        // Deserialize description
+        currentNode = objectNode.get(DESCRIPTION);
+        if (null != currentNode) {
+            record.setDescription(currentNode.textValue());
+            objectNode.remove(DESCRIPTION);
+        }
+        deserialiseDocumentMedium(record, objectNode, errors);
+        deserialiseAuthor(record, objectNode, errors);
 
-        // Check that there are no additional values left after processing the tree
-        // If there are additional throw a malformed input exception
+        // Check that there are no additional values left after processing
+        // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The registrering you tried to create is malformed. The " +
-                    "following fields are not recognised as registrering fields [" +
-                    CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append("The registrering you tried to create is ");
+            errors.append("malformed. The following fields are not ");
+            errors.append("recognised as registrering fields [" +
+                    checkNodeObjectEmpty(objectNode) + "]. ");
         }
 
         if (0 < errors.length())

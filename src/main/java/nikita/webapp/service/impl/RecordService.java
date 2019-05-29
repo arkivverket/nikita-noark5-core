@@ -280,10 +280,11 @@ public class RecordService
                                @NotNull final Record incomingRecord) {
         Record existingRecord = getRecordOrThrow(recordSystemId);
         // Here copy all the values you are allowed to copy ....
-        // TODO: FIND ALL VALUES
-        // This might be a class that can only have values set via parameter
-        // values rather than request bodies
-
+        updateTitleAndDescription(incomingRecord, existingRecord);
+        if (null != incomingRecord.getDocumentMedium()) {
+            existingRecord.setDocumentMedium(
+                    incomingRecord.getDocumentMedium());
+        }
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingRecord.setVersion(version);

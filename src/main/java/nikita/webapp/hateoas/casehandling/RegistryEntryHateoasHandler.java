@@ -3,7 +3,7 @@ package nikita.webapp.hateoas.casehandling;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
-import nikita.webapp.hateoas.BasicRecordHateoasHandler;
+import nikita.webapp.hateoas.RecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -13,14 +13,14 @@ import static nikita.common.config.N5ResourceMappings.*;
 /**
  * Created by tsodring on 2/6/17.
  * <p>
- * Used to add BasicRecordHateoas links with BasicRecord specific information
+ * Used to add RecordHateoas links with Record specific information
  * <p>
  * Not sure if there is a difference in what should be returned of links for various CRUD operations so keeping them
  * separate calls at the moment.
  */
 @Component("registryEntryHateoasHandler")
 public class RegistryEntryHateoasHandler
-        extends BasicRecordHateoasHandler
+        extends RecordHateoasHandler
         implements IRegistryEntryHateoasHandler {
 
     @Override

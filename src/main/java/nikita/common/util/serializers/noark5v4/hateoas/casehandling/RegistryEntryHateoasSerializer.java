@@ -56,9 +56,9 @@ public class RegistryEntryHateoasSerializer
         printScreening(jgen, registryEntry);
         printClassified(jgen, registryEntry);
 
-        // handle general BasicRecord  properties
+        // handle general Record  properties
         if (registryEntry.getRecordId() != null) {
-            jgen.writeStringField(BASIC_RECORD_ID, registryEntry.getRecordId());
+            jgen.writeStringField(RECORD_ID, registryEntry.getRecordId());
         }
         if (registryEntry.getTitle() != null) {
             jgen.writeStringField(TITLE, registryEntry.getTitle());

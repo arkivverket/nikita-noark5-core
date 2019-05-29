@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.meeting;
 
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.BasicRecord;
+import nikita.common.model.noark5.v5.Record;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -14,7 +14,7 @@ import javax.persistence.*;
 // Enable soft delete of MeetingRecord
 // @SQLDelete(sql="UPDATE meeting_record SET deleted = true WHERE pk_record_id = ? and version = ?")
 // @Where(clause="deleted <> true")
-public class MeetingRecord extends BasicRecord {
+public class MeetingRecord extends Record {
 
     /**
      * M085 - moeteregistreringstype (xs:string)

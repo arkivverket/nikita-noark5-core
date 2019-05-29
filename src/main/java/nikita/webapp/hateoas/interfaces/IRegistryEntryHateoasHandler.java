@@ -8,7 +8,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  * <p>
  * Describe Hateoas links handler
  */
-public interface IRegistryEntryHateoasHandler extends IBasicRecordHateoasHandler {
+public interface IRegistryEntryHateoasHandler extends IRecordHateoasHandler {
 
     void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 

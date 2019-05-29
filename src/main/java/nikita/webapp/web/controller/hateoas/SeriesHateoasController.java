@@ -580,7 +580,7 @@ public class SeriesHateoasController
     @Counted
 
     @GetMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + REGISTRATION)
+            RIGHT_PARENTHESIS + SLASH + RECORD)
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
             @ApiParam(name = "systemID",
                     value = "systemID of the series to find associated records",

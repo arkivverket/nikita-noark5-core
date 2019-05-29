@@ -66,12 +66,12 @@ public class RegistryEntryDeserializer
         registryEntry.setArchivedDate(
                 deserializeDateTime(RECORD_ARCHIVED_DATE, objectNode, errors));
 
-        // Deserialize general BasicRecord properties
+        // Deserialize general Record properties
         // Deserialize recordId
-        currentNode = objectNode.get(BASIC_RECORD_ID);
+        currentNode = objectNode.get(RECORD_ID);
         if (null != currentNode) {
             registryEntry.setRecordId(currentNode.textValue());
-            objectNode.remove(BASIC_RECORD_ID);
+            objectNode.remove(RECORD_ID);
         }
         // Deserialize title (not using utils to preserve order)
         currentNode = objectNode.get(TITLE);

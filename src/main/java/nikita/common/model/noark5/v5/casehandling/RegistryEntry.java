@@ -3,7 +3,7 @@ package nikita.common.model.noark5.v5.casehandling;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.BasicRecord;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
@@ -40,7 +40,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasPacker(using = RegistryEntryHateoasHandler.class)
 @HateoasObject(using = RegistryEntryHateoas.class)
 public class RegistryEntry
-        extends BasicRecord implements
+        extends Record implements
         IElectronicSignature,
         IPrecedence, /*ICorrespondencePart,*/ ISignOff, IDocumentFlow {
 

@@ -20,8 +20,7 @@ public final class N5ResourceMappings {
     public static final String MEETING_FILE = "moetemappe";
     public static final String MEETING_PARTICIPANT = "moetedeltager";
     public static final String MEETING_RECORD = "moeteregistrering";
-    public static final String REGISTRATION = "registrering";
-    public static final String BASIC_RECORD = "basisregistrering";
+    public static final String RECORD = "registrering";
     public static final String REGISTRY_ENTRY = "journalpost";
     public static final String DOCUMENT_DESCRIPTION = "dokumentbeskrivelse";
     public static final String DOCUMENT_OBJECT = "dokumentobjekt";
@@ -115,8 +114,8 @@ public final class N5ResourceMappings {
     public static final String RECORD_ARCHIVED_BY = "arkivertAv";
     public static final String RECORD_ARCHIVED_DATE = "arkivertDato";
 
-    // BasicRecord
-    public static final String BASIC_RECORD_ID = "registreringsID";
+    // Record
+    public static final String RECORD_ID = "registreringsID";
 
     // RegistryEntry
     public static final String REGISTRY_ENTRY_DATE = "journaldato";
@@ -259,8 +258,8 @@ public final class N5ResourceMappings {
     // Meeting
     public static final String MEETING_FILE_TYPE = "moetesakstype";
     public static final String MEETING_PARTICIPANT_FUNCTION = "moetedeltakerfunksjon";
-    public static final String MEETING_REGISTRATION_STATUS = "moteregistreringsstatus";
-    public static final String MEETING_REGISTRATION_TYPE = "moeteregistreringstype";
+    public static final String MEETING_RECORD_STATUS = "moteregistreringsstatus";
+    public static final String MEETING_RECORD_TYPE = "moeteregistreringstype";
 
     // FondsCreator
     public static final String FONDS_CREATOR = "arkivskaper";
@@ -369,8 +368,8 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG = "tilknyttetregistreringsom";
     public static final String AUTHOR_ENG = "forfatter";
-    public static final String BASIC_RECORD_ENG = "basicRecord";
-    public static final String BASIC_RECORD_ID_ENG = "registreringsID";
+    public static final String RECORD_ENG = "Record";
+    public static final String RECORD_ID_ENG = "registreringsID";
     public static final String BUSINESS_ADDRESS_ENG = "forretningsadresse";
     public static final String CASE_DATE_ENG = "saksdato";
     public static final String CASE_FILE_ENG = "caseFile";
@@ -497,8 +496,8 @@ public final class N5ResourceMappings {
     public static final String MEETING_PARTICIPANT_ENG = "moetedeltager";
     public static final String MEETING_PARTICIPANT_FUNCTION_ENG = "moetedeltakerfunksjon";
     public static final String MEETING_RECORD_ENG = "moeteregistrering";
-    public static final String MEETING_REGISTRATION_STATUS_ENG = "moteregistreringsstatus";
-    public static final String MEETING_REGISTRATION_TYPE_ENG = "moeteregistreringstype";
+    public static final String MEETING_RECORD_STATUS_ENG = "moteregistreringsstatus";
+    public static final String MEETING_RECORD_TYPE_ENG = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG = "mobiltelefon";
     public static final String NAME_ENG = "navn";
     public static final String ORGANISATION_NUMBER_ENG = "organisasjonsnummer";
@@ -520,7 +519,6 @@ public final class N5ResourceMappings {
     public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG = "referanseAdministratitivEnhet";
     public static final String REFERENCE_CASE_HANDLER_ENG = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG = "referanseArkivdel";
-    public static final String REGISTRATION_ENG = "record";
     public static final String REGISTRY_ENTRY_DATE_ENG = "journaldato";
     public static final String REGISTRY_ENTRY_DOCUMENT_DATE_ENG = "dokumentetsDato";
     public static final String REGISTRY_ENTRY_DUE_DATE_ENG = "forfallsdato";
@@ -581,8 +579,8 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG_OBJECT = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT = "tilknyttetregistreringsom";
     public static final String AUTHOR_ENG_OBJECT = "forfatter";
-    public static final String BASIC_RECORD_ENG_OBJECT = "BasicRecord";
-    public static final String BASIC_RECORD_ID_ENG_OBJECT = "registreringsID";
+    public static final String RECORD_ENG_OBJECT = "Record";
+    public static final String RECORD_ID_ENG_OBJECT = "registreringsID";
     public static final String BUSINESS_ADDRESS_ENG_OBJECT = "forretningsadresse";
     public static final String CASE_DATE_ENG_OBJECT = "saksdato";
     public static final String CASE_FILE_ENG_OBJECT = "CaseFile";
@@ -710,8 +708,8 @@ public final class N5ResourceMappings {
     public static final String MEETING_PARTICIPANT_ENG_OBJECT = "moetedeltager";
     public static final String MEETING_PARTICIPANT_FUNCTION_ENG_OBJECT = "moetedeltakerfunksjon";
     public static final String MEETING_RECORD_ENG_OBJECT = "moeteregistrering";
-    public static final String MEETING_REGISTRATION_STATUS_ENG_OBJECT = "moteregistreringsstatus";
-    public static final String MEETING_REGISTRATION_TYPE_ENG_OBJECT = "moeteregistreringstype";
+    public static final String MEETING_RECORD_STATUS_ENG_OBJECT = "moteregistreringsstatus";
+    public static final String MEETING_RECORD_TYPE_ENG_OBJECT = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
     public static final String NAME_ENG_OBJECT = "navn";
     public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisasjonsnummer";
@@ -733,7 +731,6 @@ public final class N5ResourceMappings {
     public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG_OBJECT = "referanseAdministratitivEnhet";
     public static final String REFERENCE_CASE_HANDLER_ENG_OBJECT = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG_OBJECT = "referanseArkivdel";
-    public static final String REGISTRATION_ENG_OBJECT = "Record";
     public static final String REGISTRY_ENTRY_DATE_ENG_OBJECT = "journaldato";
     public static final String REGISTRY_ENTRY_DOCUMENT_DATE_ENG_OBJECT = "dokumentetsDato";
     public static final String REGISTRY_ENTRY_DUE_DATE_ENG_OBJECT = "forfallsdato";

@@ -42,10 +42,10 @@ public class StorageLocation extends NoarkEntity {
     @OneToMany(mappedBy = "referenceStorageLocation")
     private List<File> referenceFile = new ArrayList<>();
 
-    // Links to BasicRecords
+    // Links to Records
     @ManyToMany(mappedBy = "referenceStorageLocation")
     @JsonIgnore
-    private List<BasicRecord> referenceBasicRecord = new ArrayList<>();
+    private List<Record> referenceRecord = new ArrayList<>();
 
 
     public String getStorageLocation() {
@@ -85,12 +85,12 @@ public class StorageLocation extends NoarkEntity {
         this.referenceFile = referenceFile;
     }
 
-    public List<BasicRecord> getReferenceBasicRecord() {
-        return referenceBasicRecord;
+    public List<Record> getReferenceRecord() {
+        return referenceRecord;
     }
 
-    public void setReferenceBasicRecord(List<BasicRecord> referenceBasicRecord) {
-        this.referenceBasicRecord = referenceBasicRecord;
+    public void setReferenceRecord(List<Record> referenceRecord) {
+        this.referenceRecord = referenceRecord;
     }
 
     @Override

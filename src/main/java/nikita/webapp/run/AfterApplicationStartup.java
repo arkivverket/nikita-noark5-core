@@ -285,9 +285,9 @@ public class AfterApplicationStartup {
                         AUTHOR_ENG,
                         AUTHOR_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (BASIC_RECORD,
-                        BASIC_RECORD_ENG,
-                        BASIC_RECORD_ENG_OBJECT);
+                (RECORD,
+                        RECORD_ENG,
+                        RECORD_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (CASE_FILE,
                         CASE_FILE_ENG,
@@ -377,9 +377,9 @@ public class AfterApplicationStartup {
                         MEETING_RECORD_ENG,
                         MEETING_RECORD_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (REGISTRATION,
-                        REGISTRATION_ENG,
-                        REGISTRATION_ENG_OBJECT);
+                (RECORD,
+                        RECORD_ENG,
+                        RECORD_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (REGISTRY_ENTRY,
                         REGISTRY_ENTRY_ENG,
@@ -451,9 +451,9 @@ public class AfterApplicationStartup {
                         ASSOCIATED_WITH_RECORD_AS_ENG,
                         ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (BASIC_RECORD_ID,
-                        BASIC_RECORD_ID_ENG,
-                        BASIC_RECORD_ID_ENG_OBJECT);
+                (RECORD_ID,
+                        RECORD_ID_ENG,
+                        RECORD_ID_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (BUSINESS_ADDRESS,
                         BUSINESS_ADDRESS_ENG,
@@ -869,13 +869,13 @@ public class AfterApplicationStartup {
                         MEETING_PARTICIPANT_FUNCTION_ENG,
                         MEETING_PARTICIPANT_FUNCTION_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (MEETING_REGISTRATION_STATUS,
-                        MEETING_REGISTRATION_STATUS_ENG,
-                        MEETING_REGISTRATION_STATUS_ENG_OBJECT);
+                (MEETING_RECORD_STATUS,
+                        MEETING_RECORD_STATUS_ENG,
+                        MEETING_RECORD_STATUS_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (MEETING_REGISTRATION_TYPE,
-                        MEETING_REGISTRATION_TYPE_ENG,
-                        MEETING_REGISTRATION_TYPE_ENG_OBJECT);
+                (MEETING_RECORD_TYPE,
+                        MEETING_RECORD_TYPE_ENG,
+                        MEETING_RECORD_TYPE_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (MOBILE_TELEPHONE_NUMBER,
                         MOBILE_TELEPHONE_NUMBER_ENG,

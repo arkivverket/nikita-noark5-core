@@ -1,6 +1,5 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v5.BasicRecord;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
@@ -89,12 +88,6 @@ public class FileService
         return recordService.create(record);
     }
 
-    @Override
-    public BasicRecord createBasicRecordAssociatedWithFile(
-            String fileSystemId, BasicRecord basicRecord) {
-        basicRecord.setReferenceFile(getFileOrThrow(fileSystemId));
-        return (BasicRecord) recordService.create(basicRecord);
-    }
 
     // All READ operations
     public List<File> findAll() {

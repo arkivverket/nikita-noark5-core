@@ -25,9 +25,9 @@ public interface IFileHateoasHandler
 
     void addNewRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addBasicRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewBasicRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 

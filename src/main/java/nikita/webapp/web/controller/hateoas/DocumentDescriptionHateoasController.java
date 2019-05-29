@@ -235,7 +235,7 @@ public class DocumentDescriptionHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + REGISTRATION)
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + RECORD)
     public ResponseEntity<RecordHateoas>
     findAllRecordAssociatedWithDocumentDescription(
             @ApiParam(name = "systemID",

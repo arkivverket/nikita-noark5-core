@@ -57,4 +57,35 @@ public interface IRecordHateoasHandler extends IHateoasHandler {
 
     void addNewScreening(INikitaEntity entity,
                          IHateoasNoarkObject hateoasNoarkObject);
+
+
+    void addStorageLocation(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewStorageLocation(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject);
+
+    void addComment(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewComment(INikitaEntity entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
+
+    void addAuthor(INikitaEntity entity,
+                   IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewAuthor(INikitaEntity entity,
+                      IHateoasNoarkObject hateoasNoarkObject);
+
+    void addCrossReference(INikitaEntity entity,
+                           IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewCrossReference(INikitaEntity entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
+    void addKeyword(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewKeyword(INikitaEntity entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
 }

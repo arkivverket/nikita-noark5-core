@@ -16,7 +16,10 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.*;
+import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
+import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -49,7 +52,6 @@ public class FileHateoasController
     private IFileService fileService;
     private IFileHateoasHandler fileHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
-    private IBasicRecordHateoasHandler basicRecordHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
@@ -57,7 +59,6 @@ public class FileHateoasController
     public FileHateoasController(IFileService fileService,
                                  IFileHateoasHandler fileHateoasHandler,
                                  IRecordHateoasHandler recordHateoasHandler,
-                                 IBasicRecordHateoasHandler basicRecordHateoasHandler,
                                  ISeriesHateoasHandler seriesHateoasHandler,
                                  IClassHateoasHandler classHateoasHandler,
                                  ApplicationEventPublisher applicationEventPublisher) {
@@ -65,7 +66,6 @@ public class FileHateoasController
         this.fileService = fileService;
         this.fileHateoasHandler = fileHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
-        this.basicRecordHateoasHandler = basicRecordHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
@@ -113,60 +113,20 @@ public class FileHateoasController
                 .body(recordHateoas);
     }
 
-    // Create a BasicRecord
-    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-basisregistrering
-    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-basisregistrering/
-    @ApiOperation(value = "Persists a BasicRecord associated with the given Series systemId",
-            notes = "Returns the newly created basicRecord after it was associated with a File and " +
-                    "persisted to the database", response = BasicRecordHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "BasicRecord " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = BasicRecordHateoas.class),
-            @ApiResponse(code = 201, message = "BasicRecord " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = BasicRecordHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type BasicRecord"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_BASIC_RECORD, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
-    public ResponseEntity<BasicRecordHateoas> createBasicRecordAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
-            @ApiParam(name = "systemID",
-                    value = "systemId of file to associate the basicRecord with",
-                    required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "BasicRecord",
-                    value = "Incoming basicRecord",
-                    required = true)
-            @RequestBody BasicRecord basicRecord) throws NikitaException {
-        BasicRecord createdBasicRecord = fileService.createBasicRecordAssociatedWithFile(systemID, basicRecord);
-        BasicRecordHateoas basicRecordHateoas = new BasicRecordHateoas(createdBasicRecord);
-        basicRecordHateoasHandler.addLinks(basicRecordHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdBasicRecord));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdBasicRecord.getVersion().toString())
-                .body(basicRecordHateoas);
-    }
-
     // Create a CrossReference
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-kryssreferanse
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-kryssreferanse/
-    @ApiOperation(value = "Persists a BasicRecord associated with the given Series systemId",
-            notes = "Returns the newly created basicRecord after it was associated with a File and " +
-                    "persisted to the database", response = BasicRecordHateoas.class)
+    @ApiOperation(value = "Persists a Record associated with the given Series systemId",
+            notes = "Returns the newly created Record after it was associated with a File and " +
+                    "persisted to the database", response = RecordHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "BasicRecord " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = BasicRecordHateoas.class),
-            @ApiResponse(code = 201, message = "BasicRecord " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = BasicRecordHateoas.class),
+            @ApiResponse(code = 200, message = "Record " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 201, message = "Record " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = RecordHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type BasicRecord"),
+            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type Record"),
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
@@ -176,7 +136,7 @@ public class FileHateoasController
     public ResponseEntity<String> createCrossReferenceAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
-                    value = "systemId of file to associate the basicRecord with",
+                    value = "systemId of file to associate the Record with",
                     required = true)
             @PathVariable("systemID") final String systemID,
             @ApiParam(name = "crossReferenceEntity",
@@ -392,7 +352,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + REGISTRATION,
+    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + RECORD,
             method = RequestMethod.GET)
     public ResponseEntity<RecordHateoas> findAllRecordsAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
@@ -412,29 +372,6 @@ public class FileHateoasController
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
-    }
-
-    // Retrieve all BasicRecords associated with File identified by systemId
-    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/basisregistrering
-    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/basisregistrering/
-    @ApiOperation(value = "Retrieve all BasicRecord associated with a File identified by systemId",
-            response = BasicRecordHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "BasicRecord returned", response = BasicRecordHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + BASIC_RECORD,
-            method = RequestMethod.GET)
-    public ResponseEntity<String> findAllBasicRecordsAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated BasicRecord",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
     // Retrieve all Series associated with File identified by a systemId
@@ -484,15 +421,15 @@ public class FileHateoasController
             @PathVariable("systemID") final String systemID) {
         return fileService.findClassAssociatedWithFile(systemID);
     }
-    
-    
-    // Retrieve all BasicRecords associated with File identified by systemId
+
+
+    // Retrieve all Records associated with File identified by systemId
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/undermappe
     // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/undermappe/
     @ApiOperation(value = "Retrieve all (sub) File associated with a File identified by systemId",
-            response = BasicRecordHateoas.class)
+            response = RecordHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "BasicRecord returned", response = BasicRecordHateoas.class),
+            @ApiResponse(code = 200, message = "Record returned", response = RecordHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -533,32 +470,6 @@ public class FileHateoasController
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
-    }
-
-    // Create a BasicRecord with default values
-    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-basisregistrering
-    @ApiOperation(value = "Create a BasicRecord with default values", response = BasicRecord.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "BasicRecord returned", response = BasicRecord.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            NEW_BASIC_RECORD, method = RequestMethod.GET)
-    public ResponseEntity<BasicRecordHateoas> createDefaultBasicRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response) {
-
-        BasicRecord defaultBasicRecord = new BasicRecord();
-        defaultBasicRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
-        defaultBasicRecord.setArchivedDate(ZonedDateTime.now());
-        BasicRecordHateoas basicRecordHateoas = new
-                BasicRecordHateoas(defaultBasicRecord);
-        basicRecordHateoasHandler.addLinksOnNew(basicRecordHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(basicRecordHateoas);
     }
 
     // Retrieve a file identified by a systemId

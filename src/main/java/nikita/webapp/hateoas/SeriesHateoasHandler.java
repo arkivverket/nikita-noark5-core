@@ -158,7 +158,7 @@ public class SeriesHateoasHandler extends HateoasHandler
         if (authorisation.canCreateRegistrationAttachedToSeries()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH + entity.getSystemId() + SLASH +
-                    NEW_RECORD + SLASH, REL_FONDS_STRUCTURE_NEW_REGISTRATION,
+                    NEW_RECORD + SLASH, REL_FONDS_STRUCTURE_NEW_RECORD,
                     false));
         }
     }
@@ -207,7 +207,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     public void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES +
-                SLASH + entity.getSystemId() + SLASH + REGISTRATION + SLASH, REL_FONDS_STRUCTURE_REGISTRATION,
+                SLASH + entity.getSystemId() + SLASH + RECORD + SLASH, REL_FONDS_STRUCTURE_RECORD,
                 false));
     }
 
