@@ -637,6 +637,8 @@ public final class Constants {
             "file_comment";
     public static final String TABLE_FILE_PARTY =
             "file_party";
+    public static final String TABLE_RECORD_PARTY =
+            "record_party";
     public static final String TABLE_FONDS_STORAGE_LOCATION =
             "fonds_storage_location";
     public static final String TABLE_RECORD_KEYWORD =

@@ -8,7 +8,6 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.RecordHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
@@ -77,8 +76,7 @@ public class Record
      */
     @Column(name = "record_id")
     @Audited
-
-    protected String recordId;
+    private String recordId;
 
     /**
      * M020 - tittel (xs:string)
@@ -86,35 +84,42 @@ public class Record
     @NotNull
     @Column(name = "title", nullable = false)
     @Audited
-
-    protected String title;
+    private String title;
 
     /**
      * M025 - offentligTittel (xs:string)
      */
     @Column(name = "official_title")
     @Audited
-    protected String officialTitle;
+    private String officialTitle;
 
     /**
      * M021 - beskrivelse (xs:string)
      */
     @Column(name = "description")
     @Audited
-
-    protected String description;
+    private String description;
 
     /**
      * M300 - dokumentmedium (xs:string)
      */
     @Column(name = "document_medium")
     @Audited
-
-    protected String documentMedium;
+    private String documentMedium;
 
     @Column(name = "owned_by")
     @Audited
-    protected String ownedBy;
+    private String ownedBy;
+    // Link to StorageLocation
+    @ManyToMany(cascade = PERSIST)
+    @JoinTable(name = TABLE_RECORD_STORAGE_LOCATION,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_RECORD),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_STORAGE_LOCATION_PK,
+                    referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
+    private List<StorageLocation> referenceStorageLocation =
+            new ArrayList<>();
 
     // Link to File
     @ManyToOne(fetch = FetchType.LAZY)
@@ -130,17 +135,6 @@ public class Record
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_class_id", referencedColumnName = "pk_class_id")
     private Class referenceClass;
-
-    // Link to StorageLocation
-    @ManyToMany(cascade = PERSIST)
-    @JoinTable(name = TABLE_RECORD_STORAGE_LOCATION,
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
-            inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_STORAGE_LOCATION_PK,
-                    referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
-    protected List<StorageLocation> referenceStorageLocation =
-            new ArrayList<>();
     // Links to Keywords
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_KEYWORD,
@@ -148,7 +142,7 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_RECORD),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
                     referencedColumnName = PRIMARY_KEY_KEYWORD))
-    protected List<Keyword> referenceKeyword = new ArrayList<>();
+    private List<Keyword> referenceKeyword = new ArrayList<>();
     // Links to Authors
     @ManyToMany
     @JoinTable(name = "basic_record_author",
@@ -156,7 +150,7 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_RECORD),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_AUTHOR_PK,
                     referencedColumnName = PRIMARY_KEY_AUTHOR))
-    protected List<Author> referenceAuthor = new ArrayList<>();
+    private List<Author> referenceAuthor = new ArrayList<>();
     // Links to Comments
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_COMMENT,
@@ -165,34 +159,46 @@ public class Record
             inverseJoinColumns =
             @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_COMMENT))
-    protected List<Comment> referenceComment = new ArrayList<>();
+    private List<Comment> referenceComment = new ArrayList<>();
     // Links to DocumentDescriptions
     @ManyToMany
     @JoinTable(name = "record_document_description",
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
                     referencedColumnName = PRIMARY_KEY_RECORD),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_document_description_id",
+            inverseJoinColumns = @JoinColumn(
+                    name = "f_pk_document_description_id",
                     referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    private List<DocumentDescription> referenceDocumentDescription =
+            new ArrayList<>();
+    // Links to CrossReference
+    @OneToMany(mappedBy = "referenceRecord")
+    private List<CrossReference> referenceCrossReference;
+
     // Links to Classified
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "record_classified_id",
             referencedColumnName = "pk_classified_id")
     private Classified referenceClassified;
+
     // Link to Disposal
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "record_disposal_id",
             referencedColumnName = "pk_disposal_id")
     private Disposal referenceDisposal;
+
     // Link to Screening
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "record_screening_id",
             referencedColumnName = "pk_screening_id")
     private Screening referenceScreening;
-
-    // Links to CrossReference
-    @OneToMany(mappedBy = "referenceRecord")
-    protected List<CrossReference> referenceCrossReference;
+    // Links to Party
+    @ManyToMany
+    @JoinTable(name = TABLE_RECORD_PARTY,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_RECORD),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
+                    referencedColumnName = PRIMARY_KEY_PART))
+    private List<Party> referenceParty = new ArrayList<>();
 
     // Used for soft delete.
     @Column(name = "deleted")
@@ -390,23 +396,21 @@ public class Record
         return referenceCrossReference;
     }
 
-    public void setReferenceCrossReference(List<CrossReference> referenceCrossReference) {
+    public void setReferenceCrossReference(
+            List<CrossReference> referenceCrossReference) {
         this.referenceCrossReference = referenceCrossReference;
     }
 
-    /**
-     * Identify who is the parent of this object.
-     */
-    public NoarkEntity chooseParent() {
-        if (null != referenceFile) {
-            return referenceFile;
-        } else if (null != referenceClass) {
-            return referenceClass;
-        } else if (null != referenceSeries) {
-            return referenceSeries;
-        } else { // This should be impossible, a record cannot exist without a parent
-            throw new NoarkEntityNotFoundException("Could not find parent object for " + this.toString());
-        }
+    public List<Party> getReferenceParty() {
+        return referenceParty;
+    }
+
+    public void setReferenceParty(List<Party> referenceParty) {
+        this.referenceParty = referenceParty;
+    }
+
+    public void addReferenceParty(Party party) {
+        this.referenceParty.add(party);
     }
 
     @Override

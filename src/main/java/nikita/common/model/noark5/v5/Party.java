@@ -100,6 +100,15 @@ public class Party
     @ManyToMany(mappedBy = "referenceParty")
     private List<File> referenceFile = new ArrayList<>();
 
+    // Links to Record
+    @ManyToMany(mappedBy = "referenceParty")
+    private List<Record> referenceRecord = new ArrayList<>();
+
+    // Links to DocumentDescriptions
+    @ManyToMany(mappedBy = "referenceParty")
+    private List<DocumentDescription> referenceDocumentDescription =
+            new ArrayList<>();
+
     public String getPartyId() {
         return partyId;
     }
@@ -196,6 +205,36 @@ public class Party
 
     public void setReferenceFile(List<File> referenceFile) {
         this.referenceFile = referenceFile;
+    }
+
+    public void addReferenceFile(File file) {
+        this.referenceFile.add(file);
+    }
+
+    public List<Record> getReferenceRecord() {
+        return referenceRecord;
+    }
+
+    public void setReferenceRecord(List<Record> referenceRecord) {
+        this.referenceRecord = referenceRecord;
+    }
+
+    public void addReferenceRecord(Record record) {
+        this.referenceRecord.add(record);
+    }
+
+    public List<DocumentDescription> getReferenceDocumentDescription() {
+        return referenceDocumentDescription;
+    }
+
+    public void setReferenceDocumentDescription(
+            List<DocumentDescription> referenceDocumentDescription) {
+        this.referenceDocumentDescription = referenceDocumentDescription;
+    }
+
+    public void addReferenceDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.add(documentDescription);
     }
 
     @Override

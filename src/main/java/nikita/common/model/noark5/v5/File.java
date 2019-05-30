@@ -137,7 +137,6 @@ public class File
                     referencedColumnName = PRIMARY_KEY_FILE),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_PART))
-
     private List<Party> referenceParty = new ArrayList<>();
 
     public String getFileId() {
