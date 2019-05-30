@@ -19,11 +19,14 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 
 @Entity
 @Table(name = "file")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = FileDeserializer.class)
 @HateoasPacker(using = FileHateoasHandler.class)
 @HateoasObject(using = FileHateoas.class)
@@ -73,7 +76,7 @@ public class File
     private List<Keyword> referenceKeyword = new ArrayList<>();
 
     // Link to parent File
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     private File referenceParentFile;
 
     // Links to child Files
@@ -81,13 +84,13 @@ public class File
     private List<File> referenceChildFile = new ArrayList<>();
 
     // Link to Series
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FILE_SERIES_ID,
             referencedColumnName = PRIMARY_KEY_SERIES)
     private Series referenceSeries;
 
     // Link to Class
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FILE_CLASS_ID,
             referencedColumnName = PRIMARY_KEY_CLASS)
     private Class referenceClass;
@@ -97,7 +100,7 @@ public class File
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Comments
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = PERSIST)
     @JoinTable(name = TABLE_FILE_COMMENT,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
                     referencedColumnName = PRIMARY_KEY_FILE),
@@ -106,26 +109,36 @@ public class File
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = PERSIST)
     @JoinColumn(name = FILE_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_CLASSIFIED)
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = PERSIST)
     @JoinColumn(name = FILE_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_DISPOSAL)
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = PERSIST)
     @JoinColumn(name = FILE_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SCREENING)
     private Screening referenceScreening;
 
     @OneToMany(mappedBy = "referenceFile")
     private List<CrossReference> referenceCrossReference;
+
+    // Links to Party
+    @ManyToMany
+    @JoinTable(name = TABLE_FILE_PARTY,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
+                    referencedColumnName = PRIMARY_KEY_FILE),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
+                    referencedColumnName = PRIMARY_KEY_PART))
+
+    private List<Party> referenceParty = new ArrayList<>();
 
     public String getFileId() {
         return fileId;
@@ -245,7 +258,6 @@ public class File
         this.referenceRecord = referenceRecord;
     }
 
-
     public List<Comment> getReferenceComment() {
         return referenceComment;
     }
@@ -263,6 +275,18 @@ public class File
     public void setReferenceCrossReference(
             List<CrossReference> referenceCrossReference) {
         this.referenceCrossReference = referenceCrossReference;
+    }
+
+    public List<Party> getReferenceParty() {
+        return referenceParty;
+    }
+
+    public void setReferenceParty(List<Party> referenceParty) {
+        this.referenceParty = referenceParty;
+    }
+
+    public void addReferenceParty(Party party) {
+        this.referenceParty.add(party);
     }
 
     /**

@@ -2,8 +2,6 @@ package nikita.common.model.noark5.v5.casehandling;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.Constants;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
@@ -27,8 +25,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.JOIN_CASE_FILE_STATUS;
-import static nikita.common.config.Constants.PRIMARY_KEY_CASE_FILE_STATUS;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CASE_FILE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 
@@ -115,16 +114,6 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     @Audited
     private String ownedBy;
 
-    // Links to Party
-    @ManyToMany
-    @JoinTable(name = "case_file_case_file_party",
-            joinColumns = @JoinColumn(name = "f_pk_case_file_id",
-                    referencedColumnName = "pk_file_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_part_id",
-                    referencedColumnName = "pk_part_id"))
-
-    private List<Party> referenceParty = new ArrayList<>();
-
     // Links to Precedence
     @ManyToMany
     @JoinTable(name = "case_file_precedence",
@@ -141,26 +130,18 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     private Boolean deleted;
 
     // Link to AdministrativeUnit
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_file_administrative_unit_id",
-            referencedColumnName = Constants.PRIMARY_KEY_ADMINISTRATIVE_UNIT)
+            referencedColumnName = PRIMARY_KEY_ADMINISTRATIVE_UNIT)
     @JsonIgnore
     private AdministrativeUnit referenceAdministrativeUnit;
 
     // Link to CaseFileStatus
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = JOIN_CASE_FILE_STATUS,
             referencedColumnName = PRIMARY_KEY_CASE_FILE_STATUS)
     @JsonIgnore
     private CaseStatus referenceCaseFileStatus;
-
-    public static String getForeignKeyIdentifier(String parent) {
-
-        if (parent.equalsIgnoreCase("series")) {
-            return "referenceSeries";
-        } else
-            return null;
-    }
 
     public Integer getCaseYear() {
         return caseYear;
@@ -244,20 +225,12 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CASE_FILE;
+        return CASE_FILE;
     }
 
     @Override
     public String getFunctionalTypeName() {
-        return Constants.NOARK_CASE_HANDLING_PATH;
-    }
-
-    public List<Party> getReferenceParty() {
-        return referenceParty;
-    }
-
-    public void setReferenceParty(List<Party> referenceParty) {
-        this.referenceParty = referenceParty;
+        return NOARK_CASE_HANDLING_PATH;
     }
 
     public List<Precedence> getReferencePrecedence() {

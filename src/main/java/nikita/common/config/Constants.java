@@ -635,6 +635,8 @@ public final class Constants {
             "file_keyword";
     public static final String TABLE_FILE_COMMENT =
             "file_comment";
+    public static final String TABLE_FILE_PARTY =
+            "file_party";
     public static final String TABLE_FONDS_STORAGE_LOCATION =
             "fonds_storage_location";
     public static final String TABLE_RECORD_KEYWORD =
@@ -659,6 +661,7 @@ public final class Constants {
             "f_pk_keyword_id";
     public static final String FOREIGN_KEY_FILE_PK = "f_pk_file_id";
     public static final String FOREIGN_KEY_COMMENT_PK = "f_pk_comment_id";
+    public static final String FOREIGN_KEY_PART_PK = "f_pk_part_id";
     public static final String FOREIGN_KEY_RECORD_PK = "f_pk_record_id";
 
     public static final String FOREIGN_KEY_STORAGE_LOCATION_PK =
@@ -692,6 +695,7 @@ public final class Constants {
     public static final String PRIMARY_KEY_FILE = "pk_file_id";
     public static final String PRIMARY_KEY_KEYWORD = "pk_keyword_id";
     public static final String PRIMARY_KEY_COMMENT = "pk_comment_id";
+    public static final String PRIMARY_KEY_PART = "pk_part_id";
     public static final String PRIMARY_KEY_CLASSIFIED = "pk_classified_id";
     public static final String PRIMARY_KEY_DISPOSAL = "pk_disposal_id";
     public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";

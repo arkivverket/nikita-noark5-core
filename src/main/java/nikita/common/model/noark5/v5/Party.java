@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5;
 
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.interfaces.entities.IPartyEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,13 +11,16 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.PRIMARY_KEY_PART;
+
 /**
  * Created by tsodring on 4/10/16.
  */
 
 @Entity
 @Table(name = "party")
-@AttributeOverride(name = "id", column = @Column(name = "pk_part_id"))
+@AttributeOverride(name = "id",
+        column = @Column(name = PRIMARY_KEY_PART))
 public class Party
         extends NoarkGeneralEntity
         implements IPartyEntity {
@@ -94,9 +96,9 @@ public class Party
     @Audited
     private String contactPerson;
 
-    // Links to CaseFiles
+    // Links to Files
     @ManyToMany(mappedBy = "referenceParty")
-    private List<CaseFile> referenceCaseFile = new ArrayList<>();
+    private List<File> referenceFile = new ArrayList<>();
 
     public String getPartyId() {
         return partyId;
@@ -188,12 +190,12 @@ public class Party
         return Constants.NOARK_CASE_HANDLING_PATH;
     }
 
-    public List<CaseFile> getReferenceCaseFile() {
-        return referenceCaseFile;
+    public List<File> getReferenceFile() {
+        return referenceFile;
     }
 
-    public void setReferenceCaseFile(List<CaseFile> referenceCaseFile) {
-        this.referenceCaseFile = referenceCaseFile;
+    public void setReferenceFile(List<File> referenceFile) {
+        this.referenceFile = referenceFile;
     }
 
     @Override
