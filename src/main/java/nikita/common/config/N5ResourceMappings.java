@@ -183,6 +183,8 @@ public final class N5ResourceMappings {
     // identifying numbers
     public static final String DOCUMENT_OBJECT_FILE_NAME = "filnavn";
     public static final String DOCUMENT_OBJECT_MIME_TYPE = "mimeType";
+    public static final String DOCUMENT_OBJECT_PRONOM_MIME = "pronomMime";
+    public static final String DOCUMENT_OBJECT_PRONOM_PUID = "pronomPuid";
     // Other Noark Objects
 
     // Precedence
