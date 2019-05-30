@@ -45,8 +45,6 @@ public class CaseFileHateoasHandler
         //addClass(entity, hateoasNoarkObject);
         addNewPrecedence(entity, hateoasNoarkObject);
         //addPrecedence(entity, hateoasNoarkObject);
-        addNewParty(entity, hateoasNoarkObject);
-        //addParty(entity, hateoasNoarkObject);
         addNewCaseStatus(entity, hateoasNoarkObject);
         //addCaseStatus(entity, hateoasNoarkObject);
         addNewRegistryEntry(entity, hateoasNoarkObject);
@@ -83,20 +81,6 @@ public class CaseFileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 PRECEDENCE + SLASH, REL_CASE_HANDLING_PRECEDENCE, false));
-    }
-
-    @Override
-    public void addNewParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_PART
-                + SLASH, REL_CASE_HANDLING_NEW_PART, false));
-    }
-
-    @Override
-    public void addParty(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + PART
-                + SLASH, REL_CASE_HANDLING_PART, false));
     }
 
     @Override

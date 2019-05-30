@@ -44,6 +44,8 @@ public class FileHateoasHandler
         addNewComment(entity, hateoasNoarkObject);
         addSubFile(entity, hateoasNoarkObject);
         addNewSubFile(entity, hateoasNoarkObject);
+        addNewParty(entity, hateoasNoarkObject);
+        addParty(entity, hateoasNoarkObject);
         addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         addClass(entity, hateoasNoarkObject);
@@ -162,6 +164,44 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH +
                 NEW_SUB_FILE + SLASH, REL_FONDS_STRUCTURE_NEW_SUB_FILE, false));
+    }
+
+    /**
+     * Create a REL/HREF pair for the list of Party objects associated with the
+     * given File.
+     * <p>
+     * "../hateoas-api/arkivstruktur/mappe/1234/part"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/part/"
+     *
+     * @param entity             file
+     * @param hateoasNoarkObject hateoasFile
+     */
+    @Override
+    public void addParty(INikitaEntity entity,
+                         IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() + HREF_BASE_FILE +
+                        entity.getSystemId() + SLASH + PART,
+                        REL_CASE_HANDLING_PART, true));
+    }
+
+    /**
+     * Create a REL/HREF pair to create a new Part associated with the given
+     * File.
+     * <p>
+     * "../hateoas-api/arkivstruktur/mappe/1234/ny-part"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-part/"
+     *
+     * @param entity             file
+     * @param hateoasNoarkObject hateoasFile
+     */
+    @Override
+    public void addNewParty(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() + HREF_BASE_FILE +
+                        entity.getSystemId() + SLASH + NEW_PART,
+                        REL_CASE_HANDLING_NEW_PART));
     }
 
     @Override
