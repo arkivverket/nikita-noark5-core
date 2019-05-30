@@ -33,7 +33,7 @@ public class Classified
     private static final long serialVersionUID = 1L;
 
     /**
-     * M506 - gradering (xs:string)
+     * M506 - grad(xs:string)
      **/
     @Column(name = "classification")
     @Audited

@@ -39,7 +39,7 @@ public final class N5ResourceMappings {
     public static final String NEW_COUNTRY = NEW + Constants.DASH + COUNTRY;
 
     public static final String COUNTRY_CODE = "landkode";
-    public static final String CLASSIFIED_CODE = "graderingskode";
+    public static final String CLASSIFIED_CODE = "grad";
     public static final String CLASSIFICATION_TYPE = "klassifikasjonstype";
     public static final String ASSOCIATED_WITH_RECORD_AS = "tilknyttetregistreringsom";
     public static final String ACCESS_RESTRICTION = "tilgangsrestriksjon";
@@ -394,8 +394,8 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_SYSTEM_ENG = "klassifikasjonssystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG = "klassifikasjonstype";
     public static final String CLASSIFICATION_TYPE_ENG = "klassifikasjonstype";
-    public static final String CLASSIFIED_CODE_ENG = "graderingskode";
-    public static final String CLASSIFIED_ENG = "gradering"; // root node
+    public static final String CLASSIFIED_CODE_ENG = "classifiedcode";
+    public static final String CLASSIFIED_ENG = "classified"; // root node
     public static final String CODE_ENG = "kode";
     public static final String COMMENT_DATE_ENG = "merknadsdato";
     public static final String COMMENT_ENG = "merknad";
@@ -605,8 +605,8 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_SYSTEM_ENG_OBJECT = "klassifikasjonssystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG_OBJECT = "klassifikasjonstype";
     public static final String CLASSIFICATION_TYPE_ENG_OBJECT = "klassifikasjonstype";
-    public static final String CLASSIFIED_CODE_ENG_OBJECT = "graderingskode";
-    public static final String CLASSIFIED_ENG_OBJECT = "gradering"; // root node
+    public static final String CLASSIFIED_CODE_ENG_OBJECT = "classifiedcode";
+    public static final String CLASSIFIED_ENG_OBJECT = "classified"; // rootnode
     public static final String CODE_ENG_OBJECT = "kode";
     public static final String COMMENT_DATE_ENG_OBJECT = "merknadsdato";
     public static final String COMMENT_ENG_OBJECT = "merknad";
