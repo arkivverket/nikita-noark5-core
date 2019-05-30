@@ -36,6 +36,8 @@ public class RecordHateoasHandler
         addReferenceFile(entity, hateoasNoarkObject);
         addReferenceClass(entity, hateoasNoarkObject);
         // Add the secondary entity links
+        addNewParty(entity, hateoasNoarkObject);
+        addParty(entity, hateoasNoarkObject);
         addClassified(entity, hateoasNoarkObject);
         addNewClassified(entity, hateoasNoarkObject);
         addDisposal(entity, hateoasNoarkObject);
@@ -295,6 +297,45 @@ public class RecordHateoasHandler
                 NEW_SCREENING + SLASH, REL_FONDS_STRUCTURE_NEW_SCREENING, false));
     }
 
+
+    /**
+     * Create a REL/HREF pair for the list of Party objects associated with the
+     * given Record.
+     * <p>
+     * "../hateoas-api/arkivstruktur/registrering/1234/part"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/part/"
+     *
+     * @param entity             record
+     * @param hateoasNoarkObject hateoasRecord
+     */
+    @Override
+    public void addParty(INikitaEntity entity,
+                         IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() + HREF_BASE_RECORD +
+                        entity.getSystemId() + SLASH + PART,
+                        REL_FONDS_STRUCTURE_PART, true));
+    }
+
+    /**
+     * Create a REL/HREF pair to create a new Part associated with the given
+     * Record.
+     * <p>
+     * "../hateoas-api/arkivstruktur/registrering/1234/ny-part"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-part/"
+     *
+     * @param entity             record
+     * @param hateoasNoarkObject hateoasRecord
+     */
+    @Override
+    public void addNewParty(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() + HREF_BASE_RECORD +
+                        entity.getSystemId() + SLASH + NEW_PART,
+                        REL_FONDS_STRUCTURE_NEW_PART));
+    }
+    
     /**
      * Cast the INikitaEntity entity to a Record
      *

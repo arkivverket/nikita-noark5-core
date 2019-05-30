@@ -88,4 +88,10 @@ public interface IRecordHateoasHandler extends IHateoasHandler {
 
     void addNewKeyword(INikitaEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
+
+    void addParty(INikitaEntity entity,
+                  IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewParty(INikitaEntity entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
 }
