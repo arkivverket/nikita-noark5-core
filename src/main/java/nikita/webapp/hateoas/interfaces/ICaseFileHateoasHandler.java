@@ -23,12 +23,6 @@ public interface ICaseFileHateoasHandler
     void addPrecedence(INikitaEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewParty(INikitaEntity entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addParty(INikitaEntity entity,
-                  IHateoasNoarkObject hateoasNoarkObject);
-
     void addCaseStatus(INikitaEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
