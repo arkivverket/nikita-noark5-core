@@ -24,12 +24,14 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "record")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = RecordDeserializer.class)
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
@@ -110,6 +112,12 @@ public class Record
     @Column(name = "owned_by")
     @Audited
     private String ownedBy;
+
+    // Link to File
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "record_file_id", referencedColumnName = "pk_file_id")
+    private File referenceFile;
+
     // Link to StorageLocation
     @ManyToMany(cascade = PERSIST)
     @JoinTable(name = TABLE_RECORD_STORAGE_LOCATION,
@@ -120,21 +128,22 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
     private List<StorageLocation> referenceStorageLocation =
             new ArrayList<>();
-
-    // Link to File
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "record_file_id", referencedColumnName = "pk_file_id")
-    private File referenceFile;
-
     // Link to Series
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "record_series_id", referencedColumnName = "pk_series_id")
     private Series referenceSeries;
-
     // Link to Class
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "record_class_id", referencedColumnName = "pk_class_id")
     private Class referenceClass;
+
+    // Used for soft delete.
+    @Column(name = "deleted")
+    @Audited
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+    
     // Links to Keywords
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_KEYWORD,
@@ -143,6 +152,7 @@ public class Record
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
                     referencedColumnName = PRIMARY_KEY_KEYWORD))
     private List<Keyword> referenceKeyword = new ArrayList<>();
+
     // Links to Authors
     @ManyToMany
     @JoinTable(name = "basic_record_author",
@@ -151,6 +161,7 @@ public class Record
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_AUTHOR_PK,
                     referencedColumnName = PRIMARY_KEY_AUTHOR))
     private List<Author> referenceAuthor = new ArrayList<>();
+
     // Links to Comments
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_COMMENT,
@@ -160,6 +171,7 @@ public class Record
             @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_COMMENT))
     private List<Comment> referenceComment = new ArrayList<>();
+
     // Links to DocumentDescriptions
     @ManyToMany
     @JoinTable(name = "record_document_description",
@@ -170,6 +182,7 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
+
     // Links to CrossReference
     @OneToMany(mappedBy = "referenceRecord")
     private List<CrossReference> referenceCrossReference;
@@ -191,6 +204,7 @@ public class Record
     @JoinColumn(name = "record_screening_id",
             referencedColumnName = "pk_screening_id")
     private Screening referenceScreening;
+
     // Links to Party
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_PARTY,
@@ -199,13 +213,6 @@ public class Record
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_PART))
     private List<Party> referenceParty = new ArrayList<>();
-
-    // Used for soft delete.
-    @Column(name = "deleted")
-    @Audited
-    public ZonedDateTime getCreatedDate() {
-        return createdDate;
-    }
 
     public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
