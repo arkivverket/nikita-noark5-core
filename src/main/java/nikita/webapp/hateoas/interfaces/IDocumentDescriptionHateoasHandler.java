@@ -52,5 +52,10 @@ public interface IDocumentDescriptionHateoasHandler extends IHateoasHandler {
 
     void addDocumentStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
+    void addParty(INikitaEntity entity,
+                  IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewParty(INikitaEntity entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
 }
 
