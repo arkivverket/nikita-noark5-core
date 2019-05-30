@@ -49,4 +49,9 @@ public interface IFileHateoasHandler
 
     void addNewReferenceSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
+    void addParty(INikitaEntity entity,
+                  IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewParty(INikitaEntity entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
 }
