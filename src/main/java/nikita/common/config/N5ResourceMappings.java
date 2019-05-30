@@ -192,7 +192,7 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_SOURCE_OF_LAW = "rettskildefaktor";
     public static final String PRECEDENCE_APPROVED_DATE = "presedensGodkjentDato";
     public static final String PRECEDENCE_APPROVED_BY = "presedensGodkjentAv";
-    public static final String PRECEDENCE_STATUS = "presedensstatus";
+    public static final String PRECEDENCE_STATUS = "presedensStatus";
 
     // Disposal
     public static final String DISPOSAL = "kassasjon";
@@ -511,7 +511,7 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_DATE_ENG = "presedensDato";
     public static final String PRECEDENCE_ENG = "presedens";
     public static final String PRECEDENCE_SOURCE_OF_LAW_ENG = "rettskildefaktor";
-    public static final String PRECEDENCE_STATUS_ENG = "presedensstatus";
+    public static final String PRECEDENCE_STATUS_ENG = "precedencestatus";
     public static final String PRODUCTION_VERSION_ENG = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG = "arkivertAv";
     public static final String RECORD_ARCHIVED_DATE_ENG = "arkivertDato";
@@ -723,7 +723,8 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_DATE_ENG_OBJECT = "presedensDato";
     public static final String PRECEDENCE_ENG_OBJECT = "presedens";
     public static final String PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT = "rettskildefaktor";
-    public static final String PRECEDENCE_STATUS_ENG_OBJECT = "presedensstatus";
+    public static final String PRECEDENCE_STATUS_ENG_OBJECT =
+            "precedenceStatus";
     public static final String PRODUCTION_VERSION_ENG_OBJECT = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG_OBJECT = "arkivertAv";
     public static final String RECORD_ARCHIVED_DATE_ENG_OBJECT = "arkivertDato";
