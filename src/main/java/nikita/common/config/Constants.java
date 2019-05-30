@@ -639,6 +639,8 @@ public final class Constants {
             "file_party";
     public static final String TABLE_RECORD_PARTY =
             "record_party";
+    public static final String TABLE_DOCUMENT_DESCRIPTION_PARTY =
+            "document_description_party";
     public static final String TABLE_FONDS_STORAGE_LOCATION =
             "fonds_storage_location";
     public static final String TABLE_RECORD_KEYWORD =
@@ -662,6 +664,8 @@ public final class Constants {
     public static final String FOREIGN_KEY_KEYWORD_PK =
             "f_pk_keyword_id";
     public static final String FOREIGN_KEY_FILE_PK = "f_pk_file_id";
+    public static final String FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK =
+            "f_pk_document_description_id";
     public static final String FOREIGN_KEY_COMMENT_PK = "f_pk_comment_id";
     public static final String FOREIGN_KEY_PART_PK = "f_pk_part_id";
     public static final String FOREIGN_KEY_RECORD_PK = "f_pk_record_id";
