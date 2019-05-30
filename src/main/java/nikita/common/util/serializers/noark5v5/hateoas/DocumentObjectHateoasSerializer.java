@@ -48,10 +48,6 @@ public class DocumentObjectHateoasSerializer
                     documentObject.getFormatDetails());
         }
         printCreateEntity(jgen, documentObject);
-        if (documentObject.getReferenceDocumentFile() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE,
-                    documentObject.getReferenceDocumentFile());
-        }
         if (documentObject.getChecksum() != null) {
             jgen.writeStringField(DOCUMENT_OBJECT_CHECKSUM,
                     documentObject.getChecksum());
