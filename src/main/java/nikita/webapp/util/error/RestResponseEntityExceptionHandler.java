@@ -72,6 +72,15 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), BAD_REQUEST, request);
     }
 
+    // 409
+    @ExceptionHandler({NoarkConcurrencyException.class})
+    public ResponseEntity<Object> handleETAGException(
+            final DataIntegrityViolationException ex,
+            final WebRequest request) {
+        return handleExceptionInternal(ex, message(CONFLICT, ex),
+                new HttpHeaders(), CONFLICT, request);
+    }
+
     // 403
     @ExceptionHandler({ AccessDeniedException.class })
     public ResponseEntity<Object> handleAccessDeniedException(
