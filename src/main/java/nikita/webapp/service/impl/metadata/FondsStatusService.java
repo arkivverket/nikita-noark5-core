@@ -3,7 +3,6 @@ package nikita.webapp.service.impl.metadata;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.repository.n5v5.metadata.IFondsStatusRepository;
-import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IFondsStatusService;
 import org.slf4j.Logger;
@@ -28,16 +27,13 @@ public class FondsStatusService
             LoggerFactory.getLogger(FondsStatusService.class);
 
     private IFondsStatusRepository fondsStatusRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public FondsStatusService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IFondsStatusRepository fondsStatusRepository,
-            IMetadataHateoasHandler metadataHateoasHandler) {
+            IFondsStatusRepository fondsStatusRepository) {
         super(entityManager, applicationEventPublisher);
         this.fondsStatusRepository = fondsStatusRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
