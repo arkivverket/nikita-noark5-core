@@ -2,7 +2,6 @@ package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.repository.n5v5.metadata.IDocumentStatusRepository;
-import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;
 import org.slf4j.Logger;
@@ -30,16 +29,13 @@ public class DocumentStatusService
             LoggerFactory.getLogger(DocumentStatusService.class);
 
     private IDocumentStatusRepository documentStatusRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public DocumentStatusService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IDocumentStatusRepository documentStatusRepository,
-            IMetadataHateoasHandler metadataHateoasHandler) {
+            IDocumentStatusRepository documentStatusRepository) {
         super(entityManager, applicationEventPublisher);
         this.documentStatusRepository = documentStatusRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
