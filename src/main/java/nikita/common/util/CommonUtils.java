@@ -224,7 +224,7 @@ public final class CommonUtils {
             return nor2engEntityMap.get(norwegianName).getEnglishNameDatabase();
         }
 
-        public final static String getSuccessStatusStringForDelete() {
+        public static String getSuccessStatusStringForDelete() {
             return "{\"status\" : \"Success\"}";
         }
 
