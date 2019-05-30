@@ -85,7 +85,7 @@ public final class CommonUtils {
          * per-class basis. We need to validate on a per-class, per-CRUD method basis. E.g. A incoming fonds
          * will be validated differently if it's a CREATE operation as opposed to a UPDATE operation.
          *
-         * @param nikitaEntity
+         * @param nikitaEntity incoming nikita object
          * @return true if valid. If not valid an exception is thrown
          */
         public static boolean validateUpdateNoarkEntity(@NotNull INikitaEntity nikitaEntity) {
