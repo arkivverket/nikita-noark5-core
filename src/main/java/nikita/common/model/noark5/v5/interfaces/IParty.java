@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.interfaces;
 
-import nikita.common.model.noark5.v5.casehandling.Party;
+import nikita.common.model.noark5.v5.Party;
 
 import java.util.List;
 

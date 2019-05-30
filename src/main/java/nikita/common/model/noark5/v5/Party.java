@@ -1,8 +1,8 @@
-package nikita.common.model.noark5.v5.casehandling;
+package nikita.common.model.noark5.v5;
 
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.NoarkGeneralEntity;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.interfaces.entities.IPartyEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
