@@ -17,8 +17,6 @@ import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
@@ -70,8 +68,6 @@ public class CaseFileService
     private IUserRepository userRepository;
     private ICaseStatusService caseStatusService;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
-    private IRecordNoteHateoasHandler recordNoteHateoasHandler;
-    private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
 
     public CaseFileService(
             EntityManager entityManager,
@@ -83,9 +79,7 @@ public class CaseFileService
             IAdministrativeUnitRepository administrativeUnitRepository,
             IUserRepository userRepository,
             ICaseStatusService caseStatusService,
-            ICaseFileHateoasHandler caseFileHateoasHandler,
-            IRecordNoteHateoasHandler recordNoteHateoasHandler,
-            IRegistryEntryHateoasHandler registryEntryHateoasHandler) {
+            ICaseFileHateoasHandler caseFileHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.registryEntryService = registryEntryService;
         this.recordNoteService = recordNoteService;
@@ -95,8 +89,6 @@ public class CaseFileService
         this.userRepository = userRepository;
         this.caseStatusService = caseStatusService;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
-        this.recordNoteHateoasHandler = recordNoteHateoasHandler;
-        this.registryEntryHateoasHandler = registryEntryHateoasHandler;
     }
 
     @Override
