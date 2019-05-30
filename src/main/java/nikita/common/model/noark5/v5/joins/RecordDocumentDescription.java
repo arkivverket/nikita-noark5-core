@@ -8,9 +8,15 @@ import java.util.Objects;
 
 /**
  * Created by tsodring on 5/10/17.
+ *
+ * This table is an attempt to do the many to many as two onetomany as this is
+ * meant to be more efficient. We need to decide if we will continue with the
+ * approach or just delete this entity from the code base.
+ *
+ * This is not in use, it's just in the codebase as an example.
  */
 @Entity
-@Table(name = "XXXXXrecord_document_description")
+@Table(name = "test_record_document_description")
 public class RecordDocumentDescription {
     @EmbeddedId
     private RecordDocumentDescriptionId id;
