@@ -2,7 +2,6 @@ package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.repository.n5v5.metadata.IDocumentMediumRepository;
-import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import org.slf4j.Logger;
@@ -26,16 +25,13 @@ public class DocumentMediumService
             LoggerFactory.getLogger(DocumentMediumService.class);
 
     private IDocumentMediumRepository documentMediumRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public DocumentMediumService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IDocumentMediumRepository documentMediumRepository,
-            IMetadataHateoasHandler metadataHateoasHandler) {
+            IDocumentMediumRepository documentMediumRepository) {
         super(entityManager, applicationEventPublisher);
         this.documentMediumRepository = documentMediumRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
