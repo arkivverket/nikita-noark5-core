@@ -105,11 +105,11 @@ public final class N5ResourceMappings {
     public static final String CASE_LOANED_DATE = "utlaantDato";
     public static final String CASE_LOANED_TO = "utlaantTil";
 
-    // CaseParty
-    public static final String CASE_PARTY = "sakspart";
-    public static final String CASE_PARTY_ID = "saksPartID";
-    public static final String CASE_PARTY_NAME = "sakspartNavn";
-    public static final String CASE_PARTY_ROLE = "sakspartrolle";
+    // Party
+    public static final String PART = "part";
+    public static final String PART_ID = "partID";
+    public static final String PART_NAME = "partNavn";
+    public static final String PART_ROLE = "partrolle";
 
     // Record
     public static final String RECORD_ARCHIVED_BY = "arkivertAv";
@@ -377,10 +377,10 @@ public final class N5ResourceMappings {
     public static final String CASE_HANDLER_ENG = "saksbehandler";
     public static final String CASE_LOANED_DATE_ENG = "utlaantDato";
     public static final String CASE_LOANED_TO_ENG = "utlaantTil";
-    public static final String CASE_PARTY_ENG = "sakspart";
-    public static final String CASE_PARTY_ID_ENG = "saksPartID";
-    public static final String CASE_PARTY_NAME_ENG = "sakspartNavn";
-    public static final String CASE_PARTY_ROLE_ENG = "sakspartrolle";
+    public static final String PART_ENG = "part";
+    public static final String PART_ID_ENG = "partID";
+    public static final String PART_NAME_ENG = "partNavn";
+    public static final String PART_ROLE_ENG = "partrolle";
     public static final String CASE_RECORDS_MANAGEMENT_UNIT_ENG = "journalenhet";
     public static final String CASE_RESPONSIBLE_ENG = "saksansvarlig";
     public static final String CASE_SEQUENCE_NUMBER_ENG = "sakssekvensnummer";
@@ -588,10 +588,10 @@ public final class N5ResourceMappings {
     public static final String CASE_HANDLER_ENG_OBJECT = "saksbehandler";
     public static final String CASE_LOANED_DATE_ENG_OBJECT = "utlaantDato";
     public static final String CASE_LOANED_TO_ENG_OBJECT = "utlaantTil";
-    public static final String CASE_PARTY_ENG_OBJECT = "sakspart";
-    public static final String CASE_PARTY_ID_ENG_OBJECT = "saksPartID";
-    public static final String CASE_PARTY_NAME_ENG_OBJECT = "sakspartNavn";
-    public static final String CASE_PARTY_ROLE_ENG_OBJECT = "sakspartrolle";
+    public static final String PART_ENG_OBJECT = "part";
+    public static final String PART_ID_ENG_OBJECT = "partID";
+    public static final String PART_NAME_ENG_OBJECT = "partNavn";
+    public static final String PART_ROLE_ENG_OBJECT = "partrolle";
     public static final String CASE_RECORDS_MANAGEMENT_UNIT_ENG_OBJECT = "journalenhet";
     public static final String CASE_RESPONSIBLE_ENG_OBJECT = "saksansvarlig";
     public static final String CASE_SEQUENCE_NUMBER_ENG_OBJECT = "sakssekvensnummer";

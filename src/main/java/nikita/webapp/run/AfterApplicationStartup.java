@@ -475,21 +475,21 @@ public class AfterApplicationStartup {
                         CASE_LOANED_TO_ENG,
                         CASE_LOANED_TO_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (CASE_PARTY,
-                        CASE_PARTY_ENG,
-                        CASE_PARTY_ENG_OBJECT);
+                (PART,
+                        PART_ENG,
+                        PART_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (CASE_PARTY_ID,
-                        CASE_PARTY_ID_ENG,
-                        CASE_PARTY_ID_ENG_OBJECT);
+                (PART_ID,
+                        PART_ID_ENG,
+                        PART_ID_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (CASE_PARTY_NAME,
-                        CASE_PARTY_NAME_ENG,
-                        CASE_PARTY_NAME_ENG_OBJECT);
+                (PART_NAME,
+                        PART_NAME_ENG,
+                        PART_NAME_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (CASE_PARTY_ROLE,
-                        CASE_PARTY_ROLE_ENG,
-                        CASE_PARTY_ROLE_ENG_OBJECT);
+                (PART_ROLE,
+                        PART_ROLE_ENG,
+                        PART_ROLE_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (CASE_RECORDS_MANAGEMENT_UNIT,
                         CASE_RECORDS_MANAGEMENT_UNIT_ENG,

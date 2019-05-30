@@ -3,7 +3,7 @@ package nikita.common.model.noark5.v5.casehandling;
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.ICasePartyEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IPartyEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -17,33 +17,32 @@ import java.util.List;
  */
 
 @Entity
-@Table(name = "case_party")
-// Enable soft delete of CaseParty
-// @SQLDelete(sql="UPDATE case_party SET deleted = true WHERE pk_case_party_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_case_party_id"))
-public class CaseParty extends NoarkGeneralEntity implements ICasePartyEntity {
+@Table(name = "party")
+@AttributeOverride(name = "id", column = @Column(name = "pk_part_id"))
+public class Party
+        extends NoarkGeneralEntity
+        implements IPartyEntity {
 
     /**
-     * M010 - sakspartID (xs:string)
+     * M010 - partID (xs:string)
      */
-    @Column(name = "case_party_id")
+    @Column(name = "part_id")
     @Audited
-    private String casePartyId;
+    private String partyId;
 
     /**
-     * M302 - sakspartNavn (xs:string)
+     * M302 - partNavn (xs:string)
      */
-    @Column(name = "case_party_name")
+    @Column(name = "part_name")
     @Audited
-    private String casePartyName;
+    private String partyName;
 
     /**
-     * M303 - sakspartRolle (xs:string)
+     * M303 - partRolle (xs:string)
      */
-    @Column(name = "case_party_role")
+    @Column(name = "part_role")
     @Audited
-    private String casePartyRole;
+    private String partyRole;
 
     /**
      * M406 - postadresse (xs:string)
@@ -96,31 +95,31 @@ public class CaseParty extends NoarkGeneralEntity implements ICasePartyEntity {
     private String contactPerson;
 
     // Links to CaseFiles
-    @ManyToMany(mappedBy = "referenceCaseParty")
+    @ManyToMany(mappedBy = "referenceParty")
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
-    public String getCasePartyId() {
-        return casePartyId;
+    public String getPartyId() {
+        return partyId;
     }
 
-    public void setCasePartyId(String casePartyId) {
-        this.casePartyId = casePartyId;
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
     }
 
-    public String getCasePartyName() {
-        return casePartyName;
+    public String getPartyName() {
+        return partyName;
     }
 
-    public void setCasePartyName(String casePartyName) {
-        this.casePartyName = casePartyName;
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
     }
 
-    public String getCasePartyRole() {
-        return casePartyRole;
+    public String getPartyRole() {
+        return partyRole;
     }
 
-    public void setCasePartyRole(String casePartyRole) {
-        this.casePartyRole = casePartyRole;
+    public void setPartyRole(String partyRole) {
+        this.partyRole = partyRole;
     }
 
     public String getPostalAddress() {
@@ -181,7 +180,7 @@ public class CaseParty extends NoarkGeneralEntity implements ICasePartyEntity {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CASE_PARTY;
+        return N5ResourceMappings.PART;
     }
 
     @Override
@@ -199,10 +198,10 @@ public class CaseParty extends NoarkGeneralEntity implements ICasePartyEntity {
 
     @Override
     public String toString() {
-        return "CaseParty{" + super.toString() +
-                ", casePartyId='" + casePartyId + '\'' +
-                ", casePartyName='" + casePartyName + '\'' +
-                ", casePartyRole='" + casePartyRole + '\'' +
+        return "Party{" + super.toString() +
+                ", partyId='" + partyId + '\'' +
+                ", partyName='" + partyName + '\'' +
+                ", partyRole='" + partyRole + '\'' +
                 ", postalAddress='" + postalAddress + '\'' +
                 ", postCode='" + postCode + '\'' +
                 ", postalTown='" + postalTown + '\'' +
@@ -224,12 +223,12 @@ public class CaseParty extends NoarkGeneralEntity implements ICasePartyEntity {
         if (other.getClass() != getClass()) {
             return false;
         }
-        CaseParty rhs = (CaseParty) other;
+        Party rhs = (Party) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(casePartyId, rhs.casePartyId)
-                .append(casePartyName, rhs.casePartyName)
-                .append(casePartyRole, rhs.casePartyRole)
+                .append(partyId, rhs.partyId)
+                .append(partyName, rhs.partyName)
+                .append(partyRole, rhs.partyRole)
                 .append(postalAddress, rhs.postalAddress)
                 .append(postCode, rhs.postCode)
                 .append(postalTown, rhs.postalTown)
@@ -244,9 +243,9 @@ public class CaseParty extends NoarkGeneralEntity implements ICasePartyEntity {
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(casePartyId)
-                .append(casePartyName)
-                .append(casePartyRole)
+                .append(partyId)
+                .append(partyName)
+                .append(partyRole)
                 .append(postalAddress)
                 .append(postCode)
                 .append(postalTown)

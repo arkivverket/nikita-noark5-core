@@ -9,8 +9,8 @@ import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
-import nikita.common.model.noark5.v5.casehandling.CaseParty;
 import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
+import nikita.common.model.noark5.v5.casehandling.Party;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.Link;
@@ -735,76 +735,79 @@ public final class CommonUtils {
                 objectNode.remove(DELETION);
             }
 
-            public static void deserialiseCaseParties(ICaseParty casePartyObject, ObjectNode objectNode, StringBuilder errors) {
-                List<CaseParty> caseParties = casePartyObject.getReferenceCaseParty();
+            public static void deserialiseCaseParties(
+                    IParty partyObject,
+                    ObjectNode objectNode,
+                    StringBuilder errors) {
+                List<Party> caseParties = partyObject.getReferenceParty();
                 if (caseParties != null && caseParties.size() > 0) {
-                    for (CaseParty caseParty : caseParties) {
-                        deserialiseCaseParty(caseParty, objectNode, errors);
-                        objectNode.remove(CASE_PARTY);
+                    for (Party party : caseParties) {
+                        deserialiseParty(party, objectNode, errors);
+                        objectNode.remove(PART);
                     }
                 }
             }
 
-            public static void deserialiseCaseParty(ICasePartyEntity casePartyEntity, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseParty(IPartyEntity partyEntity, ObjectNode objectNode, StringBuilder errors) {
 
-                // Deserialize casePartyId
-                JsonNode currentNode = objectNode.get(CASE_PARTY_ID);
+                // Deserialize partyId
+                JsonNode currentNode = objectNode.get(PART_ID);
                 if (null != currentNode) {
-                    casePartyEntity.setCasePartyId(currentNode.textValue());
-                    objectNode.remove(CASE_PARTY_ID);
+                    partyEntity.setPartyId(currentNode.textValue());
+                    objectNode.remove(PART_ID);
                 }
-                // Deserialize casePartyName
-                currentNode = objectNode.get(CASE_PARTY_NAME);
+                // Deserialize partyName
+                currentNode = objectNode.get(PART_NAME);
                 if (null != currentNode) {
-                    casePartyEntity.setCasePartyName(currentNode.textValue());
-                    objectNode.remove(CASE_PARTY_NAME);
+                    partyEntity.setPartyName(currentNode.textValue());
+                    objectNode.remove(PART_NAME);
                 }
-                // Deserialize casePartyRole
-                currentNode = objectNode.get(CASE_PARTY_ROLE);
+                // Deserialize partyRole
+                currentNode = objectNode.get(PART_ROLE);
                 if (null != currentNode) {
-                    casePartyEntity.setCasePartyRole(currentNode.textValue());
-                    objectNode.remove(CASE_PARTY_ROLE);
+                    partyEntity.setPartyRole(currentNode.textValue());
+                    objectNode.remove(PART_ROLE);
                 }
                 // Deserialize postalAddress
-                currentNode = objectNode.get(N5ResourceMappings.POSTAL_ADDRESS);
+                currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
-                    casePartyEntity.setPostalAddress(currentNode.textValue());
-                    objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
+                    partyEntity.setPostalAddress(currentNode.textValue());
+                    objectNode.remove(POSTAL_ADDRESS);
                 }
                 // Deserialize postCode
-                currentNode = objectNode.get(N5ResourceMappings.POSTAL_NUMBER);
+                currentNode = objectNode.get(POSTAL_NUMBER);
                 if (null != currentNode) {
-                    casePartyEntity.setPostCode(currentNode.textValue());
-                    objectNode.remove(N5ResourceMappings.POSTAL_NUMBER);
+                    partyEntity.setPostCode(currentNode.textValue());
+                    objectNode.remove(POSTAL_NUMBER);
                 }
                 // Deserialize postalTown
                 currentNode = objectNode.get(POSTAL_TOWN);
                 if (null != currentNode) {
-                    casePartyEntity.setPostalTown(currentNode.textValue());
+                    partyEntity.setPostalTown(currentNode.textValue());
                     objectNode.remove(POSTAL_TOWN);
                 }
                 // Deserialize foreignAddress
                 currentNode = objectNode.get(FOREIGN_ADDRESS);
                 if (null != currentNode) {
-                    casePartyEntity.setForeignAddress(currentNode.textValue());
+                    partyEntity.setForeignAddress(currentNode.textValue());
                     objectNode.remove(FOREIGN_ADDRESS);
                 }
                 // Deserialize emailAddress
-                currentNode = objectNode.get(N5ResourceMappings.EMAIL_ADDRESS);
+                currentNode = objectNode.get(EMAIL_ADDRESS);
                 if (null != currentNode) {
-                    casePartyEntity.setEmailAddress(currentNode.textValue());
-                    objectNode.remove(N5ResourceMappings.EMAIL_ADDRESS);
+                    partyEntity.setEmailAddress(currentNode.textValue());
+                    objectNode.remove(EMAIL_ADDRESS);
                 }
                 // Deserialize telephoneNumber
-                currentNode = objectNode.get(N5ResourceMappings.TELEPHONE_NUMBER);
+                currentNode = objectNode.get(TELEPHONE_NUMBER);
                 if (null != currentNode) {
-                    casePartyEntity.setTelephoneNumber(currentNode.textValue());
-                    objectNode.remove(N5ResourceMappings.TELEPHONE_NUMBER);
+                    partyEntity.setTelephoneNumber(currentNode.textValue());
+                    objectNode.remove(TELEPHONE_NUMBER);
                 }
                 // Deserialize contactPerson
                 currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
-                    casePartyEntity.setContactPerson(currentNode.textValue());
+                    partyEntity.setContactPerson(currentNode.textValue());
                     objectNode.remove(CONTACT_PERSON);
                 }
             }
@@ -852,9 +855,9 @@ public final class CommonUtils {
                 precedenceEntity.setPrecedenceApprovedDate(deserializeDate(PRECEDENCE_APPROVED_DATE, objectNode, errors));
             }
 
-            public static List<CaseParty> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
-                ArrayList<CaseParty> caseParties = new ArrayList<>();
-                //JsonNode jsonCaseParty = objectNode.get(CASE_PARTY);
+            public static List<Party> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
+                ArrayList<Party> caseParties = new ArrayList<>();
+                //JsonNode jsonParty = objectNode.get(PART);
                 // TODO: I seem tobe missing my body of code ...
 /*                for (CorrespondencePart correspondencePart: caseParties) {
                     deserialiseCorrespondencePart(correspondencePart, objectNode);
@@ -961,7 +964,8 @@ public final class CommonUtils {
                     // Deserialize postnummer
                     currentNode = objectNode.get(POSTAL_NUMBER);
                     if (null != currentNode) {
-                        simpleAddress.setPostalNumber(new PostalNumber(currentNode.textValue()));
+                        simpleAddress.setPostalNumber(
+                                new PostalNumber(currentNode.textValue()));
                         objectNode.remove(POSTAL_NUMBER);
                     }
                     // Deserialize poststed
@@ -1368,45 +1372,55 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printCaseParty(JsonGenerator jgen, ICaseParty casePartyObject)
+            public static void printParty(JsonGenerator jgen, IParty partyObject)
                     throws IOException {
-                if (casePartyObject != null) {
-                    List<CaseParty> caseParties = casePartyObject.getReferenceCaseParty();
+                if (partyObject != null) {
+                    List<Party> caseParties = partyObject.getReferenceParty();
                     if (caseParties != null && caseParties.size() > 0) {
-                        jgen.writeArrayFieldStart(CASE_PARTY);
-                        for (CaseParty caseParty : caseParties) {
-                            if (caseParty != null) {
-                                jgen.writeObjectFieldStart(CASE_PARTY);
+                        jgen.writeArrayFieldStart(PART);
+                        for (Party party : caseParties) {
+                            if (party != null) {
+                                jgen.writeObjectFieldStart(PART);
 
-                                if (caseParty.getCasePartyId() != null) {
-                                    jgen.writeStringField(CASE_PARTY_ID, caseParty.getCasePartyId());
+                                if (party.getPartyId() != null) {
+                                    jgen.writeStringField(PART_ID,
+                                            party.getPartyId());
                                 }
-                                if (caseParty.getCasePartyName() != null) {
-                                    jgen.writeStringField(CASE_PARTY_NAME, caseParty.getCasePartyName());
+                                if (party.getPartyName() != null) {
+                                    jgen.writeStringField(PART_NAME,
+                                            party.getPartyName());
                                 }
-                                if (caseParty.getCasePartyRole() != null) {
-                                    jgen.writeStringField(CASE_PARTY_ROLE, caseParty.getCasePartyRole());
+                                if (party.getPartyRole() != null) {
+                                    jgen.writeStringField(PART_ROLE,
+                                            party.getPartyRole());
                                 }
-                                if (caseParty.getPostalAddress() != null) {
-                                    jgen.writeStringField(N5ResourceMappings.POSTAL_ADDRESS, caseParty.getPostalAddress());
+                                if (party.getPostalAddress() != null) {
+                                    jgen.writeStringField(POSTAL_ADDRESS,
+                                            party.getPostalAddress());
                                 }
-                                if (caseParty.getPostCode() != null) {
-                                    jgen.writeStringField(N5ResourceMappings.POSTAL_NUMBER, caseParty.getPostCode());
+                                if (party.getPostCode() != null) {
+                                    jgen.writeStringField(POSTAL_NUMBER,
+                                            party.getPostCode());
                                 }
-                                if (caseParty.getPostalTown() != null) {
-                                    jgen.writeStringField(POSTAL_TOWN, caseParty.getPostalTown());
+                                if (party.getPostalTown() != null) {
+                                    jgen.writeStringField(POSTAL_TOWN,
+                                            party.getPostalTown());
                                 }
-                                if (caseParty.getForeignAddress() != null) {
-                                    jgen.writeStringField(FOREIGN_ADDRESS, caseParty.getForeignAddress());
+                                if (party.getForeignAddress() != null) {
+                                    jgen.writeStringField(FOREIGN_ADDRESS,
+                                            party.getForeignAddress());
                                 }
-                                if (caseParty.getEmailAddress() != null) {
-                                    jgen.writeStringField(N5ResourceMappings.EMAIL_ADDRESS, caseParty.getEmailAddress());
+                                if (party.getEmailAddress() != null) {
+                                    jgen.writeStringField(EMAIL_ADDRESS,
+                                            party.getEmailAddress());
                                 }
-                                if (caseParty.getTelephoneNumber() != null) {
-                                    jgen.writeStringField(N5ResourceMappings.TELEPHONE_NUMBER, caseParty.getTelephoneNumber());
+                                if (party.getTelephoneNumber() != null) {
+                                    jgen.writeStringField(TELEPHONE_NUMBER,
+                                            party.getTelephoneNumber());
                                 }
-                                if (caseParty.getContactPerson() != null) {
-                                    jgen.writeStringField(CONTACT_PERSON, caseParty.getContactPerson());
+                                if (party.getContactPerson() != null) {
+                                    jgen.writeStringField(CONTACT_PERSON,
+                                            party.getContactPerson());
                                 }
                                 jgen.writeEndObject();
                             }

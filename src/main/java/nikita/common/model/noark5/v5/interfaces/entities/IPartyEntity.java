@@ -5,17 +5,17 @@ import java.io.Serializable;
 /**
  * Created by tsodring on 1/16/17.
  */
-public interface ICasePartyEntity extends Serializable {
+public interface IPartyEntity extends Serializable {
 
-    String getCasePartyId();
+    String getPartyId();
 
-    void setCasePartyId(String casePartyId);
+    void setPartyId(String partyId);
 
-    void setCasePartyName(String casePartyName);
+    void setPartyName(String partyName);
 
-    String getCasePartyRole();
+    String getPartyRole();
 
-    void setCasePartyRole(String casePartyRole);
+    void setPartyRole(String partyRole);
 
     String getPostalAddress();
 

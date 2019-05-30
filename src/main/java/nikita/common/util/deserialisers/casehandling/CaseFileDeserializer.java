@@ -145,7 +145,7 @@ public class CaseFileDeserializer extends JsonDeserializer {
             errors.append("].");
         }
 
-        caseFile.setReferenceCaseParty(
+        caseFile.setReferenceParty(
                 deserialiseCaseParties(objectNode, errors));
         caseFile.setReferencePrecedence(
                 deserialisePrecedences(objectNode, errors));

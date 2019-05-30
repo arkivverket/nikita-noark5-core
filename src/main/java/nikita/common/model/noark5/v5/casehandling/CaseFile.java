@@ -7,7 +7,7 @@ import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v5.interfaces.ICaseParty;
+import nikita.common.model.noark5.v5.interfaces.IParty;
 import nikita.common.model.noark5.v5.interfaces.IPrecedence;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
@@ -45,7 +45,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @HateoasPacker(using = CaseFileHateoasHandler.class)
 @HateoasObject(using = CaseFileHateoas.class)
 public class CaseFile extends File implements Serializable, INikitaEntity,
-        IPrecedence, ICaseParty {
+        IPrecedence, IParty {
 
     private static final long serialVersionUID = 1L;
 
@@ -115,15 +115,15 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     @Audited
     private String ownedBy;
 
-    // Links to CaseParty
+    // Links to Party
     @ManyToMany
     @JoinTable(name = "case_file_case_file_party",
             joinColumns = @JoinColumn(name = "f_pk_case_file_id",
                     referencedColumnName = "pk_file_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_case_party_id",
-                    referencedColumnName = "pk_case_party_id"))
+            inverseJoinColumns = @JoinColumn(name = "f_pk_part_id",
+                    referencedColumnName = "pk_part_id"))
 
-    private List<CaseParty> referenceCaseParty = new ArrayList<>();
+    private List<Party> referenceParty = new ArrayList<>();
 
     // Links to Precedence
     @ManyToMany
@@ -252,12 +252,12 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
         return Constants.NOARK_CASE_HANDLING_PATH;
     }
 
-    public List<CaseParty> getReferenceCaseParty() {
-        return referenceCaseParty;
+    public List<Party> getReferenceParty() {
+        return referenceParty;
     }
 
-    public void setReferenceCaseParty(List<CaseParty> referenceCaseParty) {
-        this.referenceCaseParty = referenceCaseParty;
+    public void setReferenceParty(List<Party> referenceParty) {
+        this.referenceParty = referenceParty;
     }
 
     public List<Precedence> getReferencePrecedence() {

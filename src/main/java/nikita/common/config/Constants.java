@@ -114,7 +114,7 @@ public final class Constants {
     public static final String NEW_REGISTRY_ENTRY = NEW + DASH + REGISTRY_ENTRY;
     public static final String NEW_RECORD_NOTE = NEW + DASH + RECORD_NOTE;
     public static final String NEW_PRECEDENCE = NEW + DASH + PRECEDENCE;
-    public static final String NEW_CASE_PARTY = NEW + DASH + CASE_PARTY;
+    public static final String NEW_PART = NEW + DASH + PART;
     public static final String NEW_CASE_STATUS = NEW + DASH + CASE_STATUS;
     public static final String NEW_SECONDARY_CLASSIFICATION = NEW + DASH +
             "sekundaerklassifikasjon";
@@ -148,8 +148,8 @@ public final class Constants {
     public static final String NEW_REGISTRY_ENTRY_TYPE = NEW + DASH +
             REGISTRY_ENTRY_TYPE;
 
-    public static final String NEW_CASE_PARTY_ROLE = NEW + DASH +
-            CASE_PARTY_ROLE;
+    public static final String NEW_PART_ROLE = NEW + DASH +
+            PART_ROLE;
 
     public static final String NEW_FILE_TYPE = NEW + DASH + FILE_TYPE;
 
@@ -282,8 +282,8 @@ public final class Constants {
     public static final String TEMPLATE_FLOW_STATUS_CODE = "G";
     public static final String TEMPLATE_FLOW_STATUS_DESCRIPTION = "Godkjent";
 
-    public static final String TEMPLATE_CASE_PARTY_ROLE_CODE = "KLI";
-    public static final String TEMPLATE_CASE_PARTY_ROLE_DESCRIPTION = "Klient";
+    public static final String TEMPLATE_PART_ROLE_CODE = "KLI";
+    public static final String TEMPLATE_PART_ROLE_DESCRIPTION = "Klient";
 
     public static final String TEMPLATE_FILE_TYPE_CODE = "S";
     public static final String TEMPLATE_FILE_TYPE_DESCRIPTION = "Saksmappe";
@@ -343,6 +343,7 @@ public final class Constants {
     public static final String API_MESSAGE_UNAUTHENTICATED_USER = "Unauthenticated. User has not provided necessary credentials to carry out the request.";
     public static final String API_MESSAGE_UNAUTHORISED_FOR_USER = "Unauthorised. User does not have necessary rights to carry out the request.";
     public static final String API_MESSAGE_PARENT_DOES_NOT_EXIST = "Non-existent parent object. The parent specified does not exist";
+    public static final String API_MESSAGE_NOT_FOUND = "Object not found";
     public static final String API_MESSAGE_CONFLICT = "Conflict. The resource is being used by someone else";
     public static final String API_MESSAGE_INTERNAL_SERVER_ERROR = "Internal server error";
     public static final String API_MESSAGE_NOT_IMPLEMENTED = "Not implemented yet";
@@ -403,8 +404,8 @@ public final class Constants {
     public static final String REL_CASE_HANDLING_CLASS = REL_FONDS_STRUCTURE + CLASS + SLASH;
     public static final String REL_CASE_HANDLING_PRECEDENCE = REL_CASE_HANDLING + PRECEDENCE + SLASH;
     public static final String REL_CASE_HANDLING_NEW_PRECEDENCE = REL_CASE_HANDLING + NEW_PRECEDENCE + SLASH;
-    public static final String REL_CASE_HANDLING_CASE_PARTY = REL_CASE_HANDLING + CASE_PARTY + SLASH;
-    public static final String REL_CASE_HANDLING_NEW_CASE_PARTY = REL_CASE_HANDLING + NEW_CASE_PARTY + SLASH;
+    public static final String REL_CASE_HANDLING_PART = REL_CASE_HANDLING + PART + SLASH;
+    public static final String REL_CASE_HANDLING_NEW_PART = REL_CASE_HANDLING + NEW_PART + SLASH;
     public static final String REL_CASE_HANDLING_SECONDARY_CLASSIFICATION = NIKITA_CONFORMANCE_REL + SECONDARY_CLASSIFICATION + SLASH;
     public static final String REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION = NIKITA_CONFORMANCE_REL + NEW_SECONDARY_CLASSIFICATION + SLASH;
     public static final String REL_METADATA_CASE_STATUS = REL_METADATA + CASE_STATUS + SLASH;
@@ -593,8 +594,8 @@ public final class Constants {
     public static final String REL_METADATA_PRECEDENCE_STATUS =
             REL_METADATA + PRECEDENCE_STATUS + SLASH;
 
-    public static final String REL_METADATA_CASE_PARTY_ROLE =
-            REL_METADATA + CASE_PARTY_ROLE + SLASH;
+    public static final String REL_METADATA_PART_ROLE =
+            REL_METADATA + PART_ROLE + SLASH;
 
     public static final String REL_METADATA_FILE_TYPE =
             REL_METADATA + FILE_TYPE + SLASH;
