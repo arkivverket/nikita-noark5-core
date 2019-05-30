@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v5.casehandling;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import nikita.common.model.noark5.v5.DocumentFlow;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.interfaces.IDocumentFlow;
