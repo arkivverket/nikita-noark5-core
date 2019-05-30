@@ -47,21 +47,21 @@ public class RegistryEntry
     /**
      * M013 - journalaar (xs:integer)
      */
-    @Column(name = "record_year")
+    @Column(name = "record_year", nullable = false)
     @Audited
     private Integer recordYear;
 
     /**
      * M014 - journalsekvensnummer (xs:integer)
      */
-    @Column(name = "record_sequence_number")
+    @Column(name = "record_sequence_number", nullable = false)
     @Audited
     private Integer recordSequenceNumber;
 
     /**
      * M015 - journalpostnummer (xs:integer)
      */
-    @Column(name = "registry_entry_number")
+    @Column(name = "registry_entry_number", nullable = false)
     @Audited
     private Integer registryEntryNumber;
 
