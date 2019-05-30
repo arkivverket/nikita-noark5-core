@@ -182,7 +182,7 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
                         entity.getSystemId() + SLASH + PART,
-                        REL_CASE_HANDLING_PART, true));
+                        REL_FONDS_STRUCTURE_PART, true));
     }
 
     /**
@@ -201,7 +201,7 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
                         entity.getSystemId() + SLASH + NEW_PART,
-                        REL_CASE_HANDLING_NEW_PART));
+                        REL_FONDS_STRUCTURE_NEW_PART));
     }
 
     @Override
