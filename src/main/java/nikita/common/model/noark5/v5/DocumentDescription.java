@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
@@ -22,16 +21,13 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = "document_description")
-// Enable soft delete of DocumentDescription
-// @SQLDelete(sql="UPDATE document_description SET deleted = true WHERE pk_document_description_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-//@Indexed(index = "document_description")
 @JsonDeserialize(using = DocumentDescriptionDeserializer.class)
 @HateoasPacker(using = DocumentDescriptionHateoasHandler.class)
 @HateoasObject(using = DocumentDescriptionHateoas.class)
@@ -195,6 +191,15 @@ public class DocumentDescription
     @JoinColumn(name = "pk_electronic_signature_id")
     private ElectronicSignature referenceElectronicSignature;
 
+    // Links to Party
+    @ManyToMany
+    @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_PARTY,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
+                    referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
+                    referencedColumnName = PRIMARY_KEY_PART))
+    private List<Party> referenceParty = new ArrayList<>();
+
     public String getDocumentType() {
         return documentType;
     }
@@ -261,7 +266,7 @@ public class DocumentDescription
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.DOCUMENT_DESCRIPTION;
+        return DOCUMENT_DESCRIPTION;
     }
 
     public Integer getDocumentNumber() {
@@ -371,7 +376,8 @@ public class DocumentDescription
     }
 
     @Override
-    public void setReferenceDisposalUndertaken(DisposalUndertaken referenceDisposalUndertaken) {
+    public void setReferenceDisposalUndertaken(
+            DisposalUndertaken referenceDisposalUndertaken) {
         this.referenceDisposalUndertaken = referenceDisposalUndertaken;
     }
 
@@ -404,6 +410,18 @@ public class DocumentDescription
     public void setReferenceElectronicSignature(
             ElectronicSignature referenceElectronicSignature) {
         this.referenceElectronicSignature = referenceElectronicSignature;
+    }
+
+    public List<Party> getReferenceParty() {
+        return referenceParty;
+    }
+
+    public void setReferenceParty(List<Party> referenceParty) {
+        this.referenceParty = referenceParty;
+    }
+
+    public void addReferenceParty(Party party) {
+        this.referenceParty.add(party);
     }
 
     @Override
