@@ -5,6 +5,8 @@ import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface IRegistryEntryRepository extends
         PagingAndSortingRepository<RegistryEntry, Long> {
@@ -15,7 +17,9 @@ public interface IRegistryEntryRepository extends
 
     RegistryEntry findBySystemId(String systemId);
 
-    Long countByReferenceFile(File file);
+    List<RegistryEntry> findByReferenceFile(File file);
 
     long deleteByOwnedBy(String ownedBy);
+
+    Long countByReferenceFile(File file);
 }

@@ -10,32 +10,52 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  */
 public interface IRegistryEntryHateoasHandler extends IRecordHateoasHandler {
 
-    void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addElectronicSignature(INikitaEntity entity,
+                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewElectronicSignature(INikitaEntity entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addPrecedence(INikitaEntity entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewPrecedence(INikitaEntity entity,
+                          IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSignOff(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSignOff(INikitaEntity entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDocumentFlow(INikitaEntity entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewDocumentFlow(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCorrespondencePartPerson(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCorrespondencePartPerson(INikitaEntity entity,
+                                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCorrespondencePartUnit(INikitaEntity entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCorrespondencePartInternal(INikitaEntity entity,
+                                       IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCorrespondencePartPerson(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCorrespondencePartPerson(INikitaEntity entity,
+                                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCorrespondencePartUnit(INikitaEntity entity,
+                                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCorrespondencePartInternal(INikitaEntity entity,
+                                          IHateoasNoarkObject hateoasNoarkObject);
 
+    // Metadata entries
+    void addRegistryEntryStatus(INikitaEntity entity,
+                                IHateoasNoarkObject hateoasNoarkObject);
+
+    void addRegistryEntryType(INikitaEntity entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
 }

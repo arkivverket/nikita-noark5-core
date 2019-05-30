@@ -23,7 +23,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.PERSIST;
+import static nikita.common.config.Constants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -32,7 +34,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = RecordDeserializer.class)
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_record_id"))
+@AttributeOverride(name = "id", column = @Column(name = PRIMARY_KEY_RECORD))
 public class Record
         extends NoarkEntity
         implements INoarkCreateEntity, IClassified, IScreening, IDisposal,
@@ -129,55 +131,65 @@ public class Record
     @JoinColumn(name = "record_class_id", referencedColumnName = "pk_class_id")
     private Class referenceClass;
 
-    // Links to DocumentDescriptions
-    @ManyToMany
-    @JoinTable(name = "record_document_description", joinColumns = @JoinColumn(name = "f_pk_record_id",
-            referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_document_description_id",
-                    referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
-
-    // Links to Classified
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "record_classified_id", referencedColumnName = "pk_classified_id")
-    private Classified referenceClassified;
-
-    // Link to Disposal
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "record_disposal_id", referencedColumnName = "pk_disposal_id")
-    private Disposal referenceDisposal;
-
-    // Link to Screening
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "record_screening_id", referencedColumnName = "pk_screening_id")
-    private Screening referenceScreening;
-
-
     // Link to StorageLocation
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "basic_record_storage_location", joinColumns = @JoinColumn(name = "f_pk_basic_record_id",
-            referencedColumnName = "pk_record_id"), inverseJoinColumns = @JoinColumn(name = "f_pk_storage_location_id",
-            referencedColumnName = "pk_storage_location_id"))
-    protected List<StorageLocation> referenceStorageLocation = new ArrayList<>();
-
+    @ManyToMany(cascade = PERSIST)
+    @JoinTable(name = TABLE_RECORD_STORAGE_LOCATION,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_RECORD),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_STORAGE_LOCATION_PK,
+                    referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
+    protected List<StorageLocation> referenceStorageLocation =
+            new ArrayList<>();
     // Links to Keywords
     @ManyToMany
-    @JoinTable(name = "basic_record_keyword", joinColumns = @JoinColumn(name = "f_pk_record_id",
-            referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_keyword_id", referencedColumnName = "pk_keyword_id"))
+    @JoinTable(name = TABLE_RECORD_KEYWORD,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_RECORD),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
+                    referencedColumnName = PRIMARY_KEY_KEYWORD))
     protected List<Keyword> referenceKeyword = new ArrayList<>();
     // Links to Authors
     @ManyToMany
-    @JoinTable(name = "basic_record_author", joinColumns = @JoinColumn(name = "f_pk_record_id",
-            referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_author_id", referencedColumnName = "pk_author_id"))
+    @JoinTable(name = "basic_record_author",
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_RECORD),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_AUTHOR_PK,
+                    referencedColumnName = PRIMARY_KEY_AUTHOR))
     protected List<Author> referenceAuthor = new ArrayList<>();
     // Links to Comments
     @ManyToMany
-    @JoinTable(name = "basic_record_comment", joinColumns = @JoinColumn(name = "f_pk_record_id",
-            referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id", referencedColumnName = "pk_comment_id"))
+    @JoinTable(name = TABLE_RECORD_COMMENT,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_RECORD),
+            inverseJoinColumns =
+            @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
+                    referencedColumnName = PRIMARY_KEY_COMMENT))
     protected List<Comment> referenceComment = new ArrayList<>();
+    // Links to DocumentDescriptions
+    @ManyToMany
+    @JoinTable(name = "record_document_description",
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_RECORD),
+            inverseJoinColumns = @JoinColumn(name = "f_pk_document_description_id",
+                    referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
+    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    // Links to Classified
+    @ManyToOne(cascade = ALL)
+    @JoinColumn(name = "record_classified_id",
+            referencedColumnName = "pk_classified_id")
+    private Classified referenceClassified;
+    // Link to Disposal
+    @ManyToOne(cascade = ALL)
+    @JoinColumn(name = "record_disposal_id",
+            referencedColumnName = "pk_disposal_id")
+    private Disposal referenceDisposal;
+    // Link to Screening
+    @ManyToOne(cascade = ALL)
+    @JoinColumn(name = "record_screening_id",
+            referencedColumnName = "pk_screening_id")
+    private Screening referenceScreening;
+
     // Links to CrossReference
     @OneToMany(mappedBy = "referenceRecord")
     protected List<CrossReference> referenceCrossReference;
@@ -185,7 +197,6 @@ public class Record
     // Used for soft delete.
     @Column(name = "deleted")
     @Audited
-
     public ZonedDateTime getCreatedDate() {
         return createdDate;
     }

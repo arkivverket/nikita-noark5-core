@@ -59,6 +59,14 @@ public class RecordHateoasHandler
     }
 
     @Override
+    public void addEntityLinksOnTemplate(
+            INikitaEntity entity,
+            IHateoasNoarkObject hateoasNoarkObject) {
+        addDocumentMedium(entity, hateoasNoarkObject);
+    }
+
+
+    @Override
     public void addAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH +

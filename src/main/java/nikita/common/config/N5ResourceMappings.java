@@ -22,6 +22,7 @@ public final class N5ResourceMappings {
     public static final String MEETING_RECORD = "moeteregistrering";
     public static final String RECORD = "registrering";
     public static final String REGISTRY_ENTRY = "journalpost";
+    public static final String RECORD_NOTE = "arkivnotat";
     public static final String DOCUMENT_DESCRIPTION = "dokumentbeskrivelse";
     public static final String DOCUMENT_OBJECT = "dokumentobjekt";
     public static final String STORAGE_LOCATION = "oppbevaringssted";

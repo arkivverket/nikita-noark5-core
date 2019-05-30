@@ -112,6 +112,7 @@ public final class Constants {
     // Create for new casehandling objects
     public static final String NEW_CASE_FILE = NEW + DASH + CASE_FILE;
     public static final String NEW_REGISTRY_ENTRY = NEW + DASH + REGISTRY_ENTRY;
+    public static final String NEW_RECORD_NOTE = NEW + DASH + RECORD_NOTE;
     public static final String NEW_PRECEDENCE = NEW + DASH + PRECEDENCE;
     public static final String NEW_CASE_PARTY = NEW + DASH + CASE_PARTY;
     public static final String NEW_CASE_STATUS = NEW + DASH + CASE_STATUS;
@@ -170,6 +171,11 @@ public final class Constants {
 
     public static final String SERIES_ASSOCIATE_AS_SUCCESSOR = "referanseArvtager";
     public static final String SERIES_ASSOCIATE_AS_PRECURSOR = "referanseForloeper";
+
+    // String used for default / template object
+    public static final String DEFAULT_TITLE = "Default title for ";
+    public static final String DEFAULT_DESCRIPTION = "This object is, if " +
+            "persisted, will be associated with ";
 
     // Some user identifiers used for testing
     public static final String TEST_USER_CASE_HANDLER_1 = "example test user case handler 1";
@@ -331,6 +337,8 @@ public final class Constants {
 
     // Messages used for API description
     public static final String API_MESSAGE_OBJECT_ALREADY_PERSISTED = "object already persisted.";
+    public static final String API_MESSAGE_OBJECT_UPDATED =
+            " object successfully updated";
     public static final String API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED = "object successfully created.";
     public static final String API_MESSAGE_UNAUTHENTICATED_USER = "Unauthenticated. User has not provided necessary credentials to carry out the request.";
     public static final String API_MESSAGE_UNAUTHORISED_FOR_USER = "Unauthorised. User does not have necessary rights to carry out the request.";
@@ -406,6 +414,11 @@ public final class Constants {
 
     public static final String REL_CASE_HANDLING_NEW_REGISTRY_ENTRY = REL_CASE_HANDLING + NEW_REGISTRY_ENTRY + SLASH;
     public static final String REL_CASE_HANDLING_REGISTRY_ENTRY = REL_CASE_HANDLING + REGISTRY_ENTRY + SLASH;
+
+    public static final String REL_CASE_HANDLING_RECORD_NOTE =
+            REL_CASE_HANDLING + RECORD_NOTE + SLASH;
+    public static final String REL_CASE_HANDLING_NEW_RECORD_NOTE =
+            REL_CASE_HANDLING + NEW_RECORD_NOTE + SLASH;
 
     // FileHateoas REL links
     public static final String REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE = NIKITA_CONFORMANCE_REL + FILE_EXPAND_TO_CASE_FILE + SLASH;
@@ -655,6 +668,12 @@ public final class Constants {
             "file_comment";
     public static final String TABLE_FONDS_STORAGE_LOCATION =
             "fonds_storage_location";
+    public static final String TABLE_RECORD_KEYWORD =
+            "record_keyword";
+    public static final String TABLE_RECORD_COMMENT =
+            "record_comment";
+    public static final String TABLE_RECORD_STORAGE_LOCATION =
+            "record_storage_location";
 
     // Column Constants
     // Foreign key names
@@ -662,6 +681,7 @@ public final class Constants {
     public static final String FOREIGN_KEY_FONDS_CREATOR_PK =
             "f_pk_fonds_creator_id";
 
+    public static final String FOREIGN_KEY_AUTHOR_PK = "f_pk_author_id";
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
             "f_pk_administrative_unit_id";
@@ -708,8 +728,10 @@ public final class Constants {
     public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";
 
     public static final String PRIMARY_KEY_USER = "pk_user_id";
+    public static final String PRIMARY_KEY_AUTHOR = "pk_author_id";
     public static final String PRIMARY_KEY_RECORD = "pk_record_id";
-    public static final String PRIMARY_KEY_STORAGE_LOCATION = "pk_storage_location_id";
+    public static final String PRIMARY_KEY_STORAGE_LOCATION =
+            "pk_storage_location_id";
     public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
             "pk_administrative_unit_id";
     public static final String PRIMARY_KEY_CORRESPONDENCE_PART_PERSON =
@@ -723,6 +745,7 @@ public final class Constants {
 
     public static final String JOIN_CASE_FILE_STATUS =
             "case_file_case_file_status_id";
+
     public static final String PRIMARY_KEY_DOCUMENT_DESCRIPTION =
             "pk_document_description_id";
 
@@ -733,6 +756,12 @@ public final class Constants {
     public static final String HREF_BASE_FONDS_STRUCTURE =
             HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH;
 
+    public static final String HREF_BASE_METADATA =
+            HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH;
+
+    public static final String HREF_BASE_CASE_HANDLING =
+            HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH;
+
     public static final String HREF_BASE_DOCUMENT_DESCRIPTION =
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH;
 
@@ -742,8 +771,14 @@ public final class Constants {
     public static final String HREF_BASE_RECORD =
             HREF_BASE_FONDS_STRUCTURE + RECORD + SLASH;
 
+    public static final String HREF_BASE_RECORD_NOTE =
+            HREF_BASE_FONDS_STRUCTURE + RECORD_NOTE + SLASH;
+
     public static final String HREF_BASE_FILE =
             HREF_BASE_FONDS_STRUCTURE + FILE + SLASH;
+
+    public static final String HREF_BASE_CASE_FILE =
+            HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH;
 
     public static final String HREF_BASE_SERIES =
             HREF_BASE_FONDS_STRUCTURE + SERIES + SLASH;
@@ -756,6 +791,9 @@ public final class Constants {
 
     public static final String HREF_BASE_FONDS =
             HREF_BASE_FONDS_STRUCTURE + FONDS + SLASH;
+
+    public static final String HREF_BASE_DOCUMENT_FLOW =
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW + SLASH;
 
     public static final String HREF_METADATA_PATH =
             HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH;

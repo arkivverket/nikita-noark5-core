@@ -1,5 +1,6 @@
 package nikita.webapp.service.interfaces;
 
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
@@ -8,6 +9,8 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUn
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -46,6 +49,9 @@ public interface IRegistryEntryService {
 
     List<RegistryEntry> findRegistryEntryByOwnerPaginated(Integer top, Integer skip);
 
+    ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryByCaseFile(
+            CaseFile caseFile);
+
     CorrespondencePartPersonHateoas
     getCorrespondencePartPersonAssociatedWithRegistryEntry(String systemID);
 
@@ -64,4 +70,7 @@ public interface IRegistryEntryService {
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
+    ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
+            @NotNull final String caseFileSystemId);
 }

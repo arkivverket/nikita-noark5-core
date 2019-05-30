@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
@@ -9,9 +10,12 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUn
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
@@ -19,6 +23,7 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +37,10 @@ import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.Constants.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
@@ -47,17 +54,20 @@ public class RegistryEntryService
     private ICorrespondencePartService correspondencePartService;
     private IPrecedenceService precedenceService;
     private IRegistryEntryRepository registryEntryRepository;
+    private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
 
     public RegistryEntryService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             ICorrespondencePartService correspondencePartService,
             IPrecedenceService precedenceService,
-            IRegistryEntryRepository registryEntryRepository) {
+            IRegistryEntryRepository registryEntryRepository,
+            IRegistryEntryHateoasHandler registryEntryHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
         this.registryEntryRepository = registryEntryRepository;
+        this.registryEntryHateoasHandler = registryEntryHateoasHandler;
     }
 
     @Override
@@ -104,6 +114,29 @@ public class RegistryEntryService
                         getReferenceCorrespondencePartUnit());
     }
 
+
+    @Override
+    public ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
+            @NotNull final String caseFileSystemId) {
+        RegistryEntry defaultRegistryEntry = new RegistryEntry();
+        defaultRegistryEntry.setTitle(DEFAULT_TITLE + "RegistryEntry");
+        defaultRegistryEntry.setDescription(DEFAULT_DESCRIPTION + " a CaseFile " +
+                "with systemId [" + caseFileSystemId + "]");
+        ZonedDateTime now = ZonedDateTime.now();
+        defaultRegistryEntry.setRecordDate(now);
+        defaultRegistryEntry.setDocumentDate(now);
+        defaultRegistryEntry.setRecordStatus(TEST_RECORD_STATUS);
+        defaultRegistryEntry.setRegistryEntryType(TEST_REGISTRY_ENTRY_TYPE);
+        defaultRegistryEntry.setRecordYear(now.getYear());
+        RegistryEntryHateoas registryEntryHateoas = new
+                RegistryEntryHateoas(defaultRegistryEntry);
+        registryEntryHateoasHandler.addLinksOnTemplate(registryEntryHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(registryEntryHateoas);
+    }
+    
     /**
      * Create a CorrespondencePartPerson object and associate it with the
      * identified registryEntry
@@ -255,6 +288,20 @@ public class RegistryEntryService
         return getRegistryEntryOrThrow(systemId);
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryByCaseFile(
+            CaseFile caseFile) {
+        RegistryEntryHateoas registryEntryHateoas = new RegistryEntryHateoas(
+                (List<INikitaEntity>)
+                        (List) registryEntryRepository.
+                                findByReferenceFile(caseFile));
+        registryEntryHateoasHandler.addLinks(registryEntryHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(registryEntryHateoas);
+    }
 
     @Override
     public Precedence createPrecedenceAssociatedWithRecord(

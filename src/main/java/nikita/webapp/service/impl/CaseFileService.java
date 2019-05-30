@@ -4,8 +4,11 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
 import nikita.common.repository.n5v5.ICaseFileRepository;
@@ -14,10 +17,13 @@ import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
+import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
@@ -57,30 +63,40 @@ public class CaseFileService
             LoggerFactory.getLogger(CaseFileService.class);
 
     private IRegistryEntryService registryEntryService;
+    private IRecordNoteService recordNoteService;
     private ICaseFileRepository caseFileRepository;
     private ISequenceNumberGeneratorService numberGeneratorService;
     private IAdministrativeUnitRepository administrativeUnitRepository;
     private IUserRepository userRepository;
     private ICaseStatusService caseStatusService;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
+    private IRecordNoteHateoasHandler recordNoteHateoasHandler;
+    private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
 
-    public CaseFileService(EntityManager entityManager,
-                           ApplicationEventPublisher applicationEventPublisher,
-                           IRegistryEntryService registryEntryService,
-                           ICaseFileRepository caseFileRepository,
-                           ISequenceNumberGeneratorService numberGeneratorService,
-                           IAdministrativeUnitRepository administrativeUnitRepository,
-                           IUserRepository userRepository,
-                           ICaseStatusService caseStatusService,
-                           ICaseFileHateoasHandler caseFileHateoasHandler) {
+    public CaseFileService(
+            EntityManager entityManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            IRegistryEntryService registryEntryService,
+            IRecordNoteService recordNoteService,
+            ICaseFileRepository caseFileRepository,
+            ISequenceNumberGeneratorService numberGeneratorService,
+            IAdministrativeUnitRepository administrativeUnitRepository,
+            IUserRepository userRepository,
+            ICaseStatusService caseStatusService,
+            ICaseFileHateoasHandler caseFileHateoasHandler,
+            IRecordNoteHateoasHandler recordNoteHateoasHandler,
+            IRegistryEntryHateoasHandler registryEntryHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.registryEntryService = registryEntryService;
+        this.recordNoteService = recordNoteService;
         this.caseFileRepository = caseFileRepository;
         this.numberGeneratorService = numberGeneratorService;
         this.administrativeUnitRepository = administrativeUnitRepository;
         this.userRepository = userRepository;
         this.caseStatusService = caseStatusService;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
+        this.recordNoteHateoasHandler = recordNoteHateoasHandler;
+        this.registryEntryHateoasHandler = registryEntryHateoasHandler;
     }
 
     @Override
@@ -132,6 +148,32 @@ public class CaseFileService
     }
 
     @Override
+    public ResponseEntity<RecordNoteHateoas> findAllRecordNoteToCaseFile(
+            @NotNull final String caseFileSystemId) {
+        return recordNoteService.findAllRecordNoteByCaseFile(
+                getCaseFileOrThrow(caseFileSystemId));
+    }
+
+    @Override
+    public ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryToCaseFile(
+            @NotNull final String caseFileSystemId) {
+        return registryEntryService.findAllRegistryEntryByCaseFile(
+                getCaseFileOrThrow(caseFileSystemId));
+    }
+
+    /**
+     * Create a RegistryEntry associated with a ClassFile.
+     * <p>
+     * First find the caseFile to associate with, set the references between
+     * them before calling the RegistryEntryService save, which will add all
+     * required values.
+     *
+     * @param fileSystemId  systemID of the caseFile
+     * @param registryEntry the incoming RegistryEntry object
+     * @return he registryEntry object wrapped as a Hateoas object, further
+     * wrapped as a ResponseEntity
+     */
+    @Override
     public RegistryEntry createRegistryEntryAssociatedWithCaseFile(
             @NotNull String fileSystemId,
             @NotNull RegistryEntry registryEntry) {
@@ -139,6 +181,67 @@ public class CaseFileService
         registryEntry.setReferenceFile(caseFile);
         caseFile.getReferenceRecord().add(registryEntry);
         return registryEntryService.save(registryEntry);
+    }
+
+    /**
+     * Create a RecordNote associated with a ClassFile.
+     * <p>
+     * First find the caseFile to associate with, set the references between
+     * them before calling the RecordNoteService save, which will add all
+     * required values.
+     *
+     * @param fileSystemId systemID of the caseFile
+     * @param recordNote the incoming RecordNote object
+     *
+     * @return the recordNote object wrapped as a Hateoas object, further
+     * wrapped as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<RecordNoteHateoas> createRecordNoteToCaseFile(
+            @NotNull String fileSystemId,
+            @NotNull RecordNote recordNote) {
+        CaseFile caseFile = getCaseFileOrThrow(fileSystemId);
+        recordNote.setReferenceFile(caseFile);
+        caseFile.getReferenceRecord().add(recordNote);
+        return recordNoteService.save(recordNote);
+    }
+
+    /**
+     * Generate a Default RecordNote object that can be associated with the
+     * identified CaseFile.
+     * <br>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param caseFileSystemId The systemId of the CaseFile object you wish to
+     *                         generate a default RecordNote for
+     * @return the RecordNote object wrapped as a RecordNoteHateoas object
+     */
+    @Override
+    public ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
+            @NotNull String caseFileSystemId) {
+        return recordNoteService.generateDefaultRecordNote(caseFileSystemId);
+    }
+
+    /**
+     * Generate a Default RegistryEntry object that can be associated with the
+     * identified CaseFile.
+     * <br>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param caseFileSystemId The systemId of the CaseFile object you wish to
+     *                         generate a default RegistryEntry for
+     * @return the RegistryEntry object wrapped as a RegistryEntryHateoas
+     * object, further wrapped as a ResponseEntity object
+     */
+    @Override
+    public ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
+            @NotNull String caseFileSystemId) {
+        return registryEntryService.generateDefaultRegistryEntry(
+                caseFileSystemId);
     }
 
     // All READ operations
@@ -169,6 +272,7 @@ public class CaseFileService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(Series series) {
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(
                 (List<INikitaEntity>)
@@ -223,7 +327,6 @@ public class CaseFileService
         CaseFile caseFile = getCaseFileOrThrow(caseFileSystemId);
         caseFileRepository.delete(caseFile);
     }
-
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
@@ -292,7 +395,6 @@ public class CaseFileService
                 new Authorisation());
         return caseFileHateoas;
     }
-
 
     /**
      * Internal helper method. Find the administrativeUnit identified by the

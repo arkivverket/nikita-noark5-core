@@ -10,6 +10,8 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Table(name = "document_flow")
 // Enable soft delete of DocumentFlow
@@ -61,9 +63,15 @@ public class DocumentFlow extends NoarkEntity {
     private String flowComment;
 
     // Link to Series
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_flow_registry_entry_id", referencedColumnName = "pk_record_id")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "work_flow_registry_entry_id",
+            referencedColumnName = "pk_record_id")
     private RegistryEntry referenceRegistryEntry;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "work_flow_record_note_id",
+            referencedColumnName = "pk_record_id")
+    private RecordNote referenceRecordNote;
 
     public String getFlowTo() {
         return flowTo;
@@ -129,6 +137,14 @@ public class DocumentFlow extends NoarkEntity {
 
     public void setReferenceRegistryEntry(RegistryEntry referenceRegistryEntry) {
         this.referenceRegistryEntry = referenceRegistryEntry;
+    }
+
+    public RecordNote getReferenceRecordNote() {
+        return referenceRecordNote;
+    }
+
+    public void setReferenceRecordNote(RecordNote referenceRecordNote) {
+        this.referenceRecordNote = referenceRecordNote;
     }
 
     @Override
