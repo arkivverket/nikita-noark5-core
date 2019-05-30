@@ -122,6 +122,14 @@ public class DocumentObject
     @Audited
     private String mimeType;
 
+    @Column(name = "pronom_puid")
+    @Audited
+    private String pronomPUID;
+
+    @Column(name = "pronom_mime")
+    @Audited
+    private String pronomMIME;
+
     // Link to DocumentDescription
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_object_document_description_id",
@@ -231,6 +239,22 @@ public class DocumentObject
 
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
+    }
+
+    public String getPronomPUID() {
+        return pronomPUID;
+    }
+
+    public void setPronomPUID(String pronomPUID) {
+        this.pronomPUID = pronomPUID;
+    }
+
+    public String getPronomMIME() {
+        return pronomMIME;
+    }
+
+    public void setPronomMIME(String pronomMIME) {
+        this.pronomMIME = pronomMIME;
     }
 
     @Override
