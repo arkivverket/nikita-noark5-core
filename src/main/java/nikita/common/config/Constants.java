@@ -1,9 +1,5 @@
 package nikita.common.config;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
@@ -17,19 +13,9 @@ public final class Constants {
     public static final String PARENT = "forelder";
 
     // Spring profile for development and production
-    public static final String SPRING_PROFILE_PRODUCTION = "prod";
     public static final String SPRING_PROFILE_SWAGGER = "swagger";
     public static final String SPRING_PROFILE_METRICS = "metrics";
 
-    public static final String SPRING_ENDPOINT_DELIMITER = "||";
-
-    public static final String[] ODATA_SET_VALUES =
-            new String[]{"$top", "$skip", "$filter"};
-    public static final Set<String> ODATA_QUERY_PARAMS =
-            new HashSet<>(Arrays.asList(ODATA_SET_VALUES));
-
-    public static final String USERNAME_ADMIN = "admin";
-    public static final String PASSWORD_ADMIN = "password";
     public static final String REGEX_UUID = "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4" +
             "}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
 
@@ -46,15 +32,11 @@ public final class Constants {
     public static final String ROLE_GUEST = "GUEST";
 
     // Names of APIs that the core supports
-    public static final String IMPORT_API_PATH = "import-api";
     public static final String HATEOAS_API_PATH = "hateoas-api";
-    public static final String GUI_PATH = "gui";
 
     public static final String SLASH = "/";
     public static final String LEFT_PARENTHESIS = "{";
     public static final String RIGHT_PARENTHESIS = "}";
-    public static final String REF_ID = "$ref?$id=";
-
     public static final String ENTITY_ROOT_NAME_LIST = "results";
 
     // Create for new arkivstruktur objects
@@ -193,19 +175,6 @@ public final class Constants {
     public static final String NOARK_DATE_FORMAT_PATTERN = "yyyy-MM-dd";
     public static final String NOARK_TIME_FORMAT_PATTERN = "HH:mm:ss";
     public static final String NOARK_DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
-    public static final String ONLY_WHITESPACE = "\\s*";
-
-    // OData variable names
-    public static final String TOP = "top";
-    public static final String SKIP = "skip";
-    public static final String DOLLAR = "$";
-
-    // Strings relating to conformity to Noark 5v5 standard
-    public static final String NOARK_CONFORMANCE_LEVEL_0 = "Nivå 0 – Basiskrav";
-    public static final String NOARK_CONFORMANCE_LEVEL_1 = "Nivå 1 – Arkivstruktur - obligatoriske krav";
-    public static final String NOARK_CONFORMANCE_LEVEL_1_1 = "Nivå 1.1 – Arkivstruktur - valgfrie krav";
-    public static final String NOARK_CONFORMANCE_LEVEL_2 = "Nivå 2a – Sakarkiv – obligatoriske krav";
-    public static final String NOARK_CONFORMANCE_LEVEL_2_1_a = "Nivå 2.1a – Sakarkiv - valgfrie krav";
 
     public static final String REFERENCE_FILE = "referanseFil";
 
@@ -235,7 +204,6 @@ public final class Constants {
     public static final String NOARK5_V5_CONTENT_TYPE_JSON = "application/vnd.noark5-v5+json";
     public static final String NOARK5_V5_CONTENT_TYPE_JSON_XML = "application/vnd.noark5-v5+xml";
 
-    public static final String INFO_CANNOT_CREATE_OBJECT = "Cannot create ";
     public static final String INFO_CANNOT_FIND_OBJECT = "Cannot find object of type ";
     public static final String INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT = "Cannot associate with a closed object";
     public static final String INFO_INVALID_STRUCTURE = "Invalid Noark structure";

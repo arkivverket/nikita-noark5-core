@@ -7,8 +7,6 @@ public final class N5ResourceMappings {
 
     // Commonly used entities for REST request mappings
     public static final String FONDS = "arkiv";
-    public static final String SUB = "under";
-    public static final String PARENT = "forelder";
     public static final String SUB_FONDS = SUB + FONDS;
     public static final String PARENT_FONDS = PARENT + FONDS;
     public static final String SERIES = "arkivdel";
