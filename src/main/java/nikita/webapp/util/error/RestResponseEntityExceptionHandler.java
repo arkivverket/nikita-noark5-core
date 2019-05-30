@@ -64,6 +64,7 @@ public class RestResponseEntityExceptionHandler
                 BAD_REQUEST, request);
     }
 
+    // 400
     @ExceptionHandler({ DataIntegrityViolationException.class })
     public ResponseEntity<Object> handleBadRequest(
             final DataIntegrityViolationException ex,
@@ -106,6 +107,7 @@ public class RestResponseEntityExceptionHandler
                 ex), new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
     }
 
+    // 406
     @ExceptionHandler(value = {UsernameExistsException.class})
     protected ResponseEntity<Object> handleUserExists(
             final RuntimeException ex, final WebRequest request) {
@@ -113,6 +115,7 @@ public class RestResponseEntityExceptionHandler
                 ex), new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
     }
 
+    // 400
     @ExceptionHandler(value = {NikitaMalformedInputDataException.class})
     protected ResponseEntity<Object> handleMalformedDataInput(
             final RuntimeException ex, final WebRequest request) {
@@ -141,6 +144,7 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), BAD_REQUEST, request);
     }
 
+    // 409
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintException(
             final RuntimeException ex, final WebRequest request) {
@@ -150,6 +154,7 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), CONFLICT, request);
     }
 
+    // 500
     @ExceptionHandler(NikitaMisconfigurationException.class)
     public ResponseEntity<Object> handleMisconfigurationException(
             final RuntimeException ex, final WebRequest request) {
@@ -159,6 +164,7 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), INTERNAL_SERVER_ERROR, request);
     }
 
+    // 400
     @ExceptionHandler(NikitaMalformedHeaderException.class)
     public ResponseEntity<Object> handleMalformedHeaderException(
             final RuntimeException ex, final WebRequest request) {
