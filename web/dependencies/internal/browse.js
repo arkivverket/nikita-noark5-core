@@ -1,5 +1,11 @@
 var app = angular.module('nikita-browse', []);
 
+app.config(['$locationProvider', function ($locationProvider) {
+  $locationProvider.html5Mode({
+    enabled: true
+  });
+}]);
+
 /**
  *
  */
@@ -15,8 +21,13 @@ app.directive('loginModal', function () {
 });
 
 var browseController = app.controller('BrowseController',
-  ['$scope', '$http', '$httpParamSerializer',
-    function ($scope, $http, $httpParamSerializer) {
+  ['$scope', '$http', '$httpParamSerializer', '$location',
+    function ($scope, $http, $httpParamSerializer, $location) {
+
+      if ($location.search().hasOwnProperty('find')) {
+        baseUrl = $location.search()['find'];
+        console.log("Attempting to retrieve: " + baseUrl);
+      }
 
       // Grab a copy of the authentication token
       $scope.token = GetUserToken();
