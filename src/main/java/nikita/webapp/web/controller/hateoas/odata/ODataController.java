@@ -56,6 +56,15 @@ public class ODataController {
         return null;
     }
 
+    /**
+     * Can be used in the following ways
+     * <p>
+     * ../mappe/1234/ny-kryssreferanse/$ref?$id=https://./basisregistrering/4321
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**/$ref?$id**")
     public ResponseEntity<HateoasNoarkObject>
     handleRefPost(HttpServletRequest request)
