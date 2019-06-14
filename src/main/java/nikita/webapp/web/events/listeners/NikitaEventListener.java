@@ -26,9 +26,16 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
+import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -47,8 +54,16 @@ public class NikitaEventListener {
 
     protected static final Logger logger =
             LoggerFactory.getLogger(NikitaEventListener.class);
+
     @Value("${nikita.simplechain.address}")
     private String urlSimpleChain;
+
+    @Value("${nikita.server.hateoas.publicAddress}")
+    protected String publicAddress;
+
+    @Value("${server.servlet.context-path}")
+    protected String contextPath;
+
 
     @EventListener
     public void handleCreationEvent(AfterNoarkEntityCreatedEvent event) {
@@ -93,6 +108,22 @@ public class NikitaEventListener {
             String entityType = event.getEntity().getBaseTypeName();
             body.put("object-type", entityType);
             body.put("event-type", eventType);
+            ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
+            body.put("created", date);
+
+            RequestAttributes requestAttributes = RequestContextHolder.
+                    getRequestAttributes();
+
+            String outAddress = getOutgoingAddress();
+
+            if (requestAttributes != null) {
+
+                HttpServletRequest request =
+                        ((ServletRequestAttributes) requestAttributes).getRequest();
+                outAddress += request.getServletPath();
+            }
+
+            body.put("object-location", outAddress);
 
             INikitaEntity entity = event.getEntity();
 
@@ -148,7 +179,7 @@ public class NikitaEventListener {
 
             block.put("body", body);
 
-            post.setEntity(new StringEntity(block.toString()));
+            post.setEntity(new StringEntity(block.toString(2)));
             post.setHeader("Accept", APPLICATION_JSON_VALUE);
             post.setHeader("Content-type", APPLICATION_JSON_VALUE);
 
@@ -171,5 +202,48 @@ public class NikitaEventListener {
                 logger.error(e.getMessage());
             }
         }
+    }
+
+
+    /**
+     * Get the outgoing address to use when generating links.
+     * If we are not running behind a front facing server incoming requests
+     * will not have X-Forward-* values set. In this case use the hardcoded
+     * value from the properties file.
+     * <p>
+     * If X-Forward-*  values are set, then use them. At a minimum Host and
+     * Proto must be set. If Port is also set use this to.
+     *
+     * @return the outgoing address
+     */
+    protected String getOutgoingAddress() {
+        RequestAttributes requestAttributes = RequestContextHolder.
+                getRequestAttributes();
+
+
+        if (requestAttributes != null) {
+
+            HttpServletRequest request =
+                    ((ServletRequestAttributes) requestAttributes).getRequest();
+            String servletPath = request.getServletPath();
+            if (request != null) {
+                String address = request.getHeader("X-Forwarded-Host");
+                String protocol = request.getHeader("X-Forwarded-Proto");
+                String port = request.getHeader("X-Forwarded-Port");
+
+                if (address != null && protocol != null) {
+                    if (port != null) {
+                        return protocol + "://" + address + ":" + port +
+                                contextPath + SLASH;
+                    } else {
+                        return protocol + "://" + address + contextPath + SLASH;
+                    }
+                }
+            }
+        } else {
+            logger.warn("Request is null. This likely means we are serving " +
+                    "from localhost. Make sure this is intended!");
+        }
+        return publicAddress + contextPath + SLASH;
     }
 }
