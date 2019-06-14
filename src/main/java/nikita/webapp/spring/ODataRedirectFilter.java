@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 import static nikita.common.config.Constants.*;
 
@@ -57,10 +58,39 @@ public class ODataRedirectFilter
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        Map<String, String[]> map = request.getParameterMap();
+
+        //then you just access the reversedMap however you like...
+        for (Map.Entry entry : map.entrySet()) {
+            log.info(entry.getKey() + ", " + entry.getValue());
+        }
+
+        String queryString = request.getQueryString();
+        String urlString = request.getRequestURL().toString();
+
         if (null != request.getQueryString() &&
-                (request.getQueryString().contains("filter")
-                        || request.getQueryString().contains("skip")
-                        || request.getQueryString().contains("top"))) {
+                (urlString.contains("ref") && queryString.contains("id="))) {
+            // DO this with a regex??
+            //ref%3F%24id
+            String path = ODATA_PATH +
+                    getEntity(request.getRequestURL()) + "%24ref%3F%24" +
+                    queryString.substring(3);
+            RequestDispatcher requestDispatcher = request.
+                    getRequestDispatcher(path);
+
+            if (requestDispatcher == null) {
+                throw new NikitaMisconfigurationException(
+                        "Unable to redirect request [" +
+                                request.getRequestURL() + "/" +
+                                queryString + "] for OData " +
+                                "processing");
+            }
+            requestDispatcher.include(request, response);
+            return;
+        } else if (null != request.getQueryString() &&
+                (queryString.contains("filter")
+                        || queryString.contains("skip")
+                        || queryString.contains("top"))) {
             String path = ODATA_PATH +
                     getEntity(request.getRequestURL());
             RequestDispatcher requestDispatcher = request.
@@ -69,8 +99,8 @@ public class ODataRedirectFilter
             if (requestDispatcher == null) {
                 throw new NikitaMisconfigurationException(
                         "Unable to redirect request [" +
-                        request.getRequestURL() + "/" +
-                                request.getQueryString()+ "] for OData " +
+                                request.getRequestURL() + "/" +
+                                queryString + "] for OData " +
                                 "processing");
             }
             requestDispatcher.include(request, response);
@@ -91,12 +121,19 @@ public class ODataRedirectFilter
     /**
      * Code should be able to adapt to any changes in the host / context path.
      *
+     * Has to handle straight forward $filter but also a /$ref?$id
      * @param url
      * @return
      */
     private String getEntity(StringBuffer url) {
         int entityStart = url.lastIndexOf(
                 NOARK_FONDS_STRUCTURE_PATH + SLASH);
-        return url.substring(entityStart + ODATA_OFFSET_LENGTH);
+        int entityEnd = url.lastIndexOf(SLASH);
+
+        if (entityStart != entityEnd) {
+// +1 because you want the slash
+            return url.substring(entityStart + ODATA_OFFSET_LENGTH, entityEnd + 1);
+        } else
+            return url.substring(entityStart + ODATA_OFFSET_LENGTH);
     }
 }

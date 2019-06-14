@@ -6,10 +6,7 @@ import nikita.webapp.service.interfaces.odata.IODataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,11 +28,39 @@ public class ODataController {
         this.oDataService = oDataService;
     }
 
-    @GetMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**")
+    // Handles the following
+    //?$filter= ...
+    //?$expand=merknad&$filter= ....
+    @GetMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "?filter=**")
     public ResponseEntity<HateoasNoarkObject>
     retrieveOData(HttpServletRequest request)
             throws Exception {
         return oDataService.processODataQueryGet(request);
+    }
+
+    // $ref?$id
+    ///odata/arkivstruktur/dokumentobjekt/$ref?id=hello
+    @GetMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**/$ref?$id**")
+    public ResponseEntity<HateoasNoarkObject>
+    handleRefGet(HttpServletRequest request)
+            throws Exception {
+        logger.info("Request has following query string: " + request.getQueryString());
+        logger.info("Request has following URL: " + request.getRequestURL());
+        return null;
+    }
+
+    @PutMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**/$ref?$id**")
+    public ResponseEntity<HateoasNoarkObject>
+    handleRefPut(HttpServletRequest request)
+            throws Exception {
+        return null;
+    }
+
+    @PostMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**/$ref?$id**")
+    public ResponseEntity<HateoasNoarkObject>
+    handleRefPost(HttpServletRequest request)
+            throws Exception {
+        return null;
     }
 
     @DeleteMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**")
