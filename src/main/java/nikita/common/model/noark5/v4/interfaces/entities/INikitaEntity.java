@@ -1,5 +1,8 @@
 package nikita.common.model.noark5.v4.interfaces.entities;
 
+import nikita.common.model.noark5.v4.NoarkEntity;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
@@ -44,4 +47,7 @@ public interface INikitaEntity extends Serializable {
     ZonedDateTime getLastModifiedDate();
 
     String getLastModifiedBy();
+
+    void createReference(@NotNull NoarkEntity entity,
+                         @NotNull String referenceType);
 }

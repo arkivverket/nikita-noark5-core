@@ -121,7 +121,6 @@ systemIDCreatedFile=$(curl "${curloptsCreateFileClass[@]}" | jq '.systemID' |
  sed 's/\"//g');
 printf "created   File 1              ($systemIDCreatedFile) \n";
 
-exit
 
 # Create a record object and capture the systemId
 # Note that record does not contain any administration to be uploaded in JSON to be created. createdBy etc are set by the core.
@@ -135,7 +134,8 @@ echo  ${curloptsCreateRecord[@]};
 # Create record 1 associated with a file 1 and capture systemId
 systemIDCreatedRecord=$(curl "${curloptsCreateRecord[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created    Record 1            ($systemIDCreatedRecord) associated with ($systemIDCreatedFile) \n";
-#echo ${curloptsCreateRecord[@]};
+echo ${curloptsCreateRecord[@]};
+exit;
 
 # Setup curl options for documentDescription
 curloptsCreateDocumentDescription+=("${curlPostOpts[@]}");

@@ -16,10 +16,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CLASS;
+import static nikita.common.config.N5ResourceMappings.REGISTRATION;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues;
 
 @Entity
 @Table(name = "file")
@@ -124,7 +129,7 @@ public class File
             referencedColumnName = PRIMARY_KEY_SCREENING)
     private Screening referenceScreening;
 
-    @OneToMany(mappedBy = "referenceFile")
+    @OneToMany(mappedBy = "referenceFile", cascade = ALL)
     private List<CrossReference> referenceCrossReference;
 
     public String getFileId() {
@@ -263,6 +268,34 @@ public class File
     public void setReferenceCrossReference(
             List<CrossReference> referenceCrossReference) {
         this.referenceCrossReference = referenceCrossReference;
+    }
+
+    @Override
+    public void addReferenceCrossReference(CrossReference crossReference) {
+        this.referenceCrossReference.add(crossReference);
+    }
+
+    public void createReference(
+            @NotNull NoarkEntity entity, @NotNull String referenceType) {
+
+        if (referenceType.equalsIgnoreCase(NEW_CROSS_REFERENCE)) {
+            CrossReference crossReference = new CrossReference();
+            setSystemIdEntityValues(crossReference);
+            crossReference.setFromSystemId(getSystemId());
+            crossReference.setToSystemId(entity.getSystemId());
+
+            if (entity.getBaseTypeName().equals(CLASS)) {
+                crossReference.setReferenceClass((Class) entity);
+                crossReference.setReferenceType(REFERENCE_TO_CLASS);
+            } else if (entity.getBaseTypeName().equals(REGISTRATION)) {
+                crossReference.setReferenceBasicRecord((BasicRecord) entity);
+                crossReference.setReferenceType(REFERENCE_TO_REGISTRATION);
+            }
+            crossReference.setReferenceFile(this);
+            referenceCrossReference.add(crossReference);
+            ((ICrossReference) entity).
+                    addReferenceCrossReference(crossReference);
+        }
     }
 
     /**

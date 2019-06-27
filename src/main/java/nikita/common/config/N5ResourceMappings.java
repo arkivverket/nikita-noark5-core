@@ -64,8 +64,6 @@ public final class N5ResourceMappings {
     public static final String SYSTEM_ID_PARAMETER =
             SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
 
-
-
     // Fonds
     public static final String FONDS_STATUS = "arkivstatus";
 
@@ -245,9 +243,7 @@ public final class N5ResourceMappings {
 
     // CrossReference
     public static final String CROSS_REFERENCE = "kryssreferanse";
-    public static final String CROSS_REFERENCE_RECORD = "referanseTilRegistrering";
-    public static final String CROSS_REFERENCE_FILE = "referanseTilMappe";
-    public static final String CROSS_REFERENCE_CLASS = "referanseTilKlasse";
+    public static final String CROSS_REFERENCES = "kryssreferanser";
 
     // ElectronicSignature
     public static final String ELECTRONIC_SIGNATURE = "elektronisksignatur";
@@ -386,7 +382,7 @@ public final class N5ResourceMappings {
     public static final String CASE_SEQUENCE_NUMBER_ENG = "sakssekvensnummer";
     public static final String CASE_STATUS_ENG = "saksstatus";
     public static final String CASE_YEAR_ENG = "saksaar";
-    public static final String CLASS_ENG = "klasse";
+    public static final String CLASS_ENG = "class";
     public static final String CLASS_ID_ENG = "klasseID";
     public static final String CLASSIFICATION_BY_ENG = "gradertAv";
     public static final String CLASSIFICATION_DATE_ENG = "graderingsdato";
@@ -598,7 +594,7 @@ public final class N5ResourceMappings {
     public static final String CASE_SEQUENCE_NUMBER_ENG_OBJECT = "sakssekvensnummer";
     public static final String CASE_STATUS_ENG_OBJECT = "saksstatus";
     public static final String CASE_YEAR_ENG_OBJECT = "saksaar";
-    public static final String CLASS_ENG_OBJECT = "klasse";
+    public static final String CLASS_ENG_OBJECT = "Class";
     public static final String CLASS_ID_ENG_OBJECT = "klasseID";
     public static final String CLASSIFICATION_BY_ENG_OBJECT = "gradertAv";
     public static final String CLASSIFICATION_DATE_ENG_OBJECT = "graderingsdato";

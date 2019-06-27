@@ -1,8 +1,10 @@
 package nikita.common.model.noark5.v4.metadata;
 
 import nikita.common.config.Constants;
+import nikita.common.model.noark5.v4.NoarkEntity;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.common.util.exceptions.NikitaException;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,6 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -154,6 +157,13 @@ public class MetadataSuperClassBase
         return Constants.NOARK_METADATA_PATH;
     }
 
+    public void createReference(@NotNull NoarkEntity entity,
+                                @NotNull String referenceType) {
+        // I really should be overridden. Currently throwing an Exception if I
+        // am not overridden as nikita is unable to process this
+        throw new NikitaMalformedInputDataException("Error when trying to " +
+                "create a reference between entities");
+    }
 
     @Override
     public int compareTo(MetadataSuperClassBase otherEntity) {

@@ -1,6 +1,11 @@
 parser grammar ODataParser;
 
 options { tokenVocab=ODataLexer; }
+
+@header {
+package nikita.webapp.odata.base;
+}
+
 /*
 created by tsodring 25/05/2018
 Basic grammar to handle OData syntax for nikita. Note this grammar will require
@@ -15,8 +20,18 @@ totalseconds, based on a duration, but there are no duration fields in Noark
 
 
 // arkivstruktur/dokumentobjekt?$filter=contains(filnavn, '<20190803045988.RT234511@mail.redemash.com>')
-// arkivstruktur/dokumentbeskrivelse/12345/dokumentobjekt?$filter=contains(filnavn, '<20190803045988.RT234511@mail.redemash.com>')
+// arkivstruktur/dokumentbeskrivelse/cf8e1d0d-e94d-4d07-b5ed-46ba2df0465e/dokumentobjekt?$filter=contains(filnavn, '<20190803045988.RT234511@mail.redemash.com>')
 
+
+
+referenceStatement
+    :
+    // Handles examples like:
+    // odata/arkivstruktur/mappe/3fd16099-0d1d-4902-a42f-f44c1aaf431f/ny-kryssreferanse/$ref?$id=odata/arkivstruktur/basisregistrering/245ff5c7-c74b-4e92-89f5-78ab0ed6b50d
+    // arkivstruktur/registrering/cf8e1d0d-e94d-4d07-b5ed-46ba2df0465e/dokumentbeskrivelse/$ref?$id=arkivstruktur/dokumentbeskrivelse/1fa94a89-3550-470b-a220-92dd4d709044
+     ODATA_ARK SLASH entityName SLASH systemIdValue SLASH entityName SLASH REF ODATA_ARK
+     SLASH entityName SLASH  systemIdValue
+    ;
 
 odataQuery
     :
@@ -24,13 +39,15 @@ odataQuery
     ;
 
 entityBase
-    : ((entityName SLASH entityName) | entityName) QUESTION;
+    : (
+       (packageName SLASH entityName) |
+       (packageName SLASH entityName SLASH systemIdValue SLASH entityName)
+      ) QUESTION;
 
 odataCommand
     : ((filterStatement (AMPERSAND countStatement)?)
     |  topStatement | skipStatement
     |  (orderByClause (AMPERSAND countStatement)?))
-    |  referenceStatement
     ;
 
 predicate
@@ -43,20 +60,6 @@ filterStatement
     : FILTER filterExpression
     ;
 
-// Value associated with $id is an odata syntax with host / contextpath / api
-// http://localhost:49708/api/arkivstruktur/Dokumentbeskrivelse/1fa94a89-3550-470b-a220-92dd4d709044
-// Need (stringvalue /)+ uuidValue. Shold sort it!
-referenceStatement
-    : DOLLARID scheme SEPERATOR host (COLON port)?
-    ;
-
-scheme
-    : (HTTP | HTTPS);
-host
-    : stringValue (DOT stringValue)+;
-port
-    : integerValue;
-
 countStatement
     : COUNT integerValue
     ;
@@ -66,7 +69,7 @@ topStatement
     ;
 
 skipStatement
-    : SKIP integerValue
+    : SKIPRULE integerValue
     ;
 
 filterExpression
@@ -89,10 +92,12 @@ boolExpressionRight
     ;
 
 stringCompareExpression
-    : (CONTAINS | STARTSWITH | ENDSWITH)
-    '(' entityName ',' singleQuotedString ')'
+    : stringCompareCommand '(' entityName ',' singleQuotedString ')'
     ;
 
+stringCompareCommand
+    : CONTAINS | STARTSWITH | ENDSWITH
+    ;
 /*
 Given tittel= "Søknad om rehabilitering"
 
@@ -131,7 +136,7 @@ concatExpression
     ;
 
 comparisonExpression
-    : entityName comparisonOperator value
+    : attributeName comparisonOperator value
     ;
 /*
 $filter=year(DateTime) eq 2010
@@ -142,10 +147,12 @@ $filter=minute(DateTime) eq 42 // start at 0 or 1? Assuming 0
 $filter=second(DateTime) eq 55 // what is after 59? 60 or 0?
 */
 integerComparatorExpression
-    : (YEAR | MONTH | DAY | HOUR | MINUTE | SECOND )
-     '(' entityName  ')' comparisonOperator integerValue
+    : integerCompareCommand '(' entityName  ')' comparisonOperator integerValue
     ;
 
+integerCompareCommand
+    : YEAR | MONTH | DAY | HOUR | MINUTE | SECOND
+    ;
 /*
 http://docs.oasis-open.org/odata/odata/v5.0/cs01/part2-url-conventions/odata-v5.0-cs01-part2-url-conventions.html#_Toc362965324
 shows that the following can return a decimal value
@@ -155,23 +162,29 @@ $filter=floor(Decimal) eq 0
 $filter=ceiling(Decimal) eq 1
 */
 floatComparatorExpression
-    : (ROUND | FLOOR | CEILING)
-     '(' entityName  ')' comparisonOperator (floatValue | integerValue)
+    : floatCommand '(' attributeName ')' comparisonOperator
+      floatOrIntegerValue
+    ;
+
+floatCommand
+    : ROUND | FLOOR | CEILING
+    ;
+
+floatOrIntegerValue
+    : floatValue | integerValue
     ;
 
 orderByClause
     : ORDER BY orderByExpression (',' orderByExpression)*
     ;
 
-
 orderByExpression
-    : entityName order=(ASC | DESC)?
+    : attributeName orderAscDesc?
     ;
 
-nullNotnull
-    : NOT? (NULL_LITERAL | NULL_SPEC_LITERAL)
+orderAscDesc
+    : ASC | DESC
     ;
-
 /*
 Examples of comparisonOperator queries:
 
@@ -201,24 +214,33 @@ comparisonOperator
     ;
 
 logicalOperator
-    : AND | OR
+    :
+    AND | OR
     ;
 
 columnName
-    : ID
+    :
+    ID
     ;
 
 entityName
-    : ID
+    :
+    NOARK_ENTITY
+    ;
+
+attributeName
+    :
+    NOARK_ENTITY
+    ;
+
+packageName
+    :
+    NOARK_ENTITY
     ;
 
 value
     : ID | STRING_LITERAL
     ;
-stringValue
-    : ID
-    ;
-
 
 singleQuotedString
     :
@@ -234,5 +256,7 @@ floatValue
     ;
 
 systemIdValue
-    : UUID EOF
+    : UUID
     ;
+
+

@@ -59,8 +59,7 @@ public class FileHateoasSerializer
             jgen.writeStringField(REFERENCE_SERIES,
                     file.getReferenceSeries().getSystemId());
         }
-        //TODO: Add missing printCrossReference(jgen, file
-        // .getReferenceCrossReference());
+        printCrossReferences(jgen, file);
         printComment(jgen, file);
         printDisposal(jgen, file);
         printScreening(jgen, file);

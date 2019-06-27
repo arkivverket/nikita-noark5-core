@@ -46,14 +46,11 @@ public final class Constants {
     public static final String ROLE_GUEST = "GUEST";
 
     // Names of APIs that the core supports
-    public static final String IMPORT_API_PATH = "import-api";
     public static final String HATEOAS_API_PATH = "hateoas-api";
-    public static final String GUI_PATH = "gui";
 
     public static final String SLASH = "/";
     public static final String LEFT_PARENTHESIS = "{";
     public static final String RIGHT_PARENTHESIS = "}";
-    public static final String REF_ID = "$ref?$id=";
 
     public static final String ENTITY_ROOT_NAME_LIST = "results";
 
@@ -71,7 +68,6 @@ public final class Constants {
     public static final String NEW_DOCUMENT_DESCRIPTION = NEW + DASH + DOCUMENT_DESCRIPTION;
     public static final String NEW_DOCUMENT_OBJECT = NEW + DASH + DOCUMENT_OBJECT;
     public static final String NEW_REFERENCE_SERIES = NEW + DASH + REFERENCE_SERIES;
-
 
     public static final String PERSON = "person";
     public static final String UNIT = "enhet";
@@ -109,6 +105,19 @@ public final class Constants {
     public static final String NEW_SERIES_PRECURSOR = NEW + DASH + SERIES_PRECURSOR;
 
     public static final String DOCUMENT_FILE = "fil";
+
+    public static final String REFERENCE_TO = "referanseTil";
+    public static final String REFERENCE_TO_CLASS =
+            REFERENCE_TO + CLASS.substring(0, 1).toUpperCase() +
+                    CLASS.substring(1);
+
+    public static final String REFERENCE_TO_FILE =
+            REFERENCE_TO + FILE.substring(0, 1).toUpperCase() +
+                    FILE.substring(1);
+
+    public static final String REFERENCE_TO_REGISTRATION =
+            REFERENCE_TO + REGISTRATION.substring(0, 1).toUpperCase() +
+                    REGISTRATION.substring(1);
 
     // Create for new casehandling objects
     public static final String NEW_CASE_FILE = NEW + DASH + CASE_FILE;
@@ -207,14 +216,14 @@ public final class Constants {
     // namespace definition
     public static final String NOARK_CONFORMANCE_REL = "https://rel.arkivverket.no/noark5/v4/api/";
     public static final String NIKITA_CONFORMANCE_REL = "https://nikita.arkivlab.no/noark5/v4/";
+    public static final String NOARK_VERSION = "noark5v4";
 
     public static final String NOARK_FONDS_STRUCTURE_PATH = "arkivstruktur";
     public static final String NOARK_METADATA_PATH = "metadata";
     public static final String NOARK_ADMINISTRATION_PATH = "admin";
     public static final String NOARK_CASE_HANDLING_PATH = "sakarkiv";
     public static final String NOARK_LOGGING_PATH = "loggingogpsoring";
-    public static final String ODATA_PATH =
-            "/odata" + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH;
+    public static final String ODATA_PATH = "/odata";
     public static final int ODATA_OFFSET_LENGTH =
             (NOARK_FONDS_STRUCTURE_PATH + SLASH).length();
     public static final String LOGIN_REL_PATH = "login";
@@ -641,6 +650,7 @@ public final class Constants {
     public static final String TABLE_FONDS = "fonds";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
+    public static final String TABLE_CROSS_REFERENCE = "cross_reference";
 
     public static final String TABLE_CASE_FILE_SEQUENCE = "sequence_generator";
     public static final String TABLE_NIKITA_ADMINISTRATIVE_UNIT =
@@ -714,6 +724,8 @@ public final class Constants {
     public static final String PRIMARY_KEY_CLASSIFIED = "pk_classified_id";
     public static final String PRIMARY_KEY_DISPOSAL = "pk_disposal_id";
     public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";
+    public static final String PRIMARY_CROSS_REFERENCE =
+            "pk_cross_reference_id";
 
     public static final String PRIMARY_KEY_USER = "pk_user_id";
     public static final String PRIMARY_KEY_RECORD = "pk_record_id";

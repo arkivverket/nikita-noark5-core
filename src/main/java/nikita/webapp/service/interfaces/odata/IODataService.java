@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 public interface IODataService {
 
@@ -15,4 +16,17 @@ public interface IODataService {
     ResponseEntity<Count>
     processODataQueryDelete(HttpServletRequest request)
             throws Exception;
+
+    ResponseEntity<HateoasNoarkObject>
+    processODataRefRequestUpdate(HttpServletRequest request)
+            throws UnsupportedEncodingException;
+
+    ResponseEntity<HateoasNoarkObject>
+    processODataRefRequestCreate(HttpServletRequest request)
+            throws UnsupportedEncodingException;
+
+    ResponseEntity<HateoasNoarkObject>
+    processODataRefRequestDelete(HttpServletRequest request)
+            throws UnsupportedEncodingException;
+
 }

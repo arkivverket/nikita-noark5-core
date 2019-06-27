@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v4;
 
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkConcurrencyException;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -12,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -112,7 +114,6 @@ public class NoarkEntity
 
     @Override
     public void setVersion(Long version) {
-
         if (!this.version.equals(version)) {
             throw new NoarkConcurrencyException(
                     "Concurrency Exception. Old version [" + this
@@ -141,6 +142,16 @@ public class NoarkEntity
     // Most entities belong to arkivstruktur. These entities pick the value up here
     public String getFunctionalTypeName() {
         return Constants.NOARK_FONDS_STRUCTURE_PATH;
+    }
+
+    @Override
+    public void createReference(
+            @NotNull NoarkEntity entity,
+            @NotNull String referenceType) {
+        // I really should be overridden. Currently throwing an Exception if I
+        // am not overriden as nikita is unable to process this
+        throw new NikitaMalformedInputDataException("Error when trying to " +
+                "create a reference between entities");
     }
 
     //@Override

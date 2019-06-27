@@ -23,7 +23,7 @@ FILTER:                              '$filter=';
 TOP:                                 '$top=';
 SKIPRULE:                            '$skip='; // SKIP is a reserved word
 ORDERBY:                             '$orderby=';
-REF:                                 '$ref=';
+REF:                                 '$ref?$id=';
 EXPAND:                              '$expand=';
 COUNT:                               '$count=';
 SELECT:                              '$select=';
@@ -79,7 +79,6 @@ AND:                                 'and';
 NOT:                                 'not';
 
 SEPERATOR:                           '://';
-COLON:                               ':';
 HTTP:                                'http';
 HTTPS:                               'https';
 //DOT:                                 '.';
@@ -96,11 +95,12 @@ COLON_SYMB:                          ':';
 AMPERSAND:                           '&';
 NULL_LITERAL:                        'NULL';
 NULL_SPEC_LITERAL:                   '\\' 'N';
-
 DOT:                                 '.';
+SLASH:                               '/';
 
-//UUID: BLOCK BLOCK '-' BLOCK '-' BLOCK '-' BLOCK '-' BLOCK BLOCK BLOCK;
+UUID: BLOCK BLOCK '-' BLOCK '-' BLOCK '-' BLOCK '-' BLOCK BLOCK BLOCK;
 
+NOARK_ENTITY:                        ID_LITERAL+ '-'? ID_LITERAL*;
 
 INTEGER:                             DEC_DIGIT+;
 FLOAT:                               DEC_DIGIT+ DOT DEC_DIGIT+;
@@ -110,6 +110,15 @@ STRING_LITERAL:                      DQUOTA_STRING | SQUOTA_STRING;
 DECIMAL_LITERAL:                     DEC_DIGIT+;
 HEXADECIMAL_LITERAL:                 'X' '\'' (HEX_DIGIT HEX_DIGIT)+ '\''
                                      | '0X' HEX_DIGIT+;
+
+ODATA_ARK:                           '/odata/arkivstruktur';
+HEX
+   : ('%' [a-fA-F0-9] [a-fA-F0-9]) +
+   ;
+
+STRING
+   : ([a-zA-Z~0-9] | HEX) ([a-zA-Z0-9.-] | HEX)*
+   ;
 
 fragment EXPONENT_NUM_PART:          'E' [-+]? DEC_DIGIT+;
 fragment ID_LITERAL:                 [a-zA-Z_$0-9]*?[a-zA-Z_$]+?[a-zA-Z_$0-9]*;

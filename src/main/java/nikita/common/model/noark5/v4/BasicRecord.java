@@ -29,7 +29,8 @@ import java.util.List;
 @JsonDeserialize(using = BasicRecordDeserializer.class)
 @HateoasPacker(using = BasicRecordHateoasHandler.class)
 @HateoasObject(using = BasicRecordHateoas.class)
-public class BasicRecord extends Record implements IDocumentMedium, INoarkTitleDescriptionEntity,
+public class BasicRecord extends Record
+        implements IDocumentMedium, INoarkTitleDescriptionEntity,
         IStorageLocation, IKeyword, IComment, ICrossReference, IAuthor {
 
     private static final long serialVersionUID = 1L;
@@ -104,9 +105,11 @@ public class BasicRecord extends Record implements IDocumentMedium, INoarkTitleD
             referencedColumnName = "pk_record_id"),
             inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id", referencedColumnName = "pk_comment_id"))
     protected List<Comment> referenceComment = new ArrayList<>();
+
     // Links to CrossReference
     @OneToMany(mappedBy = "referenceBasicRecord")
     protected List<CrossReference> referenceCrossReference;
+
     // Used for soft delete.
     @Column(name = "deleted")
     @Audited
@@ -214,6 +217,11 @@ public class BasicRecord extends Record implements IDocumentMedium, INoarkTitleD
 
     public void setReferenceCrossReference(List<CrossReference> referenceCrossReference) {
         this.referenceCrossReference = referenceCrossReference;
+    }
+
+    @Override
+    public void addReferenceCrossReference(CrossReference crossReference) {
+        this.referenceCrossReference.add(crossReference);
     }
 
     @Override

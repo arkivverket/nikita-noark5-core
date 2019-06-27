@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v4.hateoas.Link;
 import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 import nikita.webapp.security.IAuthorisation;
+import nikita.webapp.util.AddressComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ public class HateoasHandler implements IHateoasHandler {
             LoggerFactory.getLogger(HateoasHandler.class);
 
     protected IAuthorisation authorisation;
+    private AddressComponent addressComponent;
 
     @Value("${nikita.server.hateoas.publicAddress}")
     protected String publicAddress;

@@ -4,11 +4,9 @@ import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,16 +35,31 @@ public class HQLStatementBuilder {
     private final StringBuilder select;
     private final ArrayList<String> whereList = new ArrayList<>();
     private final Map<String, String> orderByMap = new HashMap<>();
+    private final Map<String, String> startsWithMap = new HashMap<>();
+    private final Map<String, String> endsWithMap = new HashMap<>();
+    private final Map<String, String> containsMap = new HashMap<>();
+
     // Setting a hard limit of 1000 unless overridden
     private final AtomicInteger limitHowMany = new AtomicInteger(1000);
     // Always start at offset 0 unless overridden
     private final AtomicInteger limitOffset = new AtomicInteger(0);
-    private String parentId = "";
+    private String parentSystemId = "";
 
-    public HQLStatementBuilder(String command) {
+    public HQLStatementBuilder() {
         select = new StringBuilder();
-        if (null != command) {
-            select.append(command);
+    }
+
+    /**
+     * Allows you to specify if the HQL statement you want to build is a
+     * 'delete' statement.Hibernate doesn't seem to want 'select' here. Only
+     * a delete is required if you intend to delete.
+     *
+     * @param dmlStatementType can be delete, select is not required
+     */
+    public HQLStatementBuilder(String dmlStatementType) {
+        select = new StringBuilder();
+        if (null != dmlStatementType) {
+            select.append(dmlStatementType);
         }
     }
 
@@ -60,36 +73,25 @@ public class HQLStatementBuilder {
      * <p>
      * gets converted to:
      * <p>
-     * where ownedBy ='admin@example.com' and title LIKE '%Title%
+     * where title LIKE '%Title%
      *
      * @param entity
-     * @param ownerColumn
-     * @param loggedInUser
      */
-    public void addSelect(String entity, String ownerColumn, String
-            loggedInUser) {
+    public void addSelect(String entity) {
         select.append(" from ");
         select.append(entity);
-        select.append(" where ");
-        select.append(ownerColumn);
-        select.append(" ='");
-        select.append(loggedInUser);
         select.append("'");
+        logger.info(select.toString());
     }
 
-    public void addSelectWithForeignKey
-            (String parentResource, String resource, String ownerColumn,
-             String loggedInUser) {
+    public void addSelectWithForeignKey(String parentEntity, String entity) {
         select.append(" from ");
-        select.append(getNameObject(resource));
+        select.append(getNameObject(entity));
         select.append(" where reference");
-        select.append(getNameObject(parentResource));
+        select.append(getNameObject(parentEntity));
         select.append(" in (select id from ");
-        select.append(getNameObject(parentResource));
-        select.append(" where systemId = :parentId ) and ");
-        select.append(ownerColumn);
-        select.append(" = '");
-        select.append(loggedInUser);
+        select.append(getNameObject(parentEntity));
+        select.append(" where systemId = :parentSystemId)");
         select.append("'");
         logger.info(select.toString());
     }
@@ -101,7 +103,7 @@ public class HQLStatementBuilder {
      * <p>
      * attribute = tittel
      * comparator = eq
-     * value = 'Oppførring av bygg på eksempelvei 1'
+     * value = 'Oppføring av bygg på eksempelvei 1'
      *
      * @param attribute  Noark attribute in english e.g. title (must be
      *                   translated before passing in)
@@ -112,6 +114,27 @@ public class HQLStatementBuilder {
     public void addEqualsWhere(String attribute, String comparator,
                                String value) {
         whereList.add(attribute + translateComparator(comparator) + value);
+    }
+
+    public void addStartsWith(String attribute, String value) {
+        String parameter = ":startsWithParameter_" + startsWithMap.size();
+        startsWithMap.put(parameter, value);
+        whereList.add(" " + getNameDatabase(attribute) + " like " +
+                parameter + " ");
+    }
+
+    public void addContains(String attribute, String value) {
+        String parameter = ":containsParameter_" + containsMap.size();
+        containsMap.put(parameter, value);
+        whereList.add(" " + getNameDatabase(attribute) + " like " +
+                parameter + " ");
+    }
+
+    public void addEndsWith(String attribute, String value) {
+        String parameter = ":endsWithParameter_" + endsWithMap.size();
+        endsWithMap.put(parameter, value);
+        whereList.add(" " + getNameDatabase(attribute) + " like " +
+                parameter + " ");
     }
 
     public void addWhere(String where) {
@@ -145,8 +168,26 @@ public class HQLStatementBuilder {
 
         hqlStatement.append(" ");
         Query query = session.createQuery(hqlStatement.toString());
-        if (!parentId.equals("")) {
-            query.setParameter("parentId", parentId);
+        if (!parentSystemId.equals("")) {
+            query.setParameter("parentId", parentSystemId);
+        }
+
+        // Resolve all startsWith parameters
+        for (Map.Entry entry : startsWithMap.entrySet()) {
+            query.setParameter(entry.getKey().toString(),
+                    entry.getValue() + "%");
+        }
+
+        // Resolve all contains parameters
+        for (Map.Entry entry : containsMap.entrySet()) {
+            query.setParameter(entry.getKey().toString(),
+                    "%" + entry.getValue() + "%");
+        }
+
+        // Resolve all endsWith parameters
+        for (Map.Entry entry : endsWithMap.entrySet()) {
+            query.setParameter(entry.getKey().toString(),
+                    "%" + entry.getValue());
         }
 
         // take care of the orderBy part
@@ -168,10 +209,26 @@ public class HQLStatementBuilder {
         return query;
     }
 
-    public void setParentIdPrimaryKey(String primaryKey) {
-        parentId = primaryKey;
+    /**
+     * To avoid potential sql injection problems, the systemId is added to the
+     * query using query.setParameter(). This means we need the value at a
+     * different time than is nice, code wise, when parsing. So the value is
+     * added here. Note: this really is done to avoid analysis tools
+     * falsely telling us that we have an sql injection problem. If the value
+     * here isn't a UUID, it won't get parsed and it won't end up being
+     * handled in this class.
+     *
+     * @param systemId
+     */
+    public void setParentIdPrimaryKey(String systemId) {
+        parentSystemId = systemId;
     }
 
+    public void referenceStatement(
+            String fromEntity, String fromSystemId, String entity,
+            String toEntity, String toSystemId) {
+
+    }
 
     /**
      * getNameDatabase
@@ -242,7 +299,6 @@ public class HQLStatementBuilder {
      * @param comparator The OData comparator
      * @return comparator used in HQL
      */
-
     private String translateComparator(String comparator)
             throws NikitaMalformedInputDataException {
 
@@ -264,4 +320,6 @@ public class HQLStatementBuilder {
                 "Unrecognised comparator used in OData query (" +
                         comparator + ")");
     }
+
+
 }

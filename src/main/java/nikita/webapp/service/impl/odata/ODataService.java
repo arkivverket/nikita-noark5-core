@@ -2,18 +2,21 @@ package nikita.webapp.service.impl.odata;
 
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v4.NoarkEntity;
-import nikita.common.model.noark5.v4.NoarkGeneralEntity;
 import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.odata.NikitaODataToHQLWalker;
-import nikita.webapp.odata.ODataLexer;
-import nikita.webapp.odata.ODataParser;
+import nikita.webapp.odata.NikitaObjectWorker;
+import nikita.webapp.odata.ODataRefHandler;
+import nikita.webapp.odata.base.ODataLexer;
+import nikita.webapp.odata.base.ODataParser;
+import nikita.webapp.odata.model.Ref;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.odata.IODataService;
+import nikita.webapp.spring.ODataRedirectFilter;
+import nikita.webapp.util.AddressComponent;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import nikita.webapp.web.controller.hateoas.odata.ODataController;
-import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -21,8 +24,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +33,15 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.net.URLDecoder.decode;
 import static nikita.common.config.Constants.REGEX_UUID;
+import static nikita.common.config.ODataConstants.DOLLAR_ID;
+import static nikita.common.config.ODataConstants.ODATA_DELETE_REF;
+import static org.antlr.v4.runtime.CharStreams.fromString;
 import static org.apache.commons.lang3.CharEncoding.UTF_8;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -47,19 +53,21 @@ public class ODataService
 
     private final Logger logger =
             LoggerFactory.getLogger(ODataController.class);
+
     private final Pattern pairRegex = Pattern.compile(REGEX_UUID);
-
     private final EntityManager entityManager;
+    private final AddressComponent address;
+    private ODataRefHandler refHandler;
+    private NikitaObjectWorker objectWorker;
 
-    @Value("${nikita.server.hateoas.publicAddress}")
-    protected String publicAddress;
-
-    @Value("${server.servlet.context-path}")
-    protected String contextPath;
-
-
-    public ODataService(EntityManager entityManager) {
+    public ODataService(EntityManager entityManager,
+                        AddressComponent address,
+                        ODataRefHandler refHandler,
+                        NikitaObjectWorker objectWorker) {
         this.entityManager = entityManager;
+        this.address = address;
+        this.refHandler = refHandler;
+        this.objectWorker = objectWorker;
     }
 
     @Override
@@ -76,8 +84,8 @@ public class ODataService
     @Override
     public ResponseEntity<HateoasNoarkObject> processODataQueryGet
             (HttpServletRequest request) throws Exception {
-        Query query = convertODataToHQL(request, null);
-        return packAsHateoasObject(query.getResultList());
+        return packAsHateoasObject(convertODataToHQL(request,
+                null).getResultList());
     }
 
     // Internal helper methods
@@ -100,8 +108,8 @@ public class ODataService
                     hateoasObject.using().getDeclaredConstructor(List.class)
                             .newInstance(list);
             handler = packer.using().getConstructor().newInstance();
-            handler.setPublicAddress(publicAddress);
-            handler.setContextPath(contextPath);
+            handler.setPublicAddress(address.getAddress());
+            handler.setContextPath(address.getContextPath());
         } else {
             noarkObject = new HateoasNoarkObject();
             handler = new HateoasHandler();
@@ -114,38 +122,139 @@ public class ODataService
 
     /**
      * Convert OData query parameters to a HQL Query.
+     * <p>
+     * Note, this appends an and to the OData query identifying the logged in
+     * user
      *
      * @param request
+     * @param dmlStatementType value delete, if HQL statement is delete,
+     *                         otherwise null
      * @return
      * @throws UnsupportedEncodingException
      */
     private Query convertODataToHQL(@NotNull HttpServletRequest request,
-                                    String command)
+                                    String dmlStatementType)
             throws UnsupportedEncodingException {
 
         StringBuffer originalRequest = request.getRequestURL();
         originalRequest.append("?");
-        originalRequest.append(
-                URLDecoder.decode(request.getQueryString(), UTF_8));
+        originalRequest.append(decode(request.getQueryString(), UTF_8));
+        // Add owned by to the query as first parameter
+        addOwnedBy(originalRequest);
+        int start = originalRequest.indexOf("/odata/");
+        String odataCommand = originalRequest.substring(start);
+        return convertODataToHQL(odataCommand, dmlStatementType);
+    }
 
+    private void addOwnedBy(StringBuffer originalRequest) {
+        int start =
+                originalRequest.lastIndexOf("$filter=") + "$filter=".length();
+        originalRequest.insert(start, " owned_by eq " + getUser() + " and ");
+    }
+
+    @Override
+    public ResponseEntity<HateoasNoarkObject> processODataRefRequestUpdate
+            (HttpServletRequest request) throws UnsupportedEncodingException {
+        String url = ((ODataRedirectFilter.ODataFilteredRequest) request).
+                getURLSanitised();
+        String queryString = request.getQueryString();
+        logger.info("Request has following query string: " + queryString);
+        logger.info("Request has following URL: " + url);
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<HateoasNoarkObject> processODataRefRequestCreate
+            (HttpServletRequest request) throws UnsupportedEncodingException {
+
+        String url = decode(((ODataRedirectFilter.ODataFilteredRequest) request).
+                getURLSanitised(), UTF_8);
+        String queryString = request.getQueryString();
+        logger.info("Request has following query string: " + queryString);
+        logger.info("Request has following URL: " + url);
+
+        Ref ref = retrieveRefValues(url + "?" + DOLLAR_ID + "=" + queryString);
+        NoarkEntity fromEntity = refHandler.getFromEntity(ref);
+        NoarkEntity toEntity = refHandler.getToEntity(ref);
+        objectWorker.handleCreateReference(fromEntity, toEntity, ref
+                .getEntity());
+        logger.info(ref.toString());
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<HateoasNoarkObject> processODataRefRequestDelete
+            (HttpServletRequest request) throws UnsupportedEncodingException {
+
+        String url = decode(((ODataRedirectFilter.ODataFilteredRequest) request).
+                getURLSanitised(), UTF_8);
+        String queryString = request.getQueryString();
+        logger.info("Request has following query string: " + queryString);
+        logger.info("Request has following URL: " + url);
+        Query query = convertODataRefToHQL(url + "?id=" + queryString,
+                ODATA_DELETE_REF);
+        return null;
+    }
+
+    public Query convertODataToHQL(String request, String dmlStatementType) {
         ODataLexer lexer = new ODataLexer(
-                CharStreams.fromString(originalRequest.toString()));
+                fromString(request));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ODataParser parser = new ODataParser(tokens);
-        ParseTree tree = parser.odataURL();
+        ParseTree tree = parser.odataQuery();
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // Make the HQL Statement
-        NikitaODataToHQLWalker hqlWalker = new NikitaODataToHQLWalker(command);
+        NikitaODataToHQLWalker hqlWalker = new NikitaODataToHQLWalker(
+                dmlStatementType);
         walker.walk(hqlWalker, tree);
 
-        Matcher matcher = pairRegex.matcher(originalRequest);
+        Matcher matcher = pairRegex.matcher(request);
         // This is a OData query on a child e.g.
         // arkivdel/8628ae60-7d50-474e-82e0-74a348a99647/mappe?
         if (matcher.find()) {
             hqlWalker.setParentIdPrimaryKey(matcher.group());
         }
-
         return hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
+    }
+
+    public Ref retrieveRefValues(String request) {
+        NikitaODataToHQLWalker hqlWalker = getWalker(request);
+        return hqlWalker.getRef();
+    }
+
+    private NikitaODataToHQLWalker getWalker(String request) {
+        CommonTokenStream tokens =
+                new CommonTokenStream(new ODataLexer(fromString(request)));
+        ODataParser parser = new ODataParser(tokens);
+        ParseTreeWalker walker = new ParseTreeWalker();
+        // Make the HQL Statement
+        NikitaODataToHQLWalker hqlWalker = new NikitaODataToHQLWalker();
+        walker.walk(hqlWalker, parser.referenceStatement());
+        return hqlWalker;
+    }
+
+    public Query convertODataRefToHQL(String request, String dmlStatementType) {
+        CommonTokenStream tokens =
+                new CommonTokenStream(new ODataLexer(fromString(request)));
+        ODataParser parser = new ODataParser(tokens);
+        ParseTreeWalker walker = new ParseTreeWalker();
+
+        // Make the HQL Statement
+        NikitaODataToHQLWalker hqlWalker = new NikitaODataToHQLWalker(
+                dmlStatementType);
+        walker.walk(hqlWalker, parser.referenceStatement());
+
+        Matcher matcher = pairRegex.matcher(request);
+        // This is a OData query on a child e.g.
+        // arkivdel/8628ae60-7d50-474e-82e0-74a348a99647/mappe?
+        if (matcher.find()) {
+            hqlWalker.setParentIdPrimaryKey(matcher.group());
+        }
+        return hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
+    }
+
+    protected String getUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

@@ -1,8 +1,14 @@
 package nikita.webapp.odata;
 
 import nikita.common.util.CommonUtils;
-import nikita.common.util.exceptions.NikitaMisconfigurationException;
-import org.springframework.security.core.context.SecurityContextHolder;
+import nikita.webapp.odata.base.ODataParser;
+import nikita.webapp.odata.base.ODataParserBaseListener;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static java.lang.Integer.parseInt;
+import static nikita.webapp.odata.base.ODataParser.*;
 
 /**
  * Extending ODataBaseListener to capture the required events for processing
@@ -33,8 +39,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 
 public abstract class NikitaODataWalker
-        extends ODataBaseListener
+        extends ODataParserBaseListener
         implements IODataWalker {
+
+    private final Logger logger =
+            LoggerFactory.getLogger(NikitaODataWalker.class);
 
     /**
      * This is the part that picks up the start of the OData command of a
@@ -55,202 +64,176 @@ public abstract class NikitaODataWalker
     @Override
     public void enterOdataCommand(ODataParser.OdataCommandContext ctx) {
         super.enterOdataCommand(ctx);
-        System.out.println("Entering enterOdataCommand. Found [" +
+        logger.debug("Entering enterOdataCommand. Found [" +
                 ctx.getText() + "]");
         // processEnterOdataCommand(ctx);
     }
 
     /**
-     * enterResource
+     * enterStringCompareExpression
+     * <p>*
+     * Used by sub-classes to convert the following OData queries to relevant
+     * queries:
+     * - contains
+     * - startswith
+     * - endswith
      * <p>
-     * Used by sub-classes to identify the entity that is being retrieved in a
-     * OData URL. In the following example:
+     * arkiv?$filter=contains(tittel, 'hello')
+     * arkiv?$filter=startsWith(tittel, 'hello')
+     * arkiv?$filter=endsWith(tittel, 'hello')
      * <p>
-     * [contextPath][api]/arkivstruktur/arkiv?$filter=contains(tittel, 'hello')
-     * <p>
-     * the resource is arkiv. We are searching the arkiv table.
-     * <p>
-     * Note, there is a "hacked-in" hardcoded value of admin user for ownedBy.
-     * If the security context is active, then the code should pick up the
-     * current logged-in user. Note that this will give us problems when
-     * trying to retrieve stuff based on group ownership rather than user
-     * ownership, but we are still exploring OData syntax processing so the
-     * topic of group ownership has to come later.
-     *
-     * @param ctx ODataParser.ResourceContext ctx
-     */
-    /*@Override
-    public void enterResource(ODataParser.ResourceContext ctx) {
-        super.enterResource(ctx);
-        System.out.println("Entering enterResource. Found [" +
-                ctx.getText() + "]");
-        // This is temporary while developing / testing outside of a spring
-        // context
-        String loggedInUser = "admin";
-        if (SecurityContextHolder.getContext() != null &&
-                SecurityContextHolder.getContext().
-                        getAuthentication() != null) {
-            loggedInUser = SecurityContextHolder.getContext().
-                    getAuthentication().getName();
-        }
-
-        String entity = ctx.getText();
-        processResource(entity, loggedInUser);
-    }
-*/
-    /**
-     * enterContains
-     * <p>
-     * Used by sub-classes to convert a OData 'contains' to a SQL style LIKE.
-     * In the following example:
-     * <p>
-     * [contextPath][api]/arkivstruktur/arkiv?$filter=contains(tittel, 'hello')
-     * <p>
-     * The contains(tittel, 'hello') is parsed and the attribute (in this case
-     * 'tittel') and value (in this case) 'hello' are identified and passed
+     * The string comparison expression contains(tittel, 'hello') is parsed and
+     * the command e.g. startsWith and the attribute (in this case  'tittel')
+     * and value (in this case) 'hello' are identified and passed
      * to the calling sub-class that will decide how it should be handled
      * according to their syntax.
      *
-     * @param ctx ODataParser.ContainsContext
+     * @param ctx The StringCompareExpressionContext
      */
     @Override
-    public void enterContains(ODataParser.ContainsContext ctx) {
-        super.enterContains(ctx);
-        System.out.println("Entering enterContains. Found [" +
+    public void enterStringCompareExpression(
+            StringCompareExpressionContext ctx) {
+        super.enterStringCompareExpression(ctx);
+        logger.debug("Entering enterStringCompareExpression. Found [" +
                 ctx.getText() + "]");
-        String attribute = ctx.getChild(
-                ODataParser.AttributeContext.class, 0).getText();
-        String value = ctx.getChild(
-                ODataParser.ValueContext.class, 0).getText();
-
-        processContains(attribute, value);
+        processStringCompare(
+                getValue(ctx, StringCompareCommandContext.class),
+                getValue(ctx, EntityNameContext.class),
+                getValue(ctx, SingleQuotedStringContext.class));
     }
 
     /**
-     * enterStartsWith
+     * enterIntegerComparatorExpression
      * <p>
-     * Used by sub-classes to convert a OData 'startsWith' to a SQL style LIKE.
-     * In the following example:
+     * Used by sub-classes to convert the following OData queries to relevant
+     * queries:
      * <p>
-     * [contextPath][api]/arkivstruktur/arkiv?$filter=startsWith(tittel,'hello')
-     * <p>
-     * The startsWith(tittel, 'hello') is parsed and the attribute (in this case
-     * 'tittel') and value (in this case) 'hello' are identified and passed
-     * to the calling sub-class that will decide how it should be handled
-     * according to their syntax.
+     * $filter=year(DateTime) eq 2010
+     * $filter=month(DateTime) eq 2 // February (month of year)
+     * $filter=day(DateTime) eq 21 // 21st day of the month
+     * $filter=hour(DateTime) eq 1 // start at 0 or 1? Assuming 0
+     * $filter=minute(DateTime) eq 42 // start at 0 or 1? Assuming 0
+     * $filter=second(DateTime) eq 55 // what is after 59? 60 or 0?
      *
-     * @param ctx ODataParser.StartsWithContext
+     * @param ctx
      */
     @Override
-    public void enterStartsWith(ODataParser.StartsWithContext ctx) {
-        super.enterStartsWith(ctx);
-        System.out.println("Entering enterStartsWith. Found [" +
+    public void enterIntegerComparatorExpression(
+            IntegerComparatorExpressionContext ctx) {
+        super.enterIntegerComparatorExpression(ctx);
+        logger.debug("Entering enterIntegerComparatorExpression. Found [" +
                 ctx.getText() + "]");
-        String attribute = ctx.getChild(
-                ODataParser.AttributeContext.class, 0).getText();
-        String value = ctx.getChild(
-                ODataParser.ValueContext.class, 0).getText();
+        processIntegerCompare(
+                getValue(ctx, IntegerCompareCommandContext.class),
+                getValue(ctx, EntityNameContext.class),
+                getValue(ctx, ComparisonOperatorContext.class),
+                getValue(ctx, IntegerValueContext.class));
+    }
 
-        processStartsWith(attribute, value);
+    /**
+     * enterFloatComparatorExpression
+     * <p>
+     * Used by sub-classes to convert the following OData queries to relevant
+     * queries:
+     * <p>
+     * $filter=round(Decimal) eq 100
+     * $filter=floor(Decimal) eq 0
+     * $filter=ceiling(Decimal) eq 1
+     *
+     * @param ctx
+     */
+    @Override
+    public void enterFloatComparatorExpression(
+            FloatComparatorExpressionContext ctx) {
+        super.enterFloatComparatorExpression(ctx);
+        logger.debug("Entering exitIntegerComparatorExpression. Found [" +
+                ctx.getText() + "]");
+        processIntegerCompare(
+                getValue(ctx, FloatCommandContext.class),
+                getValue(ctx, AttributeNameContext.class),
+                getValue(ctx, ComparisonOperatorContext.class),
+                getValue(ctx, FloatOrIntegerValueContext.class));
     }
 
     @Override
-    public void enterComparatorCommand(ODataParser.ComparatorCommandContext ctx) {
-        super.enterComparatorCommand(ctx);
-
-        System.out.println("Entering filter. Found [" +
+    public void enterComparisonExpression(ComparisonExpressionContext ctx) {
+        super.enterComparisonExpression(ctx);
+        logger.debug("Entering enterComparisonExpression. Found [" +
                 ctx.getText() + "]");
-        String attribute = ctx.getChild(
-                ODataParser.AttributeContext.class, 0).getText();
-        String comparator = ctx.getChild(
-                ODataParser.ComparatorContext.class, 0).getText();
-        String value = ctx.getChild(
-                ODataParser.ValueContext.class, 0).getText();
-
-        processComparatorCommand(attribute, comparator, value);
+        processComparatorCommand(
+                getValue(ctx, AttributeNameContext.class),
+                getValue(ctx, ComparisonOperatorContext.class),
+                getValue(ctx, ValueContext.class));
     }
 
     @Override
-    public void enterTop(ODataParser.TopContext ctx) {
-        super.enterTop(ctx);
-        System.out.println("Entering enterTop. Found [" +
+    public void enterTopStatement(TopStatementContext ctx) {
+        super.enterTopStatement(ctx);
+        logger.debug("Entering enterTopStatement. Found [" +
                 ctx.getText() + "]");
-        String topAsString = ctx.getChild(
-                ODataParser.NumberContext.class, 0).getText();
-
-        Integer top = Integer.parseInt(topAsString);
-        // TODO: Check it's a number, throw exception otherwise
-        processTopCommand(top);
+        processTopCommand(parseInt(getValue(ctx, IntegerValueContext.class)));
     }
 
     @Override
-    public void enterSkip(ODataParser.SkipContext ctx) {
-        super.enterSkip(ctx);
-
-        String skipAsString = ctx.getChild(
-                ODataParser.NumberContext.class, 0).getText();
-
-        Integer skip = Integer.parseInt(skipAsString);
-        // TODO: Check it's a number, throw exception otherwise
-        processSkipCommand(skip);
+    public void enterSkipStatement(SkipStatementContext ctx) {
+        super.enterSkipStatement(ctx);
+        logger.debug("Entering enterSkipStatement. Found [" +
+                ctx.getText() + "]");
+        processSkipCommand(parseInt(getValue(ctx, IntegerValueContext.class)));
     }
 
     @Override
-    public void enterOrderby(ODataParser.OrderbyContext ctx) {
-        super.enterOrderby(ctx);
-
-        String attribute = ctx.getChild(
-                ODataParser.AttributeContext.class, 0).getText();
-        String sortOrder = ctx.getChild(
-                ODataParser.SortOrderContext.class, 0).getText();
-
-        processOrderByCommand(attribute, sortOrder);
+    public void enterOrderByClause(OrderByClauseContext ctx) {
+        super.enterOrderByClause(ctx);
+        logger.debug("Entering enterOrderByClause. Found [" +
+                ctx.getText() + "]");
+        processOrderByCommand(
+                getValue(ctx, AttributeNameContext.class),
+                getValue(ctx, OrderAscDescContext.class));
     }
 
     @Override
-    public void enterNikitaObjects(ODataParser.NikitaObjectsContext ctx) {
-        super.enterNikitaObjects(ctx);
-        System.out.println("Entering enterNikitaObjects. Found [" +
+    public void enterEntityBase(EntityBaseContext ctx) {
+        super.enterEntityBase(ctx);
+        logger.debug("Entering enterEntityBase. Found [" +
                 ctx.getText() + "]");
-        String parentResource = null;
-        String systemId = null;
-
-        if (null != ctx.getChild(ODataParser.ParentResourceContext.class, 0)) {
-            parentResource = ctx.getChild(
-                    ODataParser.ParentResourceContext.class, 0).getText();
+        // Process a join filter example e.g.
+        // arkivstruktur/dokumentbeskrivelse/cf8e1d0d-e94d-4d07-b5ed
+        // -46ba2df0465e/dokumentobjekt?$filter=contains(filnavn, 'fubar')
+        if (null != ctx.getChild(SystemIdValueContext.class, 0)) {
+            processEntityBase(
+                    getValue(ctx, EntityNameContext.class),
+                    getValue(ctx, EntityNameContext.class, 1),
+                    getValue(ctx, SystemIdValueContext.class));
         }
-
-        String resource = ctx.getChild(
-                ODataParser.ResourceContext.class, 0).getText();
-
-        if (null != ctx.getChild(
-                ODataParser.SystemIdContext.class, 0)) {
-            systemId = ctx.getChild(
-                    ODataParser.SystemIdContext.class, 0).getText();
+        // Process a basic filter example e.g.
+        // arkivstruktur/dokumentobjekt?$filter=contains(filnavn, 'fubar')
+        else {
+            processEntityBase(getValue(ctx, EntityNameContext.class));
         }
+    }
 
-        System.out.println("Entering enterResource. Found [" +
-                ctx.getText() + "]");
-        String loggedInUser = null;
-        if (SecurityContextHolder.getContext() != null &&
-                SecurityContextHolder.getContext().
-                        getAuthentication() != null) {
-            loggedInUser = SecurityContextHolder.getContext().
-                    getAuthentication().getName();
-        }
+    @Override
+    public void enterReferenceStatement(ReferenceStatementContext ctx) {
+        super.enterReferenceStatement(ctx);
+        processReferenceStatement(
+                getValue(ctx, EntityNameContext.class),
+                getValue(ctx, SystemIdValueContext.class),
+                getValue(ctx, EntityNameContext.class, 1),
+                getValue(ctx, EntityNameContext.class, 2),
+                getValue(ctx, SystemIdValueContext.class, 1));
+    }
 
-        if (loggedInUser == null) {
-            throw new NikitaMisconfigurationException(
-                    "Internal error when parsing OData syntax. Cannot find " +
-                            "user.");
-        }
 
-        if (parentResource != null && systemId != null) {
-            processNikitaObjects(parentResource, resource, systemId,
-                    loggedInUser);
-        } else {
-            processResource(resource, loggedInUser);
-        }
+    @Override
+    public void processEntityBase(String entity) {
+
+    }
+
+    @Override
+    public void processEntityBase(String parentEntity, String entity,
+                                  String systemId) {
+
     }
 
     /**
@@ -308,5 +291,13 @@ public abstract class NikitaODataWalker
             return norwegianName;
         else
             return englishName;
+    }
+
+    private String getValue(ParserRuleContext context, Class klass) {
+        return context.getChild(klass, 0).getText();
+    }
+
+    private String getValue(ParserRuleContext context, Class klass, int count) {
+        return context.getChild(klass, count).getText();
     }
 }

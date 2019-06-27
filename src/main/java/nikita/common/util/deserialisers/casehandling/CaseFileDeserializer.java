@@ -64,7 +64,7 @@ public class CaseFileDeserializer extends JsonDeserializer {
             objectNode.remove(FILE_PUBLIC_TITLE);
         }
         caseFile.setReferenceCrossReference(
-                deserialiseCrossReferences(objectNode, errors));
+                deserialiseCrossReferences(caseFile, objectNode, errors));
         deserialiseComments(caseFile, objectNode, errors);
         caseFile.setReferenceDisposal(
                 deserialiseDisposal(objectNode, errors));
