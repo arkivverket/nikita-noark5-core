@@ -3,13 +3,13 @@ package nikita.webapp.web.controller.hateoas;
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.*;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.ClassificationSystem;
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.*;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.ClassificationSystem;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
@@ -38,7 +38,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 @Api(value = "SeriesController", description = "Contains CRUD operations for Series. Create operations are only for " +
         "entities that can be associated with a series e.g. File / ClassificationSystem. Update and delete operations" +
         " are on individual series entities identified by systemId. Read operations are either on individual series" +
@@ -94,7 +94,7 @@ public class SeriesHateoasController
     @RequestMapping(method = RequestMethod.POST,
             value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
                     SLASH + NEW_CLASSIFICATION_SYSTEM,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystemAssociatedWithSeries(
             HttpServletRequest request,
@@ -137,7 +137,7 @@ public class SeriesHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_FILE, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_FILE, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<FileHateoas> createFileAssociatedWithSeries(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -178,7 +178,7 @@ public class SeriesHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH
-            + NEW_CASE_FILE, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + NEW_CASE_FILE, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CaseFileHateoas> createCaseFileAssociatedWithSeries(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -218,7 +218,7 @@ public class SeriesHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_RECORD, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_RECORD, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> createRecordAssociatedWithSeries(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -260,7 +260,7 @@ public class SeriesHateoasController
     @Counted
 
     @RequestMapping(method = PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + SERIES_ASSOCIATE_AS_SUCCESSOR, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            RIGHT_PARENTHESIS + SLASH + SERIES_ASSOCIATE_AS_SUCCESSOR, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> associateSeriesWithSeriesPrecursor(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -303,7 +303,7 @@ public class SeriesHateoasController
     @Counted
 
     @RequestMapping(method = PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + SERIES_ASSOCIATE_AS_PRECURSOR, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            RIGHT_PARENTHESIS + SLASH + SERIES_ASSOCIATE_AS_PRECURSOR, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> associateSeriesWithSeriesSuccessor(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -345,7 +345,7 @@ public class SeriesHateoasController
 
     @RequestMapping(method = PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
             RIGHT_PARENTHESIS + SLASH + NEW_CLASSIFICATION_SYSTEM,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> associateSeriesWithClassificationSystem(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -386,7 +386,7 @@ public class SeriesHateoasController
     @Counted
 
     @RequestMapping(method = PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            RIGHT_PARENTHESIS, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<SeriesHateoas> updateSeries(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -580,7 +580,7 @@ public class SeriesHateoasController
     @Counted
 
     @GetMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + REGISTRATION)
+            RIGHT_PARENTHESIS + SLASH + RECORD)
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
             @ApiParam(name = "systemID",
                     value = "systemID of the series to find associated records",

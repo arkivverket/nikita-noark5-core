@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.secondary;
 
-import nikita.common.model.noark5.v4.casehandling.Precedence;
-import nikita.common.repository.n5v4.secondary.IPrecedenceRepository;
+import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.repository.n5v5.secondary.IPrecedenceRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import org.slf4j.Logger;

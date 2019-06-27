@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
@@ -145,7 +145,7 @@ public class CaseFileDeserializer extends JsonDeserializer {
             errors.append("].");
         }
 
-        caseFile.setReferenceCaseParty(
+        caseFile.setReferenceParty(
                 deserialiseCaseParties(objectNode, errors));
         caseFile.setReferencePrecedence(
                 deserialisePrecedences(objectNode, errors));

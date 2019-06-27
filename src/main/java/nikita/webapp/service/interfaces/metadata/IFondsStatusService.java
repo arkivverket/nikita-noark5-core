@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces.metadata;
 
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.metadata.FondsStatus;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.metadata.FondsStatus;
 
 import java.util.ArrayList;
 import java.util.List;

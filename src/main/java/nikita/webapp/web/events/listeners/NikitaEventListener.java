@@ -1,13 +1,13 @@
 package nikita.webapp.web.events.listeners;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.DocumentObject;
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.DocumentObject;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityEvent;

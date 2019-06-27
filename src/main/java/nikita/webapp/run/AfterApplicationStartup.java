@@ -1,14 +1,14 @@
 package nikita.webapp.run;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.Authority;
-import nikita.common.model.noark5.v4.admin.AuthorityName;
-import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.Authority;
+import nikita.common.model.noark5.v5.admin.AuthorityName;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
@@ -43,7 +43,7 @@ import static nikita.common.config.FileConstants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_HANDLER;
 import static nikita.common.config.N5ResourceMappings.REFERENCE_ADMINISTRATIVE_UNIT;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.model.noark5.v4.admin.AuthorityName.*;
+import static nikita.common.model.noark5.v5.admin.AuthorityName.*;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
 import static nikita.common.util.CommonUtils.FileUtils.setDefaultMimeTypesAsConvertible;
 
@@ -285,9 +285,9 @@ public class AfterApplicationStartup {
                         AUTHOR_ENG,
                         AUTHOR_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (BASIC_RECORD,
-                        BASIC_RECORD_ENG,
-                        BASIC_RECORD_ENG_OBJECT);
+                (RECORD,
+                        RECORD_ENG,
+                        RECORD_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (CASE_FILE,
                         CASE_FILE_ENG,
@@ -377,9 +377,9 @@ public class AfterApplicationStartup {
                         MEETING_RECORD_ENG,
                         MEETING_RECORD_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (REGISTRATION,
-                        REGISTRATION_ENG,
-                        REGISTRATION_ENG_OBJECT);
+                (RECORD,
+                        RECORD_ENG,
+                        RECORD_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (REGISTRY_ENTRY,
                         REGISTRY_ENTRY_ENG,
@@ -451,9 +451,9 @@ public class AfterApplicationStartup {
                         ASSOCIATED_WITH_RECORD_AS_ENG,
                         ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (BASIC_RECORD_ID,
-                        BASIC_RECORD_ID_ENG,
-                        BASIC_RECORD_ID_ENG_OBJECT);
+                (RECORD_ID,
+                        RECORD_ID_ENG,
+                        RECORD_ID_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (BUSINESS_ADDRESS,
                         BUSINESS_ADDRESS_ENG,
@@ -475,21 +475,21 @@ public class AfterApplicationStartup {
                         CASE_LOANED_TO_ENG,
                         CASE_LOANED_TO_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (CASE_PARTY,
-                        CASE_PARTY_ENG,
-                        CASE_PARTY_ENG_OBJECT);
+                (PART,
+                        PART_ENG,
+                        PART_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (CASE_PARTY_ID,
-                        CASE_PARTY_ID_ENG,
-                        CASE_PARTY_ID_ENG_OBJECT);
+                (PART_ID,
+                        PART_ID_ENG,
+                        PART_ID_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (CASE_PARTY_NAME,
-                        CASE_PARTY_NAME_ENG,
-                        CASE_PARTY_NAME_ENG_OBJECT);
+                (PART_NAME,
+                        PART_NAME_ENG,
+                        PART_NAME_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (CASE_PARTY_ROLE,
-                        CASE_PARTY_ROLE_ENG,
-                        CASE_PARTY_ROLE_ENG_OBJECT);
+                (PART_ROLE,
+                        PART_ROLE_ENG,
+                        PART_ROLE_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (CASE_RECORDS_MANAGEMENT_UNIT,
                         CASE_RECORDS_MANAGEMENT_UNIT_ENG,
@@ -869,13 +869,13 @@ public class AfterApplicationStartup {
                         MEETING_PARTICIPANT_FUNCTION_ENG,
                         MEETING_PARTICIPANT_FUNCTION_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (MEETING_REGISTRATION_STATUS,
-                        MEETING_REGISTRATION_STATUS_ENG,
-                        MEETING_REGISTRATION_STATUS_ENG_OBJECT);
+                (MEETING_RECORD_STATUS,
+                        MEETING_RECORD_STATUS_ENG,
+                        MEETING_RECORD_STATUS_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
-                (MEETING_REGISTRATION_TYPE,
-                        MEETING_REGISTRATION_TYPE_ENG,
-                        MEETING_REGISTRATION_TYPE_ENG_OBJECT);
+                (MEETING_RECORD_TYPE,
+                        MEETING_RECORD_TYPE_ENG,
+                        MEETING_RECORD_TYPE_ENG_OBJECT);
         CommonUtils.WebUtils.addNorToEnglishNameMap
                 (MOBILE_TELEPHONE_NUMBER,
                         MOBILE_TELEPHONE_NUMBER_ENG,

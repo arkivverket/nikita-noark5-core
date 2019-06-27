@@ -6,10 +6,10 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.DocumentObject;
-import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
-import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.DocumentObject;
+import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -73,7 +73,7 @@ public class DocumentObjectHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SYSTEM_ID_PARAMETER,
-            produces = NOARK5_V4_CONTENT_TYPE_JSON)
+            produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> findOneDocumentObjectBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -97,7 +97,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(method = RequestMethod.GET, produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+    @RequestMapping(method = RequestMethod.GET, produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
     public ResponseEntity<DocumentObjectHateoas> findAllDocumentObject(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request) {
         DocumentObjectHateoas documentObjectHateoas = new
@@ -202,8 +202,8 @@ public class DocumentObjectHateoasController
     @Counted
     @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + REFERENCE_FILE,
             headers = "Accept=*/*",
-            produces = {NOARK5_V4_CONTENT_TYPE_JSON,
-                    NOARK5_V4_CONTENT_TYPE_JSON_XML})
+            produces = {NOARK5_V5_CONTENT_TYPE_JSON,
+                    NOARK5_V5_CONTENT_TYPE_JSON_XML})
     public ResponseEntity<DocumentObjectHateoas> handleFileUpload(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -231,7 +231,7 @@ public class DocumentObjectHateoasController
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
             RIGHT_PARENTHESIS + SLASH + "konverterFil",
             method = RequestMethod.PUT, headers = "Accept=*/*", produces =
-            {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+            {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
     public ResponseEntity<DocumentObjectHateoas> convertFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -308,7 +308,7 @@ public class DocumentObjectHateoasController
     @Counted
 
     @RequestMapping(method = RequestMethod.PUT, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            RIGHT_PARENTHESIS, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<DocumentObjectHateoas> updateDocumentObject(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",

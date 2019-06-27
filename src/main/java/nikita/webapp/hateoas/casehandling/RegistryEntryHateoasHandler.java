@@ -1,9 +1,9 @@
 package nikita.webapp.hateoas.casehandling;
 
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.webapp.hateoas.BasicRecordHateoasHandler;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.webapp.hateoas.RecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -13,18 +13,18 @@ import static nikita.common.config.N5ResourceMappings.*;
 /**
  * Created by tsodring on 2/6/17.
  * <p>
- * Used to add BasicRecordHateoas links with BasicRecord specific information
- * <p>
- * Not sure if there is a difference in what should be returned of links for various CRUD operations so keeping them
- * separate calls at the moment.
+ * Used to add RegistryEntryHateoas links with RegistryEntry specific
+ * information
+ *
  */
 @Component("registryEntryHateoasHandler")
 public class RegistryEntryHateoasHandler
-        extends BasicRecordHateoasHandler
+        extends RecordHateoasHandler
         implements IRegistryEntryHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinks(entity, hateoasNoarkObject);
         addElectronicSignature(entity, hateoasNoarkObject);
         addNewElectronicSignature(entity, hateoasNoarkObject);
@@ -40,6 +40,16 @@ public class RegistryEntryHateoasHandler
         addNewCorrespondencePartUnit(entity, hateoasNoarkObject);
         addCorrespondencePartInternal(entity, hateoasNoarkObject);
         addNewCorrespondencePartInternal(entity, hateoasNoarkObject);
+        addRegistryEntryStatus(entity, hateoasNoarkObject);
+        addRegistryEntryType(entity, hateoasNoarkObject);
+    }
+
+    public void addEntityLinksOnTemplate(
+            INikitaEntity entity,
+            IHateoasNoarkObject hateoasNoarkObject) {
+        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addRegistryEntryStatus(entity, hateoasNoarkObject);
+        addRegistryEntryType(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -144,5 +154,45 @@ public class RegistryEntryHateoasHandler
                 NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
                 entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_INTERNAL + SLASH,
                 REL_CASE_HANDLING_NEW_CORRESPONDENCE_PART_INTERNAL, false));
+    }
+
+    // Metadata entries
+
+    /**
+     * Create a REL/HREF pair for the list of possible registryEntryStatus
+     * (journalstatus) values
+     * <p>
+     * "../hateoas-api/arkivstruktur/metadata/journalstatus"
+     * "http://rel.kxml.no/noark5/v4/api/metadata/journalstatus/"
+     *
+     * @param entity             registryEntry
+     * @param hateoasNoarkObject hateoasRegistryEntry
+     */
+    @Override
+    public void addRegistryEntryStatus(INikitaEntity entity,
+                                       IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() + HREF_BASE_METADATA +
+                        REGISTRY_ENTRY_STATUS,
+                        REL_METADATA_REGISTRY_ENTRY_STATUS, true));
+    }
+
+    /**
+     * Create a REL/HREF pair for the list of possible registryEntryType
+     * (journalposttype) values
+     * <p>
+     * "../hateoas-api/arkivstruktur/metadata/journalposttype"
+     * "http://rel.kxml.no/noark5/v4/api/metadata/journalposttype/"
+     *
+     * @param entity             registryEntry
+     * @param hateoasNoarkObject hateoasRegistryEntry
+     */
+    @Override
+    public void addRegistryEntryType(INikitaEntity entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() + HREF_BASE_METADATA +
+                        REGISTRY_ENTRY_TYPE,
+                        REL_METADATA_REGISTRY_ENTRY_TYPE, true));
     }
 }

@@ -1,11 +1,11 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.DocumentObject;
-import nikita.common.model.noark5.v4.hateoas.DocumentDescriptionHateoas;
-import nikita.common.model.noark5.v4.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v4.secondary.Conversion;
-import nikita.common.repository.n5v4.IDocumentObjectRepository;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.DocumentObject;
+import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.secondary.Conversion;
+import nikita.common.repository.n5v5.IDocumentObjectRepository;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;

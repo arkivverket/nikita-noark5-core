@@ -1,9 +1,5 @@
 package nikita.common.config;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
@@ -17,19 +13,9 @@ public final class Constants {
     public static final String PARENT = "forelder";
 
     // Spring profile for development and production
-    public static final String SPRING_PROFILE_PRODUCTION = "prod";
     public static final String SPRING_PROFILE_SWAGGER = "swagger";
     public static final String SPRING_PROFILE_METRICS = "metrics";
 
-    public static final String SPRING_ENDPOINT_DELIMITER = "||";
-
-    public static final String[] ODATA_SET_VALUES =
-            new String[]{"$top", "$skip", "$filter"};
-    public static final Set<String> ODATA_QUERY_PARAMS =
-            new HashSet<>(Arrays.asList(ODATA_SET_VALUES));
-
-    public static final String USERNAME_ADMIN = "admin";
-    public static final String PASSWORD_ADMIN = "password";
     public static final String REGEX_UUID = "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4" +
             "}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
 
@@ -46,15 +32,11 @@ public final class Constants {
     public static final String ROLE_GUEST = "GUEST";
 
     // Names of APIs that the core supports
-    public static final String IMPORT_API_PATH = "import-api";
     public static final String HATEOAS_API_PATH = "hateoas-api";
-    public static final String GUI_PATH = "gui";
 
     public static final String SLASH = "/";
     public static final String LEFT_PARENTHESIS = "{";
     public static final String RIGHT_PARENTHESIS = "}";
-    public static final String REF_ID = "$ref?$id=";
-
     public static final String ENTITY_ROOT_NAME_LIST = "results";
 
     // Create for new arkivstruktur objects
@@ -66,8 +48,7 @@ public final class Constants {
     public static final String NEW_CLASS = NEW + DASH + CLASS;
     public static final String NEW_SUB_CLASS = NEW + DASH + SUB_CLASS;
     public static final String NEW_FILE = NEW + DASH + FILE;
-    public static final String NEW_RECORD = NEW + DASH + REGISTRATION;
-    public static final String NEW_BASIC_RECORD = NEW + DASH + BASIC_RECORD;
+    public static final String NEW_RECORD = NEW + DASH + RECORD;
     public static final String NEW_DOCUMENT_DESCRIPTION = NEW + DASH + DOCUMENT_DESCRIPTION;
     public static final String NEW_DOCUMENT_OBJECT = NEW + DASH + DOCUMENT_OBJECT;
     public static final String NEW_REFERENCE_SERIES = NEW + DASH + REFERENCE_SERIES;
@@ -113,8 +94,9 @@ public final class Constants {
     // Create for new casehandling objects
     public static final String NEW_CASE_FILE = NEW + DASH + CASE_FILE;
     public static final String NEW_REGISTRY_ENTRY = NEW + DASH + REGISTRY_ENTRY;
+    public static final String NEW_RECORD_NOTE = NEW + DASH + RECORD_NOTE;
     public static final String NEW_PRECEDENCE = NEW + DASH + PRECEDENCE;
-    public static final String NEW_CASE_PARTY = NEW + DASH + CASE_PARTY;
+    public static final String NEW_PART = NEW + DASH + PART;
     public static final String NEW_CASE_STATUS = NEW + DASH + CASE_STATUS;
     public static final String NEW_SECONDARY_CLASSIFICATION = NEW + DASH +
             "sekundaerklassifikasjon";
@@ -148,8 +130,8 @@ public final class Constants {
     public static final String NEW_REGISTRY_ENTRY_TYPE = NEW + DASH +
             REGISTRY_ENTRY_TYPE;
 
-    public static final String NEW_CASE_PARTY_ROLE = NEW + DASH +
-            CASE_PARTY_ROLE;
+    public static final String NEW_PART_ROLE = NEW + DASH +
+            PART_ROLE;
 
     public static final String NEW_FILE_TYPE = NEW + DASH + FILE_TYPE;
 
@@ -172,6 +154,11 @@ public final class Constants {
     public static final String SERIES_ASSOCIATE_AS_SUCCESSOR = "referanseArvtager";
     public static final String SERIES_ASSOCIATE_AS_PRECURSOR = "referanseForloeper";
 
+    // String used for default / template object
+    public static final String DEFAULT_TITLE = "Default title for ";
+    public static final String DEFAULT_DESCRIPTION = "This object is, if " +
+            "persisted, will be associated with ";
+
     // Some user identifiers used for testing
     public static final String TEST_USER_CASE_HANDLER_1 = "example test user case handler 1";
     public static final String TEST_USER_CASE_HANDLER_2 = "example test user case handler 2";
@@ -188,25 +175,12 @@ public final class Constants {
     public static final String NOARK_DATE_FORMAT_PATTERN = "yyyy-MM-dd";
     public static final String NOARK_TIME_FORMAT_PATTERN = "HH:mm:ss";
     public static final String NOARK_DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
-    public static final String ONLY_WHITESPACE = "\\s*";
-
-    // OData variable names
-    public static final String TOP = "top";
-    public static final String SKIP = "skip";
-    public static final String DOLLAR = "$";
-
-    // Strings relating to conformity to Noark 5v4 standard
-    public static final String NOARK_CONFORMANCE_LEVEL_0 = "Nivå 0 – Basiskrav";
-    public static final String NOARK_CONFORMANCE_LEVEL_1 = "Nivå 1 – Arkivstruktur - obligatoriske krav";
-    public static final String NOARK_CONFORMANCE_LEVEL_1_1 = "Nivå 1.1 – Arkivstruktur - valgfrie krav";
-    public static final String NOARK_CONFORMANCE_LEVEL_2 = "Nivå 2a – Sakarkiv – obligatoriske krav";
-    public static final String NOARK_CONFORMANCE_LEVEL_2_1_a = "Nivå 2.1a – Sakarkiv - valgfrie krav";
 
     public static final String REFERENCE_FILE = "referanseFil";
 
     // namespace definition
-    public static final String NOARK_CONFORMANCE_REL = "https://rel.arkivverket.no/noark5/v4/api/";
-    public static final String NIKITA_CONFORMANCE_REL = "https://nikita.arkivlab.no/noark5/v4/";
+    public static final String NOARK_CONFORMANCE_REL = "https://rel.arkivverket.no/noark5/v5/api/";
+    public static final String NIKITA_CONFORMANCE_REL = "https://nikita.arkivlab.no/noark5/v5/";
 
     public static final String NOARK_FONDS_STRUCTURE_PATH = "arkivstruktur";
     public static final String NOARK_METADATA_PATH = "metadata";
@@ -227,10 +201,9 @@ public final class Constants {
     public static final String LOGIN_OAUTH = "rfc6749";
     public static final String LOGIN_OAUTH2_PATH = "/oauth/token";
 
-    public static final String NOARK5_V4_CONTENT_TYPE_JSON = "application/vnd.noark5-v4+json";
-    public static final String NOARK5_V4_CONTENT_TYPE_JSON_XML = "application/vnd.noark5-v4+xml";
+    public static final String NOARK5_V5_CONTENT_TYPE_JSON = "application/vnd.noark5-v5+json";
+    public static final String NOARK5_V5_CONTENT_TYPE_JSON_XML = "application/vnd.noark5-v5+xml";
 
-    public static final String INFO_CANNOT_CREATE_OBJECT = "Cannot create ";
     public static final String INFO_CANNOT_FIND_OBJECT = "Cannot find object of type ";
     public static final String INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT = "Cannot associate with a closed object";
     public static final String INFO_INVALID_STRUCTURE = "Invalid Noark structure";
@@ -277,8 +250,8 @@ public final class Constants {
     public static final String TEMPLATE_FLOW_STATUS_CODE = "G";
     public static final String TEMPLATE_FLOW_STATUS_DESCRIPTION = "Godkjent";
 
-    public static final String TEMPLATE_CASE_PARTY_ROLE_CODE = "KLI";
-    public static final String TEMPLATE_CASE_PARTY_ROLE_DESCRIPTION = "Klient";
+    public static final String TEMPLATE_PART_ROLE_CODE = "KLI";
+    public static final String TEMPLATE_PART_ROLE_DESCRIPTION = "Klient";
 
     public static final String TEMPLATE_FILE_TYPE_CODE = "S";
     public static final String TEMPLATE_FILE_TYPE_DESCRIPTION = "Saksmappe";
@@ -332,20 +305,23 @@ public final class Constants {
 
     // Messages used for API description
     public static final String API_MESSAGE_OBJECT_ALREADY_PERSISTED = "object already persisted.";
+    public static final String API_MESSAGE_OBJECT_UPDATED =
+            " object successfully updated";
     public static final String API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED = "object successfully created.";
     public static final String API_MESSAGE_UNAUTHENTICATED_USER = "Unauthenticated. User has not provided necessary credentials to carry out the request.";
     public static final String API_MESSAGE_UNAUTHORISED_FOR_USER = "Unauthorised. User does not have necessary rights to carry out the request.";
     public static final String API_MESSAGE_PARENT_DOES_NOT_EXIST = "Non-existent parent object. The parent specified does not exist";
+    public static final String API_MESSAGE_NOT_FOUND = "Object not found";
     public static final String API_MESSAGE_CONFLICT = "Conflict. The resource is being used by someone else";
     public static final String API_MESSAGE_INTERNAL_SERVER_ERROR = "Internal server error";
     public static final String API_MESSAGE_NOT_IMPLEMENTED = "Not implemented yet";
     public static final String API_MESSAGE_MALFORMED_PAYLOAD = "Incoming data is malformed";
 
 
-    public static final String REL_METADATA = "https://rel.arkivverket.no/noark5/v4/api/metadata/";
-    public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v4/api/administrasjon/";
-    public static final String REL_FONDS_STRUCTURE = "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/";
-    public static final String REL_CASE_HANDLING = "https://rel.arkivverket.no/noark5/v4/api/sakarkiv/";
+    public static final String REL_METADATA = "https://rel.arkivverket.no/noark5/v5/api/metadata/";
+    public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v5/api/administrasjon/";
+    public static final String REL_FONDS_STRUCTURE = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/";
+    public static final String REL_CASE_HANDLING = "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/";
 
     // FondsHateoas REL links
 
@@ -367,8 +343,8 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_SERIES = REL_FONDS_STRUCTURE + SERIES + SLASH;
 
     // Common SeriesHateoas/FileHateoas/RegistrationHateoas REL links
-    public static final String REL_FONDS_STRUCTURE_NEW_REGISTRATION = REL_FONDS_STRUCTURE + NEW_RECORD + SLASH;
-    public static final String REL_FONDS_STRUCTURE_REGISTRATION = REL_FONDS_STRUCTURE + REGISTRATION + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_RECORD = REL_FONDS_STRUCTURE + NEW_RECORD + SLASH;
+    public static final String REL_FONDS_STRUCTURE_RECORD = REL_FONDS_STRUCTURE + RECORD + SLASH;
 
     // Common SeriesHateoas/FileHateoas REL links
     public static final String REL_FONDS_STRUCTURE_NEW_FILE = REL_FONDS_STRUCTURE + NEW_FILE + SLASH;
@@ -391,13 +367,15 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_NEW_SUCCESSOR = NIKITA_CONFORMANCE_REL + NEW_SERIES_SUCCESSOR + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_PRECURSOR = NIKITA_CONFORMANCE_REL + NEW_SERIES_PRECURSOR + SLASH;
 
+    public static final String REL_FONDS_STRUCTURE_PART = REL_FONDS_STRUCTURE + PART + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_PART = REL_FONDS_STRUCTURE + NEW_PART + SLASH;
+
+
     // CaseFileHateoas REL links
     public static final String REL_CASE_HANDLING_NEW_CLASS = REL_FONDS_STRUCTURE + NEW_CLASS + SLASH;
     public static final String REL_CASE_HANDLING_CLASS = REL_FONDS_STRUCTURE + CLASS + SLASH;
     public static final String REL_CASE_HANDLING_PRECEDENCE = REL_CASE_HANDLING + PRECEDENCE + SLASH;
     public static final String REL_CASE_HANDLING_NEW_PRECEDENCE = REL_CASE_HANDLING + NEW_PRECEDENCE + SLASH;
-    public static final String REL_CASE_HANDLING_CASE_PARTY = REL_CASE_HANDLING + CASE_PARTY + SLASH;
-    public static final String REL_CASE_HANDLING_NEW_CASE_PARTY = REL_CASE_HANDLING + NEW_CASE_PARTY + SLASH;
     public static final String REL_CASE_HANDLING_SECONDARY_CLASSIFICATION = NIKITA_CONFORMANCE_REL + SECONDARY_CLASSIFICATION + SLASH;
     public static final String REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION = NIKITA_CONFORMANCE_REL + NEW_SECONDARY_CLASSIFICATION + SLASH;
     public static final String REL_METADATA_CASE_STATUS = REL_METADATA + CASE_STATUS + SLASH;
@@ -408,12 +386,15 @@ public final class Constants {
     public static final String REL_CASE_HANDLING_NEW_REGISTRY_ENTRY = REL_CASE_HANDLING + NEW_REGISTRY_ENTRY + SLASH;
     public static final String REL_CASE_HANDLING_REGISTRY_ENTRY = REL_CASE_HANDLING + REGISTRY_ENTRY + SLASH;
 
+    public static final String REL_CASE_HANDLING_RECORD_NOTE =
+            REL_CASE_HANDLING + RECORD_NOTE + SLASH;
+    public static final String REL_CASE_HANDLING_NEW_RECORD_NOTE =
+            REL_CASE_HANDLING + NEW_RECORD_NOTE + SLASH;
+
     // FileHateoas REL links
     public static final String REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE = NIKITA_CONFORMANCE_REL + FILE_EXPAND_TO_CASE_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE = NIKITA_CONFORMANCE_REL + FILE_EXPAND_TO_MEETING_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_END_FILE = NIKITA_CONFORMANCE_REL + FILE_END + SLASH;
-    public static final String REL_FONDS_STRUCTURE_BASIC_RECORD = REL_FONDS_STRUCTURE + BASIC_RECORD + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_BASIC_RECORD = REL_FONDS_STRUCTURE + NEW_BASIC_RECORD + SLASH;
 
     // Comment
     public static final String REL_FONDS_STRUCTURE_COMMENT = REL_FONDS_STRUCTURE + COMMENT + SLASH;
@@ -465,11 +446,6 @@ public final class Constants {
     // Deletion
     public static final String REL_FONDS_STRUCTURE_DELETION = NIKITA_CONFORMANCE_REL + DELETION + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_DELETION = NIKITA_CONFORMANCE_REL + NEW_DELETION + SLASH;
-
-    // Record
-    public static final String REL_FONDS_STRUCTURE_RECORD = REL_FONDS_STRUCTURE + REGISTRATION + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_RECORD = REL_FONDS_STRUCTURE + NEW_RECORD + SLASH;
-
 
     // Author
     public static final String REL_FONDS_STRUCTURE_AUTHOR = NIKITA_CONFORMANCE_REL + AUTHOR + SLASH;
@@ -588,8 +564,8 @@ public final class Constants {
     public static final String REL_METADATA_PRECEDENCE_STATUS =
             REL_METADATA + PRECEDENCE_STATUS + SLASH;
 
-    public static final String REL_METADATA_CASE_PARTY_ROLE =
-            REL_METADATA + CASE_PARTY_ROLE + SLASH;
+    public static final String REL_METADATA_PART_ROLE =
+            REL_METADATA + PART_ROLE + SLASH;
 
     public static final String REL_METADATA_FILE_TYPE =
             REL_METADATA + FILE_TYPE + SLASH;
@@ -661,8 +637,20 @@ public final class Constants {
             "file_keyword";
     public static final String TABLE_FILE_COMMENT =
             "file_comment";
+    public static final String TABLE_FILE_PARTY =
+            "file_party";
+    public static final String TABLE_RECORD_PARTY =
+            "record_party";
+    public static final String TABLE_DOCUMENT_DESCRIPTION_PARTY =
+            "document_description_party";
     public static final String TABLE_FONDS_STORAGE_LOCATION =
             "fonds_storage_location";
+    public static final String TABLE_RECORD_KEYWORD =
+            "record_keyword";
+    public static final String TABLE_RECORD_COMMENT =
+            "record_comment";
+    public static final String TABLE_RECORD_STORAGE_LOCATION =
+            "record_storage_location";
 
     // Column Constants
     // Foreign key names
@@ -670,6 +658,7 @@ public final class Constants {
     public static final String FOREIGN_KEY_FONDS_CREATOR_PK =
             "f_pk_fonds_creator_id";
 
+    public static final String FOREIGN_KEY_AUTHOR_PK = "f_pk_author_id";
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
             "f_pk_administrative_unit_id";
@@ -677,7 +666,10 @@ public final class Constants {
     public static final String FOREIGN_KEY_KEYWORD_PK =
             "f_pk_keyword_id";
     public static final String FOREIGN_KEY_FILE_PK = "f_pk_file_id";
+    public static final String FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK =
+            "f_pk_document_description_id";
     public static final String FOREIGN_KEY_COMMENT_PK = "f_pk_comment_id";
+    public static final String FOREIGN_KEY_PART_PK = "f_pk_part_id";
     public static final String FOREIGN_KEY_RECORD_PK = "f_pk_record_id";
 
     public static final String FOREIGN_KEY_STORAGE_LOCATION_PK =
@@ -711,13 +703,16 @@ public final class Constants {
     public static final String PRIMARY_KEY_FILE = "pk_file_id";
     public static final String PRIMARY_KEY_KEYWORD = "pk_keyword_id";
     public static final String PRIMARY_KEY_COMMENT = "pk_comment_id";
+    public static final String PRIMARY_KEY_PART = "pk_part_id";
     public static final String PRIMARY_KEY_CLASSIFIED = "pk_classified_id";
     public static final String PRIMARY_KEY_DISPOSAL = "pk_disposal_id";
     public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";
 
     public static final String PRIMARY_KEY_USER = "pk_user_id";
+    public static final String PRIMARY_KEY_AUTHOR = "pk_author_id";
     public static final String PRIMARY_KEY_RECORD = "pk_record_id";
-    public static final String PRIMARY_KEY_STORAGE_LOCATION = "pk_storage_location_id";
+    public static final String PRIMARY_KEY_STORAGE_LOCATION =
+            "pk_storage_location_id";
     public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
             "pk_administrative_unit_id";
     public static final String PRIMARY_KEY_CORRESPONDENCE_PART_PERSON =
@@ -731,6 +726,7 @@ public final class Constants {
 
     public static final String JOIN_CASE_FILE_STATUS =
             "case_file_case_file_status_id";
+
     public static final String PRIMARY_KEY_DOCUMENT_DESCRIPTION =
             "pk_document_description_id";
 
@@ -741,6 +737,12 @@ public final class Constants {
     public static final String HREF_BASE_FONDS_STRUCTURE =
             HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH;
 
+    public static final String HREF_BASE_METADATA =
+            HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH;
+
+    public static final String HREF_BASE_CASE_HANDLING =
+            HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH;
+
     public static final String HREF_BASE_DOCUMENT_DESCRIPTION =
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH;
 
@@ -748,10 +750,16 @@ public final class Constants {
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH;
 
     public static final String HREF_BASE_RECORD =
-            HREF_BASE_FONDS_STRUCTURE + REGISTRATION + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + RECORD + SLASH;
+
+    public static final String HREF_BASE_RECORD_NOTE =
+            HREF_BASE_FONDS_STRUCTURE + RECORD_NOTE + SLASH;
 
     public static final String HREF_BASE_FILE =
             HREF_BASE_FONDS_STRUCTURE + FILE + SLASH;
+
+    public static final String HREF_BASE_CASE_FILE =
+            HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH;
 
     public static final String HREF_BASE_SERIES =
             HREF_BASE_FONDS_STRUCTURE + SERIES + SLASH;
@@ -764,6 +772,9 @@ public final class Constants {
 
     public static final String HREF_BASE_FONDS =
             HREF_BASE_FONDS_STRUCTURE + FONDS + SLASH;
+
+    public static final String HREF_BASE_DOCUMENT_FLOW =
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW + SLASH;
 
     public static final String HREF_METADATA_PATH =
             HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH;

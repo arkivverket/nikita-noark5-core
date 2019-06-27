@@ -7,11 +7,11 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.FondsCreator;
-import nikita.common.model.noark5.v4.hateoas.FondsCreatorHateoas;
-import nikita.common.model.noark5.v4.hateoas.FondsHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.FondsCreator;
+import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
+import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -40,7 +40,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class FondsCreatorHateoasController extends NoarkController {
 
     private IFondsCreatorService fondsCreatorService;
@@ -76,7 +76,7 @@ public class FondsCreatorHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = {RequestMethod.POST}, value = NEW_FONDS_CREATOR, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+    @RequestMapping(method = {RequestMethod.POST}, value = NEW_FONDS_CREATOR, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<FondsCreatorHateoas> createFondsCreator(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "FondsCreator",
@@ -111,7 +111,7 @@ public class FondsCreatorHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.POST, value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + NEW_FONDS, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            RIGHT_PARENTHESIS + SLASH + NEW_FONDS, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<FondsHateoas> createFondsAssociatedWithFondsCreator(
             HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemId",
@@ -209,7 +209,7 @@ public class FondsCreatorHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<FondsCreatorHateoas> updateFondsCreator(HttpServletRequest request,
                                                                   @ApiParam(name = "fondsCreator",
                                                                           value = "Incoming fondsCreator object",

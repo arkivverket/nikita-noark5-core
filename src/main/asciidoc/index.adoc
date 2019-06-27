@@ -14,7 +14,7 @@ to test asciidoc.
 
 == Introduction
 This is a Spring REST Docs generated documentation for the
-nikita-noark5-core (Noark 5v4). Noark 5v4 is a Hateoas level 3
+nikita-noark5-core (Noark 5v5). Noark 5v5 is a Hateoas level 3
 API and makes active use of "links" within the API.
 
 === About
@@ -23,12 +23,12 @@ Noark 5. The source code is hosted on https://gitlab.com/OsloMet-ABI/nikita-noar
 This document refers to two Noark resources. The first is the actual Noark 5 standard, a document
 maintained by the Norwegian National Archive. The second is a the Noark 5 interface standard. This
 is an API description of the Noark 5 standard. Currently the Noark 5 interface standard relates
-to Noark 5 version 4 (Noark 5v4), while the actual Noark standard is working a Noark 5 version 5.
+to Noark 5 version 4 (Noark 5v5), while the actual Noark standard is working a Noark 5 version 5.
 
 === Hateoas principles
 Hateoas stands for Hypermedia As The Engine of Application state and is an ...
 It was proposed by .... With the context of the. A level 3 Hateoas is seen as a kind-of
-holy-grail when it comes to API development. The Noark 5v4 interface standard is a Hateoas
+holy-grail when it comes to API development. The Noark 5v5 interface standard is a Hateoas
 level 3 API.
 
 
@@ -56,7 +56,7 @@ $  mvn spring-boot:run -Dspring-boot.run.profiles=http-basic-authentication
 
 [source,bash]
 ----
-$ curl --user admin:password 'http://localhost:8092/noark5v4/' -i -X GET \
+$ curl --user admin:password 'http://localhost:8092/noark5v5/' -i -X GET \
     -H 'Accept:application/vnd.noark5-v4+json'
 ----
 
@@ -66,7 +66,7 @@ as part of a header field.
 [source,bash]
 ----
 $ curl -H Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=  \
-    -H 'Accept:application/vnd.noark5-v4+json' -i -X GET 'http://localhost:8092/noark5v4/'
+    -H 'Accept:application/vnd.noark5-v4+json' -i -X GET 'http://localhost:8092/noark5v5/'
 ----
 
 
@@ -75,13 +75,13 @@ $ curl -H Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=  \
 [source,bash]
 ----
 $   curl -i -X POST -d username=admin -d password=password -c /tmp/cookies.txt \
-      -H 'Accept:application/vnd.noark5-v4+json' http://localhost:8092/noark5v4/login
+      -H 'Accept:application/vnd.noark5-v4+json' http://localhost:8092/noark5v5/login
 ----
 
 [source,bash]
 ----
 $  curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5-v4+json \
-    -X GET http://localhost:8092/noark5v4/
+    -X GET http://localhost:8092/noark5v5/
 ----
 
 [source,bash]
@@ -99,7 +99,7 @@ There are plenty of online resources to explore the subject.
 [source,bash]
 ----
 $ curl -v -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ=' \
-  -X POST  'http://localhost:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password'
+  -X POST  'http://localhost:8092/noark5v5/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password'
 ----
 
 The OAuth2 endpoint is protected with Basic authentication. This is the reason for

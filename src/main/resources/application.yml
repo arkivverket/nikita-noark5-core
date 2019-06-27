@@ -10,10 +10,14 @@
 
 server:
   servlet:
-    context-path: /noark5v4
+    context-path: /noark5v5
   port: 8092
 
+
 spring:
+  h2:
+    console:
+      path: /h2-console
   application:
     name: OsloMet Noark 5 Core (Demo mode)
   datasource:

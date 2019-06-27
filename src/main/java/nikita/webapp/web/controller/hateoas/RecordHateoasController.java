@@ -7,12 +7,12 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.hateoas.*;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v4.secondary.*;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
@@ -40,8 +40,8 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + REGISTRATION,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD,
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class RecordHateoasController extends NoarkController {
 
     private IRecordService recordService;
@@ -82,7 +82,7 @@ public class RecordHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_DOCUMENT_DESCRIPTION, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            SLASH + NEW_DOCUMENT_DESCRIPTION, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<DocumentDescriptionHateoas>
     createDocumentDescriptionAssociatedWithRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
@@ -131,7 +131,7 @@ public class RecordHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_REFERENCE_SERIES, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_REFERENCE_SERIES, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addReferenceSeriesToRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -170,7 +170,7 @@ public class RecordHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_CLASSIFIED, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_CLASSIFIED, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addNewClassifiedToRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -208,7 +208,7 @@ public class RecordHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_DISPOSAL, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_DISPOSAL, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addNewDisposalToRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -247,7 +247,7 @@ public class RecordHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_SCREENING, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_SCREENING, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addNewScreeningToRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -286,7 +286,7 @@ public class RecordHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_DISPOSAL_UNDERTAKEN, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_DISPOSAL_UNDERTAKEN, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addNewDisposalUndertakenToRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -325,7 +325,7 @@ public class RecordHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(method = POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_DELETION, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_DELETION, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<String> addNewDeletionToRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -646,7 +646,7 @@ public class RecordHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<RecordHateoas> updateRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",

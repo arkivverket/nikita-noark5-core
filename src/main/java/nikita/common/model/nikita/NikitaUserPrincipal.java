@@ -1,7 +1,7 @@
 package nikita.common.model.nikita;
 
-import nikita.common.model.noark5.v4.admin.Authority;
-import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.model.noark5.v5.admin.Authority;
+import nikita.common.model.noark5.v5.admin.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

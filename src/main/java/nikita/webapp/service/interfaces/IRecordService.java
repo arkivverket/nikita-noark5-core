@@ -1,8 +1,8 @@
 package nikita.webapp.service.interfaces;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.hateoas.*;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.hateoas.*;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -41,10 +41,13 @@ public interface IRecordService {
     List<Record> findByOwnedBy(String ownedBy);
 
     // -- All UPDATE operations
-    Record handleUpdate(@NotNull String systemId, @NotNull Long version, @NotNull Record record);
+    Record handleUpdate(@NotNull String systemId,
+                        @NotNull Long version, @NotNull Record record);
 
     // -- All DELETE operations
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
+
 }

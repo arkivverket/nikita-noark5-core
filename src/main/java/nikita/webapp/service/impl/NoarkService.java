@@ -1,16 +1,21 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkTitleDescriptionEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
+
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static org.springframework.http.HttpHeaders.ETAG;
 
 public class NoarkService {
 
@@ -52,5 +57,27 @@ public class NoarkService {
     protected String getServletPath() {
         return ((ServletRequestAttributes) RequestContextHolder.
                 getRequestAttributes()).getRequest().getServletPath();
+    }
+
+    protected Long getETag() {
+        return parseETAG(((ServletRequestAttributes) RequestContextHolder.
+                getRequestAttributes()).getRequest().getHeader(ETAG));
+    }
+
+    protected boolean deletePossible(INikitaEntity entity) {
+        // Note, you cannot delete an entity unless you the latest copy. The
+        // following call may result in a NoarkConcurrencyException/409
+        // Conflict
+        entity.setVersion(getETag());
+
+        if (entity.getOwnedBy().equals(getUser())) {
+            return true;
+        } else {
+            String message = "User [" + getUser() + "] tried to delete a " +
+                    entity.getBaseTypeName() + " with systemId [" +
+                    entity.getSystemId() + "] but is not the owner";
+            logger.error(message);
+            throw new AccessDeniedException(message);
+        }
     }
 }

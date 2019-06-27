@@ -1,7 +1,7 @@
 package nikita.webapp.persistence;
 
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.repository.n5v4.IFondsRepository;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.repository.n5v5.IFondsRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

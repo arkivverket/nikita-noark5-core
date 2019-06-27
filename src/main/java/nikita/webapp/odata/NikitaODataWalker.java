@@ -1,8 +1,7 @@
 package nikita.webapp.odata;
 
 import nikita.common.util.CommonUtils;
-import nikita.common.util.exceptions.NikitaMisconfigurationException;
-import org.springframework.security.core.context.SecurityContextHolder;
+import nikita.webapp.odata.base.ODataParserBaseListener;
 
 /**
  * Extending ODataBaseListener to capture the required events for processing
@@ -33,7 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 
 public abstract class NikitaODataWalker
-        extends ODataBaseListener
+        extends ODataParserBaseListener
         implements IODataWalker {
 
     /**
@@ -51,7 +50,7 @@ public abstract class NikitaODataWalker
      *
      * @param ctx ODataParser.OdataCommandContext
      */
-
+/*
     @Override
     public void enterOdataCommand(ODataParser.OdataCommandContext ctx) {
         super.enterOdataCommand(ctx);
@@ -59,7 +58,7 @@ public abstract class NikitaODataWalker
                 ctx.getText() + "]");
         // processEnterOdataCommand(ctx);
     }
-
+*/
     /**
      * enterResource
      * <p>
@@ -113,6 +112,7 @@ public abstract class NikitaODataWalker
      *
      * @param ctx ODataParser.ContainsContext
      */
+    /*
     @Override
     public void enterContains(ODataParser.ContainsContext ctx) {
         super.enterContains(ctx);
@@ -125,7 +125,7 @@ public abstract class NikitaODataWalker
 
         processContains(attribute, value);
     }
-
+*/
     /**
      * enterStartsWith
      * <p>
@@ -141,6 +141,7 @@ public abstract class NikitaODataWalker
      *
      * @param ctx ODataParser.StartsWithContext
      */
+    /*
     @Override
     public void enterStartsWith(ODataParser.StartsWithContext ctx) {
         super.enterStartsWith(ctx);
@@ -252,7 +253,7 @@ public abstract class NikitaODataWalker
             processResource(resource, loggedInUser);
         }
     }
-
+*/
     /**
      * getNameDatabase
      * <p>

@@ -7,7 +7,7 @@ classification as well as the technical side of understanding a recordkeeping sy
 around 2010 and has had various test implementations, both in PHP and Java. We decided in 2016 to concentrate on JavaEE 
 and based the project on [spring](https://www.spring.io/). 
 
-A Noark system should only be approved against the latest version of the standard, which currently is Noark 5v4 and the 
+A Noark system should only be approved against the latest version of the standard, which currently is Noark 5v5 and the 
 standard has an associated Hateaoas/REST interface. So we have developed the core, as far as possible, in accordance 
 with this interface standard.
 

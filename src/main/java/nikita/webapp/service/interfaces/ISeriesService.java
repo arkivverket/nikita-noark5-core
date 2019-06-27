@@ -1,12 +1,12 @@
 package nikita.webapp.service.interfaces;
 
 
-import nikita.common.model.noark5.v4.ClassificationSystem;
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.*;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.ClassificationSystem;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;

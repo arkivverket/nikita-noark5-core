@@ -1,6 +1,6 @@
 package nikita.webapp.service.interfaces.metadata;
 
-import nikita.common.model.noark5.v4.metadata.SeriesStatus;
+import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces.secondary;
 
 
-import nikita.common.model.noark5.v4.casehandling.Precedence;
+import nikita.common.model.noark5.v5.casehandling.Precedence;
 
 public interface IPrecedenceService {
 

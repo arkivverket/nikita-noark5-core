@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
@@ -66,12 +66,12 @@ public class RegistryEntryDeserializer
         registryEntry.setArchivedDate(
                 deserializeDateTime(RECORD_ARCHIVED_DATE, objectNode, errors));
 
-        // Deserialize general BasicRecord properties
+        // Deserialize general Record properties
         // Deserialize recordId
-        currentNode = objectNode.get(BASIC_RECORD_ID);
+        currentNode = objectNode.get(RECORD_ID);
         if (null != currentNode) {
             registryEntry.setRecordId(currentNode.textValue());
-            objectNode.remove(BASIC_RECORD_ID);
+            objectNode.remove(RECORD_ID);
         }
         // Deserialize title (not using utils to preserve order)
         currentNode = objectNode.get(TITLE);

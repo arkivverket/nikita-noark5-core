@@ -1,7 +1,7 @@
 package nikita.webapp.spring.security;
 
 import nikita.common.model.nikita.NikitaUserPrincipal;
-import nikita.common.model.noark5.v4.admin.User;
+import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.repository.nikita.IUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

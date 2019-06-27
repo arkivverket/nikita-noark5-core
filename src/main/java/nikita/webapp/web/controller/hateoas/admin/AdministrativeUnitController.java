@@ -7,9 +7,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.hateoas.admin.AdministrativeUnitHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.hateoas.admin.AdministrativeUnitHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.admin.IAdministrativeUnitHateoasHandler;
@@ -30,7 +30,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class AdministrativeUnitController extends NoarkController {
 
     private IAdministrativeUnitService administrativeUnitService;

@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -30,11 +29,11 @@ import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
  * This can be tested using:
  * <p>
  * curl -i -X POST -d username=admin -d password=password -c /tmp/cookies.txt
- * http://localhost:8092/noark5v4/login
+ * http://localhost:8092/noark5v5/login
  * <p>
  * <p>
- * curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5-v4+json
- * -X GET http://localhost:8092/noark5v4/
+ * curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5-v5+json
+ * -X GET http://localhost:8092/noark5v5/
  */
 
 @Profile("security-form-authentication")

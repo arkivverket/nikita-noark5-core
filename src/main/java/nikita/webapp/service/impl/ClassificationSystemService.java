@@ -1,12 +1,12 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.Class;
-import nikita.common.model.noark5.v4.ClassificationSystem;
-import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v4.hateoas.ClassificationSystemHateoas;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.repository.n5v4.IClassificationSystemRepository;
+import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.ClassificationSystem;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.repository.n5v5.IClassificationSystemRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;

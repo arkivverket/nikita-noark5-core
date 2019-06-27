@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.webapp.util.serialisers.APIDetailsSerializer;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.config.N5ResourceMappings.NEW_DOCUMENT_MEDIUM;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @JsonSerialize(using = APIDetailsSerializer.class)
 public class MetadataDetails extends APIDetails {
@@ -229,20 +229,20 @@ public class MetadataDetails extends APIDetails {
                 true
         ));
 
-        // Add support for CasePartyRole
+        // Add support for PartyRole
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HATEOAS_API_PATH + SLASH +
-                        NOARK_METADATA_PATH + SLASH + CASE_PARTY_ROLE,
-                REL_METADATA_CASE_PARTY_ROLE,
+                        NOARK_METADATA_PATH + SLASH + PART_ROLE,
+                REL_METADATA_PART_ROLE,
                 true
         ));
 
-        // Add support for new CasePartyRole
+        // Add support for new PartyRole
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HATEOAS_API_PATH + SLASH +
-                        NOARK_METADATA_PATH + SLASH + NEW_CASE_PARTY_ROLE,
+                        NOARK_METADATA_PATH + SLASH + NEW_PART_ROLE,
                 NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH +
-                        NEW_CASE_PARTY_ROLE + SLASH,
+                        NEW_PART_ROLE + SLASH,
                 true
         ));
 

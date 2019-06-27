@@ -7,15 +7,15 @@ import javax.validation.constraints.NotNull;
  *
  *
  * The following is an example of this:
- * "href" : "http://localhost:8092/noark5v4/hateoas-api/arkivstruktur",
- *  "rel" : "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur"
+ * "href" : "http://localhost:8092/noark5v5/hateoas-api/arkivstruktur",
+ *  "rel" : "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur"
  *
  *
  * Also used to identify conformity with additional interfaces. The example below shows
  * nikitas own GUI being identified as a usable service by the core
  *
- * "href" : "http://localhost:8092/noark5v4/gui",
- * "rel" : "http://nikita.arkivlab.no/noark5/v4/gui"
+ * "href" : "http://localhost:8092/noark5v5/gui",
+ * "rel" : "http://nikita.arkivlab.no/noark5/v5/gui"
  */
 public class ConformityLevel {
     protected String href;

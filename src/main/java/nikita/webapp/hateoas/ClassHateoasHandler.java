@@ -1,9 +1,9 @@
 package nikita.webapp.hateoas;
 
-import nikita.common.model.noark5.v4.Class;
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -58,7 +58,7 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
      * with a ClassificationSystem, but we are not doing that check here.
      * <p>
      * "../hateoas-api/arkivstruktur/klassifikasjonssystem/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/"
      *
      * @param entity             class
      * @param hateoasNoarkObject hateoasClass
@@ -81,7 +81,7 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
      * Class. Checks if the Class is actually associated with a Class.
      * <p>
      * "../hateoas-api/arkivstruktur/klasse/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/"
      *
      * @param entity             class
      * @param hateoasNoarkObject hateoasClass
@@ -122,8 +122,8 @@ public class ClassHateoasHandler extends HateoasHandler implements IClassHateoas
     @Override
     public void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + REGISTRATION
-                + SLASH, REL_FONDS_STRUCTURE_REGISTRATION,
+                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + RECORD
+                + SLASH, REL_FONDS_STRUCTURE_RECORD,
                 false));
     }
 

@@ -1,11 +1,11 @@
 package nikita.webapp.service.impl;
 
-import nikita.common.model.noark5.v4.DocumentDescription;
-import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.hateoas.*;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
-import nikita.common.repository.n5v4.IDocumentDescriptionRepository;
-import nikita.common.repository.n5v4.IRecordRepository;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
+import nikita.common.repository.n5v5.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
@@ -280,10 +280,11 @@ public class RecordService
                                @NotNull final Record incomingRecord) {
         Record existingRecord = getRecordOrThrow(recordSystemId);
         // Here copy all the values you are allowed to copy ....
-        // TODO: FIND ALL VALUES
-        // This might be a class that can only have values set via parameter
-        // values rather than request bodies
-
+        updateTitleAndDescription(incomingRecord, existingRecord);
+        if (null != incomingRecord.getDocumentMedium()) {
+            existingRecord.setDocumentMedium(
+                    incomingRecord.getDocumentMedium());
+        }
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingRecord.setVersion(version);

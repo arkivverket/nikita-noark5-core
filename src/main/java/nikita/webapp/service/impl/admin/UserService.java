@@ -1,10 +1,10 @@
 package nikita.webapp.service.impl.admin;
 
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.admin.AuthorityName;
-import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.AuthorityName;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;

@@ -285,7 +285,7 @@ app.controller('RegistryEntryController', ['$scope', '$http', 'breadcrumbService
             url: urlRegistryEntry,
             method: method,
             headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+              'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': GetUserToken(),
                 'ETAG': $scope.registryEntryETag
             },
@@ -325,7 +325,7 @@ $scope.send_form = function () {
             url: url,
             method: "POST",
             headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+                'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': GetUserToken()
             },
             data: formdata,

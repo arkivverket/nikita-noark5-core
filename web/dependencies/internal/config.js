@@ -4,7 +4,7 @@
 
 
 // Set the base url for application
-var baseUrl = 'http://localhost:8092/noark5v4/';
+var baseUrl = 'http://localhost:8092/noark5v5/';
 console.log("Setting nikita app_url: " + baseUrl);
 var recordsManagerPage = 'arkivar.html';
 var caseHandlerPage = 'saksbehandler.html';

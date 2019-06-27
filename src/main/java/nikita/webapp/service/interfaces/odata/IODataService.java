@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces.odata;
 
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;

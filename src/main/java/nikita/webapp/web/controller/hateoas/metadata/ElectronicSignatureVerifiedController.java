@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
-import nikita.common.model.noark5.v4.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v4.metadata.ElectronicSignatureVerified;
+import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
+import nikita.common.model.noark5.v5.metadata.ElectronicSignatureVerified;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.metadata.IElectronicSignatureVerifiedService;
@@ -30,8 +30,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
 @RequestMapping(
         value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
                 SLASH,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON,
-                NOARK5_V4_CONTENT_TYPE_JSON_XML})
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON,
+                NOARK5_V5_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
 public class ElectronicSignatureVerifiedController {
 

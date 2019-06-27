@@ -21,7 +21,7 @@ Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
  * Update templated printing so templated should only be printed if it
    is set true. Requires more work to roll out across entire
    application.
- * Remove Record->DocumentObject as per domain model of n5v4.
+ * Remove Record->DocumentObject as per domain model of n5v5.
  * Add ability to delete lists filtered with OData.
  * Return NO_CONTENT (204) on delete as per interface standard.
  * Introduce support for ConstraintViolationException exception.

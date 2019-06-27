@@ -6,12 +6,12 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.Class;
-import nikita.common.model.noark5.v4.File;
-import nikita.common.model.noark5.v4.Record;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.hateoas.*;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.IClassService;
 import org.springframework.http.HttpStatus;
@@ -32,8 +32,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(
         value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
-                CLASS, produces = {NOARK5_V4_CONTENT_TYPE_JSON,
-        NOARK5_V4_CONTENT_TYPE_JSON_XML})
+                CLASS, produces = {NOARK5_V5_CONTENT_TYPE_JSON,
+        NOARK5_V5_CONTENT_TYPE_JSON_XML})
 public class ClassHateoasController
         extends NoarkController {
 
@@ -73,7 +73,7 @@ public class ClassHateoasController
     @Counted
     @PostMapping(value = SLASH + LEFT_PARENTHESIS + "systemID" +
             RIGHT_PARENTHESIS + SLASH + NEW_SUB_CLASS,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas>
     createClassAssociatedWithClass(
             HttpServletRequest request,
@@ -125,7 +125,7 @@ public class ClassHateoasController
     @RequestMapping(method = POST,
             value = SLASH + LEFT_PARENTHESIS + "systemID" +
                     RIGHT_PARENTHESIS + SLASH + NEW_FILE,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FileHateoas>
     createFileAssociatedWithClass(
             HttpServletRequest request,
@@ -176,7 +176,7 @@ public class ClassHateoasController
     @RequestMapping(method = POST,
             value = SLASH + LEFT_PARENTHESIS + "systemID" +
                     RIGHT_PARENTHESIS + SLASH + NEW_CASE_FILE,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas>
     createCaseCaseFileAssociatedWithClass(
             HttpServletRequest request,
@@ -227,7 +227,7 @@ public class ClassHateoasController
     @RequestMapping(method = POST,
             value = SLASH + LEFT_PARENTHESIS + "systemID" +
                     RIGHT_PARENTHESIS + SLASH + NEW_RECORD,
-            consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordHateoas>
     createRecordAssociatedWithClass(
             HttpServletRequest request,
@@ -320,7 +320,7 @@ public class ClassHateoasController
     // Retrieve all ClassificationSystem associated with Class identified by a
     // systemId
     // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/klassifikasjonsystem
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klassifikasjonsystem/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klassifikasjonsystem/
     @ApiOperation(value = "Retrieves a single ClassificationSystem that is " +
             "the parent of the Class entity identified by systemId",
             response = ClassificationSystemHateoas.class)
@@ -348,7 +348,7 @@ public class ClassHateoasController
 
     // Retrieve all Class associated with Class identified by a systemId
     // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/klasse
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/
     @ApiOperation(value = "Retrieves a single Class that is  the parent of " +
             "the Class entity identified by systemId",
             response = ClassificationSystemHateoas.class)
@@ -487,7 +487,7 @@ public class ClassHateoasController
     @Counted
     @RequestMapping(method = PUT,
             value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-                    RIGHT_PARENTHESIS, consumes = NOARK5_V4_CONTENT_TYPE_JSON)
+                    RIGHT_PARENTHESIS, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas> updateClass(
             HttpServletRequest request,
             @ApiParam(name = "systemID",

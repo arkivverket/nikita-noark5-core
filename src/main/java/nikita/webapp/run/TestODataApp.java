@@ -1,15 +1,7 @@
 package nikita.webapp.run;
 
-import nikita.webapp.odata.NikitaODataToSQLWalker;
-import nikita.webapp.odata.ODataLexer;
-import nikita.webapp.odata.ODataParser;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.io.File;
 import java.io.InputStream;
 public class TestODataApp {
 
@@ -29,7 +21,7 @@ public class TestODataApp {
             afterApplicationStartup.populateTranslatedNames();
             */
             TestODataApp app = new TestODataApp();
-
+/*
             ODataLexer lexer = new ODataLexer(
                     CharStreams.fromStream(app.getInputStreamForParseFile(
                             "odata" + File.separator +
@@ -43,7 +35,7 @@ public class TestODataApp {
             NikitaODataToSQLWalker sqlWalker = new NikitaODataToSQLWalker();
             walker.walk(sqlWalker, tree);
             System.out.println(sqlWalker.getSqlStatement());
-
+*/
         } catch (RecognitionException e) {
             throw new IllegalStateException("Recognition exception");
         }

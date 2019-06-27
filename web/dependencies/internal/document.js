@@ -196,7 +196,7 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
             url: urlDocumentDescription,
             method: method,
             headers: {
-                'Content-Type': 'application/vnd.noark5-v4+json',
+              'Content-Type': 'application/vnd.noark5-v5+json',
                 'Authorization': GetUserToken(),
                 'ETAG': $scope.documentDescriptionETag
             },
@@ -236,7 +236,7 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
                 url: urlDocumentObject,
                 method: method,
                 headers: {
-                    'Content-Type': 'application/vnd.noark5-v4+json',
+                  'Content-Type': 'application/vnd.noark5-v5+json',
                     'Authorization': GetUserToken(),
                     'ETAG': $scope.documentDescriptionETag
                 },

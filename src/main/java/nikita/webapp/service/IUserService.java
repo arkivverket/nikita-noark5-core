@@ -1,8 +1,8 @@
 package nikita.webapp.service;
 
-import nikita.common.model.noark5.v4.admin.AuthorityName;
-import nikita.common.model.noark5.v4.admin.User;
-import nikita.common.model.noark5.v4.hateoas.admin.UserHateoas;
+import nikita.common.model.noark5.v5.admin.AuthorityName;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
 import nikita.webapp.util.exceptions.UsernameExistsException;
 
 import javax.validation.constraints.NotNull;

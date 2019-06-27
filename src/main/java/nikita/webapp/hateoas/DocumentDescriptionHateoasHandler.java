@@ -1,8 +1,8 @@
 package nikita.webapp.hateoas;
 
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +12,8 @@ import static nikita.common.config.N5ResourceMappings.*;
 /**
  * Created by tsodring on 2/6/17.
  * <p>
- * Used to add DocumentDescriptionHateoas links with DocumentDescription specific information
- * <p>
- * Not sure if there is a difference in what should be returned of links for various CRUD operations so keeping them
- * separate calls at the moment.
+ * Used to add DocumentDescriptionHateoas links with DocumentDescription
+ * specific information
  */
 @Component("documentDescriptionHateoasHandler")
 public class DocumentDescriptionHateoasHandler
@@ -26,7 +24,8 @@ public class DocumentDescriptionHateoasHandler
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
 
         // links for primary entities
         addRecord(entity, hateoasNoarkObject);
@@ -38,6 +37,8 @@ public class DocumentDescriptionHateoasHandler
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
         addNewScreening(entity, hateoasNoarkObject);
+        addNewParty(entity, hateoasNoarkObject);
+        addParty(entity, hateoasNoarkObject);
         // links for secondary entities 1:M
         addStorageLocation(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
@@ -66,7 +67,7 @@ public class DocumentDescriptionHateoasHandler
                           IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + entity.getSystemId() + SLASH +
-                REGISTRATION, REL_FONDS_STRUCTURE_RECORD, false));
+                RECORD, REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override
@@ -205,5 +206,43 @@ public class DocumentDescriptionHateoasHandler
     public void addDocumentStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_METADATA_PATH + SLASH + DOCUMENT_TYPE, REL_METADATA_DOCUMENT_TYPE, false));
+    }
+
+    /**
+     * Create a REL/HREF pair for the list of Party objects associated with the
+     * given DocumentDescription.
+     * <p>
+     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/part"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/part/"
+     *
+     * @param entity             documentDescription
+     * @param hateoasNoarkObject hateoasDocumentDescription
+     */
+    @Override
+    public void addParty(INikitaEntity entity,
+                         IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() +
+                        HREF_BASE_DOCUMENT_DESCRIPTION + entity.getSystemId() +
+                        SLASH + PART, REL_FONDS_STRUCTURE_PART, true));
+    }
+
+    /**
+     * Create a REL/HREF pair to create a new Part associated with the given
+     * DocumentDescription.
+     * <p>
+     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/ny-part"
+     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-part/"
+     *
+     * @param entity             documentDescription
+     * @param hateoasNoarkObject hateoasDocumentDescription
+     */
+    @Override
+    public void addNewParty(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() +
+                        HREF_BASE_DOCUMENT_DESCRIPTION + entity.getSystemId() +
+                        SLASH + NEW_PART, REL_FONDS_STRUCTURE_NEW_PART));
     }
 }

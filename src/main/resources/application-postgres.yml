@@ -5,7 +5,7 @@
 
 server:
   servlet:
-    context-path: /noark5v4
+    context-path: /noark5v5
   port: 8092
 
 spring:

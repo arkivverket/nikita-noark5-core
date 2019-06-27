@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -57,4 +57,41 @@ public interface IRecordHateoasHandler extends IHateoasHandler {
 
     void addNewScreening(INikitaEntity entity,
                          IHateoasNoarkObject hateoasNoarkObject);
+
+
+    void addStorageLocation(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewStorageLocation(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject);
+
+    void addComment(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewComment(INikitaEntity entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
+
+    void addAuthor(INikitaEntity entity,
+                   IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewAuthor(INikitaEntity entity,
+                      IHateoasNoarkObject hateoasNoarkObject);
+
+    void addCrossReference(INikitaEntity entity,
+                           IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewCrossReference(INikitaEntity entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
+    void addKeyword(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewKeyword(INikitaEntity entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
+
+    void addParty(INikitaEntity entity,
+                  IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewParty(INikitaEntity entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
 }

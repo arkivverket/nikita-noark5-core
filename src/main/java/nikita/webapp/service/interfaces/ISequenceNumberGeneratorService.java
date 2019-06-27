@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces;
 
-import nikita.common.model.noark5.v4.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v4.casehandling.SequenceNumberGenerator;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
 
 import javax.validation.constraints.NotNull;
 

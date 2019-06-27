@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.model.noark5.v4.NoarkGeneralEntity;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.NoarkGeneralEntity;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.util.CommonUtils;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package nikita.webapp.web.events;
 
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import org.springframework.context.ApplicationEvent;
 
 import javax.validation.constraints.NotNull;

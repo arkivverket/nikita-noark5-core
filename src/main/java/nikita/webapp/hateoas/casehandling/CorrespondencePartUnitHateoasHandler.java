@@ -1,8 +1,8 @@
 package nikita.webapp.hateoas.casehandling;
 
-import nikita.common.model.noark5.v4.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.Link;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.Link;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.*;

@@ -1,9 +1,9 @@
 package nikita.webapp.service;
 
-import nikita.common.model.noark5.v4.Fonds;
-import nikita.common.model.noark5.v4.hateoas.FondsHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INoarkGeneralEntity;
-import nikita.common.repository.n5v4.IFondsRepository;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
+import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.webapp.Base;
 import nikita.webapp.hateoas.FondsHateoasHandler;
 import nikita.webapp.service.impl.FondsService;

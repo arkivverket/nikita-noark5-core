@@ -104,7 +104,7 @@ var app = angular.module('nikita', [])
                 url: urlCorrespondencePartPerson,
                 method: method,
                 headers: {
-                    'Content-Type': 'application/vnd.noark5-v4+json',
+                  'Content-Type': 'application/vnd.noark5-v5+json',
                     'Authorization': GetUserToken(),
                     'ETAG': $scope.correspondencePartPersonETag
                 },

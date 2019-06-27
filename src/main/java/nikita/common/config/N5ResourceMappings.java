@@ -7,8 +7,6 @@ public final class N5ResourceMappings {
 
     // Commonly used entities for REST request mappings
     public static final String FONDS = "arkiv";
-    public static final String SUB = "under";
-    public static final String PARENT = "forelder";
     public static final String SUB_FONDS = SUB + FONDS;
     public static final String PARENT_FONDS = PARENT + FONDS;
     public static final String SERIES = "arkivdel";
@@ -20,9 +18,9 @@ public final class N5ResourceMappings {
     public static final String MEETING_FILE = "moetemappe";
     public static final String MEETING_PARTICIPANT = "moetedeltager";
     public static final String MEETING_RECORD = "moeteregistrering";
-    public static final String REGISTRATION = "registrering";
-    public static final String BASIC_RECORD = "basisregistrering";
+    public static final String RECORD = "registrering";
     public static final String REGISTRY_ENTRY = "journalpost";
+    public static final String RECORD_NOTE = "arkivnotat";
     public static final String DOCUMENT_DESCRIPTION = "dokumentbeskrivelse";
     public static final String DOCUMENT_OBJECT = "dokumentobjekt";
     public static final String STORAGE_LOCATION = "oppbevaringssted";
@@ -41,7 +39,7 @@ public final class N5ResourceMappings {
     public static final String NEW_COUNTRY = NEW + Constants.DASH + COUNTRY;
 
     public static final String COUNTRY_CODE = "landkode";
-    public static final String CLASSIFIED_CODE = "graderingskode";
+    public static final String CLASSIFIED_CODE = "grad";
     public static final String CLASSIFICATION_TYPE = "klassifikasjonstype";
     public static final String ASSOCIATED_WITH_RECORD_AS = "tilknyttetregistreringsom";
     public static final String ACCESS_RESTRICTION = "tilgangsrestriksjon";
@@ -105,18 +103,18 @@ public final class N5ResourceMappings {
     public static final String CASE_LOANED_DATE = "utlaantDato";
     public static final String CASE_LOANED_TO = "utlaantTil";
 
-    // CaseParty
-    public static final String CASE_PARTY = "sakspart";
-    public static final String CASE_PARTY_ID = "saksPartID";
-    public static final String CASE_PARTY_NAME = "sakspartNavn";
-    public static final String CASE_PARTY_ROLE = "sakspartrolle";
+    // Party
+    public static final String PART = "part";
+    public static final String PART_ID = "partID";
+    public static final String PART_NAME = "partNavn";
+    public static final String PART_ROLE = "partrolle";
 
     // Record
     public static final String RECORD_ARCHIVED_BY = "arkivertAv";
     public static final String RECORD_ARCHIVED_DATE = "arkivertDato";
 
-    // BasicRecord
-    public static final String BASIC_RECORD_ID = "registreringsID";
+    // Record
+    public static final String RECORD_ID = "registreringsID";
 
     // RegistryEntry
     public static final String REGISTRY_ENTRY_DATE = "journaldato";
@@ -181,10 +179,12 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM = "sjekksumAlgoritme";
     public static final String DOCUMENT_OBJECT_FILE_SIZE = "filstoerrelse";
     // The following may or may not be part of the official standard. Sent an email to find out
-    // but are specified in n5v4 tjenestegrensesnitt, but nit in metadata catalogues and therefore lack official
+    // but are specified in n5v5 tjenestegrensesnitt, but nit in metadata catalogues and therefore lack official
     // identifying numbers
     public static final String DOCUMENT_OBJECT_FILE_NAME = "filnavn";
     public static final String DOCUMENT_OBJECT_MIME_TYPE = "mimeType";
+    public static final String DOCUMENT_OBJECT_PRONOM_MIME = "pronomMime";
+    public static final String DOCUMENT_OBJECT_PRONOM_PUID = "pronomPuid";
     // Other Noark Objects
 
     // Precedence
@@ -194,7 +194,7 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_SOURCE_OF_LAW = "rettskildefaktor";
     public static final String PRECEDENCE_APPROVED_DATE = "presedensGodkjentDato";
     public static final String PRECEDENCE_APPROVED_BY = "presedensGodkjentAv";
-    public static final String PRECEDENCE_STATUS = "presedensstatus";
+    public static final String PRECEDENCE_STATUS = "presedensStatus";
 
     // Disposal
     public static final String DISPOSAL = "kassasjon";
@@ -259,8 +259,8 @@ public final class N5ResourceMappings {
     // Meeting
     public static final String MEETING_FILE_TYPE = "moetesakstype";
     public static final String MEETING_PARTICIPANT_FUNCTION = "moetedeltakerfunksjon";
-    public static final String MEETING_REGISTRATION_STATUS = "moteregistreringsstatus";
-    public static final String MEETING_REGISTRATION_TYPE = "moeteregistreringstype";
+    public static final String MEETING_RECORD_STATUS = "moteregistreringsstatus";
+    public static final String MEETING_RECORD_TYPE = "moeteregistreringstype";
 
     // FondsCreator
     public static final String FONDS_CREATOR = "arkivskaper";
@@ -369,18 +369,18 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG = "tilknyttetregistreringsom";
     public static final String AUTHOR_ENG = "forfatter";
-    public static final String BASIC_RECORD_ENG = "basicRecord";
-    public static final String BASIC_RECORD_ID_ENG = "registreringsID";
+    public static final String RECORD_ENG = "Record";
+    public static final String RECORD_ID_ENG = "registreringsID";
     public static final String BUSINESS_ADDRESS_ENG = "forretningsadresse";
     public static final String CASE_DATE_ENG = "saksdato";
     public static final String CASE_FILE_ENG = "caseFile";
     public static final String CASE_HANDLER_ENG = "saksbehandler";
     public static final String CASE_LOANED_DATE_ENG = "utlaantDato";
     public static final String CASE_LOANED_TO_ENG = "utlaantTil";
-    public static final String CASE_PARTY_ENG = "sakspart";
-    public static final String CASE_PARTY_ID_ENG = "saksPartID";
-    public static final String CASE_PARTY_NAME_ENG = "sakspartNavn";
-    public static final String CASE_PARTY_ROLE_ENG = "sakspartrolle";
+    public static final String PART_ENG = "part";
+    public static final String PART_ID_ENG = "partID";
+    public static final String PART_NAME_ENG = "partNavn";
+    public static final String PART_ROLE_ENG = "partrolle";
     public static final String CASE_RECORDS_MANAGEMENT_UNIT_ENG = "journalenhet";
     public static final String CASE_RESPONSIBLE_ENG = "saksansvarlig";
     public static final String CASE_SEQUENCE_NUMBER_ENG = "sakssekvensnummer";
@@ -396,8 +396,8 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_SYSTEM_ENG = "klassifikasjonssystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG = "klassifikasjonstype";
     public static final String CLASSIFICATION_TYPE_ENG = "klassifikasjonstype";
-    public static final String CLASSIFIED_CODE_ENG = "graderingskode";
-    public static final String CLASSIFIED_ENG = "gradering"; // root node
+    public static final String CLASSIFIED_CODE_ENG = "classifiedcode";
+    public static final String CLASSIFIED_ENG = "classified"; // root node
     public static final String CODE_ENG = "kode";
     public static final String COMMENT_DATE_ENG = "merknadsdato";
     public static final String COMMENT_ENG = "merknad";
@@ -497,8 +497,8 @@ public final class N5ResourceMappings {
     public static final String MEETING_PARTICIPANT_ENG = "moetedeltager";
     public static final String MEETING_PARTICIPANT_FUNCTION_ENG = "moetedeltakerfunksjon";
     public static final String MEETING_RECORD_ENG = "moeteregistrering";
-    public static final String MEETING_REGISTRATION_STATUS_ENG = "moteregistreringsstatus";
-    public static final String MEETING_REGISTRATION_TYPE_ENG = "moeteregistreringstype";
+    public static final String MEETING_RECORD_STATUS_ENG = "moteregistreringsstatus";
+    public static final String MEETING_RECORD_TYPE_ENG = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG = "mobiltelefon";
     public static final String NAME_ENG = "navn";
     public static final String ORGANISATION_NUMBER_ENG = "organisasjonsnummer";
@@ -513,14 +513,13 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_DATE_ENG = "presedensDato";
     public static final String PRECEDENCE_ENG = "presedens";
     public static final String PRECEDENCE_SOURCE_OF_LAW_ENG = "rettskildefaktor";
-    public static final String PRECEDENCE_STATUS_ENG = "presedensstatus";
+    public static final String PRECEDENCE_STATUS_ENG = "precedencestatus";
     public static final String PRODUCTION_VERSION_ENG = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG = "arkivertAv";
     public static final String RECORD_ARCHIVED_DATE_ENG = "arkivertDato";
     public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG = "referanseAdministratitivEnhet";
     public static final String REFERENCE_CASE_HANDLER_ENG = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG = "referanseArkivdel";
-    public static final String REGISTRATION_ENG = "record";
     public static final String REGISTRY_ENTRY_DATE_ENG = "journaldato";
     public static final String REGISTRY_ENTRY_DOCUMENT_DATE_ENG = "dokumentetsDato";
     public static final String REGISTRY_ENTRY_DUE_DATE_ENG = "forfallsdato";
@@ -581,18 +580,18 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG_OBJECT = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT = "tilknyttetregistreringsom";
     public static final String AUTHOR_ENG_OBJECT = "forfatter";
-    public static final String BASIC_RECORD_ENG_OBJECT = "BasicRecord";
-    public static final String BASIC_RECORD_ID_ENG_OBJECT = "registreringsID";
+    public static final String RECORD_ENG_OBJECT = "Record";
+    public static final String RECORD_ID_ENG_OBJECT = "registreringsID";
     public static final String BUSINESS_ADDRESS_ENG_OBJECT = "forretningsadresse";
     public static final String CASE_DATE_ENG_OBJECT = "saksdato";
     public static final String CASE_FILE_ENG_OBJECT = "CaseFile";
     public static final String CASE_HANDLER_ENG_OBJECT = "saksbehandler";
     public static final String CASE_LOANED_DATE_ENG_OBJECT = "utlaantDato";
     public static final String CASE_LOANED_TO_ENG_OBJECT = "utlaantTil";
-    public static final String CASE_PARTY_ENG_OBJECT = "sakspart";
-    public static final String CASE_PARTY_ID_ENG_OBJECT = "saksPartID";
-    public static final String CASE_PARTY_NAME_ENG_OBJECT = "sakspartNavn";
-    public static final String CASE_PARTY_ROLE_ENG_OBJECT = "sakspartrolle";
+    public static final String PART_ENG_OBJECT = "part";
+    public static final String PART_ID_ENG_OBJECT = "partID";
+    public static final String PART_NAME_ENG_OBJECT = "partNavn";
+    public static final String PART_ROLE_ENG_OBJECT = "partrolle";
     public static final String CASE_RECORDS_MANAGEMENT_UNIT_ENG_OBJECT = "journalenhet";
     public static final String CASE_RESPONSIBLE_ENG_OBJECT = "saksansvarlig";
     public static final String CASE_SEQUENCE_NUMBER_ENG_OBJECT = "sakssekvensnummer";
@@ -608,8 +607,8 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_SYSTEM_ENG_OBJECT = "klassifikasjonssystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG_OBJECT = "klassifikasjonstype";
     public static final String CLASSIFICATION_TYPE_ENG_OBJECT = "klassifikasjonstype";
-    public static final String CLASSIFIED_CODE_ENG_OBJECT = "graderingskode";
-    public static final String CLASSIFIED_ENG_OBJECT = "gradering"; // root node
+    public static final String CLASSIFIED_CODE_ENG_OBJECT = "classifiedcode";
+    public static final String CLASSIFIED_ENG_OBJECT = "classified"; // rootnode
     public static final String CODE_ENG_OBJECT = "kode";
     public static final String COMMENT_DATE_ENG_OBJECT = "merknadsdato";
     public static final String COMMENT_ENG_OBJECT = "merknad";
@@ -710,8 +709,8 @@ public final class N5ResourceMappings {
     public static final String MEETING_PARTICIPANT_ENG_OBJECT = "moetedeltager";
     public static final String MEETING_PARTICIPANT_FUNCTION_ENG_OBJECT = "moetedeltakerfunksjon";
     public static final String MEETING_RECORD_ENG_OBJECT = "moeteregistrering";
-    public static final String MEETING_REGISTRATION_STATUS_ENG_OBJECT = "moteregistreringsstatus";
-    public static final String MEETING_REGISTRATION_TYPE_ENG_OBJECT = "moeteregistreringstype";
+    public static final String MEETING_RECORD_STATUS_ENG_OBJECT = "moteregistreringsstatus";
+    public static final String MEETING_RECORD_TYPE_ENG_OBJECT = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
     public static final String NAME_ENG_OBJECT = "navn";
     public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisasjonsnummer";
@@ -726,14 +725,14 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_DATE_ENG_OBJECT = "presedensDato";
     public static final String PRECEDENCE_ENG_OBJECT = "presedens";
     public static final String PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT = "rettskildefaktor";
-    public static final String PRECEDENCE_STATUS_ENG_OBJECT = "presedensstatus";
+    public static final String PRECEDENCE_STATUS_ENG_OBJECT =
+            "precedenceStatus";
     public static final String PRODUCTION_VERSION_ENG_OBJECT = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG_OBJECT = "arkivertAv";
     public static final String RECORD_ARCHIVED_DATE_ENG_OBJECT = "arkivertDato";
     public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG_OBJECT = "referanseAdministratitivEnhet";
     public static final String REFERENCE_CASE_HANDLER_ENG_OBJECT = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG_OBJECT = "referanseArkivdel";
-    public static final String REGISTRATION_ENG_OBJECT = "Record";
     public static final String REGISTRY_ENTRY_DATE_ENG_OBJECT = "journaldato";
     public static final String REGISTRY_ENTRY_DOCUMENT_DATE_ENG_OBJECT = "dokumentetsDato";
     public static final String REGISTRY_ENTRY_DUE_DATE_ENG_OBJECT = "forfallsdato";

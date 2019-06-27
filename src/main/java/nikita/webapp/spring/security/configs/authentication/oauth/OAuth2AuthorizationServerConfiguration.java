@@ -28,7 +28,7 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
  * login to nikita with oauth2 support via curl:
  * <p>
  * curl -v -H 'Authorization: Basic bmlraXRhLWNsaWVudDpzZWNyZXQ='
- * -X POST  'http://127.0.1.1:8092/noark5v4/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password'
+ * -X POST  'http://127.0.1.1:8092/noark5v5/oauth/token?grant_type=password&client_id=nikita-client&username=admin&password=password'
  * <p>
  * bmlraXRhLWNsaWVudDpzZWNyZXQ= is 'nikita-client:secret' base64 encoded.
  * You will need to make sure this matches with the *.yml files where the

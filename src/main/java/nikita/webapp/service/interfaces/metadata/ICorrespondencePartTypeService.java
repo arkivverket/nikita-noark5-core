@@ -1,6 +1,6 @@
 package nikita.webapp.service.interfaces.metadata;
 
-import nikita.common.model.noark5.v4.metadata.CorrespondencePartType;
+import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

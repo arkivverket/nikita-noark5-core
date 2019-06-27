@@ -7,17 +7,19 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v4.Class;
-import nikita.common.model.noark5.v4.NoarkEntity;
-import nikita.common.model.noark5.v4.Series;
-import nikita.common.model.noark5.v4.casehandling.CaseFile;
-import nikita.common.model.noark5.v4.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v4.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v4.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v4.hateoas.SeriesHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v4.hateoas.casehandling.RegistryEntryHateoas;
-import nikita.common.model.noark5.v4.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RecordNote;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -39,7 +41,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -49,8 +50,9 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE,
-        produces = {NOARK5_V4_CONTENT_TYPE_JSON, NOARK5_V4_CONTENT_TYPE_JSON_XML})
-public class CaseFileHateoasController extends NoarkController {
+        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
+public class CaseFileHateoasController
+        extends NoarkController {
 
     private ICaseFileService caseFileService;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
@@ -75,6 +77,41 @@ public class CaseFileHateoasController extends NoarkController {
 
     // API - All POST Requests (CRUD - CREATE)
 
+    // Create a RecordNote entity
+    // POST [contextPath][api]/sakarkiv/{systemId}/ny-journalpost
+    @ApiOperation(value = "Persists a RecordNote object associated with the " +
+            "given Series systemId", notes = "Returns the newly created " +
+            "record object after it was associated with a File object and " +
+            "persisted to the database",
+            response = RecordNoteHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "RecordNote " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = RecordNoteHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD_NOTE,
+            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    public ResponseEntity<RecordNoteHateoas> createRecordNoteAssociatedWithFile(
+            @ApiParam(name = "systemID",
+                    value = "systemId of file to associate the recordNote with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "RecordNote",
+                    value = "Incoming recordNote object",
+                    required = true)
+            @RequestBody RecordNote recordNote) {
+        return caseFileService.createRecordNoteToCaseFile(systemID, recordNote);
+    }
+
     // Create a RegistryEntry entity
     // POST [contextPath][api]/sakarkiv/{systemId}/ny-journalpost
     @ApiOperation(value = "Persists a RegistryEntry object associated with the given Series systemId",
@@ -91,9 +128,8 @@ public class CaseFileHateoasController extends NoarkController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_REGISTRY_ENTRY, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            + SLASH + NEW_REGISTRY_ENTRY, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<RegistryEntryHateoas> createRegistryEntryAssociatedWithFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -103,9 +139,11 @@ public class CaseFileHateoasController extends NoarkController {
             @ApiParam(name = "RegistryEntry",
                     value = "Incoming registryEntry object",
                     required = true)
-            @RequestBody RegistryEntry registryEntry)  throws NikitaException {
-        RegistryEntry createdRegistryEntry = caseFileService.createRegistryEntryAssociatedWithCaseFile(systemID,
-                registryEntry);
+            @RequestBody RegistryEntry registryEntry) {
+        RegistryEntry createdRegistryEntry =
+                caseFileService.
+                        createRegistryEntryAssociatedWithCaseFile(systemID,
+                                registryEntry);
         RegistryEntryHateoas registryEntryHateoas = new RegistryEntryHateoas(createdRegistryEntry);
         registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdRegistryEntry));
@@ -118,39 +156,53 @@ public class CaseFileHateoasController extends NoarkController {
     // API - All GET Requests (CRUD - READ)
 
     // Create a RegistryEntry object with default values
-    // GET [contextPath][api]/sakarkiv/mappe/SYSTEM_ID/ny-journalpost
-    @ApiOperation(value = "Create a RegistryEntry with default values", response = RegistryEntry.class)
+    // GET [contextPath][api]/sakarkiv/mappe/{systemID}/ny-journalpost
+    @ApiOperation(value = "Create a RegistryEntry with default values",
+            response = RegistryEntryHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "RegistryEntry returned", response = RegistryEntry.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200,
+                    message = "RegistryEntry returned",
+                    response = RegistryEntryHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            NEW_REGISTRY_ENTRY, method = RequestMethod.GET)
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_REGISTRY_ENTRY)
     public ResponseEntity<RegistryEntryHateoas> createDefaultRegistryEntry(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response) {
+            @ApiParam(name = "systemID",
+                    value = "systemID of the caseFile to retrieve a template " +
+                            "RegistryEntry",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return caseFileService.generateDefaultRegistryEntry(systemID);
+    }
 
-        RegistryEntry defaultRegistryEntry = new RegistryEntry();
-        ZonedDateTime now = ZonedDateTime.now();
-
-        // TODO figure out good defaults to return
-        defaultRegistryEntry.setRecordDate(now);
-        defaultRegistryEntry.setDocumentDate(now);
-        defaultRegistryEntry.setRecordStatus(TEST_RECORD_STATUS);
-        defaultRegistryEntry.setRegistryEntryType(TEST_REGISTRY_ENTRY_TYPE);
-        defaultRegistryEntry.setRecordYear(now.getYear());
-        // TODO generate these
-        //defaultRegistryEntry.setRecordSequenceNumber(201701011);
-        //defaultRegistryEntry.setRegistryEntryNumber(201701);
-
-        RegistryEntryHateoas registryEntryHateoas = new
-                RegistryEntryHateoas(defaultRegistryEntry);
-        registryEntryHateoasHandler.addLinksOnNew(registryEntryHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryHateoas);
+    // Create a RecordNote object with default values
+    // GET [contextPath][api]/sakarkiv/mappe/{systemID}/ny-arkivnotat
+    @ApiOperation(value = "Create a RecordNote with default values",
+            response = RecordNoteHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "RecordNote returned",
+                    response = RecordNoteHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD_NOTE)
+    public ResponseEntity<RecordNoteHateoas> createDefaultRecordNote(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the caseFile to retrieve a template " +
+                            "RecordNote",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return caseFileService.generateDefaultRecordNote(systemID);
     }
 
     // Retrieve a single casefile identified by systemId
@@ -185,34 +237,54 @@ public class CaseFileHateoasController extends NoarkController {
 
     // Retrieve all RegistryEntry associated with a casefile identified by systemId
     // GET [contextPath][api]/sakarkiv/saksmappe/{systemID}/journalpost
-    @ApiOperation(value = "Retrieves all RegistryEntry associated with a CaseFile identified by systemId",
-            response = RegistryEntry.class)
+    @ApiOperation(value = "Retrieves all RegistryEntry associated with a " +
+            "CaseFile identified by systemId",
+            response = RegistryEntryHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "RegistryEntry list returned", response = RegistryEntryHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200,
+                    message = "RegistryEntry list returned",
+                    response = RegistryEntryHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + REGISTRY_ENTRY,
-            method = RequestMethod.GET)
-    public ResponseEntity<RegistryEntryHateoas> findRegistryEntryAssociatedWithCaseFileBySystemId(
-            HttpServletRequest request,
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + REGISTRY_ENTRY)
+    public ResponseEntity<RegistryEntryHateoas>
+    findRegistryEntryToCaseFileBySystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable("systemID") final String caseFileSystemId) {
-        CaseFile caseFile = caseFileService.findBySystemId(caseFileSystemId);
-        if (caseFile == null) {
-            throw new NoarkEntityNotFoundException(caseFileSystemId);
-        }
-        RegistryEntryHateoas registryEntryHateoas = new
-                RegistryEntryHateoas((List<INikitaEntity>)
-                (List) (caseFile.getReferenceRecord()));
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryHateoas);
+            @PathVariable("systemID") final String systemID) {
+        return caseFileService.findAllRegistryEntryToCaseFile(systemID);
+    }
+
+    // Retrieve all RecordNote associated with a casefile identified by systemId
+    // GET [contextPath][api]/sakarkiv/saksmappe/{systemID}/journalpost
+    @ApiOperation(value = "Retrieves all RecordNote associated with a " +
+            "CaseFile identified by systemId",
+            response = RecordNoteHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "RecordNote list returned",
+                    response = RecordNoteHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + RECORD_NOTE)
+    public ResponseEntity<RecordNoteHateoas>
+    findRecordNoteToCaseFileBySystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the caseFile to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return caseFileService.findAllRecordNoteToCaseFile(systemID);
     }
 
     @ApiOperation(value = "Retrieves multiple CaseFile entities limited by ownership rights", notes = "The field skip" +
@@ -321,7 +393,7 @@ public class CaseFileHateoasController extends NoarkController {
     @Counted
 
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V4_CONTENT_TYPE_JSON})
+            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CaseFileHateoas> updateCaseFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
