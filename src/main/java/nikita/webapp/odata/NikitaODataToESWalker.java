@@ -18,10 +18,12 @@ import static nikita.common.config.ESConstants.*;
  * MAY NOT DO ANYTHING.
  */
 
-public class NikitaODataToESWalker
-        extends NikitaODataWalker
-        implements IODataWalker {
-
+public class NikitaODataToESWalker {
+    // There is not time right now to get this code also in place. The
+    // concept is definitely nice, to convert OData to HQL, SQL and ES, but HQL
+    // is all we require at the moment. Leaving it in the repo commented out
+    // so the we may try and piece it together when we have some extra time
+    // now and again
     private static final Logger logger =
             LoggerFactory.getLogger(NikitaODataToESWalker.class);
 
@@ -66,7 +68,7 @@ public class NikitaODataToESWalker
      * via groups. Probably have to some lookup or something. But we are
      * currently just dealing with getting OData2ES to work.
      */
-    @Override
+
     public void processResource(String entity, String loggedInUser) {
         query = new JSONObject("{\n\t \"" + QUERY_QUERY +
                 "\" : {\n\t}\n}\n");
@@ -76,7 +78,7 @@ public class NikitaODataToESWalker
         query.put(QUERY_QUERY, where);
     }
 
-    @Override
+
     public void processNikitaObjects(
             String parentResource, String resource, String systemId, String loggedInUser) {
         logger.error("processNikitaObjects ES not implemented");
@@ -112,15 +114,15 @@ public class NikitaODataToESWalker
      * @param attribute The attribute/column you wish to filter on
      * @param value     The value you wish to filter on
      */
-    @Override
+
     public void processStartsWith(String attribute, String value) {
         JSONObject prefix = (JSONObject) query.get(QUERY_PREFIX);
         if (prefix == null) {
             prefix = new JSONObject();
-            prefix.put(getNameObject(attribute), value);
+            //prefix.put(getNameObject(attribute), value);
             query.put(QUERY_PREFIX, prefix);
         } else {
-            prefix.put(getNameObject(attribute), value);
+            // prefix.put(getNameObject(attribute), value);
         }
     }
 
@@ -156,16 +158,16 @@ public class NikitaODataToESWalker
      * @param attribute The attribute/column you wish to filter on
      * @param value     The value you wish to filter on
      */
-    @Override
+
     public void processContains(String attribute, String value) {
 
         JSONObject matchPhrase = (JSONObject) query.get(QUERY_MATCH_PHRASE);
         if (matchPhrase == null) {
             matchPhrase = new JSONObject();
-            matchPhrase.put(getNameObject(attribute), value);
+            //matchPhrase.put(getNameObject(attribute), value);
             query.put(QUERY_MATCH_PHRASE, matchPhrase);
         } else {
-            matchPhrase.put(getNameObject(attribute), value);
+            //matchPhrase.put(getNameObject(attribute), value);
         }
     }
 
@@ -189,23 +191,23 @@ public class NikitaODataToESWalker
      *                   lt etc
      * @param value      The value you wish to filter on
      */
-    @Override
+
     public void processComparatorCommand(String attribute, String comparator,
                                          String value) {
 
     }
 
-    @Override
+
     public void processSkipCommand(Integer skip) {
 
     }
 
-    @Override
+
     public void processTopCommand(Integer top) {
 
     }
 
-    @Override
+
     public void processOrderByCommand(String attribute, String sortOrder) {
 
     }

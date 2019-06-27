@@ -133,7 +133,7 @@ public class NoarkGeneralEntity
     }
 
     @Override
-    public int compareTo(NoarkEntity otherEntity) {
+    public int compareTo(nikita.common.model.noark5.v5.NoarkEntity otherEntity) {
         if (null == otherEntity) {
             return -1;
         }

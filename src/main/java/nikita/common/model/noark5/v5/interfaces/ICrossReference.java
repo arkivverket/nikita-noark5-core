@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface ICrossReference {
     List<CrossReference> getReferenceCrossReference();
-
     void setReferenceCrossReference(List<CrossReference> crossReference);
+
+    void addReferenceCrossReference(CrossReference crossReference);
 }

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.FileDeserializer;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.FileHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
@@ -16,13 +16,18 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CLASS;
+import static nikita.common.config.N5ResourceMappings.REGISTRATION;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues;
 
 @Entity
 @Table(name = "file")
@@ -127,7 +132,7 @@ public class File
             referencedColumnName = PRIMARY_KEY_SCREENING)
     private Screening referenceScreening;
 
-    @OneToMany(mappedBy = "referenceFile")
+    @OneToMany(mappedBy = "referenceFile", cascade = ALL)
     private List<CrossReference> referenceCrossReference;
 
     // Links to Party
@@ -288,22 +293,35 @@ public class File
         this.referenceParty.add(party);
     }
 
-    /**
-     * Identify who is the parent of this object.
-     */
-    public NoarkEntity chooseParent() {
-        if (null != referenceParentFile) {
-            return referenceParentFile;
-        } else if (null != referenceClass) {
-            return referenceClass;
-        } else if (null != referenceSeries) {
-            return referenceSeries;
-        } else { // This should be impossible,
-            // a File cannot exist without a parent
-            throw new NoarkEntityNotFoundException(
-                    "Could not find parent object for " + this.toString());
+    @Override
+    public void addReferenceCrossReference(CrossReference crossReference) {
+        this.referenceCrossReference.add(crossReference);
+    }
+
+    @Override
+    public void createReference(@NotNull INikitaEntity entity,
+                                @NotNull String referenceType) {
+
+        if (referenceType.equalsIgnoreCase(NEW_CROSS_REFERENCE)) {
+            CrossReference crossReference = new CrossReference();
+            setSystemIdEntityValues(crossReference);
+            crossReference.setFromSystemId(getSystemId());
+            crossReference.setToSystemId(entity.getSystemId());
+
+            if (entity.getBaseTypeName().equals(CLASS)) {
+                crossReference.setReferenceClass((Class) entity);
+                crossReference.setReferenceType(REFERENCE_TO_CLASS);
+            } else if (entity.getBaseTypeName().equals(REGISTRATION)) {
+                crossReference.setReferenceRecord((Record) entity);
+                crossReference.setReferenceType(REFERENCE_TO_REGISTRATION);
+            }
+            crossReference.setReferenceFile(this);
+            referenceCrossReference.add(crossReference);
+            ((ICrossReference) entity).
+                    addReferenceCrossReference(crossReference);
         }
     }
+
 
     @Override
     public String toString() {

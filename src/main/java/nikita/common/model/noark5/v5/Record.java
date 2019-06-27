@@ -155,7 +155,7 @@ public class Record
 
     // Links to Authors
     @ManyToMany
-    @JoinTable(name = "basic_record_author",
+    @JoinTable(name = "registration_author",
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
                     referencedColumnName = PRIMARY_KEY_RECORD),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_AUTHOR_PK,
@@ -403,9 +403,15 @@ public class Record
         return referenceCrossReference;
     }
 
+    @Override
     public void setReferenceCrossReference(
             List<CrossReference> referenceCrossReference) {
         this.referenceCrossReference = referenceCrossReference;
+    }
+
+    @Override
+    public void addReferenceCrossReference(CrossReference crossReference) {
+        this.referenceCrossReference.add(crossReference);
     }
 
     public List<Party> getReferenceParty() {

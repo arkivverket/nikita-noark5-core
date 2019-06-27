@@ -7,15 +7,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v5.Class;
-import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
@@ -328,7 +323,7 @@ public class CaseFileHateoasController
 
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
             method = RequestMethod.DELETE)
-    public ResponseEntity<HateoasNoarkObject> deleteCaseFileBySystemId(
+    public ResponseEntity<String> deleteCaseFileBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
                     value = "systemID of the caseFile to delete",
@@ -336,25 +331,11 @@ public class CaseFileHateoasController
             @PathVariable("systemID") final String systemID) {
 
         CaseFile caseFile = caseFileService.findBySystemId(systemID);
-        NoarkEntity parentEntity = caseFile.chooseParent();
-        HateoasNoarkObject hateoasNoarkObject;
-        if (parentEntity instanceof Series) {
-            hateoasNoarkObject = new SeriesHateoas(parentEntity);
-            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        // TODO: Can a casefile have a Class as parent???
-        else if (parentEntity instanceof Class) {
-            hateoasNoarkObject = new ClassHateoas(parentEntity);
-            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else {
-            throw new NikitaException("Internal error. Could not process " + request.getRequestURI());
-        }
         caseFileService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, caseFile));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(hateoasNoarkObject);
+                .body("deleted");
     }
 
     // Delete all CaseFile

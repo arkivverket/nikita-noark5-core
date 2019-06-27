@@ -8,7 +8,9 @@ import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Class;
-import nikita.common.model.noark5.v5.*;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
@@ -795,7 +797,7 @@ public class FileHateoasController
 
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
             method = RequestMethod.DELETE)
-    public ResponseEntity<HateoasNoarkObject> deleteFileBySystemId(
+    public ResponseEntity<String> deleteFileBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to delete",
@@ -803,29 +805,11 @@ public class FileHateoasController
             @PathVariable("systemID") final String systemID) {
 
         File file = fileService.findBySystemId(systemID);
-        NoarkEntity parentEntity = file.chooseParent();
-        HateoasNoarkObject hateoasNoarkObject;
-        if (parentEntity instanceof Series) {
-            hateoasNoarkObject = new SeriesHateoas(parentEntity);
-            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else if (parentEntity instanceof File) {
-            hateoasNoarkObject = new FileHateoas(parentEntity);
-            fileHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else if (parentEntity instanceof Class) {
-            hateoasNoarkObject = new ClassHateoas(parentEntity);
-            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else {
-            throw new NikitaException("Internal error. Could not process"
-                    + request.getRequestURI());
-        }
         fileService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, file));
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(hateoasNoarkObject);
+                .body("deleted");
     }
 
     // Delete all File

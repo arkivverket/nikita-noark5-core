@@ -19,6 +19,7 @@ public final class N5ResourceMappings {
     public static final String MEETING_PARTICIPANT = "moetedeltager";
     public static final String MEETING_RECORD = "moeteregistrering";
     public static final String RECORD = "registrering";
+    public static final String REGISTRATION = "registrering";
     public static final String REGISTRY_ENTRY = "journalpost";
     public static final String RECORD_NOTE = "arkivnotat";
     public static final String DOCUMENT_DESCRIPTION = "dokumentbeskrivelse";
@@ -61,8 +62,6 @@ public final class N5ResourceMappings {
     public static final String NEW_DOCUMENT_MEDIUM = NEW + Constants.DASH + DOCUMENT_MEDIUM;
     public static final String SYSTEM_ID_PARAMETER =
             SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
-
-
 
     // Fonds
     public static final String FONDS_STATUS = "arkivstatus";
@@ -245,9 +244,7 @@ public final class N5ResourceMappings {
 
     // CrossReference
     public static final String CROSS_REFERENCE = "kryssreferanse";
-    public static final String CROSS_REFERENCE_RECORD = "referanseTilRegistrering";
-    public static final String CROSS_REFERENCE_FILE = "referanseTilMappe";
-    public static final String CROSS_REFERENCE_CLASS = "referanseTilKlasse";
+    public static final String CROSS_REFERENCES = "kryssreferanser";
 
     // ElectronicSignature
     public static final String ELECTRONIC_SIGNATURE = "elektronisksignatur";
@@ -259,8 +256,8 @@ public final class N5ResourceMappings {
     // Meeting
     public static final String MEETING_FILE_TYPE = "moetesakstype";
     public static final String MEETING_PARTICIPANT_FUNCTION = "moetedeltakerfunksjon";
-    public static final String MEETING_RECORD_STATUS = "moteregistreringsstatus";
-    public static final String MEETING_RECORD_TYPE = "moeteregistreringstype";
+    public static final String MEETING_REGISTRATION_STATUS = "moteregistreringsstatus";
+    public static final String MEETING_REGISTRATION_TYPE = "moeteregistreringstype";
 
     // FondsCreator
     public static final String FONDS_CREATOR = "arkivskaper";
@@ -386,7 +383,7 @@ public final class N5ResourceMappings {
     public static final String CASE_SEQUENCE_NUMBER_ENG = "sakssekvensnummer";
     public static final String CASE_STATUS_ENG = "saksstatus";
     public static final String CASE_YEAR_ENG = "saksaar";
-    public static final String CLASS_ENG = "klasse";
+    public static final String CLASS_ENG = "class";
     public static final String CLASS_ID_ENG = "klasseID";
     public static final String CLASSIFICATION_BY_ENG = "gradertAv";
     public static final String CLASSIFICATION_DATE_ENG = "graderingsdato";
@@ -496,9 +493,9 @@ public final class N5ResourceMappings {
     public static final String MEETING_FILE_TYPE_ENG = "moetesakstype";
     public static final String MEETING_PARTICIPANT_ENG = "moetedeltager";
     public static final String MEETING_PARTICIPANT_FUNCTION_ENG = "moetedeltakerfunksjon";
-    public static final String MEETING_RECORD_ENG = "moeteregistrering";
-    public static final String MEETING_RECORD_STATUS_ENG = "moteregistreringsstatus";
-    public static final String MEETING_RECORD_TYPE_ENG = "moeteregistreringstype";
+    public static final String MEETING_REGISTRATION_ENG = "moeteregistrering";
+    public static final String MEETING_REGISTRATION_STATUS_ENG = "moteregistreringsstatus";
+    public static final String MEETING_REGISTRATION_TYPE_ENG = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG = "mobiltelefon";
     public static final String NAME_ENG = "navn";
     public static final String ORGANISATION_NUMBER_ENG = "organisasjonsnummer";
@@ -597,7 +594,7 @@ public final class N5ResourceMappings {
     public static final String CASE_SEQUENCE_NUMBER_ENG_OBJECT = "sakssekvensnummer";
     public static final String CASE_STATUS_ENG_OBJECT = "saksstatus";
     public static final String CASE_YEAR_ENG_OBJECT = "saksaar";
-    public static final String CLASS_ENG_OBJECT = "klasse";
+    public static final String CLASS_ENG_OBJECT = "Class";
     public static final String CLASS_ID_ENG_OBJECT = "klasseID";
     public static final String CLASSIFICATION_BY_ENG_OBJECT = "gradertAv";
     public static final String CLASSIFICATION_DATE_ENG_OBJECT = "graderingsdato";
@@ -708,9 +705,9 @@ public final class N5ResourceMappings {
     public static final String MEETING_FILE_TYPE_ENG_OBJECT = "moetesakstype";
     public static final String MEETING_PARTICIPANT_ENG_OBJECT = "moetedeltager";
     public static final String MEETING_PARTICIPANT_FUNCTION_ENG_OBJECT = "moetedeltakerfunksjon";
-    public static final String MEETING_RECORD_ENG_OBJECT = "moeteregistrering";
-    public static final String MEETING_RECORD_STATUS_ENG_OBJECT = "moteregistreringsstatus";
-    public static final String MEETING_RECORD_TYPE_ENG_OBJECT = "moeteregistreringstype";
+    public static final String MEETING_REGISTRATION_ENG_OBJECT = "moeteregistrering";
+    public static final String MEETING_REGISTRATION_STATUS_ENG_OBJECT = "moteregistreringsstatus";
+    public static final String MEETING_REGISTRATION_TYPE_ENG_OBJECT = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
     public static final String NAME_ENG_OBJECT = "navn";
     public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisasjonsnummer";

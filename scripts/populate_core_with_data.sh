@@ -121,6 +121,7 @@ systemIDCreatedFile=$(curl "${curloptsCreateFileClass[@]}" | jq '.systemID' |
  sed 's/\"//g');
 printf "created   File 1              ($systemIDCreatedFile) \n";
 
+
 # Create a record object and capture the systemId
 # Note that record does not contain any administration to be uploaded in JSON to be created. createdBy etc are set by the core.
 # It is handled as a POST request without data
@@ -133,7 +134,8 @@ echo  ${curloptsCreateRecord[@]};
 # Create record 1 associated with a file 1 and capture systemId
 systemIDCreatedRecord=$(curl "${curloptsCreateRecord[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created    Record 1            ($systemIDCreatedRecord) associated with ($systemIDCreatedFile) \n";
-#echo ${curloptsCreateRecord[@]};
+echo ${curloptsCreateRecord[@]};
+exit;
 
 # Setup curl options for documentDescription
 curloptsCreateDocumentDescription+=("${curlPostOpts[@]}");
@@ -142,7 +144,7 @@ curloptsCreateDocumentDescription+=( --data @"$curl_files_dir"document-descripti
 # Create documentDescription 1 associated with a file 1 / record 1 and capture systemId
 systemIDCreatedDocumentDescription=$(curl "${curloptsCreateDocumentDescription[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created     DocumentDescription ($systemIDCreatedDocumentDescription) associated with ($systemIDCreatedRecord) \n";
-echo ${curloptsCreateDocumentDescription[@]};
+#echo ${curloptsCreateDocumentDescription[@]};
 
 # Setup curl options for documentObject
 curloptsCreateDocumentObject+=("${curlPostOpts[@]}");
@@ -200,7 +202,7 @@ curloptsCreateRegistryEntry+=( --data @"$curl_files_dir"registry-entry-data.json
 
 # Create registryEntry 1 associated with a caseFile 1 and capture systemId
 systemIDCreatedRegistryEntry=$(curl "${curloptsCreateRegistryEntry[@]}" | jq '.systemID' | sed 's/\"//g');
-echo "${curloptsCreateRegistryEntry[@]}";
+#echo "${curloptsCreateRegistryEntry[@]}";
 printf "created    RegistryEntry 1     ($systemIDCreatedRegistryEntry) associated with ($systemIDCreatedCaseFile)\n";
 
 # Setup curl options for correspondencePartPErson

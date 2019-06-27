@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkEntity;
@@ -11,82 +10,100 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.PRIMARY_CROSS_REFERENCE;
+import static nikita.common.config.N5ResourceMappings.CROSS_REFERENCE;
+
+/**
+ * Created by tsodring
+ * <p>
+ * Note a cross-reference is a a one way relationship from an entity to
+ * another entity. It is a NoarkGeneral entity so it has a systemID for
+ * identification purposes. This breaks with the current understanding of the
+ * domain model in the API-standard.
+ * <p>
+ * A cross reference can occur between File, Class and Record. The fields
+ * fromsSystemId and toSystemId show the one way relationship.
+ */
 @Entity
 @Table(name = "cross_reference")
-// Enable soft delete of CrossReference
-// @SQLDelete(sql="UPDATE cross_reference SET deleted = true WHERE pk_cross_reference_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_cross_reference_id"))
-public class CrossReference extends NoarkEntity implements ICrossReferenceEntity {
+@AttributeOverride(name = "id",
+        column = @Column(name = PRIMARY_CROSS_REFERENCE))
+public class CrossReference
+        extends NoarkEntity
+        implements ICrossReferenceEntity {
 
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "from_system_id", nullable = false)
+    private String fromSystemId;
+
+    @Column(name = "to_system_id", nullable = false)
+    private String toSystemId;
+
     /**
+     * Can be referanseTilKlasse, referanseTilMappe or
+     * referanseTilRegistrering
+     */
+    @Column(name = "reference_type", nullable = false)
+    private String referenceType;
+
+    /**
+     * Link to Class
+     * Can be used to determine:
      * M219 - referanseTilKlasse (xs:string)
      * points to systemId of the referenced Class
      **/
-    @Column(name = "class_system_id")
-    private String referenceToClass;
+    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(name = "cross_reference_class_id",
+            referencedColumnName = "pk_class_id")
+    private Class referenceClass;
 
     /**
+     * Link to File
+     * Can be used to determine:
      * M210 - referanseTilMappe (xs:string)
-     * points to systemId of the referenced File
+     * points to systemId of the referenced FiLink to File
      **/
-    @Column(name = "file_system_id")
-    private String referenceToFile;
+    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(name = "cross_reference_file_id",
+            referencedColumnName = "pk_file_id")
+    private File referenceFile;
 
     /**
+     * Link to Record
+     * Can be used to determine:
      * M212 - referanseTilRegistrering (xs:string)
      * points to systemId of the referenced Record
      **/
-    @Column(name = "record_system_id")
-    private String referenceToRecord;
-
-    // Link to Class
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cross_reference_class_id", referencedColumnName = "pk_class_id")
-    private Class referenceClass;
-
-    // Link to File
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cross_reference_file_id", referencedColumnName = "pk_file_id")
-    private File referenceFile;
-
-    // Link to Record
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cross_reference_basic_record_id", referencedColumnName = "pk_record_id")
+    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(name = "cross_reference_registration_id",
+            referencedColumnName = "pk_record_id")
     private Record referenceRecord;
 
-    @Override
-    public String getBaseTypeName() {
-        return N5ResourceMappings.CROSS_REFERENCE;
+    public String getFromSystemId() {
+        return fromSystemId;
     }
 
-    @Override
-    public String getReferenceToClass() {
-        return referenceToClass;
+    public void setFromSystemId(String fromSystemId) {
+        this.fromSystemId = fromSystemId;
     }
 
-    public void setReferenceToClass(String referenceToClass) {
-        this.referenceToClass = referenceToClass;
+    public String getToSystemId() {
+        return toSystemId;
     }
 
-    @Override
-    public String getReferenceToFile() {
-        return referenceToFile;
+    public void setToSystemId(String toSystemId) {
+        this.toSystemId = toSystemId;
     }
 
-    public void setReferenceToFile(String referenceToFile) {
-        this.referenceToFile = referenceToFile;
+    public String getReferenceType() {
+        return referenceType;
     }
 
-    @Override
-    public String getReferenceToRecord() {
-        return referenceToRecord;
-    }
-
-    public void setReferenceToRecord(String referenceToRecord) {
-        this.referenceToRecord = referenceToRecord;
+    public void setReferenceType(String referenceType) {
+        this.referenceType = referenceType;
     }
 
     public Class getReferenceClass() {
@@ -114,11 +131,15 @@ public class CrossReference extends NoarkEntity implements ICrossReferenceEntity
     }
 
     @Override
+    public String getBaseTypeName() {
+        return CROSS_REFERENCE;
+    }
+
+    @Override
     public String toString() {
-        return "CrossReference{" + super.toString() +
-                ", referenceToClass='" + referenceToClass + '\'' +
-                ", referenceToFile='" + referenceToFile + '\'' +
-                ", referenceToRecord='" + referenceToRecord + '\'' +
+        return "CrossReference{" +
+                "fromSystemId='" + fromSystemId + '\'' +
+                ", toSystemId='" + toSystemId + '\'' +
                 '}';
     }
 
@@ -136,9 +157,8 @@ public class CrossReference extends NoarkEntity implements ICrossReferenceEntity
         CrossReference rhs = (CrossReference) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(referenceToClass, rhs.referenceToClass)
-                .append(referenceToFile, rhs.referenceToFile)
-                .append(referenceToRecord, rhs.referenceToRecord)
+                .append(fromSystemId, rhs.fromSystemId)
+                .append(toSystemId, rhs.toSystemId)
                 .isEquals();
     }
 
@@ -146,9 +166,8 @@ public class CrossReference extends NoarkEntity implements ICrossReferenceEntity
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(referenceToClass)
-                .append(referenceToFile)
-                .append(referenceToRecord)
+                .append(fromSystemId)
+                .append(toSystemId)
                 .toHashCode();
     }
 }

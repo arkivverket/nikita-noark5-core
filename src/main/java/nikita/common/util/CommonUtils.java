@@ -23,6 +23,7 @@ import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedHeaderException;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -213,6 +214,30 @@ public final class CommonUtils {
                 @NotNull String englishNameObject) {
             nor2engEntityMap.put(norwegianName,
                     new ModelNames(englishNameDatabase, englishNameObject));
+        }
+
+        /**
+         * split a URL in two, using the API name as the point to split. This is
+         * only undertaken if the URL starts with 'http://' or 'https://',
+         * otherwise the url is returned as is.
+         * <p>
+         * The reason for this is to solve the problem where spring is
+         * rejecting query parameters that contain a double '//' as in
+         * 'http://', as the '//' is seen as a potential security issue.
+         *
+         * @param url the URL as a string to sanitise for OData internal use
+         * @return the sanitised URL as a String
+         */
+        public static String sanitiseUrlForOData(String url) {
+            if (url.contains("http://") || url.contains("https://")) {
+                String[] split = url.split(HATEOAS_API_PATH);
+                if (split != null && split.length != 2) {
+                    throw new NikitaMalformedInputDataException(
+                            "OData filtering problem with URL [" + url + "]");
+                }
+                return ODATA_PATH + split[1];
+            } else
+                return url;
         }
 
         public static String getEnglishNameObject(String norwegianName) {
@@ -561,36 +586,59 @@ public final class CommonUtils {
                 return result.toString();
             }
 
-            // TODO: FIX THIS!!!!
-            public static List<CrossReference> deserialiseCrossReferences(ObjectNode objectNode, StringBuilder errors) {
-                List<CrossReference> crossReferences = new ArrayList<>();
+            public static List<CrossReference> deserialiseCrossReferences(
+                    @NotNull ICrossReference crossReferenceObject,
+                    @NotNull ObjectNode objectNode,
+                    @NotNull StringBuilder errors) {
 
-                //deserialiseCrossReference(crossReference, objectNode);
+                List<CrossReference> crossReferences = crossReferenceObject.
+                        getReferenceCrossReference();
+                if (null != crossReferences) {
+                    crossReferences.forEach(
+                            crossReference ->
+                                    deserialiseCrossReferenceEntity(crossReference,
+                                            objectNode, errors));
+                }
+                objectNode.remove(CROSS_REFERENCES);
                 return crossReferences;
             }
 
-            public static void deserialiseCrossReference(ICrossReferenceEntity crossReferenceEntity,
-                                                         ObjectNode objectNode, StringBuilder errors) {
+            /**
+             * Note: This approach requires an additional step to add the
+             * fromSystemId. This can't be solved here.
+             *
+             * @param crossReferenceEntity
+             * @param objectNode
+             * @param errors
+             */
+            public static void deserialiseCrossReferenceEntity(
+                    ICrossReferenceEntity crossReferenceEntity,
+                    ObjectNode objectNode, StringBuilder errors) {
 
-                // Deserialize referenceToRecord
-                JsonNode currentNode = objectNode.get(CROSS_REFERENCE_RECORD);
+                deserialiseNoarkSystemIdEntity(crossReferenceEntity,
+                        objectNode, errors);
+
+                JsonNode currentNode = objectNode.get(REFERENCE_TO_CLASS);
                 if (null != currentNode) {
-                    crossReferenceEntity.setReferenceToRecord(currentNode.textValue());
-                    objectNode.remove(CROSS_REFERENCE_RECORD);
+                    crossReferenceEntity.setReferenceType(REFERENCE_TO_CLASS);
+                    crossReferenceEntity.setToSystemId(
+                            currentNode.textValue());
+                    objectNode.remove(REFERENCE_TO_CLASS);
                 }
-
-                // Deserialize referenceToFile
-                currentNode = objectNode.get(CROSS_REFERENCE_FILE);
+                currentNode = objectNode.get(REFERENCE_TO_REGISTRATION);
                 if (null != currentNode) {
-                    crossReferenceEntity.setReferenceToFile(currentNode.textValue());
-                    objectNode.remove(CROSS_REFERENCE_FILE);
+                    crossReferenceEntity.setReferenceType(
+                            REFERENCE_TO_REGISTRATION);
+                    crossReferenceEntity.setToSystemId(
+                            currentNode.textValue());
+                    objectNode.remove(REFERENCE_TO_REGISTRATION);
                 }
-
-                // Deserialize referenceToClass
-                currentNode = objectNode.get(CROSS_REFERENCE_CLASS);
+                currentNode = objectNode.get(REFERENCE_TO_FILE);
                 if (null != currentNode) {
-                    crossReferenceEntity.setReferenceToClass(currentNode.textValue());
-                    objectNode.remove(CROSS_REFERENCE_CLASS);
+                    crossReferenceEntity.setReferenceType(REFERENCE_TO_FILE);
+                    crossReferenceEntity.setToSystemId(
+                            currentNode.textValue());
+                    objectNode.remove(REFERENCE_TO_FILE);
                 }
                 objectNode.remove(CROSS_REFERENCE);
             }
@@ -2103,23 +2151,30 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printCrossReference(JsonGenerator jgen, ICrossReferenceEntity crossReferenceEntity)
+            public static void printCrossReferences(
+                    @NotNull JsonGenerator jgen,
+                    @NotNull ICrossReference crossReferences)
                     throws IOException {
-                if (crossReferenceEntity != null) {
+                jgen.writeArrayFieldStart(CROSS_REFERENCES);
+                for (CrossReference crossReference :
+                        crossReferences.getReferenceCrossReference()) {
+                    printCrossReference(jgen, crossReference);
+                }
+                jgen.writeEndArray();
+            }
+
+            private static void printCrossReference(
+                    @NotNull JsonGenerator jgen,
+                    @NotNull ICrossReferenceEntity crossReference)
+                    throws IOException {
+                if (crossReference != null) {
                     jgen.writeObjectFieldStart(CROSS_REFERENCE);
-                    if (crossReferenceEntity.getReferenceToClass() != null) {
-                        jgen.writeStringField(CROSS_REFERENCE_CLASS, crossReferenceEntity.getReferenceToClass());
-                    }
-                    if (crossReferenceEntity.getReferenceToFile() != null) {
-                        jgen.writeStringField(CROSS_REFERENCE_FILE, crossReferenceEntity.getReferenceToFile());
-                    }
-                    if (crossReferenceEntity.getReferenceToRecord() != null) {
-                        jgen.writeStringField(CROSS_REFERENCE_RECORD, crossReferenceEntity.getReferenceToRecord());
-                    }
+                    printSystemIdEntity(jgen, crossReference);
+                    jgen.writeStringField(crossReference.getReferenceType(),
+                            crossReference.getToSystemId());
                     jgen.writeEndObject();
                 }
             }
-
 
             public static void printKeyword(JsonGenerator jgen, IKeyword keywordEntity)
                     throws IOException {

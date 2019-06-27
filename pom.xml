@@ -55,7 +55,8 @@
     <commons-lang3.version>3.4</commons-lang3.version>
     <springfox-swagger2.version>2.7.0</springfox-swagger2.version>
     <springfox-swagger-ui.version>2.7.0</springfox-swagger-ui.version>
-    <antlr.version>4.7.1</antlr.version>
+    <antlr.version>4.7.2</antlr.version>
+    <antlr-maven-plugin.version>4.7.2</antlr-maven-plugin.version>
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     <tika-parsers.version>1.18</tika-parsers.version>
 
@@ -473,8 +474,10 @@
       <plugin>
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-maven-plugin</artifactId>
-        <version>4.5.3</version>
+        <version>${antlr-maven-plugin.version}</version>
         <configuration>
+          <listener>true</listener>
+          <visitor>true</visitor>
           <arguments>
             <argument>-package</argument>
             <argument>nikita.webapp.odata.base</argument>

@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.util.Map;
 
-import static nikita.common.config.Constants.*;
-
+import static nikita.common.config.ODataConstants.*;
+import static nikita.common.util.CommonUtils.WebUtils.sanitiseUrlForOData;
 
 /**
  * Created by tsodring on 05/13/19.
@@ -27,27 +27,30 @@ import static nikita.common.config.Constants.*;
  * <p>
  * Note, this filter has to run after the security filter
  */
-
 @Component
 @Order
 public class ODataRedirectFilter
         implements Filter {
 
-    private final Logger log =
+    private final Logger logger =
             LoggerFactory.getLogger(ODataRedirectFilter.class);
 
     public ODataRedirectFilter() {
-        log.info("ODataRedirectFilter init");
+        logger.info("ODataRedirectFilter init");
     }
 
     /**
-     * If the request contains a OData specific
+     * If the request contains OData specific query parameters, forward the
+     * request to the OData controller. In this case, we are checking for the
+     * presence of the following query parameters $filter, $top, $skip,
+     * $orderby, In addition if the URL contains $ref and the query parameter
+     * contains $id the request is forwarded to the OData controller.
      *
-     * @param req
-     * @param res
-     * @param chain
-     * @throws IOException
-     * @throws ServletException
+     * @param req   the incoming request
+     * @param res   the response object
+     * @param chain the filter chain
+     * @throws IOException      network exception
+     * @throws ServletException servlet processing exception
      */
     @Override
     public void doFilter(ServletRequest req,
@@ -56,84 +59,78 @@ public class ODataRedirectFilter
             throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
-
-        Map<String, String[]> map = request.getParameterMap();
-
-        //then you just access the reversedMap however you like...
-        for (Map.Entry entry : map.entrySet()) {
-            log.info(entry.getKey() + ", " + entry.getValue());
-        }
-
-        String queryString = request.getQueryString();
         String urlString = request.getRequestURL().toString();
-
-        if (null != request.getQueryString() &&
-                (urlString.contains("ref") && queryString.contains("id="))) {
-            // DO this with a regex??
-            //ref%3F%24id
-            String path = ODATA_PATH +
-                    getEntity(request.getRequestURL()) + "%24ref%3F%24" +
-                    queryString.substring(3);
+        Map<String, String[]> map = request.getParameterMap();
+        // Check to see that this is a regular OData request that should
+        // be forwarded to the OData endpoint
+        if ((map.containsKey(DOLLAR_FILTER) ||
+                map.containsKey(DOLLAR_TOP) ||
+                map.containsKey(DOLLAR_SKIP) ||
+                map.containsKey(DOLLAR_ORDER_BY)) ||
+                (map.containsKey(DOLLAR_ID) &&
+                        urlString.contains(DOLLAR_REF_URL))) {
             RequestDispatcher requestDispatcher = request.
-                    getRequestDispatcher(path);
-
+                    getRequestDispatcher(
+                            sanitiseUrlForOData(urlString));
             if (requestDispatcher == null) {
-                throw new NikitaMisconfigurationException(
-                        "Unable to redirect request [" +
-                                request.getRequestURL() + "/" +
-                                queryString + "] for OData " +
-                                "processing");
+                String message = "Unable to forward request [" +
+                        request.getRequestURL() + "/" +
+                        request.getQueryString() + "] for OData processing";
+                logger.error(message);
+                throw new NikitaMisconfigurationException(message);
             }
-            requestDispatcher.include(request, response);
-            return;
-        } else if (null != request.getQueryString() &&
-                (queryString.contains("filter")
-                        || queryString.contains("skip")
-                        || queryString.contains("top"))) {
-            String path = ODATA_PATH +
-                    getEntity(request.getRequestURL());
-            RequestDispatcher requestDispatcher = request.
-                    getRequestDispatcher(path);
-
-            if (requestDispatcher == null) {
-                throw new NikitaMisconfigurationException(
-                        "Unable to redirect request [" +
-                                request.getRequestURL() + "/" +
-                                queryString + "] for OData " +
-                                "processing");
-            }
-            requestDispatcher.include(request, response);
+            requestDispatcher.
+                    include(new ODataFilteredRequest(request), res);
             return;
         }
         chain.doFilter(req, res);
     }
 
-
-    @Override
-    public void init(FilterConfig filterConfig) {
-    }
-
-    @Override
-    public void destroy() {
-    }
-
     /**
-     * Code should be able to adapt to any changes in the host / context path.
-     *
-     * Has to handle straight forward $filter but also a /$ref?$id
-     * @param url
-     * @return
+     * When handling OData requests, we need to update the request so that the
+     * query parameter does not contain '//' as in http://.... as the use of
+     * '//' is a potential security issue. It is not possible to update the
+     * query parameter of the incoming request as modifying the parameter
+     * would not truly represent what the client sent. Therefore
+     * HttpServletRequest does not have a setParameter method. A solution as
+     * discussed in the following SO post details the approach we use here:
+     * <p>
+     * https://stackoverflow.com/questions/1413129/modify-request-parameter-with-servlet-filter
+     * <p>
+     * That is, to use the HttpServletRequestWrapper class, which allows you
+     * to wrap one request with another and subsequently subclassing the
+     * original request, overriding the getParameter method to return the
+     * sanitized value. This subclassed object is passed to the chain.doFilter
+     * instead of the original request.
      */
-    private String getEntity(StringBuffer url) {
-        int entityStart = url.lastIndexOf(
-                NOARK_FONDS_STRUCTURE_PATH + SLASH);
-        int entityEnd = url.lastIndexOf(SLASH);
+    public static class ODataFilteredRequest
+            extends HttpServletRequestWrapper {
 
-        if (entityStart != entityEnd) {
-// +1 because you want the slash
-            return url.substring(entityStart + ODATA_OFFSET_LENGTH, entityEnd + 1);
-        } else
-            return url.substring(entityStart + ODATA_OFFSET_LENGTH);
+        private ODataFilteredRequest(ServletRequest request) {
+            super((HttpServletRequest) request);
+        }
+
+        @Override
+        public String getParameter(String paramName) {
+            return sanitiseUrlForOData(super.getParameter(paramName));
+        }
+
+        @Override
+        public String[] getParameterValues(String paramName) {
+            String[] values = super.getParameterValues(paramName);
+            for (int index = 0; index < values.length; index++) {
+                values[index] = sanitiseUrlForOData(values[index]);
+            }
+            return values;
+        }
+
+        @Override
+        public String getQueryString() {
+            return sanitiseUrlForOData(super.getQueryString());
+        }
+
+        public String getURLSanitised() {
+            return sanitiseUrlForOData(super.getRequestURL().toString());
+        }
     }
 }

@@ -9,7 +9,6 @@ import nikita.common.model.noark5.v5.interfaces.IDisposal;
 import nikita.common.model.noark5.v5.interfaces.IScreening;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.ClassDeserializer;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.ClassHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
@@ -21,6 +20,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
 @Table(name = "class")
 // Enable soft delete of Class
@@ -31,7 +32,9 @@ import java.util.List;
 @HateoasPacker(using = ClassHateoasHandler.class)
 @HateoasObject(using = ClassHateoas.class)
 @AttributeOverride(name = "id", column = @Column(name = "pk_class_id"))
-public class Class extends NoarkGeneralEntity implements IDisposal, IScreening, IClassified, ICrossReference {
+public class Class
+        extends NoarkGeneralEntity
+        implements IDisposal, IScreening, IClassified, ICrossReference {
 
     /**
      * M002 - klasseID (xs:string)
@@ -70,21 +73,21 @@ public class Class extends NoarkGeneralEntity implements IDisposal, IScreening, 
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = ALL)
     @JoinColumn(name = "class_classified_id", referencedColumnName = "pk_classified_id")
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = ALL)
     @JoinColumn(name = "class_disposal_id", referencedColumnName = "pk_disposal_id")
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = ALL)
     @JoinColumn(name = "class_screening_id", referencedColumnName = "pk_screening_id")
     private Screening referenceScreening;
 
-    @OneToMany(mappedBy = "referenceClass")
+    @OneToMany(mappedBy = "referenceClass", cascade = ALL)
     private List<CrossReference> referenceCrossReference;
 
     public String getClassId() {
@@ -189,14 +192,10 @@ public class Class extends NoarkGeneralEntity implements IDisposal, IScreening, 
         this.referenceCrossReference = referenceCrossReference;
     }
 
-    public NoarkEntity chooseParent() {
-        if (null != referenceParentClass) {
-            return referenceParentClass;
-        } else if (null != referenceClassificationSystem) {
-            return referenceClassificationSystem;
-        } else { // This should be impossible, a class cannot exist without a parent
-            throw new NoarkEntityNotFoundException("Could not find parent object for " + this.toString());
-        }
+
+    @Override
+    public void addReferenceCrossReference(CrossReference crossReference) {
+        this.referenceCrossReference.add(crossReference);
     }
 
     @Override

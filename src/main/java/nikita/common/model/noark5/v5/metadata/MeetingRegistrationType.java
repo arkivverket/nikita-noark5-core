@@ -19,6 +19,6 @@ public class MeetingRegistrationType extends MetadataSuperClass {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.MEETING_RECORD_TYPE;
+        return N5ResourceMappings.MEETING_REGISTRATION_TYPE;
     }
 }

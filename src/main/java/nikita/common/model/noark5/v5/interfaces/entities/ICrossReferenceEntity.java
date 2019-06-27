@@ -5,16 +5,18 @@ import java.io.Serializable;
 /**
  * Created by tsodring on 1/16/17.
  */
-public interface ICrossReferenceEntity extends Serializable {
-    String getReferenceToFile();
+public interface ICrossReferenceEntity
+        extends Serializable, INikitaEntity {
 
-    void setReferenceToFile(String referenceToFile);
+    String getFromSystemId();
 
-    String getReferenceToRecord();
+    void setFromSystemId(String fromSystemId);
 
-    void setReferenceToRecord(String referenceToRecord);
+    String getToSystemId();
 
-    String getReferenceToClass();
+    void setToSystemId(String toSystemId);
 
-    void setReferenceToClass(String referenceToClass);
+    String getReferenceType();
+
+    void setReferenceType(String toSystemId);
 }

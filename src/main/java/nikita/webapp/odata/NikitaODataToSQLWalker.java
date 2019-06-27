@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static nikita.common.config.Constants.DM_OWNED_BY;
 import static nikita.common.config.ODataConstants.*;
 
 /**
@@ -14,8 +13,12 @@ import static nikita.common.config.ODataConstants.*;
  * command to SQL.
  */
 
-public class NikitaODataToSQLWalker
-        extends NikitaODataWalker {
+public class NikitaODataToSQLWalker {
+    // There is not time right now to get this code also in place. The 
+    // concept is definitely nice, to convert OData to HQL, SQL and ES, but HQL
+    // is all we require at the moment. Leaving it in the repo commented out
+    // so the we may try and piece it together when we have some extra time
+    // now and again
 
     private static final Logger logger =
             LoggerFactory.getLogger(NikitaODataToSQLWalker.class);
@@ -54,13 +57,13 @@ public class NikitaODataToSQLWalker
      * @param loggedInUser The name of the user whose tupples you want to
      *                     retrieve
      */
-    @Override
+
     public void processResource(String entity, String loggedInUser) {
-        sqlStatementBuilder.addSelect(getNameDatabase(entity), DM_OWNED_BY,
-                loggedInUser);
+        // sqlStatementBuilder.addSelect(getNameDatabase(entity), DM_OWNED_BY,
+        //         loggedInUser);
     }
 
-    @Override
+
     public void processNikitaObjects(
             String parentResource, String resource, String systemId, String loggedInUser) {
         logger.error("processNikitaObjects SQL not implemented");
@@ -79,10 +82,10 @@ public class NikitaODataToSQLWalker
      * @param attribute The attribute/column you wish to filter on
      * @param value     The value you wish to filter on
      */
-    @Override
+
     public void processContains(String attribute, String value) {
-        sqlStatementBuilder.addWhere(getNameDatabase(attribute) +
-                " LIKE '%" + value + "%'");
+        //sqlStatementBuilder.addWhere(getNameDatabase(attribute) +
+        //        " LIKE '%" + value + "%'");
     }
 
     /**
@@ -101,10 +104,10 @@ public class NikitaODataToSQLWalker
      * @param attribute The attribute/column you wish to filter on
      * @param value     The value you wish to filter on
      */
-    @Override
+
     public void processStartsWith(String attribute, String value) {
-        sqlStatementBuilder.addWhere(
-                getNameDatabase(attribute) + " LIKE '" + value + "%'");
+        //sqlStatementBuilder.addWhere(
+        //        getNameDatabase(attribute) + " LIKE '" + value + "%'");
     }
 
     /**
@@ -127,12 +130,12 @@ public class NikitaODataToSQLWalker
      *                   lt etc
      * @param value      The value you wish to filter on
      */
-    @Override
+
     public void processComparatorCommand(String attribute, String comparator,
                                          String value) {
-        sqlStatementBuilder.addWhere(getNameDatabase(attribute) + " " +
-                getSQLComparator(comparator) + " '" +
-                value + "'");
+        //sqlStatementBuilder.addWhere(getNameDatabase(attribute) + " " +
+        //        getSQLComparator(comparator) + " '" +
+        //        value + "'");
     }
 
     /**
@@ -154,9 +157,9 @@ public class NikitaODataToSQLWalker
      * @param sortOrder The type of comparison you want to undertake e.g eq,
      *                  lt etc
      */
-    @Override
+
     public void processOrderByCommand(String attribute, String sortOrder) {
-        sqlStatementBuilder.addOrderby(getNameDatabase(attribute), sortOrder);
+        //sqlStatementBuilder.addOrderby(getNameDatabase(attribute), sortOrder);
     }
 
     /**
@@ -176,7 +179,7 @@ public class NikitaODataToSQLWalker
      *
      * @param top The number of rows in the result set
      */
-    @Override
+
     public void processTopCommand(Integer top) {
         sqlStatementBuilder.addLimitby_top(top);
     }
@@ -195,7 +198,7 @@ public class NikitaODataToSQLWalker
      *
      * @param skip The number of rows in the result set to jump over
      */
-    @Override
+
     public void processSkipCommand(Integer skip) {
         sqlStatementBuilder.addLimitby_skip(skip);
     }
