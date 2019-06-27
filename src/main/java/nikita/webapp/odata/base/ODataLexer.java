@@ -1,4 +1,4 @@
-// Generated from /home/tsodring/git/nikita-noark5-core/src/main/antlr4/ODataLexer.g4 by ANTLR 4.7.2
+// Generated from /home/tsodring/tmp/nikita-noark5-core/src/main/antlr4/ODataLexer.g4 by ANTLR 4.7.2
 package nikita.webapp.odata.base;
 
 import org.antlr.v4.runtime.*;
