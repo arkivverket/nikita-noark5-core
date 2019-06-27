@@ -2168,7 +2168,7 @@ public final class CommonUtils {
                     @NotNull ICrossReferenceEntity crossReference)
                     throws IOException {
                 if (crossReference != null) {
-                    jgen.writeObjectFieldStart(CROSS_REFERENCE);
+                    jgen.writeStartObject();
                     printSystemIdEntity(jgen, crossReference);
                     jgen.writeStringField(crossReference.getReferenceType(),
                             crossReference.getToSystemId());
