@@ -12,8 +12,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
 
-package nikita.webapp.odata.base;
-
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class ODataParser extends Parser {
     public static final int
