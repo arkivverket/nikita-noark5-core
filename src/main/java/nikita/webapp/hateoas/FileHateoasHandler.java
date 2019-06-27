@@ -34,7 +34,6 @@ public class FileHateoasHandler
         addNewRecord(entity, hateoasNoarkObject);
         // Add the parent links
         addSeries(entity, hateoasNoarkObject);
-        addClass(entity, hateoasNoarkObject);
         // Add action links
         addEndFile(entity, hateoasNoarkObject);
         addExpandToCaseFile(entity, hateoasNoarkObject);
