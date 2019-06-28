@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,13 +9,13 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CONVERSION;
+
 @Entity
-@Table(name = "conversion")
-// Enable soft delete of Conversion
-// @SQLDelete(sql="UPDATE conversion SET deleted = true WHERE pk_conversion_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_conversion_id"))
-public class Conversion extends NoarkEntity {
+@Table(name = TABLE_CONVERSION)
+public class Conversion
+        extends NoarkEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -64,9 +63,9 @@ public class Conversion extends NoarkEntity {
 
     // Link to DocumentObject
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "conversion_document_object_id", referencedColumnName = "pk_document_object_id")
+    @JoinColumn(name = CONVERSION_DOCUMENT_OBJECT_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DocumentObject referenceDocumentObject;
-
 
     public ZonedDateTime getConvertedDate() {
         return convertedDate;
@@ -116,17 +115,17 @@ public class Conversion extends NoarkEntity {
         this.conversionComment = conversionComment;
     }
 
-
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CONVERSION;
+        return CONVERSION;
     }
 
     public DocumentObject getReferenceDocumentObject() {
         return referenceDocumentObject;
     }
 
-    public void setReferenceDocumentObject(DocumentObject referenceDocumentObject) {
+    public void setReferenceDocumentObject(
+            DocumentObject referenceDocumentObject) {
         this.referenceDocumentObject = referenceDocumentObject;
     }
 

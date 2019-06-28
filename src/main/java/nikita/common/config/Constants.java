@@ -648,6 +648,7 @@ public final class Constants {
             "correspondence_part";
     public static final String TABLE_CONTACT_CLASSIFIED = "classified";
     public static final String TABLE_COMMENT = "comment";
+    public static final String TABLE_CONVERSION = "conversion";
     public static final String TABLE_CONTACT_AUTHOR = "author";
     public static final String TABLE_CONTACT_INFORMATION =
             "contact_information";
@@ -760,9 +761,9 @@ public final class Constants {
     public static final String FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID =
             "f_pk_correspondence_part_internal_id";
 
-
-
     public static final String FILE_SERIES_ID = "file_series_id";
+    public static final String CONVERSION_DOCUMENT_OBJECT_ID =
+            "conversion_document_object_id";
     public static final String CASE_FILE_ADMINISTRATIVE_UNIT_ID =
             "case_file_administrative_unit_id";
     public static final String FILE_CLASS_ID = "file_class_id";
