@@ -630,6 +630,7 @@ public final class Constants {
     // Table Constants
     public static final String TABLE_FONDS = "fonds";
     public static final String TABLE_SERIES = "series";
+    public static final String TABLE_RECORD = "record";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
     public static final String TABLE_CROSS_REFERENCE = "cross_reference";
@@ -655,8 +656,10 @@ public final class Constants {
             "file_keyword";
     public static final String TABLE_FILE_COMMENT =
             "file_comment";
-    public static final String TABLE_FILE_PARTY =
-            "file_party";
+    public static final String TABLE_FILE_PARTY = "file_party";
+    public static final String TABLE_RECORD_AUTHOR = "record_author";
+    public static final String TABLE_RECORD_DOCUMENT_DESCRIPTION =
+            "record_document_description";
     public static final String TABLE_RECORD_PARTY =
             "record_party";
     public static final String TABLE_DOCUMENT_DESCRIPTION_PARTY =
@@ -677,6 +680,8 @@ public final class Constants {
     public static final String FOREIGN_KEY_FONDS_CREATOR_PK =
             "f_pk_fonds_creator_id";
 
+    public static final String FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK =
+            "f_pk_document_description_id";
     public static final String FOREIGN_KEY_AUTHOR_PK = "f_pk_author_id";
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
@@ -685,8 +690,6 @@ public final class Constants {
     public static final String FOREIGN_KEY_KEYWORD_PK =
             "f_pk_keyword_id";
     public static final String FOREIGN_KEY_FILE_PK = "f_pk_file_id";
-    public static final String FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK =
-            "f_pk_document_description_id";
     public static final String FOREIGN_KEY_COMMENT_PK = "f_pk_comment_id";
     public static final String FOREIGN_KEY_PART_PK = "f_pk_part_id";
     public static final String FOREIGN_KEY_RECORD_PK = "f_pk_record_id";
@@ -713,6 +716,11 @@ public final class Constants {
     public static final String REFERENCE_ADMINISTRATIVE_UNIT =
             "referenceAdministrativeUnit";
 
+    public static final String RECORD_FILE_ID = "record_file_id";
+    public static final String RECORD_CLASS_ID = "record_class_id";
+    public static final String RECORD_CLASSIFIED_ID = "record_classified_id";
+    public static final String RECORD_DISPOSAL_ID = "record_disposal_id";
+    public static final String RECORD_SERIES_ID = "record_series_id";
     public static final String SERIES_FONDS_ID = "series_fonds_id";
     public static final String SERIES_DISPOSAL_ID = "series_disposal_id";
     public static final String SERIES_SCREENING_ID = "series_screening_id";

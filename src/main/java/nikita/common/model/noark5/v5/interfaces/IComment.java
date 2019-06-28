@@ -11,4 +11,6 @@ public interface IComment {
     List<Comment> getReferenceComment();
 
     void setReferenceComment(List<Comment> comments);
+
+    void addReferenceComment(Comment comment);
 }

@@ -30,12 +30,11 @@ import static nikita.common.config.Constants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "record")
+@Table(name = TABLE_RECORD)
 @Inheritance(strategy = JOINED)
 @JsonDeserialize(using = RecordDeserializer.class)
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = PRIMARY_KEY_RECORD))
 public class Record
         extends NoarkEntity
         implements INoarkCreateEntity, IClassified, IScreening, IDisposal,
@@ -95,67 +94,72 @@ public class Record
 
     // Link to File
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "record_file_id", referencedColumnName = "pk_file_id")
+    @JoinColumn(name = RECORD_FILE_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private File referenceFile;
 
     // Link to StorageLocation
     @ManyToMany(cascade = PERSIST)
     @JoinTable(name = TABLE_RECORD_STORAGE_LOCATION,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
-                    referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<StorageLocation> referenceStorageLocation =
             new ArrayList<>();
 
     // Link to Series
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "record_series_id", referencedColumnName = "pk_series_id")
+    @JoinColumn(name = RECORD_SERIES_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Series referenceSeries;
 
     // Link to Class
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "record_class_id", referencedColumnName = "pk_class_id")
+    @JoinColumn(name = RECORD_CLASS_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Class referenceClass;
-
 
     // Links to Keywords
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_KEYWORD,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
-                    referencedColumnName = PRIMARY_KEY_KEYWORD))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Keyword> referenceKeyword = new ArrayList<>();
 
     // Links to Authors
     @ManyToMany
-    @JoinTable(name = "registration_author",
+    @JoinTable(name = TABLE_RECORD_AUTHOR,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_AUTHOR_PK,
-                    referencedColumnName = PRIMARY_KEY_AUTHOR))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Author> referenceAuthor = new ArrayList<>();
 
     // Links to Comments
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_COMMENT,
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns =
-            @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
-                    referencedColumnName = PRIMARY_KEY_COMMENT))
+            @JoinColumn(
+                    name = FOREIGN_KEY_COMMENT_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to DocumentDescriptions
     @ManyToMany
-    @JoinTable(name = "record_document_description",
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+    @JoinTable(name = TABLE_RECORD_DOCUMENT_DESCRIPTION,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
-                    name = "f_pk_document_description_id",
-                    referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
+                    name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
@@ -165,29 +169,29 @@ public class Record
 
     // Links to Classified
     @ManyToOne(cascade = ALL)
-    @JoinColumn(name = "record_classified_id",
-            referencedColumnName = "pk_classified_id")
+    @JoinColumn(name = RECORD_CLASSIFIED_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
     @ManyToOne(cascade = ALL)
-    @JoinColumn(name = "record_disposal_id",
-            referencedColumnName = "pk_disposal_id")
+    @JoinColumn(name = RECORD_DISPOSAL_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "record_screening_id",
-            referencedColumnName = "pk_screening_id")
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
     // Links to Party
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_PARTY,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
-                    referencedColumnName = PRIMARY_KEY_PART))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Party> referenceParty = new ArrayList<>();
 
     public ZonedDateTime getArchivedDate() {
@@ -324,16 +328,26 @@ public class Record
         return referenceStorageLocation;
     }
 
-    public void setReferenceStorageLocation(List<StorageLocation> referenceStorageLocation) {
+    @Override
+    public void setReferenceStorageLocation(
+            List<StorageLocation> referenceStorageLocation) {
         this.referenceStorageLocation = referenceStorageLocation;
     }
 
+    @Override
+    public void addReferenceStorageLocation(StorageLocation storageLocation) {
+        this.referenceStorageLocation.add(storageLocation);
+    }
     public List<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }
 
     public void setReferenceKeyword(List<Keyword> referenceKeyword) {
         this.referenceKeyword = referenceKeyword;
+    }
+
+    public void addReferenceKeyword(Keyword keyword) {
+        this.referenceKeyword.add(keyword);
     }
 
     public List<Author> getReferenceAuthor() {
@@ -344,12 +358,20 @@ public class Record
         this.referenceAuthor = referenceAuthor;
     }
 
+    public void addReferenceAuthor(Author author) {
+        this.referenceAuthor.add(author);
+    }
+
     public List<Comment> getReferenceComment() {
         return referenceComment;
     }
 
     public void setReferenceComment(List<Comment> referenceComment) {
         this.referenceComment = referenceComment;
+    }
+
+    public void addReferenceComment(Comment comment) {
+        this.referenceComment.add(comment);
     }
 
     @Override

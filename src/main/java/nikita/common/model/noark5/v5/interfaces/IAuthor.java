@@ -11,4 +11,6 @@ public interface IAuthor {
     List<Author> getReferenceAuthor();
 
     void setReferenceAuthor(List<Author> authors);
+
+    void addReferenceAuthor(Author author);
 }
