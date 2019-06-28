@@ -647,6 +647,8 @@ public final class Constants {
     public static final String TABLE_CORRESPONDENCE_PART =
             "correspondence_part";
 
+    public static final String TABLE_CONTACT_AUTHOR =
+            "author";
     public static final String TABLE_CONTACT_INFORMATION =
             "contact_information";
 

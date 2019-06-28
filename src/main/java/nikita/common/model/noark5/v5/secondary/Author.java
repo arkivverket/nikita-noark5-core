@@ -8,17 +8,19 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_CONTACT_AUTHOR;
+
 @Entity
-@Table(name = "author")
-// Enable soft delete of Author
-// @SQLDelete(sql="UPDATE author SET deleted = true WHERE pk_author_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_author_id"))
-public class Author extends NoarkEntity {
+@Table(name = TABLE_CONTACT_AUTHOR)
+public class Author
+        extends NoarkEntity {
 
     /**
      * M024 - forfatter (xs:string)
@@ -26,12 +28,15 @@ public class Author extends NoarkEntity {
     @Column(name = "author")
     @Audited
     private String author;
+
     // Links to Records
     @ManyToMany(mappedBy = "referenceAuthor")
     private List<Record> referenceRecord = new ArrayList<>();
+
     // Links to DocumentDescriptions
     @ManyToMany(mappedBy = "referenceAuthor")
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    private List<DocumentDescription> referenceDocumentDescription =
+            new ArrayList<>();
 
     public String getAuthor() {
         return author;
@@ -58,7 +63,8 @@ public class Author extends NoarkEntity {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(List<DocumentDescription> referenceDocumentDescription) {
+    public void setReferenceDocumentDescription(
+            List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
