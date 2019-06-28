@@ -633,6 +633,7 @@ public final class Constants {
     public static final String TABLE_RECORD = "record";
     public static final String TABLE_PART = "part";
     public static final String TABLE_FILE = "file";
+    public static final String TABLE_DOCUMENT_OBJECT = "document_object";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
     public static final String TABLE_CROSS_REFERENCE = "cross_reference";
@@ -723,6 +724,10 @@ public final class Constants {
     public static final String RECORD_CLASSIFIED_ID = "record_classified_id";
     public static final String RECORD_DISPOSAL_ID = "record_disposal_id";
     public static final String RECORD_SERIES_ID = "record_series_id";
+
+    public static final String DOCUMENT_OBJECT_DOCUMENT_DESCRIPTION_ID =
+            "document_object_document_description_id";
+
     public static final String SERIES_FONDS_ID = "series_fonds_id";
     public static final String SERIES_DISPOSAL_ID = "series_disposal_id";
     public static final String SERIES_SCREENING_ID = "series_screening_id";

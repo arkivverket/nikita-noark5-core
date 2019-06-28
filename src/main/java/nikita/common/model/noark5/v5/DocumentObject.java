@@ -23,19 +23,15 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "document_object")
-// Enable soft delete of DocumentObject ... Temporarily disabled because we can 'delete' things without ref integrity
-// @SQLDelete(sql="UPDATE document_object SET deleted = true WHERE pk_document_object_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-//@Indexed(index = "document_object")
+@Table(name = TABLE_DOCUMENT_OBJECT)
 @JsonDeserialize(using = DocumentObjectDeserializer.class)
 @HateoasPacker(using = DocumentObjectHateoasHandler.class)
 @HateoasObject(using = DocumentObjectHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_document_object_id"))
 public class DocumentObject
         extends NoarkEntity
         implements INoarkCreateEntity,
@@ -131,9 +127,9 @@ public class DocumentObject
     private String pronomMIME;
 
     // Link to DocumentDescription
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "document_object_document_description_id",
-            referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = DOCUMENT_OBJECT_DOCUMENT_DESCRIPTION_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DocumentDescription referenceDocumentDescription;
 
     // Links to Conversion
@@ -142,7 +138,7 @@ public class DocumentObject
 
     // Link to ElectronicSignature
     @OneToOne
-    @JoinColumn(name = "pk_electronic_signature_id")
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private ElectronicSignature referenceElectronicSignature;
 
     public Integer getVersionNumber() {
@@ -287,7 +283,8 @@ public class DocumentObject
         return referenceElectronicSignature;
     }
 
-    public void setReferenceElectronicSignature(ElectronicSignature referenceElectronicSignature) {
+    public void setReferenceElectronicSignature(
+            ElectronicSignature referenceElectronicSignature) {
         this.referenceElectronicSignature = referenceElectronicSignature;
     }
 
