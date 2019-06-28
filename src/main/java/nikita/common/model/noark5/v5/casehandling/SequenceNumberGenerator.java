@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static javax.persistence.CascadeType.ALL;
 import static nikita.common.config.Constants.FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID;
 import static nikita.common.config.Constants.TABLE_CASE_FILE_SEQUENCE;
 
@@ -27,7 +28,7 @@ public class SequenceNumberGenerator
         implements Serializable {
 
     @Id
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = ALL)
     @JoinColumn(name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID,
             insertable = false, updatable = false)
     private AdministrativeUnit referenceAdministrativeUnit;
