@@ -9,11 +9,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_CONTACT_CLASSIFIED;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
@@ -21,11 +25,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  */
 
 @Entity
-@Table(name = "classified")
-// Enable soft delete of Classified
-// @SQLDelete(sql="UPZonedDateTime classified SET deleted = true WHERE pk_classified_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_classified_id"))
+@Table(name = TABLE_CONTACT_CLASSIFIED)
 public class Classified
         extends NoarkEntity
         implements IClassifiedEntity {
@@ -67,6 +67,7 @@ public class Classified
     @Column(name = "classification_downgraded_by")
     @Audited
     private String classificationDowngradedBy;
+
     // Links to Series
     @OneToMany(mappedBy = "referenceClassified")
     private List<Series> referenceSeries = new ArrayList<>();
@@ -85,7 +86,8 @@ public class Classified
 
     // Links to DocumentDescription
     @OneToMany(mappedBy = "referenceClassified")
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    private List<DocumentDescription> referenceDocumentDescription =
+            new ArrayList<>();
 
     public String getClassification() {
         return classification;
@@ -115,7 +117,8 @@ public class Classified
         return classificationDowngradedDate;
     }
 
-    public void setClassificationDowngradedDate(ZonedDateTime classificationDowngradedDate) {
+    public void setClassificationDowngradedDate(
+            ZonedDateTime classificationDowngradedDate) {
         this.classificationDowngradedDate = classificationDowngradedDate;
     }
 
@@ -123,7 +126,8 @@ public class Classified
         return classificationDowngradedBy;
     }
 
-    public void setClassificationDowngradedBy(String classificationDowngradedBy) {
+    public void setClassificationDowngradedBy(
+            String classificationDowngradedBy) {
         this.classificationDowngradedBy = classificationDowngradedBy;
     }
 
@@ -168,7 +172,8 @@ public class Classified
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(List<DocumentDescription> referenceDocumentDescription) {
+    public void setReferenceDocumentDescription(
+            List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
@@ -178,8 +183,10 @@ public class Classified
                 ", classification='" + classification + '\'' +
                 ", classificationDate=" + classificationDate +
                 ", classificationBy='" + classificationBy + '\'' +
-                ", classificationDowngradedDate=" + classificationDowngradedDate +
-                ", classificationDowngradedBy='" + classificationDowngradedBy + '\'' +
+                ", classificationDowngradedDate=" +
+                classificationDowngradedDate +
+                ", classificationDowngradedBy='" +
+                classificationDowngradedBy + '\'' +
                 '}';
     }
 
@@ -200,8 +207,10 @@ public class Classified
                 .append(classification, rhs.classification)
                 .append(classificationDate, rhs.classificationDate)
                 .append(classificationBy, rhs.classificationBy)
-                .append(classificationDowngradedDate, rhs.classificationDowngradedDate)
-                .append(classificationDowngradedBy, rhs.classificationDowngradedBy)
+                .append(classificationDowngradedDate,
+                        rhs.classificationDowngradedDate)
+                .append(classificationDowngradedBy,
+                        rhs.classificationDowngradedBy)
                 .isEquals();
     }
 
