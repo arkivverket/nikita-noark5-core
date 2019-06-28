@@ -19,14 +19,16 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
+import static nikita.common.config.Constants.TABLE_RECORD_NOTE;
 import static nikita.common.config.N5ResourceMappings.RECORD_NOTE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "record_note")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = TABLE_RECORD_NOTE)
+@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = RecordNoteDeserializer.class)
 @HateoasPacker(using = RecordNoteHateoasHandler.class)
 @HateoasObject(using = RecordNoteHateoas.class)

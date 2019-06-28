@@ -634,6 +634,7 @@ public final class Constants {
     public static final String TABLE_PART = "part";
     public static final String TABLE_FILE = "file";
     public static final String TABLE_CLASS = "class";
+    public static final String TABLE_RECORD_NOTE = "record_note";
     public static final String TABLE_PRECEDENCE = "precedence";
     public static final String TABLE_DOCUMENT_OBJECT = "document_object";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
