@@ -45,10 +45,10 @@ public class ContactInformation
     private String telephoneNumber;
 
     @OneToOne(fetch = LAZY)
-    CorrespondencePartPerson correspondencePartPerson;
+    private CorrespondencePartPerson correspondencePartPerson;
 
     @OneToOne(fetch = LAZY)
-    CorrespondencePartUnit correspondencePartUnit;
+    private CorrespondencePartUnit correspondencePartUnit;
 
     public String getEmailAddress() {
         return emailAddress;
