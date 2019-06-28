@@ -693,10 +693,13 @@ public final class Constants {
     public static final String TABLE_CORRESPONDENCE_PART_UNIT =
             "correspondence_part_unit";
 
+    public static final String TABLE_CASE_FILE_PRECEDENCE =
+            "case_file_precedence";
     public static final String TABLE_RECORD_STORAGE_LOCATION =
             "record_storage_location";
 
     public static final String TABLE_DOCUMENT_FLOW = "document_flow";
+    public static final String TABLE_CASE_FILE = "case_file";
     public static final String TABLE_POSTAL_ADDRESS = "postal_address";
     public static final String TABLE_RESIDING_ADDRESS = "residing_address";
     public static final String TABLE_DOCUMENT_DESCRIPTION =
@@ -712,6 +715,8 @@ public final class Constants {
     public static final String FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK =
             "f_pk_document_description_id";
     public static final String FOREIGN_KEY_AUTHOR_PK = "f_pk_author_id";
+    public static final String FOREIGN_KEY_CASE_FILE_PK = "f_pk_case_file_id";
+    public static final String FOREIGN_KEY_PRECEDENCE_PK = "f_pk_precedence_id";
     public static final String FOREIGN_KEY_CLASS_PK = "f_pk_class_id";
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
@@ -738,6 +743,8 @@ public final class Constants {
 
 
     public static final String FILE_SERIES_ID = "file_series_id";
+    public static final String CASE_FILE_ADMINISTRATIVE_UNIT_ID =
+            "case_file_administrative_unit_id";
     public static final String FILE_CLASS_ID = "file_class_id";
     public static final String FILE_CLASSIFIED_ID = "file_classified_id";
     public static final String FILE_SCREENING_ID = "file_screening_id";
@@ -757,6 +764,7 @@ public final class Constants {
     public static final String RECORD_SERIES_ID = "record_series_id";
     public static final String CLASS_CLASSIFIED_ID = "class_classified_id";
     public static final String CLASS_DISPOSAL_ID = "class_disposal_id";
+    public static final String CLASS_SCREENING_ID = "class_screening_id";
     public static final String CLASS_SCREENING_ID = "class_screening_id";
 
     public static final String DOCUMENT_OBJECT_DOCUMENT_DESCRIPTION_ID =

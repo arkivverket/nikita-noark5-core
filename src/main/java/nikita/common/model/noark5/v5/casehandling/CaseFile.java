@@ -26,26 +26,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
-import static nikita.common.config.Constants.JOIN_CASE_FILE_STATUS;
-import static nikita.common.config.Constants.NOARK_CASE_HANDLING_PATH;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_FILE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
-
-// TODO: You are missing M209 referanseSekundaerKlassifikasjon
-
-
 @Entity
-@Table(name = "case_file")
-// Enable soft delete of CaseFile
-// @SQLDelete(sql="UPDATE case_file SET deleted = true WHERE pk_file_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-//@Indexed(index = "case_file")
+@Table(name = TABLE_CASE_FILE)
 @JsonDeserialize(using = CaseFileDeserializer.class)
 @HateoasPacker(using = CaseFileHateoasHandler.class)
 @HateoasObject(using = CaseFileHateoas.class)
-public class CaseFile extends File implements Serializable, INikitaEntity,
-        IPrecedence, IPart {
+public class CaseFile
+        extends File
+        implements Serializable, INikitaEntity, IPrecedence, IPart {
 
     private static final long serialVersionUID = 1L;
 
@@ -111,36 +103,28 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
     @Audited
     private String loanedTo;
 
-    @Column(name = "owned_by")
-    @Audited
-    private String ownedBy;
-
     // Links to Precedence
     @ManyToMany
-    @JoinTable(name = "case_file_precedence",
-            joinColumns = @JoinColumn(name = "f_pk_case_file_id",
-                    referencedColumnName = "pk_file_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_precedence_id",
-                    referencedColumnName = "pk_precedence_id"))
-
+    @JoinTable(name = TABLE_CASE_FILE_PRECEDENCE,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CASE_FILE_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_PRECEDENCE_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Precedence> referencePrecedence = new ArrayList<>();
-
-    // Used for soft delete.
-    @Column(name = "deleted")
-    @Audited
-    private Boolean deleted;
 
     // Link to AdministrativeUnit
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "case_file_administrative_unit_id",
-            referencedColumnName = PRIMARY_KEY_ADMINISTRATIVE_UNIT)
+    @JoinColumn(name = CASE_FILE_ADMINISTRATIVE_UNIT_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private AdministrativeUnit referenceAdministrativeUnit;
 
     // Link to CaseFileStatus
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = JOIN_CASE_FILE_STATUS,
-            referencedColumnName = PRIMARY_KEY_CASE_FILE_STATUS)
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private CaseStatus referenceCaseFileStatus;
 
@@ -206,22 +190,6 @@ public class CaseFile extends File implements Serializable, INikitaEntity,
 
     public void setLoanedTo(String loanedTo) {
         this.loanedTo = loanedTo;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public String getOwnedBy() {
-        return ownedBy;
-    }
-
-    public void setOwnedBy(String ownedBy) {
-        this.ownedBy = ownedBy;
     }
 
     @Override

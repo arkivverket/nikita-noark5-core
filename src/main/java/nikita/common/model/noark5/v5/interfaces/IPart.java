@@ -8,5 +8,5 @@ import java.util.List;
  * Created by tsodring on 12/7/16.
  */
 public interface IPart {
-    List<Part> getReferenceParty();
+    List<Part> getReferencePart();
 }
