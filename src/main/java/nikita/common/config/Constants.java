@@ -637,6 +637,8 @@ public final class Constants {
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
     public static final String TABLE_CROSS_REFERENCE = "cross_reference";
+    public static final String TABLE_CLASSIFICATION_SYSTEM =
+            "classification_system";
 
     public static final String TABLE_CASE_FILE_SEQUENCE = "sequence_generator";
     public static final String TABLE_NIKITA_ADMINISTRATIVE_UNIT =
@@ -765,11 +767,6 @@ public final class Constants {
 
     public static final String DOCUMENT_DESCRIPTION_SCREENING_ID =
             "document_description_screening_id";
-    public static final String =;
-    public static final String =;
-    public static final String =;
-
-
 
     // Primary key names
     public static final String PRIMARY_KEY_SYSTEM_ID = "pk_fonds_id";

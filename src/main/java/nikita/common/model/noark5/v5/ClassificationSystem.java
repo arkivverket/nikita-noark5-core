@@ -11,21 +11,22 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_CLASSIFICATION_SYSTEM;
+
 @Entity
-@Table(name = "classification_system")
-// Enable soft delete of ClassificationSystem
-// @SQLDelete(sql="UPDATE classification_system SET deleted = true WHERE pk_classification_system_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-//@Indexed(index = "classification_system")
+@Table(name = TABLE_CLASSIFICATION_SYSTEM)
 @JsonDeserialize(using = ClassifiactionSystemDeserializer.class)
 @HateoasPacker(using = ClassificationSystemHateoasHandler.class)
 @HateoasObject(using = ClassificationSystemHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_classification_system_id"))
-public class ClassificationSystem extends NoarkGeneralEntity {
+public class ClassificationSystem
+        extends NoarkGeneralEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,7 +35,6 @@ public class ClassificationSystem extends NoarkGeneralEntity {
      */
     @Column(name = "classification_type")
     @Audited
-
     private String classificationType;
 
     // Links to Series
