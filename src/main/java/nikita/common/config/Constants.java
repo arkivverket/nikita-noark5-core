@@ -640,6 +640,8 @@ public final class Constants {
     public static final String TABLE_CROSS_REFERENCE = "cross_reference";
     public static final String TABLE_CLASSIFICATION_SYSTEM =
             "classification_system";
+    public static final String TABLE_CONTACT_INFORMATION =
+            "contact_information";
 
     public static final String TABLE_CASE_FILE_SEQUENCE = "sequence_generator";
     public static final String TABLE_NIKITA_ADMINISTRATIVE_UNIT =
