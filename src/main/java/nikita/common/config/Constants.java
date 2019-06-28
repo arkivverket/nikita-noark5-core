@@ -712,6 +712,8 @@ public final class Constants {
 
     public static final String TABLE_DOCUMENT_FLOW = "document_flow";
     public static final String TABLE_CASE_FILE = "case_file";
+    public static final String TABLE_MEETING_PARTICIPANT = "meeting_participant";
+    public static final String TABLE_MEETING_RECORD = "meeting_record";
     public static final String TABLE_POSTAL_ADDRESS = "postal_address";
     public static final String TABLE_RESIDING_ADDRESS = "residing_address";
     public static final String TABLE_DOCUMENT_DESCRIPTION =
@@ -780,7 +782,8 @@ public final class Constants {
     public static final String CLASS_CLASSIFIED_ID = "class_classified_id";
     public static final String CLASS_DISPOSAL_ID = "class_disposal_id";
     public static final String CLASS_SCREENING_ID = "class_screening_id";
-
+    public static final String MEETING_PARTICIPANT_FILE_ID =
+            "meeting_participant_file_id";
     public static final String DOCUMENT_OBJECT_DOCUMENT_DESCRIPTION_ID =
             "document_object_document_description_id";
 
