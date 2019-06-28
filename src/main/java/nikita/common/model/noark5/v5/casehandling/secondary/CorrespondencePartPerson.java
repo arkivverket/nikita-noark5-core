@@ -17,8 +17,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_PERSON;
+
 @Entity
-@Table(name = "correspondence_part_person")
+@Table(name = TABLE_CORRESPONDENCE_PART_PERSON)
 @JsonDeserialize(using = CorrespondencePartPersonDeserializer.class)
 @HateoasPacker(using = CorrespondencePartPersonHateoasHandler.class)
 @HateoasObject(using = CorrespondencePartPersonHateoas.class)
@@ -50,15 +54,15 @@ public class CorrespondencePartPerson
     private String name;
 
     @OneToOne(mappedBy = "correspondencePartPerson",
-            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+            fetch = LAZY, cascade = ALL)
     private PostalAddress postalAddress;
 
     @OneToOne(mappedBy = "correspondencePartPerson",
-            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+            fetch = LAZY, cascade = ALL)
     private ResidingAddress residingAddress;
 
     @OneToOne(mappedBy = "correspondencePartPerson",
-            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+            fetch = LAZY, cascade = ALL)
     private ContactInformation contactInformation;
 
     // Links to RegistryEntry
@@ -130,7 +134,8 @@ public class CorrespondencePartPerson
     }
 
     @Override
-    public void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry) {
+    public void setReferenceRegistryEntry(
+            List<RegistryEntry> referenceRegistryEntry) {
         this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
