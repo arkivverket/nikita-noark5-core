@@ -2,8 +2,6 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.Constants;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.interfaces.IDocumentMedium;
 import nikita.common.model.noark5.v5.interfaces.IFondsCreator;
@@ -21,11 +19,13 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.FONDS;
 
 @Entity
-@Table(name = Constants.TABLE_FONDS)
+@Table(name = TABLE_FONDS)
 @JsonDeserialize(using = FondsDeserializer.class)
 @HateoasPacker(using = FondsHateoasHandler.class)
 @HateoasObject(using = FondsHateoas.class)
@@ -63,8 +63,8 @@ public class Fonds
     private List<Fonds> referenceChildFonds = new ArrayList<>();
 
     // Links to StorageLocations
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = Constants.TABLE_FONDS_STORAGE_LOCATION,
+    @ManyToMany(cascade = PERSIST)
+    @JoinTable(name = TABLE_FONDS_STORAGE_LOCATION,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_FONDS_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
@@ -104,7 +104,7 @@ public class Fonds
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.FONDS;
+        return FONDS;
     }
 
     public List<Series> getReferenceSeries() {
@@ -131,15 +131,24 @@ public class Fonds
         this.referenceChildFonds = referenceChildFonds;
     }
 
+    @Override
     public List<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
     }
 
+    @Override
     public void setReferenceStorageLocation(
             List<StorageLocation> referenceStorageLocation) {
         this.referenceStorageLocation = referenceStorageLocation;
     }
 
+    @Override
+    public void addReferenceStorageLocation(
+            StorageLocation storageLocation) {
+        this.referenceStorageLocation.add(storageLocation);
+    }
+
+    @Override
     public List<FondsCreator> getReferenceFondsCreator() {
         return referenceFondsCreator;
     }
