@@ -285,6 +285,11 @@ public class File
         this.referenceCrossReference = referenceCrossReference;
     }
 
+    @Override
+    public void addReferenceComment(Comment comment) {
+        this.referenceComment.add(comment);
+    }
+
     public List<Part> getReferencePart() {
         return referencePart;
     }
