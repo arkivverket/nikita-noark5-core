@@ -7,7 +7,7 @@ import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.DocumentFlow;
 import nikita.common.model.noark5.v5.FondsCreator;
-import nikita.common.model.noark5.v5.Party;
+import nikita.common.model.noark5.v5.Part;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
@@ -783,19 +783,19 @@ public final class CommonUtils {
             }
 
             public static void deserialiseCaseParties(
-                    IParty partyObject,
+                    IPart partyObject,
                     ObjectNode objectNode,
                     StringBuilder errors) {
-                List<Party> caseParties = partyObject.getReferenceParty();
+                List<Part> caseParties = partyObject.getReferenceParty();
                 if (caseParties != null && caseParties.size() > 0) {
-                    for (Party party : caseParties) {
-                        deserialiseParty(party, objectNode, errors);
+                    for (Part part : caseParties) {
+                        deserialiseParty(part, objectNode, errors);
                         objectNode.remove(PART);
                     }
                 }
             }
 
-            public static void deserialiseParty(IPartyEntity partyEntity, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseParty(IPartEntity partyEntity, ObjectNode objectNode, StringBuilder errors) {
 
                 // Deserialize partyId
                 JsonNode currentNode = objectNode.get(PART_ID);
@@ -902,8 +902,8 @@ public final class CommonUtils {
                 precedenceEntity.setPrecedenceApprovedDate(deserializeDate(PRECEDENCE_APPROVED_DATE, objectNode, errors));
             }
 
-            public static List<Party> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
-                ArrayList<Party> caseParties = new ArrayList<>();
+            public static List<Part> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
+                ArrayList<Part> caseParties = new ArrayList<>();
                 //JsonNode jsonParty = objectNode.get(PART);
                 // TODO: I seem tobe missing my body of code ...
 /*                for (CorrespondencePart correspondencePart: caseParties) {
@@ -1421,55 +1421,55 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printParty(JsonGenerator jgen, IParty partyObject)
+            public static void printParty(JsonGenerator jgen, IPart partyObject)
                     throws IOException {
                 if (partyObject != null) {
-                    List<Party> caseParties = partyObject.getReferenceParty();
+                    List<Part> caseParties = partyObject.getReferenceParty();
                     if (caseParties != null && caseParties.size() > 0) {
                         jgen.writeArrayFieldStart(PART);
-                        for (Party party : caseParties) {
-                            if (party != null) {
+                        for (Part part : caseParties) {
+                            if (part != null) {
                                 jgen.writeObjectFieldStart(PART);
 
-                                if (party.getPartyId() != null) {
+                                if (part.getPartyId() != null) {
                                     jgen.writeStringField(PART_ID,
-                                            party.getPartyId());
+                                            part.getPartyId());
                                 }
-                                if (party.getPartyName() != null) {
+                                if (part.getPartyName() != null) {
                                     jgen.writeStringField(PART_NAME,
-                                            party.getPartyName());
+                                            part.getPartyName());
                                 }
-                                if (party.getPartyRole() != null) {
+                                if (part.getPartyRole() != null) {
                                     jgen.writeStringField(PART_ROLE,
-                                            party.getPartyRole());
+                                            part.getPartyRole());
                                 }
-                                if (party.getPostalAddress() != null) {
+                                if (part.getPostalAddress() != null) {
                                     jgen.writeStringField(POSTAL_ADDRESS,
-                                            party.getPostalAddress());
+                                            part.getPostalAddress());
                                 }
-                                if (party.getPostCode() != null) {
+                                if (part.getPostCode() != null) {
                                     jgen.writeStringField(POSTAL_NUMBER,
-                                            party.getPostCode());
+                                            part.getPostCode());
                                 }
-                                if (party.getPostalTown() != null) {
+                                if (part.getPostalTown() != null) {
                                     jgen.writeStringField(POSTAL_TOWN,
-                                            party.getPostalTown());
+                                            part.getPostalTown());
                                 }
-                                if (party.getForeignAddress() != null) {
+                                if (part.getForeignAddress() != null) {
                                     jgen.writeStringField(FOREIGN_ADDRESS,
-                                            party.getForeignAddress());
+                                            part.getForeignAddress());
                                 }
-                                if (party.getEmailAddress() != null) {
+                                if (part.getEmailAddress() != null) {
                                     jgen.writeStringField(EMAIL_ADDRESS,
-                                            party.getEmailAddress());
+                                            part.getEmailAddress());
                                 }
-                                if (party.getTelephoneNumber() != null) {
+                                if (part.getTelephoneNumber() != null) {
                                     jgen.writeStringField(TELEPHONE_NUMBER,
-                                            party.getTelephoneNumber());
+                                            part.getTelephoneNumber());
                                 }
-                                if (party.getContactPerson() != null) {
+                                if (part.getContactPerson() != null) {
                                     jgen.writeStringField(CONTACT_PERSON,
-                                            party.getContactPerson());
+                                            part.getContactPerson());
                                 }
                                 jgen.writeEndObject();
                             }

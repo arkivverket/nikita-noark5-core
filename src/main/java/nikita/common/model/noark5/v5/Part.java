@@ -2,28 +2,29 @@ package nikita.common.model.noark5.v5;
 
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.interfaces.entities.IPartyEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IPartEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_PART;
+import static nikita.common.config.Constants.TABLE_PART;
 
 /**
  * Created by tsodring on 4/10/16.
  */
 
 @Entity
-@Table(name = "party")
-@AttributeOverride(name = "id",
-        column = @Column(name = PRIMARY_KEY_PART))
-public class Party
+@Table(name = TABLE_PART)
+public class Part
         extends NoarkGeneralEntity
-        implements IPartyEntity {
+        implements IPartEntity {
 
     /**
      * M010 - partID (xs:string)
@@ -239,7 +240,7 @@ public class Party
 
     @Override
     public String toString() {
-        return "Party{" + super.toString() +
+        return "Part{" + super.toString() +
                 ", partyId='" + partyId + '\'' +
                 ", partyName='" + partyName + '\'' +
                 ", partyRole='" + partyRole + '\'' +
@@ -264,7 +265,7 @@ public class Party
         if (other.getClass() != getClass()) {
             return false;
         }
-        Party rhs = (Party) other;
+        Part rhs = (Part) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(partyId, rhs.partyId)

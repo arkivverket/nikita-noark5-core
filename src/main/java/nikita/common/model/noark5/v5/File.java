@@ -134,14 +134,14 @@ public class File
     @OneToMany(mappedBy = "referenceFile", cascade = ALL)
     private List<CrossReference> referenceCrossReference;
 
-    // Links to Party
+    // Links to Part
     @ManyToMany
     @JoinTable(name = TABLE_FILE_PARTY,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
                     referencedColumnName = PRIMARY_KEY_FILE),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_PART))
-    private List<Party> referenceParty = new ArrayList<>();
+    private List<Part> referencePart = new ArrayList<>();
 
     public String getFileId() {
         return fileId;
@@ -280,16 +280,16 @@ public class File
         this.referenceCrossReference = referenceCrossReference;
     }
 
-    public List<Party> getReferenceParty() {
-        return referenceParty;
+    public List<Part> getReferencePart() {
+        return referencePart;
     }
 
-    public void setReferenceParty(List<Party> referenceParty) {
-        this.referenceParty = referenceParty;
+    public void setReferencePart(List<Part> referencePart) {
+        this.referencePart = referencePart;
     }
 
-    public void addReferenceParty(Party party) {
-        this.referenceParty.add(party);
+    public void addReferenceParty(Part part) {
+        this.referencePart.add(part);
     }
 
     @Override

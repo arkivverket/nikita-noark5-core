@@ -209,7 +209,7 @@ public class DocumentDescriptionHateoasHandler
     }
 
     /**
-     * Create a REL/HREF pair for the list of Party objects associated with the
+     * Create a REL/HREF pair for the list of Part objects associated with the
      * given DocumentDescription.
      * <p>
      * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/part"

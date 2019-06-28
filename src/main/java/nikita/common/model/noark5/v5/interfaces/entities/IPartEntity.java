@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by tsodring on 1/16/17.
  */
-public interface IPartyEntity extends Serializable {
+public interface IPartEntity extends Serializable {
 
     String getPartyId();
 

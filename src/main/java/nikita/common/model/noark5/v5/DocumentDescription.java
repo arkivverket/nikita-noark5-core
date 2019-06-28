@@ -191,14 +191,14 @@ public class DocumentDescription
     @JoinColumn(name = "pk_electronic_signature_id")
     private ElectronicSignature referenceElectronicSignature;
 
-    // Links to Party
+    // Links to Part
     @ManyToMany
     @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_PARTY,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
                     referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_PART))
-    private List<Party> referenceParty = new ArrayList<>();
+    private List<Part> referencePart = new ArrayList<>();
 
     public String getDocumentType() {
         return documentType;
@@ -412,16 +412,16 @@ public class DocumentDescription
         this.referenceElectronicSignature = referenceElectronicSignature;
     }
 
-    public List<Party> getReferenceParty() {
-        return referenceParty;
+    public List<Part> getReferencePart() {
+        return referencePart;
     }
 
-    public void setReferenceParty(List<Party> referenceParty) {
-        this.referenceParty = referenceParty;
+    public void setReferencePart(List<Part> referencePart) {
+        this.referencePart = referencePart;
     }
 
-    public void addReferenceParty(Party party) {
-        this.referenceParty.add(party);
+    public void addReferenceParty(Part part) {
+        this.referencePart.add(part);
     }
 
     @Override

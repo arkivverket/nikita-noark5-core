@@ -166,7 +166,7 @@ public class FileHateoasHandler
     }
 
     /**
-     * Create a REL/HREF pair for the list of Party objects associated with the
+     * Create a REL/HREF pair for the list of Part objects associated with the
      * given File.
      * <p>
      * "../hateoas-api/arkivstruktur/mappe/1234/part"

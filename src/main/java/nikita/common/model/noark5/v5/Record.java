@@ -185,14 +185,14 @@ public class Record
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
-    // Links to Party
+    // Links to Part
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_PARTY,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Party> referenceParty = new ArrayList<>();
+    private List<Part> referencePart = new ArrayList<>();
 
     public ZonedDateTime getArchivedDate() {
         return archivedDate;
@@ -390,16 +390,16 @@ public class Record
         this.referenceCrossReference.add(crossReference);
     }
 
-    public List<Party> getReferenceParty() {
-        return referenceParty;
+    public List<Part> getReferencePart() {
+        return referencePart;
     }
 
-    public void setReferenceParty(List<Party> referenceParty) {
-        this.referenceParty = referenceParty;
+    public void setReferencePart(List<Part> referencePart) {
+        this.referencePart = referencePart;
     }
 
-    public void addReferenceParty(Party party) {
-        this.referenceParty.add(party);
+    public void addReferenceParty(Part part) {
+        this.referencePart.add(part);
     }
 
     @Override

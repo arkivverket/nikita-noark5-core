@@ -299,7 +299,7 @@ public class RecordHateoasHandler
 
 
     /**
-     * Create a REL/HREF pair for the list of Party objects associated with the
+     * Create a REL/HREF pair for the list of Part objects associated with the
      * given Record.
      * <p>
      * "../hateoas-api/arkivstruktur/registrering/1234/part"
