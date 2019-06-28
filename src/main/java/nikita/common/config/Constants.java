@@ -727,6 +727,7 @@ public final class Constants {
     public static final String TABLE_RESIDING_ADDRESS = "residing_address";
     public static final String TABLE_KEYWORD = "keyword";
     public static final String TABLE_SCREENING = "screening";
+    public static final String TABLE_SIGN_OFF = "sign_off";
     public static final String TABLE_DOCUMENT_DESCRIPTION =
             "document_description";
 
