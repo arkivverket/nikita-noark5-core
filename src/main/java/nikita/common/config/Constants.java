@@ -761,6 +761,7 @@ public final class Constants {
             "f_pk_correspondence_part_internal_id";
 
 
+
     public static final String FILE_SERIES_ID = "file_series_id";
     public static final String CASE_FILE_ADMINISTRATIVE_UNIT_ID =
             "case_file_administrative_unit_id";
@@ -814,6 +815,13 @@ public final class Constants {
 
     public static final String DOCUMENT_DESCRIPTION_SCREENING_ID =
             "document_description_screening_id";
+
+    public static final String CROSS_REFERENCE_FILE_ID =
+            "cross_reference_file_id";
+    public static final String CROSS_REFERENCE_CLASS_ID =
+            "cross_reference_class_id";
+    public static final String CROSS_REFERENCE_RECORD_ID =
+            "cross_reference_record_id";
 
     // Primary key names
     public static final String PRIMARY_KEY_SYSTEM_ID = "pk_fonds_id";

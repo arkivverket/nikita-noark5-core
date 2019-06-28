@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
-import static nikita.common.config.Constants.PRIMARY_CROSS_REFERENCE;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CROSS_REFERENCE;
 
 /**
@@ -27,9 +27,7 @@ import static nikita.common.config.N5ResourceMappings.CROSS_REFERENCE;
  * fromsSystemId and toSystemId show the one way relationship.
  */
 @Entity
-@Table(name = "cross_reference")
-@AttributeOverride(name = "id",
-        column = @Column(name = PRIMARY_CROSS_REFERENCE))
+@Table(name = TABLE_CROSS_REFERENCE)
 public class CrossReference
         extends NoarkEntity
         implements ICrossReferenceEntity {
@@ -56,8 +54,8 @@ public class CrossReference
      * points to systemId of the referenced Class
      **/
     @ManyToOne(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "cross_reference_class_id",
-            referencedColumnName = "pk_class_id")
+    @JoinColumn(name = CROSS_REFERENCE_CLASS_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Class referenceClass;
 
     /**
@@ -67,8 +65,8 @@ public class CrossReference
      * points to systemId of the referenced FiLink to File
      **/
     @ManyToOne(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "cross_reference_file_id",
-            referencedColumnName = "pk_file_id")
+    @JoinColumn(name = CROSS_REFERENCE_FILE_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private File referenceFile;
 
     /**
@@ -78,8 +76,8 @@ public class CrossReference
      * points to systemId of the referenced Record
      **/
     @ManyToOne(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "cross_reference_registration_id",
-            referencedColumnName = "pk_record_id")
+    @JoinColumn(name = CROSS_REFERENCE_RECORD_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Record referenceRecord;
 
     public String getFromSystemId() {
