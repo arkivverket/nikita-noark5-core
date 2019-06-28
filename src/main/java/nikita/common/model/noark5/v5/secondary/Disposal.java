@@ -8,21 +8,24 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static nikita.common.config.Constants.TABLE_DISPOSAL;
 
 /**
  * Created by tsodring on 4/10/16.
  */
 @Entity
-@Table(name = "disposal")
-// Enable soft delete of Disposal
-// @SQLDelete(sql="UPDATE disposal SET deleted = true WHERE pk_disposal_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_disposal_id"))
-public class Disposal extends NoarkEntity implements IDisposalEntity {
+@Table(name = TABLE_DISPOSAL)
+public class Disposal
+        extends NoarkEntity
+        implements IDisposalEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -72,7 +75,8 @@ public class Disposal extends NoarkEntity implements IDisposalEntity {
 
     // Links to DocumentDescription
     @OneToMany(mappedBy = "referenceDisposal")
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    private List<DocumentDescription>
+            referenceDocumentDescription = new ArrayList<>();
 
     public String getDisposalDecision() {
         return disposalDecision;
@@ -147,7 +151,8 @@ public class Disposal extends NoarkEntity implements IDisposalEntity {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(List<DocumentDescription> referenceDocumentDescription) {
+    public void setReferenceDocumentDescription(
+            List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 

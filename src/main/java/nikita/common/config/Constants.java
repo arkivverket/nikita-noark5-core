@@ -645,6 +645,7 @@ public final class Constants {
             "classification_system";
     public static final String TABLE_MEETING_FILE = "meeting_file";
     public static final String TABLE_DELETION = "deletion";
+    public static final String TABLE_DISPOSAL = "disposal";
     public static final String TABLE_CORRESPONDENCE_PART =
             "correspondence_part";
 
