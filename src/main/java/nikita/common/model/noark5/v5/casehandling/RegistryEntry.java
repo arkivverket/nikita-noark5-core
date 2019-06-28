@@ -30,20 +30,20 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "registry_entry")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = TABLE_REGISTRY_ENTRY)
+@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = RegistryEntryDeserializer.class)
 @HateoasPacker(using = RegistryEntryHateoasHandler.class)
 @HateoasObject(using = RegistryEntryHateoas.class)
 public class RegistryEntry
-        extends Record implements
-        IElectronicSignature,
-        IPrecedence, /*ICorrespondencePart,*/ ISignOff, IDocumentFlow {
+        extends Record
+        implements IElectronicSignature, IPrecedence, ISignOff, IDocumentFlow {
 
     /**
      * M013 - journalaar (xs:integer)
@@ -164,61 +164,70 @@ public class RegistryEntry
 
     // Links to CorrespondencePartPerson
     @ManyToMany
-    @JoinTable(name = "registry_entry_correspondence_part_person",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name =
-                    FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK,
-                    referencedColumnName = PRIMARY_KEY_CORRESPONDENCE_PART))
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_PERSON,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<CorrespondencePartPerson>
             referenceCorrespondencePartPerson = new ArrayList<>();
 
     // Links to CorrespondencePartUnit
     @ManyToMany
-    @JoinTable(name = "registry_entry_correspondence_part_unit",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_correspondence_part_unit_id",
-                    referencedColumnName = "pk_correspondence_part_id"))
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_UNIT,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_UNIT_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<CorrespondencePartUnit>
             referenceCorrespondencePartUnit = new ArrayList<>();
 
     // Links to CorrespondencePartInternal
     @ManyToMany
     @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL,
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns =
-            @JoinColumn(name = FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID,
-                    referencedColumnName = PRIMARY_KEY_CORRESPONDENCE_PART))
+            @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<CorrespondencePartInternal>
             referenceCorrespondencePartInternal = new ArrayList<>();
 
     // Links to DocumentFlow
     @OneToMany(mappedBy = "referenceRegistryEntry")
     private List<DocumentFlow> referenceDocumentFlow = new ArrayList<>();
+
     // Links to SignOff
     @ManyToMany
-    @JoinTable(name = "registry_entry_sign_off",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_sign_off_id",
-                    referencedColumnName = "pk_sign_off_id"))
-
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_SIGN_OFF,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_SIGN_OFF_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<SignOff> referenceSignOff = new ArrayList<>();
 
     // Links to Precedence
     @ManyToMany
-    @JoinTable(name = "registry_entry_precedence",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_precedence_id",
-                    referencedColumnName = "pk_precedence_id"))
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_PRECEDENCE,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_PRECEDENCE_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Precedence> referencePrecedence = new ArrayList<>();
 
     // Link to ElectronicSignature
     @OneToOne
-    @JoinColumn(name = "pk_electronic_signature_id")
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private ElectronicSignature referenceElectronicSignature;
 
     public Integer getRecordYear() {
@@ -357,17 +366,20 @@ public class RegistryEntry
     }
 
     @Override
-    public void setReferenceDocumentFlow(List<DocumentFlow> referenceDocumentFlow) {
+    public void setReferenceDocumentFlow(
+            List<DocumentFlow> referenceDocumentFlow) {
         this.referenceDocumentFlow = referenceDocumentFlow;
     }
 
-    public List<CorrespondencePartPerson> getReferenceCorrespondencePartPerson() {
+    public List<CorrespondencePartPerson>
+    getReferenceCorrespondencePartPerson() {
         return referenceCorrespondencePartPerson;
     }
 
     public void setReferenceCorrespondencePartPerson(
             List<CorrespondencePartPerson> referenceCorrespondencePartPerson) {
-        this.referenceCorrespondencePartPerson = referenceCorrespondencePartPerson;
+        this.referenceCorrespondencePartPerson =
+                referenceCorrespondencePartPerson;
     }
 
     public void addCorrespondencePartPerson(
@@ -423,7 +435,8 @@ public class RegistryEntry
         return referenceElectronicSignature;
     }
 
-    public void setReferenceElectronicSignature(ElectronicSignature referenceElectronicSignature) {
+    public void setReferenceElectronicSignature(
+            ElectronicSignature referenceElectronicSignature) {
         this.referenceElectronicSignature = referenceElectronicSignature;
     }
 

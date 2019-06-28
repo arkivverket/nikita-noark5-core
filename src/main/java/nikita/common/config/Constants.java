@@ -635,6 +635,7 @@ public final class Constants {
     public static final String TABLE_FILE = "file";
     public static final String TABLE_CLASS = "class";
     public static final String TABLE_RECORD_NOTE = "record_note";
+    public static final String TABLE_REGISTRY_ENTRY = "registry_entry";
     public static final String TABLE_PRECEDENCE = "precedence";
     public static final String TABLE_DOCUMENT_OBJECT = "document_object";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
@@ -671,6 +672,12 @@ public final class Constants {
             "file_comment";
     public static final String TABLE_FILE_PARTY = "file_party";
     public static final String TABLE_RECORD_AUTHOR = "record_author";
+    public static final String TABLE_REGISTRY_ENTRY_SIGN_OFF =
+            "registry_entry_sign_off";
+    public static final String TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_PERSON =
+            "registry_entry_correspondence_part_person";
+    public static final String TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_UNIT =
+            "registry_entry_correspondence_part_unit";
     public static final String TABLE_RECORD_DOCUMENT_DESCRIPTION =
             "record_document_description";
     public static final String TABLE_RECORD_PARTY = "record_party";
@@ -683,6 +690,8 @@ public final class Constants {
             "record_keyword";
     public static final String TABLE_RECORD_COMMENT =
             "record_comment";
+    public static final String TABLE_REGISTRY_ENTRY_PRECEDENCE =
+            "registry_entry_precedence";
     public static final String TABLE_DOCUMENT_DESCRIPTION_COMMENT =
             "document_description_comment";
     public static final String TABLE_DOCUMENT_DESCRIPTION_AUTHOR =
@@ -710,6 +719,9 @@ public final class Constants {
     // Column Constants
     // Foreign key names
     public static final String FOREIGN_KEY_FONDS_PK = "f_pk_fonds_id";
+    public static final String FOREIGN_KEY_CORRESPONDENCE_PART_UNIT_PK =
+            "f_pk_correspondence_part_unit_id";
+    public static final String FOREIGN_KEY_SIGN_OFF_PK = "f_pk_sign_off_id";
     public static final String FOREIGN_KEY_SERIES_PK = "f_pk_series_id";
     public static final String FOREIGN_KEY_FONDS_CREATOR_PK =
             "f_pk_fonds_creator_id";
