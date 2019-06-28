@@ -27,7 +27,6 @@ import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CLASS;
 import static nikita.common.config.N5ResourceMappings.REGISTRATION;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues;
 
 @Entity
 @Table(name = "file")
@@ -304,7 +303,6 @@ public class File
 
         if (referenceType.equalsIgnoreCase(NEW_CROSS_REFERENCE)) {
             CrossReference crossReference = new CrossReference();
-            setSystemIdEntityValues(crossReference);
             crossReference.setFromSystemId(getSystemId());
             crossReference.setToSystemId(entity.getSystemId());
 
@@ -321,7 +319,6 @@ public class File
                     addReferenceCrossReference(crossReference);
         }
     }
-
 
     @Override
     public String toString() {

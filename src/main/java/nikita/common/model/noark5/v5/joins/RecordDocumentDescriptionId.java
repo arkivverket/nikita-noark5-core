@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.joins;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by tsodring on 5/10/17.
@@ -10,22 +11,22 @@ import java.util.Objects;
 
 @Embeddable
 public class RecordDocumentDescriptionId implements Serializable {
-    private Long recordId;
-    private Long documentDescriptionId;
+    private UUID recordId;
+    private UUID documentDescriptionId;
 
     private RecordDocumentDescriptionId() {
     }
 
-    public RecordDocumentDescriptionId(Long recordId, Long documentDescriptionId) {
+    public RecordDocumentDescriptionId(UUID recordId, UUID documentDescriptionId) {
         this.recordId = recordId;
         this.documentDescriptionId = documentDescriptionId;
     }
 
-    public Long getRecordId() {
+    public UUID getRecordId() {
         return recordId;
     }
 
-    public Long getDocumentDescriptionId() {
+    public UUID getDocumentDescriptionId() {
         return documentDescriptionId;
     }
 

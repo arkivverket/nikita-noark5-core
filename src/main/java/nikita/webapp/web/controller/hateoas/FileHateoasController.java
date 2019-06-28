@@ -24,7 +24,6 @@ import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -105,14 +104,7 @@ public class FileHateoasController
                     value = "Incoming record",
                     required = true)
             @RequestBody Record record) throws NikitaException {
-        Record createdRecord = fileService.createRecordAssociatedWithFile(systemID, record);
-        RecordHateoas recordHateoas = new RecordHateoas(createdRecord);
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdRecord));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdRecord.getVersion().toString())
-                .body(recordHateoas);
+        return fileService.createRecordAssociatedWithFile(systemID, record);
     }
 
     // Create a CrossReference

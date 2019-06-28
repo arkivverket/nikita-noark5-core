@@ -54,6 +54,7 @@ public class UniqueCodeMetadataSuperClass extends MetadataSuperClassBase impleme
         }
         MetadataSuperClass otherEntity = (MetadataSuperClass) o;
         return new CompareToBuilder()
+                .appendSuper(super.compareTo(otherEntity))
                 .append(this.code, otherEntity.code)
                 .toComparison();
     }

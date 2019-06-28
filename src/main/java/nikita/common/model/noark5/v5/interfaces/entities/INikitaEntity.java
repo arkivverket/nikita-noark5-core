@@ -3,23 +3,18 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
-public interface INikitaEntity extends Serializable {
-    Long getId();
-
-    void setId(Long id);
+public interface INikitaEntity
+        extends Serializable, INoarkCreateEntity {
 
     String getSystemId();
 
-    void setSystemId(String systemId);
+    void setSystemId(UUID systemId);
 
     String getOwnedBy();
 
     void setOwnedBy(String ownedBy);
-
-    Boolean getDeleted();
-
-    void setDeleted(Boolean deleted);
 
     Long getVersion();
 

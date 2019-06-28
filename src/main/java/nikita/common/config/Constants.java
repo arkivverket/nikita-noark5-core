@@ -629,6 +629,7 @@ public final class Constants {
 
     // Table Constants
     public static final String TABLE_FONDS = "fonds";
+    public static final String TABLE_SERIES = "series";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
     public static final String TABLE_CROSS_REFERENCE = "cross_reference";
@@ -648,6 +649,8 @@ public final class Constants {
             "fonds_fonds_creator";
     public static final String TABLE_FILE_STORAGE_LOCATION =
             "file_storage_location";
+    public static final String TABLE_SERIES_STORAGE_LOCATION =
+            "series_storage_location";
     public static final String TABLE_FILE_KEYWORD =
             "file_keyword";
     public static final String TABLE_FILE_COMMENT =
@@ -670,6 +673,7 @@ public final class Constants {
     // Column Constants
     // Foreign key names
     public static final String FOREIGN_KEY_FONDS_PK = "f_pk_fonds_id";
+    public static final String FOREIGN_KEY_SERIES_PK = "f_pk_series_id";
     public static final String FOREIGN_KEY_FONDS_CREATOR_PK =
             "f_pk_fonds_creator_id";
 
@@ -709,38 +713,51 @@ public final class Constants {
     public static final String REFERENCE_ADMINISTRATIVE_UNIT =
             "referenceAdministrativeUnit";
 
+    public static final String SERIES_FONDS_ID = "series_fonds_id";
+    public static final String SERIES_DISPOSAL_ID = "series_disposal_id";
+    public static final String SERIES_SCREENING_ID = "series_screening_id";
+    public static final String SERIES_CLASSIFIED_ID = "series_classified_id";
+    public static final String SERIES_DISPOSAL_UNDERTAKEN_ID =
+            "series_disposal_undertaken_id";
+    public static final String SERIES_CLASSIFICATION_SYSTEM_ID =
+            "series_classification_system_id";
+    public static final String SERIES_DELETION_ID = "series_deletion_id";
+
+
     // Primary key names
-    public static final String PRIMARY_KEY_FONDS = "pk_fonds_id";
-    public static final String PRIMARY_KEY_FONDS_CREATOR =
-            "pk_fonds_creator_id";
-    public static final String PRIMARY_KEY_SERIES = "pk_series_id";
-    public static final String PRIMARY_KEY_CLASS = "pk_class_id";
-    public static final String PRIMARY_KEY_FILE = "pk_file_id";
-    public static final String PRIMARY_KEY_KEYWORD = "pk_keyword_id";
-    public static final String PRIMARY_KEY_COMMENT = "pk_comment_id";
-    public static final String PRIMARY_KEY_PART = "pk_part_id";
-    public static final String PRIMARY_KEY_CLASSIFIED = "pk_classified_id";
-    public static final String PRIMARY_KEY_DISPOSAL = "pk_disposal_id";
-    public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";
-    public static final String PRIMARY_CROSS_REFERENCE =
-            "pk_cross_reference_id";
+    public static final String PRIMARY_KEY_SYSTEM_ID = "pk_fonds_id";
+    /*
+        public static final String PRIMARY_KEY_FONDS = "pk_fonds_id";
+        public static final String PRIMARY_KEY_FONDS_CREATOR =
+                "pk_fonds_creator_id";
+        public static final String PRIMARY_KEY_SERIES = "pk_series_id";
+        public static final String PRIMARY_KEY_CLASS = "pk_class_id";
+        public static final String PRIMARY_KEY_FILE = "pk_file_id";
+        public static final String PRIMARY_KEY_KEYWORD = "pk_keyword_id";
+        public static final String PRIMARY_KEY_COMMENT = "pk_comment_id";
+        public static final String PRIMARY_KEY_PART = "pk_part_id";
+        public static final String PRIMARY_KEY_CLASSIFIED = "pk_classified_id";
+        public static final String PRIMARY_KEY_DISPOSAL = "pk_disposal_id";
+        public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";
+        public static final String PRIMARY_CROSS_REFERENCE =
+                "pk_cross_reference_id";
 
-    public static final String PRIMARY_KEY_USER = "pk_user_id";
-    public static final String PRIMARY_KEY_AUTHOR = "pk_author_id";
-    public static final String PRIMARY_KEY_RECORD = "pk_record_id";
-    public static final String PRIMARY_KEY_STORAGE_LOCATION =
-            "pk_storage_location_id";
-    public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
-            "pk_administrative_unit_id";
-    public static final String PRIMARY_KEY_CORRESPONDENCE_PART_PERSON =
-            "pk_correspondence_part_person_id";
+        public static final String PRIMARY_KEY_USER = "pk_user_id";
+        public static final String PRIMARY_KEY_AUTHOR = "pk_author_id";
+        public static final String PRIMARY_KEY_RECORD = "pk_record_id";
+        public static final String PRIMARY_KEY_STORAGE_LOCATION =
+                "pk_storage_location_id";
+        public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
+                "pk_administrative_unit_id";
+        public static final String PRIMARY_KEY_CORRESPONDENCE_PART_PERSON =
+                "pk_correspondence_part_person_id";
 
-    public static final String PRIMARY_KEY_CORRESPONDENCE_PART =
-            "pk_correspondence_part_id";
+        public static final String PRIMARY_KEY_CORRESPONDENCE_PART =
+                "pk_correspondence_part_id";
 
-    public static final String PRIMARY_KEY_CASE_FILE_STATUS =
-            "pk_case_file_status_id";
-
+        public static final String PRIMARY_KEY_CASE_FILE_STATUS =
+                "pk_case_file_status_id";
+    */
     public static final String JOIN_CASE_FILE_STATUS =
             "case_file_case_file_status_id";
 

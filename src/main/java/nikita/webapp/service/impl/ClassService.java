@@ -33,7 +33,6 @@ import java.util.Optional;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -92,7 +91,6 @@ public class ClassService
      */
     @Override
     public ClassHateoas save(Class klass) {
-        setNoarkEntityValues(klass);
         setFinaliseEntityValues(klass);
         ClassHateoas classHateoas = new
                 ClassHateoas(classRepository.save(klass));
@@ -197,7 +195,7 @@ public class ClassService
      * object
      */
     @Override
-    public RecordHateoas createRecordAssociatedWithClass(
+    public ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
             String classSystemId, Record record) {
         record.setReferenceClass(getClassOrThrow(classSystemId));
         return recordService.save(record);
@@ -209,7 +207,7 @@ public class ClassService
      * Retrieve all class objects the user owns.
      *
      * @param ownedBy identifier og logged-in user
-     * @return ClassHAteoas object containing a list of Class objects
+     * @return ClassHateoas object containing a list of Class objects
      */
     @Override
     @SuppressWarnings("unchecked")

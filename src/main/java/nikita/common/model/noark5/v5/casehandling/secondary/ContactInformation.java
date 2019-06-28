@@ -21,7 +21,8 @@ public class ContactInformation
 
     @OneToOne(fetch = FetchType.LAZY)
     CorrespondencePartPerson correspondencePartPerson;
-    @OneToOne(fetch = FetchType.LAZY)
+    @
+            OneToOne(fetch = FetchType.LAZY)
     CorrespondencePartUnit correspondencePartUnit;
     /**
      * M410 - epostadresse (xs:string)
@@ -41,17 +42,6 @@ public class ContactInformation
     @Column(name = "telephone_number")
     @Audited
     private String telephoneNumber;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getEmailAddress() {
         return emailAddress;

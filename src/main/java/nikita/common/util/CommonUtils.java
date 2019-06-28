@@ -417,7 +417,8 @@ public final class CommonUtils {
                 // Deserialize systemId
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
                 if (null != currentNode) {
-                    noarkSystemIdEntity.setSystemId(currentNode.textValue());
+                    noarkSystemIdEntity.setSystemId(
+                            UUID.fromString(currentNode.textValue()));
                     objectNode.remove(SYSTEM_ID);
                 }
             }
@@ -487,7 +488,6 @@ public final class CommonUtils {
                         for (JsonNode node : currentNode) {
                             String location = node.textValue();
                             Author author = new Author();
-                            author.setSystemId(UUID.randomUUID().toString());
                             author.setAuthor(location);
                             authors.add(author);
                         }
@@ -509,7 +509,6 @@ public final class CommonUtils {
                         for (JsonNode node : currentNode) {
                             String location = node.textValue();
                             StorageLocation storageLocation = new StorageLocation();
-                            storageLocation.setSystemId(UUID.randomUUID().toString());
                             storageLocation.setStorageLocation(location);
                             storageLocations.add(storageLocation);
                         }
@@ -950,7 +949,8 @@ public final class CommonUtils {
                     currentNode = objectNode.get(ADMINISTRATIVE_UNIT_PARENT_REFERENCE);
                     if (null != currentNode) {
                         AdministrativeUnit parent = new AdministrativeUnit();
-                        parent.setSystemId(currentNode.textValue());
+                        parent.setSystemId(
+                                UUID.fromString(currentNode.textValue()));
                         parent.getReferenceChildAdministrativeUnit().add((AdministrativeUnit) administrativeUnit);
                         administrativeUnit.setParentAdministrativeUnit(parent);
                         objectNode.remove(ADMINISTRATIVE_UNIT_PARENT_REFERENCE);
@@ -1239,7 +1239,8 @@ public final class CommonUtils {
                 // Deserialize systemID
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
                 if (null != currentNode) {
-                    fondsCreatorEntity.setSystemId(currentNode.textValue());
+                    fondsCreatorEntity.setSystemId(
+                            UUID.fromString(currentNode.textValue()));
                     objectNode.remove(SYSTEM_ID);
                 }
                 // Deserialize fondsCreatorId

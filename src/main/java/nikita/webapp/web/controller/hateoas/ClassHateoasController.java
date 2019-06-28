@@ -230,7 +230,6 @@ public class ClassHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordHateoas>
     createRecordAssociatedWithClass(
-            HttpServletRequest request,
             @ApiParam(name = "systemId",
                     value = "systemId of Class to associate " +
                             "the record with.",
@@ -241,12 +240,8 @@ public class ClassHateoasController
                     required = true)
             @RequestBody Record record)
             throws NikitaException {
-        RecordHateoas recordHateoas = classService.
+        return classService.
                 createRecordAssociatedWithClass(systemID, record);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(recordHateoas.getEntityVersion().toString())
-                .body(recordHateoas);
     }
 
     // API - All GET Requests (CRUD - READ)

@@ -13,7 +13,6 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,11 +62,6 @@ public class FlowStatusService
     @Override
     public MetadataHateoas createNewFlowStatus(
             FlowStatus flowStatus) {
-
-        flowStatus.setDeleted(false);
-        flowStatus.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 flowStatusRepository.save(flowStatus));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());

@@ -62,8 +62,6 @@ public class PostalCodeService
     @Override
     public MetadataHateoas createNewPostalCode(
             PostalCode postalCode) {
-
-        postalCode.setDeleted(false);
         postalCode.setOwnedBy(SecurityContextHolder.getContext().
                 getAuthentication().getName());
 

@@ -41,22 +41,6 @@ public class NoarkGeneralEntity
     @Audited
     private String description;
 
-
-    /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @Column(name = "created_date")
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    private ZonedDateTime createdDate;
-
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @Column(name = "created_by")
-    @Audited
-    private String createdBy;
-
     /**
      * M602 - avsluttetDato (xs:dateTime)
      */
@@ -93,26 +77,6 @@ public class NoarkGeneralEntity
     }
 
     @Override
-    public ZonedDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    @Override
-    public void setCreatedDate(ZonedDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @Override
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    @Override
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Override
     public ZonedDateTime getFinalisedDate() {
         return finalisedDate;
     }
@@ -133,13 +97,20 @@ public class NoarkGeneralEntity
     }
 
     @Override
-    public int compareTo(nikita.common.model.noark5.v5.NoarkEntity otherEntity) {
+    public int compareTo(NoarkEntity otherEntity) {
         if (null == otherEntity) {
             return -1;
         }
         return new CompareToBuilder()
-                .append(this.createdDate,
-                        ((NoarkGeneralEntity) otherEntity).createdDate)
+                .appendSuper(super.compareTo(otherEntity))
+                .append(this.title,
+                        ((NoarkGeneralEntity) otherEntity).title)
+                .append(this.description,
+                        ((NoarkGeneralEntity) otherEntity).description)
+                .append(this.finalisedBy,
+                        ((NoarkGeneralEntity) otherEntity).finalisedBy)
+                .append(this.finalisedDate,
+                        ((NoarkGeneralEntity) otherEntity).finalisedDate)
                 .toComparison();
     }
 
@@ -149,8 +120,6 @@ public class NoarkGeneralEntity
         return super.toString() +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", createdDate=" + createdDate +
-                ", createdBy='" + createdBy + '\'' +
                 ", finalisedDate=" + finalisedDate +
                 ", finalisedBy='" + finalisedBy + '\'';
     }
@@ -171,8 +140,6 @@ public class NoarkGeneralEntity
                 .appendSuper(super.equals(other))
                 .append(title, rhs.title)
                 .append(description, rhs.description)
-                .append(createdDate, rhs.createdDate)
-                .append(createdBy, rhs.createdBy)
                 .append(finalisedDate, rhs.finalisedDate)
                 .append(finalisedBy, rhs.finalisedBy)
                 .isEquals();
@@ -184,8 +151,6 @@ public class NoarkGeneralEntity
                 .appendSuper(super.hashCode())
                 .append(title)
                 .append(description)
-                .append(createdDate)
-                .append(createdBy)
                 .append(finalisedDate)
                 .append(finalisedBy)
                 .toHashCode();

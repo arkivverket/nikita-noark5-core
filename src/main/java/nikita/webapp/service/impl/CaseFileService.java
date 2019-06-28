@@ -48,7 +48,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -93,7 +92,6 @@ public class CaseFileService
 
     @Override
     public CaseFile save(CaseFile caseFile) {
-        setNoarkEntityValues(caseFile);
         checkDocumentMediumValid(caseFile);
 
         // If caseStatus is not set, set it to "Opprettet"

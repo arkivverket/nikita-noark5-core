@@ -8,7 +8,6 @@ import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +46,6 @@ public class CorrespondencePartTypeService
      */
     @Override
     public CorrespondencePartType createNewCorrespondencePartType(CorrespondencePartType correspondencePartType) {
-        correspondencePartType.setDeleted(false);
-        correspondencePartType.setOwnedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         return correspondencePartTypeRepository.save(correspondencePartType);
     }
 

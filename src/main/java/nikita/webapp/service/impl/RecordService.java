@@ -21,10 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -77,34 +75,14 @@ public class RecordService
 
     // All CREATE operations
     @Override
-    public RecordHateoas save(Record record) {
-        String username = SecurityContextHolder.getContext().
-                getAuthentication().getName();
-
-        record.setSystemId(UUID.randomUUID().toString());
-        record.setCreatedDate(ZonedDateTime.now());
-        record.setOwnedBy(username);
-        record.setCreatedBy(username);
-        record.setDeleted(false);
-
+    public ResponseEntity<RecordHateoas> save(Record record) {
         RecordHateoas recordHateoas =
                 new RecordHateoas(recordRepository.save(record));
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return recordHateoas;
-    }
-
-
-    public Record create(Record record) {
-        String username = SecurityContextHolder.getContext().
-                getAuthentication().getName();
-
-        record.setSystemId(UUID.randomUUID().toString());
-        record.setCreatedDate(ZonedDateTime.now());
-        record.setOwnedBy(username);
-        record.setCreatedBy(username);
-        record.setDeleted(false);
-
-        return recordRepository.save(record);
+        classHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(recordHateoas.getEntityVersion().toString())
+                .body(recordHateoas);
     }
 
     public DocumentDescriptionHateoas

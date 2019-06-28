@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import org.springframework.http.ResponseEntity;
 
@@ -19,7 +20,7 @@ public interface IFileService {
 
     FileHateoas save(File file);
 
-    Record createRecordAssociatedWithFile(
+    ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
             @NotNull final String fileSystemId,
             @NotNull final Record record);
 

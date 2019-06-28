@@ -6,8 +6,11 @@ import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,6 +18,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -25,18 +30,19 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 public class MetadataSuperClassBase
         implements INikitaEntity, Comparable<MetadataSuperClassBase> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pk_id", nullable = false, insertable = true, updatable = false)
-    protected Long id;
-
     /**
      * M001 - systemID (xs:string)
      */
-    @Column(name = "system_id", unique = true)
-    @Audited
-
-    protected String systemId;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator",
+            parameters = {@Parameter(
+                    name = "uuid_gen_strategy_class",
+                    value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
+    @Column(name = "system_id", updatable = false, nullable = false)
+    protected UUID systemId;
 
     /**
      * M021 - beskrivelse (xs:string)
@@ -44,19 +50,13 @@ public class MetadataSuperClassBase
     @Column(name = "description")
     @Audited
     protected String description;
-
+    @CreatedBy
     @Column(name = "owned_by")
     @Audited
     protected String ownedBy;
-
     @Version
     @Column(name = "version")
     protected Long version;
-
-    // Used for soft delete.
-    @Column(name = "deleted")
-    @Audited
-    private Boolean deleted;
 
     /**
      * M??? - oppdatertDato (xs:dateTime)
@@ -72,14 +72,29 @@ public class MetadataSuperClassBase
     @LastModifiedBy
     @Column(name = "last_modified_by")
     private String lastModifiedBy;
+    /**
+     * M600 - opprettetDato (xs:dateTime)
+     */
+    @CreatedDate
+    @Column(name = "created_date")
+    @DateTimeFormat(iso = DATE_TIME)
+    @Audited
+    private ZonedDateTime createdDate;
+    /**
+     * M601 - opprettetAv (xs:string)
+     */
+    @CreatedBy
+    @Column(name = "created_by")
+    @Audited
+    private String createdBy;
 
     @Override
     public String getSystemId() {
-        return systemId;
+        return systemId.toString();
     }
 
     @Override
-    public void setSystemId(String systemId) {
+    public void setSystemId(UUID systemId) {
         this.systemId = systemId;
     }
 
@@ -92,13 +107,31 @@ public class MetadataSuperClassBase
     }
 
     @Override
-    public Boolean getDeleted() {
-        return deleted;
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
     }
 
     @Override
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    @Override
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    @Override
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 
     @Override
@@ -109,16 +142,6 @@ public class MetadataSuperClassBase
     @Override
     public void setOwnedBy(String ownedBy) {
         this.ownedBy = ownedBy;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override
@@ -189,30 +212,31 @@ public class MetadataSuperClassBase
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(systemId, rhs.systemId)
-                .append(deleted, rhs.getDeleted())
+                .append(description, rhs.getDescription())
                 .append(version, rhs.getVersion())
+                .append(createdBy, rhs.getCreatedBy())
+                .append(createdDate, rhs.getCreatedDate())
                 .append(ownedBy, rhs.getOwnedBy())
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
-                .append(systemId)
-                .append(deleted)
-                .append(version)
-                .append(ownedBy)
-                .toHashCode();
+        return Objects.hash(systemId, description, createdDate, createdBy,
+                lastModifiedDate, lastModifiedBy, ownedBy, version);
     }
 
     @Override
     public String toString() {
-        return this.getClass().getName() + " {" +
-                "id=" + id +
+        return "MetadataSuperClassBase{" +
+                "systemId=" + systemId +
                 ", description='" + description + '\'' +
-                ", deleted=" + deleted +
-                ", version=" + version +
+                ", createdDate=" + createdDate +
+                ", createdBy='" + createdBy + '\'' +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
                 ", ownedBy='" + ownedBy + '\'' +
+                ", version=" + version +
                 '}';
     }
 }

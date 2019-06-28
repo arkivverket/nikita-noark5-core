@@ -12,9 +12,7 @@ import java.util.Optional;
 public interface IRecordService {
 
     // -- All CREATE operations
-    RecordHateoas save(Record record);
-
-    Record create(Record record);
+    ResponseEntity<RecordHateoas> save(Record record);
 
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription);

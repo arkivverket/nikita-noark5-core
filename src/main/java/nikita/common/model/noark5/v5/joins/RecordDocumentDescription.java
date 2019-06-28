@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.Record;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by tsodring on 5/10/17.
@@ -33,7 +34,9 @@ public class RecordDocumentDescription {
     public RecordDocumentDescription(Record record, DocumentDescription documentDescription) {
         this.record = record;
         this.documentDescription = documentDescription;
-        this.id = new RecordDocumentDescriptionId(record.getId(), documentDescription.getId());
+        this.id = new RecordDocumentDescriptionId(
+                UUID.fromString(record.getSystemId()),
+                UUID.fromString(documentDescription.getSystemId()));
     }
 
     //Getters and setters omitted for brevity

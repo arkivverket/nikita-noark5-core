@@ -39,7 +39,8 @@ import java.util.List;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -91,7 +92,6 @@ public class FondsService
     @Override
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
         checkDocumentMediumValid(fonds);
-        setNoarkEntityValues(fonds);
         fonds.setFondsStatus(STATUS_OPEN);
         setFinaliseEntityValues(fonds);
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.save(fonds));
@@ -467,14 +467,14 @@ public class FondsService
         Query q = entityManager.createNativeQuery(
                 "DELETE FROM " + TABLE_FONDS_FONDS_CREATOR + " WHERE " +
                         FOREIGN_KEY_FONDS_PK + " = :id ;");
-        q.setParameter("id", fonds.getId());
+        q.setParameter("id", fonds.getSystemId());
         q.executeUpdate();
 
         // Disassociate any links between Fonds and StorageLocation
         q = entityManager.createNativeQuery(
                 "DELETE FROM " + TABLE_FONDS_STORAGE_LOCATION + " WHERE " +
                         FOREIGN_KEY_FONDS_PK + " = :id ;");
-        q.setParameter("id", fonds.getId());
+        q.setParameter("id", fonds.getSystemId());
         q.executeUpdate();
 
         // Next get hibernate to delete the Fonds object

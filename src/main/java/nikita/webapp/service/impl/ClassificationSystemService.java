@@ -31,7 +31,6 @@ import java.util.List;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -94,7 +93,6 @@ public class ClassificationSystemService
     @Override
     public ClassificationSystemHateoas save(
             ClassificationSystem classificationSystem) {
-        setNoarkEntityValues(classificationSystem);
         setFinaliseEntityValues(classificationSystem);
         ClassificationSystemHateoas classificationSystemHateoas = new
                 ClassificationSystemHateoas(
@@ -216,6 +214,7 @@ public class ClassificationSystemService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithClassificationSystem(@NotNull final String systemId) {
         SeriesHateoas seriesHateoas = new

@@ -26,7 +26,6 @@ import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.SYSTEM;
 
@@ -69,11 +68,9 @@ public class UserService
             throw new UsernameExistsException("There is an account with that " +
                     "username: " + user.getUsername());
         }
-        user.setSystemId(UUID.randomUUID().toString());
         // Encrypt the password. Should be bcrypt!
         user.setPassword(encoder.encode(user.getPassword()));
         user.setEnabled(true);
-        user.setDeleted(false);
         user.setCreatedBy(SYSTEM);
         user.setCreatedDate(ZonedDateTime.now());
         user.setAccountNonExpired(true);

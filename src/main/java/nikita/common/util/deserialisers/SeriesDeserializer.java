@@ -12,6 +12,7 @@ import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -71,7 +72,7 @@ public class SeriesDeserializer extends JsonDeserializer {
         currentNode = objectNode.get(N5ResourceMappings.SERIES_PRECURSOR);
         if (null != currentNode) {
             Series seriesPrecursor = new Series();
-            seriesPrecursor.setSystemId(currentNode.textValue());
+            seriesPrecursor.setSystemId(UUID.fromString(currentNode.textValue()));
             series.setReferencePrecursor(seriesPrecursor);
             // TODO: Does this imply that the current arkivdel is the successor?
             // I would not set it here, as the service class has to check that
@@ -82,7 +83,7 @@ public class SeriesDeserializer extends JsonDeserializer {
         currentNode = objectNode.get(N5ResourceMappings.SERIES_SUCCESSOR);
         if (null != currentNode) {
             Series seriesSuccessor = new Series();
-            seriesSuccessor.setSystemId(currentNode.textValue());
+            seriesSuccessor.setSystemId(UUID.fromString(currentNode.textValue()));
             series.setReferenceSuccessor(seriesSuccessor);
             // TODO: Does this imply that the current arkivdel is the precursor?
             // I would not set it here, as the service class should do this

@@ -43,21 +43,6 @@ public class Record
         IKeyword, IComment, ICrossReference, IAuthor {
 
     /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @Column(name = "created_date")
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    private ZonedDateTime createdDate;
-
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @Column(name = "created_by")
-    @Audited
-    private String createdBy;
-
-    /**
      * M604 - arkivertDato (xs:dateTime)
      */
     @Column(name = "archived_date")
@@ -71,7 +56,6 @@ public class Record
     @Column(name = "archived_by")
     @Audited
     private String archivedBy;
-
 
     /**
      * M004 - registreringsID (xs:string)
@@ -109,10 +93,6 @@ public class Record
     @Audited
     private String documentMedium;
 
-    @Column(name = "owned_by")
-    @Audited
-    private String ownedBy;
-
     // Link to File
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "record_file_id", referencedColumnName = "pk_file_id")
@@ -128,22 +108,18 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
     private List<StorageLocation> referenceStorageLocation =
             new ArrayList<>();
+
     // Link to Series
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "record_series_id", referencedColumnName = "pk_series_id")
     private Series referenceSeries;
+
     // Link to Class
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "record_class_id", referencedColumnName = "pk_class_id")
     private Class referenceClass;
 
-    // Used for soft delete.
-    @Column(name = "deleted")
-    @Audited
-    public ZonedDateTime getCreatedDate() {
-        return createdDate;
-    }
-    
+
     // Links to Keywords
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_KEYWORD,
@@ -214,18 +190,6 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_PART))
     private List<Party> referenceParty = new ArrayList<>();
 
-    public void setCreatedDate(ZonedDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public ZonedDateTime getArchivedDate() {
         return archivedDate;
     }
@@ -280,16 +244,6 @@ public class Record
 
     public void setDocumentMedium(String documentMedium) {
         this.documentMedium = documentMedium;
-    }
-
-    @Override
-    public String getOwnedBy() {
-        return ownedBy;
-    }
-
-    @Override
-    public void setOwnedBy(String ownedBy) {
-        this.ownedBy = ownedBy;
     }
 
     @Override
@@ -431,13 +385,10 @@ public class Record
         return "Record{" + super.toString() +
                 "archivedBy='" + archivedBy + '\'' +
                 ", archivedDate=" + archivedDate +
-                ", createdBy='" + createdBy + '\'' +
-                ", createdDate=" + createdDate +
                 ", description='" + description + '\'' +
                 ", officialTitle='" + officialTitle + '\'' +
                 ", title='" + title + '\'' +
                 ", recordId='" + recordId + '\'' +
-                ", ownedBy='" + ownedBy + '\'' +
                 '}';
     }
 
@@ -457,14 +408,11 @@ public class Record
                 .appendSuper(super.equals(other))
                 .append(archivedBy, rhs.archivedBy)
                 .append(archivedDate, rhs.archivedDate)
-                .append(createdBy, rhs.createdBy)
-                .append(createdDate, rhs.createdDate)
                 .append(recordId, rhs.recordId)
                 .append(title, rhs.title)
                 .append(officialTitle, rhs.officialTitle)
                 .append(description, rhs.description)
                 .append(documentMedium, rhs.documentMedium)
-                .append(ownedBy, rhs.ownedBy)
                 .isEquals();
     }
 
@@ -474,14 +422,11 @@ public class Record
                 .appendSuper(super.hashCode())
                 .append(archivedBy)
                 .append(archivedDate)
-                .append(createdBy)
-                .append(createdDate)
                 .append(recordId)
                 .append(title)
                 .append(officialTitle)
                 .append(description)
                 .append(documentMedium)
-                .append(ownedBy)
                 .toHashCode();
     }
 }

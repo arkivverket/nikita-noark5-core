@@ -33,7 +33,6 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.STATUS_CLOSED;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -104,7 +103,6 @@ public class SeriesService
 
     @Override
     public Series save(Series series) {
-        setNoarkEntityValues(series);
         checkDocumentMediumValid(series);
         return seriesRepository.save(series);
     }
@@ -159,7 +157,6 @@ public class SeriesService
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(fileHateoas);
     }
-
 
     /**
      * Retrieve the list of ClassificationSystemHateoas object associated with
@@ -224,7 +221,6 @@ public class SeriesService
                 .eTag(seriesHateoas.getEntityVersion().toString())
                 .body(seriesHateoas);
     }
-
 
     // All UPDATE operations
 

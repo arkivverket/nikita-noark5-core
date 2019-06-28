@@ -51,7 +51,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
@@ -61,7 +60,6 @@ import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -116,10 +114,6 @@ public class DocumentObjectService
     // All CREATE operations
 
     public DocumentObject save(DocumentObject documentObject) {
-        setSystemIdEntityValues(documentObject);
-        setCreateEntityValues(documentObject);
-        setNikitaEntityValues(documentObject);
-
         Long version =
                 documentObjectRepository.
                         countByReferenceDocumentDescriptionAndVariantFormat(
@@ -271,7 +265,6 @@ public class DocumentObjectService
 
         archiveDocumentObject.setFileSize(Files.size(archiveVersion));
         setGeneratedDocumentFilename(archiveDocumentObject);
-        archiveDocumentObject.setDeleted(false);
         archiveDocumentObject.setOwnedBy(productionDocumentObject.getOwnedBy());
 
         return archiveVersion;
@@ -313,8 +306,6 @@ public class DocumentObjectService
         DocumentObject archiveDocumentObject = new DocumentObject();
 
         try {
-
-            archiveDocumentObject.setSystemId(UUID.randomUUID().toString());
 
             Path archiveFile = convertFileFromStorage(originalDocumentObject,
                     archiveDocumentObject);
@@ -585,30 +576,6 @@ public class DocumentObjectService
             }
         }
         return "unknown";
-    }
-
-    /**
-     * Calculate the sha256 checksum of an identified file
-     *
-     * @throws IOException if there is a problem with the file
-     */
-    private void calculateAndSetChecksum(DocumentObject documentObject)
-            throws IOException {
-        documentObject.setChecksumAlgorithm(defaultChecksumAlgorithm);
-        String checksum = new DigestUtils(defaultChecksumAlgorithm).digestAsHex(
-                getToFile(documentObject).toFile());
-        documentObject.setChecksum(checksum);
-    }
-
-    /**
-     * Calculate the size of a file
-     *
-     * @param fileLocation The location of the file
-     * @return the length of the file in bytes
-     * @throws IOException if something goes wrong
-     */
-    private Long getFileSize(String fileLocation) throws IOException {
-        return Files.size(Paths.get(fileLocation));
     }
 
     /**

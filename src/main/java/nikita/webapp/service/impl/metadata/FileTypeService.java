@@ -13,7 +13,6 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,11 +62,6 @@ public class FileTypeService
     @Override
     public MetadataHateoas createNewFileType(
             FileType fileType) {
-
-        fileType.setDeleted(false);
-        fileType.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 fileTypeRepository.save(fileType));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());

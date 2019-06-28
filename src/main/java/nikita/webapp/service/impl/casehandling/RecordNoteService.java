@@ -26,7 +26,7 @@ import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -54,11 +54,7 @@ public class RecordNoteService
     @Override
     public ResponseEntity<RecordNoteHateoas> save(
             @NotNull final RecordNote recordNote) {
-        setNikitaEntityValues(recordNote);
-        setSystemIdEntityValues(recordNote);
-        setCreateEntityValues(recordNote);
         checkDocumentMediumValid(recordNote);
-
         RecordNoteHateoas recordNoteHateoas = new
                 RecordNoteHateoas(recordNoteRepository.save(recordNote));
         recordNoteHateoasHandler.addLinks(recordNoteHateoas,

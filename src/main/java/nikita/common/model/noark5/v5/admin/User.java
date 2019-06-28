@@ -21,7 +21,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.FOREIGN_KEY_USER_PK;
+import static nikita.common.config.Constants.NOARK_ADMINISTRATION_PATH;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -35,10 +36,6 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 public class User
         extends NoarkEntity
         implements IUserEntity {
-
-    @Column(name = "system_id", unique = true)
-    @NotNull
-    private String systemId;
 
     @Column(unique = true)
     @NotNull
@@ -118,16 +115,6 @@ public class User
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private List<AdministrativeUnit> administrativeUnits = new ArrayList<>();
-
-    @Override
-    public String getSystemId() {
-        return systemId;
-    }
-
-    @Override
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
 
     @Override
     public String getCreatedBy() {

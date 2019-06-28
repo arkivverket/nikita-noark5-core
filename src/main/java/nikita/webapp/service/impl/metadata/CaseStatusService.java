@@ -13,7 +13,6 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,11 +66,6 @@ public class CaseStatusService
     @Override
     public MetadataHateoas createNewCaseStatus(
             CaseStatus caseStatus) {
-
-        caseStatus.setDeleted(false);
-        caseStatus.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 caseStatusRepository.save(caseStatus));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());

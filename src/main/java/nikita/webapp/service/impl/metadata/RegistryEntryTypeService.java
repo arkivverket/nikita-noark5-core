@@ -13,7 +13,6 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,11 +62,6 @@ public class RegistryEntryTypeService
     @Override
     public MetadataHateoas createNewRegistryEntryType(
             RegistryEntryType registryEntryType) {
-
-        registryEntryType.setDeleted(false);
-        registryEntryType.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 formatRepository.save(registryEntryType));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());

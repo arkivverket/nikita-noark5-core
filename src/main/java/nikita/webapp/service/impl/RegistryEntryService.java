@@ -39,7 +39,7 @@ import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -72,9 +72,6 @@ public class RegistryEntryService
 
     @Override
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
-        setNikitaEntityValues(registryEntry);
-        setSystemIdEntityValues(registryEntry);
-        setCreateEntityValues(registryEntry);
         checkDocumentMediumValid(registryEntry);
         registryEntry.setRecordDate(ZonedDateTime.now());
         File file = registryEntry.getReferenceFile();
@@ -309,8 +306,6 @@ public class RegistryEntryService
 
         RegistryEntry registryEntry = getRegistryEntryOrThrow(
                 registryEntrySystemID);
-        setNikitaEntityValues(precedence);
-        setSystemIdEntityValues(precedence);
         // bidirectional relationship @ManyToMany, set both sides of relationship
         registryEntry.getReferencePrecedence().add(precedence);
         precedence.getReferenceRegistryEntry().add(registryEntry);

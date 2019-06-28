@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -29,7 +30,8 @@ import java.util.Optional;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -64,7 +66,6 @@ public class FileService
 
     public FileHateoas save(File file) {
         checkDocumentMediumValid(file);
-        setNoarkEntityValues(file);
         setFinaliseEntityValues(file);
         FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
@@ -76,16 +77,15 @@ public class FileService
     @Override
     public File createFile(File file) {
         checkDocumentMediumValid(file);
-        setNoarkEntityValues(file);
         setFinaliseEntityValues(file);
         return fileRepository.save(file);
     }
 
     @Override
-    public Record createRecordAssociatedWithFile(
+    public ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
             String fileSystemId, Record record) {
         record.setReferenceFile(getFileOrThrow(fileSystemId));
-        return recordService.create(record);
+        return recordService.save(record);
     }
 
 

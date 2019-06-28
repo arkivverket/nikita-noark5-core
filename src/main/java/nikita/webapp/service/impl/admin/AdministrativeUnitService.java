@@ -15,9 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.Constants.SYSTEM;
@@ -64,10 +62,7 @@ public class AdministrativeUnitService
     @Override
     public AdministrativeUnit
     createNewAdministrativeUnitBySystem(AdministrativeUnit administrativeUnit) {
-        administrativeUnit.setSystemId(UUID.randomUUID().toString());
-        administrativeUnit.setCreatedDate(ZonedDateTime.now());
         administrativeUnit.setCreatedBy(SYSTEM);
-        administrativeUnit.setDeleted(false);
         administrativeUnit.setOwnedBy(SYSTEM);
         createSequenceNumberGenerator(administrativeUnit);
         return administrativeUnit;
@@ -89,10 +84,7 @@ public class AdministrativeUnitService
     createNewAdministrativeUnitByUser(
             AdministrativeUnit administrativeUnit,
             User user) {
-        administrativeUnit.setSystemId(UUID.randomUUID().toString());
-        administrativeUnit.setCreatedDate(ZonedDateTime.now());
         administrativeUnit.setCreatedBy(user.getCreatedBy());
-        administrativeUnit.setDeleted(false);
         administrativeUnit.setOwnedBy(user.getCreatedBy());
         createSequenceNumberGenerator(administrativeUnit);
         return administrativeUnit;
