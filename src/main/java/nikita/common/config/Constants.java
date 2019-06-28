@@ -673,10 +673,19 @@ public final class Constants {
             "record_keyword";
     public static final String TABLE_RECORD_COMMENT =
             "record_comment";
+    public static final String TABLE_DOCUMENT_DESCRIPTION_COMMENT =
+            "document_description_comment";
+    public static final String TABLE_DOCUMENT_DESCRIPTION_AUTHOR =
+            "document_description_author";
+    public static final String table_document_description_comment =
+            "document_description_comment";
+
     public static final String TABLE_RECORD_STORAGE_LOCATION =
             "record_storage_location";
 
     public static final String TABLE_DOCUMENT_FLOW = "document_flow";
+    public static final String TABLE_DOCUMENT_DESCRIPTION =
+            "document_description";
 
     // Column Constants
     // Foreign key names
@@ -743,6 +752,23 @@ public final class Constants {
     public static final String SERIES_CLASSIFICATION_SYSTEM_ID =
             "series_classification_system_id";
     public static final String SERIES_DELETION_ID = "series_deletion_id";
+    public static final String DOCUMENT_DESCRIPTION_DISPOSAL_ID =
+            "document_description_disposal_id";
+
+    public static final String DOCUMENT_DESCRIPTION_CLASSIFIED_ID =
+            "document_description_classified_id";
+
+    public static final String DOCUMENT_DESCRIPTION_DISPOSAL_UNDERTAKEN_ID =
+            "document_description_disposal_undertaken_id";
+    public static final String DOCUMENT_DESCRIPTION_DELETION_ID =
+            "document_description_deletion_id";
+
+    public static final String DOCUMENT_DESCRIPTION_SCREENING_ID =
+            "document_description_screening_id";
+    public static final String =;
+    public static final String =;
+    public static final String =;
+
 
 
     // Primary key names
