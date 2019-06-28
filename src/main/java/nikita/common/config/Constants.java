@@ -690,6 +690,8 @@ public final class Constants {
 
     public static final String TABLE_CORRESPONDENCE_PART_PERSON =
             "correspondence_part_person";
+    public static final String TABLE_CORRESPONDENCE_PART_UNIT =
+            "correspondence_part_unit";
 
     public static final String TABLE_RECORD_STORAGE_LOCATION =
             "record_storage_location";
