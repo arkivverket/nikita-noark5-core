@@ -685,8 +685,8 @@ public final class Constants {
             "document_description_comment";
     public static final String TABLE_DOCUMENT_DESCRIPTION_AUTHOR =
             "document_description_author";
-    public static final String table_document_description_comment =
-            "document_description_comment";
+    public static final String TABLE_CORRESPONDENCE_PART_INTERNAL =
+            "correspondence_part_internal";
 
     public static final String TABLE_RECORD_STORAGE_LOCATION =
             "record_storage_location";
