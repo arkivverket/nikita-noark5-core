@@ -646,10 +646,9 @@ public final class Constants {
     public static final String TABLE_MEETING_FILE = "meeting_file";
     public static final String TABLE_CORRESPONDENCE_PART =
             "correspondence_part";
-    public static final String TABLE_CONTACT_CLASSIFIED =
-            "classified";
-    public static final String TABLE_CONTACT_AUTHOR =
-            "author";
+    public static final String TABLE_CONTACT_CLASSIFIED = "classified";
+    public static final String TABLE_CONTACT_COMMENT = "comment";
+    public static final String TABLE_CONTACT_AUTHOR = "author";
     public static final String TABLE_CONTACT_INFORMATION =
             "contact_information";
 
