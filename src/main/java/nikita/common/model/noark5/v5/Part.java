@@ -31,21 +31,21 @@ public class Part
      */
     @Column(name = "part_id")
     @Audited
-    private String partyId;
+    private String partId;
 
     /**
      * M302 - partNavn (xs:string)
      */
     @Column(name = "part_name")
     @Audited
-    private String partyName;
+    private String partName;
 
     /**
      * M303 - partRolle (xs:string)
      */
     @Column(name = "part_role")
     @Audited
-    private String partyRole;
+    private String partRole;
 
     /**
      * M406 - postadresse (xs:string)
@@ -98,40 +98,40 @@ public class Part
     private String contactPerson;
 
     // Links to Files
-    @ManyToMany(mappedBy = "referenceParty")
+    @ManyToMany(mappedBy = "referencePart")
     private List<File> referenceFile = new ArrayList<>();
 
     // Links to Record
-    @ManyToMany(mappedBy = "referenceParty")
+    @ManyToMany(mappedBy = "referencePart")
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to DocumentDescriptions
-    @ManyToMany(mappedBy = "referenceParty")
+    @ManyToMany(mappedBy = "referencePart")
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
-    public String getPartyId() {
-        return partyId;
+    public String getPartId() {
+        return partId;
     }
 
-    public void setPartyId(String partyId) {
-        this.partyId = partyId;
+    public void setPartId(String partId) {
+        this.partId = partId;
     }
 
-    public String getPartyName() {
-        return partyName;
+    public String getPartName() {
+        return partName;
     }
 
-    public void setPartyName(String partyName) {
-        this.partyName = partyName;
+    public void setPartName(String partName) {
+        this.partName = partName;
     }
 
-    public String getPartyRole() {
-        return partyRole;
+    public String getPartRole() {
+        return partRole;
     }
 
-    public void setPartyRole(String partyRole) {
-        this.partyRole = partyRole;
+    public void setPartRole(String partRole) {
+        this.partRole = partRole;
     }
 
     public String getPostalAddress() {
@@ -241,9 +241,9 @@ public class Part
     @Override
     public String toString() {
         return "Part{" + super.toString() +
-                ", partyId='" + partyId + '\'' +
-                ", partyName='" + partyName + '\'' +
-                ", partyRole='" + partyRole + '\'' +
+                ", partId='" + partId + '\'' +
+                ", partName='" + partName + '\'' +
+                ", partRole='" + partRole + '\'' +
                 ", postalAddress='" + postalAddress + '\'' +
                 ", postCode='" + postCode + '\'' +
                 ", postalTown='" + postalTown + '\'' +
@@ -268,9 +268,9 @@ public class Part
         Part rhs = (Part) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(partyId, rhs.partyId)
-                .append(partyName, rhs.partyName)
-                .append(partyRole, rhs.partyRole)
+                .append(partId, rhs.partId)
+                .append(partName, rhs.partName)
+                .append(partRole, rhs.partRole)
                 .append(postalAddress, rhs.postalAddress)
                 .append(postCode, rhs.postCode)
                 .append(postalTown, rhs.postalTown)
@@ -285,9 +285,9 @@ public class Part
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(partyId)
-                .append(partyName)
-                .append(partyRole)
+                .append(partId)
+                .append(partName)
+                .append(partRole)
                 .append(postalAddress)
                 .append(postCode)
                 .append(postalTown)
