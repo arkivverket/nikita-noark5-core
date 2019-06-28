@@ -13,16 +13,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_DOCUMENT_DESCRIPTION;
+import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
+import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
-@Table(name = "electronic_signature")
-// Enable soft delete of ElectronicSignature
-// @SQLDelete(sql="UPDATE electronic_signature SET deleted = true WHERE pk_electronic_signature_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_electronic_signature_id"))
-public class ElectronicSignature extends NoarkEntity {
+@Table(name = TABLE_ELECTRONIC_SIGNATURE)
+public class ElectronicSignature
+        extends NoarkEntity {
 
     /**
      * M507 - elektronisksignatursikkerhetsnivaa (xs:string)
@@ -55,32 +53,35 @@ public class ElectronicSignature extends NoarkEntity {
 
     // Link to RegistryEntry
     @OneToOne
-    @JoinColumn(name = "pk_record_id")
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private RegistryEntry referenceRegistryEntry;
 
     // Link to DocumentObject
     @OneToOne
-    @JoinColumn(name = "pk_document_object_id")
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentObject referenceDocumentObject;
 
     // Link to DocumentDescription
     @OneToOne
-    @JoinColumn(name = PRIMARY_KEY_DOCUMENT_DESCRIPTION)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentDescription referenceDocumentDescription;
 
     public String getElectronicSignatureSecurityLevel() {
         return electronicSignatureSecurityLevel;
     }
 
-    public void setElectronicSignatureSecurityLevel(String electronicSignatureSecurityLevel) {
-        this.electronicSignatureSecurityLevel = electronicSignatureSecurityLevel;
+    public void setElectronicSignatureSecurityLevel(
+            String electronicSignatureSecurityLevel) {
+        this.electronicSignatureSecurityLevel =
+                electronicSignatureSecurityLevel;
     }
 
     public String getElectronicSignatureVerified() {
         return electronicSignatureVerified;
     }
 
-    public void setElectronicSignatureVerified(String electronicSignatureVerified) {
+    public void setElectronicSignatureVerified(
+            String electronicSignatureVerified) {
         this.electronicSignatureVerified = electronicSignatureVerified;
     }
 
@@ -109,7 +110,8 @@ public class ElectronicSignature extends NoarkEntity {
         return referenceRegistryEntry;
     }
 
-    public void setReferenceRegistryEntry(RegistryEntry referenceRegistryEntry) {
+    public void setReferenceRegistryEntry(
+            RegistryEntry referenceRegistryEntry) {
         this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
@@ -117,7 +119,8 @@ public class ElectronicSignature extends NoarkEntity {
         return referenceDocumentObject;
     }
 
-    public void setReferenceDocumentObject(DocumentObject referenceDocumentObject) {
+    public void setReferenceDocumentObject(
+            DocumentObject referenceDocumentObject) {
         this.referenceDocumentObject = referenceDocumentObject;
     }
 
@@ -125,15 +128,18 @@ public class ElectronicSignature extends NoarkEntity {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(DocumentDescription referenceDocumentDescription) {
+    public void setReferenceDocumentDescription(
+            DocumentDescription referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
     @Override
     public String toString() {
         return "ElectronicSignature{" + super.toString() +
-                ", electronicSignatureSecurityLevel='" + electronicSignatureSecurityLevel + '\'' +
-                ", electronicSignatureVerified='" + electronicSignatureVerified + '\'' +
+                ", electronicSignatureSecurityLevel='" +
+                electronicSignatureSecurityLevel + '\'' +
+                ", electronicSignatureVerified='" +
+                electronicSignatureVerified + '\'' +
                 '}';
     }
 
@@ -151,8 +157,10 @@ public class ElectronicSignature extends NoarkEntity {
         ElectronicSignature rhs = (ElectronicSignature) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(electronicSignatureSecurityLevel, rhs.electronicSignatureSecurityLevel)
-                .append(electronicSignatureVerified, rhs.electronicSignatureVerified)
+                .append(electronicSignatureSecurityLevel,
+                        rhs.electronicSignatureSecurityLevel)
+                .append(electronicSignatureVerified,
+                        rhs.electronicSignatureVerified)
                 .isEquals();
     }
 

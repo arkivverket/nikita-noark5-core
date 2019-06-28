@@ -646,6 +646,7 @@ public final class Constants {
     public static final String TABLE_MEETING_FILE = "meeting_file";
     public static final String TABLE_DELETION = "deletion";
     public static final String TABLE_DISPOSAL = "disposal";
+    public static final String TABLE_ELECTRONIC_SIGNATURE = "electronic_signature";
     public static final String TABLE_DISPOSAL_UNDERTAKEN =
             "disposal_undertaken";
     public static final String TABLE_CORRESPONDENCE_PART =
@@ -865,9 +866,6 @@ public final class Constants {
     */
     public static final String JOIN_CASE_FILE_STATUS =
             "case_file_case_file_status_id";
-
-    public static final String PRIMARY_KEY_DOCUMENT_DESCRIPTION =
-            "pk_document_description_id";
 
     public static final String DM_OWNED_BY = "ownedBy";
     public static final String SYSTEM = "system";
