@@ -12,14 +12,12 @@ import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
 
 @Entity
-@Table(name = "document_flow")
-// Enable soft delete of DocumentFlow
-// @SQLDelete(sql="UPDATE document_flow SET deleted = true WHERE pk_flow_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_flow_id"))
-public class DocumentFlow extends NoarkEntity {
+@Table(name = TABLE_DOCUMENT_FLOW)
+public class DocumentFlow
+        extends NoarkEntity {
 
     /**
      * M660 flytTil (xs:string)
@@ -65,13 +63,13 @@ public class DocumentFlow extends NoarkEntity {
 
     // Link to Series
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "work_flow_registry_entry_id",
-            referencedColumnName = "pk_record_id")
+    @JoinColumn(name = WORK_FLOW_REGISTRY_ENTRY_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private RegistryEntry referenceRegistryEntry;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "work_flow_record_note_id",
-            referencedColumnName = "pk_record_id")
+    @JoinColumn(name = WORK_FLOW_RECORD_NOTE_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private RecordNote referenceRecordNote;
 
     public String getFlowTo() {

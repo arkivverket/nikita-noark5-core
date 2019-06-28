@@ -676,6 +676,8 @@ public final class Constants {
     public static final String TABLE_RECORD_STORAGE_LOCATION =
             "record_storage_location";
 
+    public static final String TABLE_DOCUMENT_FLOW = "document_flow";
+
     // Column Constants
     // Foreign key names
     public static final String FOREIGN_KEY_FONDS_PK = "f_pk_fonds_id";
@@ -715,6 +717,10 @@ public final class Constants {
     public static final String FILE_CLASSIFIED_ID = "file_classified_id";
     public static final String FILE_SCREENING_ID = "file_screening_id";
     public static final String FILE_DISPOSAL_ID = "file_disposal_id";
+    public static final String WORK_FLOW_REGISTRY_ENTRY_ID =
+            "work_flow_registry_entry_id";
+    public static final String WORK_FLOW_RECORD_NOTE_ID =
+            "work_flow_record_note_id";
 
     public static final String REFERENCE_ADMINISTRATIVE_UNIT =
             "referenceAdministrativeUnit";
