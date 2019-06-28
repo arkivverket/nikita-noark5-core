@@ -11,13 +11,12 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "meeting_file")
-// Enable soft delete of MeetingFile
-// @SQLDelete(sql="UPDATE meeting_file SET deleted = true WHERE pk_file_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-public class MeetingFile extends File {
+import static nikita.common.config.Constants.TABLE_MEETING_FILE;
 
+@Entity
+@Table(name = TABLE_MEETING_FILE)
+public class MeetingFile
+        extends File {
 
     /**
      * M008 - moetenummer (xs:string)
@@ -65,7 +64,8 @@ public class MeetingFile extends File {
 
     // Links to MeetingParticipant
     @OneToMany(mappedBy = "referenceMeetingFile")
-    private List<MeetingParticipant> referenceMeetingParticipant = new ArrayList<>();
+    private List<MeetingParticipant> referenceMeetingParticipant =
+            new ArrayList<>();
 
     public String getMeetingNumber() {
         return meetingNumber;
@@ -116,7 +116,8 @@ public class MeetingFile extends File {
         return referencePreviousMeeting;
     }
 
-    public void setReferencePreviousMeeting(MeetingFile referencePreviousMeeting) {
+    public void setReferencePreviousMeeting(
+            MeetingFile referencePreviousMeeting) {
         this.referencePreviousMeeting = referencePreviousMeeting;
     }
 
@@ -124,7 +125,8 @@ public class MeetingFile extends File {
         return referenceMeetingParticipant;
     }
 
-    public void setReferenceMeetingParticipant(List<MeetingParticipant> referenceMeetingParticipant) {
+    public void setReferenceMeetingParticipant(
+            List<MeetingParticipant> referenceMeetingParticipant) {
         this.referenceMeetingParticipant = referenceMeetingParticipant;
     }
 

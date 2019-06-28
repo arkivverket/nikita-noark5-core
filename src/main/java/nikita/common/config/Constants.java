@@ -643,6 +643,7 @@ public final class Constants {
     public static final String TABLE_CROSS_REFERENCE = "cross_reference";
     public static final String TABLE_CLASSIFICATION_SYSTEM =
             "classification_system";
+    public static final String TABLE_MEETING_FILE = "meeting_file";
     public static final String TABLE_CORRESPONDENCE_PART =
             "correspondence_part";
 
