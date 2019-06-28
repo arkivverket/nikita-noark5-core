@@ -697,6 +697,8 @@ public final class Constants {
             "record_storage_location";
 
     public static final String TABLE_DOCUMENT_FLOW = "document_flow";
+    public static final String TABLE_POSTAL_ADDRESS = "postal_address";
+    public static final String TABLE_RESIDING_ADDRESS = "residing_address";
     public static final String TABLE_DOCUMENT_DESCRIPTION =
             "document_description";
 
