@@ -8,18 +8,21 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_PRECEDENCE;
+
 @Entity
-@Table(name = "precedence")
-// Enable soft delete of Precedence
-// @SQLDelete(sql="UPDATE precedence SET deleted = true WHERE pk_precedence_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_precedence_id"))
-public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity {
+@Table(name = TABLE_PRECEDENCE)
+public class Precedence
+        extends NoarkGeneralEntity
+        implements IPrecedenceEntity {
 
     /**
      * M111 - presedensDato (xs:date)
@@ -134,7 +137,8 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
         return referenceRegistryEntry;
     }
 
-    public void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry) {
+    public void setReferenceRegistryEntry(
+            List<RegistryEntry> referenceRegistryEntry) {
         this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
