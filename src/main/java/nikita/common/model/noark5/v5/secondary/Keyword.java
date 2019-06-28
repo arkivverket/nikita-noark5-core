@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkEntity;
@@ -9,17 +8,20 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_KEYWORD;
+import static nikita.common.config.N5ResourceMappings.KEYWORD;
+
 @Entity
-@Table(name = "keyword")
-// Enable soft delete of Keyword
-// @SQLDelete(sql="UPDATE keyword SET deleted = true WHERE pk_keyword_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_keyword_id"))
-public class Keyword extends NoarkEntity {
+@Table(name = TABLE_KEYWORD)
+public class Keyword
+        extends NoarkEntity {
 
     /**
      * M022 - noekkelord (xs:string)
@@ -50,7 +52,7 @@ public class Keyword extends NoarkEntity {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.KEYWORD;
+        return KEYWORD;
     }
 
     public List<Class> getReferenceClass() {

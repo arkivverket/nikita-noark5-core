@@ -725,6 +725,7 @@ public final class Constants {
     public static final String TABLE_MEETING_RECORD = "meeting_record";
     public static final String TABLE_POSTAL_ADDRESS = "postal_address";
     public static final String TABLE_RESIDING_ADDRESS = "residing_address";
+    public static final String TABLE_KEYWORD = "keyword";
     public static final String TABLE_DOCUMENT_DESCRIPTION =
             "document_description";
 
@@ -832,38 +833,7 @@ public final class Constants {
 
     // Primary key names
     public static final String PRIMARY_KEY_SYSTEM_ID = "pk_fonds_id";
-    /*
-        public static final String PRIMARY_KEY_FONDS = "pk_fonds_id";
-        public static final String PRIMARY_KEY_FONDS_CREATOR =
-                "pk_fonds_creator_id";
-        public static final String PRIMARY_KEY_SERIES = "pk_series_id";
-        public static final String PRIMARY_KEY_CLASS = "pk_class_id";
-        public static final String PRIMARY_KEY_FILE = "pk_file_id";
-        public static final String PRIMARY_KEY_KEYWORD = "pk_keyword_id";
-        public static final String PRIMARY_KEY_COMMENT = "pk_comment_id";
-        public static final String PRIMARY_KEY_PART = "pk_part_id";
-        public static final String PRIMARY_KEY_CLASSIFIED = "pk_classified_id";
-        public static final String PRIMARY_KEY_DISPOSAL = "pk_disposal_id";
-        public static final String PRIMARY_KEY_SCREENING = "pk_screening_id";
-        public static final String PRIMARY_CROSS_REFERENCE =
-                "pk_cross_reference_id";
 
-        public static final String PRIMARY_KEY_USER = "pk_user_id";
-        public static final String PRIMARY_KEY_AUTHOR = "pk_author_id";
-        public static final String PRIMARY_KEY_RECORD = "pk_record_id";
-        public static final String PRIMARY_KEY_STORAGE_LOCATION =
-                "pk_storage_location_id";
-        public static final String PRIMARY_KEY_ADMINISTRATIVE_UNIT =
-                "pk_administrative_unit_id";
-        public static final String PRIMARY_KEY_CORRESPONDENCE_PART_PERSON =
-                "pk_correspondence_part_person_id";
-
-        public static final String PRIMARY_KEY_CORRESPONDENCE_PART =
-                "pk_correspondence_part_id";
-
-        public static final String PRIMARY_KEY_CASE_FILE_STATUS =
-                "pk_case_file_status_id";
-    */
     public static final String JOIN_CASE_FILE_STATUS =
             "case_file_case_file_status_id";
 
