@@ -11,19 +11,19 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_COMMENT;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "comment")
-// Enable soft delete of Comment
-// @SQLDelete(sql="UPDATE comment SET deleted = true WHERE pk_comment_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_comment_id"))
+@Table(name = TABLE_COMMENT)
 public class Comment
         extends NoarkEntity
         implements ICommentEntity {
