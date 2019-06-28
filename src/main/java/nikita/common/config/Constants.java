@@ -632,6 +632,7 @@ public final class Constants {
     public static final String TABLE_SERIES = "series";
     public static final String TABLE_RECORD = "record";
     public static final String TABLE_PART = "part";
+    public static final String TABLE_FILE = "file";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
     public static final String TABLE_CROSS_REFERENCE = "cross_reference";

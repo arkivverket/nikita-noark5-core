@@ -29,12 +29,11 @@ import static nikita.common.config.N5ResourceMappings.CLASS;
 import static nikita.common.config.N5ResourceMappings.REGISTRATION;
 
 @Entity
-@Table(name = "file")
+@Table(name = TABLE_FILE)
 @Inheritance(strategy = JOINED)
 @JsonDeserialize(using = FileDeserializer.class)
 @HateoasPacker(using = FileHateoasHandler.class)
 @HateoasObject(using = FileHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = PRIMARY_KEY_FILE))
 public class File
         extends NoarkGeneralEntity
         implements IDocumentMedium, IStorageLocation, IKeyword, IClassified,
@@ -64,19 +63,19 @@ public class File
     @ManyToMany
     @JoinTable(name = TABLE_FILE_STORAGE_LOCATION,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
-                    referencedColumnName = PRIMARY_KEY_FILE),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns =
             @JoinColumn(name = FOREIGN_KEY_STORAGE_LOCATION_PK,
-                    referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
 
     // Links to Keywords
     @ManyToMany
     @JoinTable(name = TABLE_FILE_KEYWORD, joinColumns =
     @JoinColumn(name = FOREIGN_KEY_FILE_PK,
-            referencedColumnName = PRIMARY_KEY_FILE),
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
-                    referencedColumnName = PRIMARY_KEY_KEYWORD))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Keyword> referenceKeyword = new ArrayList<>();
 
     // Link to parent File
@@ -90,13 +89,13 @@ public class File
     // Link to Series
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FILE_SERIES_ID,
-            referencedColumnName = PRIMARY_KEY_SERIES)
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Series referenceSeries;
 
     // Link to Class
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FILE_CLASS_ID,
-            referencedColumnName = PRIMARY_KEY_CLASS)
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Class referenceClass;
 
     // Links to Records
@@ -107,28 +106,28 @@ public class File
     @ManyToMany(cascade = PERSIST)
     @JoinTable(name = TABLE_FILE_COMMENT,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
-                    referencedColumnName = PRIMARY_KEY_FILE),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
-                    referencedColumnName = PRIMARY_KEY_COMMENT))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Classified
     @ManyToOne(cascade = PERSIST)
     @JoinColumn(name = FILE_CLASSIFIED_ID,
-            referencedColumnName = PRIMARY_KEY_CLASSIFIED)
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
     @ManyToOne(cascade = PERSIST)
     @JoinColumn(name = FILE_DISPOSAL_ID,
-            referencedColumnName = PRIMARY_KEY_DISPOSAL)
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
     @ManyToOne(cascade = PERSIST)
     @JoinColumn(name = FILE_SCREENING_ID,
-            referencedColumnName = PRIMARY_KEY_SCREENING)
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
     @OneToMany(mappedBy = "referenceFile", cascade = ALL)
@@ -138,9 +137,9 @@ public class File
     @ManyToMany
     @JoinTable(name = TABLE_FILE_PARTY,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
-                    referencedColumnName = PRIMARY_KEY_FILE),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
-                    referencedColumnName = PRIMARY_KEY_PART))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Part> referencePart = new ArrayList<>();
 
     public String getFileId() {
@@ -211,6 +210,12 @@ public class File
     public void setReferenceStorageLocation(
             List<StorageLocation> referenceStorageLocation) {
         this.referenceStorageLocation = referenceStorageLocation;
+    }
+
+    @Override
+    public void addReferenceStorageLocation(
+            StorageLocation storageLocation) {
+        this.referenceStorageLocation.add(storageLocation);
     }
 
     public List<Keyword> getReferenceKeyword() {
