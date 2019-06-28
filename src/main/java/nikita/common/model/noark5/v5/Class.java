@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.interfaces.IClassified;
 import nikita.common.model.noark5.v5.interfaces.ICrossReference;
@@ -21,17 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CLASS;
 
 @Entity
-@Table(name = "class")
-// Enable soft delete of Class
-// @SQLDelete(sql="UPDATE class SET deleted = true WHERE pk_class_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-//@Indexed(index = "class")
+@Table(name = TABLE_CLASS)
 @JsonDeserialize(using = ClassDeserializer.class)
 @HateoasPacker(using = ClassHateoasHandler.class)
 @HateoasObject(using = ClassHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_class_id"))
 public class Class
         extends NoarkGeneralEntity
         implements IDisposal, IScreening, IClassified, ICrossReference {
@@ -41,23 +38,27 @@ public class Class
      */
     @Column(name = "class_id")
     @Audited
-
     private String classId;
 
     // Links to Keywords
     @ManyToMany
-    @JoinTable(name = "class_keyword", joinColumns = @JoinColumn(name = "f_pk_class_id",
-            referencedColumnName = "pk_class_id"), inverseJoinColumns = @JoinColumn(name = "f_pk_keyword_id",
-            referencedColumnName = "pk_keyword_id"))
+    @JoinTable(name = TABLE_CLASS_KEYWORD,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CLASS_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_KEYWORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Keyword> referenceKeyword = new ArrayList<>();
 
     // Link to ClassificationSystem
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_classification_system_id", referencedColumnName = "pk_classification_system_id")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "class_classification_system_id",
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ClassificationSystem referenceClassificationSystem;
 
     // Link to parent Class
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     private Class referenceParentClass;
 
     // Links to child Classes
@@ -74,17 +75,20 @@ public class Class
 
     // Links to Classified
     @ManyToOne(cascade = ALL)
-    @JoinColumn(name = "class_classified_id", referencedColumnName = "pk_classified_id")
+    @JoinColumn(name = CLASS_CLASSIFIED_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
     @ManyToOne(cascade = ALL)
-    @JoinColumn(name = "class_disposal_id", referencedColumnName = "pk_disposal_id")
+    @JoinColumn(name = CLASS_DISPOSAL_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
     @ManyToOne(cascade = ALL)
-    @JoinColumn(name = "class_screening_id", referencedColumnName = "pk_screening_id")
+    @JoinColumn(name = CLASS_SCREENING_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
     @OneToMany(mappedBy = "referenceClass", cascade = ALL)
@@ -100,7 +104,7 @@ public class Class
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CLASS;
+        return CLASS;
     }
 
     public List<Keyword> getReferenceKeyword() {
@@ -188,10 +192,10 @@ public class Class
     }
 
     @Override
-    public void setReferenceCrossReference(List<CrossReference> referenceCrossReference) {
+    public void setReferenceCrossReference(
+            List<CrossReference> referenceCrossReference) {
         this.referenceCrossReference = referenceCrossReference;
     }
-
 
     @Override
     public void addReferenceCrossReference(CrossReference crossReference) {

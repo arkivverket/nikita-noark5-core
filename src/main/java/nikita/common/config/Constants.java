@@ -633,6 +633,7 @@ public final class Constants {
     public static final String TABLE_RECORD = "record";
     public static final String TABLE_PART = "part";
     public static final String TABLE_FILE = "file";
+    public static final String TABLE_CLASS = "class";
     public static final String TABLE_DOCUMENT_OBJECT = "document_object";
     public static final String TABLE_FONDS_CREATOR = "fonds_creator";
     public static final String TABLE_STORAGE_LOCATION = "storage_location";
@@ -665,8 +666,8 @@ public final class Constants {
     public static final String TABLE_RECORD_AUTHOR = "record_author";
     public static final String TABLE_RECORD_DOCUMENT_DESCRIPTION =
             "record_document_description";
-    public static final String TABLE_RECORD_PARTY =
-            "record_party";
+    public static final String TABLE_RECORD_PARTY = "record_party";
+    public static final String TABLE_CLASS_KEYWORD = "class_keyword";
     public static final String TABLE_DOCUMENT_DESCRIPTION_PARTY =
             "document_description_party";
     public static final String TABLE_FONDS_STORAGE_LOCATION =
@@ -699,6 +700,7 @@ public final class Constants {
     public static final String FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK =
             "f_pk_document_description_id";
     public static final String FOREIGN_KEY_AUTHOR_PK = "f_pk_author_id";
+    public static final String FOREIGN_KEY_CLASS_PK = "f_pk_class_id";
     public static final String FOREIGN_KEY_USER_PK = "f_pk_user_id";
     public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK =
             "f_pk_administrative_unit_id";
@@ -741,6 +743,9 @@ public final class Constants {
     public static final String RECORD_CLASSIFIED_ID = "record_classified_id";
     public static final String RECORD_DISPOSAL_ID = "record_disposal_id";
     public static final String RECORD_SERIES_ID = "record_series_id";
+    public static final String CLASS_CLASSIFIED_ID = "class_classified_id";
+    public static final String CLASS_DISPOSAL_ID = "class_disposal_id";
+    public static final String CLASS_SCREENING_ID = "class_screening_id";
 
     public static final String DOCUMENT_OBJECT_DOCUMENT_DESCRIPTION_ID =
             "document_object_document_description_id";
