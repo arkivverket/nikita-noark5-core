@@ -131,6 +131,10 @@ public class Fonds
         this.referenceChildFonds = referenceChildFonds;
     }
 
+    public void addReferenceChildFonds(Fonds childFonds) {
+        this.referenceChildFonds.add(childFonds);
+    }
+
     @Override
     public List<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
