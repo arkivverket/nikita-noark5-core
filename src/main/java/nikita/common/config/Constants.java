@@ -640,6 +640,9 @@ public final class Constants {
     public static final String TABLE_CROSS_REFERENCE = "cross_reference";
     public static final String TABLE_CLASSIFICATION_SYSTEM =
             "classification_system";
+    public static final String TABLE_CORRESPONDENCE_PART =
+            "correspondence_part";
+
     public static final String TABLE_CONTACT_INFORMATION =
             "contact_information";
 
@@ -751,6 +754,9 @@ public final class Constants {
 
     public static final String DOCUMENT_OBJECT_DOCUMENT_DESCRIPTION_ID =
             "document_object_document_description_id";
+
+    public static final String CORRESPONDENCE_PART_CORRESPONDENCE_PART_TYPE_ID =
+            "correspondence_part_correspondence_part_type_id";
 
     public static final String SERIES_FONDS_ID = "series_fonds_id";
     public static final String SERIES_DISPOSAL_ID = "series_disposal_id";
