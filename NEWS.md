@@ -3,6 +3,10 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
+Release 0.5 2019-0X-XX (commit X)
+----------------------
+ *
+
 Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
 ----------------------
  * Roll out OData handling to all endpoints where applicable.
