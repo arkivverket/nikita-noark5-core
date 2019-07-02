@@ -44,7 +44,7 @@ public class N5CoreApp {
                         "contextPath: \thttp://{}:{}{} \n\t" +
                         "Application is running with following profile(s): {} \n\t" +
                         "\n----------------------------------------------------------",
-                env.getProperty("server.application.name"),
+                env.getProperty("spring.application.name"),
                 env.getProperty("server.port"),
                 InetAddress.getLocalHost().getHostAddress(),
                 env.getProperty("server.port"),
