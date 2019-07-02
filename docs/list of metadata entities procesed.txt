@@ -30,7 +30,7 @@ SystemID : Not sure how to deal with
 *Møteregistreringstype : MeetingRegistrationType
 *Postnummer  185
 -Presedensstatus : PrecedenceStatus
--SakspartRolle : CasePartyRole
+-SakspartRolle : CasePartRole
 -SkjermingDokument : ScreeningDocument
 -SkjermingMetadata : ScreeningMetadata
 *Slettingstype : DeletionType

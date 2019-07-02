@@ -2,24 +2,24 @@ package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v5.metadata.PartyRole;
-import nikita.common.repository.n5v5.metadata.IPartyRoleRepository;
+import nikita.common.model.noark5.v5.metadata.PartRole;
+import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
-import nikita.webapp.service.interfaces.metadata.IPartyRoleService;
+import nikita.webapp.service.interfaces.metadata.IPartRoleService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.PART_ROLE;
@@ -30,20 +30,20 @@ import static nikita.common.config.N5ResourceMappings.PART_ROLE;
 
 @Service
 @Transactional
-public class PartyRoleService
+public class PartRoleService
         extends NoarkService
-        implements IPartyRoleService {
+        implements IPartRoleService {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(PartyRoleService.class);
+            LoggerFactory.getLogger(PartRoleService.class);
 
-    private IPartyRoleRepository partyRoleRepository;
+    private IPartRoleRepository partyRoleRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
 
-    public PartyRoleService(
+    public PartRoleService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IPartyRoleRepository partyRoleRepository,
+            IPartRoleRepository partyRoleRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.partyRoleRepository =
@@ -54,20 +54,15 @@ public class PartyRoleService
     // All CREATE operations
 
     /**
-     * Persists a new PartyRole object to the database.
+     * Persists a new PartRole object to the database.
      *
      * @param partyRole partyRole object with values set
-     * @return the newly persisted PartyRole object wrapped as a
+     * @return the newly persisted PartRole object wrapped as a
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas createNewPartyRole(
-            PartyRole partyRole) {
-
-        partyRole.setDeleted(false);
-        partyRole.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
+    public MetadataHateoas createNewPartRole(
+            PartRole partyRole) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 partyRoleRepository.save(partyRole));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -77,9 +72,9 @@ public class PartyRoleService
     // All READ operations
 
     /**
-     * Retrieve a list of all PartyRole objects
+     * Retrieve a list of all PartRole objects
      *
-     * @return list of PartyRole objects wrapped as a
+     * @return list of PartRole objects wrapped as a
      * MetadataHateoas object
      */
     @Override
@@ -95,29 +90,29 @@ public class PartyRoleService
     // find by systemId
 
     /**
-     * Retrieve a single PartyRole object identified by systemId
+     * Retrieve a single PartRole object identified by systemId
      *
-     * @param systemId systemId of the PartyRole you wish to retrieve
-     * @return single PartyRole object wrapped as a MetadataHateoas object
+     * @param systemId systemId of the PartRole you wish to retrieve
+     * @return single PartRole object wrapped as a MetadataHateoas object
      */
     @Override
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 partyRoleRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
     /**
-     * Retrieve all PartyRole that have a given
+     * Retrieve all PartRole that have a given
      * description.
      * <br>
      * Note, this will be replaced by OData search.
      *
      * @param description Description of object you wish to retrieve. The
      *                    whole text, this is an exact search.
-     * @return A list of PartyRole objects wrapped as a MetadataHateoas
+     * @return A list of PartRole objects wrapped as a MetadataHateoas
      * object
      */
     @Override
@@ -132,12 +127,12 @@ public class PartyRoleService
     }
 
     /**
-     * retrieve all PartyRole that have a particular code.
+     * retrieve all PartRole that have a particular code.
      * <br>
      * Note, this will be replaced by OData search.
      *
      * @param code The code of the object you wish to retrieve
-     * @return A list of PartyRole objects wrapped as a MetadataHateoas
+     * @return A list of PartRole objects wrapped as a MetadataHateoas
      * object
      */
     @Override
@@ -152,14 +147,14 @@ public class PartyRoleService
     }
 
     /**
-     * Generate a default PartyRole object
+     * Generate a default PartRole object
      *
-     * @return the PartyRole object wrapped as a PartyRoleHateoas object
+     * @return the PartRole object wrapped as a PartRoleHateoas object
      */
     @Override
-    public PartyRole generateDefaultPartyRole() {
+    public PartRole generateDefaultPartRole() {
 
-        PartyRole partyRole = new PartyRole();
+        PartRole partyRole = new PartRole();
         partyRole.setCode(TEMPLATE_PART_ROLE_CODE);
         partyRole.setDescription(TEMPLATE_PART_ROLE_DESCRIPTION);
 
@@ -167,58 +162,58 @@ public class PartyRoleService
     }
 
     /**
-     * Update a PartyRole identified by its systemId
+     * Update a PartRole identified by its systemId
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId      The systemId of the PartyRole object you wish to
+     * @param systemId      The systemId of the PartRole object you wish to
      *                      update
-     * @param incomingPartyRole The updated PartyRole object. Note
+     * @param incomingPartRole The updated PartRole object. Note
      *                              the values you are allowed to change are
      *                              copied from this object. This object is
      *                              not persisted.
-     * @return the updated PartyRole
+     * @return the updated PartRole
      */
     @Override
     public MetadataHateoas handleUpdate(
             @NotNull final String systemId,
             @NotNull final Long version,
-            @NotNull final PartyRole incomingPartyRole) {
+            @NotNull final PartRole incomingPartRole) {
 
-        PartyRole existingPartyRole = getPartyRoleOrThrow(systemId);
-        updateCodeAndDescription(incomingPartyRole, existingPartyRole);
+        PartRole existingPartRole = getPartRoleOrThrow(systemId);
+        updateCodeAndDescription(incomingPartRole, existingPartRole);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
-        existingPartyRole.setVersion(version);
+        existingPartRole.setVersion(version);
 
         MetadataHateoas partyRoleHateoas = new MetadataHateoas(
-                partyRoleRepository.save(existingPartyRole));
+                partyRoleRepository.save(existingPartRole));
 
         metadataHateoasHandler.addLinks(partyRoleHateoas,
                 new Authorisation());
 
         applicationEventPublisher.publishEvent(new
                 AfterNoarkEntityUpdatedEvent(this,
-                existingPartyRole));
+                existingPartRole));
         return partyRoleHateoas;
     }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid PartyRole object back. If there
-     * is no PartyRole object, a NoarkEntityNotFoundException exception
+     * that you will only ever get a valid PartRole object back. If there
+     * is no PartRole object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the PartyRole object to retrieve
-     * @return the PartyRole object
+     * @param systemId The systemId of the PartRole object to retrieve
+     * @return the PartRole object
      */
-    private PartyRole
-    getPartyRoleOrThrow(@NotNull String systemId) {
-        PartyRole partyRole =
-                partyRoleRepository.findBySystemId(systemId);
+    private PartRole
+    getPartRoleOrThrow(@NotNull String systemId) {
+        PartRole partyRole =
+                partyRoleRepository.findBySystemId(UUID.fromString(systemId));
         if (partyRole == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " PartyRole, using " +
+            String info = INFO_CANNOT_FIND_OBJECT + " PartRole, using " +
                     "systemId " + systemId;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);

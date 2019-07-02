@@ -24,7 +24,7 @@ public interface IClassService {
     CaseFileHateoas createCaseFileAssociatedWithClass(
             String classSystemId, CaseFile caseFile);
 
-    RecordHateoas createRecordAssociatedWithClass(
+    ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
             String classSystemId, Record record);
 
     ClassHateoas generateDefaultSubClass(@NotNull String classSystemId);

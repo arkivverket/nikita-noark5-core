@@ -19,8 +19,11 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_INTERNAL;
+import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
+
 @Entity
-@Table(name = "correspondence_part_internal")
+@Table(name = TABLE_CORRESPONDENCE_PART_INTERNAL)
 @JsonDeserialize(using = CorrespondencePartInternalDeserializer.class)
 @HateoasPacker(using = CorrespondencePartInternalHateoasHandler.class)
 @HateoasObject(using = CorrespondencePartInternalHateoas.class)
@@ -35,15 +38,15 @@ public class CorrespondencePartInternal
     @Audited
     private String administrativeUnit;
 
-    @ManyToOne
-    private AdministrativeUnit referenceAdministrativeUnit;
-
     /**
      * M307 - saksbehandler (xs:string)
      */
     @Column(name = "case_handler")
     @Audited
     private String caseHandler;
+
+    @ManyToOne
+    private AdministrativeUnit referenceAdministrativeUnit;
 
     @ManyToOne
     private User user;
@@ -89,13 +92,14 @@ public class CorrespondencePartInternal
         return referenceRegistryEntry;
     }
 
-    public void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry) {
+    public void setReferenceRegistryEntry(
+            List<RegistryEntry> referenceRegistryEntry) {
         this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
+        return CORRESPONDENCE_PART_INTERNAL;
     }
 
     @Override

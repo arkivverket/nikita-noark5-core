@@ -7,17 +7,19 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "meeting_file")
-// Enable soft delete of MeetingFile
-// @SQLDelete(sql="UPDATE meeting_file SET deleted = true WHERE pk_file_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-public class MeetingFile extends File {
+import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.TABLE_MEETING_FILE;
+import static nikita.common.config.N5ResourceMappings.MEETING_FILE;
 
+@Entity
+@Table(name = TABLE_MEETING_FILE)
+@Inheritance(strategy = JOINED)
+public class MeetingFile
+        extends File {
 
     /**
      * M008 - moetenummer (xs:string)
@@ -38,7 +40,7 @@ public class MeetingFile extends File {
      */
     @Column(name = "loaned_date")
     @Audited
-    private ZonedDateTime meetingDate;
+    private OffsetDateTime meetingDate;
 
     /**
      * M371 - moetested (xs:string)
@@ -65,7 +67,8 @@ public class MeetingFile extends File {
 
     // Links to MeetingParticipant
     @OneToMany(mappedBy = "referenceMeetingFile")
-    private List<MeetingParticipant> referenceMeetingParticipant = new ArrayList<>();
+    private List<MeetingParticipant> referenceMeetingParticipant =
+            new ArrayList<>();
 
     public String getMeetingNumber() {
         return meetingNumber;
@@ -83,11 +86,11 @@ public class MeetingFile extends File {
         this.committee = committee;
     }
 
-    public ZonedDateTime getMeetingDate() {
+    public OffsetDateTime getMeetingDate() {
         return meetingDate;
     }
 
-    public void setMeetingDate(ZonedDateTime meetingDate) {
+    public void setMeetingDate(OffsetDateTime meetingDate) {
         this.meetingDate = meetingDate;
     }
 
@@ -101,7 +104,7 @@ public class MeetingFile extends File {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.MEETING_FILE;
+        return MEETING_FILE;
     }
 
     public MeetingFile getReferenceNextMeeting() {
@@ -116,7 +119,8 @@ public class MeetingFile extends File {
         return referencePreviousMeeting;
     }
 
-    public void setReferencePreviousMeeting(MeetingFile referencePreviousMeeting) {
+    public void setReferencePreviousMeeting(
+            MeetingFile referencePreviousMeeting) {
         this.referencePreviousMeeting = referencePreviousMeeting;
     }
 
@@ -124,7 +128,8 @@ public class MeetingFile extends File {
         return referenceMeetingParticipant;
     }
 
-    public void setReferenceMeetingParticipant(List<MeetingParticipant> referenceMeetingParticipant) {
+    public void setReferenceMeetingParticipant(
+            List<MeetingParticipant> referenceMeetingParticipant) {
         this.referenceMeetingParticipant = referenceMeetingParticipant;
     }
 

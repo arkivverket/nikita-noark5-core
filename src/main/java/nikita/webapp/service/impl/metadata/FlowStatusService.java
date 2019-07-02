@@ -13,13 +13,13 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FLOW_STATUS;
@@ -63,11 +63,6 @@ public class FlowStatusService
     @Override
     public MetadataHateoas createNewFlowStatus(
             FlowStatus flowStatus) {
-
-        flowStatus.setDeleted(false);
-        flowStatus.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 flowStatusRepository.save(flowStatus));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -103,7 +98,7 @@ public class FlowStatusService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 flowStatusRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -203,7 +198,8 @@ public class FlowStatusService
      */
     private FlowStatus
     getFlowStatusOrThrow(@NotNull String systemId) {
-        FlowStatus flowStatus = flowStatusRepository.findBySystemId(systemId);
+        FlowStatus flowStatus =
+                flowStatusRepository.findBySystemId(UUID.fromString(systemId));
         if (flowStatus == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " FlowStatus, using " +
                     "systemId " + systemId;

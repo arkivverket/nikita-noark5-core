@@ -2,20 +2,26 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
 
-import javax.persistence.*;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.TABLE_RESIDING_ADDRESS;
 
 /**
  * Created by tsodring on 5/14/17.
  */
 @Entity
-@Table(name = "residing_address")
+@Table(name = TABLE_RESIDING_ADDRESS)
 public class ResidingAddress
         extends NoarkEntity {
 
     @Embedded
     SimpleAddress simpleAddress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     CorrespondencePartPerson correspondencePartPerson;
 
     public SimpleAddress getSimpleAddress() {
@@ -30,7 +36,8 @@ public class ResidingAddress
         return correspondencePartPerson;
     }
 
-    public void setCorrespondencePartPerson(CorrespondencePartPerson correspondencePartPerson) {
+    public void setCorrespondencePartPerson(
+            CorrespondencePartPerson correspondencePartPerson) {
         this.correspondencePartPerson = correspondencePartPerson;
     }
 

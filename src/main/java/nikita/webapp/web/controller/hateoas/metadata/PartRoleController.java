@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.metadata.PartyRole;
+import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.service.interfaces.metadata.IPartyRoleService;
+import nikita.webapp.service.interfaces.metadata.IPartRoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,11 +32,11 @@ import static org.springframework.http.HttpStatus.OK;
         value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
         produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
 @SuppressWarnings("unchecked")
-public class PartyRoleController {
+public class PartRoleController {
 
-    private IPartyRoleService partyRoleService;
+    private IPartRoleService partyRoleService;
 
-    public PartyRoleController(IPartyRoleService partyRoleService) {
+    public PartRoleController(IPartRoleService partyRoleService) {
         this.partyRoleService = partyRoleService;
     }
 
@@ -44,16 +44,16 @@ public class PartyRoleController {
     // Creates a new partrolle
     // POST [contextPath][api]/metadata/partrolle/ny-partrolle
     @ApiOperation(
-            value = "Persists a new PartyRole object",
-            notes = "Returns the newly created PartyRole object after it " +
+            value = "Persists a new PartRole object",
+            notes = "Returns the newly created PartRole object after it " +
                     "is persisted to the database",
-            response = PartyRole.class)
+            response = PartRole.class)
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "PartyRole " +
+                    message = "PartRole " +
                             API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = PartyRole.class),
+                    response = PartRole.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(
@@ -73,13 +73,13 @@ public class PartyRoleController {
             method = RequestMethod.POST,
             value = PART_ROLE + SLASH + NEW_PART_ROLE
     )
-    public ResponseEntity<MetadataHateoas> createPartyRole(
+    public ResponseEntity<MetadataHateoas> createPartRole(
             HttpServletRequest request,
-            @RequestBody PartyRole partyRole)
+            @RequestBody PartRole partyRole)
             throws NikitaException {
 
         MetadataHateoas metadataHateoas =
-                partyRoleService.createNewPartyRole(partyRole);
+                partyRoleService.createNewPartRole(partyRole);
 
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -88,16 +88,16 @@ public class PartyRoleController {
     }
 
     // API - All GET Requests (CRUD - READ)
-    // Retrieves all PartyRole
+    // Retrieves all PartRole
     // GET [contextPath][api]/metadata/partrolle/
     @ApiOperation(
-            value = "Retrieves all PartyRole ",
-            response = PartyRole.class)
+            value = "Retrieves all PartRole ",
+            response = PartRole.class)
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "PartyRole codes found",
-                    response = PartyRole.class),
+                    message = "PartRole codes found",
+                    response = PartRole.class),
             @ApiResponse(
                     code = 404,
                     message = API_MESSAGE_NOT_FOUND),
@@ -118,18 +118,18 @@ public class PartyRoleController {
                 .body(partyRoleService.findAll());
     }
 
-    // Retrieves a given PartyRole identified by a systemId
+    // Retrieves a given PartRole identified by a systemId
     // GET [contextPath][api]/metadata/partrolle/{systemId}/
     @ApiOperation(
-            value = "Gets PartyRole identified by its systemId",
-            notes = "Returns the requested PartyRole object",
-            response = PartyRole.class)
+            value = "Gets PartRole identified by its systemId",
+            notes = "Returns the requested PartRole object",
+            response = PartRole.class)
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "PartyRole " +
+                    message = "PartRole " +
                             API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = PartyRole.class),
+                    response = PartRole.class),
             @ApiResponse(
                     code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -161,20 +161,20 @@ public class PartyRoleController {
                 .body(metadataHateoas);
     }
 
-    // Create a suggested PartyRole(like a template) with default values
+    // Create a suggested PartRole(like a template) with default values
     // (nothing persisted)
     // GET [contextPath][api]/metadata/ny-partrolle
     @ApiOperation(
-            value = "Creates a suggested PartyRole",
-            response = PartyRole.class)
+            value = "Creates a suggested PartRole",
+            response = PartRole.class)
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "PartyRole codes found",
-                    response = PartyRole.class),
+                    message = "PartRole codes found",
+                    response = PartRole.class),
             @ApiResponse(
                     code = 404,
-                    message = "No PartyRole found"),
+                    message = "No PartRole found"),
             @ApiResponse(
                     code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -190,10 +190,10 @@ public class PartyRoleController {
             value = NEW_PART_ROLE
     )
     public ResponseEntity<MetadataHateoas>
-    generateDefaultPartyRole(HttpServletRequest request) {
+    generateDefaultPartRole(HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = new MetadataHateoas
-                (partyRoleService.generateDefaultPartyRole());
+                (partyRoleService.generateDefaultPartRole());
 
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -204,16 +204,16 @@ public class PartyRoleController {
     // Update a partrolle
     // PUT [contextPath][api]/metatdata/partrolle/
     @ApiOperation(
-            value = "Updates a PartyRole object",
-            notes = "Returns the newly updated PartyRole object after it " +
+            value = "Updates a PartRole object",
+            notes = "Returns the newly updated PartRole object after it " +
                     "is persisted to the database",
-            response = PartyRole.class)
+            response = PartRole.class)
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "PartyRole " +
+                    message = "PartRole " +
                             API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = PartyRole.class),
+                    response = PartRole.class),
             @ApiResponse(
                     code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -231,12 +231,12 @@ public class PartyRoleController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PutMapping(value = PART_ROLE + SLASH + PART_ROLE)
-    public ResponseEntity<MetadataHateoas> updatePartyRole(
+    public ResponseEntity<MetadataHateoas> updatePartRole(
             @ApiParam(name = "systemID",
                     value = "systemId of partyRole to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
-            @RequestBody PartyRole partyRole,
+            @RequestBody PartRole partyRole,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = partyRoleService.handleUpdate

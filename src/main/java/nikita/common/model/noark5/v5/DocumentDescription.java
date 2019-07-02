@@ -17,22 +17,21 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "document_description")
+@Table(name = TABLE_DOCUMENT_DESCRIPTION)
 @JsonDeserialize(using = DocumentDescriptionDeserializer.class)
 @HateoasPacker(using = DocumentDescriptionHateoasHandler.class)
 @HateoasObject(using = DocumentDescriptionHateoas.class)
-@AttributeOverride(name = "id",
-        column = @Column(name = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
 public class DocumentDescription
         extends NoarkEntity
         implements INoarkTitleDescriptionEntity, INoarkCreateEntity,
@@ -78,7 +77,7 @@ public class DocumentDescription
     @Column(name = "created_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -117,7 +116,7 @@ public class DocumentDescription
     @Column(name = "association_date", nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime associationDate;
+    private OffsetDateTime associationDate;
 
     /**
      * M621 - tilknyttetAv (xs:string)
@@ -140,65 +139,71 @@ public class DocumentDescription
 
     // Links to Comments
     @ManyToMany
-    @JoinTable(name = "document_description_comment", joinColumns =
-    @JoinColumn(name = "f_pk_document_description_id",
-            referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_comment_id",
-                    referencedColumnName = "pk_comment_id"))
+    @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_COMMENT,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_COMMENT_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Authors
     @ManyToMany
-    @JoinTable(name = "document_description_author",
-            joinColumns = @JoinColumn(name = "f_pk_document_description_id",
-                    referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_author_id",
-                    referencedColumnName = "pk_author_id"))
+    @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_AUTHOR,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_AUTHOR_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Author> referenceAuthor = new ArrayList<>();
 
     // Link to Classified
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_classified_id",
-            referencedColumnName = "pk_classified_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = DOCUMENT_DESCRIPTION_CLASSIFIED_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_disposal_id",
-            referencedColumnName = "pk_disposal_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = DOCUMENT_DESCRIPTION_DISPOSAL_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to DisposalUndertaken
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_disposal_undertaken_id",
-            referencedColumnName = "pk_disposal_undertaken_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = DOCUMENT_DESCRIPTION_DISPOSAL_UNDERTAKEN_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DisposalUndertaken referenceDisposalUndertaken;
 
     // Link to Deletion
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_deletion_id",
-            referencedColumnName = "pk_deletion_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = DOCUMENT_DESCRIPTION_DELETION_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Deletion referenceDeletion;
 
     // Link to Screening
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_screening_id",
-            referencedColumnName = "pk_screening_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = DOCUMENT_DESCRIPTION_SCREENING_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
     // Link to ElectronicSignature
     @OneToOne
-    @JoinColumn(name = "pk_electronic_signature_id")
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private ElectronicSignature referenceElectronicSignature;
 
-    // Links to Party
+    // Links to Part
     @ManyToMany
     @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_PARTY,
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
-                    referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION),
-            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
-                    referencedColumnName = PRIMARY_KEY_PART))
-    private List<Party> referenceParty = new ArrayList<>();
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_PART_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private List<Part> referencePart = new ArrayList<>();
 
     public String getDocumentType() {
         return documentType;
@@ -232,11 +237,11 @@ public class DocumentDescription
         this.description = description;
     }
 
-    public ZonedDateTime getCreatedDate() {
+    public OffsetDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(OffsetDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -277,11 +282,11 @@ public class DocumentDescription
         this.documentNumber = documentNumber;
     }
 
-    public ZonedDateTime getAssociationDate() {
+    public OffsetDateTime getAssociationDate() {
         return associationDate;
     }
 
-    public void setAssociationDate(ZonedDateTime associationDate) {
+    public void setAssociationDate(OffsetDateTime associationDate) {
         this.associationDate = associationDate;
     }
 
@@ -328,12 +333,19 @@ public class DocumentDescription
         this.storageLocation = storageLocation;
     }
 
+    @Override
     public List<Comment> getReferenceComment() {
         return referenceComment;
     }
 
+    @Override
     public void setReferenceComment(List<Comment> referenceComment) {
         this.referenceComment = referenceComment;
+    }
+
+    @Override
+    public void addReferenceComment(Comment comment) {
+        this.referenceComment.add(comment);
     }
 
     @Override
@@ -412,16 +424,16 @@ public class DocumentDescription
         this.referenceElectronicSignature = referenceElectronicSignature;
     }
 
-    public List<Party> getReferenceParty() {
-        return referenceParty;
+    public List<Part> getReferencePart() {
+        return referencePart;
     }
 
-    public void setReferenceParty(List<Party> referenceParty) {
-        this.referenceParty = referenceParty;
+    public void setReferencePart(List<Part> referencePart) {
+        this.referencePart = referencePart;
     }
 
-    public void addReferenceParty(Party party) {
-        this.referenceParty.add(party);
+    public void addReferencePart(Part part) {
+        this.referencePart.add(part);
     }
 
     @Override

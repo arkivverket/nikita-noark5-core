@@ -6,52 +6,49 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.TABLE_CONTACT_INFORMATION;
 
 /**
  * Created by tsodring on 5/14/17.
  */
 @Entity
-@Table(name = "contact_information")
-@AttributeOverride(name = "id",
-        column = @Column(name = "pk_contact_information_id"))
+@Table(name = TABLE_CONTACT_INFORMATION)
 public class ContactInformation
         extends NoarkEntity
         implements IContactInformationEntity {
 
-    @OneToOne(fetch = FetchType.LAZY)
-    CorrespondencePartPerson correspondencePartPerson;
-    @OneToOne(fetch = FetchType.LAZY)
-    CorrespondencePartUnit correspondencePartUnit;
     /**
      * M410 - epostadresse (xs:string)
      */
     @Audited
     @Column(name = "email_address")
     private String emailAddress;
+
     /**
      * M??? - mobiltelefon (xs:string)
      */
     @Column(name = "mobile_telephone_number")
     @Audited
     private String mobileTelephoneNumber;
+
     /**
      * M411 - telefonnummer (xs:string)
      */
     @Column(name = "telephone_number")
     @Audited
     private String telephoneNumber;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    public Long getId() {
-        return id;
-    }
+    @OneToOne(fetch = LAZY)
+    private CorrespondencePartPerson correspondencePartPerson;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @OneToOne(fetch = LAZY)
+    private CorrespondencePartUnit correspondencePartUnit;
 
     public String getEmailAddress() {
         return emailAddress;

@@ -9,20 +9,23 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import java.time.ZonedDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_SCREENING;
+import static nikita.common.config.N5ResourceMappings.SCREENING;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
-@Table(name = "screening")
-// Enable soft delete of Screening
-// @SQLDelete(sql="UPDATE screening SET deleted = true WHERE pk_screening_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_screening_id"))
-public class Screening extends NoarkEntity implements IScreeningEntity {
+@Table(name = TABLE_SCREENING)
+public class Screening
+        extends NoarkEntity
+        implements IScreeningEntity {
 
     /**
      * M500 - tilgangsrestriksjon n4 (JP.TGKODE)
@@ -58,7 +61,7 @@ public class Screening extends NoarkEntity implements IScreeningEntity {
     @Column(name = "screening_expires")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime screeningExpiresDate;
+    private OffsetDateTime screeningExpiresDate;
 
     /**
      * M504 - skjermingsvarighet
@@ -86,7 +89,8 @@ public class Screening extends NoarkEntity implements IScreeningEntity {
 
     // Links to DocumentDescription
     @ManyToMany(mappedBy = "referenceScreening")
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    private List<DocumentDescription> referenceDocumentDescription =
+            new ArrayList<>();
 
     public String getAccessRestriction() {
         return accessRestriction;
@@ -120,11 +124,11 @@ public class Screening extends NoarkEntity implements IScreeningEntity {
         this.screeningDocument = screeningDocument;
     }
 
-    public ZonedDateTime getScreeningExpiresDate() {
+    public OffsetDateTime getScreeningExpiresDate() {
         return screeningExpiresDate;
     }
 
-    public void setScreeningExpiresDate(ZonedDateTime screeningExpiresDate) {
+    public void setScreeningExpiresDate(OffsetDateTime screeningExpiresDate) {
         this.screeningExpiresDate = screeningExpiresDate;
     }
 
@@ -138,7 +142,7 @@ public class Screening extends NoarkEntity implements IScreeningEntity {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.SCREENING;
+        return SCREENING;
     }
 
     public List<Series> getReferenceSeries() {
@@ -177,7 +181,8 @@ public class Screening extends NoarkEntity implements IScreeningEntity {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(List<DocumentDescription> referenceDocumentDescription) {
+    public void setReferenceDocumentDescription(
+            List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 

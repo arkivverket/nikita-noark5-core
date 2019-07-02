@@ -7,7 +7,7 @@ import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.DocumentFlow;
 import nikita.common.model.noark5.v5.FondsCreator;
-import nikita.common.model.noark5.v5.Party;
+import nikita.common.model.noark5.v5.Part;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
@@ -30,7 +30,7 @@ import org.springframework.http.HttpMethod;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -345,15 +345,15 @@ public final class CommonUtils {
                             .parseDefaulting(MINUTE_OF_HOUR, 0)
                             .toFormatter();
 
-            public static ZonedDateTime deserializeDate(String fieldname,
+            public static OffsetDateTime deserializeDate(String fieldname,
                                                         ObjectNode objectNode,
                                                         StringBuilder errors,
                                                         boolean required) {
-                ZonedDateTime d = null;
+                OffsetDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        d = ZonedDateTime.parse(currentNode.textValue(),
+                        d = OffsetDateTime.parse(currentNode.textValue(),
                                 dateFormatter);
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
@@ -368,21 +368,21 @@ public final class CommonUtils {
                 return d;
             }
 
-            public static ZonedDateTime deserializeDate(String fieldname,
+            public static OffsetDateTime deserializeDate(String fieldname,
                                                         ObjectNode objectNode,
                                                         StringBuilder errors) {
                 return deserializeDate(fieldname, objectNode, errors, false);
             }
 
-            public static ZonedDateTime deserializeDateTime(String fieldname,
+            public static OffsetDateTime deserializeDateTime(String fieldname,
                                                             ObjectNode objectNode,
                                                             StringBuilder errors,
                                                             boolean required) {
-                ZonedDateTime d = null;
+                OffsetDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        d = ZonedDateTime.parse(currentNode.textValue(),
+                        d = OffsetDateTime.parse(currentNode.textValue(),
                                 ISO_DATE_TIME);
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
@@ -397,7 +397,7 @@ public final class CommonUtils {
                 return d;
             }
 
-            public static ZonedDateTime deserializeDateTime(String fieldname,
+            public static OffsetDateTime deserializeDateTime(String fieldname,
                                                             ObjectNode objectNode,
                                                             StringBuilder errors) {
                 return deserializeDateTime(fieldname, objectNode, errors, false);
@@ -417,7 +417,8 @@ public final class CommonUtils {
                 // Deserialize systemId
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
                 if (null != currentNode) {
-                    noarkSystemIdEntity.setSystemId(currentNode.textValue());
+                    noarkSystemIdEntity.setSystemId(
+                            UUID.fromString(currentNode.textValue()));
                     objectNode.remove(SYSTEM_ID);
                 }
             }
@@ -487,7 +488,6 @@ public final class CommonUtils {
                         for (JsonNode node : currentNode) {
                             String location = node.textValue();
                             Author author = new Author();
-                            author.setSystemId(UUID.randomUUID().toString());
                             author.setAuthor(location);
                             authors.add(author);
                         }
@@ -509,7 +509,6 @@ public final class CommonUtils {
                         for (JsonNode node : currentNode) {
                             String location = node.textValue();
                             StorageLocation storageLocation = new StorageLocation();
-                            storageLocation.setSystemId(UUID.randomUUID().toString());
                             storageLocation.setStorageLocation(location);
                             storageLocations.add(storageLocation);
                         }
@@ -784,36 +783,36 @@ public final class CommonUtils {
             }
 
             public static void deserialiseCaseParties(
-                    IParty partyObject,
+                    IPart partyObject,
                     ObjectNode objectNode,
                     StringBuilder errors) {
-                List<Party> caseParties = partyObject.getReferenceParty();
+                List<Part> caseParties = partyObject.getReferencePart();
                 if (caseParties != null && caseParties.size() > 0) {
-                    for (Party party : caseParties) {
-                        deserialiseParty(party, objectNode, errors);
+                    for (Part part : caseParties) {
+                        deserialisePart(part, objectNode, errors);
                         objectNode.remove(PART);
                     }
                 }
             }
 
-            public static void deserialiseParty(IPartyEntity partyEntity, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialisePart(IPartEntity partyEntity, ObjectNode objectNode, StringBuilder errors) {
 
                 // Deserialize partyId
                 JsonNode currentNode = objectNode.get(PART_ID);
                 if (null != currentNode) {
-                    partyEntity.setPartyId(currentNode.textValue());
+                    partyEntity.setPartId(currentNode.textValue());
                     objectNode.remove(PART_ID);
                 }
                 // Deserialize partyName
                 currentNode = objectNode.get(PART_NAME);
                 if (null != currentNode) {
-                    partyEntity.setPartyName(currentNode.textValue());
+                    partyEntity.setPartName(currentNode.textValue());
                     objectNode.remove(PART_NAME);
                 }
                 // Deserialize partyRole
                 currentNode = objectNode.get(PART_ROLE);
                 if (null != currentNode) {
-                    partyEntity.setPartyRole(currentNode.textValue());
+                    partyEntity.setPartRole(currentNode.textValue());
                     objectNode.remove(PART_ROLE);
                 }
                 // Deserialize postalAddress
@@ -903,9 +902,9 @@ public final class CommonUtils {
                 precedenceEntity.setPrecedenceApprovedDate(deserializeDate(PRECEDENCE_APPROVED_DATE, objectNode, errors));
             }
 
-            public static List<Party> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
-                ArrayList<Party> caseParties = new ArrayList<>();
-                //JsonNode jsonParty = objectNode.get(PART);
+            public static List<Part> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
+                ArrayList<Part> caseParties = new ArrayList<>();
+                //JsonNode jsonPart = objectNode.get(PART);
                 // TODO: I seem tobe missing my body of code ...
 /*                for (CorrespondencePart correspondencePart: caseParties) {
                     deserialiseCorrespondencePart(correspondencePart, objectNode);
@@ -950,7 +949,8 @@ public final class CommonUtils {
                     currentNode = objectNode.get(ADMINISTRATIVE_UNIT_PARENT_REFERENCE);
                     if (null != currentNode) {
                         AdministrativeUnit parent = new AdministrativeUnit();
-                        parent.setSystemId(currentNode.textValue());
+                        parent.setSystemId(
+                                UUID.fromString(currentNode.textValue()));
                         parent.getReferenceChildAdministrativeUnit().add((AdministrativeUnit) administrativeUnit);
                         administrativeUnit.setParentAdministrativeUnit(parent);
                         objectNode.remove(ADMINISTRATIVE_UNIT_PARENT_REFERENCE);
@@ -1239,7 +1239,8 @@ public final class CommonUtils {
                 // Deserialize systemID
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
                 if (null != currentNode) {
-                    fondsCreatorEntity.setSystemId(currentNode.textValue());
+                    fondsCreatorEntity.setSystemId(
+                            UUID.fromString(currentNode.textValue()));
                     objectNode.remove(SYSTEM_ID);
                 }
                 // Deserialize fondsCreatorId
@@ -1354,11 +1355,11 @@ public final class CommonUtils {
         }
 
         public static final class Serialize {
-            public static String formatDate(ZonedDateTime value) {
+            public static String formatDate(OffsetDateTime value) {
                 return value.format(ISO_DATE);
             }
 
-            public static String formatDateTime(ZonedDateTime value) {
+            public static String formatDateTime(OffsetDateTime value) {
                 return value.format(ISO_DATE_TIME);
             }
 
@@ -1420,55 +1421,55 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printParty(JsonGenerator jgen, IParty partyObject)
+            public static void printPart(JsonGenerator jgen, IPart partyObject)
                     throws IOException {
                 if (partyObject != null) {
-                    List<Party> caseParties = partyObject.getReferenceParty();
+                    List<Part> caseParties = partyObject.getReferencePart();
                     if (caseParties != null && caseParties.size() > 0) {
                         jgen.writeArrayFieldStart(PART);
-                        for (Party party : caseParties) {
-                            if (party != null) {
+                        for (Part part : caseParties) {
+                            if (part != null) {
                                 jgen.writeObjectFieldStart(PART);
 
-                                if (party.getPartyId() != null) {
+                                if (part.getPartId() != null) {
                                     jgen.writeStringField(PART_ID,
-                                            party.getPartyId());
+                                            part.getPartId());
                                 }
-                                if (party.getPartyName() != null) {
+                                if (part.getPartName() != null) {
                                     jgen.writeStringField(PART_NAME,
-                                            party.getPartyName());
+                                            part.getPartName());
                                 }
-                                if (party.getPartyRole() != null) {
+                                if (part.getPartRole() != null) {
                                     jgen.writeStringField(PART_ROLE,
-                                            party.getPartyRole());
+                                            part.getPartRole());
                                 }
-                                if (party.getPostalAddress() != null) {
+                                if (part.getPostalAddress() != null) {
                                     jgen.writeStringField(POSTAL_ADDRESS,
-                                            party.getPostalAddress());
+                                            part.getPostalAddress());
                                 }
-                                if (party.getPostCode() != null) {
+                                if (part.getPostCode() != null) {
                                     jgen.writeStringField(POSTAL_NUMBER,
-                                            party.getPostCode());
+                                            part.getPostCode());
                                 }
-                                if (party.getPostalTown() != null) {
+                                if (part.getPostalTown() != null) {
                                     jgen.writeStringField(POSTAL_TOWN,
-                                            party.getPostalTown());
+                                            part.getPostalTown());
                                 }
-                                if (party.getForeignAddress() != null) {
+                                if (part.getForeignAddress() != null) {
                                     jgen.writeStringField(FOREIGN_ADDRESS,
-                                            party.getForeignAddress());
+                                            part.getForeignAddress());
                                 }
-                                if (party.getEmailAddress() != null) {
+                                if (part.getEmailAddress() != null) {
                                     jgen.writeStringField(EMAIL_ADDRESS,
-                                            party.getEmailAddress());
+                                            part.getEmailAddress());
                                 }
-                                if (party.getTelephoneNumber() != null) {
+                                if (part.getTelephoneNumber() != null) {
                                     jgen.writeStringField(TELEPHONE_NUMBER,
-                                            party.getTelephoneNumber());
+                                            part.getTelephoneNumber());
                                 }
-                                if (party.getContactPerson() != null) {
+                                if (part.getContactPerson() != null) {
                                     jgen.writeStringField(CONTACT_PERSON,
-                                            party.getContactPerson());
+                                            part.getContactPerson());
                                 }
                                 jgen.writeEndObject();
                             }
@@ -1478,25 +1479,46 @@ public final class CommonUtils {
                 }
             }
 
-            // Note: This method assumes that the startObject has already been written
-            public static void printHateoasLinks(JsonGenerator jgen, List<Link> links) throws IOException {
+            /**
+             *
+             * Note: This method assumes that the startObject has already been
+             * written
+             *
+             * {
+             *   "_links": {
+             *     "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/": {
+             *        "href": "https://n5.example.com/api/arkivstruktur"
+             *       },
+             *     "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/": {
+             *        "href": "https://n5.example.com/api/sakarkiv"
+             *       },
+             *     "https://rel.arkivverket.no/noark5/v5/api/admin/system/": {
+             *        "href": "https://n5.example.com/api/admin/system/",
+             *       }
+             *     }
+             * }
+             *
+             * @param jgen
+             * @param links
+             * @throws IOException
+             */
+            public static void printHateoasLinks(
+                    JsonGenerator jgen, List<Link> links) throws IOException {
 
                 if (links != null && links.size() > 0) {
-                    jgen.writeArrayFieldStart(LINKS);
+                    jgen.writeObjectFieldStart(LINKS);
                     for (Link link : links) {
-                        jgen.writeStartObject(link.getLinkName());
+                        jgen.writeObjectFieldStart(link.getRel());
                         jgen.writeStringField(HREF, link.getHref());
-                        jgen.writeStringField(REL, link.getRel());
                         if (link.getTemplated()) {
                             jgen.writeBooleanField(TEMPLATED,
                                     link.getTemplated());
                         }
                         jgen.writeEndObject();
                     }
-                    jgen.writeEndArray();
+                    jgen.writeEndObject();
                 } else {
-                    jgen.writeArrayFieldStart(LINKS);
-                    jgen.writeEndArray();
+                    jgen.writeFieldName(LINKS);
                 }
             }
 

@@ -10,20 +10,23 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-import java.time.ZonedDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_DELETION;
+import static nikita.common.config.N5ResourceMappings.DELETION;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "deletion")
-// Enable soft delete of Deletion
-// @SQLDelete(sql="UPDATE deletion SET deleted = true WHERE pk_deletion_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_deletion_id"))
-public class Deletion extends NoarkEntity implements IDeletionEntity {
+@Table(name = TABLE_DELETION)
+public class Deletion
+        extends NoarkEntity
+        implements IDeletionEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,7 +50,7 @@ public class Deletion extends NoarkEntity implements IDeletionEntity {
     @Column(name = "deletion_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime deletionDate;
+    private OffsetDateTime deletionDate;
 
     // Links to Series
     @OneToMany(mappedBy = "referenceDeletion")
@@ -55,7 +58,8 @@ public class Deletion extends NoarkEntity implements IDeletionEntity {
 
     // Links to DocumentDescription
     @OneToMany(mappedBy = "referenceDeletion")
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    private List<DocumentDescription>
+            referenceDocumentDescription = new ArrayList<>();
 
     public String getDeletionType() {
         return deletionType;
@@ -73,17 +77,17 @@ public class Deletion extends NoarkEntity implements IDeletionEntity {
         this.deletionBy = deletionBy;
     }
 
-    public ZonedDateTime getDeletionDate() {
+    public OffsetDateTime getDeletionDate() {
         return deletionDate;
     }
 
-    public void setDeletionDate(ZonedDateTime deletionDate) {
+    public void setDeletionDate(OffsetDateTime deletionDate) {
         this.deletionDate = deletionDate;
     }
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.DELETION;
+        return DELETION;
     }
 
     public List<Series> getReferenceSeries() {
@@ -98,7 +102,8 @@ public class Deletion extends NoarkEntity implements IDeletionEntity {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(List<DocumentDescription> referenceDocumentDescription) {
+    public void setReferenceDocumentDescription(
+            List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 

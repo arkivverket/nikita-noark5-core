@@ -74,10 +74,10 @@ public interface IDocumentDescriptionHateoasHandler
     void addDocumentStatus(INikitaEntity entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
-    void addParty(INikitaEntity entity,
+    void addPart(INikitaEntity entity,
                   IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewParty(INikitaEntity entity,
+    void addNewPart(INikitaEntity entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 }
 

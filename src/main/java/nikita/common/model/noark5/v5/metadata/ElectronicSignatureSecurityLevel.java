@@ -7,18 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL;
+import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_SECURITY_LEVEL;
+
 // Noark 5v5 elektroniskSignaturSikkerhetsnivå
 @Entity
-@Table(name = "electronic_signature_security_level")
-// Enable soft delete
-// @SQLDelete(sql = "UPDATE electronic_signature_security_level SET deleted = true WHERE pk_electronic_signature_security_level_id  = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_electronic_signature_security_level_id"))
-public class ElectronicSignatureSecurityLevel extends MetadataSuperClass {
+@Table(name = TABLE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
+public class ElectronicSignatureSecurityLevel
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.ELECTRONIC_SIGNATURE_SECURITY_LEVEL;
+        return ELECTRONIC_SIGNATURE_SECURITY_LEVEL;
     }
 }

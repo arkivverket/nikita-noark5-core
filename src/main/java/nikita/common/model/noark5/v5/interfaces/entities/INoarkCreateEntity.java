@@ -1,12 +1,12 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 public interface INoarkCreateEntity {
 
-    ZonedDateTime getCreatedDate();
+    OffsetDateTime getCreatedDate();
 
-    void setCreatedDate(ZonedDateTime createdDate);
+    void setCreatedDate(OffsetDateTime createdDate);
 
     String getCreatedBy();
 

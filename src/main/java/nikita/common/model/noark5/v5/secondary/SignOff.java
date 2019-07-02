@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
@@ -10,20 +9,19 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_SIGN_OFF;
+import static nikita.common.config.N5ResourceMappings.SIGN_OFF;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 
 @Entity
-@Table(name = "sign_off")
-// Enable soft delete of SignOff
-// @SQLDelete(sql="UPDATE sign_off SET deleted = true WHERE pk_sign_off_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_sign_off_id"))
-public class SignOff extends NoarkEntity {
+@Table(name = TABLE_SIGN_OFF)
+public class SignOff
+        extends NoarkEntity {
 
     /**
      * M617 - avskrivningsdato
@@ -32,7 +30,7 @@ public class SignOff extends NoarkEntity {
     @DateTimeFormat(iso = DATE)
 
     @Audited
-    private ZonedDateTime signOffDate;
+    private OffsetDateTime signOffDate;
 
     /**
      * M618 - avskrevetAv
@@ -68,11 +66,11 @@ public class SignOff extends NoarkEntity {
     @ManyToMany(mappedBy = "referenceSignOff")
     private List<RegistryEntry> referenceRecord = new ArrayList<>();
 
-    public ZonedDateTime getSignOffDate() {
+    public OffsetDateTime getSignOffDate() {
         return signOffDate;
     }
 
-    public void setSignOffDate(ZonedDateTime signOffDate) {
+    public void setSignOffDate(OffsetDateTime signOffDate) {
         this.signOffDate = signOffDate;
     }
 
@@ -94,14 +92,15 @@ public class SignOff extends NoarkEntity {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.SIGN_OFF;
+        return SIGN_OFF;
     }
 
     public RegistryEntry getReferenceSignedOffRecord() {
         return referenceSignedOffRecord;
     }
 
-    public void setReferenceSignedOffRecord(RegistryEntry referenceSignedOffRecord) {
+    public void setReferenceSignedOffRecord(
+            RegistryEntry referenceSignedOffRecord) {
         this.referenceSignedOffRecord = referenceSignedOffRecord;
     }
 
@@ -109,8 +108,10 @@ public class SignOff extends NoarkEntity {
         return referenceSignedOffCorrespondencePart;
     }
 
-    public void setReferenceSignedOffCorrespondencePart(CorrespondencePart referenceSignedOffCorrespondencePart) {
-        this.referenceSignedOffCorrespondencePart = referenceSignedOffCorrespondencePart;
+    public void setReferenceSignedOffCorrespondencePart(
+            CorrespondencePart referenceSignedOffCorrespondencePart) {
+        this.referenceSignedOffCorrespondencePart =
+                referenceSignedOffCorrespondencePart;
     }
 
     public List<RegistryEntry> getReferenceRecord() {

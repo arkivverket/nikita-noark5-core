@@ -13,13 +13,13 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FORMAT;
@@ -63,11 +63,6 @@ public class FormatService
     @Override
     public MetadataHateoas createNewFormat(
             Format format) {
-
-        format.setDeleted(false);
-        format.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 formatRepository.save(format));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -104,7 +99,7 @@ public class FormatService
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 formatRepository.save(
                         formatRepository
-                                .findBySystemId(systemId)));
+                                .findBySystemId(UUID.fromString(systemId))));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -211,8 +206,8 @@ public class FormatService
     private Format
     getFormatOrThrow(@NotNull String systemId) {
         Format format =
-                formatRepository.findBySystemId
-                        (systemId);
+                formatRepository.
+                        findBySystemId(UUID.fromString(systemId));
         if (format == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " Format, using systemId " +
                     systemId;

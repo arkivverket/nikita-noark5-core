@@ -37,8 +37,8 @@ public class DocumentDescriptionHateoasHandler
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
         addNewScreening(entity, hateoasNoarkObject);
-        addNewParty(entity, hateoasNoarkObject);
-        addParty(entity, hateoasNoarkObject);
+        addNewPart(entity, hateoasNoarkObject);
+        addPart(entity, hateoasNoarkObject);
         // links for secondary entities 1:M
         addStorageLocation(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
@@ -209,7 +209,7 @@ public class DocumentDescriptionHateoasHandler
     }
 
     /**
-     * Create a REL/HREF pair for the list of Party objects associated with the
+     * Create a REL/HREF pair for the list of Part objects associated with the
      * given DocumentDescription.
      * <p>
      * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/part"
@@ -219,7 +219,7 @@ public class DocumentDescriptionHateoasHandler
      * @param hateoasNoarkObject hateoasDocumentDescription
      */
     @Override
-    public void addParty(INikitaEntity entity,
+    public void addPart(INikitaEntity entity,
                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +
@@ -238,7 +238,7 @@ public class DocumentDescriptionHateoasHandler
      * @param hateoasNoarkObject hateoasDocumentDescription
      */
     @Override
-    public void addNewParty(INikitaEntity entity,
+    public void addNewPart(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +

@@ -9,17 +9,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW;
 
 @Entity
-@Table(name = "document_flow")
-// Enable soft delete of DocumentFlow
-// @SQLDelete(sql="UPDATE document_flow SET deleted = true WHERE pk_flow_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_flow_id"))
-public class DocumentFlow extends NoarkEntity {
+@Table(name = TABLE_DOCUMENT_FLOW)
+public class DocumentFlow
+        extends NoarkEntity {
 
     /**
      * M660 flytTil (xs:string)
@@ -40,14 +39,14 @@ public class DocumentFlow extends NoarkEntity {
      */
     @Column(name = "flow_received_date")
     @Audited
-    private ZonedDateTime flowReceivedDate;
+    private OffsetDateTime flowReceivedDate;
 
     /**
      * M662 flytSendtDato (xs:dateTime)
      */
     @Column(name = "flow_sent_date")
     @Audited
-    private ZonedDateTime flowSentDate;
+    private OffsetDateTime flowSentDate;
 
     /**
      * M663 flytStatus (xs:string)
@@ -65,13 +64,13 @@ public class DocumentFlow extends NoarkEntity {
 
     // Link to Series
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "work_flow_registry_entry_id",
-            referencedColumnName = "pk_record_id")
+    @JoinColumn(name = WORK_FLOW_REGISTRY_ENTRY_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private RegistryEntry referenceRegistryEntry;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "work_flow_record_note_id",
-            referencedColumnName = "pk_record_id")
+    @JoinColumn(name = WORK_FLOW_RECORD_NOTE_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private RecordNote referenceRecordNote;
 
     public String getFlowTo() {
@@ -90,19 +89,19 @@ public class DocumentFlow extends NoarkEntity {
         this.flowFrom = flowFrom;
     }
 
-    public ZonedDateTime getFlowReceivedDate() {
+    public OffsetDateTime getFlowReceivedDate() {
         return flowReceivedDate;
     }
 
-    public void setFlowReceivedDate(ZonedDateTime flowReceivedDate) {
+    public void setFlowReceivedDate(OffsetDateTime flowReceivedDate) {
         this.flowReceivedDate = flowReceivedDate;
     }
 
-    public ZonedDateTime getFlowSentDate() {
+    public OffsetDateTime getFlowSentDate() {
         return flowSentDate;
     }
 
-    public void setFlowSentDate(ZonedDateTime flowSentDate) {
+    public void setFlowSentDate(OffsetDateTime flowSentDate) {
         this.flowSentDate = flowSentDate;
     }
 
@@ -124,7 +123,7 @@ public class DocumentFlow extends NoarkEntity {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.DOCUMENT_FLOW;
+        return DOCUMENT_FLOW;
     }
 
     @Override

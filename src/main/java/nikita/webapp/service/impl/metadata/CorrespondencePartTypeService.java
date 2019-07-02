@@ -8,13 +8,13 @@ import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
@@ -47,8 +47,6 @@ public class CorrespondencePartTypeService
      */
     @Override
     public CorrespondencePartType createNewCorrespondencePartType(CorrespondencePartType correspondencePartType) {
-        correspondencePartType.setDeleted(false);
-        correspondencePartType.setOwnedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         return correspondencePartTypeRepository.save(correspondencePartType);
     }
 
@@ -74,7 +72,8 @@ public class CorrespondencePartTypeService
      */
     @Override
     public CorrespondencePartType findBySystemId(String systemId) {
-        return correspondencePartTypeRepository.findBySystemId(systemId);
+        return correspondencePartTypeRepository.
+                findBySystemId(UUID.fromString(systemId));
     }
 
     /**

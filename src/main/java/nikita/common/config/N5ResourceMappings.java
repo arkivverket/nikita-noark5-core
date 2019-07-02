@@ -102,7 +102,7 @@ public final class N5ResourceMappings {
     public static final String CASE_LOANED_DATE = "utlaantDato";
     public static final String CASE_LOANED_TO = "utlaantTil";
 
-    // Party
+    // Part
     public static final String PART = "part";
     public static final String PART_ID = "partID";
     public static final String PART_NAME = "partNavn";

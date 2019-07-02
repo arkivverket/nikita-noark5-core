@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Created by tsodring on 12/7/16.
@@ -11,17 +11,17 @@ public interface IClassifiedEntity extends Serializable {
 
     void setClassification(String classification);
 
-    ZonedDateTime getClassificationDate();
+    OffsetDateTime getClassificationDate();
 
-    void setClassificationDate(ZonedDateTime classificationDate);
+    void setClassificationDate(OffsetDateTime classificationDate);
 
     String getClassificationBy();
 
     void setClassificationBy(String classificationBy);
 
-    ZonedDateTime getClassificationDowngradedDate();
+    OffsetDateTime getClassificationDowngradedDate();
 
-    void setClassificationDowngradedDate(ZonedDateTime classificationDowngradedDate);
+    void setClassificationDowngradedDate(OffsetDateTime classificationDowngradedDate);
 
     String getClassificationDowngradedBy();
 

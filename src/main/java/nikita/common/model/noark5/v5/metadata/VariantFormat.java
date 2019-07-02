@@ -7,18 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_VARIANT_FORMAT;
+import static nikita.common.config.N5ResourceMappings.VARIANT_FORMAT;
+
 // Noark 5v5 variantformat
 @Entity
-@Table(name = "variant_format")
-// Enable soft delete
-// @SQLDelete(sql = "UPDATE variant_format SET deleted = true WHERE pk_variant_format_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_variant_format_id"))
-public class VariantFormat extends MetadataSuperClass {
+@Table(name = TABLE_VARIANT_FORMAT)
+public class VariantFormat
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.VARIANT_FORMAT;
+        return VARIANT_FORMAT;
     }
 }

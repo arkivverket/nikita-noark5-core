@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface IDocumentDescriptionRepository extends
@@ -24,7 +25,7 @@ public interface IDocumentDescriptionRepository extends
     Optional<DocumentDescription> findById(Long id);
 
     // systemId
-    DocumentDescription findBySystemId(String systemId);
+    DocumentDescription findBySystemId(UUID systemId);
 
     // ownedBy
     List<DocumentDescription> findByOwnedBy(String ownedBy);

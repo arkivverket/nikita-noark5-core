@@ -10,13 +10,15 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.*;
+
 @Entity
-@Table(name = "correspondence_part")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = TABLE_CORRESPONDENCE_PART)
+@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
-@AttributeOverride(name = "id",
-        column = @Column(name = "pk_correspondence_part_id"))
-// Adding @Audited as the it's required as the base class requires it
 @Audited
 public class CorrespondencePart
         extends NoarkEntity
@@ -26,11 +28,10 @@ public class CorrespondencePart
      * M087 - korrespondanseparttype (xs:string)
      */
     // Link to CorrespondencePartType
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "correspondence_part_correspondence_part_type_id",
-            referencedColumnName = "pk_correspondence_part_type_id")
+    @ManyToOne(fetch = EAGER, cascade = PERSIST)
+    @JoinColumn(name = CORRESPONDENCE_PART_CORRESPONDENCE_PART_TYPE_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private CorrespondencePartType referenceCorrespondencePartType;
-
 
     @Override
     public CorrespondencePartType getCorrespondencePartType() {
@@ -38,7 +39,8 @@ public class CorrespondencePart
     }
 
     @Override
-    public void setCorrespondencePartType(CorrespondencePartType referenceCorrespondencePartType) {
+    public void setCorrespondencePartType(
+            CorrespondencePartType referenceCorrespondencePartType) {
         this.referenceCorrespondencePartType = referenceCorrespondencePartType;
     }
 

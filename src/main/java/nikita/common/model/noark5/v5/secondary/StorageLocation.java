@@ -13,14 +13,14 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_STORAGE_LOCATION;
+import static nikita.common.config.N5ResourceMappings.STORAGE_LOCATION;
+
 @Entity
-@Table(name = "storage_location")
-// Enable soft delete of IStorageLocation
-// @SQLDelete(sql="UPDATE storage_location SET deleted = true WHERE pk_storage_location_id = ? and version = ?")
-// @Where(clause="deleted <> true")
+@Table(name = TABLE_STORAGE_LOCATION)
 @JsonSerialize(using = StorageLocationSerializer.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_storage_location_id"))
-public class StorageLocation extends NoarkEntity {
+public class StorageLocation
+        extends NoarkEntity {
 
     /**
      * M301 - oppbevaringssted (xs:string)
@@ -66,7 +66,7 @@ public class StorageLocation extends NoarkEntity {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.STORAGE_LOCATION;
+        return STORAGE_LOCATION;
     }
 
     public List<Series> getReferenceSeries() {

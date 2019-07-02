@@ -34,12 +34,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -72,11 +73,8 @@ public class RegistryEntryService
 
     @Override
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
-        setNikitaEntityValues(registryEntry);
-        setSystemIdEntityValues(registryEntry);
-        setCreateEntityValues(registryEntry);
         checkDocumentMediumValid(registryEntry);
-        registryEntry.setRecordDate(ZonedDateTime.now());
+        registryEntry.setRecordDate(OffsetDateTime.now());
         File file = registryEntry.getReferenceFile();
         if (null != file) {
             long numberAssociated =
@@ -122,7 +120,7 @@ public class RegistryEntryService
         defaultRegistryEntry.setTitle(DEFAULT_TITLE + "RegistryEntry");
         defaultRegistryEntry.setDescription(DEFAULT_DESCRIPTION + " a CaseFile " +
                 "with systemId [" + caseFileSystemId + "]");
-        ZonedDateTime now = ZonedDateTime.now();
+        OffsetDateTime now = OffsetDateTime.now();
         defaultRegistryEntry.setRecordDate(now);
         defaultRegistryEntry.setDocumentDate(now);
         defaultRegistryEntry.setRecordStatus(TEST_RECORD_STATUS);
@@ -309,8 +307,6 @@ public class RegistryEntryService
 
         RegistryEntry registryEntry = getRegistryEntryOrThrow(
                 registryEntrySystemID);
-        setNikitaEntityValues(precedence);
-        setSystemIdEntityValues(precedence);
         // bidirectional relationship @ManyToMany, set both sides of relationship
         registryEntry.getReferencePrecedence().add(precedence);
         precedence.getReferenceRegistryEntry().add(registryEntry);
@@ -429,7 +425,8 @@ public class RegistryEntryService
     protected RegistryEntry getRegistryEntryOrThrow(
             @NotNull String registryEntrySystemId) {
         RegistryEntry registryEntry =
-                registryEntryRepository.findBySystemId(registryEntrySystemId);
+                registryEntryRepository.
+                        findBySystemId(UUID.fromString(registryEntrySystemId));
         if (registryEntry == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " RegistryEntry, using systemId " + registryEntrySystemId;

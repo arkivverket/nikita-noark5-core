@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
@@ -50,7 +52,8 @@ public class PrecedenceService implements IPrecedenceService {
 
     @Override
     public Precedence findBySystemId(String precedenceSystemId) {
-        return precedenceRepository.findBySystemId(precedenceSystemId);
+        return precedenceRepository.
+                findBySystemId(UUID.fromString(precedenceSystemId));
     }
 
     /**
@@ -65,7 +68,7 @@ public class PrecedenceService implements IPrecedenceService {
     protected Precedence getPrecedenceOrThrow(
             @NotNull String precedenceSystemId) {
         Precedence precedence = precedenceRepository.
-                findBySystemId(precedenceSystemId);
+                findBySystemId(UUID.fromString(precedenceSystemId));
         if (precedence == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " Precedence, using systemId " + precedenceSystemId;

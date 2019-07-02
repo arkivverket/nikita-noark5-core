@@ -1,8 +1,6 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.Constants;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IFondsCreatorEntity;
 import nikita.common.util.deserialisers.FondsCreatorDeserializer;
@@ -13,21 +11,25 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_FONDS_CREATOR;
+import static nikita.common.config.N5ResourceMappings.FONDS_CREATOR;
+
 @Entity
-@Table(name = Constants.TABLE_FONDS_CREATOR)
-// Enable soft delete of Fonds
-// @SQLDelete(sql = "UPDATE fonds_creator SET deleted = true WHERE pk_fonds_creator_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
+@Table(name = TABLE_FONDS_CREATOR)
 @JsonDeserialize(using = FondsCreatorDeserializer.class)
 @HateoasPacker(using = FondsCreatorHateoasHandler.class)
 @HateoasObject(using = FondsCreatorHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = Constants.PRIMARY_KEY_FONDS_CREATOR))
-public class FondsCreator extends NoarkEntity implements IFondsCreatorEntity {
+public class FondsCreator
+        extends NoarkEntity
+        implements IFondsCreatorEntity {
 
     /**
      * M006 - arkivskaperID (xs:string)
@@ -82,7 +84,7 @@ public class FondsCreator extends NoarkEntity implements IFondsCreatorEntity {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.FONDS_CREATOR;
+        return FONDS_CREATOR;
     }
 
     public List<Fonds> getReferenceFonds() {

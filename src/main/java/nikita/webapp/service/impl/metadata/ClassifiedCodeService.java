@@ -13,13 +13,13 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CLASSIFIED_CODE;
@@ -63,11 +63,6 @@ public class ClassifiedCodeService
     @Override
     public MetadataHateoas createNewClassifiedCode(
             ClassifiedCode classifiedCode) {
-
-        classifiedCode.setDeleted(false);
-        classifiedCode.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classifiedCodeRepository.save(classifiedCode));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -105,7 +100,7 @@ public class ClassifiedCodeService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classifiedCodeRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -219,7 +214,7 @@ public class ClassifiedCodeService
     private ClassifiedCode getClassifiedCodeOrThrow(
             @NotNull String systemId) {
         ClassifiedCode classifiedCode =
-                classifiedCodeRepository.findBySystemId(systemId);
+                classifiedCodeRepository.findBySystemId(UUID.fromString(systemId));
         if (classifiedCode == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " ClassifiedCode, using " + "systemId " + systemId;

@@ -27,11 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -94,7 +94,6 @@ public class ClassificationSystemService
     @Override
     public ClassificationSystemHateoas save(
             ClassificationSystem classificationSystem) {
-        setNoarkEntityValues(classificationSystem);
         setFinaliseEntityValues(classificationSystem);
         ClassificationSystemHateoas classificationSystemHateoas = new
                 ClassificationSystemHateoas(
@@ -182,7 +181,8 @@ public class ClassificationSystemService
         ClassificationSystemHateoas classificationSystemHateoas = new
                 ClassificationSystemHateoas(
                 classificationSystemRepository.
-                        findBySystemId(classificationSystemSystemId));
+                        findBySystemId(
+                                UUID.fromString(classificationSystemSystemId)));
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -216,6 +216,7 @@ public class ClassificationSystemService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithClassificationSystem(@NotNull final String systemId) {
         SeriesHateoas seriesHateoas = new
@@ -321,7 +322,8 @@ public class ClassificationSystemService
             @NotNull String classificationSystemSystemId) {
         ClassificationSystem classificationSystem =
                 classificationSystemRepository.
-                        findBySystemId(classificationSystemSystemId);
+                        findBySystemId(
+                                UUID.fromString(classificationSystemSystemId));
         if (classificationSystem == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " ClassificationSystem, using systemId " +

@@ -13,13 +13,13 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_TYPE;
@@ -61,12 +61,6 @@ public class DocumentTypeService
      */
     @Override
     public MetadataHateoas createNewDocumentType(DocumentType documentType) {
-
-        documentType.setDeleted(false);
-        documentType.setOwnedBy(
-                SecurityContextHolder.getContext().
-                        getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 documentTypeRepository.save(documentType));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -101,7 +95,7 @@ public class DocumentTypeService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 documentTypeRepository.save(
-                        documentTypeRepository.findBySystemId(systemId)));
+                        documentTypeRepository.findBySystemId(UUID.fromString(systemId))));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -205,8 +199,9 @@ public class DocumentTypeService
      * @return the DocumentType object
      */
     private DocumentType getDocumentTypeOrThrow(@NotNull String systemId) {
-        DocumentType documentType = documentTypeRepository.findBySystemId
-                (systemId);
+        DocumentType documentType =
+                documentTypeRepository.
+                        findBySystemId(UUID.fromString(systemId));
         if (documentType == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " DocumentType, using " +
                     "systemId " + systemId;

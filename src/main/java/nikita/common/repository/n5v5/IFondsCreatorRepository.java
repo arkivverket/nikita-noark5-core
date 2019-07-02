@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface IFondsCreatorRepository extends
@@ -21,7 +22,7 @@ public interface IFondsCreatorRepository extends
 
     Optional<FondsCreator> findById(Long id);
 
-    FondsCreator findBySystemId(String systemId);
+    FondsCreator findBySystemId(UUID systemId);
 
     List<FondsCreator> findByOwnedBy(String ownedBy);
 

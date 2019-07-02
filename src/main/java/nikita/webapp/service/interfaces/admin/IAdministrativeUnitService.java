@@ -6,6 +6,8 @@ import nikita.common.model.noark5.v5.admin.User;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface IAdministrativeUnitService {
 
@@ -18,9 +20,13 @@ public interface IAdministrativeUnitService {
     AdministrativeUnit createNewAdministrativeUnitBySystem(
             AdministrativeUnit entity);
 
-    AdministrativeUnit findBySystemId(String administrativeUnitSystemId);
+    AdministrativeUnit findBySystemId(UUID administrativeUnitSystemId);
 
     List<AdministrativeUnit> findAll();
+
+    Optional<AdministrativeUnit> findFirst();
+
+    AdministrativeUnit getAdministrativeUnitOrThrow(User user);
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);

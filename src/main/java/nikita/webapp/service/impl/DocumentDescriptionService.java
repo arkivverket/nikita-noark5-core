@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,7 +70,6 @@ public class DocumentDescriptionService
     public DocumentObject
     createDocumentObjectAssociatedWithDocumentDescription(
             String documentDescriptionSystemId, DocumentObject documentObject) {
-        DocumentObject persistedDocumentObject;
         DocumentDescription documentDescription =
                 getDocumentDescriptionOrThrow(documentDescriptionSystemId);
         documentObject.setReferenceDocumentDescription(documentDescription);
@@ -80,25 +79,18 @@ public class DocumentDescriptionService
         return documentObjectService.save(documentObject);
     }
 
-    /**
+    /*
      * Note:
      * <p>
      * Assumes documentDescription.addReferenceRecord() has already been called.
      *
-     * @param documentDescription
-     * @return
      */
     @Override
     public DocumentDescription save(DocumentDescription documentDescription) {
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
-        documentDescription.setSystemId(UUID.randomUUID().toString());
-        documentDescription.setCreatedDate(ZonedDateTime.now());
-        documentDescription.setOwnedBy(username);
-        documentDescription.setCreatedBy(username);
-        documentDescription.setAssociationDate(ZonedDateTime.now());
+        documentDescription.setAssociationDate(OffsetDateTime.now());
         documentDescription.setAssociatedBy(username);
-
         return documentDescriptionRepository.save(documentDescription);
     }
 
@@ -123,6 +115,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<DocumentDescriptionHateoas> findAll() {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas((List<INikitaEntity>)
@@ -136,6 +129,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<DocumentObjectHateoas>
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId) {
@@ -151,6 +145,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<RecordHateoas>
     findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId) {
         RecordHateoas recordHateoas = new
@@ -184,7 +179,7 @@ public class DocumentDescriptionService
      * when the call to DocumentDescription.setVersion() occurs.
      *
      * @param systemId                    systemId of the incoming documentDescription object
-     * @param version
+     * @param version version of object, field is given by nikita
      * @param incomingDocumentDescription the incoming documentDescription
      * @return the updated documentDescription after it is persisted
      */
@@ -214,7 +209,7 @@ public class DocumentDescriptionService
         String query = "DELETE FROM record_document_description WHERE " +
                 "F_PK_DOCUMENT_DESCRIPTION_ID  = :id ;";
         Query q = entityManager.createNativeQuery(query);
-        q.setParameter("id", documentDescription.getId());
+        q.setParameter("id", documentDescription.getSystemId());
         q.executeUpdate();
 
         entityManager.remove(documentDescription);
@@ -256,14 +251,14 @@ public class DocumentDescriptionService
      * that you will only ever get a valid DocumentDescription back. If there
      * is no valid DocumentDescription, an exception is thrown
      *
-     * @param documentDescriptionSystemId
-     * @return The documentDescription
+     * @param documentDescriptionSystemId systemId of the documentDescription
+     * @return The documentDescription to be returned
      */
     protected DocumentDescription getDocumentDescriptionOrThrow(
             @NotNull String documentDescriptionSystemId) {
         DocumentDescription documentDescription =
                 documentDescriptionRepository.findBySystemId(
-                        documentDescriptionSystemId);
+                        UUID.fromString(documentDescriptionSystemId));
         if (documentDescription == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " DocumentDescription, using systemId " +

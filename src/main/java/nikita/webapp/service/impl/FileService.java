@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -26,10 +27,12 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -64,7 +67,6 @@ public class FileService
 
     public FileHateoas save(File file) {
         checkDocumentMediumValid(file);
-        setNoarkEntityValues(file);
         setFinaliseEntityValues(file);
         FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
@@ -76,16 +78,15 @@ public class FileService
     @Override
     public File createFile(File file) {
         checkDocumentMediumValid(file);
-        setNoarkEntityValues(file);
         setFinaliseEntityValues(file);
         return fileRepository.save(file);
     }
 
     @Override
-    public Record createRecordAssociatedWithFile(
+    public ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
             String fileSystemId, Record record) {
         record.setReferenceFile(getFileOrThrow(fileSystemId));
-        return recordService.create(record);
+        return recordService.save(record);
     }
 
 
@@ -128,7 +129,7 @@ public class FileService
     public ResponseEntity<ClassHateoas>
     findClassAssociatedWithFile(@NotNull final String systemId) {
         ClassHateoas classHateoas = new ClassHateoas(
-                fileRepository.findBySystemId(systemId).
+                fileRepository.findBySystemId(UUID.fromString(systemId)).
                         getReferenceClass());
 
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
@@ -149,7 +150,7 @@ public class FileService
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithFile(@NotNull final String systemId) {
         SeriesHateoas seriesHateoas = new SeriesHateoas(
-                fileRepository.findBySystemId(systemId).
+                fileRepository.findBySystemId(UUID.fromString(systemId)).
                         getReferenceSeries());
 
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
@@ -243,14 +244,15 @@ public class FileService
      * that you will only ever get a valid File back. If there is no valid
      * File, an exception is thrown
      *
-     * @param fileSystemId systemId of the file object you are looking for
+     * @param systemId systemId of the file object you are looking for
      * @return the newly found file object or null if it does not exist
      */
-    private File getFileOrThrow(@NotNull String fileSystemId) {
-        File file = fileRepository.findBySystemId(fileSystemId);
+    private File getFileOrThrow(@NotNull String systemId) {
+        File file =
+                fileRepository.findBySystemId(UUID.fromString(systemId));
         if (file == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " File, using systemId " +
-                    fileSystemId;
+                    systemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }

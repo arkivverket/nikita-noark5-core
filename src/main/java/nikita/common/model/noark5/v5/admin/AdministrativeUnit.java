@@ -17,12 +17,13 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.*;
 import static nikita.common.config.Constants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -31,26 +32,9 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = AdministrativeUnitDeserializer.class)
 @HateoasPacker(using = AdministrativeUnitHateoasHandler.class)
 @HateoasObject(using = AdministrativeUnitHateoas.class)
-@AttributeOverride(name = "id",
-        column = @Column(name = PRIMARY_KEY_ADMINISTRATIVE_UNIT))
 public class AdministrativeUnit
         extends NoarkEntity
         implements IAdministrativeUnitEntity {
-
-    /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @Column(name = "created_date")
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    private ZonedDateTime createdDate;
-
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @Column(name = "created_by")
-    @Audited
-    private String createdBy;
 
     /**
      * M602 - avsluttetDato (xs:dateTime)
@@ -58,7 +42,7 @@ public class AdministrativeUnit
     @Column(name = "finalised_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime finalisedDate;
+    private OffsetDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
@@ -95,23 +79,24 @@ public class AdministrativeUnit
 
     // Links to SequenceNumberGenerator
     @OneToMany(mappedBy = REFERENCE_ADMINISTRATIVE_UNIT,
-            cascade = CascadeType.ALL)
-    private List<SequenceNumberGenerator>
-            referenceSequenceNumberGenerator = new ArrayList<>();
+            cascade = ALL, orphanRemoval = true)
+    private Set <SequenceNumberGenerator>
+            referenceSequenceNumberGenerator = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
             name = TABLE_ADMINISTRATIVE_UNIT_JOIN_NIKITA_USER,
             joinColumns = {
-                    @JoinColumn(name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
-                            referencedColumnName =
-                                    PRIMARY_KEY_ADMINISTRATIVE_UNIT)},
-            inverseJoinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
-                    referencedColumnName = PRIMARY_KEY_USER)})
+                    @JoinColumn(
+                            name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
+                            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = FOREIGN_KEY_USER_PK,
+                            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)})
     private Set<User> users = new HashSet<>();
 
     // Links to CaseFile
-    @OneToMany(mappedBy = REFERENCE_ADMINISTRATIVE_UNIT)
+    @OneToMany(mappedBy = REFERENCE_ADMINISTRATIVE_UNIT, cascade = ALL)
     @JsonIgnore
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
@@ -129,32 +114,12 @@ public class AdministrativeUnit
             new ArrayList<>();
 
     @Override
-    public ZonedDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    @Override
-    public void setCreatedDate(ZonedDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @Override
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    @Override
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Override
-    public ZonedDateTime getFinalisedDate() {
+    public OffsetDateTime getFinalisedDate() {
         return finalisedDate;
     }
 
     @Override
-    public void setFinalisedDate(ZonedDateTime finalisedDate) {
+    public void setFinalisedDate(OffsetDateTime finalisedDate) {
         this.finalisedDate = finalisedDate;
     }
 
@@ -192,12 +157,12 @@ public class AdministrativeUnit
         this.administrativeUnitName = administrativeUnitName;
     }
 
-    public List<SequenceNumberGenerator> getReferenceSequenceNumberGenerator() {
+    public Set<SequenceNumberGenerator> getReferenceSequenceNumberGenerator() {
         return referenceSequenceNumberGenerator;
     }
 
     public void setReferenceSequenceNumberGenerator(
-            List<SequenceNumberGenerator> referenceSequenceNumberGenerator) {
+            Set<SequenceNumberGenerator> referenceSequenceNumberGenerator) {
         this.referenceSequenceNumberGenerator = referenceSequenceNumberGenerator;
     }
 
@@ -267,8 +232,6 @@ public class AdministrativeUnit
     @Override
     public String toString() {
         return "AdministrativeUnit{" + super.toString() +
-                "createdDate=" + createdDate +
-                ", createdBy='" + createdBy + '\'' +
                 ", finalisedDate=" + finalisedDate +
                 ", finalisedBy='" + finalisedBy + '\'' +
                 ", shortName='" + shortName + '\'' +
@@ -291,8 +254,6 @@ public class AdministrativeUnit
         AdministrativeUnit rhs = (AdministrativeUnit) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(createdDate, rhs.createdDate)
-                .append(createdBy, rhs.createdBy)
                 .append(finalisedDate, rhs.finalisedDate)
                 .append(finalisedBy, rhs.finalisedBy)
                 .append(shortName, rhs.shortName)
@@ -305,8 +266,6 @@ public class AdministrativeUnit
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(createdDate)
-                .append(createdBy)
                 .append(finalisedDate)
                 .append(finalisedBy)
                 .append(shortName)

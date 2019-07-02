@@ -9,18 +9,22 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
-import java.time.ZonedDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_DISPOSAL_UNDERTAKEN;
+import static nikita.common.config.N5ResourceMappings.DISPOSAL_UNDERTAKEN;
+
 @Entity
-@Table(name = "disposal_undertaken")
-// Enable soft delete of DisposalUndertaken
-// @SQLDelete(sql="UPDATE disposal_undertaken SET deleted = true WHERE pk_disposal_undertaken_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_disposal_undertaken_id"))
-public class DisposalUndertaken extends NoarkEntity implements IDisposalUndertakenEntity {
+@Table(name = TABLE_DISPOSAL_UNDERTAKEN)
+public class DisposalUndertaken
+        extends NoarkEntity
+        implements IDisposalUndertakenEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -36,7 +40,7 @@ public class DisposalUndertaken extends NoarkEntity implements IDisposalUndertak
      */
     @Column(name = "disposal_date")
     @Audited
-    private ZonedDateTime disposalDate;
+    private OffsetDateTime disposalDate;
 
     // Links to Series
     @ManyToMany(mappedBy = "referenceDisposalUndertaken")
@@ -44,7 +48,8 @@ public class DisposalUndertaken extends NoarkEntity implements IDisposalUndertak
 
     // Links to DocumentDescription
     @ManyToMany(mappedBy = "referenceDisposalUndertaken")
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    private List<DocumentDescription>
+            referenceDocumentDescription = new ArrayList<>();
 
     public String getDisposalBy() {
         return disposalBy;
@@ -54,17 +59,17 @@ public class DisposalUndertaken extends NoarkEntity implements IDisposalUndertak
         this.disposalBy = disposalBy;
     }
 
-    public ZonedDateTime getDisposalDate() {
+    public OffsetDateTime getDisposalDate() {
         return disposalDate;
     }
 
-    public void setDisposalDate(ZonedDateTime disposalDate) {
+    public void setDisposalDate(OffsetDateTime disposalDate) {
         this.disposalDate = disposalDate;
     }
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.DISPOSAL_UNDERTAKEN;
+        return DISPOSAL_UNDERTAKEN;
     }
 
     public List<Series> getReferenceSeries() {
@@ -79,7 +84,8 @@ public class DisposalUndertaken extends NoarkEntity implements IDisposalUndertak
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(List<DocumentDescription> referenceDocumentDescription) {
+    public void setReferenceDocumentDescription(
+            List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 

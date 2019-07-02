@@ -5,16 +5,21 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_NIKITA_AUTHORITY;
+
 @Entity
-@Table(name = "nikita_authority")
-public class Authority implements Serializable {
+@Table(name = TABLE_NIKITA_AUTHORITY)
+public class Authority
+        implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "authority_seq")
-    @SequenceGenerator(name = "authority_seq", sequenceName = "authority_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO,
+            generator = "authority_seq")
+    @SequenceGenerator(name = "authority_seq",
+            sequenceName = "authority_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "authority_name", length = 50)

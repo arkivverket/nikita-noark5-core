@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface IUserRepository
@@ -13,7 +14,7 @@ public interface IUserRepository
 
     Optional<User> findById(String id);
 
-    Optional<User> findBySystemId(String systemId);
+    Optional<User> findBySystemId(UUID systemId);
 
     int deleteByUsername(String username);
 }

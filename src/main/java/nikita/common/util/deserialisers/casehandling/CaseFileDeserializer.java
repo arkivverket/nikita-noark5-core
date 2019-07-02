@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
@@ -129,7 +130,7 @@ public class CaseFileDeserializer extends JsonDeserializer {
             Series series = new Series();
             String systemID = currentNode.textValue();
             if (systemID != null) {
-                series.setSystemId(systemID);
+                series.setSystemId(UUID.fromString(systemID));
             }
             caseFile.setReferenceSeries(series);
             objectNode.remove(REFERENCE_SERIES);
@@ -145,7 +146,7 @@ public class CaseFileDeserializer extends JsonDeserializer {
             errors.append("].");
         }
 
-        caseFile.setReferenceParty(
+        caseFile.setReferencePart(
                 deserialiseCaseParties(objectNode, errors));
         caseFile.setReferencePrecedence(
                 deserialisePrecedences(objectNode, errors));

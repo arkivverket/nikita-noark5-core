@@ -1,56 +1,80 @@
 package nikita.common.model.noark5.v5;
 
-import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkConcurrencyException;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
+import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
  * Created by tsodring on 5/8/17.
  */
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class NoarkEntity
         implements INikitaEntity, Comparable<NoarkEntity> {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
-
     /**
      * M001 - systemID (xs:string)
      */
-    @Column(name = "system_id", unique = true)
-    @Audited
-    private String systemId;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator",
+            parameters = {@Parameter(
+                    name = "uuid_gen_strategy_class",
+                    value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
+    @Column(name = "system_id", updatable = false, nullable = false)
+    @Type(type="uuid-char")
+    private UUID systemId;
 
+    @CreatedBy
     @Column(name = "owned_by")
     @Audited
     private String ownedBy;
 
-    // Used for soft delete.
-    @Column(name = "deleted")
-    @Audited
-    private Boolean deleted;
-
     @Version
     @Column(name = "version")
     private Long version;
+
+    /**
+     * M600 - opprettetDato (xs:dateTime)
+     */
+    @CreatedDate
+    @Column(name = "created_date")
+    @DateTimeFormat(iso = DATE_TIME)
+    @Audited
+    private OffsetDateTime createdDate;
+
+    /**
+     * M601 - opprettetAv (xs:string)
+     */
+    @CreatedBy
+    @Column(name = "created_by")
+    @Audited
+    private String createdBy;
 
     /**
      * M??? - oppdatertDato (xs:dateTime)
@@ -58,7 +82,7 @@ public class NoarkEntity
     @LastModifiedDate
     @Column(name = "last_modified_date")
     @DateTimeFormat(iso = DATE_TIME)
-    private ZonedDateTime lastModifiedDate;
+    private OffsetDateTime lastModifiedDate;
 
     /**
      * M??? - oppdatertAv (xs:string)
@@ -68,22 +92,23 @@ public class NoarkEntity
     private String lastModifiedBy;
 
     @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
     public String getSystemId() {
-        return systemId;
+        if (null != systemId)
+            return systemId.toString();
+        else
+            return null;
     }
 
     @Override
-    public void setSystemId(String systemId) {
+    public void setSystemId(UUID systemId) {
+        this.systemId = systemId;
+    }
+
+    public String getId() {
+        return systemId.toString();
+    }
+
+    public void setId(UUID systemId) {
         this.systemId = systemId;
     }
 
@@ -95,16 +120,6 @@ public class NoarkEntity
     @Override
     public void setOwnedBy(String ownedBy) {
         this.ownedBy = ownedBy;
-    }
-
-    @Override
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    @Override
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
     }
 
     @Override
@@ -123,7 +138,7 @@ public class NoarkEntity
     }
 
     @Override
-    public ZonedDateTime getLastModifiedDate() {
+    public OffsetDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
 
@@ -133,15 +148,37 @@ public class NoarkEntity
     }
 
     @Override
+    public OffsetDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    @Override
+    public void setCreatedDate(OffsetDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    @Override
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    @Override
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Override
     // You should not use, me. All subclasses must implement this themselves
     public String getBaseTypeName() {
         return null;
     }
 
     @Override
-    // Most entities belong to arkivstruktur. These entities pick the value up here
+
+    // Most entities belong to arkivstruktur. These entities pick the value
+    // up here
     public String getFunctionalTypeName() {
-        return Constants.NOARK_FONDS_STRUCTURE_PATH;
+        return NOARK_FONDS_STRUCTURE_PATH;
     }
 
     @Override
@@ -154,57 +191,11 @@ public class NoarkEntity
                 "create a reference between entities");
     }
 
-    //@Override
-    // Sub classes must implement this or validation will always be false
-    public boolean validateForUpdate(String errorDescription) {
-        /*if (description == null) {
-            errorDescription += "beskrivelse field is empty. ";
-            return false;
-        }
-        if (description.contains (ONLY_WHITESPACE)) {
-            errorDescription += "beskrivelse field contains only whitespace. ";
-            return false;
-        }
-        if (code == null) {
-            errorDescription += "kode field is empty. ";
-            return false;
-        }
-        if (description.contains (ONLY_WHITESPACE)) {
-            errorDescription += "kode field contains only whitespace. ";
-            return false;
-        }*/
-        return false;
-    }
-
-    //@Override
-    // Sub classes must implement this or validation will always be false
-    public boolean validateForCreate(String errorDescription) {
-        /*if (description == null) {
-            errorDescription += "beskrivelse field is empty. ";
-            return false;
-        }
-        if (description.contains (ONLY_WHITESPACE)) {
-            errorDescription += "beskrivelse field contains only whitespace. ";
-            return false;
-        }
-        if (code == null) {
-            errorDescription += "kode field is empty. ";
-            return false;
-        }
-        if (description.contains (ONLY_WHITESPACE)) {
-            errorDescription += "kode field contains only whitespace. ";
-            return false;
-        }*/
-        return false;
-    }
-
-
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(systemId)
-                .append(deleted)
                 .append(ownedBy)
                 .append(version)
                 .toHashCode();
@@ -218,7 +209,6 @@ public class NoarkEntity
         return new CompareToBuilder()
                 .append(this.systemId, otherEntity.systemId)
                 .append(ownedBy, otherEntity.getOwnedBy())
-                .append(deleted, otherEntity.getDeleted())
                 .append(version, otherEntity.getVersion())
                 .toComparison();
     }
@@ -239,17 +229,20 @@ public class NoarkEntity
                 .appendSuper(super.equals(other))
                 .append(systemId, rhs.getSystemId())
                 .append(ownedBy, rhs.getOwnedBy())
-                .append(deleted, rhs.getDeleted())
                 .append(version, rhs.getVersion())
                 .isEquals();
     }
 
     @Override
     public String toString() {
-        return "id=" + id +
-                ", systemId='" + systemId + '\'' +
-                ", deleted=" + deleted +
+        return "NoarkEntity{" +
+                "systemId=" + systemId +
                 ", ownedBy='" + ownedBy + '\'' +
-                ", version='" + version + '\'';
+                ", version=" + version +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                ", createdDate=" + createdDate +
+                ", createdBy='" + createdBy + '\'' +
+                '}';
     }
 }

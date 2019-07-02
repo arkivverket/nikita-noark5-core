@@ -13,13 +13,13 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
@@ -64,10 +64,6 @@ public class ClassificationTypeService
     public MetadataHateoas createNewClassificationType(
             ClassificationType classificationType) {
 
-        classificationType.setDeleted(false);
-        classificationType.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classificationTypeRepository.save(classificationType));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -105,7 +101,7 @@ public class ClassificationTypeService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classificationTypeRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -220,7 +216,8 @@ public class ClassificationTypeService
     private ClassificationType getClassificationTypeOrThrow(
             @NotNull String systemId) {
         ClassificationType classificationType =
-                classificationTypeRepository.findBySystemId(systemId);
+                classificationTypeRepository.
+                        findBySystemId(UUID.fromString(systemId));
         if (classificationType == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " ClassificationType, using " + "systemId " + systemId;

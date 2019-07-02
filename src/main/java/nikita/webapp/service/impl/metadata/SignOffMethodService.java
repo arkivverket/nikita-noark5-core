@@ -13,13 +13,13 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
@@ -63,12 +63,6 @@ public class SignOffMethodService
     @Override
     public MetadataHateoas createNewSignOffMethod(
             SignOffMethod SignOffMethod) {
-
-        SignOffMethod.setDeleted(false);
-        SignOffMethod.setOwnedBy(
-                SecurityContextHolder.getContext().
-                        getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 signOffMethodRepository.save(SignOffMethod));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -103,7 +97,8 @@ public class SignOffMethodService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 signOffMethodRepository.save(
-                        signOffMethodRepository.findBySystemId(systemId)));
+                        signOffMethodRepository.
+                                findBySystemId(UUID.fromString(systemId))));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -207,8 +202,9 @@ public class SignOffMethodService
      * @return the SignOffMethod object
      */
     private SignOffMethod getSignOffMethodOrThrow(@NotNull String systemId) {
-        SignOffMethod SignOffMethod = signOffMethodRepository.findBySystemId
-                (systemId);
+        SignOffMethod SignOffMethod =
+                signOffMethodRepository.
+                        findBySystemId(UUID.fromString(systemId));
         if (SignOffMethod == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " SignOffMethod, using " +
                     "systemId " + systemId;

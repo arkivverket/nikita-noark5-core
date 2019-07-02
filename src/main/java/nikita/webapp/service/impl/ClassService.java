@@ -29,11 +29,11 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNoarkEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -92,7 +92,6 @@ public class ClassService
      */
     @Override
     public ClassHateoas save(Class klass) {
-        setNoarkEntityValues(klass);
         setFinaliseEntityValues(klass);
         ClassHateoas classHateoas = new
                 ClassHateoas(classRepository.save(klass));
@@ -197,7 +196,7 @@ public class ClassService
      * object
      */
     @Override
-    public RecordHateoas createRecordAssociatedWithClass(
+    public ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
             String classSystemId, Record record) {
         record.setReferenceClass(getClassOrThrow(classSystemId));
         return recordService.save(record);
@@ -209,7 +208,7 @@ public class ClassService
      * Retrieve all class objects the user owns.
      *
      * @param ownedBy identifier og logged-in user
-     * @return ClassHAteoas object containing a list of Class objects
+     * @return ClassHateoas object containing a list of Class objects
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -405,7 +404,9 @@ public class ClassService
      * @return the newly found class object or null if it does not exist
      */
     protected Class getClassOrThrow(@NotNull String classSystemId) {
-        Optional<Class> klass = classRepository.findBySystemId(classSystemId);
+        Optional<Class> klass =
+                classRepository.
+                        findBySystemId(UUID.fromString(classSystemId));
         if (!klass.isPresent()) {
             String info = INFO_CANNOT_FIND_OBJECT + " Class, using systemId " +
                     classSystemId;

@@ -22,11 +22,13 @@ import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -65,8 +67,6 @@ public class FondsCreatorService
      */
     @Override
     public FondsCreator createNewFondsCreator(FondsCreator fondsCreator) {
-        setNikitaEntityValues(fondsCreator);
-        setSystemIdEntityValues(fondsCreator);
         return fondsCreatorRepository.save(fondsCreator);
     }
 
@@ -76,7 +76,6 @@ public class FondsCreatorService
         FondsCreator fondsCreator =
                 getFondsCreatorOrThrow(fondsCreatorSystemId);
         checkDocumentMediumValid(fonds);
-        setNoarkEntityValues(fonds);
         fonds.setFondsStatus(STATUS_OPEN);
         setFinaliseEntityValues(fonds);
         fonds.getReferenceFondsCreator().add(fondsCreator);
@@ -188,7 +187,7 @@ public class FondsCreatorService
         // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
         Query q = entityManager.createNativeQuery(
                 "DELETE FROM fonds_fonds_creator WHERE f_pk_fonds_creator_id = :id ;");
-        q.setParameter("id", fondsCreator.getId());
+        q.setParameter("id", fondsCreator.getSystemId());
         q.executeUpdate();
 
         entityManager.remove(fondsCreator);
@@ -220,7 +219,7 @@ public class FondsCreatorService
     protected FondsCreator getFondsCreatorOrThrow(
             @NotNull String fondsCreatorSystemId) {
         FondsCreator fondsCreator = fondsCreatorRepository.
-                findBySystemId(fondsCreatorSystemId);
+                findBySystemId(UUID.fromString(fondsCreatorSystemId));
         if (fondsCreator == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " FondsCreator, using systemId " + fondsCreatorSystemId;

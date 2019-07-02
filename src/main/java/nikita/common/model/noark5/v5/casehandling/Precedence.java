@@ -8,25 +8,29 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
-import java.time.ZonedDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.TABLE_PRECEDENCE;
+import static nikita.common.config.N5ResourceMappings.PRECEDENCE;
+
 @Entity
-@Table(name = "precedence")
-// Enable soft delete of Precedence
-// @SQLDelete(sql="UPDATE precedence SET deleted = true WHERE pk_precedence_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_precedence_id"))
-public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity {
+@Table(name = TABLE_PRECEDENCE)
+public class Precedence
+        extends NoarkGeneralEntity
+        implements IPrecedenceEntity {
 
     /**
      * M111 - presedensDato (xs:date)
      */
     @Column(name = "precedence_date")
     @Audited
-    private ZonedDateTime precedenceDate;
+    private OffsetDateTime precedenceDate;
 
     /**
      * M311 - presedensHjemmel (xs:string)
@@ -47,7 +51,7 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
      */
     @Column(name = "precedence_approved_date")
     @Audited
-    private ZonedDateTime precedenceApprovedDate;
+    private OffsetDateTime precedenceApprovedDate;
 
     /**
      * M629 - presedensGodkjentAv (xs:string)
@@ -72,11 +76,11 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
 
-    public ZonedDateTime getPrecedenceDate() {
+    public OffsetDateTime getPrecedenceDate() {
         return precedenceDate;
     }
 
-    public void setPrecedenceDate(ZonedDateTime precedenceDate) {
+    public void setPrecedenceDate(OffsetDateTime precedenceDate) {
         this.precedenceDate = precedenceDate;
     }
 
@@ -96,11 +100,11 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
         this.sourceOfLaw = sourceOfLaw;
     }
 
-    public ZonedDateTime getPrecedenceApprovedDate() {
+    public OffsetDateTime getPrecedenceApprovedDate() {
         return precedenceApprovedDate;
     }
 
-    public void setPrecedenceApprovedDate(ZonedDateTime precedenceApprovedDate) {
+    public void setPrecedenceApprovedDate(OffsetDateTime precedenceApprovedDate) {
         this.precedenceApprovedDate = precedenceApprovedDate;
     }
 
@@ -122,7 +126,7 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.PRECEDENCE;
+        return PRECEDENCE;
     }
 
     @Override
@@ -134,7 +138,8 @@ public class Precedence extends NoarkGeneralEntity implements IPrecedenceEntity 
         return referenceRegistryEntry;
     }
 
-    public void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry) {
+    public void setReferenceRegistryEntry(
+            List<RegistryEntry> referenceRegistryEntry) {
         this.referenceRegistryEntry = referenceRegistryEntry;
     }
 

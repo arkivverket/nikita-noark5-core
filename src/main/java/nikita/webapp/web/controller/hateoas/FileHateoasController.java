@@ -24,7 +24,6 @@ import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,8 +35,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -105,14 +105,7 @@ public class FileHateoasController
                     value = "Incoming record",
                     required = true)
             @RequestBody Record record) throws NikitaException {
-        Record createdRecord = fileService.createRecordAssociatedWithFile(systemID, record);
-        RecordHateoas recordHateoas = new RecordHateoas(createdRecord);
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdRecord));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdRecord.getVersion().toString())
-                .body(recordHateoas);
+        return fileService.createRecordAssociatedWithFile(systemID, record);
     }
 
     // Create a CrossReference
@@ -465,7 +458,7 @@ public class FileHateoasController
 
         Record defaultRecord = new Record();
         defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
-        defaultRecord.setArchivedDate(ZonedDateTime.now());
+        defaultRecord.setArchivedDate(OffsetDateTime.now());
         defaultRecord.setTitle(TEST_TITLE);
         defaultRecord.setDescription(TEST_DESCRIPTION);
         RecordHateoas recordHateoas = new

@@ -37,7 +37,7 @@ Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
  * Make package name follow directory structure.
  * Make sure Document number starts at 1, not 0.
  * Fix isues discovered by FindBugs.
- * Update from Date to ZonedDateTime.
+ * Update from Date to OffsetDateTime.
  * Fix wrong tablename.
  * Introduce Service layer tests.
  * Improvements to CorrespondencePart.

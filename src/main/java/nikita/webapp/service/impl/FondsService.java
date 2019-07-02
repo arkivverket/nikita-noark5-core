@@ -35,11 +35,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -91,7 +93,6 @@ public class FondsService
     @Override
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
         checkDocumentMediumValid(fonds);
-        setNoarkEntityValues(fonds);
         fonds.setFondsStatus(STATUS_OPEN);
         setFinaliseEntityValues(fonds);
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.save(fonds));
@@ -467,14 +468,14 @@ public class FondsService
         Query q = entityManager.createNativeQuery(
                 "DELETE FROM " + TABLE_FONDS_FONDS_CREATOR + " WHERE " +
                         FOREIGN_KEY_FONDS_PK + " = :id ;");
-        q.setParameter("id", fonds.getId());
+        q.setParameter("id", fonds.getSystemId());
         q.executeUpdate();
 
         // Disassociate any links between Fonds and StorageLocation
         q = entityManager.createNativeQuery(
                 "DELETE FROM " + TABLE_FONDS_STORAGE_LOCATION + " WHERE " +
                         FOREIGN_KEY_FONDS_PK + " = :id ;");
-        q.setParameter("id", fonds.getId());
+        q.setParameter("id", fonds.getSystemId());
         q.executeUpdate();
 
         // Next get hibernate to delete the Fonds object
@@ -505,7 +506,7 @@ public class FondsService
      * @return the fonds object
      */
     private Fonds getFondsOrThrow(@NotNull String fondsSystemId) {
-        Fonds fonds = fondsRepository.findBySystemId(fondsSystemId);
+        Fonds fonds = fondsRepository.findBySystemId(UUID.fromString(fondsSystemId));
         if (fonds == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " Fonds, using systemId " +
                     fondsSystemId;

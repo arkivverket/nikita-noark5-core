@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -43,7 +44,7 @@ public class N5CoreApp {
                         "contextPath: \thttp://{}:{}{} \n\t" +
                         "Application is running with following profile(s): {} \n\t" +
                         "\n----------------------------------------------------------",
-                env.getProperty("server.application.name"),
+                env.getProperty("spring.application.name"),
                 env.getProperty("server.port"),
                 InetAddress.getLocalHost().getHostAddress(),
                 env.getProperty("server.port"),

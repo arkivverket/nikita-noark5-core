@@ -7,18 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_SIGN_OFF_METHOD;
+import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
+
 // Noark 5v5 Avskrivningsmaate
 @Entity
-@Table(name = "sign_off_method")
-// Enable soft delete
-// @SQLDelete(sql = "UPDATE sign_off_method SET deleted = true WHERE pk_sign_off_method_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_sign_off_method_id"))
-public class SignOffMethod extends MetadataSuperClass {
+@Table(name = TABLE_SIGN_OFF_METHOD)
+public class SignOffMethod
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.SIGN_OFF_METHOD;
+        return SIGN_OFF_METHOD;
     }
 }

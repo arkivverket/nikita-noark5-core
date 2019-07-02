@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.admin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IUserEntity;
@@ -12,33 +11,28 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.USER;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "nikita_user")
-@AttributeOverride(name = "id",
-        column = @Column(
-                name = PRIMARY_KEY_USER))
+@Table(name = TABLE_NIKITA_USER)
 @JsonDeserialize(using = UserDeserializer.class)
 @HateoasPacker(using = UserHateoasHandler.class)
 @HateoasObject(using = UserHateoas.class)
 public class User
         extends NoarkEntity
         implements IUserEntity {
-
-    @Column(name = "system_id", unique = true)
-    @NotNull
-    private String systemId;
 
     @Column(unique = true)
     @NotNull
@@ -63,7 +57,7 @@ public class User
     @Column(name = "account_created_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -78,7 +72,7 @@ public class User
     @Column(name = "finalised_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime finalisedDate;
+    private OffsetDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
@@ -105,29 +99,20 @@ public class User
 
     @Column(name = "last_password_reset_date")
     @DateTimeFormat(iso = DATE_TIME)
-    private ZonedDateTime lastPasswordResetDate;
+    private OffsetDateTime lastPasswordResetDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "nikita_user_authority",
             joinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
-                    referencedColumnName = PRIMARY_KEY_USER)},
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID)},
             inverseJoinColumns = {@JoinColumn(name = "authority_id",
                     referencedColumnName = "id")})
     private List<Authority> authorities = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+
+    @ManyToMany(mappedBy = "users")
     private List<AdministrativeUnit> administrativeUnits = new ArrayList<>();
-
-    @Override
-    public String getSystemId() {
-        return systemId;
-    }
-
-    @Override
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
 
     @Override
     public String getCreatedBy() {
@@ -140,12 +125,12 @@ public class User
     }
 
     @Override
-    public ZonedDateTime getFinalisedDate() {
+    public OffsetDateTime getFinalisedDate() {
         return finalisedDate;
     }
 
     @Override
-    public void setFinalisedDate(ZonedDateTime finalisedDate) {
+    public void setFinalisedDate(OffsetDateTime finalisedDate) {
         this.finalisedDate = finalisedDate;
     }
 
@@ -199,11 +184,11 @@ public class User
         this.enabled = enabled;
     }
 
-    public ZonedDateTime getCreatedDate() {
+    public OffsetDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(OffsetDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -255,22 +240,11 @@ public class User
         this.administrativeUnits.add(administrativeUnit);
     }
 
-
-    //
-//    public List<CorrespondencePartInternal> getReferenceCorrespondencePartInternal() {
-//        return referenceCorrespondencePartInternal;
-//    }
-//
-//    public void setReferenceCorrespondencePartInternal(
-//            List<CorrespondencePartInternal> referenceCorrespondencePartInternal) {
-//        this.referenceCorrespondencePartInternal = referenceCorrespondencePartInternal;
-//    }
-
-    public ZonedDateTime getLastPasswordResetDate() {
+    public OffsetDateTime getLastPasswordResetDate() {
         return lastPasswordResetDate;
     }
 
-    public void setLastPasswordResetDate(ZonedDateTime lastPasswordResetDate) {
+    public void setLastPasswordResetDate(OffsetDateTime lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
 
@@ -281,7 +255,7 @@ public class User
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.USER;
+        return USER;
     }
 
     @Override

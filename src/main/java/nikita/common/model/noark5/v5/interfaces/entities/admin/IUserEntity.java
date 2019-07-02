@@ -5,7 +5,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkFinaliseEntity;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -49,7 +49,7 @@ public interface IUserEntity extends INikitaEntity, INoarkCreateEntity, INoarkFi
 
     void setAuthorities(List<Authority> authorities);
 
-    ZonedDateTime getLastPasswordResetDate();
+    OffsetDateTime getLastPasswordResetDate();
 
-    void setLastPasswordResetDate(ZonedDateTime lastPasswordResetDate);
+    void setLastPasswordResetDate(OffsetDateTime lastPasswordResetDate);
 }

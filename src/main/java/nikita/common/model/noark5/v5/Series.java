@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
@@ -18,26 +17,29 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.SERIES;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
-@Table(name = "series")
-// Enable soft delete of Series
-// @SQLDelete(sql="UPDATE series SET deleted = true WHERE pk_series_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-//@Indexed(index = "series")
+@Table(name = TABLE_SERIES)
 @JsonDeserialize(using = SeriesDeserializer.class)
 @HateoasPacker(using = SeriesHateoasHandler.class)
 @HateoasObject(using = SeriesHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = "pk_series_id"))
-public class Series extends NoarkGeneralEntity implements IStorageLocation, IDocumentMedium, IClassified, IScreening,
+public class Series
+        extends NoarkGeneralEntity
+        implements IStorageLocation, IDocumentMedium, IClassified, IScreening,
         IDisposal, IDisposalUndertaken, IDeletion {
 
     private static final long serialVersionUID = 1L;
+
     /**
      * M051 - arkivdelstatus (xs:string)
      */
@@ -52,7 +54,7 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
     @Column(name = "series_start_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime seriesStartDate;
+    private OffsetDateTime seriesStartDate;
 
     /**
      * M108 - arkivperiodeSluttDato (xs:date)
@@ -60,7 +62,7 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
     @Column(name = "series_end_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime seriesEndDate;
+    private OffsetDateTime seriesEndDate;
 
     /**
      * M300 - dokumentmedium (xs:string)
@@ -70,30 +72,35 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
     private String documentMedium;
 
     // Links to StorageLocations
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "series_storage_location", joinColumns = @JoinColumn(name = "f_pk_series_id",
-            referencedColumnName = "pk_series_id"), inverseJoinColumns = @JoinColumn(name = "f_pk_storage_location_id",
-            referencedColumnName = "pk_storage_location_id"))
+    @ManyToMany(cascade = ALL)
+    @JoinTable(name = TABLE_SERIES_STORAGE_LOCATION,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_SERIES_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_STORAGE_LOCATION_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
 
     // Link to Fonds
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_fonds_id",
-            referencedColumnName = Constants.PRIMARY_KEY_FONDS)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = SERIES_FONDS_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Fonds referenceFonds;
 
     // Link to precursor Series
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private Series referencePrecursor;
 
     // Link to successor Series
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "referencePrecursor")
+    @OneToOne(fetch = LAZY, mappedBy = "referencePrecursor")
     private Series referenceSuccessor;
 
     // Link to ClassificationSystem
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_classification_system_id", referencedColumnName = "pk_classification_system_id")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = SERIES_CLASSIFICATION_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ClassificationSystem referenceClassificationSystem;
 
     // Links to Files
@@ -107,36 +114,39 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "series_classified_id", referencedColumnName = "pk_classified_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = SERIES_CLASSIFIED_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "series_disposal_id", referencedColumnName = "pk_disposal_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = SERIES_DISPOSAL_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "series_screening_id", referencedColumnName = "pk_screening_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = SERIES_SCREENING_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Screening referenceScreening;
 
     // Link to DisposalUndertaken
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_disposal_undertaken_id",
-            referencedColumnName = "pk_disposal_undertaken_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = SERIES_DISPOSAL_UNDERTAKEN_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private DisposalUndertaken referenceDisposalUndertaken;
 
     // Link to Deletion
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "document_description_deletion_id", referencedColumnName = "pk_deletion_id")
+    @ManyToOne(cascade = PERSIST)
+    @JoinColumn(name = SERIES_DELETION_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Deletion referenceDeletion;
-
 
     public String getSeriesStatus() {
         return seriesStatus;
@@ -154,25 +164,25 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
         this.documentMedium = documentMedium;
     }
 
-    public ZonedDateTime getSeriesStartDate() {
+    public OffsetDateTime getSeriesStartDate() {
         return seriesStartDate;
     }
 
-    public void setSeriesStartDate(ZonedDateTime seriesStartDate) {
+    public void setSeriesStartDate(OffsetDateTime seriesStartDate) {
         this.seriesStartDate = seriesStartDate;
     }
 
-    public ZonedDateTime getSeriesEndDate() {
+    public OffsetDateTime getSeriesEndDate() {
         return seriesEndDate;
     }
 
-    public void setSeriesEndDate(ZonedDateTime seriesEndDate) {
+    public void setSeriesEndDate(OffsetDateTime seriesEndDate) {
         this.seriesEndDate = seriesEndDate;
     }
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.SERIES;
+        return SERIES;
     }
 
     @Override
@@ -184,6 +194,11 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
     public void setReferenceStorageLocation(
             List<StorageLocation> referenceStorageLocation) {
         this.referenceStorageLocation = referenceStorageLocation;
+    }
+
+    @Override
+    public void addReferenceStorageLocation(StorageLocation storageLocation) {
+        this.referenceStorageLocation.add(storageLocation);
     }
 
     public Fonds getReferenceFonds() {
@@ -227,12 +242,20 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
         this.referenceFile = referenceFile;
     }
 
+    public void addReferenceFile(File file) {
+        this.referenceFile.add(file);
+    }
+
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+    public void addReferenceRecord(Record record) {
+        this.referenceRecord.add(record);
     }
 
     @Override
@@ -261,7 +284,8 @@ public class Series extends NoarkGeneralEntity implements IStorageLocation, IDoc
     }
 
     @Override
-    public void setReferenceDisposalUndertaken(DisposalUndertaken referenceDisposalUndertaken) {
+    public void setReferenceDisposalUndertaken(
+            DisposalUndertaken referenceDisposalUndertaken) {
         this.referenceDisposalUndertaken = referenceDisposalUndertaken;
     }
 

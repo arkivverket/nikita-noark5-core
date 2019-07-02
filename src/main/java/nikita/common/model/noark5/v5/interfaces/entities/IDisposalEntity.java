@@ -2,7 +2,7 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Created by tsodring on 12/7/16.
@@ -20,7 +20,7 @@ public interface IDisposalEntity extends Serializable {
 
     void setPreservationTime(Integer preservationTime);
 
-    ZonedDateTime getDisposalDate();
+    OffsetDateTime getDisposalDate();
 
-    void setDisposalDate(ZonedDateTime disposalDate);
+    void setDisposalDate(OffsetDateTime disposalDate);
 }

@@ -3,13 +3,19 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.casehandling.ISimpleAddress;
 
-import javax.persistence.*;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.TABLE_POSTAL_ADDRESS;
 
 /**
  * Created by tsodring on 5/14/17.
  */
 @Entity
-@Table(name = "postal_address")
+@Table(name = TABLE_POSTAL_ADDRESS)
 public class PostalAddress
         extends NoarkEntity
         implements ISimpleAddress {
@@ -17,10 +23,10 @@ public class PostalAddress
     @Embedded
     private SimpleAddress simpleAddress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private CorrespondencePartPerson correspondencePartPerson;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private CorrespondencePartUnit correspondencePartUnit;
 
     public SimpleAddress getSimpleAddress() {

@@ -18,7 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +27,15 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.RECORD;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "record")
+@Table(name = TABLE_RECORD)
 @Inheritance(strategy = JOINED)
 @JsonDeserialize(using = RecordDeserializer.class)
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = PRIMARY_KEY_RECORD))
 public class Record
         extends NoarkEntity
         implements INoarkCreateEntity, IClassified, IScreening, IDisposal,
@@ -43,27 +43,12 @@ public class Record
         IKeyword, IComment, ICrossReference, IAuthor {
 
     /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @Column(name = "created_date")
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    private ZonedDateTime createdDate;
-
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @Column(name = "created_by")
-    @Audited
-    private String createdBy;
-
-    /**
      * M604 - arkivertDato (xs:dateTime)
      */
     @Column(name = "archived_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime archivedDate;
+    private OffsetDateTime archivedDate;
 
     /**
      * M605 - arkivertAv (xs:string)
@@ -71,7 +56,6 @@ public class Record
     @Column(name = "archived_by")
     @Audited
     private String archivedBy;
-
 
     /**
      * M004 - registreringsID (xs:string)
@@ -109,77 +93,74 @@ public class Record
     @Audited
     private String documentMedium;
 
-    @Column(name = "owned_by")
-    @Audited
-    private String ownedBy;
-
     // Link to File
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "record_file_id", referencedColumnName = "pk_file_id")
+    @JoinColumn(name = RECORD_FILE_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private File referenceFile;
 
     // Link to StorageLocation
     @ManyToMany(cascade = PERSIST)
     @JoinTable(name = TABLE_RECORD_STORAGE_LOCATION,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
-                    referencedColumnName = PRIMARY_KEY_STORAGE_LOCATION))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<StorageLocation> referenceStorageLocation =
             new ArrayList<>();
+
     // Link to Series
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "record_series_id", referencedColumnName = "pk_series_id")
+    @JoinColumn(name = RECORD_SERIES_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Series referenceSeries;
+
     // Link to Class
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "record_class_id", referencedColumnName = "pk_class_id")
+    @JoinColumn(name = RECORD_CLASS_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Class referenceClass;
 
-    // Used for soft delete.
-    @Column(name = "deleted")
-    @Audited
-    public ZonedDateTime getCreatedDate() {
-        return createdDate;
-    }
-    
     // Links to Keywords
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_KEYWORD,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
-                    referencedColumnName = PRIMARY_KEY_KEYWORD))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Keyword> referenceKeyword = new ArrayList<>();
 
     // Links to Authors
     @ManyToMany
-    @JoinTable(name = "registration_author",
+    @JoinTable(name = TABLE_RECORD_AUTHOR,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_AUTHOR_PK,
-                    referencedColumnName = PRIMARY_KEY_AUTHOR))
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Author> referenceAuthor = new ArrayList<>();
 
     // Links to Comments
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_COMMENT,
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns =
-            @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
-                    referencedColumnName = PRIMARY_KEY_COMMENT))
+            @JoinColumn(
+                    name = FOREIGN_KEY_COMMENT_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to DocumentDescriptions
     @ManyToMany
-    @JoinTable(name = "record_document_description",
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+    @JoinTable(name = TABLE_RECORD_DOCUMENT_DESCRIPTION,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
-                    name = "f_pk_document_description_id",
-                    referencedColumnName = PRIMARY_KEY_DOCUMENT_DESCRIPTION))
+                    name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
@@ -189,48 +170,36 @@ public class Record
 
     // Links to Classified
     @ManyToOne(cascade = ALL)
-    @JoinColumn(name = "record_classified_id",
-            referencedColumnName = "pk_classified_id")
+    @JoinColumn(name = RECORD_CLASSIFIED_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
     @ManyToOne(cascade = ALL)
-    @JoinColumn(name = "record_disposal_id",
-            referencedColumnName = "pk_disposal_id")
+    @JoinColumn(name = RECORD_DISPOSAL_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "record_screening_id",
-            referencedColumnName = "pk_screening_id")
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
-    // Links to Party
+    // Links to Part
     @ManyToMany
     @JoinTable(name = TABLE_RECORD_PARTY,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
-                    referencedColumnName = PRIMARY_KEY_PART))
-    private List<Party> referenceParty = new ArrayList<>();
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private List<Part> referencePart = new ArrayList<>();
 
-    public void setCreatedDate(ZonedDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public ZonedDateTime getArchivedDate() {
+    public OffsetDateTime getArchivedDate() {
         return archivedDate;
     }
 
-    public void setArchivedDate(ZonedDateTime archivedDate) {
+    public void setArchivedDate(OffsetDateTime archivedDate) {
         this.archivedDate = archivedDate;
     }
 
@@ -283,18 +252,8 @@ public class Record
     }
 
     @Override
-    public String getOwnedBy() {
-        return ownedBy;
-    }
-
-    @Override
-    public void setOwnedBy(String ownedBy) {
-        this.ownedBy = ownedBy;
-    }
-
-    @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.RECORD;
+        return RECORD;
     }
 
     public File getReferenceFile() {
@@ -370,16 +329,26 @@ public class Record
         return referenceStorageLocation;
     }
 
-    public void setReferenceStorageLocation(List<StorageLocation> referenceStorageLocation) {
+    @Override
+    public void setReferenceStorageLocation(
+            List<StorageLocation> referenceStorageLocation) {
         this.referenceStorageLocation = referenceStorageLocation;
     }
 
+    @Override
+    public void addReferenceStorageLocation(StorageLocation storageLocation) {
+        this.referenceStorageLocation.add(storageLocation);
+    }
     public List<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }
 
     public void setReferenceKeyword(List<Keyword> referenceKeyword) {
         this.referenceKeyword = referenceKeyword;
+    }
+
+    public void addReferenceKeyword(Keyword keyword) {
+        this.referenceKeyword.add(keyword);
     }
 
     public List<Author> getReferenceAuthor() {
@@ -390,12 +359,20 @@ public class Record
         this.referenceAuthor = referenceAuthor;
     }
 
+    public void addReferenceAuthor(Author author) {
+        this.referenceAuthor.add(author);
+    }
+
     public List<Comment> getReferenceComment() {
         return referenceComment;
     }
 
     public void setReferenceComment(List<Comment> referenceComment) {
         this.referenceComment = referenceComment;
+    }
+
+    public void addReferenceComment(Comment comment) {
+        this.referenceComment.add(comment);
     }
 
     @Override
@@ -414,16 +391,16 @@ public class Record
         this.referenceCrossReference.add(crossReference);
     }
 
-    public List<Party> getReferenceParty() {
-        return referenceParty;
+    public List<Part> getReferencePart() {
+        return referencePart;
     }
 
-    public void setReferenceParty(List<Party> referenceParty) {
-        this.referenceParty = referenceParty;
+    public void setReferencePart(List<Part> referencePart) {
+        this.referencePart = referencePart;
     }
 
-    public void addReferenceParty(Party party) {
-        this.referenceParty.add(party);
+    public void addReferencePart(Part part) {
+        this.referencePart.add(part);
     }
 
     @Override
@@ -431,13 +408,10 @@ public class Record
         return "Record{" + super.toString() +
                 "archivedBy='" + archivedBy + '\'' +
                 ", archivedDate=" + archivedDate +
-                ", createdBy='" + createdBy + '\'' +
-                ", createdDate=" + createdDate +
                 ", description='" + description + '\'' +
                 ", officialTitle='" + officialTitle + '\'' +
                 ", title='" + title + '\'' +
                 ", recordId='" + recordId + '\'' +
-                ", ownedBy='" + ownedBy + '\'' +
                 '}';
     }
 
@@ -457,14 +431,11 @@ public class Record
                 .appendSuper(super.equals(other))
                 .append(archivedBy, rhs.archivedBy)
                 .append(archivedDate, rhs.archivedDate)
-                .append(createdBy, rhs.createdBy)
-                .append(createdDate, rhs.createdDate)
                 .append(recordId, rhs.recordId)
                 .append(title, rhs.title)
                 .append(officialTitle, rhs.officialTitle)
                 .append(description, rhs.description)
                 .append(documentMedium, rhs.documentMedium)
-                .append(ownedBy, rhs.ownedBy)
                 .isEquals();
     }
 
@@ -474,14 +445,11 @@ public class Record
                 .appendSuper(super.hashCode())
                 .append(archivedBy)
                 .append(archivedDate)
-                .append(createdBy)
-                .append(createdDate)
                 .append(recordId)
                 .append(title)
                 .append(officialTitle)
                 .append(description)
                 .append(documentMedium)
-                .append(ownedBy)
                 .toHashCode();
     }
 }

@@ -12,6 +12,7 @@ import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -62,12 +63,15 @@ public class AdministrativeUnitDeserializer extends JsonDeserializer {
         // Deserialize referenceToParent
         currentNode = objectNode.get(N5ResourceMappings.ADMINISTRATIVE_UNIT_PARENT_REFERENCE);
         if (currentNode != null) {
-            AdministrativeUnit parentAdministrativeUnit = administrativeUnit.getParentAdministrativeUnit();
+            AdministrativeUnit parentAdministrativeUnit = administrativeUnit.
+                    getParentAdministrativeUnit();
             // Will it not always be null??
             if (parentAdministrativeUnit == null) {
                 parentAdministrativeUnit = new AdministrativeUnit();
-                parentAdministrativeUnit.setSystemId(currentNode.textValue());
-                parentAdministrativeUnit.getReferenceChildAdministrativeUnit().add(administrativeUnit);
+                parentAdministrativeUnit.setSystemId(UUID.fromString(
+                        currentNode.textValue()));
+                parentAdministrativeUnit.getReferenceChildAdministrativeUnit().
+                        add(administrativeUnit);
             }
             objectNode.remove(N5ResourceMappings.ADMINISTRATIVE_UNIT_PARENT_REFERENCE);
         }

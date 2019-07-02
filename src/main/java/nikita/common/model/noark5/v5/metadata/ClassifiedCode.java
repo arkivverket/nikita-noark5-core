@@ -7,18 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_CLASSIFIED_CODE;
+import static nikita.common.config.N5ResourceMappings.CLASSIFIED_CODE;
+
 // Noark 5v5 graderingskode
 @Entity
-@Table(name = "classified_code")
-// Enable soft delete
-// @SQLDelete(sql = "UPDATE classified_code SET deleted = true WHERE pk_classified_code_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_classified_code_id"))
-public class ClassifiedCode extends MetadataSuperClass {
+@Table(name = TABLE_CLASSIFIED_CODE)
+public class ClassifiedCode
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CLASSIFIED_CODE;
+        return CLASSIFIED_CODE;
     }
 }

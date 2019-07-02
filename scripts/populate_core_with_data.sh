@@ -37,7 +37,7 @@ echo "Token is " $authToken;
 
 # Setup common curl options
 contentTypeForPost+=(--header "Content-Type:application/vnd.noark5-v5+json");
-curlOpts+=( -s --header "Accept:application/vnd.noark5-v5+json" --header "Authorization:Bearer $authToken");
+curlOpts+=( -s --header "Accept:application/vnd.noark5-v5+json" --header "'Authorization:Bearer $authToken'");
 curlPostOpts+=("${curlOpts[@]}" "${contentTypeForPost[@]}" -X POST );
 curlPutOpts+=("${curlOpts[@]}" "${contentTypeForPost[@]}" -X PUT );
 

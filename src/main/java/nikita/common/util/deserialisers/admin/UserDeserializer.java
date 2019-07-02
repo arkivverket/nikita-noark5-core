@@ -11,6 +11,7 @@ import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static nikita.common.config.N5ResourceMappings.*;
 
@@ -50,7 +51,7 @@ public class UserDeserializer extends JsonDeserializer {
         // Deserialize systemID
         JsonNode currentNode = objectNode.get(SYSTEM_ID);
         if (null != currentNode) {
-            user.setSystemId(currentNode.textValue());
+            user.setSystemId(UUID.fromString(currentNode.textValue()));
             objectNode.remove(SYSTEM_ID);
         }
 

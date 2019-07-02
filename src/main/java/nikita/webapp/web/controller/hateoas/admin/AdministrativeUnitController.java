@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -120,7 +121,8 @@ public class AdministrativeUnitController extends NoarkController {
             method = RequestMethod.GET)
     public ResponseEntity<AdministrativeUnitHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
                                                                     HttpServletRequest request) {
-        AdministrativeUnit administrativeUnit = administrativeUnitService.findBySystemId(systemId);
+        AdministrativeUnit administrativeUnit =
+                administrativeUnitService.findBySystemId(UUID.fromString(systemId));
         AdministrativeUnitHateoas adminHateoas = new AdministrativeUnitHateoas(administrativeUnit);
         administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)

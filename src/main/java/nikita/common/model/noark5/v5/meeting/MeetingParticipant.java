@@ -8,13 +8,14 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.MEETING_PARTICIPANT;
+
 @Entity
-@Table(name = "meeting_participant")
-// Enable soft delete of MeetingParticipant
-// @SQLDelete(sql="UPDATE meeting_participant SET deleted = true WHERE pk_meeting_participant_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_meeting_participant_id"))
-public class MeetingParticipant extends NoarkEntity {
+@Table(name = TABLE_MEETING_PARTICIPANT)
+public class MeetingParticipant
+        extends NoarkEntity {
 
     /**
      * M372 - moetedeltakerNavn (xs:string)
@@ -31,8 +32,9 @@ public class MeetingParticipant extends NoarkEntity {
     private String meetingParticipantFunction;
 
     // Link to MeetingFile
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "meeting_participant_file_id", referencedColumnName = "pk_file_id")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = MEETING_PARTICIPANT_FILE_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private MeetingFile referenceMeetingFile;
 
 
@@ -48,13 +50,14 @@ public class MeetingParticipant extends NoarkEntity {
         return meetingParticipantFunction;
     }
 
-    public void setMeetingParticipantFunction(String meetingParticipantFunction) {
+    public void setMeetingParticipantFunction(
+            String meetingParticipantFunction) {
         this.meetingParticipantFunction = meetingParticipantFunction;
     }
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.MEETING_PARTICIPANT;
+        return MEETING_PARTICIPANT;
     }
 
     public MeetingFile getReferenceMeetingFile() {
@@ -68,7 +71,8 @@ public class MeetingParticipant extends NoarkEntity {
     @Override
     public String toString() {
         return "MeetingParticipant{" + super.toString() +
-                "meetingParticipantFunction='" + meetingParticipantFunction + '\'' +
+                "meetingParticipantFunction='" +
+                meetingParticipantFunction + '\'' +
                 ", meetingParticipantName='" + meetingParticipantName + '\'' +
                 '}';
     }
@@ -87,7 +91,8 @@ public class MeetingParticipant extends NoarkEntity {
         MeetingParticipant rhs = (MeetingParticipant) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(meetingParticipantFunction, rhs.meetingParticipantFunction)
+                .append(meetingParticipantFunction,
+                        rhs.meetingParticipantFunction)
                 .append(meetingParticipantName, rhs.meetingParticipantName)
                 .isEquals();
     }

@@ -37,6 +37,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -330,7 +331,8 @@ public class CaseFileHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
 
-        CaseFile caseFile = caseFileService.findBySystemId(systemID);
+        CaseFile caseFile =
+                caseFileService.findBySystemId(systemID);
         caseFileService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, caseFile));
         return ResponseEntity.status(HttpStatus.OK)

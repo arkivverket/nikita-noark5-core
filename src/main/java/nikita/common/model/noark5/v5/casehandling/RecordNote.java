@@ -15,18 +15,20 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
+import static nikita.common.config.Constants.TABLE_RECORD_NOTE;
 import static nikita.common.config.N5ResourceMappings.RECORD_NOTE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "record_note")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = TABLE_RECORD_NOTE)
+@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = RecordNoteDeserializer.class)
 @HateoasPacker(using = RecordNoteHateoasHandler.class)
 @HateoasObject(using = RecordNoteHateoas.class)
@@ -40,7 +42,7 @@ public class RecordNote
     @Column(name = "document_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime documentDate;
+    private OffsetDateTime documentDate;
 
     /**
      * M104 - mottattDato (xs:dateTime)
@@ -48,7 +50,7 @@ public class RecordNote
     @Column(name = "received_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime receivedDate;
+    private OffsetDateTime receivedDate;
 
     /**
      * M105 - sendtDato (xs:dateTime)
@@ -56,7 +58,7 @@ public class RecordNote
     @Column(name = "sent_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime sentDate;
+    private OffsetDateTime sentDate;
 
     /**
      * M109 - forfallsdato (xs:date)
@@ -64,7 +66,7 @@ public class RecordNote
     @Column(name = "due_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime dueDate;
+    private OffsetDateTime dueDate;
 
     /**
      * M110 - offentlighetsvurdertDato (xs:date)
@@ -72,7 +74,7 @@ public class RecordNote
     @Column(name = "freedom_assessment_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime freedomAssessmentDate;
+    private OffsetDateTime freedomAssessmentDate;
 
     /**
      * M304 - antallVedlegg (xs:integer)
@@ -87,7 +89,7 @@ public class RecordNote
     @Column(name = "loaned_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime loanedDate;
+    private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
@@ -101,43 +103,43 @@ public class RecordNote
     private List<DocumentFlow> referenceDocumentFlow = new ArrayList<>();
 
 
-    public ZonedDateTime getDocumentDate() {
+    public OffsetDateTime getDocumentDate() {
         return documentDate;
     }
 
-    public void setDocumentDate(ZonedDateTime documentDate) {
+    public void setDocumentDate(OffsetDateTime documentDate) {
         this.documentDate = documentDate;
     }
 
-    public ZonedDateTime getReceivedDate() {
+    public OffsetDateTime getReceivedDate() {
         return receivedDate;
     }
 
-    public void setReceivedDate(ZonedDateTime receivedDate) {
+    public void setReceivedDate(OffsetDateTime receivedDate) {
         this.receivedDate = receivedDate;
     }
 
-    public ZonedDateTime getSentDate() {
+    public OffsetDateTime getSentDate() {
         return sentDate;
     }
 
-    public void setSentDate(ZonedDateTime sentDate) {
+    public void setSentDate(OffsetDateTime sentDate) {
         this.sentDate = sentDate;
     }
 
-    public ZonedDateTime getDueDate() {
+    public OffsetDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(ZonedDateTime dueDate) {
+    public void setDueDate(OffsetDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
-    public ZonedDateTime getFreedomAssessmentDate() {
+    public OffsetDateTime getFreedomAssessmentDate() {
         return freedomAssessmentDate;
     }
 
-    public void setFreedomAssessmentDate(ZonedDateTime freedomAssessmentDate) {
+    public void setFreedomAssessmentDate(OffsetDateTime freedomAssessmentDate) {
         this.freedomAssessmentDate = freedomAssessmentDate;
     }
 
@@ -149,11 +151,11 @@ public class RecordNote
         this.numberOfAttachments = numberOfAttachments;
     }
 
-    public ZonedDateTime getLoanedDate() {
+    public OffsetDateTime getLoanedDate() {
         return loanedDate;
     }
 
-    public void setLoanedDate(ZonedDateTime loanedDate) {
+    public void setLoanedDate(OffsetDateTime loanedDate) {
         this.loanedDate = loanedDate;
     }
 

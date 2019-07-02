@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface IFileRepository extends
@@ -23,7 +24,7 @@ public interface IFileRepository extends
     Optional<File> findById(Long id);
 
     // systemId
-    File findBySystemId(String systemId);
+    File findBySystemId(UUID systemId);
 
     // ownedBy
     List<File> findByOwnedBy(String ownedBy);

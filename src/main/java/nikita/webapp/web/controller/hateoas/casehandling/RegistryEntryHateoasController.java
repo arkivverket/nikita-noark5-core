@@ -528,7 +528,7 @@ TODO: Temp disabled!
                     value = "systemID of the file to retrieve associated Record",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        /*  Record record = recordService.findBySystemId(systemID);
+        /*  Record record = recordService.findBySystemId(UUID.fromString(systemId));
             if (record == null) {
             throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
         }
@@ -562,7 +562,7 @@ TODO: Temp disabled!
                     value = "systemID of the registryEntry to retrieve associated Precedence",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        /*   Record record = recordService.findBySystemId(systemID);
+        /*   Record record = recordService.findBySystemId(UUID.fromString(systemId));
         if (record == null) {
             throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
         }
@@ -596,7 +596,7 @@ TODO: Temp disabled!
                     value = "systemID of the file to retrieve associated Record",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        /*  Record record = recordService.findBySystemId(systemID);
+        /*  Record record = recordService.findBySystemId(UUID.fromString(systemId));
             if (record == null) {
             throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
         }
@@ -687,7 +687,8 @@ TODO: Temp disabled!
                     required = true)
             @PathVariable("systemID") final String systemID) {
 
-        RegistryEntry registryEntry = registryEntryService.findBySystemId(systemID);
+        RegistryEntry registryEntry =
+                registryEntryService.findBySystemId(systemID);
         registryEntryService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, registryEntry));
         return ResponseEntity.status(OK)

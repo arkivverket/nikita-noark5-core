@@ -19,14 +19,16 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.misc.UUDecoder;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -54,11 +56,7 @@ public class RecordNoteService
     @Override
     public ResponseEntity<RecordNoteHateoas> save(
             @NotNull final RecordNote recordNote) {
-        setNikitaEntityValues(recordNote);
-        setSystemIdEntityValues(recordNote);
-        setCreateEntityValues(recordNote);
         checkDocumentMediumValid(recordNote);
-
         RecordNoteHateoas recordNoteHateoas = new
                 RecordNoteHateoas(recordNoteRepository.save(recordNote));
         recordNoteHateoasHandler.addLinks(recordNoteHateoas,
@@ -259,16 +257,16 @@ public class RecordNoteService
      * that you will only ever get a valid RecordNote back. If there is no
      * valid RecordNote, an exception is thrown
      *
-     * @param recordNoteSystemId systemId of the recordNote to find.
+     * @param systemId systemId of the recordNote to find.
      * @return the recordNote
      */
     protected RecordNote getRecordNoteOrThrow(
-            @NotNull String recordNoteSystemId) {
+            @NotNull String systemId) {
         RecordNote recordNote =
-                recordNoteRepository.findBySystemId(recordNoteSystemId);
+                recordNoteRepository.findBySystemId(UUID.fromString(systemId));
         if (recordNote == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                    " RecordNote, using systemId " + recordNoteSystemId;
+                    " RecordNote, using systemId " + systemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }

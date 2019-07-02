@@ -36,8 +36,8 @@ public class RecordHateoasHandler
         addReferenceFile(entity, hateoasNoarkObject);
         addReferenceClass(entity, hateoasNoarkObject);
         // Add the secondary entity links
-        addNewParty(entity, hateoasNoarkObject);
-        addParty(entity, hateoasNoarkObject);
+        addNewPart(entity, hateoasNoarkObject);
+        addPart(entity, hateoasNoarkObject);
         addClassified(entity, hateoasNoarkObject);
         addNewClassified(entity, hateoasNoarkObject);
         addDisposal(entity, hateoasNoarkObject);
@@ -299,7 +299,7 @@ public class RecordHateoasHandler
 
 
     /**
-     * Create a REL/HREF pair for the list of Party objects associated with the
+     * Create a REL/HREF pair for the list of Part objects associated with the
      * given Record.
      * <p>
      * "../hateoas-api/arkivstruktur/registrering/1234/part"
@@ -309,7 +309,7 @@ public class RecordHateoasHandler
      * @param hateoasNoarkObject hateoasRecord
      */
     @Override
-    public void addParty(INikitaEntity entity,
+    public void addPart(INikitaEntity entity,
                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_RECORD +
@@ -328,7 +328,7 @@ public class RecordHateoasHandler
      * @param hateoasNoarkObject hateoasRecord
      */
     @Override
-    public void addNewParty(INikitaEntity entity,
+    public void addNewPart(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_RECORD +

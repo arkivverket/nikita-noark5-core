@@ -26,24 +26,25 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "registry_entry")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = TABLE_REGISTRY_ENTRY)
+@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = RegistryEntryDeserializer.class)
 @HateoasPacker(using = RegistryEntryHateoasHandler.class)
 @HateoasObject(using = RegistryEntryHateoas.class)
 public class RegistryEntry
-        extends Record implements
-        IElectronicSignature,
-        IPrecedence, /*ICorrespondencePart,*/ ISignOff, IDocumentFlow {
+        extends Record
+        implements IElectronicSignature, IPrecedence, ISignOff, IDocumentFlow {
 
     /**
      * M013 - journalaar (xs:integer)
@@ -89,7 +90,7 @@ public class RegistryEntry
     @Column(name = "record_date", nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime recordDate;
+    private OffsetDateTime recordDate;
 
     /**
      * M103 - dokumentetsDato (xs:date)
@@ -97,7 +98,7 @@ public class RegistryEntry
     @Column(name = "document_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime documentDate;
+    private OffsetDateTime documentDate;
 
     /**
      * M104 - mottattDato (xs:dateTime)
@@ -105,7 +106,7 @@ public class RegistryEntry
     @Column(name = "received_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime receivedDate;
+    private OffsetDateTime receivedDate;
 
     /**
      * M105 - sendtDato (xs:dateTime)
@@ -113,7 +114,7 @@ public class RegistryEntry
     @Column(name = "sent_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime sentDate;
+    private OffsetDateTime sentDate;
 
     /**
      * M109 - forfallsdato (xs:date)
@@ -121,7 +122,7 @@ public class RegistryEntry
     @Column(name = "due_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime dueDate;
+    private OffsetDateTime dueDate;
 
     /**
      * M110 - offentlighetsvurdertDato (xs:date)
@@ -129,7 +130,7 @@ public class RegistryEntry
     @Column(name = "freedom_assessment_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime freedomAssessmentDate;
+    private OffsetDateTime freedomAssessmentDate;
 
     /**
      * M304 - antallVedlegg (xs:integer)
@@ -145,7 +146,7 @@ public class RegistryEntry
     @Column(name = "loaned_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime loanedDate;
+    private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
@@ -164,61 +165,70 @@ public class RegistryEntry
 
     // Links to CorrespondencePartPerson
     @ManyToMany
-    @JoinTable(name = "registry_entry_correspondence_part_person",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name =
-                    FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK,
-                    referencedColumnName = PRIMARY_KEY_CORRESPONDENCE_PART))
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_PERSON,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<CorrespondencePartPerson>
             referenceCorrespondencePartPerson = new ArrayList<>();
 
     // Links to CorrespondencePartUnit
     @ManyToMany
-    @JoinTable(name = "registry_entry_correspondence_part_unit",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_correspondence_part_unit_id",
-                    referencedColumnName = "pk_correspondence_part_id"))
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_UNIT,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_UNIT_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<CorrespondencePartUnit>
             referenceCorrespondencePartUnit = new ArrayList<>();
 
     // Links to CorrespondencePartInternal
     @ManyToMany
     @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL,
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_RECORD),
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns =
-            @JoinColumn(name = FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID,
-                    referencedColumnName = PRIMARY_KEY_CORRESPONDENCE_PART))
+            @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<CorrespondencePartInternal>
             referenceCorrespondencePartInternal = new ArrayList<>();
 
     // Links to DocumentFlow
     @OneToMany(mappedBy = "referenceRegistryEntry")
     private List<DocumentFlow> referenceDocumentFlow = new ArrayList<>();
+
     // Links to SignOff
     @ManyToMany
-    @JoinTable(name = "registry_entry_sign_off",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_sign_off_id",
-                    referencedColumnName = "pk_sign_off_id"))
-
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_SIGN_OFF,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_SIGN_OFF_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<SignOff> referenceSignOff = new ArrayList<>();
 
     // Links to Precedence
     @ManyToMany
-    @JoinTable(name = "registry_entry_precedence",
-            joinColumns = @JoinColumn(name = "f_pk_record_id",
-                    referencedColumnName = "pk_record_id"),
-            inverseJoinColumns = @JoinColumn(name = "f_pk_precedence_id",
-                    referencedColumnName = "pk_precedence_id"))
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_PRECEDENCE,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_PRECEDENCE_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Precedence> referencePrecedence = new ArrayList<>();
 
     // Link to ElectronicSignature
     @OneToOne
-    @JoinColumn(name = "pk_electronic_signature_id")
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private ElectronicSignature referenceElectronicSignature;
 
     public Integer getRecordYear() {
@@ -261,51 +271,51 @@ public class RegistryEntry
         this.recordStatus = recordStatus;
     }
 
-    public ZonedDateTime getRecordDate() {
+    public OffsetDateTime getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(ZonedDateTime recordDate) {
+    public void setRecordDate(OffsetDateTime recordDate) {
         this.recordDate = recordDate;
     }
 
-    public ZonedDateTime getDocumentDate() {
+    public OffsetDateTime getDocumentDate() {
         return documentDate;
     }
 
-    public void setDocumentDate(ZonedDateTime documentDate) {
+    public void setDocumentDate(OffsetDateTime documentDate) {
         this.documentDate = documentDate;
     }
 
-    public ZonedDateTime getReceivedDate() {
+    public OffsetDateTime getReceivedDate() {
         return receivedDate;
     }
 
-    public void setReceivedDate(ZonedDateTime receivedDate) {
+    public void setReceivedDate(OffsetDateTime receivedDate) {
         this.receivedDate = receivedDate;
     }
 
-    public ZonedDateTime getSentDate() {
+    public OffsetDateTime getSentDate() {
         return sentDate;
     }
 
-    public void setSentDate(ZonedDateTime sentDate) {
+    public void setSentDate(OffsetDateTime sentDate) {
         this.sentDate = sentDate;
     }
 
-    public ZonedDateTime getDueDate() {
+    public OffsetDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(ZonedDateTime dueDate) {
+    public void setDueDate(OffsetDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
-    public ZonedDateTime getFreedomAssessmentDate() {
+    public OffsetDateTime getFreedomAssessmentDate() {
         return freedomAssessmentDate;
     }
 
-    public void setFreedomAssessmentDate(ZonedDateTime freedomAssessmentDate) {
+    public void setFreedomAssessmentDate(OffsetDateTime freedomAssessmentDate) {
         this.freedomAssessmentDate = freedomAssessmentDate;
     }
 
@@ -317,11 +327,11 @@ public class RegistryEntry
         this.numberOfAttachments = numberOfAttachments;
     }
 
-    public ZonedDateTime getLoanedDate() {
+    public OffsetDateTime getLoanedDate() {
         return loanedDate;
     }
 
-    public void setLoanedDate(ZonedDateTime loanedDate) {
+    public void setLoanedDate(OffsetDateTime loanedDate) {
         this.loanedDate = loanedDate;
     }
 
@@ -343,7 +353,7 @@ public class RegistryEntry
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.REGISTRY_ENTRY;
+        return REGISTRY_ENTRY;
     }
 
     @Override
@@ -357,17 +367,20 @@ public class RegistryEntry
     }
 
     @Override
-    public void setReferenceDocumentFlow(List<DocumentFlow> referenceDocumentFlow) {
+    public void setReferenceDocumentFlow(
+            List<DocumentFlow> referenceDocumentFlow) {
         this.referenceDocumentFlow = referenceDocumentFlow;
     }
 
-    public List<CorrespondencePartPerson> getReferenceCorrespondencePartPerson() {
+    public List<CorrespondencePartPerson>
+    getReferenceCorrespondencePartPerson() {
         return referenceCorrespondencePartPerson;
     }
 
     public void setReferenceCorrespondencePartPerson(
             List<CorrespondencePartPerson> referenceCorrespondencePartPerson) {
-        this.referenceCorrespondencePartPerson = referenceCorrespondencePartPerson;
+        this.referenceCorrespondencePartPerson =
+                referenceCorrespondencePartPerson;
     }
 
     public void addCorrespondencePartPerson(
@@ -423,7 +436,8 @@ public class RegistryEntry
         return referenceElectronicSignature;
     }
 
-    public void setReferenceElectronicSignature(ElectronicSignature referenceElectronicSignature) {
+    public void setReferenceElectronicSignature(
+            ElectronicSignature referenceElectronicSignature) {
         this.referenceElectronicSignature = referenceElectronicSignature;
     }
 

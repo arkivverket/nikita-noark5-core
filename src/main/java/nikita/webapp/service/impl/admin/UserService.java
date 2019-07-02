@@ -23,10 +23,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.SYSTEM;
 
@@ -69,13 +68,11 @@ public class UserService
             throw new UsernameExistsException("There is an account with that " +
                     "username: " + user.getUsername());
         }
-        user.setSystemId(UUID.randomUUID().toString());
         // Encrypt the password. Should be bcrypt!
         user.setPassword(encoder.encode(user.getPassword()));
         user.setEnabled(true);
-        user.setDeleted(false);
         user.setCreatedBy(SYSTEM);
-        user.setCreatedDate(ZonedDateTime.now());
+        user.setCreatedDate(OffsetDateTime.now());
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
@@ -88,7 +85,7 @@ public class UserService
         // default one
         if (user.getAdministrativeUnits().size() < 1) {
             AdministrativeUnit administrativeUnit = new AdministrativeUnit();
-            administrativeUnit.setOwnedBy(user.getOwnedBy());
+            administrativeUnit.setOwnedBy(getUser());
             administrativeUnit.setAdministrativeUnitName("system opprettet " +
                     "AdministrativtEnhet for bruker " + user.getUsername());
             administrativeUnit.setShortName("adminenhet " + user.getUsername());

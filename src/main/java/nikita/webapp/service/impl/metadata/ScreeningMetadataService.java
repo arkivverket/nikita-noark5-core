@@ -13,13 +13,13 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.SCREENING_METADATA;
@@ -63,11 +63,6 @@ public class ScreeningMetadataService
     @Override
     public MetadataHateoas createNewScreeningMetadata(
             ScreeningMetadata screeningMetadata) {
-
-        screeningMetadata.setDeleted(false);
-        screeningMetadata.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 screeningMetadataRepository.save(screeningMetadata));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -104,7 +99,7 @@ public class ScreeningMetadataService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 screeningMetadataRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -215,7 +210,7 @@ public class ScreeningMetadataService
      */
     private ScreeningMetadata getScreeningMetadataOrThrow(@NotNull String systemId) {
         ScreeningMetadata screeningMetadata = screeningMetadataRepository.
-                findBySystemId(systemId);
+                findBySystemId(UUID.fromString(systemId));
         if (screeningMetadata == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " ScreeningMetadata, using " +
                     "systemId " + systemId;

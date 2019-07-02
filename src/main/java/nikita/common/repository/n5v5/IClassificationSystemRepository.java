@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface IClassificationSystemRepository extends
@@ -23,7 +24,7 @@ public interface IClassificationSystemRepository extends
     Optional<ClassificationSystem> findById(Long id);
 
     // systemId
-    ClassificationSystem findBySystemId(String systemId);
+    ClassificationSystem findBySystemId(UUID systemId);
 
     // ownedBy
     List<ClassificationSystem> findByOwnedBy(String ownedBy);

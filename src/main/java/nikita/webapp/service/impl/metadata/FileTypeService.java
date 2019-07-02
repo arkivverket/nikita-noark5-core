@@ -13,13 +13,13 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FILE_TYPE;
@@ -63,11 +63,6 @@ public class FileTypeService
     @Override
     public MetadataHateoas createNewFileType(
             FileType fileType) {
-
-        fileType.setDeleted(false);
-        fileType.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
-
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 fileTypeRepository.save(fileType));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -103,7 +98,7 @@ public class FileTypeService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 fileTypeRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -208,7 +203,8 @@ public class FileTypeService
      * @return the FileType object
      */
     private FileType getFileTypeOrThrow(@NotNull String systemId) {
-        FileType fileType = fileTypeRepository.findBySystemId(systemId);
+        FileType fileType =
+                fileTypeRepository.findBySystemId(UUID.fromString(systemId));
         if (fileType == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " FileType, using " +
                     "systemId " + systemId;

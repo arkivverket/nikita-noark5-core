@@ -8,6 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface ICaseFileRepository
@@ -18,7 +19,7 @@ public interface ICaseFileRepository
 
     // -- All READ operations
     // systemId
-    CaseFile findBySystemId(String systemId);
+    CaseFile findBySystemId(UUID systemId);
 
     List<CaseFile> findByReferenceSeries(Series series);
 

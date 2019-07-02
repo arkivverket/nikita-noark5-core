@@ -498,7 +498,7 @@ public class SeriesHateoasController
                     value = "systemId of the series to retrieve",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        /*Series series = seriesService.findBySystemId(systemID);
+        /*Series series = seriesService.findBySystemId(UUID.fromString(systemId));
         if (series == null) {
             throw new NoarkEntityNotFoundException("Could not find series object with systemID " + systemID);
         }
@@ -530,7 +530,7 @@ public class SeriesHateoasController
                     value = "systemId of the series to retrieve",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        /*Series series = seriesService.findBySystemId(systemID);
+        /*Series series = seriesService.findBySystemId(UUID.fromString(systemId));
         if (series == null) {
             throw new NoarkEntityNotFoundException("Could not find series object with systemID " + systemID);
         }

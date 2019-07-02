@@ -99,7 +99,7 @@ public class RightsController extends NoarkController {
             method = RequestMethod.GET)
     public ResponseEntity<UserHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
                                                                                    HttpServletRequest request) {
-        User administrativeUnit = administrativeUnitService.findBySystemId(systemId);
+        User administrativeUnit = administrativeUnitService.findBySystemId(UUID.fromString(systemId));
         UserHateoas adminHateoas = new UserHateoas(administrativeUnit);
         administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)

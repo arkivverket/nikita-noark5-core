@@ -7,12 +7,12 @@ import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by tsodring on 31/1/18.
@@ -48,8 +48,6 @@ public class DocumentStatusService
      */
     @Override
     public DocumentStatus createNewDocumentStatus(DocumentStatus documentStatus) {
-        documentStatus.setDeleted(false);
-        documentStatus.setOwnedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         return documentStatusRepository.save(documentStatus);
     }
 
@@ -75,7 +73,8 @@ public class DocumentStatusService
      */
     @Override
     public DocumentStatus findBySystemId(String systemId) {
-        return documentStatusRepository.findBySystemId(systemId);
+        return documentStatusRepository.
+                findBySystemId(UUID.fromString(systemId));
     }
 
     /**

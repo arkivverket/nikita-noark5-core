@@ -2,8 +2,6 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.Constants;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.interfaces.IDocumentMedium;
 import nikita.common.model.noark5.v5.interfaces.IFondsCreator;
@@ -21,15 +19,19 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.FONDS;
+
 @Entity
-@Table(name = Constants.TABLE_FONDS)
-//@Indexed(index = "fonds")
+@Table(name = TABLE_FONDS)
 @JsonDeserialize(using = FondsDeserializer.class)
 @HateoasPacker(using = FondsHateoasHandler.class)
 @HateoasObject(using = FondsHateoas.class)
-@AttributeOverride(name = "id", column = @Column(name = Constants.PRIMARY_KEY_FONDS))
-public class Fonds extends NoarkGeneralEntity implements IStorageLocation,
-        IDocumentMedium, IFondsCreator {
+public class Fonds
+        extends NoarkGeneralEntity
+        implements IStorageLocation, IDocumentMedium, IFondsCreator {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,34 +55,34 @@ public class Fonds extends NoarkGeneralEntity implements IStorageLocation,
     private List<Series> referenceSeries = new ArrayList<>();
 
     // Link to parent Fonds
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     private Fonds referenceParentFonds;
 
     // Links to child Fonds
-    @OneToMany(mappedBy = "referenceParentFonds", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "referenceParentFonds", fetch = LAZY)
     private List<Fonds> referenceChildFonds = new ArrayList<>();
 
     // Links to StorageLocations
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = Constants.TABLE_FONDS_STORAGE_LOCATION,
+    @ManyToMany(cascade = PERSIST)
+    @JoinTable(name = TABLE_FONDS_STORAGE_LOCATION,
             joinColumns = @JoinColumn(
-                    name = Constants.FOREIGN_KEY_FONDS_PK,
-                    referencedColumnName = Constants.PRIMARY_KEY_FONDS),
+                    name = FOREIGN_KEY_FONDS_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
-                    name = "f_pk_storage_location_id",
-                    referencedColumnName = "pk_storage_location_id")
+                    name = FOREIGN_KEY_STORAGE_LOCATION_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     )
     private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
 
     // Links to FondsCreators
     @ManyToMany
-    @JoinTable(name = Constants.TABLE_FONDS_FONDS_CREATOR,
+    @JoinTable(name = TABLE_FONDS_FONDS_CREATOR,
             joinColumns = @JoinColumn(
-                    name = Constants.FOREIGN_KEY_FONDS_PK,
-                    referencedColumnName = Constants.PRIMARY_KEY_FONDS),
+                    name = FOREIGN_KEY_FONDS_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
-                    name = Constants.FOREIGN_KEY_FONDS_CREATOR_PK,
-                    referencedColumnName = Constants.PRIMARY_KEY_FONDS_CREATOR)
+                    name = FOREIGN_KEY_FONDS_CREATOR_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     )
     private List<FondsCreator> referenceFondsCreator = new ArrayList<>();
 
@@ -102,7 +104,7 @@ public class Fonds extends NoarkGeneralEntity implements IStorageLocation,
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.FONDS;
+        return FONDS;
     }
 
     public List<Series> getReferenceSeries() {
@@ -129,20 +131,34 @@ public class Fonds extends NoarkGeneralEntity implements IStorageLocation,
         this.referenceChildFonds = referenceChildFonds;
     }
 
+    public void addReferenceChildFonds(Fonds childFonds) {
+        this.referenceChildFonds.add(childFonds);
+    }
+
+    @Override
     public List<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
     }
 
+    @Override
     public void setReferenceStorageLocation(
             List<StorageLocation> referenceStorageLocation) {
         this.referenceStorageLocation = referenceStorageLocation;
     }
 
+    @Override
+    public void addReferenceStorageLocation(
+            StorageLocation storageLocation) {
+        this.referenceStorageLocation.add(storageLocation);
+    }
+
+    @Override
     public List<FondsCreator> getReferenceFondsCreator() {
         return referenceFondsCreator;
     }
 
-    public void setReferenceFondsCreator(List<FondsCreator> referenceFondsCreator) {
+    public void setReferenceFondsCreator(
+            List<FondsCreator> referenceFondsCreator) {
         this.referenceFondsCreator = referenceFondsCreator;
     }
 

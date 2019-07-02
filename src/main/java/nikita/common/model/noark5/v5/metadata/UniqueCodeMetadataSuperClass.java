@@ -13,8 +13,9 @@ import javax.persistence.MappedSuperclass;
  * Created by tsodring on 3/23/17.
  */
 @MappedSuperclass
-public class UniqueCodeMetadataSuperClass extends MetadataSuperClassBase implements IMetadataEntity {
-
+public class UniqueCodeMetadataSuperClass
+        extends MetadataSuperClassBase
+        implements IMetadataEntity {
 
     /**
      * M -  (xs:string)
@@ -54,6 +55,7 @@ public class UniqueCodeMetadataSuperClass extends MetadataSuperClassBase impleme
         }
         MetadataSuperClass otherEntity = (MetadataSuperClass) o;
         return new CompareToBuilder()
+                .appendSuper(super.compareTo(otherEntity))
                 .append(this.code, otherEntity.code)
                 .toComparison();
     }

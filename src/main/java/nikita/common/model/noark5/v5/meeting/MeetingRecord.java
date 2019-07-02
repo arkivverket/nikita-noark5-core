@@ -8,13 +8,16 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.TABLE_MEETING_RECORD;
+import static nikita.common.config.N5ResourceMappings.MEETING_RECORD;
+
 @Entity
-@Table(name = "meeting_record")
-@Inheritance(strategy = InheritanceType.JOINED)
-// Enable soft delete of MeetingRecord
-// @SQLDelete(sql="UPDATE meeting_record SET deleted = true WHERE pk_record_id = ? and version = ?")
-// @Where(clause="deleted <> true")
-public class MeetingRecord extends Record {
+@Table(name = TABLE_MEETING_RECORD)
+@Inheritance(strategy = JOINED)
+public class MeetingRecord
+        extends Record {
 
     /**
      * M085 - moeteregistreringstype (xs:string)
@@ -55,15 +58,14 @@ public class MeetingRecord extends Record {
      * M223 - referanseTilMoeteregistrering (xs:string)
      **/
     // Link to "to"  MeetingRegistration
-    // TODO: This should link to sysemId, not id!
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private MeetingRecord referenceToMeetingRegistration;
 
     /**
      * M224 - referanseFraMoeteregistrering (xs:string)
      **/
     // Link to "from" MeetingRegistration
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private MeetingRecord referenceFromMeetingRegistration;
 
     public String getMeetingRecordType() {
@@ -109,7 +111,7 @@ public class MeetingRecord extends Record {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.MEETING_RECORD;
+        return MEETING_RECORD;
     }
 
     public MeetingRecord getReferenceToMeetingRegistration() {

@@ -10,7 +10,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NikitaUserPrincipal implements UserDetails {
+public class NikitaUserPrincipal
+        implements UserDetails {
+
     private User user;
 
     public NikitaUserPrincipal(User user) {
@@ -24,6 +26,10 @@ public class NikitaUserPrincipal implements UserDetails {
                 .map(authority -> new SimpleGrantedAuthority(
                         authority.getAuthorityName().name()))
                 .collect(Collectors.toList());
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override

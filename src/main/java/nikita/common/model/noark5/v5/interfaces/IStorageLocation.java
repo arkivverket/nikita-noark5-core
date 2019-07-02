@@ -11,4 +11,6 @@ public interface IStorageLocation {
     List<StorageLocation> getReferenceStorageLocation();
 
     void setReferenceStorageLocation(List<StorageLocation> storageLocations);
+
+    void addReferenceStorageLocation(StorageLocation storageLocation);
 }

@@ -2,49 +2,51 @@ package nikita.common.model.noark5.v5;
 
 import nikita.common.config.Constants;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.interfaces.entities.IPartyEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IPartEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_PART;
+import static nikita.common.config.Constants.TABLE_PART;
+import static nikita.common.config.N5ResourceMappings.PART;
 
 /**
  * Created by tsodring on 4/10/16.
  */
 
 @Entity
-@Table(name = "party")
-@AttributeOverride(name = "id",
-        column = @Column(name = PRIMARY_KEY_PART))
-public class Party
+@Table(name = TABLE_PART)
+public class Part
         extends NoarkGeneralEntity
-        implements IPartyEntity {
+        implements IPartEntity {
 
     /**
      * M010 - partID (xs:string)
      */
     @Column(name = "part_id")
     @Audited
-    private String partyId;
+    private String partId;
 
     /**
      * M302 - partNavn (xs:string)
      */
     @Column(name = "part_name")
     @Audited
-    private String partyName;
+    private String partName;
 
     /**
      * M303 - partRolle (xs:string)
      */
     @Column(name = "part_role")
     @Audited
-    private String partyRole;
+    private String partRole;
 
     /**
      * M406 - postadresse (xs:string)
@@ -97,40 +99,40 @@ public class Party
     private String contactPerson;
 
     // Links to Files
-    @ManyToMany(mappedBy = "referenceParty")
+    @ManyToMany(mappedBy = "referencePart")
     private List<File> referenceFile = new ArrayList<>();
 
     // Links to Record
-    @ManyToMany(mappedBy = "referenceParty")
+    @ManyToMany(mappedBy = "referencePart")
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to DocumentDescriptions
-    @ManyToMany(mappedBy = "referenceParty")
+    @ManyToMany(mappedBy = "referencePart")
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
-    public String getPartyId() {
-        return partyId;
+    public String getPartId() {
+        return partId;
     }
 
-    public void setPartyId(String partyId) {
-        this.partyId = partyId;
+    public void setPartId(String partId) {
+        this.partId = partId;
     }
 
-    public String getPartyName() {
-        return partyName;
+    public String getPartName() {
+        return partName;
     }
 
-    public void setPartyName(String partyName) {
-        this.partyName = partyName;
+    public void setPartName(String partName) {
+        this.partName = partName;
     }
 
-    public String getPartyRole() {
-        return partyRole;
+    public String getPartRole() {
+        return partRole;
     }
 
-    public void setPartyRole(String partyRole) {
-        this.partyRole = partyRole;
+    public void setPartRole(String partRole) {
+        this.partRole = partRole;
     }
 
     public String getPostalAddress() {
@@ -191,7 +193,7 @@ public class Party
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.PART;
+        return PART;
     }
 
     @Override
@@ -239,10 +241,10 @@ public class Party
 
     @Override
     public String toString() {
-        return "Party{" + super.toString() +
-                ", partyId='" + partyId + '\'' +
-                ", partyName='" + partyName + '\'' +
-                ", partyRole='" + partyRole + '\'' +
+        return "Part{" + super.toString() +
+                ", partId='" + partId + '\'' +
+                ", partName='" + partName + '\'' +
+                ", partRole='" + partRole + '\'' +
                 ", postalAddress='" + postalAddress + '\'' +
                 ", postCode='" + postCode + '\'' +
                 ", postalTown='" + postalTown + '\'' +
@@ -264,12 +266,12 @@ public class Party
         if (other.getClass() != getClass()) {
             return false;
         }
-        Party rhs = (Party) other;
+        Part rhs = (Part) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(partyId, rhs.partyId)
-                .append(partyName, rhs.partyName)
-                .append(partyRole, rhs.partyRole)
+                .append(partId, rhs.partId)
+                .append(partName, rhs.partName)
+                .append(partRole, rhs.partRole)
                 .append(postalAddress, rhs.postalAddress)
                 .append(postCode, rhs.postCode)
                 .append(postalTown, rhs.postalTown)
@@ -284,9 +286,9 @@ public class Party
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(partyId)
-                .append(partyName)
-                .append(partyRole)
+                .append(partId)
+                .append(partName)
+                .append(partRole)
                 .append(postalAddress)
                 .append(postCode)
                 .append(postalTown)

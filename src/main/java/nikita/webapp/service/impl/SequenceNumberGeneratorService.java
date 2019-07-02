@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import io.swagger.models.auth.In;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
 import nikita.common.repository.n5v5.casehandling.ISequenceNumberGeneratorRepository;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 /**
@@ -49,7 +50,7 @@ public class SequenceNumberGeneratorService
      */
     public Integer getNextSequenceNumber(
             AdministrativeUnit administrativeUnit) {
-        Integer currentYear = ZonedDateTime.now().getYear();
+        Integer currentYear = OffsetDateTime.now().getYear();
 
         Optional<SequenceNumberGenerator> nextSequenceOptional =
                 numberGeneratorRepository
@@ -59,18 +60,7 @@ public class SequenceNumberGeneratorService
         if (nextSequenceOptional.isPresent()) {
             return getNextSequence(nextSequenceOptional.get());
         } else {
-            SequenceNumberGenerator sequenceNumberGenerator =
-                    createSequenceNumberGenerator(administrativeUnit);
-            if (sequenceNumberGenerator != null) {
-                return getNextSequence(sequenceNumberGenerator);
-            } else {
-                logger.error("Error missing sequencenumber " +
-                        "generator for " + administrativeUnit + " and year " +
-                        currentYear.toString());
-                throw new NikitaException("Error missing sequencenumber " +
-                        "generator for " + administrativeUnit + " and year " +
-                        currentYear.toString());
-            }
+            return generateNewSequenceGenerator(administrativeUnit, currentYear);
         }
     }
 
@@ -93,7 +83,9 @@ public class SequenceNumberGeneratorService
         sequenceNumberGenerator.setSequenceNumber(1);
         sequenceNumberGenerator
                 .setReferenceAdministrativeUnit(administrativeUnit);
-        return numberGeneratorRepository.save(sequenceNumberGenerator);
+        administrativeUnit.
+                addReferenceSequenceNumberGenerator(sequenceNumberGenerator);
+        return sequenceNumberGenerator;
     }
 
     /**
@@ -110,5 +102,23 @@ public class SequenceNumberGeneratorService
         nextSequence.incrementByOne();
         numberGeneratorRepository.save(nextSequence);
         return sequenceNumber;
+    }
+
+    private Integer generateNewSequenceGenerator(
+            AdministrativeUnit administrativeUnit, Integer currentYear) {
+
+        SequenceNumberGenerator sequenceNumberGenerator =
+                createSequenceNumberGenerator(administrativeUnit);
+
+        if (sequenceNumberGenerator != null) {
+            return getNextSequence(sequenceNumberGenerator);
+        } else {
+            logger.error("Error missing sequencenumber " +
+                    "generator for " + administrativeUnit + " and year " +
+                    currentYear.toString());
+            throw new NikitaException("Error missing sequencenumber " +
+                    "generator for " + administrativeUnit + " and year " +
+                    currentYear.toString());
+        }
     }
 }

@@ -23,15 +23,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.misc.UUDecoder;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setNikitaEntityValues;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setSystemIdEntityValues;
 
 @Service
 @Transactional
@@ -185,16 +186,10 @@ public class CorrespondencePartService
 
         ContactInformation contactInformation
                 = correspondencePart.getContactInformation();
-        if (null != contactInformation) {
-            setNikitaEntityValues(contactInformation);
-            setSystemIdEntityValues(contactInformation);
-        }
         correspondencePart.setContactInformation(contactInformation);
 
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {
-            setNikitaEntityValues(postalAddress);
-            setSystemIdEntityValues(postalAddress);
             postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
         }
         correspondencePart.setPostalAddress(postalAddress);
@@ -202,14 +197,9 @@ public class CorrespondencePartService
         ResidingAddress residingAddress =
                 correspondencePart.getResidingAddress();
         if (null != residingAddress) {
-            setNikitaEntityValues(residingAddress);
-            setSystemIdEntityValues(residingAddress);
             residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
         }
         correspondencePart.setResidingAddress(residingAddress);
-
-        setNikitaEntityValues(correspondencePart);
-        setSystemIdEntityValues(correspondencePart);
 
         registryEntry.getReferenceCorrespondencePartPerson().
                 add(correspondencePart);
@@ -238,17 +228,8 @@ public class CorrespondencePartService
 
         // Set NikitaEntity values for ContactInformation, PostalAddress,
         // BusinessAddress
-        ContactInformation contactInformation =
-                correspondencePart.getContactInformation();
-        if (null != contactInformation) {
-            setNikitaEntityValues(contactInformation);
-            setSystemIdEntityValues(contactInformation);
-        }
-
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {
-            setNikitaEntityValues(postalAddress);
-            setSystemIdEntityValues(postalAddress);
             postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
             correspondencePart.setPostalAddress(postalAddress);
             postalAddress.setCorrespondencePartUnit(correspondencePart);
@@ -257,15 +238,11 @@ public class CorrespondencePartService
         BusinessAddress businessAddress =
                 correspondencePart.getBusinessAddress();
         if (null != businessAddress) {
-            setNikitaEntityValues(businessAddress);
-            setSystemIdEntityValues(businessAddress);
             businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
             correspondencePart.setBusinessAddress(businessAddress);
             businessAddress.setCorrespondencePartUnit(correspondencePart);
         }
 
-        setNikitaEntityValues(correspondencePart);
-        setSystemIdEntityValues(correspondencePart);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
         registryEntry.
@@ -317,13 +294,11 @@ public class CorrespondencePartService
                 getCorrespondencePartOrThrow(systemId));
     }
 
-
     @Override
     public void deleteCorrespondencePartPerson(@NotNull String systemId) {
         correspondencePartRepository.delete(
                 getCorrespondencePartOrThrow(systemId));
     }
-
 
     /**
      * Delete a CorrespondencePart identified by the given systemId
@@ -364,7 +339,7 @@ public class CorrespondencePartService
             @NotNull String correspondencePartSystemId) {
         CorrespondencePart correspondencePart =
                 correspondencePartRepository.findBySystemId(
-                        correspondencePartSystemId);
+                        UUID.fromString(correspondencePartSystemId));
         if (correspondencePart == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " CorrespondencePart, " +
                     "using systemId " + correspondencePartSystemId;
@@ -757,8 +732,8 @@ public class CorrespondencePartService
      * @param code               A code identifying a correspondencePartType
      * @param correspondencePart The correct correspondencePartType
      */
-    private void findAndSetCorrespondencePartType(String code,
-                                                  CorrespondencePart correspondencePart) {
+    private void findAndSetCorrespondencePartType(
+            String code, CorrespondencePart correspondencePart) {
         CorrespondencePartType correspondencePartType =
                 correspondencePartTypeService.
                         findByCode(code);

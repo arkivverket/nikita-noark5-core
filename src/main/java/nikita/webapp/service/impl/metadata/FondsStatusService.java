@@ -8,13 +8,13 @@ import nikita.webapp.service.interfaces.metadata.IFondsStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -46,8 +46,6 @@ public class FondsStatusService
      */
     @Override
     public FondsStatus createNewFondsStatus(FondsStatus fondsStatus) {
-        fondsStatus.setDeleted(false);
-        fondsStatus.setOwnedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         return fondsStatusRepository.save(fondsStatus);
     }
 
@@ -75,7 +73,7 @@ public class FondsStatusService
      */
     @Override
     public FondsStatus findBySystemId(String systemId) {
-        return fondsStatusRepository.findBySystemId(systemId);
+        return fondsStatusRepository.findBySystemId(UUID.fromString(systemId));
     }
 
     /**
