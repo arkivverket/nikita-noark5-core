@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.webapp.application.ApplicationDetails;
 import nikita.webapp.application.ConformityLevel;
 
@@ -12,9 +13,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static nikita.common.config.HATEOASConstants.HREF;
-import static nikita.common.config.HATEOASConstants.LINKS;
-import static nikita.common.config.HATEOASConstants.REL;
+import static nikita.common.config.HATEOASConstants.*;
 
 public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetails> {
 
@@ -24,21 +23,21 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
 
     // TODO: Add some error handling, if application details is empty  etc
     @Override
-    public void serialize(ApplicationDetails applicationDetails, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    public void serialize(ApplicationDetails applicationDetails,
+                          JsonGenerator jgen, SerializerProvider provider)
+            throws IOException {
+
         jgen.writeStartObject();
-        jgen.writeArrayFieldStart(LINKS);
-
-        ArrayList<ConformityLevel> conformityLevels = (ArrayList) applicationDetails.getConformityLevels();
-        Iterator<ConformityLevel> iterator = conformityLevels.iterator();
-
+        jgen.writeObjectFieldStart(LINKS);
+        Iterator<ConformityLevel> iterator =
+                applicationDetails.getConformityLevels().iterator();
         while (iterator.hasNext()) {
             ConformityLevel conformityLevel = iterator.next();
-            jgen.writeStartObject();
+            jgen.writeObjectFieldStart(conformityLevel.getRel());
             jgen.writeStringField(HREF, conformityLevel.getHref());
-            jgen.writeStringField(REL, conformityLevel.getRel());
             jgen.writeEndObject();
         }
-        jgen.writeEndArray();
+        jgen.writeEndObject();
         jgen.writeEndObject();
     }
 

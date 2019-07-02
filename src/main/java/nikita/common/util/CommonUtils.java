@@ -1479,25 +1479,46 @@ public final class CommonUtils {
                 }
             }
 
-            // Note: This method assumes that the startObject has already been written
-            public static void printHateoasLinks(JsonGenerator jgen, List<Link> links) throws IOException {
+            /**
+             *
+             * Note: This method assumes that the startObject has already been
+             * written
+             *
+             * {
+             *   "_links": {
+             *     "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/": {
+             *        "href": "https://n5.example.com/api/arkivstruktur"
+             *       },
+             *     "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/": {
+             *        "href": "https://n5.example.com/api/sakarkiv"
+             *       },
+             *     "https://rel.arkivverket.no/noark5/v5/api/admin/system/": {
+             *        "href": "https://n5.example.com/api/admin/system/",
+             *       }
+             *     }
+             * }
+             *
+             * @param jgen
+             * @param links
+             * @throws IOException
+             */
+            public static void printHateoasLinks(
+                    JsonGenerator jgen, List<Link> links) throws IOException {
 
                 if (links != null && links.size() > 0) {
-                    jgen.writeArrayFieldStart(LINKS);
+                    jgen.writeObjectFieldStart(LINKS);
                     for (Link link : links) {
-                        jgen.writeStartObject(link.getLinkName());
+                        jgen.writeObjectFieldStart(link.getRel());
                         jgen.writeStringField(HREF, link.getHref());
-                        jgen.writeStringField(REL, link.getRel());
                         if (link.getTemplated()) {
                             jgen.writeBooleanField(TEMPLATED,
                                     link.getTemplated());
                         }
                         jgen.writeEndObject();
                     }
-                    jgen.writeEndArray();
+                    jgen.writeEndObject();
                 } else {
-                    jgen.writeArrayFieldStart(LINKS);
-                    jgen.writeEndArray();
+                    jgen.writeFieldName(LINKS);
                 }
             }
 
