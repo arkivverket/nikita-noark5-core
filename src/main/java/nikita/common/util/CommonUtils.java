@@ -30,7 +30,7 @@ import org.springframework.http.HttpMethod;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -345,15 +345,15 @@ public final class CommonUtils {
                             .parseDefaulting(MINUTE_OF_HOUR, 0)
                             .toFormatter();
 
-            public static ZonedDateTime deserializeDate(String fieldname,
+            public static OffsetDateTime deserializeDate(String fieldname,
                                                         ObjectNode objectNode,
                                                         StringBuilder errors,
                                                         boolean required) {
-                ZonedDateTime d = null;
+                OffsetDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        d = ZonedDateTime.parse(currentNode.textValue(),
+                        d = OffsetDateTime.parse(currentNode.textValue(),
                                 dateFormatter);
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
@@ -368,21 +368,21 @@ public final class CommonUtils {
                 return d;
             }
 
-            public static ZonedDateTime deserializeDate(String fieldname,
+            public static OffsetDateTime deserializeDate(String fieldname,
                                                         ObjectNode objectNode,
                                                         StringBuilder errors) {
                 return deserializeDate(fieldname, objectNode, errors, false);
             }
 
-            public static ZonedDateTime deserializeDateTime(String fieldname,
+            public static OffsetDateTime deserializeDateTime(String fieldname,
                                                             ObjectNode objectNode,
                                                             StringBuilder errors,
                                                             boolean required) {
-                ZonedDateTime d = null;
+                OffsetDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        d = ZonedDateTime.parse(currentNode.textValue(),
+                        d = OffsetDateTime.parse(currentNode.textValue(),
                                 ISO_DATE_TIME);
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
@@ -397,7 +397,7 @@ public final class CommonUtils {
                 return d;
             }
 
-            public static ZonedDateTime deserializeDateTime(String fieldname,
+            public static OffsetDateTime deserializeDateTime(String fieldname,
                                                             ObjectNode objectNode,
                                                             StringBuilder errors) {
                 return deserializeDateTime(fieldname, objectNode, errors, false);
@@ -1355,11 +1355,11 @@ public final class CommonUtils {
         }
 
         public static final class Serialize {
-            public static String formatDate(ZonedDateTime value) {
+            public static String formatDate(OffsetDateTime value) {
                 return value.format(ISO_DATE);
             }
 
-            public static String formatDateTime(ZonedDateTime value) {
+            public static String formatDateTime(OffsetDateTime value) {
                 return value.format(ISO_DATE_TIME);
             }
 

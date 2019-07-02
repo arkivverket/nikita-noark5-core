@@ -13,7 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class Screening
     @Column(name = "screening_expires")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime screeningExpiresDate;
+    private OffsetDateTime screeningExpiresDate;
 
     /**
      * M504 - skjermingsvarighet
@@ -124,11 +124,11 @@ public class Screening
         this.screeningDocument = screeningDocument;
     }
 
-    public ZonedDateTime getScreeningExpiresDate() {
+    public OffsetDateTime getScreeningExpiresDate() {
         return screeningExpiresDate;
     }
 
-    public void setScreeningExpiresDate(ZonedDateTime screeningExpiresDate) {
+    public void setScreeningExpiresDate(OffsetDateTime screeningExpiresDate) {
         this.screeningExpiresDate = screeningExpiresDate;
     }
 

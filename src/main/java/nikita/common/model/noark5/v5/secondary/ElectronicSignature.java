@@ -11,7 +11,7 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
 import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE;
@@ -43,7 +43,7 @@ public class ElectronicSignature
     @Column(name = "verified_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime verifiedDate;
+    private OffsetDateTime verifiedDate;
 
     /**
      * M623 - verifisertAv (xs:string)
@@ -86,11 +86,11 @@ public class ElectronicSignature
         this.electronicSignatureVerified = electronicSignatureVerified;
     }
 
-    public ZonedDateTime getVerifiedDate() {
+    public OffsetDateTime getVerifiedDate() {
         return verifiedDate;
     }
 
-    public void setVerifiedDate(ZonedDateTime verifiedDate) {
+    public void setVerifiedDate(OffsetDateTime verifiedDate) {
         this.verifiedDate = verifiedDate;
     }
 

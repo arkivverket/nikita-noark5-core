@@ -14,7 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class Deletion
     @Column(name = "deletion_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime deletionDate;
+    private OffsetDateTime deletionDate;
 
     // Links to Series
     @OneToMany(mappedBy = "referenceDeletion")
@@ -77,11 +77,11 @@ public class Deletion
         this.deletionBy = deletionBy;
     }
 
-    public ZonedDateTime getDeletionDate() {
+    public OffsetDateTime getDeletionDate() {
         return deletionDate;
     }
 
-    public void setDeletionDate(ZonedDateTime deletionDate) {
+    public void setDeletionDate(OffsetDateTime deletionDate) {
         this.deletionDate = deletionDate;
     }
 

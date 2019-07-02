@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class MeetingFile
      */
     @Column(name = "loaned_date")
     @Audited
-    private ZonedDateTime meetingDate;
+    private OffsetDateTime meetingDate;
 
     /**
      * M371 - moetested (xs:string)
@@ -86,11 +86,11 @@ public class MeetingFile
         this.committee = committee;
     }
 
-    public ZonedDateTime getMeetingDate() {
+    public OffsetDateTime getMeetingDate() {
         return meetingDate;
     }
 
-    public void setMeetingDate(ZonedDateTime meetingDate) {
+    public void setMeetingDate(OffsetDateTime meetingDate) {
         this.meetingDate = meetingDate;
     }
 

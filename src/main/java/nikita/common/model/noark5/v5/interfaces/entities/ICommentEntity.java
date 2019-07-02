@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Created by tsodring on 1/16/17.
@@ -15,9 +15,9 @@ public interface ICommentEntity extends Serializable {
 
     void setCommentType(String commentType);
 
-    ZonedDateTime getCommentDate();
+    OffsetDateTime getCommentDate();
 
-    void setCommentDate(ZonedDateTime commentDate);
+    void setCommentDate(OffsetDateTime commentDate);
 
     String getCommentRegisteredBy();
 

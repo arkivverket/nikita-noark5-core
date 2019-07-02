@@ -17,7 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +77,7 @@ public class DocumentDescription
     @Column(name = "created_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -116,7 +116,7 @@ public class DocumentDescription
     @Column(name = "association_date", nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime associationDate;
+    private OffsetDateTime associationDate;
 
     /**
      * M621 - tilknyttetAv (xs:string)
@@ -237,11 +237,11 @@ public class DocumentDescription
         this.description = description;
     }
 
-    public ZonedDateTime getCreatedDate() {
+    public OffsetDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(OffsetDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -282,11 +282,11 @@ public class DocumentDescription
         this.documentNumber = documentNumber;
     }
 
-    public ZonedDateTime getAssociationDate() {
+    public OffsetDateTime getAssociationDate() {
         return associationDate;
     }
 
-    public void setAssociationDate(ZonedDateTime associationDate) {
+    public void setAssociationDate(OffsetDateTime associationDate) {
         this.associationDate = associationDate;
     }
 

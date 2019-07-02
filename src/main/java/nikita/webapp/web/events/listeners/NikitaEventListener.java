@@ -33,7 +33,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -108,7 +108,7 @@ public class NikitaEventListener {
             String entityType = event.getEntity().getBaseTypeName();
             body.put("object-type", entityType);
             body.put("event-type", eventType);
-            ZonedDateTime date = ZonedDateTime.now(ZoneId.systemDefault());
+            OffsetDateTime date = OffsetDateTime.now(ZoneId.systemDefault());
             body.put("created", date);
 
             RequestAttributes requestAttributes = RequestContextHolder.

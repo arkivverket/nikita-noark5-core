@@ -19,7 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
@@ -66,7 +66,7 @@ public class NoarkEntity
     @Column(name = "created_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -82,7 +82,7 @@ public class NoarkEntity
     @LastModifiedDate
     @Column(name = "last_modified_date")
     @DateTimeFormat(iso = DATE_TIME)
-    private ZonedDateTime lastModifiedDate;
+    private OffsetDateTime lastModifiedDate;
 
     /**
      * M??? - oppdatertAv (xs:string)
@@ -138,7 +138,7 @@ public class NoarkEntity
     }
 
     @Override
-    public ZonedDateTime getLastModifiedDate() {
+    public OffsetDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
 
@@ -148,12 +148,12 @@ public class NoarkEntity
     }
 
     @Override
-    public ZonedDateTime getCreatedDate() {
+    public OffsetDateTime getCreatedDate() {
         return createdDate;
     }
 
     @Override
-    public void setCreatedDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(OffsetDateTime createdDate) {
         this.createdDate = createdDate;
     }
 

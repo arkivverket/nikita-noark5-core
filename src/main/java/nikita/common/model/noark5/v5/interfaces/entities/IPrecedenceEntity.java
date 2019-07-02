@@ -1,14 +1,14 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Created by tsodring on 1/16/17.
  */
 public interface IPrecedenceEntity extends INoarkCreateEntity, INoarkTitleDescriptionEntity, INoarkFinaliseEntity {
-    ZonedDateTime getPrecedenceDate();
+    OffsetDateTime getPrecedenceDate();
 
-    void setPrecedenceDate(ZonedDateTime precedenceDate);
+    void setPrecedenceDate(OffsetDateTime precedenceDate);
 
     String getPrecedenceAuthority();
 
@@ -18,9 +18,9 @@ public interface IPrecedenceEntity extends INoarkCreateEntity, INoarkTitleDescri
 
     void setSourceOfLaw(String sourceOfLaw);
 
-    ZonedDateTime getPrecedenceApprovedDate();
+    OffsetDateTime getPrecedenceApprovedDate();
 
-    void setPrecedenceApprovedDate(ZonedDateTime precedenceApprovedDate);
+    void setPrecedenceApprovedDate(OffsetDateTime precedenceApprovedDate);
 
     String getPrecedenceApprovedBy();
 

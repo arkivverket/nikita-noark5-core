@@ -15,7 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class Comment
     @Column(name = "comment_time")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime commentDate;
+    private OffsetDateTime commentDate;
 
     /**
      * M612 - merknadRegistrertAv (xs:string)
@@ -88,11 +88,11 @@ public class Comment
         this.commentType = commentType;
     }
 
-    public ZonedDateTime getCommentDate() {
+    public OffsetDateTime getCommentDate() {
         return commentDate;
     }
 
-    public void setCommentDate(ZonedDateTime commentDate) {
+    public void setCommentDate(OffsetDateTime commentDate) {
         this.commentDate = commentDate;
     }
 

@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
@@ -39,14 +39,14 @@ public class DocumentFlow
      */
     @Column(name = "flow_received_date")
     @Audited
-    private ZonedDateTime flowReceivedDate;
+    private OffsetDateTime flowReceivedDate;
 
     /**
      * M662 flytSendtDato (xs:dateTime)
      */
     @Column(name = "flow_sent_date")
     @Audited
-    private ZonedDateTime flowSentDate;
+    private OffsetDateTime flowSentDate;
 
     /**
      * M663 flytStatus (xs:string)
@@ -89,19 +89,19 @@ public class DocumentFlow
         this.flowFrom = flowFrom;
     }
 
-    public ZonedDateTime getFlowReceivedDate() {
+    public OffsetDateTime getFlowReceivedDate() {
         return flowReceivedDate;
     }
 
-    public void setFlowReceivedDate(ZonedDateTime flowReceivedDate) {
+    public void setFlowReceivedDate(OffsetDateTime flowReceivedDate) {
         this.flowReceivedDate = flowReceivedDate;
     }
 
-    public ZonedDateTime getFlowSentDate() {
+    public OffsetDateTime getFlowSentDate() {
         return flowSentDate;
     }
 
-    public void setFlowSentDate(ZonedDateTime flowSentDate) {
+    public void setFlowSentDate(OffsetDateTime flowSentDate) {
         this.flowSentDate = flowSentDate;
     }
 

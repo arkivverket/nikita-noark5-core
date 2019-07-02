@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CONVERSION;
@@ -24,7 +24,7 @@ public class Conversion
      */
     @Column(name = "converted_date")
     @Audited
-    private ZonedDateTime convertedDate;
+    private OffsetDateTime convertedDate;
 
     /**
      * M616 - konvertertAv (xs:string)
@@ -67,11 +67,11 @@ public class Conversion
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DocumentObject referenceDocumentObject;
 
-    public ZonedDateTime getConvertedDate() {
+    public OffsetDateTime getConvertedDate() {
         return convertedDate;
     }
 
-    public void setConvertedDate(ZonedDateTime convertedDate) {
+    public void setConvertedDate(OffsetDateTime convertedDate) {
         this.convertedDate = convertedDate;
     }
 

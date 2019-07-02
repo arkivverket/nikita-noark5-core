@@ -12,7 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +56,7 @@ public class Disposal
      */
     @Column(name = "disposal_date")
     @Audited
-    private ZonedDateTime disposalDate;
+    private OffsetDateTime disposalDate;
 
     // Links to Series
     @OneToMany(mappedBy = "referenceDisposal")
@@ -103,11 +103,11 @@ public class Disposal
         this.preservationTime = preservationTime;
     }
 
-    public ZonedDateTime getDisposalDate() {
+    public OffsetDateTime getDisposalDate() {
         return disposalDate;
     }
 
-    public void setDisposalDate(ZonedDateTime disposalDate) {
+    public void setDisposalDate(OffsetDateTime disposalDate) {
         this.disposalDate = disposalDate;
     }
 

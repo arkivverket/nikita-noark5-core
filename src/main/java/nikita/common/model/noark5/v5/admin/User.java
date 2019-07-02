@@ -17,7 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class User
     @Column(name = "account_created_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -72,7 +72,7 @@ public class User
     @Column(name = "finalised_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime finalisedDate;
+    private OffsetDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
@@ -99,7 +99,7 @@ public class User
 
     @Column(name = "last_password_reset_date")
     @DateTimeFormat(iso = DATE_TIME)
-    private ZonedDateTime lastPasswordResetDate;
+    private OffsetDateTime lastPasswordResetDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -125,12 +125,12 @@ public class User
     }
 
     @Override
-    public ZonedDateTime getFinalisedDate() {
+    public OffsetDateTime getFinalisedDate() {
         return finalisedDate;
     }
 
     @Override
-    public void setFinalisedDate(ZonedDateTime finalisedDate) {
+    public void setFinalisedDate(OffsetDateTime finalisedDate) {
         this.finalisedDate = finalisedDate;
     }
 
@@ -184,11 +184,11 @@ public class User
         this.enabled = enabled;
     }
 
-    public ZonedDateTime getCreatedDate() {
+    public OffsetDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(OffsetDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -240,11 +240,11 @@ public class User
         this.administrativeUnits.add(administrativeUnit);
     }
 
-    public ZonedDateTime getLastPasswordResetDate() {
+    public OffsetDateTime getLastPasswordResetDate() {
         return lastPasswordResetDate;
     }
 
-    public void setLastPasswordResetDate(ZonedDateTime lastPasswordResetDate) {
+    public void setLastPasswordResetDate(OffsetDateTime lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
 

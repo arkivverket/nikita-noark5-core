@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Created by tsodring on 12/7/16.
@@ -15,7 +15,7 @@ public interface IDeletionEntity extends Serializable {
 
     void setDeletionBy(String deletionBy);
 
-    ZonedDateTime getDeletionDate();
+    OffsetDateTime getDeletionDate();
 
-    void setDeletionDate(ZonedDateTime deletionDate);
+    void setDeletionDate(OffsetDateTime deletionDate);
 }

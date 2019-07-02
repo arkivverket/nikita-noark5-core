@@ -13,7 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class Classified
     @Column(name = "classification_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime classificationDate;
+    private OffsetDateTime classificationDate;
 
     /**
      * M629 - gradertAv (xs:string)
@@ -60,7 +60,7 @@ public class Classified
      **/
     @Column(name = "classification_downgraded_date")
     @Audited
-    private ZonedDateTime classificationDowngradedDate;
+    private OffsetDateTime classificationDowngradedDate;
 
     /**
      * M627 - nedgradertAv (xs:string)
@@ -98,11 +98,11 @@ public class Classified
         this.classification = classification;
     }
 
-    public ZonedDateTime getClassificationDate() {
+    public OffsetDateTime getClassificationDate() {
         return classificationDate;
     }
 
-    public void setClassificationDate(ZonedDateTime classificationDate) {
+    public void setClassificationDate(OffsetDateTime classificationDate) {
         this.classificationDate = classificationDate;
     }
 
@@ -114,12 +114,12 @@ public class Classified
         this.classificationBy = classificationBy;
     }
 
-    public ZonedDateTime getClassificationDowngradedDate() {
+    public OffsetDateTime getClassificationDowngradedDate() {
         return classificationDowngradedDate;
     }
 
     public void setClassificationDowngradedDate(
-            ZonedDateTime classificationDowngradedDate) {
+            OffsetDateTime classificationDowngradedDate) {
         this.classificationDowngradedDate = classificationDowngradedDate;
     }
 

@@ -26,7 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +90,7 @@ public class RegistryEntry
     @Column(name = "record_date", nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime recordDate;
+    private OffsetDateTime recordDate;
 
     /**
      * M103 - dokumentetsDato (xs:date)
@@ -98,7 +98,7 @@ public class RegistryEntry
     @Column(name = "document_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime documentDate;
+    private OffsetDateTime documentDate;
 
     /**
      * M104 - mottattDato (xs:dateTime)
@@ -106,7 +106,7 @@ public class RegistryEntry
     @Column(name = "received_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime receivedDate;
+    private OffsetDateTime receivedDate;
 
     /**
      * M105 - sendtDato (xs:dateTime)
@@ -114,7 +114,7 @@ public class RegistryEntry
     @Column(name = "sent_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime sentDate;
+    private OffsetDateTime sentDate;
 
     /**
      * M109 - forfallsdato (xs:date)
@@ -122,7 +122,7 @@ public class RegistryEntry
     @Column(name = "due_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime dueDate;
+    private OffsetDateTime dueDate;
 
     /**
      * M110 - offentlighetsvurdertDato (xs:date)
@@ -130,7 +130,7 @@ public class RegistryEntry
     @Column(name = "freedom_assessment_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime freedomAssessmentDate;
+    private OffsetDateTime freedomAssessmentDate;
 
     /**
      * M304 - antallVedlegg (xs:integer)
@@ -146,7 +146,7 @@ public class RegistryEntry
     @Column(name = "loaned_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime loanedDate;
+    private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
@@ -271,51 +271,51 @@ public class RegistryEntry
         this.recordStatus = recordStatus;
     }
 
-    public ZonedDateTime getRecordDate() {
+    public OffsetDateTime getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(ZonedDateTime recordDate) {
+    public void setRecordDate(OffsetDateTime recordDate) {
         this.recordDate = recordDate;
     }
 
-    public ZonedDateTime getDocumentDate() {
+    public OffsetDateTime getDocumentDate() {
         return documentDate;
     }
 
-    public void setDocumentDate(ZonedDateTime documentDate) {
+    public void setDocumentDate(OffsetDateTime documentDate) {
         this.documentDate = documentDate;
     }
 
-    public ZonedDateTime getReceivedDate() {
+    public OffsetDateTime getReceivedDate() {
         return receivedDate;
     }
 
-    public void setReceivedDate(ZonedDateTime receivedDate) {
+    public void setReceivedDate(OffsetDateTime receivedDate) {
         this.receivedDate = receivedDate;
     }
 
-    public ZonedDateTime getSentDate() {
+    public OffsetDateTime getSentDate() {
         return sentDate;
     }
 
-    public void setSentDate(ZonedDateTime sentDate) {
+    public void setSentDate(OffsetDateTime sentDate) {
         this.sentDate = sentDate;
     }
 
-    public ZonedDateTime getDueDate() {
+    public OffsetDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(ZonedDateTime dueDate) {
+    public void setDueDate(OffsetDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
-    public ZonedDateTime getFreedomAssessmentDate() {
+    public OffsetDateTime getFreedomAssessmentDate() {
         return freedomAssessmentDate;
     }
 
-    public void setFreedomAssessmentDate(ZonedDateTime freedomAssessmentDate) {
+    public void setFreedomAssessmentDate(OffsetDateTime freedomAssessmentDate) {
         this.freedomAssessmentDate = freedomAssessmentDate;
     }
 
@@ -327,11 +327,11 @@ public class RegistryEntry
         this.numberOfAttachments = numberOfAttachments;
     }
 
-    public ZonedDateTime getLoanedDate() {
+    public OffsetDateTime getLoanedDate() {
         return loanedDate;
     }
 
-    public void setLoanedDate(ZonedDateTime loanedDate) {
+    public void setLoanedDate(OffsetDateTime loanedDate) {
         this.loanedDate = loanedDate;
     }
 

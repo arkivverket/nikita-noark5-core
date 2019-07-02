@@ -9,7 +9,7 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class SignOff
     @DateTimeFormat(iso = DATE)
 
     @Audited
-    private ZonedDateTime signOffDate;
+    private OffsetDateTime signOffDate;
 
     /**
      * M618 - avskrevetAv
@@ -66,11 +66,11 @@ public class SignOff
     @ManyToMany(mappedBy = "referenceSignOff")
     private List<RegistryEntry> referenceRecord = new ArrayList<>();
 
-    public ZonedDateTime getSignOffDate() {
+    public OffsetDateTime getSignOffDate() {
         return signOffDate;
     }
 
-    public void setSignOffDate(ZonedDateTime signOffDate) {
+    public void setSignOffDate(OffsetDateTime signOffDate) {
         this.signOffDate = signOffDate;
     }
 

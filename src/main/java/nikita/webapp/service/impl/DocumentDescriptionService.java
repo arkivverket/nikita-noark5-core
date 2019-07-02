@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -89,7 +89,7 @@ public class DocumentDescriptionService
     public DocumentDescription save(DocumentDescription documentDescription) {
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
-        documentDescription.setAssociationDate(ZonedDateTime.now());
+        documentDescription.setAssociationDate(OffsetDateTime.now());
         documentDescription.setAssociatedBy(username);
         return documentDescriptionRepository.save(documentDescription);
     }

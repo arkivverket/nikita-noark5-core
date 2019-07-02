@@ -12,7 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class Precedence
      */
     @Column(name = "precedence_date")
     @Audited
-    private ZonedDateTime precedenceDate;
+    private OffsetDateTime precedenceDate;
 
     /**
      * M311 - presedensHjemmel (xs:string)
@@ -51,7 +51,7 @@ public class Precedence
      */
     @Column(name = "precedence_approved_date")
     @Audited
-    private ZonedDateTime precedenceApprovedDate;
+    private OffsetDateTime precedenceApprovedDate;
 
     /**
      * M629 - presedensGodkjentAv (xs:string)
@@ -76,11 +76,11 @@ public class Precedence
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
 
-    public ZonedDateTime getPrecedenceDate() {
+    public OffsetDateTime getPrecedenceDate() {
         return precedenceDate;
     }
 
-    public void setPrecedenceDate(ZonedDateTime precedenceDate) {
+    public void setPrecedenceDate(OffsetDateTime precedenceDate) {
         this.precedenceDate = precedenceDate;
     }
 
@@ -100,11 +100,11 @@ public class Precedence
         this.sourceOfLaw = sourceOfLaw;
     }
 
-    public ZonedDateTime getPrecedenceApprovedDate() {
+    public OffsetDateTime getPrecedenceApprovedDate() {
         return precedenceApprovedDate;
     }
 
-    public void setPrecedenceApprovedDate(ZonedDateTime precedenceApprovedDate) {
+    public void setPrecedenceApprovedDate(OffsetDateTime precedenceApprovedDate) {
         this.precedenceApprovedDate = precedenceApprovedDate;
     }
 

@@ -17,7 +17,7 @@ import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +42,7 @@ public class AdministrativeUnit
     @Column(name = "finalised_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime finalisedDate;
+    private OffsetDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
@@ -114,12 +114,12 @@ public class AdministrativeUnit
             new ArrayList<>();
 
     @Override
-    public ZonedDateTime getFinalisedDate() {
+    public OffsetDateTime getFinalisedDate() {
         return finalisedDate;
     }
 
     @Override
-    public void setFinalisedDate(ZonedDateTime finalisedDate) {
+    public void setFinalisedDate(OffsetDateTime finalisedDate) {
         this.finalisedDate = finalisedDate;
     }
 

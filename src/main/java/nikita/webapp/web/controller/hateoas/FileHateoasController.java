@@ -35,7 +35,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -458,7 +458,7 @@ public class FileHateoasController
 
         Record defaultRecord = new Record();
         defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
-        defaultRecord.setArchivedDate(ZonedDateTime.now());
+        defaultRecord.setArchivedDate(OffsetDateTime.now());
         defaultRecord.setTitle(TEST_TITLE);
         defaultRecord.setDescription(TEST_DESCRIPTION);
         RecordHateoas recordHateoas = new

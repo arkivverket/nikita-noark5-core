@@ -21,7 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +65,7 @@ public class CaseFile
     @Column(name = "case_date", nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime caseDate;
+    private OffsetDateTime caseDate;
 
     /**
      * M306 - saksansvarlig (xs:string)
@@ -97,7 +97,7 @@ public class CaseFile
     @Column(name = "loaned_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime loanedDate;
+    private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
@@ -147,11 +147,11 @@ public class CaseFile
         this.caseSequenceNumber = caseSequenceNumber;
     }
 
-    public ZonedDateTime getCaseDate() {
+    public OffsetDateTime getCaseDate() {
         return caseDate;
     }
 
-    public void setCaseDate(ZonedDateTime caseDate) {
+    public void setCaseDate(OffsetDateTime caseDate) {
         this.caseDate = caseDate;
     }
 
@@ -179,11 +179,11 @@ public class CaseFile
         this.caseStatus = caseStatus;
     }
 
-    public ZonedDateTime getLoanedDate() {
+    public OffsetDateTime getLoanedDate() {
         return loanedDate;
     }
 
-    public void setLoanedDate(ZonedDateTime loanedDate) {
+    public void setLoanedDate(OffsetDateTime loanedDate) {
         this.loanedDate = loanedDate;
     }
 

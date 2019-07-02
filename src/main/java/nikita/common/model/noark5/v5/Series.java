@@ -17,7 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class Series
     @Column(name = "series_start_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime seriesStartDate;
+    private OffsetDateTime seriesStartDate;
 
     /**
      * M108 - arkivperiodeSluttDato (xs:date)
@@ -62,7 +62,7 @@ public class Series
     @Column(name = "series_end_date")
     @DateTimeFormat(iso = DATE)
     @Audited
-    private ZonedDateTime seriesEndDate;
+    private OffsetDateTime seriesEndDate;
 
     /**
      * M300 - dokumentmedium (xs:string)
@@ -164,19 +164,19 @@ public class Series
         this.documentMedium = documentMedium;
     }
 
-    public ZonedDateTime getSeriesStartDate() {
+    public OffsetDateTime getSeriesStartDate() {
         return seriesStartDate;
     }
 
-    public void setSeriesStartDate(ZonedDateTime seriesStartDate) {
+    public void setSeriesStartDate(OffsetDateTime seriesStartDate) {
         this.seriesStartDate = seriesStartDate;
     }
 
-    public ZonedDateTime getSeriesEndDate() {
+    public OffsetDateTime getSeriesEndDate() {
         return seriesEndDate;
     }
 
-    public void setSeriesEndDate(ZonedDateTime seriesEndDate) {
+    public void setSeriesEndDate(OffsetDateTime seriesEndDate) {
         this.seriesEndDate = seriesEndDate;
     }
 

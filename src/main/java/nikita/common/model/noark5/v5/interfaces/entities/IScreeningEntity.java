@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Created by tsodring on 12/7/16.
@@ -23,9 +23,9 @@ public interface IScreeningEntity extends Serializable {
 
     void setScreeningDocument(String screeningDocument);
 
-    ZonedDateTime getScreeningExpiresDate();
+    OffsetDateTime getScreeningExpiresDate();
 
-    void setScreeningExpiresDate(ZonedDateTime screeningExpiresDate);
+    void setScreeningExpiresDate(OffsetDateTime screeningExpiresDate);
 
     String getScreeningDuration();
 

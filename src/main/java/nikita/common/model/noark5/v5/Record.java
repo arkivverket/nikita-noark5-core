@@ -18,7 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class Record
     @Column(name = "archived_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime archivedDate;
+    private OffsetDateTime archivedDate;
 
     /**
      * M605 - arkivertAv (xs:string)
@@ -195,11 +195,11 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Part> referencePart = new ArrayList<>();
 
-    public ZonedDateTime getArchivedDate() {
+    public OffsetDateTime getArchivedDate() {
         return archivedDate;
     }
 
-    public void setArchivedDate(ZonedDateTime archivedDate) {
+    public void setArchivedDate(OffsetDateTime archivedDate) {
         this.archivedDate = archivedDate;
     }
 

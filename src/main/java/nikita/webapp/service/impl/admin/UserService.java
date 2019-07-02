@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +72,7 @@ public class UserService
         user.setPassword(encoder.encode(user.getPassword()));
         user.setEnabled(true);
         user.setCreatedBy(SYSTEM);
-        user.setCreatedDate(ZonedDateTime.now());
+        user.setCreatedDate(OffsetDateTime.now());
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);

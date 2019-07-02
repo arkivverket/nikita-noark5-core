@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -47,7 +47,7 @@ public class NoarkGeneralEntity
     @Column(name = "finalised_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime finalisedDate;
+    private OffsetDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
@@ -77,12 +77,12 @@ public class NoarkGeneralEntity
     }
 
     @Override
-    public ZonedDateTime getFinalisedDate() {
+    public OffsetDateTime getFinalisedDate() {
         return finalisedDate;
     }
 
     @Override
-    public void setFinalisedDate(ZonedDateTime finalisedDate) {
+    public void setFinalisedDate(OffsetDateTime finalisedDate) {
         this.finalisedDate = finalisedDate;
     }
 

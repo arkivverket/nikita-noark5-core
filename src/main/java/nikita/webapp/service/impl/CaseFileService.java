@@ -38,7 +38,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 import static nikita.common.config.Constants.*;
@@ -107,9 +107,9 @@ public class CaseFileService
         caseFile.setReferenceAdministrativeUnit(administrativeUnit);
 
         // Set case year
-        Integer currentYear = ZonedDateTime.now().getYear();
+        Integer currentYear = OffsetDateTime.now().getYear();
         caseFile.setCaseYear(currentYear);
-        caseFile.setCaseDate(ZonedDateTime.now());
+        caseFile.setCaseDate(OffsetDateTime.now());
         caseFile.setCaseSequenceNumber(getNextSequenceNumber(
                 administrativeUnit));
         caseFile.setFileId(currentYear.toString() + "/" +
@@ -365,7 +365,7 @@ public class CaseFileService
                 caseStatusService.generateDefaultCaseStatus());
         defaultCaseFile.setCaseResponsible(SecurityContextHolder.getContext().
                 getAuthentication().getName());
-        defaultCaseFile.setCaseDate(ZonedDateTime.now());
+        defaultCaseFile.setCaseDate(OffsetDateTime.now());
         defaultCaseFile.setTitle(TEST_TITLE);
         defaultCaseFile.setOfficialTitle(TEST_TITLE);
         defaultCaseFile.setDescription(TEST_DESCRIPTION);

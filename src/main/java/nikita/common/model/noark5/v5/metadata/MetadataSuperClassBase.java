@@ -17,7 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -67,7 +67,7 @@ public class MetadataSuperClassBase implements INikitaEntity,
     @Column(name = "created_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    private ZonedDateTime createdDate;
+    private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
@@ -83,7 +83,7 @@ public class MetadataSuperClassBase implements INikitaEntity,
     @LastModifiedDate
     @Column(name = "last_modified_date")
     @DateTimeFormat(iso = DATE_TIME)
-    private ZonedDateTime lastModifiedDate;
+    private OffsetDateTime lastModifiedDate;
 
     /**
      * M??? - oppdatertAv (xs:string)
@@ -111,12 +111,12 @@ public class MetadataSuperClassBase implements INikitaEntity,
     }
 
     @Override
-    public ZonedDateTime getCreatedDate() {
+    public OffsetDateTime getCreatedDate() {
         return createdDate;
     }
 
     @Override
-    public void setCreatedDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(OffsetDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -130,7 +130,7 @@ public class MetadataSuperClassBase implements INikitaEntity,
         this.createdBy = createdBy;
     }
 
-    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
+    public void setLastModifiedDate(OffsetDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -159,7 +159,7 @@ public class MetadataSuperClassBase implements INikitaEntity,
     }
 
     @Override
-    public ZonedDateTime getLastModifiedDate() {
+    public OffsetDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
 

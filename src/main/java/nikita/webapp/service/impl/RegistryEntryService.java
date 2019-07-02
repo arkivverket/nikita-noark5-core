@@ -34,7 +34,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,7 +74,7 @@ public class RegistryEntryService
     @Override
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
         checkDocumentMediumValid(registryEntry);
-        registryEntry.setRecordDate(ZonedDateTime.now());
+        registryEntry.setRecordDate(OffsetDateTime.now());
         File file = registryEntry.getReferenceFile();
         if (null != file) {
             long numberAssociated =
@@ -120,7 +120,7 @@ public class RegistryEntryService
         defaultRegistryEntry.setTitle(DEFAULT_TITLE + "RegistryEntry");
         defaultRegistryEntry.setDescription(DEFAULT_DESCRIPTION + " a CaseFile " +
                 "with systemId [" + caseFileSystemId + "]");
-        ZonedDateTime now = ZonedDateTime.now();
+        OffsetDateTime now = OffsetDateTime.now();
         defaultRegistryEntry.setRecordDate(now);
         defaultRegistryEntry.setDocumentDate(now);
         defaultRegistryEntry.setRecordStatus(TEST_RECORD_STATUS);

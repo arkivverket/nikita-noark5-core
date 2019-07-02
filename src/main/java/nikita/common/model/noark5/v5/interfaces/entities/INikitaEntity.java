@@ -2,7 +2,7 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public interface INikitaEntity
@@ -37,7 +37,7 @@ public interface INikitaEntity
      */
     String getFunctionalTypeName();
 
-    ZonedDateTime getLastModifiedDate();
+    OffsetDateTime getLastModifiedDate();
 
     String getLastModifiedBy();
 

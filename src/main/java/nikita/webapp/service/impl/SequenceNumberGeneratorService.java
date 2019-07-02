@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 /**
@@ -50,7 +50,7 @@ public class SequenceNumberGeneratorService
      */
     public Integer getNextSequenceNumber(
             AdministrativeUnit administrativeUnit) {
-        Integer currentYear = ZonedDateTime.now().getYear();
+        Integer currentYear = OffsetDateTime.now().getYear();
 
         Optional<SequenceNumberGenerator> nextSequenceOptional =
                 numberGeneratorRepository
