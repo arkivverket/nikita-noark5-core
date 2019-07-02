@@ -466,7 +466,7 @@ public class FondsService
     public void deleteEntity(@NotNull String fondsSystemId) {
         Fonds fonds = getFondsOrThrow(fondsSystemId);
         // Disassociate any links between Fonds and FondsCreator
-        disassociateForeignKeys(fonds, DELETE_FROM_FONDS_FONDS_CREATOR );
+        disassociateForeignKeys(fonds, DELETE_FROM_FONDS_FONDS_CREATOR);
         // Disassociate any links between Fonds and StorageLocation
         disassociateForeignKeys(fonds, DELETE_FONDS_STORAGE_LOCATION);
         deleteEntity(fonds);
