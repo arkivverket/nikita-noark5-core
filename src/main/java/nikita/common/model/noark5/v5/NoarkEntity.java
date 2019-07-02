@@ -8,11 +8,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -27,6 +29,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  * Created by tsodring on 5/8/17.
  */
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class NoarkEntity
         implements INikitaEntity, Comparable<NoarkEntity> {
 
@@ -44,6 +47,7 @@ public class NoarkEntity
                     name = "uuid_gen_strategy_class",
                     value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
     @Column(name = "system_id", updatable = false, nullable = false)
+    @Type(type="uuid-char")
     private UUID systemId;
 
     @CreatedBy
@@ -67,7 +71,7 @@ public class NoarkEntity
     /**
      * M601 - opprettetAv (xs:string)
      */
-    @CreatedDate
+    @CreatedBy
     @Column(name = "created_by")
     @Audited
     private String createdBy;
@@ -89,11 +93,22 @@ public class NoarkEntity
 
     @Override
     public String getSystemId() {
-        return systemId.toString();
+        if (null != systemId)
+            return systemId.toString();
+        else
+            return null;
     }
 
     @Override
     public void setSystemId(UUID systemId) {
+        this.systemId = systemId;
+    }
+
+    public String getId() {
+        return systemId.toString();
+    }
+
+    public void setId(UUID systemId) {
         this.systemId = systemId;
     }
 

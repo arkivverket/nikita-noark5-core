@@ -27,8 +27,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  * Created by tsodring on 3/23/17.
  */
 @MappedSuperclass
-public class MetadataSuperClassBase
-        implements INikitaEntity, Comparable<MetadataSuperClassBase> {
+public class MetadataSuperClassBase implements INikitaEntity,
+        Comparable<MetadataSuperClassBase> {
 
     /**
      * M001 - systemID (xs:string)
@@ -50,13 +50,32 @@ public class MetadataSuperClassBase
     @Column(name = "description")
     @Audited
     protected String description;
+
     @CreatedBy
     @Column(name = "owned_by")
     @Audited
-    protected String ownedBy;
+    private String ownedBy;
+
     @Version
     @Column(name = "version")
-    protected Long version;
+    private Long version;
+
+    /**
+     * M600 - opprettetDato (xs:dateTime)
+     */
+    @CreatedDate
+    @Column(name = "created_date")
+    @DateTimeFormat(iso = DATE_TIME)
+    @Audited
+    private ZonedDateTime createdDate;
+
+    /**
+     * M601 - opprettetAv (xs:string)
+     */
+    @CreatedBy
+    @Column(name = "created_by")
+    @Audited
+    private String createdBy;
 
     /**
      * M??? - oppdatertDato (xs:dateTime)
@@ -72,23 +91,8 @@ public class MetadataSuperClassBase
     @LastModifiedBy
     @Column(name = "last_modified_by")
     private String lastModifiedBy;
-    /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @CreatedDate
-    @Column(name = "created_date")
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    private ZonedDateTime createdDate;
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @CreatedBy
-    @Column(name = "created_by")
-    @Audited
-    private String createdBy;
 
-    @Override
+
     public String getSystemId() {
         return systemId.toString();
     }

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -71,7 +72,7 @@ public class SeriesStatusService
      * @return
      */
     @Override
-    public SeriesStatus findBySystemId(String systemId) {
+    public SeriesStatus findBySystemId(UUID systemId) {
         return seriesStatusRepository.findBySystemId(systemId);
     }
 

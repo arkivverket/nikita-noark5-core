@@ -1,14 +1,16 @@
 package nikita.common.model.noark5.v5.casehandling;
 
+import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
-import static nikita.common.config.Constants.FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID;
-import static nikita.common.config.Constants.TABLE_CASE_FILE_SEQUENCE;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
 
 /**
  * A sequence number generator is required to automatically fill in values for
@@ -28,8 +30,8 @@ public class SequenceNumberGenerator
         implements Serializable {
 
     @Id
-    @ManyToOne(cascade = ALL)
-    @JoinColumn(name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID,
+    @ManyToOne
+    @JoinColumn(name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
             insertable = false, updatable = false)
     private AdministrativeUnit referenceAdministrativeUnit;
 
@@ -47,7 +49,8 @@ public class SequenceNumberGenerator
     }
 
     public SequenceNumberGenerator(
-            Integer year, AdministrativeUnit referenceAdministrativeUnit) {
+            Integer year,
+            AdministrativeUnit referenceAdministrativeUnit) {
         this.year = year;
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
     }
@@ -59,6 +62,14 @@ public class SequenceNumberGenerator
     public void setReferenceAdministrativeUnit(
             AdministrativeUnit referenceAdministrativeUnit) {
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Integer incrementByOne() {
@@ -82,7 +93,7 @@ public class SequenceNumberGenerator
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals (Object o) {
         if (this == o) return true;
         if (!(o instanceof SequenceNumberGenerator)) return false;
         SequenceNumberGenerator that = (SequenceNumberGenerator) o;

@@ -3,6 +3,7 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by tsodring on 31/1/18.

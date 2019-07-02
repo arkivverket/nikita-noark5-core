@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -180,7 +181,8 @@ public class ClassificationSystemService
         ClassificationSystemHateoas classificationSystemHateoas = new
                 ClassificationSystemHateoas(
                 classificationSystemRepository.
-                        findBySystemId(classificationSystemSystemId));
+                        findBySystemId(
+                                UUID.fromString(classificationSystemSystemId)));
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -320,7 +322,8 @@ public class ClassificationSystemService
             @NotNull String classificationSystemSystemId) {
         ClassificationSystem classificationSystem =
                 classificationSystemRepository.
-                        findBySystemId(classificationSystemSystemId);
+                        findBySystemId(
+                                UUID.fromString(classificationSystemSystemId));
         if (classificationSystem == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " ClassificationSystem, using systemId " +

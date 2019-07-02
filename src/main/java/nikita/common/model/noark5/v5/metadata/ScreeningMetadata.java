@@ -7,18 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_SCREENING_METADATA;
+import static nikita.common.config.N5ResourceMappings.SCREENING_METADATA;
+
 // Noark 5v5 skjermingmetadata
 @Entity
-@Table(name = "screening_metadata")
-// Enable soft delete
-// @SQLDelete(sql = "UPDATE screening_metadata SET deleted = true WHERE pk_screening_metadata_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_screening_metadata_id"))
-public class ScreeningMetadata extends MetadataSuperClass {
+@Table(name = TABLE_SCREENING_METADATA)
+public class ScreeningMetadata
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.SCREENING_METADATA;
+        return SCREENING_METADATA;
     }
 }

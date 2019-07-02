@@ -11,10 +11,13 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.TABLE_MEETING_FILE;
+import static nikita.common.config.N5ResourceMappings.MEETING_FILE;
 
 @Entity
 @Table(name = TABLE_MEETING_FILE)
+@Inheritance(strategy = JOINED)
 public class MeetingFile
         extends File {
 
@@ -101,7 +104,7 @@ public class MeetingFile
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.MEETING_FILE;
+        return MEETING_FILE;
     }
 
     public MeetingFile getReferenceNextMeeting() {

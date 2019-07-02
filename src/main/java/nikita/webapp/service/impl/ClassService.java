@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -403,7 +404,9 @@ public class ClassService
      * @return the newly found class object or null if it does not exist
      */
     protected Class getClassOrThrow(@NotNull String classSystemId) {
-        Optional<Class> klass = classRepository.findBySystemId(classSystemId);
+        Optional<Class> klass =
+                classRepository.
+                        findBySystemId(UUID.fromString(classSystemId));
         if (!klass.isPresent()) {
             String info = INFO_CANNOT_FIND_OBJECT + " Class, using systemId " +
                     classSystemId;

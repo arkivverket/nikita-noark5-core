@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -72,7 +73,8 @@ public class DocumentMediumService
      */
     @Override
     public DocumentMedium findBySystemId(String systemId) {
-        return documentMediumRepository.findBySystemId(systemId);
+        return documentMediumRepository.
+                findBySystemId(UUID.fromString(systemId));
     }
 
     /**

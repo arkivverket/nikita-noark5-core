@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_STORAGE_LOCATION;
+import static nikita.common.config.N5ResourceMappings.STORAGE_LOCATION;
 
 @Entity
 @Table(name = TABLE_STORAGE_LOCATION)
@@ -65,7 +66,7 @@ public class StorageLocation
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.STORAGE_LOCATION;
+        return STORAGE_LOCATION;
     }
 
     public List<Series> getReferenceSeries() {

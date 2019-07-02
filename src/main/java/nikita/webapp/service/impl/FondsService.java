@@ -35,6 +35,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -505,7 +506,7 @@ public class FondsService
      * @return the fonds object
      */
     private Fonds getFondsOrThrow(@NotNull String fondsSystemId) {
-        Fonds fonds = fondsRepository.findBySystemId(fondsSystemId);
+        Fonds fonds = fondsRepository.findBySystemId(UUID.fromString(fondsSystemId));
         if (fonds == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " Fonds, using systemId " +
                     fondsSystemId;

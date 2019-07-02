@@ -8,18 +8,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_FONDS_STATUS;
+import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
+
 // Noark 5v5 arkivstatus
 @Entity
-@Table(name = "fonds_status")
-// Enable soft delete of FondsStatus
-// @SQLDelete(sql = "UPDATE fonds_status SET deleted = true WHERE pk_fonds_status_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_fonds_status_id"))
-public class FondsStatus extends MetadataSuperClass {
+@Table(name = TABLE_FONDS_STATUS)
+public class FondsStatus
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.FONDS_STATUS;
+        return FONDS_STATUS;
     }
 }

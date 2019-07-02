@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.admin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IUserEntity;
@@ -12,6 +11,7 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -21,15 +21,12 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.FOREIGN_KEY_USER_PK;
-import static nikita.common.config.Constants.NOARK_ADMINISTRATION_PATH;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.USER;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = "nikita_user")
-@AttributeOverride(name = "id",
-        column = @Column(
-                name = PRIMARY_KEY_USER))
+@Table(name = TABLE_NIKITA_USER)
 @JsonDeserialize(using = UserDeserializer.class)
 @HateoasPacker(using = UserHateoasHandler.class)
 @HateoasObject(using = UserHateoas.class)
@@ -108,12 +105,13 @@ public class User
     @JoinTable(
             name = "nikita_user_authority",
             joinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
-                    referencedColumnName = PRIMARY_KEY_USER)},
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID)},
             inverseJoinColumns = {@JoinColumn(name = "authority_id",
                     referencedColumnName = "id")})
     private List<Authority> authorities = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+
+    @ManyToMany(mappedBy = "users")
     private List<AdministrativeUnit> administrativeUnits = new ArrayList<>();
 
     @Override
@@ -242,17 +240,6 @@ public class User
         this.administrativeUnits.add(administrativeUnit);
     }
 
-
-    //
-//    public List<CorrespondencePartInternal> getReferenceCorrespondencePartInternal() {
-//        return referenceCorrespondencePartInternal;
-//    }
-//
-//    public void setReferenceCorrespondencePartInternal(
-//            List<CorrespondencePartInternal> referenceCorrespondencePartInternal) {
-//        this.referenceCorrespondencePartInternal = referenceCorrespondencePartInternal;
-//    }
-
     public ZonedDateTime getLastPasswordResetDate() {
         return lastPasswordResetDate;
     }
@@ -268,7 +255,7 @@ public class User
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.USER;
+        return USER;
     }
 
     @Override

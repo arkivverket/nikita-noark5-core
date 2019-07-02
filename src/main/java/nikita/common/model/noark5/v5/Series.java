@@ -25,6 +25,7 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.SERIES;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
@@ -181,7 +182,7 @@ public class Series
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.SERIES;
+        return SERIES;
     }
 
     @Override

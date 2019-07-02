@@ -7,18 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_DOCUMENT_STATUS;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_STATUS;
+
 // Noark 5v5 dokumentstatus
 @Entity
-@Table(name = "document_status")
-// Enable soft delete
-// @SQLDelete(sql = "UPDATE document_status SET deleted = true WHERE pk_document_status_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_document_status_id"))
-public class DocumentStatus extends MetadataSuperClass {
+@Table(name = TABLE_DOCUMENT_STATUS)
+public class DocumentStatus
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.DOCUMENT_STATUS;
+        return DOCUMENT_STATUS;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
@@ -100,7 +101,7 @@ public class ClassificationTypeService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 classificationTypeRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -215,7 +216,8 @@ public class ClassificationTypeService
     private ClassificationType getClassificationTypeOrThrow(
             @NotNull String systemId) {
         ClassificationType classificationType =
-                classificationTypeRepository.findBySystemId(systemId);
+                classificationTypeRepository.
+                        findBySystemId(UUID.fromString(systemId));
         if (classificationType == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " ClassificationType, using " + "systemId " + systemId;

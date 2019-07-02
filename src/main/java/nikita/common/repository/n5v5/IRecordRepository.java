@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface IRecordRepository extends
@@ -27,7 +28,7 @@ public interface IRecordRepository extends
     Optional<Record> findById(Long id);
 
     // systemId
-    Record findBySystemId(String systemId);
+    Record findBySystemId(UUID systemId);
 
     // ownedBy
     List<Record> findByOwnedBy(String ownedBy);

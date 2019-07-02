@@ -10,13 +10,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_POSTAL_CODE;
+import static nikita.common.config.N5ResourceMappings.POSTAL_NUMBER;
+
 // Noark 5v5 postnummer
 @Entity
-@Table(name = "postal_code")
+@Table(name = TABLE_POSTAL_CODE)
+public class PostalCode
+        extends MetadataSuperClass {
 
-@AttributeOverride(name = "id", column = @Column(name = "pk_postal_code_id"))
-public class PostalCode extends MetadataSuperClass {
-    private static final long serialVersionUID = 1L;
+     private static final long serialVersionUID = 1L;
 
     /**
      * Kommunenummer (xs:string)
@@ -26,14 +29,14 @@ public class PostalCode extends MetadataSuperClass {
     protected String municipalitynumber;
 
     /**
-     * Kommunenavn (xs:string)
+     * Kommunenavn (xs:string")
      */
     @Column(name = "municipality_name")
     @Audited
     protected String municipalityname;
 
     /**
-     * kategori  (xs:string)
+     * kategori  (xs:string")
      */
     @Column(name = "category")
     @Audited
@@ -65,7 +68,7 @@ public class PostalCode extends MetadataSuperClass {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.POSTAL_NUMBER;
+        return POSTAL_NUMBER;
     }
 
     @Override

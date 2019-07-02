@@ -7,6 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 public interface IAdministrativeUnitRepository
         extends PagingAndSortingRepository<AdministrativeUnit, Long> {
@@ -23,8 +24,10 @@ public interface IAdministrativeUnitRepository
     // id
     Optional<AdministrativeUnit> findById(Long id);
 
+    Optional<AdministrativeUnit> findFirstByOrderByCreatedDateAsc();
+
     // systemId
-    AdministrativeUnit findBySystemId(String systemId);
+    AdministrativeUnit findBySystemId(UUID systemId);
 
     // administrativeUnitName
     AdministrativeUnit findByAdministrativeUnitName(

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.UUID;
+
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
@@ -114,7 +116,7 @@ public class SeriesStatusController {
     @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
     public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
                                                           HttpServletRequest request) {
-        SeriesStatus seriesStatus = seriesStatusService.findBySystemId(systemId);
+        SeriesStatus seriesStatus = seriesStatusService.findBySystemId(UUID.fromString(systemId));
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)

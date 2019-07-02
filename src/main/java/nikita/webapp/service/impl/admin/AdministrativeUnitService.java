@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.*;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.Constants.SYSTEM;
@@ -62,10 +62,8 @@ public class AdministrativeUnitService
     @Override
     public AdministrativeUnit
     createNewAdministrativeUnitBySystem(AdministrativeUnit administrativeUnit) {
-        administrativeUnit.setCreatedBy(SYSTEM);
-        administrativeUnit.setOwnedBy(SYSTEM);
         createSequenceNumberGenerator(administrativeUnit);
-        return administrativeUnit;
+        return administrativeUnitRepository.save(administrativeUnit);
     }
 
     /**
@@ -87,7 +85,7 @@ public class AdministrativeUnitService
         administrativeUnit.setCreatedBy(user.getCreatedBy());
         administrativeUnit.setOwnedBy(user.getCreatedBy());
         createSequenceNumberGenerator(administrativeUnit);
-        return administrativeUnit;
+        return administrativeUnitRepository.save(administrativeUnit);
     }
 
     // All READ methods
@@ -111,7 +109,7 @@ public class AdministrativeUnitService
      * @return the administrativeUnit
      */
     @Override
-    public AdministrativeUnit findBySystemId(String systemId) {
+    public AdministrativeUnit findBySystemId(UUID systemId) {
         return administrativeUnitRepository.findBySystemId(systemId);
     }
 
@@ -139,7 +137,6 @@ public class AdministrativeUnitService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingAdministrativeUnit.setVersion(version);
-        administrativeUnitRepository.save(existingAdministrativeUnit);
         return administrativeUnitRepository.save(incomingAdministrativeUnit);
     }
 
@@ -164,6 +161,40 @@ public class AdministrativeUnitService
         return administrativeUnitRepository.deleteByOwnedBy(getUser());
     }
 
+    @Override
+    public Optional<AdministrativeUnit> findFirst() {
+        return administrativeUnitRepository.findFirstByOrderByCreatedDateAsc();
+    }
+
+    /**
+     * Find the administrativeUnit identified for the  given user or throw a
+     * NoarkEntityNotFoundException. Note this method  will return a non-null
+     * administrativeUnit. An exception is thrown otherwise.
+     *
+     * @param user the user you want to retrieve an associated
+     *             administrativeUnit
+     * @return the administrativeUnit
+     */
+    public AdministrativeUnit getAdministrativeUnitOrThrow(User user) {
+
+        Set<User> users = new HashSet<>();
+        users.add(user);
+        Optional<AdministrativeUnit> administrativeUnit =
+                administrativeUnitRepository.
+                        findByUsersInAndDefaultAdministrativeUnit(
+                                users, true);
+        if (administrativeUnit.isPresent()) {
+            return administrativeUnit.get();
+        } else {
+            String info =
+                    INFO_CANNOT_FIND_OBJECT +
+                            " AdministrativeUnit associated with user " +
+                            user.toString();
+            logger.warn(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+    }
+
     // All HELPER methods
 
     /**
@@ -180,7 +211,8 @@ public class AdministrativeUnitService
     getAdministrativeUnitOrThrow(@NotNull String administrativeUnitSystemId) {
         AdministrativeUnit administrativeUnit =
                 administrativeUnitRepository
-                        .findBySystemId(administrativeUnitSystemId);
+                        .findBySystemId(
+                                UUID.fromString(administrativeUnitSystemId));
         if (administrativeUnit == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " AdministrativeUnit, using systemId " +
@@ -195,12 +227,14 @@ public class AdministrativeUnitService
      * Create a SequenceNumberGenerator object to be associated with this
      * administrativeUnit.
      *
+     * Explain why returning getReferenceAdministrativeUnit
      * @param administrativeUnit The administrativeUnit you want a
      *                           SequenceNumberGenerator for
      */
-    private void createSequenceNumberGenerator(
+    private AdministrativeUnit createSequenceNumberGenerator(
             AdministrativeUnit administrativeUnit) {
-        numberGeneratorService.
-                createSequenceNumberGenerator(administrativeUnit);
+        return numberGeneratorService.
+                createSequenceNumberGenerator(administrativeUnit).
+                getReferenceAdministrativeUnit();
     }
 }

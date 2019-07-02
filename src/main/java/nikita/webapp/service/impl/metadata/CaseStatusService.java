@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
@@ -101,7 +102,7 @@ public class CaseStatusService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 caseStatusRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -208,7 +209,7 @@ public class CaseStatusService
      */
     private CaseStatus getCaseStatusOrThrow(@NotNull String systemId) {
         CaseStatus caseStatus = caseStatusRepository.
-                findBySystemId(systemId);
+                findBySystemId(UUID.fromString(systemId));
         if (caseStatus == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " CaseStatus, using " +
                     "systemId " + systemId;
@@ -227,7 +228,7 @@ public class CaseStatusService
      */
     @Override
     public Optional<CaseStatus> getDefaultCaseStatus() {
-        return caseStatusRepository.findByDefaultCaseStatus(true);
+        return caseStatusRepository.findByCaseStatus(true);
     }
 
     /**

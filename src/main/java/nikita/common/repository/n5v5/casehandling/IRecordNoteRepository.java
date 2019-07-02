@@ -6,12 +6,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface IRecordNoteRepository extends
         PagingAndSortingRepository<RecordNote, Long> {
 
-    RecordNote findBySystemId(String systemId);
+    RecordNote findBySystemId(UUID systemId);
 
     List<RecordNote> findByOwnedBy(String ownedBy);
 

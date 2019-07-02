@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_PRECEDENCE;
+import static nikita.common.config.N5ResourceMappings.PRECEDENCE;
 
 @Entity
 @Table(name = TABLE_PRECEDENCE)
@@ -125,7 +126,7 @@ public class Precedence
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.PRECEDENCE;
+        return PRECEDENCE;
     }
 
     @Override

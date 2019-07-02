@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.SCREENING_DOCUMENT;
@@ -99,7 +100,7 @@ public class ScreeningDocumentService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 screeningDocumentRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -212,7 +213,7 @@ public class ScreeningDocumentService
     private ScreeningDocument getScreeningDocumentOrThrow(
             @NotNull String systemId) {
         ScreeningDocument screeningDocument = screeningDocumentRepository.
-                findBySystemId(systemId);
+                findBySystemId(UUID.fromString(systemId));
         if (screeningDocument == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " ScreeningDocument, using "
                     + "systemId " + systemId;

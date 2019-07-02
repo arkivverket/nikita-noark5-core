@@ -5,11 +5,13 @@ import nikita.common.model.noark5.v5.interfaces.entities.casehandling.ISimpleAdd
 
 import javax.persistence.*;
 
+import static nikita.common.config.Constants.TABLE_BUSINESS_ADDRESS;
+
 /**
  * Created by tsodring on 5/14/17.
  */
 @Entity
-@Table(name = "business_address")
+@Table(name = TABLE_BUSINESS_ADDRESS)
 public class BusinessAddress
         extends NoarkEntity
         implements ISimpleAddress {

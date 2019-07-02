@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.PRECEDENCE_STATUS;
@@ -98,7 +99,7 @@ public class PrecedenceStatusService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 precedenceStatusRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -211,7 +212,9 @@ public class PrecedenceStatusService
      */
     private PrecedenceStatus
     getPrecedenceStatusOrThrow(@NotNull String systemId) {
-        PrecedenceStatus precedenceStatus = precedenceStatusRepository.findBySystemId(systemId);
+        PrecedenceStatus precedenceStatus =
+                precedenceStatusRepository.
+                        findBySystemId(UUID.fromString(systemId));
         if (precedenceStatus == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " PrecedenceStatus,  " +
                     "using systemId " + systemId;

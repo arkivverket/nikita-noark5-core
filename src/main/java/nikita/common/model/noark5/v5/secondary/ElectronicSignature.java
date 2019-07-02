@@ -15,6 +15,7 @@ import java.time.ZonedDateTime;
 
 import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
 import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE;
+import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
@@ -103,7 +104,7 @@ public class ElectronicSignature
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.ELECTRONIC_SIGNATURE;
+        return ELECTRONIC_SIGNATURE;
     }
 
     public RegistryEntry getReferenceRegistryEntry() {

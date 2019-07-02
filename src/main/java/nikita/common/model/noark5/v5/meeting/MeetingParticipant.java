@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.MEETING_PARTICIPANT;
 
 @Entity
 @Table(name = TABLE_MEETING_PARTICIPANT)
@@ -56,7 +57,7 @@ public class MeetingParticipant
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.MEETING_PARTICIPANT;
+        return MEETING_PARTICIPANT;
     }
 
     public MeetingFile getReferenceMeetingFile() {

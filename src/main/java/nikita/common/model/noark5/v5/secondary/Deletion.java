@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_DELETION;
+import static nikita.common.config.N5ResourceMappings.DELETION;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -86,7 +87,7 @@ public class Deletion
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.DELETION;
+        return DELETION;
     }
 
     public List<Series> getReferenceSeries() {

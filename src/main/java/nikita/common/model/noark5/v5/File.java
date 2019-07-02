@@ -25,8 +25,7 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CLASS;
-import static nikita.common.config.N5ResourceMappings.REGISTRATION;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_FILE)
@@ -168,7 +167,7 @@ public class File
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.FILE;
+        return FILE;
     }
 
     @Override
@@ -298,7 +297,7 @@ public class File
         this.referencePart = referencePart;
     }
 
-    public void addReferenceParty(Part part) {
+    public void addReferencePart(Part part) {
         this.referencePart.add(part);
     }
 

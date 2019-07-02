@@ -36,6 +36,7 @@ import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -424,7 +425,8 @@ public class RegistryEntryService
     protected RegistryEntry getRegistryEntryOrThrow(
             @NotNull String registryEntrySystemId) {
         RegistryEntry registryEntry =
-                registryEntryRepository.findBySystemId(registryEntrySystemId);
+                registryEntryRepository.
+                        findBySystemId(UUID.fromString(registryEntrySystemId));
         if (registryEntry == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " RegistryEntry, using systemId " + registryEntrySystemId;

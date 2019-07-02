@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW;
 
 @Entity
 @Table(name = TABLE_DOCUMENT_FLOW)
@@ -122,7 +123,7 @@ public class DocumentFlow
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.DOCUMENT_FLOW;
+        return DOCUMENT_FLOW;
     }
 
     @Override

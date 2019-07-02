@@ -11,6 +11,7 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.TABLE_MEETING_RECORD;
+import static nikita.common.config.N5ResourceMappings.MEETING_RECORD;
 
 @Entity
 @Table(name = TABLE_MEETING_RECORD)
@@ -110,7 +111,7 @@ public class MeetingRecord
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.MEETING_RECORD;
+        return MEETING_RECORD;
     }
 
     public MeetingRecord getReferenceToMeetingRegistration() {

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by tsodring on 31/1/18.
@@ -72,7 +73,8 @@ public class DocumentStatusService
      */
     @Override
     public DocumentStatus findBySystemId(String systemId) {
-        return documentStatusRepository.findBySystemId(systemId);
+        return documentStatusRepository.
+                findBySystemId(UUID.fromString(systemId));
     }
 
     /**

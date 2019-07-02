@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.metadata;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import org.hibernate.envers.Audited;
 
@@ -10,23 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_CASE_FILE_STATUS;
+import static nikita.common.config.Constants.TABLE_CASE_STATUS;
+import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
 
 // Noark 5v5 saksstatus
 @Entity
-@Table(name = "case_status")
-// Enable soft delete
-// @SQLDelete(sql = "UPDATE case_status SET deleted = true WHERE pk_case_status_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id",
-        column = @Column(name = PRIMARY_KEY_CASE_FILE_STATUS))
-public class CaseStatus extends MetadataSuperClass {
+@Table(name = TABLE_CASE_STATUS)
+public class CaseStatus
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     // Used identify as a default
-    @Column(name = "default_case_status")
+    @Column(name = "case_status")
     @Audited
-    private Boolean defaultCaseStatus;
+    private Boolean caseStatus;
 
     // Links to CaseFile
     @OneToMany(mappedBy = "referenceCaseFileStatus")
@@ -35,15 +32,15 @@ public class CaseStatus extends MetadataSuperClass {
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CASE_STATUS;
+        return CASE_STATUS;
     }
 
-    public Boolean getDefaultCaseStatus() {
-        return defaultCaseStatus;
+    public Boolean getCaseStatus() {
+        return caseStatus;
     }
 
-    public void setDefaultCaseStatus(Boolean defaultCaseStatus) {
-        this.defaultCaseStatus = defaultCaseStatus;
+    public void setCaseStatus(Boolean caseStatus) {
+        this.caseStatus = caseStatus;
     }
 
     @Override
@@ -52,11 +49,11 @@ public class CaseStatus extends MetadataSuperClass {
         if (!(o instanceof CaseStatus)) return false;
         if (!super.equals(o)) return false;
         CaseStatus that = (CaseStatus) o;
-        return Objects.equals(defaultCaseStatus, that.defaultCaseStatus);
+        return Objects.equals(caseStatus, that.caseStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), defaultCaseStatus);
+        return Objects.hash(super.hashCode(), caseStatus);
     }
 }

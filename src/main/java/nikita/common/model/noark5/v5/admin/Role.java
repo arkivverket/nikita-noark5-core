@@ -10,7 +10,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 
 //@Entity
-//@Table(name = "nikita_role")
+//@Table(name = TABLE_nikita_role")
 public class Role extends NoarkEntity implements IRoleEntity {
 
     @Id

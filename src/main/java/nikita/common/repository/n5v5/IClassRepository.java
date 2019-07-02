@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface IClassRepository
@@ -14,7 +15,7 @@ public interface IClassRepository
     Optional<Class> findById(Long id);
 
     // systemId
-    Optional<Class> findBySystemId(String systemId);
+    Optional<Class> findBySystemId(UUID systemId);
 
     // ownedBy
     List<Class> findByOwnedBy(String ownedBy);

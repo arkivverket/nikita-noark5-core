@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface ICaseStatusRepository
         extends MetadataRepository<CaseStatus, Long> {
 
-    Optional<CaseStatus> findByDefaultCaseStatus(Boolean defaultCaseStatus);
+    Optional<CaseStatus> findByCaseStatus(Boolean aseStatus);
 }

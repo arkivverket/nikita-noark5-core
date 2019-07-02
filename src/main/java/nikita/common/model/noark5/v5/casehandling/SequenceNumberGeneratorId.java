@@ -1,8 +1,11 @@
 package nikita.common.model.noark5.v5.casehandling;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * SequenceNumberGeneratorId is used as a  @IdClass for
@@ -13,14 +16,15 @@ import java.util.Objects;
 public class SequenceNumberGeneratorId
         implements Serializable {
 
+    @Type(type="uuid-char")
+    private UUID referenceAdministrativeUnit;
     private Integer year;
-    private Long referenceAdministrativeUnit;
 
     public SequenceNumberGeneratorId() {
     }
 
     public SequenceNumberGeneratorId(Integer year,
-                                     Long referenceAdministrativeUnit) {
+                                     UUID referenceAdministrativeUnit) {
         this.year = year;
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
     }
@@ -33,11 +37,11 @@ public class SequenceNumberGeneratorId
         this.year = year;
     }
 
-    public Long getReferenceAdministrativeUnit() {
+    public UUID getReferenceAdministrativeUnit() {
         return referenceAdministrativeUnit;
     }
 
-    public void setReferenceAdministrativeUnit(Long referenceAdministrativeUnit) {
+    public void setReferenceAdministrativeUnit(UUID referenceAdministrativeUnit) {
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
     }
 

@@ -43,8 +43,8 @@ public class FileHateoasHandler
         addNewComment(entity, hateoasNoarkObject);
         addSubFile(entity, hateoasNoarkObject);
         addNewSubFile(entity, hateoasNoarkObject);
-        addNewParty(entity, hateoasNoarkObject);
-        addParty(entity, hateoasNoarkObject);
+        addNewPart(entity, hateoasNoarkObject);
+        addPart(entity, hateoasNoarkObject);
         addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         addClass(entity, hateoasNoarkObject);
@@ -176,7 +176,7 @@ public class FileHateoasHandler
      * @param hateoasNoarkObject hateoasFile
      */
     @Override
-    public void addParty(INikitaEntity entity,
+    public void addPart(INikitaEntity entity,
                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
@@ -195,7 +195,7 @@ public class FileHateoasHandler
      * @param hateoasNoarkObject hateoasFile
      */
     @Override
-    public void addNewParty(INikitaEntity entity,
+    public void addNewPart(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +

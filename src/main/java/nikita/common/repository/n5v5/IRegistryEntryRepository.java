@@ -6,6 +6,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface IRegistryEntryRepository extends
@@ -15,7 +16,7 @@ public interface IRegistryEntryRepository extends
     @Override
     RegistryEntry save(RegistryEntry registryEntry);
 
-    RegistryEntry findBySystemId(String systemId);
+    RegistryEntry findBySystemId(UUID systemId);
 
     List<RegistryEntry> findByReferenceFile(File file);
 

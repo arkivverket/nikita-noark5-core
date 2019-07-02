@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_CLASSIFICATION_SYSTEM;
+import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
 
 @Entity
 @Table(name = TABLE_CLASSIFICATION_SYSTEM)
@@ -55,7 +56,7 @@ public class ClassificationSystem
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CLASSIFICATION_SYSTEM;
+        return CLASSIFICATION_SYSTEM;
     }
 
     public List<Series> getReferenceSeries() {

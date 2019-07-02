@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_COMMENT;
+import static nikita.common.config.N5ResourceMappings.COMMENT;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -105,7 +106,7 @@ public class Comment
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.COMMENT;
+        return COMMENT;
     }
 
     public List<File> getReferenceFile() {

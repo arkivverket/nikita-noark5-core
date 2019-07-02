@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FORMAT;
@@ -98,7 +99,7 @@ public class FormatService
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 formatRepository.save(
                         formatRepository
-                                .findBySystemId(systemId)));
+                                .findBySystemId(UUID.fromString(systemId))));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -205,8 +206,8 @@ public class FormatService
     private Format
     getFormatOrThrow(@NotNull String systemId) {
         Format format =
-                formatRepository.findBySystemId
-                        (systemId);
+                formatRepository.
+                        findBySystemId(UUID.fromString(systemId));
         if (format == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " Format, using systemId " +
                     systemId;

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
@@ -71,7 +72,8 @@ public class CorrespondencePartTypeService
      */
     @Override
     public CorrespondencePartType findBySystemId(String systemId) {
-        return correspondencePartTypeRepository.findBySystemId(systemId);
+        return correspondencePartTypeRepository.
+                findBySystemId(UUID.fromString(systemId));
     }
 
     /**

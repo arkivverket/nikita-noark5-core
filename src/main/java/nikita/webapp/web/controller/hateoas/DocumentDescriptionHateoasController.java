@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.UUID;
+
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;

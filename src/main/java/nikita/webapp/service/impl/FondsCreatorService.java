@@ -22,6 +22,7 @@ import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
@@ -218,7 +219,7 @@ public class FondsCreatorService
     protected FondsCreator getFondsCreatorOrThrow(
             @NotNull String fondsCreatorSystemId) {
         FondsCreator fondsCreator = fondsCreatorRepository.
-                findBySystemId(fondsCreatorSystemId);
+                findBySystemId(UUID.fromString(fondsCreatorSystemId));
         if (fondsCreator == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " FondsCreator, using systemId " + fondsCreatorSystemId;

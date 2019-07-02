@@ -85,7 +85,7 @@ public class UserService
         // default one
         if (user.getAdministrativeUnits().size() < 1) {
             AdministrativeUnit administrativeUnit = new AdministrativeUnit();
-            administrativeUnit.setOwnedBy(user.getOwnedBy());
+            administrativeUnit.setOwnedBy(getUser());
             administrativeUnit.setAdministrativeUnitName("system opprettet " +
                     "AdministrativtEnhet for bruker " + user.getUsername());
             administrativeUnit.setShortName("adminenhet " + user.getUsername());

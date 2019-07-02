@@ -22,7 +22,7 @@ concepts from Noark 5, as used by this project.
     Klassifikasjonssystem  Classification System
                      Kode  Code
              Konvertering  Conversion
-       Korrespondansepart  Correspondence Party
+       Korrespondansepart  Correspondence Part
            Kryssreferanse  Cross Reference
                     Mappe  File
                 Mappetype  File Type
@@ -32,7 +32,7 @@ concepts from Noark 5, as used by this project.
                 Presedens  Precedence
              Registrering  Record
                 Saksmappe  Case File
-                 Sakspart  Case Party
+                 Sakspart  Case Part
                 Skjerming  Screening
                  Sletting  Deletion
                    Tittel  Title

@@ -786,33 +786,33 @@ public final class CommonUtils {
                     IPart partyObject,
                     ObjectNode objectNode,
                     StringBuilder errors) {
-                List<Part> caseParties = partyObject.getReferenceParty();
+                List<Part> caseParties = partyObject.getReferencePart();
                 if (caseParties != null && caseParties.size() > 0) {
                     for (Part part : caseParties) {
-                        deserialiseParty(part, objectNode, errors);
+                        deserialisePart(part, objectNode, errors);
                         objectNode.remove(PART);
                     }
                 }
             }
 
-            public static void deserialiseParty(IPartEntity partyEntity, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialisePart(IPartEntity partyEntity, ObjectNode objectNode, StringBuilder errors) {
 
                 // Deserialize partyId
                 JsonNode currentNode = objectNode.get(PART_ID);
                 if (null != currentNode) {
-                    partyEntity.setPartyId(currentNode.textValue());
+                    partyEntity.setPartId(currentNode.textValue());
                     objectNode.remove(PART_ID);
                 }
                 // Deserialize partyName
                 currentNode = objectNode.get(PART_NAME);
                 if (null != currentNode) {
-                    partyEntity.setPartyName(currentNode.textValue());
+                    partyEntity.setPartName(currentNode.textValue());
                     objectNode.remove(PART_NAME);
                 }
                 // Deserialize partyRole
                 currentNode = objectNode.get(PART_ROLE);
                 if (null != currentNode) {
-                    partyEntity.setPartyRole(currentNode.textValue());
+                    partyEntity.setPartRole(currentNode.textValue());
                     objectNode.remove(PART_ROLE);
                 }
                 // Deserialize postalAddress
@@ -904,7 +904,7 @@ public final class CommonUtils {
 
             public static List<Part> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
                 ArrayList<Part> caseParties = new ArrayList<>();
-                //JsonNode jsonParty = objectNode.get(PART);
+                //JsonNode jsonPart = objectNode.get(PART);
                 // TODO: I seem tobe missing my body of code ...
 /*                for (CorrespondencePart correspondencePart: caseParties) {
                     deserialiseCorrespondencePart(correspondencePart, objectNode);
@@ -1421,27 +1421,27 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printParty(JsonGenerator jgen, IPart partyObject)
+            public static void printPart(JsonGenerator jgen, IPart partyObject)
                     throws IOException {
                 if (partyObject != null) {
-                    List<Part> caseParties = partyObject.getReferenceParty();
+                    List<Part> caseParties = partyObject.getReferencePart();
                     if (caseParties != null && caseParties.size() > 0) {
                         jgen.writeArrayFieldStart(PART);
                         for (Part part : caseParties) {
                             if (part != null) {
                                 jgen.writeObjectFieldStart(PART);
 
-                                if (part.getPartyId() != null) {
+                                if (part.getPartId() != null) {
                                     jgen.writeStringField(PART_ID,
-                                            part.getPartyId());
+                                            part.getPartId());
                                 }
-                                if (part.getPartyName() != null) {
+                                if (part.getPartName() != null) {
                                     jgen.writeStringField(PART_NAME,
-                                            part.getPartyName());
+                                            part.getPartName());
                                 }
-                                if (part.getPartyRole() != null) {
+                                if (part.getPartRole() != null) {
                                     jgen.writeStringField(PART_ROLE,
-                                            part.getPartyRole());
+                                            part.getPartRole());
                                 }
                                 if (part.getPostalAddress() != null) {
                                     jgen.writeStringField(POSTAL_ADDRESS,

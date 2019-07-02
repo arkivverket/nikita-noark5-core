@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_DISPOSAL_UNDERTAKEN;
+import static nikita.common.config.N5ResourceMappings.DISPOSAL_UNDERTAKEN;
 
 @Entity
 @Table(name = TABLE_DISPOSAL_UNDERTAKEN)
@@ -68,7 +69,7 @@ public class DisposalUndertaken
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.DISPOSAL_UNDERTAKEN;
+        return DISPOSAL_UNDERTAKEN;
     }
 
     public List<Series> getReferenceSeries() {

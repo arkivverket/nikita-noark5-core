@@ -627,6 +627,9 @@ public final class Constants {
 
     // Database Constants
 
+    public static final String TABLE_NIKITA_USER = "nikita_user";
+    public static final String TABLE_NIKITA_AUTHORITY = "nikita_authority";
+
     // Table Constants
     public static final String TABLE_FONDS = "fonds";
     public static final String TABLE_SERIES = "series";
@@ -724,12 +727,63 @@ public final class Constants {
     public static final String TABLE_MEETING_PARTICIPANT = "meeting_participant";
     public static final String TABLE_MEETING_RECORD = "meeting_record";
     public static final String TABLE_POSTAL_ADDRESS = "postal_address";
+    public static final String TABLE_BUSINESS_ADDRESS = "business_address";
     public static final String TABLE_RESIDING_ADDRESS = "residing_address";
     public static final String TABLE_KEYWORD = "keyword";
     public static final String TABLE_SCREENING = "screening";
     public static final String TABLE_SIGN_OFF = "sign_off";
     public static final String TABLE_DOCUMENT_DESCRIPTION =
             "document_description";
+
+    // Metadata tablenames
+    public static final String TABLE_ACCESS_CATEGORY = "md_access_category";
+    public static final String TABLE_ACCESS_RESTRICTION = 
+            "md_access_restriction";
+    public static final String TABLE_ASSOCIATED_WITH_RECORD_AS = 
+            "md_associated_with_record_as";
+    public static final String TABLE_CASE_STATUS = "md_case_status";
+    public static final String TABLE_CLASSIFICATION_TYPE =
+            "md_classification_type";
+    public static final String TABLE_CLASSIFIED_CODE = "md_classified_code";
+    public static final String TABLE_COMMENT_TYPE = "md_comment_type";
+    public static final String TABLE_CORRESPONDENCE_PART_TYPE =
+            "md_correspondence_part_type";
+    public static final String TABLE_COUNTRY = "md_country";
+    public static final String TABLE_DELETION_TYPE = "md_deletion_type";
+    public static final String TABLE_DISPOSAL_DECISION = "md_disposal_decision";
+    public static final String TABLE_DOCUMENT_MEDIUM = "md_document_medium";
+    public static final String TABLE_DOCUMENT_STATUS = "md_document_status";
+    public static final String TABLE_DOCUMENT_TYPE = "md_document_type";
+    public static final String TABLE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL =
+            "md_electronic_signature_security_level";
+    public static final String TABLE_ELECTRONIC_SIGNATURE_VERIFIED =
+            "md_electronic_signature_verified";
+    public static final String TABLE_EVENT_TYPE = "md_event_type";
+    public static final String TABLE_FILE_TYPE = "md_file_type";
+    public static final String TABLE_FLOW_STATUS = "md_flow_status";
+    public static final String TABLE_FONDS_STATUS = "md_fonds_status";
+    public static final String TABLE_FORMAT = "md_format";
+    public static final String TABLE_MEETING_FILE_TYPE = "md_meeting_file_type";
+    public static final String TABLE_MEETING_PARTICIPANT_FUNCTION =
+            "md_meeting_participant_function";
+    public static final String TABLE_MEETING_REGISTRATION_STATUS =
+            "md_meeting_registration_status";
+    public static final String TABLE_MEETING_REGISTRATION_TYPE =
+            "md_meeting_registration_type";
+    public static final String TABLE_PART_ROLE = "md_part_role";
+    public static final String TABLE_POSTAL_CODE = "md_postal_code";
+    public static final String TABLE_PRECEDENCE_STATUS = "md_precedence_status";
+    public static final String TABLE_REGISTRY_ENTRY_STATUS =
+            "md_registry_entry_status";
+    public static final String TABLE_REGISTRY_ENTRY_TYPE =
+            "md_registry_entry_type";
+    public static final String TABLE_SCREENING_DOCUMENT =
+            "md_screening_document";
+    public static final String TABLE_SCREENING_METADATA =
+            "md_screening_metadata";
+    public static final String TABLE_SERIES_STATUS = "md_series_status";
+    public static final String TABLE_SIGN_OFF_METHOD = "md_sign_off_method";
+    public static final String TABLE_VARIANT_FORMAT = "md_variant_format";
 
     // Column Constants
     // Foreign key names
@@ -763,9 +817,6 @@ public final class Constants {
 
     public static final String FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK =
             "f_pk_correspondence_part_person_id";
-
-    public static final String FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK_ADMINISTRATIVE_UNIT_ID =
-            "administrative_unit_pk_administrative_unit_id";
 
     public static final String FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID =
             "f_pk_correspondence_part_internal_id";
@@ -834,7 +885,7 @@ public final class Constants {
             "cross_reference_record_id";
 
     // Primary key names
-    public static final String PRIMARY_KEY_SYSTEM_ID = "pk_fonds_id";
+    public static final String PRIMARY_KEY_SYSTEM_ID = "system_id";
 
     public static final String JOIN_CASE_FILE_STATUS =
             "case_file_case_file_status_id";

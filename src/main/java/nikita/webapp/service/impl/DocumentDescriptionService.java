@@ -26,6 +26,7 @@ import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -257,7 +258,7 @@ public class DocumentDescriptionService
             @NotNull String documentDescriptionSystemId) {
         DocumentDescription documentDescription =
                 documentDescriptionRepository.findBySystemId(
-                        documentDescriptionSystemId);
+                        UUID.fromString(documentDescriptionSystemId));
         if (documentDescription == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " DocumentDescription, using systemId " +

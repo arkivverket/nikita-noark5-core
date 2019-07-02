@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface ISeriesRepository
@@ -23,7 +24,7 @@ public interface ISeriesRepository
     Optional<Series> findById(Long id);
 
     // systemId
-    Series findBySystemId(String systemId);
+    Series findBySystemId(UUID systemId);
 
     // ownedBy
     List<Series> findByOwnedBy(String ownedBy);

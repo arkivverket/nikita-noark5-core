@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_INTERNAL;
+import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
 
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART_INTERNAL)
@@ -98,7 +99,7 @@ public class CorrespondencePartInternal
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
+        return CORRESPONDENCE_PART_INTERNAL;
     }
 
     @Override

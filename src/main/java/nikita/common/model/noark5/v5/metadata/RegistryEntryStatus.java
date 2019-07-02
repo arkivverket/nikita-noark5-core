@@ -7,18 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.TABLE_REGISTRY_ENTRY_STATUS;
+import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_STATUS;
+
 // Noark 5v5 journalposttype
 @Entity
-@Table(name = "registry_entry_status")
-// Enable soft delete
-// @SQLDelete(sql = "UPDATE registry_entry_status SET deleted = true WHERE pk_registry_entry_status_id = ? and version = ?")
-// @Where(clause = "deleted <> true")
-@AttributeOverride(name = "id", column = @Column(name = "pk_registry_entry_status_id"))
-public class RegistryEntryStatus extends MetadataSuperClass {
+@Table(name = TABLE_REGISTRY_ENTRY_STATUS)
+public class RegistryEntryStatus
+        extends MetadataSuperClass {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.REGISTRY_ENTRY_STATUS;
+        return REGISTRY_ENTRY_STATUS;
     }
 }

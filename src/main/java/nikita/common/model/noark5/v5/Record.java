@@ -27,6 +27,7 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.RECORD;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -252,7 +253,7 @@ public class Record
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.RECORD;
+        return RECORD;
     }
 
     public File getReferenceFile() {
@@ -398,7 +399,7 @@ public class Record
         this.referencePart = referencePart;
     }
 
-    public void addReferenceParty(Part part) {
+    public void addReferencePart(Part part) {
         this.referencePart.add(part);
     }
 

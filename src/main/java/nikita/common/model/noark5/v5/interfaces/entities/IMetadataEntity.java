@@ -5,7 +5,8 @@ import java.io.Serializable;
 /**
  *
  */
-public interface IMetadataEntity extends INikitaEntity, Serializable {
+public interface IMetadataEntity
+        extends INikitaEntity, Serializable {
 
     String getCode();
 

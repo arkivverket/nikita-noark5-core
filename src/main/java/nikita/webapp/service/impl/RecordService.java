@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -78,7 +79,7 @@ public class RecordService
     public ResponseEntity<RecordHateoas> save(Record record) {
         RecordHateoas recordHateoas =
                 new RecordHateoas(recordRepository.save(record));
-        classHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(recordHateoas.getEntityVersion().toString())
@@ -155,9 +156,9 @@ public class RecordService
     public ResponseEntity<FileHateoas>
     findFileAssociatedWithRecord(@NotNull final String systemId) {
         FileHateoas fileHateoas = new FileHateoas(
-                recordRepository.findBySystemId(systemId).
-                        getReferenceFile());
-
+                recordRepository.
+                        findBySystemId(
+                                UUID.fromString(systemId)).getReferenceFile());
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
@@ -176,7 +177,7 @@ public class RecordService
     public ResponseEntity<ClassHateoas>
     findClassAssociatedWithRecord(@NotNull final String systemId) {
         ClassHateoas classHateoas = new ClassHateoas(
-                recordRepository.findBySystemId(systemId).
+                recordRepository.findBySystemId(UUID.fromString(systemId)).
                         getReferenceClass());
 
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
@@ -197,7 +198,7 @@ public class RecordService
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithRecord(@NotNull final String systemId) {
         SeriesHateoas seriesHateoas = new SeriesHateoas(
-                recordRepository.findBySystemId(systemId).
+                recordRepository.findBySystemId(UUID.fromString(systemId)).
                         getReferenceSeries());
 
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
@@ -307,7 +308,8 @@ public class RecordService
      * @return the record
      */
     protected Record getRecordOrThrow(@NotNull String systemID) {
-        Record record = recordRepository.findBySystemId(systemID);
+        Record record =
+                recordRepository.findBySystemId(UUID.fromString(systemID));
         if (record == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " Record, using systemId " + systemID;

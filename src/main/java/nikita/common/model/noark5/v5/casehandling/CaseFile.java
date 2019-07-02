@@ -25,13 +25,16 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_FILE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
 @Table(name = TABLE_CASE_FILE)
+@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = CaseFileDeserializer.class)
 @HateoasPacker(using = CaseFileHateoasHandler.class)
 @HateoasObject(using = CaseFileHateoas.class)
@@ -115,14 +118,14 @@ public class CaseFile
     private List<Precedence> referencePrecedence = new ArrayList<>();
 
     // Link to AdministrativeUnit
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = CASE_FILE_ADMINISTRATIVE_UNIT_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private AdministrativeUnit referenceAdministrativeUnit;
 
     // Link to CaseFileStatus
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = JOIN_CASE_FILE_STATUS,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore

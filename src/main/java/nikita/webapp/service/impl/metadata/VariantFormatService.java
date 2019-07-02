@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.VARIANT_FORMAT;
@@ -97,7 +98,7 @@ public class VariantFormatService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 variantFormatRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -203,7 +204,7 @@ public class VariantFormatService
      */
     private VariantFormat getVariantFormatOrThrow(@NotNull String systemId) {
         VariantFormat variantFormat = variantFormatRepository.
-                findBySystemId(systemId);
+                findBySystemId(UUID.fromString(systemId));
         if (variantFormat == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " VariantFormat, using " +
                     "systemId " + systemId;

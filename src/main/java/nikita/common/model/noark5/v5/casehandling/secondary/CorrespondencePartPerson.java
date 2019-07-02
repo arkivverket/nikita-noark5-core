@@ -20,6 +20,7 @@ import java.util.List;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_PERSON;
+import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_PERSON;
 
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART_PERSON)
@@ -125,7 +126,7 @@ public class CorrespondencePartPerson
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CORRESPONDENCE_PART_PERSON;
+        return CORRESPONDENCE_PART_PERSON;
     }
 
     @Override

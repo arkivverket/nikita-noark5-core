@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FLOW_STATUS;
@@ -97,7 +98,7 @@ public class FlowStatusService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 flowStatusRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -197,7 +198,8 @@ public class FlowStatusService
      */
     private FlowStatus
     getFlowStatusOrThrow(@NotNull String systemId) {
-        FlowStatus flowStatus = flowStatusRepository.findBySystemId(systemId);
+        FlowStatus flowStatus =
+                flowStatusRepository.findBySystemId(UUID.fromString(systemId));
         if (flowStatus == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " FlowStatus, using " +
                     "systemId " + systemId;

@@ -26,7 +26,7 @@ Primary entities are the entities that make up the fondsstructure (arkivstruktur
   
   Secondary entities are entities that are related to a primary entity, there is little reason for them to exist 
   if they are not related to a primary entity. A primary entity identifier is typically required to create a secondary 
-  entity, e.g. to create a new caseParty, the following POST URL is used:
+  entity, e.g. to create a new casePart, the following POST URL is used:
     
     [contextPath][api]/arkivstruktur/sakarkiv/saksmappe/85b85543-d09b-40f7-a768-a4776e127bef/ny-sakspart
    
@@ -59,7 +59,7 @@ Primary entities are the entities that make up the fondsstructure (arkivstruktur
   The list of Noark secondary entities (non-embeddable) is as follows:
   
   * Author (forfatter) [M:M]
-  * CaseParty (sakspart) [M:M]
+  * CasePart (sakspart) [M:M]
   * Comment (merknad) [M:M]
   * Conversion (konvertering) [M:1] 
   * CorrespondencePart (korrespondansepart) [M:M]

@@ -32,6 +32,7 @@ import java.util.List;
 
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -352,7 +353,7 @@ public class RegistryEntry
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.REGISTRY_ENTRY;
+        return REGISTRY_ENTRY;
     }
 
     @Override

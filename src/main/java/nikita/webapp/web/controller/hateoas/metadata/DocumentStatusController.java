@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_STATUS;
@@ -123,7 +124,8 @@ public class DocumentStatusController {
     @RequestMapping(value = DOCUMENT_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
     public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
                                                           HttpServletRequest request) {
-        DocumentStatus documentStatus = documentStatusService.findBySystemId(systemId);
+        DocumentStatus documentStatus =
+                documentStatusService.findBySystemId(systemId);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)

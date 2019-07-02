@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_SCREENING;
+import static nikita.common.config.N5ResourceMappings.SCREENING;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
@@ -141,7 +142,7 @@ public class Screening
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.SCREENING;
+        return SCREENING;
     }
 
     public List<Series> getReferenceSeries() {

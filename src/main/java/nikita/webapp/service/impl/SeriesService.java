@@ -27,6 +27,7 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -299,7 +300,8 @@ public class SeriesService
      * @return the Series object
      */
     private Series getSeriesOrThrow(@NotNull String seriesSystemId) {
-        Series series = seriesRepository.findBySystemId(seriesSystemId);
+        Series series = seriesRepository.
+                findBySystemId(UUID.fromString(seriesSystemId));
         if (series == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " Series, using systemId "
                     + seriesSystemId;

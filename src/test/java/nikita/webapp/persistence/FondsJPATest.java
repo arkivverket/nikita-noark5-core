@@ -14,6 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolationException;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 /**
@@ -59,7 +61,8 @@ public class FondsJPATest {
      */
     @Test
     public void whenGetNonExistingFondsEntity_thenIsNull() {
-        assertThat(fondsRepository.findBySystemId(fonds3SystemId)).isNull();
+        assertThat(fondsRepository.findBySystemId(
+                UUID.fromString(fonds3SystemId))).isNull();
     }
 
     /**
@@ -79,9 +82,11 @@ public class FondsJPATest {
     @Test
     @Sql("/db-tests/createFonds.sql")
     public void whenInitializedByDbUnit_thenFindBySystemId() {
-        Fonds fonds = fondsRepository.findBySystemId(fonds1SystemId);
+        Fonds fonds = fondsRepository.findBySystemId(
+                UUID.fromString(fonds1SystemId));
         assertThat(fonds).isNotNull();
-        fonds = fondsRepository.findBySystemId(fonds2SystemId);
+        fonds = fondsRepository.findBySystemId(
+                UUID.fromString(fonds2SystemId));
         assertThat(fonds).isNotNull();
     }
 
@@ -92,7 +97,8 @@ public class FondsJPATest {
     @Test
     @Sql("/db-tests/createFonds.sql")
     public void whenInitializedByDbUnit_thenDeleteBySystemId() {
-        Fonds fonds = fondsRepository.findBySystemId(fonds1SystemId);
+        Fonds fonds = fondsRepository.findBySystemId(
+                UUID.fromString(fonds1SystemId));
         fondsRepository.delete(fonds);
     }
 
@@ -102,7 +108,8 @@ public class FondsJPATest {
      */
     @Test(expected = InvalidDataAccessApiUsageException.class)
     public void whenDeleteNonExistingFondsEntity_thenIsNull() {
-        Fonds fonds = fondsRepository.findBySystemId(fonds3SystemId);
+        Fonds fonds = fondsRepository.findBySystemId(
+                UUID.fromString(fonds3SystemId));
         fondsRepository.delete(fonds);
     }
 }

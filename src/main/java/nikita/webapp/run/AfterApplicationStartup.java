@@ -17,6 +17,7 @@ import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IFondsService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.ISeriesService;
+import nikita.webapp.util.DemoData;
 import nikita.webapp.util.InternalNameTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,15 +55,11 @@ public class AfterApplicationStartup {
     private static final Logger logger =
             LoggerFactory.getLogger(AfterApplicationStartup.class);
     private final RequestMappingHandlerMapping handlerMapping;
-    private UserService userService;
-    private AuthorityRepository authorityRepository;
-    private AdministrativeUnitService administrativeUnitService;
-    private IFondsService fondsService;
-    private ISeriesService seriesService;
-    private ICaseFileService caseFileService;
-    private IRecordService recordService;
+
     private ApplicationContext applicationContext;
     private InternalNameTranslator internalNameTranslator;
+    private DemoData demoData;
+
 
     @Value("${nikita.startup.create-demo-users}")
     private Boolean createUsers = false;
@@ -78,25 +75,11 @@ public class AfterApplicationStartup {
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,
-                                   UserService userService,
-                                   AuthorityRepository authorityRepository,
-                                   AdministrativeUnitService
-                                           administrativeUnitService,
-                                   IFondsService fondsService,
-                                   ISeriesService seriesService,
-                                   ICaseFileService caseFileService,
-                                   IRecordService recordService,
+                                   DemoData demoData,
                                    ApplicationContext applicationContext,
                                    InternalNameTranslator internalNameTranslator) {
-
         this.handlerMapping = handlerMapping;
-        this.userService = userService;
-        this.authorityRepository = authorityRepository;
-        this.fondsService = fondsService;
-        this.seriesService = seriesService;
-        this.caseFileService = caseFileService;
-        this.administrativeUnitService = administrativeUnitService;
-        this.recordService = recordService;
+        this.demoData = demoData;
         this.applicationContext = applicationContext;
         this.internalNameTranslator = internalNameTranslator;
     }
@@ -119,7 +102,10 @@ public class AfterApplicationStartup {
         }
 
         if (createUsers) {
-            createDemoUsers();
+            demoData.addAdminUnit();
+            demoData.addAuthorities();
+            demoData.addUserAdmin();
+            demoData.addUserRecordKeeper();
         }
     }
 
@@ -265,170 +251,5 @@ public class AfterApplicationStartup {
         String servletPath = "/oauth/token/";
         logger.info("Adding " + servletPath + " methods " + httpMethods);
         CommonUtils.WebUtils.addRequestToMethodMap(servletPath, httpMethods);
-
-    }
-
-
-    /**
-     * Create users so application has some users out of the box. This would
-     * not be done in production, but as a demo it's fine!
-     */
-    private void createDemoUsers() {
-
-        // Create an administrative unit
-        AdministrativeUnit administrativeUnit = new AdministrativeUnit();
-
-        administrativeUnit.setAdministrativeUnitName(TEST_ADMINISTRATIVE_UNIT);
-        administrativeUnit.setShortName("test");
-        administrativeUnit.setCreatedBy(SYSTEM);
-        administrativeUnit.setOwnedBy(SYSTEM);
-        administrativeUnit.setDefaultAdministrativeUnit(true);
-
-        // Create some authorities and users
-        Authority adminAuthority = new Authority();
-        if (!userService.authorityExists(RECORDS_MANAGER)) {
-            adminAuthority.setAuthorityName(RECORDS_MANAGER);
-            authorityRepository.save(adminAuthority);
-        }
-
-        Authority recordsKeeperAuthority = new Authority();
-        if (!userService.authorityExists(RECORDS_KEEPER)) {
-            recordsKeeperAuthority.setAuthorityName(RECORDS_KEEPER);
-            authorityRepository.save(recordsKeeperAuthority);
-        }
-
-        Authority caseHandlerAuthority = new Authority();
-        if (!userService.authorityExists(AuthorityName.CASE_HANDLER)) {
-            caseHandlerAuthority.setAuthorityName(
-                    AuthorityName.CASE_HANDLER);
-            authorityRepository.save(caseHandlerAuthority);
-        }
-
-        Authority leaderAuthority = new Authority();
-        if (!userService.authorityExists(LEADER)) {
-            leaderAuthority.setAuthorityName(LEADER);
-            authorityRepository.save(leaderAuthority);
-        }
-
-        Authority guestAuthority = new Authority();
-        if (!userService.authorityExists(GUEST)) {
-            guestAuthority.setAuthorityName(GUEST);
-            authorityRepository.save(guestAuthority);
-        }
-
-        User admin = new User();
-        if (!userService.userExists("admin@example.com")) {
-            admin.setPassword("password");
-            admin.setFirstname("Frank");
-            admin.setLastname("Grimes");
-            admin.setUsername("admin@example.com");
-            admin.addAuthority(adminAuthority);
-            administrativeUnit.addUser(admin);
-            admin.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(admin);
-        }
-
-        User recordKeeper = new User();
-        if (!userService.userExists("recordkeeper@example.com")) {
-            recordKeeper.setPassword("password");
-            recordKeeper.setFirstname("Moe");
-            recordKeeper.setLastname("Szyslak");
-            recordKeeper.setUsername("recordkeeper@example.com");
-            recordKeeper.addAuthority(recordsKeeperAuthority);
-            administrativeUnit.addUser(recordKeeper);
-            recordKeeper.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(recordKeeper);
-        }
-
-        User caseHandler = new User();
-        if (!userService.userExists("casehandler@example.com")) {
-            caseHandler.setPassword("password");
-            caseHandler.setFirstname("Rainier");
-            caseHandler.setLastname("Wolfcastle");
-            caseHandler.setUsername("casehandler@example.com");
-            caseHandler.addAuthority(caseHandlerAuthority);
-            administrativeUnit.addUser(caseHandler);
-            caseHandler.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(caseHandler);
-        }
-
-        User leader = new User();
-        if (!userService.userExists("leader@example.com")) {
-            leader.setPassword("password");
-            leader.setFirstname("Johnny");
-            leader.setLastname("Tightlips");
-            leader.setUsername("leader@example.com");
-            leader.addAuthority(leaderAuthority);
-            administrativeUnit.addUser(leader);
-            leader.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(leader);
-        }
-
-        User guest = new User();
-        if (!userService.userExists("cletus@example.com")) {
-            guest.setPassword("password");
-            guest.setFirstname("Cletus");
-            guest.setLastname("'Spuckler'");
-            guest.setUsername("cletus@example.com");
-            guest.addAuthority(guestAuthority);
-            administrativeUnit.addUser(guest);
-            guest.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(guest);
-        }
-
-        administrativeUnitService.createNewAdministrativeUnitBySystem(
-                administrativeUnit);
-    }
-
-    private void createDemoData() {
-
-        Fonds fonds = new Fonds();
-        fonds.setTitle("Test fonds");
-        fondsService.createNewFonds(fonds);
-        fonds.setOwnedBy("admin@example.com");
-        fondsService.handleUpdate(fonds.getSystemId(),
-                fonds.getVersion(), fonds);
-
-        Series series = new Series();
-        series.setTitle("Test series");
-        series.setSeriesStatus("Opprettet");
-        fondsService.createSeriesAssociatedWithFonds(
-                fonds.getSystemId(), series);
-
-        series.setOwnedBy("admin@example.com");
-        seriesService.handleUpdate(series.getSystemId(),
-                fonds.getVersion(), series);
-
-
-        fondsService.createSeriesAssociatedWithFonds(
-                fonds.getSystemId(), series);
-
-        CaseFile caseFile = new CaseFile();
-
-        caseFile.setTitle("Søknad om barnehageplass");
-        caseFile.setOfficialTitle("Søknad om barnehageplass");
-        caseFile.setCaseStatus("Opprettet av saksbehandler");
-
-        seriesService.createCaseFileAssociatedWithSeries(series.getSystemId(),
-                caseFile);
-
-        RegistryEntry registryEntry = new RegistryEntry();
-        registryEntry.setTitle("Innkommende brev");
-        registryEntry.setRecordStatus("Journalført");
-        registryEntry.setRegistryEntryType("Inngående dokument");
-        caseFileService.
-                createRegistryEntryAssociatedWithCaseFile(caseFile.getSystemId(),
-                        registryEntry);
-
-        DocumentDescription documentDescription = new DocumentDescription();
-        documentDescription.setTitle(registryEntry.getTitle());
-        documentDescription.setDescription("Beskrivelsen!!");
-        documentDescription.setAssociatedWithRecordAs("Hoveddokument");
-        documentDescription.setDocumentType("Brev");
-        registryEntry.addReferenceDocumentDescription(documentDescription);
-        documentDescription.addReferenceRecord(registryEntry);
-
-        recordService.createDocumentDescriptionAssociatedWithRecord(
-                registryEntry.getSystemId(), documentDescription);
     }
 }

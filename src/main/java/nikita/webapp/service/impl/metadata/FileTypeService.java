@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FILE_TYPE;
@@ -97,7 +98,7 @@ public class FileTypeService
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 fileTypeRepository
-                        .findBySystemId(systemId));
+                        .findBySystemId(UUID.fromString(systemId)));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -202,7 +203,8 @@ public class FileTypeService
      * @return the FileType object
      */
     private FileType getFileTypeOrThrow(@NotNull String systemId) {
-        FileType fileType = fileTypeRepository.findBySystemId(systemId);
+        FileType fileType =
+                fileTypeRepository.findBySystemId(UUID.fromString(systemId));
         if (fileType == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " FileType, using " +
                     "systemId " + systemId;

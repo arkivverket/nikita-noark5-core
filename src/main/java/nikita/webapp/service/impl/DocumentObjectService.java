@@ -51,6 +51,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
@@ -784,7 +785,8 @@ public class DocumentObjectService
     protected DocumentObject getDocumentObjectOrThrow(
             @NotNull String documentObjectSystemId) {
         DocumentObject documentObject =
-                documentObjectRepository.findBySystemId(documentObjectSystemId);
+                documentObjectRepository.
+                        findBySystemId(UUID.fromString(documentObjectSystemId));
         if (documentObject == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " DocumentObject, using systemId " +

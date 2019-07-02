@@ -229,7 +229,7 @@ public class MetadataDetails extends APIDetails {
                 true
         ));
 
-        // Add support for PartyRole
+        // Add support for PartRole
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HATEOAS_API_PATH + SLASH +
                         NOARK_METADATA_PATH + SLASH + PART_ROLE,
@@ -237,7 +237,7 @@ public class MetadataDetails extends APIDetails {
                 true
         ));
 
-        // Add support for new PartyRole
+        // Add support for new PartRole
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HATEOAS_API_PATH + SLASH +
                         NOARK_METADATA_PATH + SLASH + NEW_PART_ROLE,

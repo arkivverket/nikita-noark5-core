@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_STATUS;
@@ -37,7 +38,7 @@ public class RegistryEntryStatusService
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryStatusService.class);
 
-    private IRegistryEntryStatusRepository RegistryEntryStatusRepository;
+    private IRegistryEntryStatusRepository registryEntryStatusRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
 
     public RegistryEntryStatusService(
@@ -46,7 +47,7 @@ public class RegistryEntryStatusService
             IRegistryEntryStatusRepository registryEntryStatusRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
         super(entityManager, applicationEventPublisher);
-        RegistryEntryStatusRepository = registryEntryStatusRepository;
+        this.registryEntryStatusRepository = registryEntryStatusRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
@@ -63,7 +64,7 @@ public class RegistryEntryStatusService
     public MetadataHateoas createNewRegistryEntryStatus(
             RegistryEntryStatus RegistryEntryStatus) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                RegistryEntryStatusRepository.save(RegistryEntryStatus));
+                registryEntryStatusRepository.save(RegistryEntryStatus));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -79,7 +80,7 @@ public class RegistryEntryStatusService
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
-                        RegistryEntryStatusRepository.findAll(), REGISTRY_ENTRY_STATUS);
+                        registryEntryStatusRepository.findAll(), REGISTRY_ENTRY_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -95,8 +96,9 @@ public class RegistryEntryStatusService
     @Override
     public MetadataHateoas find(String systemId) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                RegistryEntryStatusRepository.save(
-                        RegistryEntryStatusRepository.findBySystemId(systemId)));
+                registryEntryStatusRepository.save(
+                        registryEntryStatusRepository.
+                                findBySystemId(UUID.fromString(systemId))));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -114,7 +116,7 @@ public class RegistryEntryStatusService
     public MetadataHateoas findByDescription(String description) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
-                        RegistryEntryStatusRepository.findByDescription(description),
+                        registryEntryStatusRepository.findByDescription(description),
                 REGISTRY_ENTRY_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
@@ -133,7 +135,7 @@ public class RegistryEntryStatusService
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
-                        RegistryEntryStatusRepository.findByCode(code),
+                        registryEntryStatusRepository.findByCode(code),
                 REGISTRY_ENTRY_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
@@ -183,7 +185,7 @@ public class RegistryEntryStatusService
         existingRegistryEntryStatus.setVersion(version);
 
         MetadataHateoas RegistryEntryStatusHateoas = new MetadataHateoas(
-                RegistryEntryStatusRepository.save(existingRegistryEntryStatus));
+                registryEntryStatusRepository.save(existingRegistryEntryStatus));
         metadataHateoasHandler.addLinks(RegistryEntryStatusHateoas,
                 new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -202,16 +204,18 @@ public class RegistryEntryStatusService
      * @param systemId The systemId of the RegistryEntryStatus object to retrieve
      * @return the RegistryEntryStatus object
      */
-    private RegistryEntryStatus getRegistryEntryStatusOrThrow(@NotNull String systemId) {
-        RegistryEntryStatus RegistryEntryStatus = RegistryEntryStatusRepository.findBySystemId
-                (systemId);
-        if (RegistryEntryStatus == null) {
+    private RegistryEntryStatus getRegistryEntryStatusOrThrow(
+            @NotNull String systemId) {
+        RegistryEntryStatus registryEntryStatus =
+                registryEntryStatusRepository.
+                        findBySystemId(UUID.fromString(systemId));
+        if (registryEntryStatus  == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " RegistryEntryStatus, using " +
                     "systemId " + systemId;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }
-        return RegistryEntryStatus;
+        return registryEntryStatus ;
     }
 
 }

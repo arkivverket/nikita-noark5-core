@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_PART;
+import static nikita.common.config.N5ResourceMappings.PART;
 
 /**
  * Created by tsodring on 4/10/16.
@@ -192,7 +193,7 @@ public class Part
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.PART;
+        return PART;
     }
 
     @Override

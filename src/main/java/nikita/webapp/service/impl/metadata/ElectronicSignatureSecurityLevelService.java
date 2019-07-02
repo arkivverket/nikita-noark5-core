@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_SECURITY_LEVEL;
@@ -109,7 +110,7 @@ public class ElectronicSignatureSecurityLevelService
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 electronicSignatureSecurityLevelRepository.save(
                         electronicSignatureSecurityLevelRepository
-                                .findBySystemId(systemId)));
+                                .findBySystemId(UUID.fromString(systemId))));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -237,8 +238,8 @@ public class ElectronicSignatureSecurityLevelService
     private ElectronicSignatureSecurityLevel
     getElectronicSignatureSecurityLevelOrThrow(@NotNull String systemId) {
         ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel =
-                electronicSignatureSecurityLevelRepository.findBySystemId
-                        (systemId);
+                electronicSignatureSecurityLevelRepository.
+                        findBySystemId(UUID.fromString(systemId));
         if (electronicSignatureSecurityLevel == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " ElectronicSignatureSecurityLevel, using systemId " +

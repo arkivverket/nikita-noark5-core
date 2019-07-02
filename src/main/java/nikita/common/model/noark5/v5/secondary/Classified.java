@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_CONTACT_CLASSIFIED;
+import static nikita.common.config.N5ResourceMappings.CLASSIFIED;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
@@ -133,7 +134,7 @@ public class Classified
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.CLASSIFIED;
+        return CLASSIFIED;
     }
 
     public List<Series> getReferenceSeries() {

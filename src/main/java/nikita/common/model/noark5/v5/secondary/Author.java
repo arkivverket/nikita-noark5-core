@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_CONTACT_AUTHOR;
+import static nikita.common.config.N5ResourceMappings.AUTHOR;
 
 @Entity
 @Table(name = TABLE_CONTACT_AUTHOR)
@@ -48,7 +49,7 @@ public class Author
 
     @Override
     public String getBaseTypeName() {
-        return N5ResourceMappings.AUTHOR;
+        return AUTHOR;
     }
 
     public List<Record> getReferenceRecord() {
