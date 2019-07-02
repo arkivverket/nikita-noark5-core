@@ -16,7 +16,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 
-import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_CREATOR_JOIN;
 import static nikita.common.config.DatabaseConstants.ID;
 import static nikita.common.util.CommonUtils.Validation.parseETAG;
 import static org.springframework.http.HttpHeaders.ETAG;
