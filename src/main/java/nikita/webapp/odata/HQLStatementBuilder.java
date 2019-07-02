@@ -89,9 +89,7 @@ public class HQLStatementBuilder {
         select.append(getNameObject(entity));
         select.append(" where reference");
         select.append(getNameObject(parentEntity));
-        select.append(" in (select id from ");
-        select.append(getNameObject(parentEntity));
-        select.append(" where systemId = :parentSystemId)");
+        select.append(" = :parentSystemId)");
         select.append("'");
         logger.info(select.toString());
     }
