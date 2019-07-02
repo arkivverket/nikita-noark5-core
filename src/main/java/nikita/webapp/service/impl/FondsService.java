@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.DatabaseConstants.DELETE_FONDS_STORAGE_LOCATION;
+import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_FONDS_CREATOR;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
@@ -463,25 +465,11 @@ public class FondsService
     @Override
     public void deleteEntity(@NotNull String fondsSystemId) {
         Fonds fonds = getFondsOrThrow(fondsSystemId);
-
         // Disassociate any links between Fonds and FondsCreator
-        Query q = entityManager.createNativeQuery(
-                "DELETE FROM " + TABLE_FONDS_FONDS_CREATOR + " WHERE " +
-                        FOREIGN_KEY_FONDS_PK + " = :id ;");
-        q.setParameter("id", fonds.getSystemId());
-        q.executeUpdate();
-
+        disassociateForeignKeys(fonds, DELETE_FROM_FONDS_FONDS_CREATOR );
         // Disassociate any links between Fonds and StorageLocation
-        q = entityManager.createNativeQuery(
-                "DELETE FROM " + TABLE_FONDS_STORAGE_LOCATION + " WHERE " +
-                        FOREIGN_KEY_FONDS_PK + " = :id ;");
-        q.setParameter("id", fonds.getSystemId());
-        q.executeUpdate();
-
-        // Next get hibernate to delete the Fonds object
-        entityManager.remove(fonds);
-        entityManager.flush();
-        entityManager.clear();
+        disassociateForeignKeys(fonds, DELETE_FONDS_STORAGE_LOCATION);
+        deleteEntity(fonds);
     }
 
     /**

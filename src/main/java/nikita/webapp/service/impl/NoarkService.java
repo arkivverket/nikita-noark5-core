@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
@@ -12,8 +13,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 
+import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_CREATOR_JOIN;
+import static nikita.common.config.DatabaseConstants.ID;
 import static nikita.common.util.CommonUtils.Validation.parseETAG;
 import static org.springframework.http.HttpHeaders.ETAG;
 
@@ -79,5 +83,25 @@ public class NoarkService {
             logger.error(message);
             throw new AccessDeniedException(message);
         }
+    }
+
+    /**
+     * See issue for a description of why this code was written this way
+     *   https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
+     *
+     * @param entity
+     * @param deleteString
+     */
+    protected void disassociateForeignKeys(
+            NoarkEntity entity, String deleteString) {
+        Query query = entityManager.createNativeQuery(deleteString);
+        query.setParameter(ID, entity.getSystemId());
+        query.executeUpdate();
+    }
+
+    protected void deleteEntity(NoarkEntity entity) {
+        entityManager.remove(entity);
+        entityManager.flush();
+        entityManager.clear();
     }
 }

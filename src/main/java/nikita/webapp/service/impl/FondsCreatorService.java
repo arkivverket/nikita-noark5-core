@@ -18,13 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_CREATOR_FONDS;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
@@ -182,17 +182,11 @@ public class FondsCreatorService
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String fondsCreatorSystemId) {
-        FondsCreator fondsCreator = getFondsCreatorOrThrow(fondsCreatorSystemId);
-        // See issue for a description of why this code was written this way
-        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
-        Query q = entityManager.createNativeQuery(
-                "DELETE FROM fonds_fonds_creator WHERE f_pk_fonds_creator_id = :id ;");
-        q.setParameter("id", fondsCreator.getSystemId());
-        q.executeUpdate();
-
-        entityManager.remove(fondsCreator);
-        entityManager.flush();
-        entityManager.clear();
+        FondsCreator fondsCreator =
+                getFondsCreatorOrThrow(fondsCreatorSystemId);
+        disassociateForeignKeys(fondsCreator,
+                DELETE_FROM_FONDS_CREATOR_FONDS);
+        deleteEntity(fondsCreator);
     }
 
     /**
