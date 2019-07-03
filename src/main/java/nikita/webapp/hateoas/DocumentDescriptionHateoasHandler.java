@@ -57,7 +57,7 @@ public class DocumentDescriptionHateoasHandler
      * with the given DocumentDescription
      * <p>
      * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/registrering"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/registrering/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/registrering/"
      *
      * @param entity             documentDescription
      * @param hateoasNoarkObject hateoasDocumentObject
@@ -213,7 +213,7 @@ public class DocumentDescriptionHateoasHandler
      * given DocumentDescription.
      * <p>
      * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/part"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/part/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/part/"
      *
      * @param entity             documentDescription
      * @param hateoasNoarkObject hateoasDocumentDescription
@@ -232,7 +232,7 @@ public class DocumentDescriptionHateoasHandler
      * DocumentDescription.
      * <p>
      * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/ny-part"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-part/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-part/"
      *
      * @param entity             documentDescription
      * @param hateoasNoarkObject hateoasDocumentDescription

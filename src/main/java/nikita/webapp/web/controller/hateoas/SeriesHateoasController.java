@@ -618,7 +618,7 @@ public class SeriesHateoasController
     // Retrieve all ClassificationSystem associated with Series identified by a
     // systemId
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/klassifikasjonsystem
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klassifikasjonsystem/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klassifikasjonsystem/
     @ApiOperation(value = "Retrieves a single ClassificationSystem that is " +
             "the parent of the Series entity identified by systemId",
             response = ClassificationSystemHateoas.class)
@@ -647,7 +647,7 @@ public class SeriesHateoasController
     // Retrieve the Fonds associated with the Series identified by the given
     // systemId
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/arkiv
-    // https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/
     @ApiOperation(value = "Retrieves a single Fonds that is " +
             "the parent of the Series entity identified by systemId",
             response = FondsHateoas.class)
