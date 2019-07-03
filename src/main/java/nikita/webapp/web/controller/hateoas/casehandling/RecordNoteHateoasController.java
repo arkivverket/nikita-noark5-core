@@ -57,7 +57,7 @@ public class RecordNoteHateoasController
 
     // Get all recordNote
     // GET [contextPath][api]/casehandling/arkivnotat/
-    // https://rel.arkivverket.no/noark5/v4/api/sakarkiv/arkivnotat/
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/arkivnotat/
     @ApiOperation(value = "Retrieves multiple RecordNote entities limited by " +
             "ownership rights", response = RecordNoteHateoas.class)
     @ApiResponses(value = {

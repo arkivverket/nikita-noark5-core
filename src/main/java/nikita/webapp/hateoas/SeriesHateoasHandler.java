@@ -85,7 +85,7 @@ public class SeriesHateoasHandler extends HateoasHandler
      * successor Series object.
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/5431"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/nestearkivdel/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/nestearkivdel/"
      *
      * @param entity             series
      * @param hateoasNoarkObject hateoasSeries
@@ -121,7 +121,7 @@ public class SeriesHateoasHandler extends HateoasHandler
      * precursor Series object.
      * <p>
      * "../hateoas-api/arkivstruktur/arkivdel/2345"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/forrigearkivdel/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/forrigearkivdel/"
      *
      * @param entity             series
      * @param hateoasNoarkObject hateoasSeries
@@ -254,7 +254,7 @@ public class SeriesHateoasHandler extends HateoasHandler
      * identified by its systemId
      * <p>
      * "../hateoas-api/arkivstruktur/arkiv/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkiv/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/"
      *
      * @param entity             series
      * @param hateoasNoarkObject hateoasSeries

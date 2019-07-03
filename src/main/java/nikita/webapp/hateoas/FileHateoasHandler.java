@@ -62,7 +62,7 @@ public class FileHateoasHandler
      * that check here.
      * <p>
      * "../hateoas-api/arkivstruktur/arkivdel/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/"
      *
      * @param entity             file
      * @param hateoasNoarkObject hateoasFile
@@ -84,7 +84,7 @@ public class FileHateoasHandler
      * File. Checks if the File is actually associated with a Class.
      * <p>
      * "../hateoas-api/arkivstruktur/klasse/1234"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/klasse/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/"
      *
      * @param entity             file
      * @param hateoasNoarkObject hateoasFile
@@ -170,7 +170,7 @@ public class FileHateoasHandler
      * given File.
      * <p>
      * "../hateoas-api/arkivstruktur/mappe/1234/part"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/part/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/part/"
      *
      * @param entity             file
      * @param hateoasNoarkObject hateoasFile
@@ -189,7 +189,7 @@ public class FileHateoasHandler
      * File.
      * <p>
      * "../hateoas-api/arkivstruktur/mappe/1234/ny-part"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-part/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-part/"
      *
      * @param entity             file
      * @param hateoasNoarkObject hateoasFile

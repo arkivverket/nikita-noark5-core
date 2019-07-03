@@ -163,7 +163,7 @@ public class RegistryEntryHateoasHandler
      * (journalstatus) values
      * <p>
      * "../hateoas-api/arkivstruktur/metadata/journalstatus"
-     * "http://rel.kxml.no/noark5/v4/api/metadata/journalstatus/"
+     * "http://rel.kxml.no/noark5/v5/api/metadata/journalstatus/"
      *
      * @param entity             registryEntry
      * @param hateoasNoarkObject hateoasRegistryEntry
@@ -182,7 +182,7 @@ public class RegistryEntryHateoasHandler
      * (journalposttype) values
      * <p>
      * "../hateoas-api/arkivstruktur/metadata/journalposttype"
-     * "http://rel.kxml.no/noark5/v4/api/metadata/journalposttype/"
+     * "http://rel.kxml.no/noark5/v5/api/metadata/journalposttype/"
      *
      * @param entity             registryEntry
      * @param hateoasNoarkObject hateoasRegistryEntry

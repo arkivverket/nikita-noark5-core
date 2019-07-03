@@ -69,7 +69,7 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
                             // make a note of the link to upload a file if a user want to upload file
                             for (rel in documentObject.links) {
                                 relation = documentObject.links[rel].rel;
-                              if (relation == 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/fil/') {
+                              if (relation == 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/fil/') {
                                     SetLinkToDocumentFile(documentObject.links[rel].href);
                                 }
                             }
@@ -119,7 +119,7 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
 
         for (rel in $scope.documentObject.links) {
             relation = $scope.documentObject.links[rel].rel;
-          if (relation == 'https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/fil/') {
+          if (relation == 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/fil/') {
                 var url = $scope.documentObject.links[rel].href;
                 var mimeType = $scope.selectedMimeType;
                 $scope.errFile = errFiles && errFiles[0];
