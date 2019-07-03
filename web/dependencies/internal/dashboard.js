@@ -6,9 +6,9 @@ var app = angular.module('nikita-casefile-dashboard', []);
  * we need a drop down list with all the arkivdel that we can pull case-files out of. To make sure, we are in
  * compliance with the standard interface, we don't store a list of relevant arkivdel that is retrievable.
  * Instead we start at application root (http://localhost:8092/noark5v5/) retrieving a list of functional
- * areas. From there we use the href associated with (https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/).
+ * areas. From there we use the href associated with (https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/).
  * This gives us a list of high-level noark entities we can interact with. So we fetch the href associated
- * with (https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/arkivdel/) and that should give us a list of arkivdel
+ * with (https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/) and that should give us a list of arkivdel
  * that the user can interact with.
  *
  */

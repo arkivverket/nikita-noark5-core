@@ -303,7 +303,7 @@ public class RecordHateoasHandler
      * given Record.
      * <p>
      * "../hateoas-api/arkivstruktur/registrering/1234/part"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/part/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/part/"
      *
      * @param entity             record
      * @param hateoasNoarkObject hateoasRecord
@@ -322,7 +322,7 @@ public class RecordHateoasHandler
      * Record.
      * <p>
      * "../hateoas-api/arkivstruktur/registrering/1234/ny-part"
-     * "https://rel.arkivverket.no/noark5/v4/api/arkivstruktur/ny-part/"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-part/"
      *
      * @param entity             record
      * @param hateoasNoarkObject hateoasRecord
