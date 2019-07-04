@@ -12,6 +12,9 @@ import static nikita.common.config.Constants.TABLE_NATIONAL_IDENTIFIER;
 @Entity
 @Table(name = TABLE_NATIONAL_IDENTIFIER)
 @Inheritance(strategy = JOINED)
+//@JsonDeserialize(using = NationalIdentifierDeserializer.class)
+//@HateoasPacker(using = NationalIdentifierHateoasHandler.class)
+//@HateoasObject(using = NationalIdentifierHateoas.class)
 public class NationalIdentifier
         extends NoarkEntity {
 

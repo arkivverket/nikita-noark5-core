@@ -15,6 +15,9 @@ import static nikita.common.config.Constants.TABLE_D_NUMBER;
 @Entity
 @Table(name = TABLE_D_NUMBER)
 @Inheritance(strategy = JOINED)
+//@JsonDeserialize(using = DNumberDeserializer.class)
+//@HateoasPacker(using = DNumberHateoasHandler.class)
+//@HateoasObject(using = DNumberHateoas.class)
 public class DNumber
         extends PersonIdentifier {
 

@@ -15,6 +15,9 @@ import static nikita.common.config.Constants.TABLE_UNIT;
 @Entity
 @Table(name = TABLE_UNIT)
 @Inheritance(strategy = JOINED)
+//@JsonDeserialize(using = UnitDeserializer.class)
+//@HateoasPacker(using = UnitHateoasHandler.class)
+//@HateoasObject(using = UnitHateoas.class)
 public class Unit
         extends NationalIdentifier {
 

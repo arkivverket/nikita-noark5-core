@@ -15,6 +15,9 @@ import static nikita.common.config.Constants.TABLE_CADASTRAL;
 @Entity
 @Table(name = TABLE_CADASTRAL)
 @Inheritance(strategy = JOINED)
+//@JsonDeserialize(using = CadastralUnitDeserializer.class)
+//@HateoasPacker(using = CadastralUnitHateoasHandler.class)
+//@HateoasObject(using = CadastralUnitHateoas.class)
 public class CadastralUnit
         extends NationalIdentifier {
 

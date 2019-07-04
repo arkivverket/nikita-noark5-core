@@ -15,6 +15,9 @@ import static nikita.common.config.Constants.TABLE_BUILDING;
 @Entity
 @Table(name = TABLE_BUILDING)
 @Inheritance(strategy = JOINED)
+//@JsonDeserialize(using = BuildingDeserializer.class)
+//@HateoasPacker(using = BuildingHateoasHandler.class)
+//@HateoasObject(using = BuildingHateoas.class)
 public class Building
         extends NationalIdentifier {
 
