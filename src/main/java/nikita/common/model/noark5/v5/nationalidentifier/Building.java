@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IBuilding;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -19,7 +20,8 @@ import static nikita.common.config.Constants.TABLE_BUILDING;
 //@HateoasPacker(using = BuildingHateoasHandler.class)
 //@HateoasObject(using = BuildingHateoas.class)
 public class Building
-        extends NationalIdentifier {
+        extends NationalIdentifier
+        implements IBuilding {
 
     /**
      * M??? bygningsnummer - (xs:integer)
@@ -35,25 +37,29 @@ public class Building
     @Audited
     Integer continuousNumberingOfBuildingChange;
 
+    @Override
     public Integer getBuildingNumber() {
         return buildingNumber;
     }
 
+    @Override
     public void setBuildingNumber(Integer buildingNumber) {
         this.buildingNumber = buildingNumber;
     }
 
+    @Override
     public Integer getContinuousNumberingOfBuildingChange() {
         return continuousNumberingOfBuildingChange;
     }
 
+    @Override
     public void setContinuousNumberingOfBuildingChange(Integer continuousNumberingOfBuildingChange) {
         this.continuousNumberingOfBuildingChange = continuousNumberingOfBuildingChange;
     }
 
     @Override
     public String toString() {
-        return "Building{" +
+        return "IBuilding{" +
                 "buildingNumber=" + buildingNumber +
                 ", continuousNumberingOfBuildingChange=" +
                 continuousNumberingOfBuildingChange +
