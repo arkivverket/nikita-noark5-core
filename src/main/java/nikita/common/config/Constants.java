@@ -735,6 +735,18 @@ public final class Constants {
     public static final String TABLE_DOCUMENT_DESCRIPTION =
             "document_description";
 
+    public static final String TABLE_NATIONAL_IDENTIFIER =
+            "as_national_identifier";
+    public static final String TABLE_BUILDING = "as_building";
+    public static final String TABLE_CADASTRAL = "as_cadastral";
+    public static final String TABLE_SOCIAL_SECURITY_NUMBER = "" +
+            "as_social_security_number";
+    public static final String TABLE_D_NUMBER = "" +
+            "as_d_number";
+    public static final String TABLE_PLAN = "as_plan";
+    public static final String TABLE_POSITION = "as_position";
+    public static final String TABLE_UNIT = "as_unit";
+
     // Metadata tablenames
     public static final String TABLE_ACCESS_CATEGORY = "md_access_category";
     public static final String TABLE_ACCESS_RESTRICTION = 
