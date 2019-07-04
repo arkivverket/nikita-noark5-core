@@ -53,6 +53,46 @@ public class CadastralUnit
     @Audited
     Integer sectionNumber;
 
+    public String getMunicipalityNumber() {
+        return municipalityNumber;
+    }
+
+    public void setMunicipalityNumber(String municipalityNumber) {
+        this.municipalityNumber = municipalityNumber;
+    }
+
+    public Integer getHoldingNumber() {
+        return holdingNumber;
+    }
+
+    public void setHoldingNumber(Integer holdingNumber) {
+        this.holdingNumber = holdingNumber;
+    }
+
+    public Integer getSubHoldingNumber() {
+        return subHoldingNumber;
+    }
+
+    public void setSubHoldingNumber(Integer subHoldingNumber) {
+        this.subHoldingNumber = subHoldingNumber;
+    }
+
+    public Integer getLeaseNumber() {
+        return leaseNumber;
+    }
+
+    public void setLeaseNumber(Integer leaseNumber) {
+        this.leaseNumber = leaseNumber;
+    }
+
+    public Integer getSectionNumber() {
+        return sectionNumber;
+    }
+
+    public void setSectionNumber(Integer sectionNumber) {
+        this.sectionNumber = sectionNumber;
+    }
+
     @Override
     public String toString() {
         return "CadastralUnit{" +
