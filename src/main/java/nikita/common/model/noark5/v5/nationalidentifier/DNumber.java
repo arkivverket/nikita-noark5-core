@@ -19,7 +19,8 @@ import static nikita.common.config.Constants.TABLE_D_NUMBER;
 //@HateoasPacker(using = DNumberHateoasHandler.class)
 //@HateoasObject(using = DNumberHateoas.class)
 public class DNumber
-        extends PersonIdentifier {
+        extends PersonIdentifier
+        implements IDNumber {
 
     /**
      * M??? - DNummer (xs:string)
@@ -28,10 +29,12 @@ public class DNumber
     @Audited
     private String dNumber;
 
+    @Override
     public String getdNumber() {
         return dNumber;
     }
 
+    @Override
     public void setdNumber(String dNumber) {
         this.dNumber = dNumber;
     }
