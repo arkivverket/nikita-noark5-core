@@ -5,7 +5,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.Table;
 
+import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.TABLE_CADASTRAL;
+
+@Entity
+@Table(name = TABLE_CADASTRAL)
+@Inheritance(strategy = JOINED)
 public class CadastralUnit
         extends NationalIdentifier {
 
