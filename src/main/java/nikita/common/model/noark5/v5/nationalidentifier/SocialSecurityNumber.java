@@ -1,8 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.webapp.util.annotation.HateoasObject;
-import nikita.webapp.util.annotation.HateoasPacker;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ISocialSecurityNumber;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -18,11 +16,12 @@ import static nikita.common.config.Constants.TABLE_SOCIAL_SECURITY_NUMBER;
 @Entity
 @Table(name = TABLE_SOCIAL_SECURITY_NUMBER)
 @Inheritance(strategy = JOINED)
-@JsonDeserialize(using = SocialSecurityNumberDeserializer.class)
-@HateoasPacker(using = SocialSecurityNumberHateoasHandler.class)
-@HateoasObject(using = SocialSecurityNumberHateoas.class)
+//@JsonDeserialize(using = SocialSecurityNumberDeserializer.class)
+//@HateoasPacker(using = SocialSecurityNumberHateoasHandler.class)
+//@HateoasObject(using = SocialSecurityNumberHateoas.class)
 public class SocialSecurityNumber
-        extends PersonIdentifier {
+        extends PersonIdentifier
+        implements ISocialSecurityNumber {
     /**
      * M??? - fødselsnummer (xs:string)
      */
@@ -30,10 +29,12 @@ public class SocialSecurityNumber
     @Audited
     private String socialSecurityNumber;
 
+    @Override
     public String getSocialSecurityNumber() {
         return socialSecurityNumber;
     }
 
+    @Override
     public void setSocialSecurityNumber(String socialSecurityNumber) {
         this.socialSecurityNumber = socialSecurityNumber;
     }
