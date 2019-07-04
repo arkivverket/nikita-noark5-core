@@ -21,7 +21,7 @@ public class CadastralUnit
     /**
      * M??? - kommunenummer (xs:string)
      */
-    @Column(name = "holding_number", nullable = false)
+    @Column(name = "municipality_number", nullable = false)
     @Audited
     String municipalityNumber;
 
