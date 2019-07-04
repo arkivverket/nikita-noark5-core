@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPositionEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -19,8 +20,8 @@ import static nikita.common.config.Constants.TABLE_POSITION;
 //@HateoasPacker(using = PositionHateoasHandler.class)
 //@HateoasObject(using = PositionHateoas.class)
 public class Position
-        extends NationalIdentifier {
-
+        extends NationalIdentifier
+        implements IPositionEntity {
 
     /**
      * M??? - koordinatsystem (xs:string)
@@ -53,34 +54,42 @@ public class Position
     @Audited
     private Double z;
 
+    @Override
     public String getCoordinateSystem() {
         return coordinateSystem;
     }
 
+    @Override
     public void setCoordinateSystem(String coordinateSystem) {
         this.coordinateSystem = coordinateSystem;
     }
 
+    @Override
     public Double getX() {
         return x;
     }
 
+    @Override
     public void setX(Double x) {
         this.x = x;
     }
 
+    @Override
     public Double getY() {
         return y;
     }
 
+    @Override
     public void setY(Double y) {
         this.y = y;
     }
 
+    @Override
     public Double getZ() {
         return z;
     }
 
+    @Override
     public void setZ(Double z) {
         this.z = z;
     }
