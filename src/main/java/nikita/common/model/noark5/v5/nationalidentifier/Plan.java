@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPlan;
 import nikita.common.model.noark5.v5.metadata.Country;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -24,7 +25,8 @@ import static nikita.common.config.Constants.TABLE_PLAN;
 //@HateoasPacker(using = PlanHateoasHandler.class)
 //@HateoasObject(using = PlanHateoas.class)
 public class Plan
-        extends NationalIdentifier {
+        extends NationalIdentifier
+        implements IPlan {
 
     /**
      * M??? - kommunenummer (xs:string)
@@ -54,34 +56,42 @@ public class Plan
     @Audited
     String planIdentification;
 
+    @Override
     public String getMunicipalityNumber() {
         return municipalityNumber;
     }
 
+    @Override
     public void setMunicipalityNumber(String municipalityNumber) {
         this.municipalityNumber = municipalityNumber;
     }
 
+    @Override
     public String getCountyNumber() {
         return countyNumber;
     }
 
+    @Override
     public void setCountyNumber(String countyNumber) {
         this.countyNumber = countyNumber;
     }
 
+    @Override
     public Country getCountry() {
         return country;
     }
 
+    @Override
     public void setCountry(Country country) {
         this.country = country;
     }
 
+    @Override
     public String getPlanIdentification() {
         return planIdentification;
     }
 
+    @Override
     public void setPlanIdentification(String planIdentification) {
         this.planIdentification = planIdentification;
     }
