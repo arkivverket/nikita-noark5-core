@@ -35,6 +35,22 @@ public class Building
     @Audited
     Integer continuousNumberingOfBuildingChange;
 
+    public Integer getBuildingNumber() {
+        return buildingNumber;
+    }
+
+    public void setBuildingNumber(Integer buildingNumber) {
+        this.buildingNumber = buildingNumber;
+    }
+
+    public Integer getContinuousNumberingOfBuildingChange() {
+        return continuousNumberingOfBuildingChange;
+    }
+
+    public void setContinuousNumberingOfBuildingChange(Integer continuousNumberingOfBuildingChange) {
+        this.continuousNumberingOfBuildingChange = continuousNumberingOfBuildingChange;
+    }
+
     @Override
     public String toString() {
         return "Building{" +
