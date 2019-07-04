@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ICadastralUnit;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -19,7 +20,8 @@ import static nikita.common.config.Constants.TABLE_CADASTRAL;
 //@HateoasPacker(using = CadastralUnitHateoasHandler.class)
 //@HateoasObject(using = CadastralUnitHateoas.class)
 public class CadastralUnit
-        extends NationalIdentifier {
+        extends NationalIdentifier
+        implements ICadastralUnit {
 
     /**
      * M??? - kommunenummer (xs:string)
@@ -56,42 +58,52 @@ public class CadastralUnit
     @Audited
     Integer sectionNumber;
 
+    @Override
     public String getMunicipalityNumber() {
         return municipalityNumber;
     }
 
+    @Override
     public void setMunicipalityNumber(String municipalityNumber) {
         this.municipalityNumber = municipalityNumber;
     }
 
+    @Override
     public Integer getHoldingNumber() {
         return holdingNumber;
     }
 
+    @Override
     public void setHoldingNumber(Integer holdingNumber) {
         this.holdingNumber = holdingNumber;
     }
 
+    @Override
     public Integer getSubHoldingNumber() {
         return subHoldingNumber;
     }
 
+    @Override
     public void setSubHoldingNumber(Integer subHoldingNumber) {
         this.subHoldingNumber = subHoldingNumber;
     }
 
+    @Override
     public Integer getLeaseNumber() {
         return leaseNumber;
     }
 
+    @Override
     public void setLeaseNumber(Integer leaseNumber) {
         this.leaseNumber = leaseNumber;
     }
 
+    @Override
     public Integer getSectionNumber() {
         return sectionNumber;
     }
 
+    @Override
     public void setSectionNumber(Integer sectionNumber) {
         this.sectionNumber = sectionNumber;
     }
