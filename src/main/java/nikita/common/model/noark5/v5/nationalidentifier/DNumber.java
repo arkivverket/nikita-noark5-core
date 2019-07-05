@@ -25,7 +25,7 @@ public class DNumber
     /**
      * M??? - DNummer (xs:string)
      */
-    @Column(name = "d_number")
+    @Column(name = "d_number", nullable = false)
     @Audited
     private String dNumber;
 
