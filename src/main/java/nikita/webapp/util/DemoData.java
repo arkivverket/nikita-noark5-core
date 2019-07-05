@@ -1,15 +1,9 @@
 package nikita.webapp.util;
 
-import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Fonds;
-import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.Authority;
 import nikita.common.model.noark5.v5.admin.AuthorityName;
 import nikita.common.model.noark5.v5.admin.User;
-import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
@@ -18,19 +12,13 @@ import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IFondsService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.ISeriesService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static nikita.common.config.Constants.SYSTEM;
 import static nikita.common.config.Constants.TEST_ADMINISTRATIVE_UNIT;
-import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.model.noark5.v5.admin.AuthorityName.*;
-import static nikita.common.model.noark5.v5.admin.AuthorityName.CASE_HANDLER;
-import static nikita.common.model.noark5.v5.admin.AuthorityName.GUEST;
-import static nikita.common.util.CommonUtils.WebUtils.addNorToEnglishNameMap;
 
 /**
  * Created by tsodring
@@ -94,38 +82,11 @@ public class DemoData {
     }
 
     public void addAuthorities() {
-
-        // Create some authorities and users
-        Authority adminAuthority = new Authority();
-        if (!userService.authorityExists(RECORDS_MANAGER)) {
-            adminAuthority.setAuthorityName(RECORDS_MANAGER);
-            authorityRepository.save(adminAuthority);
-        }
-
-        Authority recordsKeeperAuthority = new Authority();
-        if (!userService.authorityExists(RECORDS_KEEPER)) {
-            recordsKeeperAuthority.setAuthorityName(RECORDS_KEEPER);
-            authorityRepository.save(recordsKeeperAuthority);
-        }
-
-        Authority caseHandlerAuthority = new Authority();
-        if (!userService.authorityExists(CASE_HANDLER)) {
-            caseHandlerAuthority.setAuthorityName(
-                    CASE_HANDLER);
-            authorityRepository.save(caseHandlerAuthority);
-        }
-
-        Authority leaderAuthority = new Authority();
-        if (!userService.authorityExists(LEADER)) {
-            leaderAuthority.setAuthorityName(LEADER);
-            authorityRepository.save(leaderAuthority);
-        }
-
-        Authority guestAuthority = new Authority();
-        if (!userService.authorityExists(GUEST)) {
-            guestAuthority.setAuthorityName(GUEST);
-            authorityRepository.save(guestAuthority);
-        }
+        addAuthority(RECORDS_MANAGER);
+        addAuthority(RECORDS_KEEPER);
+        addAuthority(CASE_HANDLER);
+        addAuthority(LEADER);
+        addAuthority(GUEST);
     }
 
     public void addUserAdmin() {
@@ -227,5 +188,14 @@ public class DemoData {
             throw new NikitaMisconfigurationException("Could not find default" +
                     " administrativeUnit for demo users");
         }
+    }
+
+    private Authority addAuthority(AuthorityName authorityName) {
+        Authority authority = new Authority();
+        if (!userService.authorityExists(authorityName)) {
+            authority.setAuthorityName(authorityName);
+            authorityRepository.save(authority);
+        }
+        return authority;
     }
 }
