@@ -1,10 +1,7 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -13,6 +10,7 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
 
 // Noark 5v5 dokumentmedium
 @Entity
+@Table(name = TABLE_DOCUMENT_MEDIUM)
 public class DocumentMedium
         extends MetadataSuperClass
         implements INikitaEntity {
