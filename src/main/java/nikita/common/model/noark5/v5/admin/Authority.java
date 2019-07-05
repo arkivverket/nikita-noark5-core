@@ -27,7 +27,7 @@ public class Authority
     @Enumerated(EnumType.STRING)
     private AuthorityName authorityName;
 
-    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "authorities")
     private List<User> users;
 
     public Long getId() {
