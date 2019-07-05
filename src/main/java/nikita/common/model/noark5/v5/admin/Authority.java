@@ -22,7 +22,7 @@ public class Authority
             sequenceName = "authority_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "authority_name", length = 50, unique = true)
+    @Column(name = "authority_name", unique = true)
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthorityName authorityName;
