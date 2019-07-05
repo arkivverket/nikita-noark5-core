@@ -896,6 +896,11 @@ public final class Constants {
     public static final String CROSS_REFERENCE_RECORD_ID =
             "cross_reference_record_id";
 
+    public static final String NATIONAL_IDENTIFIER_RECORD_ID =
+            "national_identifier_record_id";
+    public static final String NATIONAL_IDENTIFIER_FILE_ID =
+            "national_identifier_file_id";
+
     // Primary key names
     public static final String PRIMARY_KEY_SYSTEM_ID = "system_id";
 

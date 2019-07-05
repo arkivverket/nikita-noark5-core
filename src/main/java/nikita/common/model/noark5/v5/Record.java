@@ -1,11 +1,11 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
+import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.webapp.hateoas.RecordHateoasHandler;
@@ -194,6 +194,11 @@ public class Record
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Part> referencePart = new ArrayList<>();
+
+    // Links to NationalIdentifiers
+    @OneToMany(mappedBy = "referenceFile")
+    private List<NationalIdentifier> referenceNationalIdentifier =
+            new ArrayList<>();
 
     public OffsetDateTime getArchivedDate() {
         return archivedDate;
@@ -401,6 +406,20 @@ public class Record
 
     public void addReferencePart(Part part) {
         this.referencePart.add(part);
+    }
+
+    public List<NationalIdentifier> getReferenceNationalIdentifier() {
+        return referenceNationalIdentifier;
+    }
+
+    public void setReferenceNationalIdentifier(
+            List<NationalIdentifier> referenceNationalIdentifier) {
+        this.referenceNationalIdentifier = referenceNationalIdentifier;
+    }
+
+    public void addNationalIdentifier(
+            NationalIdentifier referenceNationalIdentifier) {
+        this.referenceNationalIdentifier.add(referenceNationalIdentifier);
     }
 
     @Override
