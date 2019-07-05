@@ -627,113 +627,116 @@ public final class Constants {
 
     // Database Constants
 
-    public static final String TABLE_NIKITA_USER = "nikita_user";
-    public static final String TABLE_NIKITA_AUTHORITY = "nikita_authority";
+    public static final String TABLE_NIKITA_USER = "ad_nikita_user";
+    public static final String TABLE_NIKITA_AUTHORITY = "ad_nikita_authority";
 
     // Table Constants
-    public static final String TABLE_FONDS = "fonds";
-    public static final String TABLE_SERIES = "series";
-    public static final String TABLE_RECORD = "record";
-    public static final String TABLE_PART = "part";
-    public static final String TABLE_FILE = "file";
-    public static final String TABLE_CLASS = "class";
-    public static final String TABLE_RECORD_NOTE = "record_note";
-    public static final String TABLE_REGISTRY_ENTRY = "registry_entry";
-    public static final String TABLE_PRECEDENCE = "precedence";
-    public static final String TABLE_DOCUMENT_OBJECT = "document_object";
-    public static final String TABLE_FONDS_CREATOR = "fonds_creator";
-    public static final String TABLE_STORAGE_LOCATION = "storage_location";
-    public static final String TABLE_CROSS_REFERENCE = "cross_reference";
+    public static final String TABLE_FONDS = "as_fonds";
+    public static final String TABLE_SERIES = "as_series";
+    public static final String TABLE_RECORD = "as_record";
+    public static final String TABLE_PART = "as_part";
+    public static final String TABLE_FILE = "as_file";
+    public static final String TABLE_CLASS = "as_class";
+    public static final String TABLE_RECORD_NOTE = "sa_record_note";
+    public static final String TABLE_REGISTRY_ENTRY = "sa_registry_entry";
+    public static final String TABLE_PRECEDENCE = "sa_precedence";
+    public static final String TABLE_DOCUMENT_OBJECT = "as_document_object";
+    public static final String TABLE_FONDS_CREATOR = "as_fonds_creator";
+    public static final String TABLE_STORAGE_LOCATION = "as_storage_location";
+    public static final String TABLE_CROSS_REFERENCE = "as_cross_reference";
     public static final String TABLE_CLASSIFICATION_SYSTEM =
-            "classification_system";
-    public static final String TABLE_MEETING_FILE = "meeting_file";
-    public static final String TABLE_DELETION = "deletion";
-    public static final String TABLE_DISPOSAL = "disposal";
-    public static final String TABLE_ELECTRONIC_SIGNATURE = "electronic_signature";
+            "as_classification_system";
+    public static final String TABLE_MEETING_FILE = "mu_meeting_file";
+    public static final String TABLE_DELETION = "as_deletion";
+    public static final String TABLE_DISPOSAL = "as_disposal";
+    public static final String TABLE_ELECTRONIC_SIGNATURE = "as_electronic_signature";
     public static final String TABLE_DISPOSAL_UNDERTAKEN =
-            "disposal_undertaken";
+            "as_disposal_undertaken";
     public static final String TABLE_CORRESPONDENCE_PART =
-            "correspondence_part";
+            "sa_correspondence_part";
 
-    public static final String TABLE_CONTACT_CLASSIFIED = "classified";
-    public static final String TABLE_COMMENT = "comment";
-    public static final String TABLE_CONVERSION = "conversion";
-    public static final String TABLE_CONTACT_AUTHOR = "author";
+    public static final String TABLE_AUTHORITY_SEQ = "ad_authority_seq";
+    public static final String TABLE_NIKITA_USER_AUTHORITY = "ad_nikita_user_authority";
+    public static final String TABLE_CONTACT_CLASSIFIED = "as_classified";
+    public static final String TABLE_COMMENT = "as_comment";
+    public static final String TABLE_CONVERSION = "as_conversion";
+    public static final String TABLE_CONTACT_AUTHOR = "as_author";
     public static final String TABLE_CONTACT_INFORMATION =
-            "contact_information";
+            "as_contact_information";
 
-    public static final String TABLE_CASE_FILE_SEQUENCE = "sequence_generator";
+    public static final String TABLE_CASE_FILE_SEQUENCE =
+            "sa_sequence_generator";
     public static final String TABLE_NIKITA_ADMINISTRATIVE_UNIT =
-            "nikita_administrative_unit";
+            "ad_nikita_administrative_unit";
 
     public static final String TABLE_ADMINISTRATIVE_UNIT_JOIN_NIKITA_USER =
-            "administrative_unit_nikita_user";
+            "ad_administrative_unit_nikita_user";
     public static final String TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL =
-            "registry_entry_correspondence_part_internal";
-
+            "as_registry_entry_correspondence_part_internal";
 
     // Join table names
     public static final String TABLE_FONDS_FONDS_CREATOR =
-            "fonds_fonds_creator";
+            "as_fonds_fonds_creator";
     public static final String TABLE_FILE_STORAGE_LOCATION =
-            "file_storage_location";
+            "as_file_storage_location";
     public static final String TABLE_SERIES_STORAGE_LOCATION =
-            "series_storage_location";
+            "as_series_storage_location";
     public static final String TABLE_FILE_KEYWORD =
-            "file_keyword";
+            "as_file_keyword";
     public static final String TABLE_FILE_COMMENT =
-            "file_comment";
-    public static final String TABLE_FILE_PARTY = "file_party";
-    public static final String TABLE_RECORD_AUTHOR = "record_author";
+            "as_file_comment";
+    public static final String TABLE_FILE_PARTY = "as_file_party";
+    public static final String TABLE_RECORD_AUTHOR = "as_record_author";
     public static final String TABLE_REGISTRY_ENTRY_SIGN_OFF =
-            "registry_entry_sign_off";
+            "sa_registry_entry_sign_off";
     public static final String TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_PERSON =
-            "registry_entry_correspondence_part_person";
+            "sa_registry_entry_correspondence_part_person";
     public static final String TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_UNIT =
-            "registry_entry_correspondence_part_unit";
+            "sa_registry_entry_correspondence_part_unit";
     public static final String TABLE_RECORD_DOCUMENT_DESCRIPTION =
-            "record_document_description";
-    public static final String TABLE_RECORD_PARTY = "record_party";
-    public static final String TABLE_CLASS_KEYWORD = "class_keyword";
+            "as_record_document_description";
+    public static final String TABLE_RECORD_PARTY = "as_record_party";
+    public static final String TABLE_CLASS_KEYWORD = "as_class_keyword";
     public static final String TABLE_DOCUMENT_DESCRIPTION_PARTY =
-            "document_description_party";
+            "as_document_description_party";
     public static final String TABLE_FONDS_STORAGE_LOCATION =
-            "fonds_storage_location";
+            "as_fonds_storage_location";
     public static final String TABLE_RECORD_KEYWORD =
-            "record_keyword";
+            "as_record_keyword";
     public static final String TABLE_RECORD_COMMENT =
-            "record_comment";
+            "as_record_comment";
     public static final String TABLE_REGISTRY_ENTRY_PRECEDENCE =
-            "registry_entry_precedence";
+            "sa_registry_entry_precedence";
     public static final String TABLE_DOCUMENT_DESCRIPTION_COMMENT =
-            "document_description_comment";
+            "as_document_description_comment";
     public static final String TABLE_DOCUMENT_DESCRIPTION_AUTHOR =
-            "document_description_author";
+            "as_document_description_author";
     public static final String TABLE_CORRESPONDENCE_PART_INTERNAL =
-            "correspondence_part_internal";
+            "sa_correspondence_part_internal";
 
     public static final String TABLE_CORRESPONDENCE_PART_PERSON =
-            "correspondence_part_person";
+            "sa_correspondence_part_person";
     public static final String TABLE_CORRESPONDENCE_PART_UNIT =
-            "correspondence_part_unit";
+            "sa_correspondence_part_unit";
 
     public static final String TABLE_CASE_FILE_PRECEDENCE =
-            "case_file_precedence";
+            "sa_case_file_precedence";
     public static final String TABLE_RECORD_STORAGE_LOCATION =
-            "record_storage_location";
+            "as_record_storage_location";
 
-    public static final String TABLE_DOCUMENT_FLOW = "document_flow";
-    public static final String TABLE_CASE_FILE = "case_file";
-    public static final String TABLE_MEETING_PARTICIPANT = "meeting_participant";
-    public static final String TABLE_MEETING_RECORD = "meeting_record";
-    public static final String TABLE_POSTAL_ADDRESS = "postal_address";
-    public static final String TABLE_BUSINESS_ADDRESS = "business_address";
-    public static final String TABLE_RESIDING_ADDRESS = "residing_address";
-    public static final String TABLE_KEYWORD = "keyword";
-    public static final String TABLE_SCREENING = "screening";
-    public static final String TABLE_SIGN_OFF = "sign_off";
+    public static final String TABLE_DOCUMENT_FLOW = "as_document_flow";
+    public static final String TABLE_CASE_FILE = "sa_case_file";
+    public static final String TABLE_MEETING_PARTICIPANT =
+            "mu_meeting_participant";
+    public static final String TABLE_MEETING_RECORD = "mu_meeting_record";
+    public static final String TABLE_POSTAL_ADDRESS = "as_postal_address";
+    public static final String TABLE_BUSINESS_ADDRESS = "as_business_address";
+    public static final String TABLE_RESIDING_ADDRESS = "as_residing_address";
+    public static final String TABLE_KEYWORD = "as_keyword";
+    public static final String TABLE_SCREENING = "as_screening";
+    public static final String TABLE_SIGN_OFF = "as_sign_off";
     public static final String TABLE_DOCUMENT_DESCRIPTION =
-            "document_description";
+            "as_document_description";
 
     // Metadata tablenames
     public static final String TABLE_ACCESS_CATEGORY = "md_access_category";

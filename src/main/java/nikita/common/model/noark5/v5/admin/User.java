@@ -11,7 +11,6 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -103,7 +102,7 @@ public class User
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "nikita_user_authority",
+            name = TABLE_NIKITA_USER_AUTHORITY,
             joinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)},
             inverseJoinColumns = {@JoinColumn(name = "authority_id",

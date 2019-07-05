@@ -7,6 +7,7 @@ import java.util.List;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.AUTO;
+import static nikita.common.config.Constants.TABLE_AUTHORITY_SEQ;
 import static nikita.common.config.Constants.TABLE_NIKITA_AUTHORITY;
 
 @Entity
@@ -20,7 +21,7 @@ public class Authority
     @Column(name = "id")
     @GeneratedValue(strategy = AUTO,
             generator = "authority_seq")
-    @SequenceGenerator(name = "authority_seq",
+    @SequenceGenerator(name = TABLE_AUTHORITY_SEQ,
             sequenceName = "authority_seq", allocationSize = 1)
     private Long id;
 
