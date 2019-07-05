@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.GenerationType.AUTO;
 import static nikita.common.config.Constants.TABLE_NIKITA_AUTHORITY;
 
 @Entity
@@ -16,7 +18,7 @@ public class Authority
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO,
+    @GeneratedValue(strategy = AUTO,
             generator = "authority_seq")
     @SequenceGenerator(name = "authority_seq",
             sequenceName = "authority_seq", allocationSize = 1)
@@ -24,7 +26,7 @@ public class Authority
 
     @Column(name = "authority_name", unique = true)
     @NotNull
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private AuthorityName authorityName;
 
     @ManyToMany(mappedBy = "authorities")
