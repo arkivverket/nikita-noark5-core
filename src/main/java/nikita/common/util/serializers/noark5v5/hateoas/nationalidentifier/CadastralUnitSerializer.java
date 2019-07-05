@@ -9,6 +9,7 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 
 import java.io.IOException;
 
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printSystemIdEntity;
 
@@ -19,12 +20,33 @@ public class CadastralUnitSerializer
     @Override
     public void serializeNoarkEntity(
             INikitaEntity noarkSystemIdEntity,
-            HateoasNoarkObject classHateoas,
+            HateoasNoarkObject cadastralUnitHateoas,
             JsonGenerator jgen) throws IOException {
+
         CadastralUnit cadastralUnit = (CadastralUnit) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, cadastralUnit);
-        printHateoasLinks(jgen, classHateoas.getLinks(cadastralUnit));
+
+        jgen.writeStringField(MUNICIPALITY_NUMBER,
+                cadastralUnit.getMunicipalityNumber());
+
+        jgen.writeNumberField(HOLDING_NUMBER,
+                cadastralUnit.getHoldingNumber());
+
+        jgen.writeNumberField(SUB_HOLDING_NUMBER,
+                cadastralUnit.getSubHoldingNumber());
+
+        if (null != cadastralUnit.getLeaseNumber()) {
+            jgen.writeNumberField(LEASE_NUMBER,
+                    cadastralUnit.getLeaseNumber());
+        }
+
+        if (null != cadastralUnit.getSectionNumber()) {
+            jgen.writeNumberField(SECTION_NUMBER,
+                    cadastralUnit.getSectionNumber());
+        }
+
+        printHateoasLinks(jgen, cadastralUnitHateoas.getLinks(cadastralUnit));
         jgen.writeEndObject();
     }
 }
