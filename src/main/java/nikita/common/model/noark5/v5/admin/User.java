@@ -25,7 +25,7 @@ import static nikita.common.config.N5ResourceMappings.USER;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = TABLE_NIKITA_USER)
+@Table(name = TABLE_USER)
 @JsonDeserialize(using = UserDeserializer.class)
 @HateoasPacker(using = UserHateoasHandler.class)
 @HateoasObject(using = UserHateoas.class)
@@ -102,7 +102,7 @@ public class User
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = TABLE_NIKITA_USER_AUTHORITY,
+            name = TABLE_USER_AUTHORITY,
             joinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)},
             inverseJoinColumns = {@JoinColumn(name = "authority_id",

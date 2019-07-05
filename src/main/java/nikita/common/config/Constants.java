@@ -627,8 +627,8 @@ public final class Constants {
 
     // Database Constants
 
-    public static final String TABLE_NIKITA_USER = "ad_nikita_user";
-    public static final String TABLE_NIKITA_AUTHORITY = "ad_nikita_authority";
+    public static final String TABLE_USER = "ad_user";
+    public static final String TABLE_AUTHORITY = "ad_authority";
 
     // Table Constants
     public static final String TABLE_FONDS = "as_fonds";
@@ -656,7 +656,7 @@ public final class Constants {
             "sa_correspondence_part";
 
     public static final String TABLE_AUTHORITY_SEQ = "ad_authority_seq";
-    public static final String TABLE_NIKITA_USER_AUTHORITY = "ad_nikita_user_authority";
+    public static final String TABLE_USER_AUTHORITY = "ad_user_authority";
     public static final String TABLE_CONTACT_CLASSIFIED = "as_classified";
     public static final String TABLE_COMMENT = "as_comment";
     public static final String TABLE_CONVERSION = "as_conversion";
@@ -666,11 +666,11 @@ public final class Constants {
 
     public static final String TABLE_CASE_FILE_SEQUENCE =
             "sa_sequence_generator";
-    public static final String TABLE_NIKITA_ADMINISTRATIVE_UNIT =
-            "ad_nikita_administrative_unit";
+    public static final String TABLE_ADMINISTRATIVE_UNIT =
+            "ad_administrative_unit";
 
-    public static final String TABLE_ADMINISTRATIVE_UNIT_JOIN_NIKITA_USER =
-            "ad_administrative_unit_nikita_user";
+    public static final String TABLE_ADMINISTRATIVE_UNIT_USER =
+            "ad_administrative_unit_user";
     public static final String TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL =
             "as_registry_entry_correspondence_part_internal";
 

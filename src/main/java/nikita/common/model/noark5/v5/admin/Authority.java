@@ -7,11 +7,11 @@ import java.util.List;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.AUTO;
+import static nikita.common.config.Constants.TABLE_AUTHORITY;
 import static nikita.common.config.Constants.TABLE_AUTHORITY_SEQ;
-import static nikita.common.config.Constants.TABLE_NIKITA_AUTHORITY;
 
 @Entity
-@Table(name = TABLE_NIKITA_AUTHORITY)
+@Table(name = TABLE_AUTHORITY)
 public class Authority
         implements Serializable {
 

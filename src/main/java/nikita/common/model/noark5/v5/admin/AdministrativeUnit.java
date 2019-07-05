@@ -23,12 +23,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.*;
+import static javax.persistence.CascadeType.ALL;
 import static nikita.common.config.Constants.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = TABLE_NIKITA_ADMINISTRATIVE_UNIT)
+@Table(name = TABLE_ADMINISTRATIVE_UNIT)
 @JsonDeserialize(using = AdministrativeUnitDeserializer.class)
 @HateoasPacker(using = AdministrativeUnitHateoasHandler.class)
 @HateoasObject(using = AdministrativeUnitHateoas.class)
@@ -85,7 +85,7 @@ public class AdministrativeUnit
 
     @ManyToMany
     @JoinTable(
-            name = TABLE_ADMINISTRATIVE_UNIT_JOIN_NIKITA_USER,
+            name = TABLE_ADMINISTRATIVE_UNIT_USER,
             joinColumns = {
                     @JoinColumn(
                             name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
