@@ -1,6 +1,8 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ISocialSecurityNumberEntity;
+import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.SocialSecurityNumberSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -16,6 +18,7 @@ import static nikita.common.config.Constants.TABLE_SOCIAL_SECURITY_NUMBER;
 @Entity
 @Table(name = TABLE_SOCIAL_SECURITY_NUMBER)
 @Inheritance(strategy = JOINED)
+@JsonSerialize(using = SocialSecurityNumberSerializer.class)
 //@JsonDeserialize(using = SocialSecurityNumberDeserializer.class)
 //@HateoasPacker(using = SocialSecurityNumberHateoasHandler.class)
 //@HateoasObject(using = SocialSecurityNumberHateoas.class)
@@ -23,7 +26,7 @@ public class SocialSecurityNumber
         extends PersonIdentifier
         implements ISocialSecurityNumberEntity {
     /**
-     * M??? - fødselsnummer (xs:string)
+     * M??? - foedselsnummer (xs:string)
      */
     @Column(name = "social_security_number")
     @Audited
