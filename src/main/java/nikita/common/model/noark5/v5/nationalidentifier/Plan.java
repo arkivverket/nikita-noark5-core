@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPlan;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPlanEntity;
 import nikita.common.model.noark5.v5.metadata.Country;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -26,7 +26,7 @@ import static nikita.common.config.Constants.TABLE_PLAN;
 //@HateoasObject(using = PlanHateoas.class)
 public class Plan
         extends NationalIdentifier
-        implements IPlan {
+        implements IPlanEntity {
 
     /**
      * M??? - kommunenummer (xs:string)

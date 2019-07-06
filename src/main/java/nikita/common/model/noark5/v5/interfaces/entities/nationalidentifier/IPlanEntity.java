@@ -4,7 +4,7 @@ import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.metadata.Country;
 
-public interface IPlan
+public interface IPlanEntity
         extends INikitaEntity, Comparable<NoarkEntity> {
     String getMunicipalityNumber();
 

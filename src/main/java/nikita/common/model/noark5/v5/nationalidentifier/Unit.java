@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IUnit;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IUnitEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -21,7 +21,7 @@ import static nikita.common.config.Constants.TABLE_UNIT;
 //@HateoasObject(using = UnitHateoas.class)
 public class Unit
         extends NationalIdentifier
-        implements IUnit {
+        implements IUnitEntity {
 
     /**
      * M??? - organisasjonsnummer (xs:string)

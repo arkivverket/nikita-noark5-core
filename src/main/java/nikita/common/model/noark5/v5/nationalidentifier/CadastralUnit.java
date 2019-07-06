@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ICadastralUnit;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ICadastralUnitEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.CadastralUnitSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -24,7 +24,7 @@ import static nikita.common.config.Constants.TABLE_CADASTRAL;
 //@HateoasObject(using = CadastralUnitHateoas.class)
 public class CadastralUnit
         extends NationalIdentifier
-        implements ICadastralUnit {
+        implements ICadastralUnitEntity {
 
     /**
      * M??? - kommunenummer (xs:string)

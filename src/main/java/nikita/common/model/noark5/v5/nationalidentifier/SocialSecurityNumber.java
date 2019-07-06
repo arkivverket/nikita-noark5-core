@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ISocialSecurityNumber;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ISocialSecurityNumberEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -21,7 +21,7 @@ import static nikita.common.config.Constants.TABLE_SOCIAL_SECURITY_NUMBER;
 //@HateoasObject(using = SocialSecurityNumberHateoas.class)
 public class SocialSecurityNumber
         extends PersonIdentifier
-        implements ISocialSecurityNumber {
+        implements ISocialSecurityNumberEntity {
     /**
      * M??? - fødselsnummer (xs:string)
      */
