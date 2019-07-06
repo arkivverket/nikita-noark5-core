@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPlanEntity;
 import nikita.common.model.noark5.v5.metadata.Country;
+import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.PlanSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -21,6 +23,7 @@ import static nikita.common.config.Constants.TABLE_PLAN;
 @Entity
 @Table(name = TABLE_PLAN)
 @Inheritance(strategy = JOINED)
+@JsonSerialize(using = PlanSerializer.class)
 //@JsonDeserialize(using = PlanDeserializer.class)
 //@HateoasPacker(using = PlanHateoasHandler.class)
 //@HateoasObject(using = PlanHateoas.class)

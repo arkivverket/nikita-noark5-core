@@ -1,6 +1,5 @@
 package nikita.common.config;
 
-
 import static nikita.common.config.Constants.*;
 
 public final class N5ResourceMappings {
@@ -305,6 +304,7 @@ public final class N5ResourceMappings {
     public static final String BUILDING_CHANGE_NUMBER = "endringsloepenummer";
     // dNumber
     public static final String DNUMBER = "dNummer";
+    public static final String PLAN_IDENTIFICATION = "planidentifikasjon";
 
     public static final String SECONDARY_CLASSIFICATION = "sekundaerklassifikasjon";
 
