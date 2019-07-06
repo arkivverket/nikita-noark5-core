@@ -303,6 +303,8 @@ public final class N5ResourceMappings {
     // Building
     public static final String BUILDING_NUMBER = "bygningsnummer";
     public static final String BUILDING_CHANGE_NUMBER = "endringsloepenummer";
+    // dNumber
+    public static final String DNUMBER = "e";
 
 
     public static final String SECONDARY_CLASSIFICATION = "sekundaerklassifikasjon";
