@@ -306,6 +306,11 @@ public final class N5ResourceMappings {
     public static final String DNUMBER = "dNummer";
     public static final String PLAN_IDENTIFICATION = "planidentifikasjon";
 
+    public static final String COORDINATE_SYSTEM = "koordinatsystem";
+    public static final String X = "x";
+    public static final String Y = "y";
+    public static final String Z = "z";
+
     public static final String SECONDARY_CLASSIFICATION = "sekundaerklassifikasjon";
 
     // Constant values defined in the Metadata catalogue

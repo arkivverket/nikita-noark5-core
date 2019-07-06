@@ -1,6 +1,8 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPositionEntity;
+import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.PositionSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -16,6 +18,7 @@ import static nikita.common.config.Constants.TABLE_POSITION;
 @Entity
 @Table(name = TABLE_POSITION)
 @Inheritance(strategy = JOINED)
+@JsonSerialize(using = PositionSerializer.class)
 //@JsonDeserialize(using = PositionDeserializer.class)
 //@HateoasPacker(using = PositionHateoasHandler.class)
 //@HateoasObject(using = PositionHateoas.class)
@@ -26,7 +29,7 @@ public class Position
     /**
      * M??? - koordinatsystem (xs:string)
      */
-    @Column(name = "coordinate_system")
+    @Column(name = "coordinate_system", nullable = false)
     @Audited
     private String coordinateSystem;
 
