@@ -140,7 +140,7 @@ public final class N5ResourceMappings {
     public static final String NEW_POST_CODE = NEW + Constants.DASH + POST_CODE;
 
     public static final String SOCIAL_SECURITY_NUMBER = "foedselsnummer";
-    public static final String D_NUMBER = "dnummer";
+    public static final String D_NUMBER = "dNummer";
     public static final String CASE_HANDLER = "saksbehandler";
     // This is probably CORRESPONDENCE_PART_NAME. Waiting for clarification
     public static final String NAME = "navn";
@@ -303,7 +303,6 @@ public final class N5ResourceMappings {
     public static final String BUILDING_NUMBER = "bygningsnummer";
     public static final String BUILDING_CHANGE_NUMBER = "endringsloepenummer";
     // dNumber
-    public static final String DNUMBER = "dNummer";
     public static final String PLAN_IDENTIFICATION = "planidentifikasjon";
 
     public static final String COORDINATE_SYSTEM = "koordinatsystem";
