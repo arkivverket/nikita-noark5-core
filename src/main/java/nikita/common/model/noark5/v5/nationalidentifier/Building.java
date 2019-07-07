@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IBuilding;
+import nikita.common.util.deserialisers.nationalidentifier.BuildingDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.BuildingSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,7 +21,7 @@ import static nikita.common.config.Constants.TABLE_BUILDING;
 @Table(name = TABLE_BUILDING)
 @Inheritance(strategy = JOINED)
 @JsonSerialize(using = BuildingSerializer.class)
-//@JsonDeserialize(using = BuildingDeserializer.class)
+@JsonDeserialize(using = BuildingDeserializer.class)
 //@HateoasPacker(using = BuildingHateoasHandler.class)
 //@HateoasObject(using = BuildingHateoas.class)
 public class Building
