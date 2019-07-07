@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IDNumberEntity;
+import nikita.common.util.deserialisers.nationalidentifier.DNumberDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.DNumberSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,7 +21,7 @@ import static nikita.common.config.Constants.TABLE_D_NUMBER;
 @Table(name = TABLE_D_NUMBER)
 @Inheritance(strategy = JOINED)
 @JsonSerialize(using = DNumberSerializer.class)
-//@JsonDeserialize(using = DNumberDeserializer.class)
+@JsonDeserialize(using = DNumberDeserializer.class)
 //@HateoasPacker(using = DNumberHateoasHandler.class)
 //@HateoasObject(using = DNumberHateoas.class)
 public class DNumber
