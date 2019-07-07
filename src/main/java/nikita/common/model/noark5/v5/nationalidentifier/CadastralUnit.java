@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ICadastralUnitEntity;
+import nikita.common.util.deserialisers.nationalidentifier.CadastralUnitDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.CadastralUnitSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,7 +21,7 @@ import static nikita.common.config.Constants.TABLE_CADASTRAL;
 @Table(name = TABLE_CADASTRAL)
 @Inheritance(strategy = JOINED)
 @JsonSerialize(using = CadastralUnitSerializer.class)
-//@JsonDeserialize(using = CadastralUnitDeserializer.class)
+@JsonDeserialize(using = CadastralUnitDeserializer.class)
 //@HateoasPacker(using = CadastralUnitHateoasHandler.class)
 //@HateoasObject(using = CadastralUnitHateoas.class)
 public class CadastralUnit
