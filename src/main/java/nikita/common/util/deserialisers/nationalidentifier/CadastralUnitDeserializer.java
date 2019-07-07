@@ -10,10 +10,10 @@ import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
 
 public class CadastralUnitDeserializer
         extends JsonDeserializer {
@@ -30,14 +30,10 @@ public class CadastralUnitDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        JsonNode currentNode = objectNode.get(SYSTEM_ID);
-        if (null != currentNode) {
-            cadastralUnit.setSystemId(UUID.fromString(currentNode.textValue()));
-            objectNode.remove(SYSTEM_ID);
-        }
+        deserialiseNoarkSystemIdEntity(cadastralUnit, objectNode, errors);
 
         // Deserialize kommunenummer
-        currentNode = objectNode.get(MUNICIPALITY_NUMBER);
+        JsonNode currentNode = objectNode.get(MUNICIPALITY_NUMBER);
         if (null != currentNode) {
             cadastralUnit.setMunicipalityNumber(currentNode.textValue());
             objectNode.remove(MUNICIPALITY_NUMBER);

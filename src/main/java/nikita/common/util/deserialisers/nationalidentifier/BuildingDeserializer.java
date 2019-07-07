@@ -10,10 +10,11 @@ import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
-import java.util.UUID;
 
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.BUILDING_CHANGE_NUMBER;
+import static nikita.common.config.N5ResourceMappings.BUILDING_NUMBER;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
 
 public class BuildingDeserializer
         extends JsonDeserializer {
@@ -30,14 +31,10 @@ public class BuildingDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        JsonNode currentNode = objectNode.get(SYSTEM_ID);
-        if (null != currentNode) {
-            building.setSystemId(UUID.fromString(currentNode.textValue()));
-            objectNode.remove(SYSTEM_ID);
-        }
+        deserialiseNoarkSystemIdEntity(building, objectNode, errors);
 
         // Deserialize bygningsnummer
-        currentNode = objectNode.get(BUILDING_NUMBER);
+        JsonNode currentNode = objectNode.get(BUILDING_NUMBER);
         if (null != currentNode) {
             building.setBuildingNumber(currentNode.intValue());
             objectNode.remove(BUILDING_NUMBER);
