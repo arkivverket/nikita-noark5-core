@@ -92,7 +92,7 @@ public class Class
     private Screening referenceScreening;
 
     @OneToMany(mappedBy = "referenceClass", cascade = ALL)
-    private List<CrossReference> referenceCrossReference;
+    private List<CrossReference> referenceCrossReference = new ArrayList<>();
 
     public String getClassId() {
         return classId;

@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
@@ -166,7 +165,7 @@ public class Record
 
     // Links to CrossReference
     @OneToMany(mappedBy = "referenceRecord")
-    private List<CrossReference> referenceCrossReference;
+    private List<CrossReference> referenceCrossReference = new ArrayList<>();
 
     // Links to Classified
     @ManyToOne(cascade = ALL)

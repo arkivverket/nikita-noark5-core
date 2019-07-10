@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
@@ -130,7 +129,7 @@ public class File
     private Screening referenceScreening;
 
     @OneToMany(mappedBy = "referenceFile", cascade = ALL)
-    private List<CrossReference> referenceCrossReference;
+    private List<CrossReference> referenceCrossReference = new ArrayList<>();
 
     // Links to Part
     @ManyToMany
