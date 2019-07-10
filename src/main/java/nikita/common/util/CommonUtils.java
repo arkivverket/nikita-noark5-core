@@ -1517,8 +1517,6 @@ public final class CommonUtils {
                         jgen.writeEndObject();
                     }
                     jgen.writeEndObject();
-                } else {
-                    jgen.writeFieldName(LINKS);
                 }
             }
 
