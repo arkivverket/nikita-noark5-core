@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
-import nikita.common.util.CommonUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
 import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
 
 
 /**
@@ -39,14 +39,14 @@ public class HateoasSerializer extends StdSerializer<HateoasNoarkObject> {
             if (!hateoasObject.isSingleEntity()) {
                 jgen.writeStartObject();
                 jgen.writeFieldName(ENTITY_ROOT_NAME_LIST);
-                jgen.writeStartArray();
+                jgen.writeStartObject();
             }
             for (INikitaEntity entity : list) {
                 serializeNoarkEntity(entity, hateoasObject, jgen);
             }
             if (!hateoasObject.isSingleEntity()) {
-                jgen.writeEndArray();
-                CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, hateoasObject.getSelfLinks());
+                jgen.writeEndObject();
+                printHateoasLinks(jgen, hateoasObject.getSelfLinks());
                 jgen.writeEndObject();
             }
         }
@@ -54,9 +54,9 @@ public class HateoasSerializer extends StdSerializer<HateoasNoarkObject> {
         else {
             jgen.writeStartObject();
             jgen.writeFieldName(ENTITY_ROOT_NAME_LIST);
-            jgen.writeStartArray();
-            jgen.writeEndArray();
-            CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, hateoasObject.getSelfLinks());
+            jgen.writeStartObject();
+            jgen.writeEndObject();
+            printHateoasLinks(jgen, hateoasObject.getSelfLinks());
             jgen.writeEndObject();
         }
     }

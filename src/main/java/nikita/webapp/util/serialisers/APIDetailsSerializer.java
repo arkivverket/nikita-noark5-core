@@ -10,6 +10,9 @@ import nikita.webapp.application.APIDetails;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import static nikita.common.config.HATEOASConstants.HREF;
+import static nikita.common.config.HATEOASConstants.LINKS;
+
 public class APIDetailsSerializer extends StdSerializer<APIDetails> {
 
     public APIDetailsSerializer() {
@@ -17,21 +20,22 @@ public class APIDetailsSerializer extends StdSerializer<APIDetails> {
     }
 
     @Override
-    public void serialize(APIDetails apiDetails, JsonGenerator jgen, SerializerProvider provider)
+    public void serialize(APIDetails apiDetails,
+                          JsonGenerator jgen, SerializerProvider provider)
             throws IOException {
-        jgen.writeStartObject();
-        jgen.writeArrayFieldStart("_links");
+
+        jgen.writeObjectFieldStart(LINKS);
 
         for (APIDetail apiDetail : apiDetails.getApiDetails()) {
             jgen.writeStartObject();
-            jgen.writeStringField("href", apiDetail.getHref());
-            jgen.writeStringField("rel", apiDetail.getRel());
+            jgen.writeObjectFieldStart(apiDetail.getRel());
+            jgen.writeStringField(HREF, apiDetail.getHref());
             if (apiDetail.getTemplated()) {
-                jgen.writeBooleanField("templated", apiDetail.getTemplated());
+                jgen.writeBooleanField("templated",
+                        apiDetail.getTemplated());
             }
             jgen.writeEndObject();
         }
-        jgen.writeEndArray();
         jgen.writeEndObject();
     }
 
