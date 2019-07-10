@@ -33,6 +33,7 @@ public class APIDetailsSerializer extends StdSerializer<APIDetails> {
                 jgen.writeBooleanField("templated",
                         apiDetail.getTemplated());
             }
+            jgen.writeEndObject();
         }
         jgen.writeEndObject();
         jgen.writeEndObject();
