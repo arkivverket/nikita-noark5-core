@@ -215,7 +215,7 @@ public final class Constants {
     public static final String LOGIN_OAUTH = "rfc6749";
     public static final String LOGIN_OAUTH2_PATH = "/oauth/token";
 
-    public static final String NOARK5_V5_CONTENT_TYPE_JSON = "application/vnd+noark5.json";
+    public static final String NOARK5_V5_CONTENT_TYPE_JSON = "application/vnd.noark5+json";
     public static final String NOARK5_V5_CONTENT_TYPE_JSON_XML = "application/vnd.noark5+xml";
 
     public static final String INFO_CANNOT_FIND_OBJECT = "Cannot find object of type ";
