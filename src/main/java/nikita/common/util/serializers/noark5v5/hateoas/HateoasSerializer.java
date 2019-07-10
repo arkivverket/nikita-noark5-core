@@ -37,7 +37,7 @@ public class HateoasSerializer extends StdSerializer<HateoasNoarkObject> {
         List<INikitaEntity> list = hateoasObject.getList();
         if (list.size() > 0) {
             if (!hateoasObject.isSingleEntity()) {
-                jgen.writeStartObject();
+                jgen.writeStartArray();
                 jgen.writeFieldName(ENTITY_ROOT_NAME_LIST);
                 jgen.writeStartObject();
             }
@@ -45,7 +45,7 @@ public class HateoasSerializer extends StdSerializer<HateoasNoarkObject> {
                 serializeNoarkEntity(entity, hateoasObject, jgen);
             }
             if (!hateoasObject.isSingleEntity()) {
-                jgen.writeEndObject();
+                jgen.writeEndArray();
                 printHateoasLinks(jgen, hateoasObject.getSelfLinks());
                 jgen.writeEndObject();
             }
