@@ -23,19 +23,18 @@ public class APIDetailsSerializer extends StdSerializer<APIDetails> {
     public void serialize(APIDetails apiDetails,
                           JsonGenerator jgen, SerializerProvider provider)
             throws IOException {
-
+        jgen.writeStartObject();
         jgen.writeObjectFieldStart(LINKS);
 
         for (APIDetail apiDetail : apiDetails.getApiDetails()) {
-            jgen.writeStartObject();
             jgen.writeObjectFieldStart(apiDetail.getRel());
             jgen.writeStringField(HREF, apiDetail.getHref());
             if (apiDetail.getTemplated()) {
                 jgen.writeBooleanField("templated",
                         apiDetail.getTemplated());
             }
-            jgen.writeEndObject();
         }
+        jgen.writeEndObject();
         jgen.writeEndObject();
     }
 

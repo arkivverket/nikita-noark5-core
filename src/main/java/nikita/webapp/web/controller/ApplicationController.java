@@ -81,8 +81,9 @@ public class ApplicationController {
     @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH, method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<CaseHandlingDetails> caseHandling(HttpServletRequest request) {
+        CaseHandlingDetails c1 = applicationService.getCaseHandlingDetails();
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(applicationService.getCaseHandlingDetails());
+                .body(c1);
     }
 }
