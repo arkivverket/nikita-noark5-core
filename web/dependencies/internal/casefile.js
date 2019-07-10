@@ -179,7 +179,7 @@ var caseFileController = app.controller('CaseFileController', ['$scope', '$http'
             url: urlCaseFile,
             method: method,
             headers: {
-              'Content-Type': 'application/vnd.noark5-v5+json',
+                'Content-Type': 'application/vnd.noark5+json',
                 'Authorization': GetUserToken(),
                 'ETAG': $scope.caseFileETag
             },

@@ -35,7 +35,7 @@ app.controller('CaseFileDashboardController', ['$scope', '$http', function ($sco
         method: 'GET',
         url: urlApplicationRoot,
         headers: {'Authorization': $scope.token,
-          'Accept': 'application/vnd.noark5-v5+json'
+          'Accept': 'application/vnd.noark5+json'
         }
     }).then(function successCallback(response) {
         var functionality = response.data;

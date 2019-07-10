@@ -32,7 +32,7 @@ import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
  * http://localhost:8092/noark5v5/login
  * <p>
  * <p>
- * curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5-v5+json
+ * curl -i  -b /tmp/cookies.txt --header Accept:application/vnd.noark5+json
  * -X GET http://localhost:8092/noark5v5/
  */
 

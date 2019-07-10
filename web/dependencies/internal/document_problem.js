@@ -174,7 +174,7 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
             url: urlCreateDocumentDescription,
             method: "POST",
             headers: {
-              'Content-Type': 'application/vnd.noark5-v5+json',
+              'Content-Type': 'application/vnd.noark5+json',
                 'Authorization': GetUserToken(),
             },
             data: {
@@ -208,7 +208,7 @@ app.controller('DocumentController', ['$scope', '$http', function ($scope, $http
                 url: urlCreateDocumentObject,
                 method: "POST",
                 headers: {
-                  'Content-Type': 'application/vnd.noark5-v5+json',
+                  'Content-Type': 'application/vnd.noark5+json',
                     'Authorization': GetUserToken(),
                 },
                 data: {
