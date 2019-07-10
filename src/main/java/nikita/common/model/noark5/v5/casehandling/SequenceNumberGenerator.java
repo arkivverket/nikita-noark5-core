@@ -1,16 +1,13 @@
 package nikita.common.model.noark5.v5.casehandling;
 
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK;
+import static nikita.common.config.Constants.TABLE_CASE_FILE_SEQUENCE;
 
 /**
  * A sequence number generator is required to automatically fill in values for
@@ -39,8 +36,11 @@ public class SequenceNumberGenerator
     @Column(name = "year")
     private Integer year;
 
-    @Column(name = "sequence_number")
+    @Column(name = "case_file_sequence_number")
     private Integer sequenceNumber;
+
+    @Column(name = "record_sequence_number")
+    private Integer recordSequenceNumber;
 
     @Column(name = "administrative_unit_name")
     private String administrativeUnitName;
@@ -72,16 +72,28 @@ public class SequenceNumberGenerator
         this.year = year;
     }
 
-    public Integer incrementByOne() {
+    public Integer incrementCaseFileByOne() {
         return sequenceNumber++;
     }
 
-    public Integer getSequenceNumber() {
+    public Integer incrementRecordByOne() {
+        return recordSequenceNumber++;
+    }
+
+    public Integer getCaseFileSequenceNumber() {
         return sequenceNumber;
     }
 
-    public void setSequenceNumber(Integer sequenceNumber) {
+    public void setCaseFileSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
+    }
+
+    public Integer getRecordSequenceNumber() {
+        return recordSequenceNumber;
+    }
+
+    public void setRecordSequenceNumber(Integer recordSequenceNumber) {
+        this.recordSequenceNumber = recordSequenceNumber;
     }
 
     public String getAdministrativeUnitName() {

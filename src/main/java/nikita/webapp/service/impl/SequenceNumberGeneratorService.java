@@ -1,6 +1,5 @@
 package nikita.webapp.service.impl;
 
-import io.swagger.models.auth.In;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
 import nikita.common.repository.n5v5.casehandling.ISequenceNumberGeneratorRepository;
@@ -48,7 +47,7 @@ public class SequenceNumberGeneratorService
      *                           number for
      * @return the next sequence number
      */
-    public Integer getNextSequenceNumber(
+    public Integer getNextCaseFileSequenceNumber(
             AdministrativeUnit administrativeUnit) {
         Integer currentYear = OffsetDateTime.now().getYear();
 
@@ -58,9 +57,35 @@ public class SequenceNumberGeneratorService
                                 administrativeUnit, currentYear);
 
         if (nextSequenceOptional.isPresent()) {
-            return getNextSequence(nextSequenceOptional.get());
+            return getNextCaseFileSequence(nextSequenceOptional.get());
         } else {
             return generateNewSequenceGenerator(administrativeUnit, currentYear);
+        }
+    }
+
+    /**
+     * Get the next sequence number for a given administrativeUnit. If no
+     * sequence number exists, attempt to create a sequenceNumberGenerator.
+     * If that fails throw an Exception. This will auto increment the
+     * sequenceNumberGenerator by 1.
+     *
+     * @param administrativeUnit administrativeUnit that you want sequence
+     *                           number for
+     * @return the next sequence number
+     */
+    public Integer getNextRecordSequenceNumber(
+            AdministrativeUnit administrativeUnit) {
+        Integer currentYear = OffsetDateTime.now().getYear();
+
+        Optional<SequenceNumberGenerator> nextSequenceOptional =
+                numberGeneratorRepository
+                        .findByReferenceAdministrativeUnitAndYear(
+                                administrativeUnit, currentYear);
+
+        if (nextSequenceOptional.isPresent()) {
+            return getNextRecordSequence(nextSequenceOptional.get());
+        } else {
+            return generateNewRecordSequenceGenerator(administrativeUnit, currentYear);
         }
     }
 
@@ -80,7 +105,8 @@ public class SequenceNumberGeneratorService
 
         sequenceNumberGenerator.setAdministrativeUnitName(
                 administrativeUnit.getAdministrativeUnitName());
-        sequenceNumberGenerator.setSequenceNumber(1);
+        sequenceNumberGenerator.setCaseFileSequenceNumber(1);
+        sequenceNumberGenerator.setRecordSequenceNumber(1);
         sequenceNumberGenerator
                 .setReferenceAdministrativeUnit(administrativeUnit);
         administrativeUnit.
@@ -95,11 +121,27 @@ public class SequenceNumberGeneratorService
      * @param nextSequence The SequenceNumberGenerator from the database
      * @return the next available sequence number
      */
-    private Integer getNextSequence(
+    private Integer getNextCaseFileSequence(
             SequenceNumberGenerator nextSequence) {
-        Integer sequenceNumber = nextSequence.getSequenceNumber();
+        Integer sequenceNumber = nextSequence.getCaseFileSequenceNumber();
         // increment and save the value
-        nextSequence.incrementByOne();
+        nextSequence.incrementCaseFileByOne();
+        numberGeneratorRepository.save(nextSequence);
+        return sequenceNumber;
+    }
+
+    /**
+     * Retrieve the sequence number and increment by 1 so next call will be
+     * +1
+     *
+     * @param nextSequence The SequenceNumberGenerator from the database
+     * @return the next available sequence number
+     */
+    private Integer getNextRecordSequence(
+            SequenceNumberGenerator nextSequence) {
+        Integer sequenceNumber = nextSequence.getRecordSequenceNumber();
+        // increment and save the value
+        nextSequence.incrementRecordByOne();
         numberGeneratorRepository.save(nextSequence);
         return sequenceNumber;
     }
@@ -111,7 +153,25 @@ public class SequenceNumberGeneratorService
                 createSequenceNumberGenerator(administrativeUnit);
 
         if (sequenceNumberGenerator != null) {
-            return getNextSequence(sequenceNumberGenerator);
+            return getNextCaseFileSequence(sequenceNumberGenerator);
+        } else {
+            logger.error("Error missing sequencenumber " +
+                    "generator for " + administrativeUnit + " and year " +
+                    currentYear.toString());
+            throw new NikitaException("Error missing sequencenumber " +
+                    "generator for " + administrativeUnit + " and year " +
+                    currentYear.toString());
+        }
+    }
+
+    private Integer generateNewRecordSequenceGenerator(
+            AdministrativeUnit administrativeUnit, Integer currentYear) {
+
+        SequenceNumberGenerator sequenceNumberGenerator =
+                createSequenceNumberGenerator(administrativeUnit);
+
+        if (sequenceNumberGenerator != null) {
+            return getNextRecordSequence(sequenceNumberGenerator);
         } else {
             logger.error("Error missing sequencenumber " +
                     "generator for " + administrativeUnit + " and year " +

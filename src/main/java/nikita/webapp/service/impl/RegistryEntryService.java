@@ -1,6 +1,8 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
@@ -13,10 +15,14 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnit
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
+import nikita.common.repository.nikita.IUserRepository;
+import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
+import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
+import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -36,6 +42,8 @@ import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
@@ -56,6 +64,9 @@ public class RegistryEntryService
     private IPrecedenceService precedenceService;
     private IRegistryEntryRepository registryEntryRepository;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
+    private ISequenceNumberGeneratorService numberGeneratorService;
+    private IUserRepository userRepository;
+    private IAdministrativeUnitService administrativeUnitService;
 
     public RegistryEntryService(
             EntityManager entityManager,
@@ -63,12 +74,19 @@ public class RegistryEntryService
             ICorrespondencePartService correspondencePartService,
             IPrecedenceService precedenceService,
             IRegistryEntryRepository registryEntryRepository,
-            IRegistryEntryHateoasHandler registryEntryHateoasHandler) {
+            IRegistryEntryHateoasHandler registryEntryHateoasHandler,
+            ISequenceNumberGeneratorService numberGeneratorService,
+            IUserRepository userRepository,
+            IAdministrativeUnitService administrativeUnitService) {
         super(entityManager, applicationEventPublisher);
         this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
+        this.numberGeneratorService = numberGeneratorService;
+        this.userRepository = userRepository;
+        this.administrativeUnitService = administrativeUnitService;
+
     }
 
     @Override
@@ -81,6 +99,11 @@ public class RegistryEntryService
                     registryEntryRepository.countByReferenceFile(file) + 1;
             registryEntry.setRegistryEntryNumber((int) numberAssociated);
             registryEntry.setRecordId(file.getFileId() + "-" + numberAssociated);
+            AdministrativeUnit administrativeUnit =
+                    getAdministrativeUnitIfMemberOrThrow(registryEntry);
+
+            registryEntry.setRecordSequenceNumber(
+                    numberGeneratorService.getNextRecordSequenceNumber(administrativeUnit));
         }
         registryEntryRepository.save(registryEntry);
         return registryEntry;
@@ -412,6 +435,139 @@ public class RegistryEntryService
         return registryEntryRepository.deleteByOwnedBy(getUser());
     }
     // All helper methods
+
+    /**
+     * Internal helper method. Find the administrativeUnit identified by the
+     * given systemId or throw a NoarkEntityNotFoundException. Then check that
+     * the user is a member of that administrativeUnit. If they are not throw a
+     * NoarkAdministrativeUnitMemberException.
+     * <p>
+     * Note this method will return a non-null administrativeUnit. An
+     * exception is thrown otherwise.
+     *
+     * @param RegistryEntry The RegistryEntry
+     * @return the administrativeUnit
+     */
+    private AdministrativeUnit getAdministrativeUnitIfMemberOrThrow(
+            RegistryEntry RegistryEntry) {
+
+        //assumes ownedby is set!!!! need to get user!!!
+        Optional<User> userOptional =
+                userRepository.findByUsername(getUser());
+
+        AdministrativeUnit administrativeUnit;
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            administrativeUnit = getAdministrativeUnitOrThrow(user);
+            checkOwnerMemberAdministrativeUnit(user, administrativeUnit);
+        } else {
+            throw new NoarkEntityNotFoundException(
+                    "Could not find user with systemID [" +
+                            RegistryEntry.getOwnedBy() + "]");
+        }
+
+        userOptional = userRepository.findByUsername(getUser());
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            checkCaseResponsibleMemberAdministrativeUnit(user,
+                    administrativeUnit);
+        } else {
+            throw new NoarkEntityNotFoundException(
+                    "Could not find user with systemID [" +
+                            RegistryEntry.getSystemId() + "]");
+        }
+        return administrativeUnit;
+    }
+
+    /**
+     * Internal helper method. Find the administrativeUnit identified by the
+     * given systemId or throw a NoarkEntityNotFoundException. Then check that
+     * the user is a member of that administrativeUnit. If they are not throw a
+     * NoarkAdministrativeUnitMemberException.
+     * <p>
+     * Note this method will return a non-null administrativeUnit. An
+     * exception is thrown otherwise.
+     *
+     * @param caseFile The caseFile
+     * @return the administrativeUnit
+     */
+    private AdministrativeUnit getAdministrativeUnitIfMemberOrThrow(
+            CaseFile caseFile) {
+
+        //assumes ownedby is set!!!! need to get user!!!
+        Optional<User> userOptional =
+                userRepository.findByUsername(getUser());
+
+        AdministrativeUnit administrativeUnit;
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            administrativeUnit = getAdministrativeUnitOrThrow(user);
+            checkOwnerMemberAdministrativeUnit(user, administrativeUnit);
+        } else {
+            throw new NoarkEntityNotFoundException(
+                    "Could not find user with systemID [" +
+                            caseFile.getOwnedBy() + "]");
+        }
+
+        userOptional = userRepository.findByUsername(getUser());
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            checkCaseResponsibleMemberAdministrativeUnit(user,
+                    administrativeUnit);
+        } else {
+            throw new NoarkEntityNotFoundException(
+                    "Could not find user with systemID [" +
+                            caseFile.getCaseResponsible() + "]");
+        }
+        return administrativeUnit;
+    }
+
+    /**
+     * Internal helper method. Find the administrativeUnit identified for the
+     * given user or throw a NoarkEntityNotFoundException. Note this method
+     * will return a non-null administrativeUnit. An exception is thrown
+     * otherwise.
+     *
+     * @param user the user you want to retrieve an associated
+     *             administrativeUnit
+     * @return the administrativeUnit
+     */
+    private AdministrativeUnit getAdministrativeUnitOrThrow(User user) {
+        return administrativeUnitService.getAdministrativeUnitOrThrow(user);
+    }
+
+    private void checkCaseResponsibleMemberAdministrativeUnit(
+            User user, AdministrativeUnit administrativeUnit) {
+        // Check that the person responsible is part of the administrativeUnit
+        Set<User> users = administrativeUnit.getUsers();
+        if (!users.contains(user)) {
+            throw new NoarkAdministrativeUnitMemberException(
+                    "User [" + user.getSystemId() + "] is " +
+                            "not a member  of the administrativeUnit " +
+                            "with systemID [" +
+                            administrativeUnit.getSystemId() + "] when " +
+                            "assigning caseFile responsible field.");
+        }
+    }
+
+    private void checkOwnerMemberAdministrativeUnit(
+            User user, AdministrativeUnit administrativeUnit) {
+
+        Set<User> users = administrativeUnit.getUsers();
+        // Check that the owner is part of the administrativeUnit
+        if (!users.contains(user)) {
+            throw new NoarkAdministrativeUnitMemberException(
+                    "User [" + user.getUsername() + "] is not a member " +
+                            "of the administrativeUnit with systemID [" +
+                            administrativeUnit.getSystemId() + "] when " +
+                            "assigning ownership field.");
+        }
+    }
+
 
     /**
      * Internal helper method. Rather than having a find and try catch in

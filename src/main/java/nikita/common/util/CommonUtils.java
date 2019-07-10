@@ -346,9 +346,9 @@ public final class CommonUtils {
                             .toFormatter();
 
             public static OffsetDateTime deserializeDate(String fieldname,
-                                                        ObjectNode objectNode,
-                                                        StringBuilder errors,
-                                                        boolean required) {
+                                                         ObjectNode objectNode,
+                                                         StringBuilder errors,
+                                                         boolean required) {
                 OffsetDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
@@ -369,15 +369,15 @@ public final class CommonUtils {
             }
 
             public static OffsetDateTime deserializeDate(String fieldname,
-                                                        ObjectNode objectNode,
-                                                        StringBuilder errors) {
+                                                         ObjectNode objectNode,
+                                                         StringBuilder errors) {
                 return deserializeDate(fieldname, objectNode, errors, false);
             }
 
             public static OffsetDateTime deserializeDateTime(String fieldname,
-                                                            ObjectNode objectNode,
-                                                            StringBuilder errors,
-                                                            boolean required) {
+                                                             ObjectNode objectNode,
+                                                             StringBuilder errors,
+                                                             boolean required) {
                 OffsetDateTime d = null;
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
@@ -398,8 +398,8 @@ public final class CommonUtils {
             }
 
             public static OffsetDateTime deserializeDateTime(String fieldname,
-                                                            ObjectNode objectNode,
-                                                            StringBuilder errors) {
+                                                             ObjectNode objectNode,
+                                                             StringBuilder errors) {
                 return deserializeDateTime(fieldname, objectNode, errors, false);
             }
 
@@ -1480,22 +1480,21 @@ public final class CommonUtils {
             }
 
             /**
-             *
              * Note: This method assumes that the startObject has already been
              * written
-             *
+             * <p>
              * {
-             *   "_links": {
-             *     "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/": {
-             *        "href": "https://n5.example.com/api/arkivstruktur"
-             *       },
-             *     "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/": {
-             *        "href": "https://n5.example.com/api/sakarkiv"
-             *       },
-             *     "https://rel.arkivverket.no/noark5/v5/api/admin/system/": {
-             *        "href": "https://n5.example.com/api/admin/system/",
-             *       }
-             *     }
+             * "_links": {
+             * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/": {
+             * "href": "https://n5.example.com/api/arkivstruktur"
+             * },
+             * "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/": {
+             * "href": "https://n5.example.com/api/sakarkiv"
+             * },
+             * "https://rel.arkivverket.no/noark5/v5/api/admin/system/": {
+             * "href": "https://n5.example.com/api/admin/system/",
+             * }
+             * }
              * }
              *
              * @param jgen
@@ -2175,12 +2174,14 @@ public final class CommonUtils {
                     @NotNull JsonGenerator jgen,
                     @NotNull ICrossReference crossReferences)
                     throws IOException {
-                jgen.writeArrayFieldStart(CROSS_REFERENCES);
-                for (CrossReference crossReference :
-                        crossReferences.getReferenceCrossReference()) {
-                    printCrossReference(jgen, crossReference);
+                if (crossReferences.getReferenceCrossReference().size() > 0) {
+                    jgen.writeArrayFieldStart(CROSS_REFERENCES);
+                    for (CrossReference crossReference :
+                            crossReferences.getReferenceCrossReference()) {
+                        printCrossReference(jgen, crossReference);
+                    }
+                    jgen.writeEndArray();
                 }
-                jgen.writeEndArray();
             }
 
             private static void printCrossReference(

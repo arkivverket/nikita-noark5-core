@@ -6,7 +6,10 @@ import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
 import javax.validation.constraints.NotNull;
 
 public interface ISequenceNumberGeneratorService {
-    Integer getNextSequenceNumber(
+    Integer getNextCaseFileSequenceNumber(
+            @NotNull AdministrativeUnit administrativeUnit);
+
+    Integer getNextRecordSequenceNumber(
             @NotNull AdministrativeUnit administrativeUnit);
 
     SequenceNumberGenerator createSequenceNumberGenerator(

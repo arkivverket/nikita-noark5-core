@@ -39,7 +39,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
@@ -356,7 +359,7 @@ public class CaseFileService
      */
     protected Integer getNextSequenceNumber(AdministrativeUnit
                                                     administrativeUnit) {
-        return numberGeneratorService.getNextSequenceNumber(administrativeUnit);
+        return numberGeneratorService.getNextCaseFileSequenceNumber(administrativeUnit);
     }
 
     public CaseFileHateoas generateDefaultCaseFile() {
