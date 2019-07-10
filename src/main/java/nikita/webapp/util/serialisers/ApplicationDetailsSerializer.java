@@ -4,16 +4,15 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.webapp.application.ApplicationDetails;
 import nikita.webapp.application.ConformityLevel;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Iterator;
 
-import static nikita.common.config.HATEOASConstants.*;
+import static nikita.common.config.HATEOASConstants.HREF;
+import static nikita.common.config.HATEOASConstants.LINKS;
 
 public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetails> {
 
@@ -28,9 +27,11 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
             throws IOException {
 
         jgen.writeStartObject();
-        jgen.writeObjectFieldStart(LINKS);
         Iterator<ConformityLevel> iterator =
                 applicationDetails.getConformityLevels().iterator();
+        if (iterator.hasNext()) {
+            jgen.writeObjectFieldStart(LINKS);
+        }
         while (iterator.hasNext()) {
             ConformityLevel conformityLevel = iterator.next();
             jgen.writeObjectFieldStart(conformityLevel.getRel());
