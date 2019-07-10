@@ -29,7 +29,10 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
         jgen.writeStartObject();
         Iterator<ConformityLevel> iterator =
                 applicationDetails.getConformityLevels().iterator();
-        if (iterator.hasNext()) {
+
+        boolean writeLinks = iterator.hasNext() == true;
+
+        if (writeLinks) {
             jgen.writeObjectFieldStart(LINKS);
         }
         while (iterator.hasNext()) {
@@ -38,7 +41,10 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
             jgen.writeStringField(HREF, conformityLevel.getHref());
             jgen.writeEndObject();
         }
-        jgen.writeEndObject();
+
+        if (writeLinks) {
+            jgen.writeEndObject();
+        }
         jgen.writeEndObject();
     }
 
