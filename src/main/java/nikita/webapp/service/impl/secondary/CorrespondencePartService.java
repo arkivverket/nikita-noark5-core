@@ -23,11 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.misc.UUDecoder;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -49,7 +47,6 @@ public class CorrespondencePartService
     private final ICorrespondencePartHateoasHandler
             correspondencePartHateoasHandler;
     private final ICorrespondencePartTypeService correspondencePartTypeService;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     public CorrespondencePartService(
             EntityManager entityManager,
@@ -63,7 +60,6 @@ public class CorrespondencePartService
         this.correspondencePartTypeRepository = correspondencePartTypeRepository;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.correspondencePartTypeService = correspondencePartTypeService;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
