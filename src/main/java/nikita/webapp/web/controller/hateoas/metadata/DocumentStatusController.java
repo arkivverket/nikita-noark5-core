@@ -19,11 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_STATUS;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 
 /**
  * Created by tsodring on 31/1/18.
@@ -101,9 +100,9 @@ public class DocumentStatusController {
                 .body(metadataHateoas);
     }
 
-    // Retrieves a given documentStatus identified by a systemId
-    // GET [contextPath][api]/metadata/dokumentstatus/{systemId}/
-    @ApiOperation(value = "Gets documentStatus identified by its systemId",
+    // Retrieves a given documentStatus identified by a code
+    // GET [contextPath][api]/metadata/dokumentstatus/{code}/
+    @ApiOperation(value = "Gets documentStatus identified by its code",
             notes = "Returns the requested " +
             " documentStatus object", response = DocumentStatus.class)
     @ApiResponses(value = {
@@ -121,11 +120,11 @@ public class DocumentStatusController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = DOCUMENT_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
-    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
+    @RequestMapping(value = DOCUMENT_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
+    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String code,
                                                           HttpServletRequest request) {
         DocumentStatus documentStatus =
-                documentStatusService.findBySystemId(systemId);
+                documentStatusService.findByCode(code);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
@@ -150,7 +149,7 @@ public class DocumentStatusController {
     public ResponseEntity<MetadataHateoas> getDocumentStatusTemplate(HttpServletRequest request) {
         DocumentStatus documentStatus = new DocumentStatus();
         documentStatus.setCode(TEMPLATE_DOCUMENT_STATUS_CODE);
-        documentStatus.setDescription(TEMPLATE_DOCUMENT_STATUS_DESCRIPTION);
+        documentStatus.setName(TEMPLATE_DOCUMENT_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

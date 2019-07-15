@@ -14,11 +14,7 @@ public interface IElectronicSignatureSecurityLevelService {
     MetadataHateoas createNewElectronicSignatureSecurityLevel(
             ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

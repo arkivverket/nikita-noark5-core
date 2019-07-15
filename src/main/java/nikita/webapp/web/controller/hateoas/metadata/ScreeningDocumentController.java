@@ -128,10 +128,10 @@ public class ScreeningDocumentController {
                 .body(postalCodeService.findAll());
     }
 
-    // Retrieves a given postalCode identified by a systemId
-    // GET [contextPath][api]/metadata/skjermingdokument/{systemId}/
+    // Retrieves a given postalCode identified by a code
+    // GET [contextPath][api]/metadata/skjermingdokument/{code}/
     @ApiOperation(
-            value = "Gets postalCode identified by its systemId",
+            value = "Gets postalCode identified by its code",
             notes = "Returns the requested postalCode object",
             response = ScreeningDocument.class)
     @ApiResponses(value = {
@@ -163,15 +163,15 @@ public class ScreeningDocumentController {
     @Counted
 
     @RequestMapping(
-            value = SCREENING_DOCUMENT + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = SCREENING_DOCUMENT + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = postalCodeService.find(systemId);
+        MetadataHateoas metadataHateoas = postalCodeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -258,7 +258,7 @@ public class ScreeningDocumentController {
     )
     public ResponseEntity<MetadataHateoas> updateScreeningDocument(
             @ApiParam(name = "systemID",
-                    value = "systemId of ScreeningDocument to update.",
+                    value = "code of ScreeningDocument to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody ScreeningDocument postalCode,

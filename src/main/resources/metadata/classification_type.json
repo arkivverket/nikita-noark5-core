@@ -1,0 +1,36 @@
+{
+  "ClassificationType": [
+    {
+      "code": "GBN",
+      "name": "Gårds- og bruksnummer Valgfri"
+    },
+    {
+      "code": "FH",
+      "name": "Funksjonsbasert, hierarkisk Valgfri"
+    },
+    {
+      "code": "EH",
+      "name": "Emnebasert, hierarkisk arkivnøkkel"
+    },
+    {
+      "code": "E1",
+      "name": "Emnebasert, ett nivå"
+    },
+    {
+      "code": "KK",
+      "name": "K-koder"
+    },
+    {
+      "code": "MF",
+      "name": "Mangefasettert, ikke hierarki"
+    },
+    {
+      "code": "UO",
+      "name": "Objektbasert"
+    },
+    {
+      "code": "PNR",
+      "name": "Fødselsnummer"
+    }
+  ]
+}

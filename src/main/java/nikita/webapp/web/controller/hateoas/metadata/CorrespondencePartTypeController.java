@@ -23,7 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
+import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
@@ -95,9 +96,9 @@ public class CorrespondencePartTypeController extends NoarkController {
                 .body(metadataHateoas);
     }
 
-    // Retrieves a given correspondencePartType identified by a systemId
-    // GET [contextPath][api]/metadata/korrespondanseparttype/{systemId}
-    @ApiOperation(value = "Gets correspondencePartType identified by its systemId", notes = "Returns the requested " +
+    // Retrieves a given correspondencePartType identified by a code
+    // GET [contextPath][api]/metadata/korrespondanseparttype/{code}
+    @ApiOperation(value = "Gets correspondencePartType identified by its code", notes = "Returns the requested " +
             " correspondencePartType object", response = CorrespondencePartType.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CorrespondencePartType " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
@@ -112,11 +113,11 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS,
             method = RequestMethod.GET)
-    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
+    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String code,
                                                           HttpServletRequest request) {
-        CorrespondencePartType correspondencePartType = correspondencePartTypeService.findBySystemId(systemId);
+        CorrespondencePartType correspondencePartType = correspondencePartTypeService.findByCode(code);
         MetadataHateoas metadataHateoas = new MetadataHateoas(correspondencePartType);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
@@ -141,7 +142,7 @@ public class CorrespondencePartTypeController extends NoarkController {
     public ResponseEntity<MetadataHateoas> getCorrespondencePartTypeTemplate(HttpServletRequest request) {
         CorrespondencePartType correspondencePartType = new CorrespondencePartType();
         correspondencePartType.setCode(TEMPLATE_FONDS_STATUS_CODE);
-        correspondencePartType.setDescription(TEMPLATE_FONDS_STATUS_DESCRIPTION);
+        correspondencePartType.setName(TEMPLATE_FONDS_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(correspondencePartType);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -164,7 +165,7 @@ public class CorrespondencePartTypeController extends NoarkController {
     @Counted
 
     @RequestMapping(method = RequestMethod.PUT, value = CORRESPONDENCE_PART_TYPE + UNIT + SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS)
+            CODE + RIGHT_PARENTHESIS)
     public ResponseEntity<MetadataHateoas> updateCorrespondencePartTypeUnit(
             @RequestBody CorrespondencePartType correspondencePartType,
             HttpServletRequest request)

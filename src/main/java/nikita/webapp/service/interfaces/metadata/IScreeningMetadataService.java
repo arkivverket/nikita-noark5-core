@@ -14,11 +14,7 @@ public interface IScreeningMetadataService {
     MetadataHateoas createNewScreeningMetadata(
             ScreeningMetadata screeningMetadata);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

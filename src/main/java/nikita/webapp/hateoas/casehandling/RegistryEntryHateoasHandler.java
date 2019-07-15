@@ -15,7 +15,6 @@ import static nikita.common.config.N5ResourceMappings.*;
  * <p>
  * Used to add RegistryEntryHateoas links with RegistryEntry specific
  * information
- *
  */
 @Component("registryEntryHateoasHandler")
 public class RegistryEntryHateoasHandler
@@ -26,6 +25,8 @@ public class RegistryEntryHateoasHandler
     public void addEntityLinks(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinks(entity, hateoasNoarkObject);
+
+
         addElectronicSignature(entity, hateoasNoarkObject);
         addNewElectronicSignature(entity, hateoasNoarkObject);
         addPrecedence(entity, hateoasNoarkObject);
@@ -34,12 +35,6 @@ public class RegistryEntryHateoasHandler
         addNewSignOff(entity, hateoasNoarkObject);
         addDocumentFlow(entity, hateoasNoarkObject);
         addNewDocumentFlow(entity, hateoasNoarkObject);
-        addCorrespondencePartPerson(entity, hateoasNoarkObject);
-        addNewCorrespondencePartPerson(entity, hateoasNoarkObject);
-        addCorrespondencePartUnit(entity, hateoasNoarkObject);
-        addNewCorrespondencePartUnit(entity, hateoasNoarkObject);
-        addCorrespondencePartInternal(entity, hateoasNoarkObject);
-        addNewCorrespondencePartInternal(entity, hateoasNoarkObject);
         addRegistryEntryStatus(entity, hateoasNoarkObject);
         addRegistryEntryType(entity, hateoasNoarkObject);
     }
@@ -106,54 +101,6 @@ public class RegistryEntryHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
                 entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW + SLASH, REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW, false));
-    }
-
-    @Override
-    public void addCorrespondencePartPerson(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + CORRESPONDENCE_PART_PERSON + SLASH,
-                REL_CASE_HANDLING_CORRESPONDENCE_PART_PERSON, false));
-    }
-
-    @Override
-    public void addNewCorrespondencePartPerson(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_PERSON + SLASH,
-                REL_CASE_HANDLING_NEW_CORRESPONDENCE_PART_PERSON, false));
-    }
-
-    @Override
-    public void addCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + CORRESPONDENCE_PART_UNIT + SLASH,
-                REL_CASE_HANDLING_CORRESPONDENCE_PART_UNIT, false));
-    }
-
-    @Override
-    public void addNewCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_UNIT + SLASH,
-                REL_CASE_HANDLING_NEW_CORRESPONDENCE_PART_UNIT, false));
-    }
-
-    @Override
-    public void addCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + CORRESPONDENCE_PART_INTERNAL + SLASH,
-                REL_CASE_HANDLING_CORRESPONDENCE_PART_INTERNAL, false));
-    }
-
-    @Override
-    public void addNewCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_INTERNAL + SLASH,
-                REL_CASE_HANDLING_NEW_CORRESPONDENCE_PART_INTERNAL, false));
     }
 
     // Metadata entries

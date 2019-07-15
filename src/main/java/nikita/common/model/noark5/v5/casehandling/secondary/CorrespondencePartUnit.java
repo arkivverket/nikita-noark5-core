@@ -1,10 +1,9 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.casehandling.ICorrespondencePartUnitEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartUnitEntity;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartUnitDeserializer;
 import nikita.webapp.hateoas.casehandling.CorrespondencePartUnitHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
@@ -64,9 +63,9 @@ public class CorrespondencePartUnit
             fetch = LAZY, cascade = ALL)
     private ContactInformation contactInformation;
 
-    // Links to RegistryEntry
+    // Links to Record
     @ManyToMany(mappedBy = "referenceCorrespondencePartUnit")
-    private List<RegistryEntry> referenceRegistryEntry = new ArrayList<>();
+    private List<Record> referenceRecord = new ArrayList<>();
 
     public String getOrganisationNumber() {
         return organisationNumber;
@@ -122,19 +121,19 @@ public class CorrespondencePartUnit
     }
 
     @Override
-    public List<RegistryEntry> getReferenceRegistryEntry() {
-        return referenceRegistryEntry;
+    public List<Record> getReferenceRecord() {
+        return referenceRecord;
     }
 
     @Override
-    public void setReferenceRegistryEntry(
-            List<RegistryEntry> referenceRegistryEntry) {
-        this.referenceRegistryEntry = referenceRegistryEntry;
+    public void setReferenceRecord(
+            List<Record> referenceRecord) {
+        this.referenceRecord = referenceRecord;
     }
 
     @Override
-    public void addRegistryEntry(RegistryEntry referenceRegistryEntry) {
-        this.referenceRegistryEntry.add(referenceRegistryEntry);
+    public void addRecord(Record referenceRecord) {
+        this.referenceRecord.add(referenceRecord);
     }
 
     @Override

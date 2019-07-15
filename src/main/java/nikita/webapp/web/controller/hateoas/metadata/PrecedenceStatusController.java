@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.PRECEDENCE_STATUS;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -137,11 +137,11 @@ public class PrecedenceStatusController {
     }
 
     // Retrieves a given PrecedenceStatus identified by a
-    // systemId
+    // code
     // GET [contextPath][api]/metadata/journalposttype/
-    // {systemId}/
+    // {code}/
     @ApiOperation(
-            value = "Gets PrecedenceStatus identified by its systemId",
+            value = "Gets PrecedenceStatus identified by its code",
             notes = "Returns the requested PrecedenceStatus object",
             response = PrecedenceStatus.class)
     @ApiResponses(value = {
@@ -173,16 +173,16 @@ public class PrecedenceStatusController {
     @Counted
 
     @RequestMapping(
-            value = PRECEDENCE_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = PRECEDENCE_STATUS + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                PrecedenceStatusService.find(systemId);
+                PrecedenceStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -271,7 +271,7 @@ public class PrecedenceStatusController {
     public ResponseEntity<MetadataHateoas>
     updatePrecedenceStatus(
             @ApiParam(name = "systemID",
-                    value = "systemId of PrecedenceStatus to update.",
+                    value = "code of PrecedenceStatus to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody PrecedenceStatus PrecedenceStatus,

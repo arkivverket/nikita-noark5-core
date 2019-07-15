@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CLASSIFIED_CODE;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
@@ -132,10 +132,10 @@ public class ClassifiedCodeController {
                 .body(classifiedCodeService.findAll());
     }
 
-    // Retrieves a given classifiedCode identified by a systemId
-    // GET [contextPath][api]/metadata/graderingskode/{systemId}/
+    // Retrieves a given classifiedCode identified by a code
+    // GET [contextPath][api]/metadata/graderingskode/{code}/
     @ApiOperation(
-            value = "Gets classifiedCode identified by its systemId",
+            value = "Gets classifiedCode identified by its code",
             notes = "Returns the requested classifiedCode object",
             response = ClassifiedCode.class)
     @ApiResponses(value = {
@@ -167,16 +167,16 @@ public class ClassifiedCodeController {
     @Counted
 
     @RequestMapping(
-            value = CLASSIFIED_CODE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = CLASSIFIED_CODE + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                classifiedCodeService.find(systemId);
+                classifiedCodeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(
@@ -263,7 +263,7 @@ public class ClassifiedCodeController {
     )
     public ResponseEntity<MetadataHateoas> updateClassifiedCode(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody ClassifiedCode classifiedCode,

@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.UUID;
-
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
@@ -96,9 +94,9 @@ public class SeriesStatusController {
                 .body(metadataHateoas);*/
     }
 
-    // Retrieves a given seriesStatus identified by a systemId
-    // GET [contextPath][api]/metadata/arkivdelstatus/{systemId}/
-    @ApiOperation(value = "Gets seriesStatus identified by its systemId", notes = "Returns the requested " +
+    // Retrieves a given seriesStatus identified by a code
+    // GET [contextPath][api]/metadata/arkivdelstatus/{code}/
+    @ApiOperation(value = "Gets seriesStatus identified by its code", notes = "Returns the requested " +
             " seriesStatus object", response = SeriesStatus.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "SeriesStatus " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
@@ -113,10 +111,12 @@ public class SeriesStatusController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
-    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
-                                                          HttpServletRequest request) {
-        SeriesStatus seriesStatus = seriesStatusService.findBySystemId(UUID.fromString(systemId));
+    @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
+    public ResponseEntity<MetadataHateoas> findByCode(
+            @PathVariable("systemID") final String code,
+            HttpServletRequest request) {
+        SeriesStatus seriesStatus =
+                seriesStatusService.findByCode(code);
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
@@ -141,7 +141,7 @@ public class SeriesStatusController {
     public ResponseEntity<MetadataHateoas> getSeriesStatusTemplate(HttpServletRequest request) {
         SeriesStatus seriesStatus = new SeriesStatus();
         seriesStatus.setCode(TEMPLATE_FONDS_STATUS_CODE);
-        seriesStatus.setDescription(TEMPLATE_FONDS_STATUS_DESCRIPTION);
+        seriesStatus.setName(TEMPLATE_FONDS_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

@@ -1,9 +1,5 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.config.N5ResourceMappings;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 

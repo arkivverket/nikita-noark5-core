@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FLOW_STATUS;
@@ -86,46 +85,9 @@ public class FlowStatusService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single FlowStatus object identified by systemId
-     *
-     * @param systemId systemId of the FlowStatus you wish to retrieve
-     * @return single FlowStatus object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                flowStatusRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all FlowStatus that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of FlowStatus objects wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        flowStatusRepository
-                                .findByDescription(description), FLOW_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all FlowStatus that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of FlowStatus objects wrapped as a MetadataHateoas object
@@ -133,8 +95,7 @@ public class FlowStatusService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        flowStatusRepository.findByCode(code), FLOW_STATUS);
+                getFlowStatusOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -146,20 +107,18 @@ public class FlowStatusService
      */
     @Override
     public FlowStatus generateDefaultFlowStatus() {
-
         FlowStatus flowStatus = new FlowStatus();
         flowStatus.setCode(TEMPLATE_FLOW_STATUS_CODE);
-        flowStatus.setDescription(TEMPLATE_FLOW_STATUS_DESCRIPTION);
-
+        flowStatus.setName(TEMPLATE_FLOW_STATUS_NAME);
         return flowStatus;
     }
 
     /**
-     * Update a FlowStatus identified by its systemId
+     * Update a FlowStatus identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId The systemId of the flowStatus object you wish to update
+     * @param code The code of the flowStatus object you wish to update
      * @param incomingFlowStatus The updated flowStatus object. Note the
      *                           values you are allowed to change are copied
      *                           from this object. This object is not persisted.
@@ -167,11 +126,11 @@ public class FlowStatusService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final FlowStatus incomingFlowStatus) {
 
-        FlowStatus existingFlowStatus = getFlowStatusOrThrow(systemId);
+        FlowStatus existingFlowStatus = getFlowStatusOrThrow(code);
         updateCodeAndDescription(incomingFlowStatus, existingFlowStatus);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -193,16 +152,16 @@ public class FlowStatusService
      * that you will only ever get a valid FlowStatus object back. If there is
      * no FlowStatus object, a NoarkEntityNotFoundException exception is thrown
      *
-     * @param systemId The systemId of the FlowStatus object to retrieve
+     * @param code The code of the FlowStatus object to retrieve
      * @return the FlowStatus object
      */
     private FlowStatus
-    getFlowStatusOrThrow(@NotNull String systemId) {
+    getFlowStatusOrThrow(@NotNull String code) {
         FlowStatus flowStatus =
-                flowStatusRepository.findBySystemId(UUID.fromString(systemId));
+                flowStatusRepository.findByCode(code);
         if (flowStatus == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " FlowStatus, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

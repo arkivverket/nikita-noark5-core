@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by tsodring on 4/2/17.
@@ -14,14 +13,11 @@ import java.util.UUID;
 
 @Repository
 @NoRepositoryBean
-public interface MetadataRepository<INikitaEntity, ID extends Serializable> extends
-        CrudRepository<INikitaEntity, Long> {
+public interface MetadataRepository
+        <INikitaEntity, ID extends Serializable> extends
+        CrudRepository<INikitaEntity, String> {
 
     List<INikitaEntity> findAll();
 
-    INikitaEntity findBySystemId(UUID systemId);
-
-    List<INikitaEntity> findByDescription(String description);
-
-    List<INikitaEntity> findByCode(String code);
+    INikitaEntity findByCode(String code);
 }

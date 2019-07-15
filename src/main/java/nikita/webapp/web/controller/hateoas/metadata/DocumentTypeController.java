@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_TYPE;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -129,10 +129,10 @@ public class DocumentTypeController {
                 .body(documentTypeService.findAll());
     }
 
-    // Retrieves a given documentType identified by a systemId
-    // GET [contextPath][api]/metadata/dokumenttype/{systemId}/
+    // Retrieves a given documentType identified by a code
+    // GET [contextPath][api]/metadata/dokumenttype/{code}/
     @ApiOperation(
-            value = "Gets documentType identified by its systemId",
+            value = "Gets documentType identified by its code",
             notes = "Returns the requested documentType object",
             response = DocumentType.class)
     @ApiResponses(value = {
@@ -164,15 +164,15 @@ public class DocumentTypeController {
     @Counted
 
     @RequestMapping(
-            value = DOCUMENT_TYPE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = DOCUMENT_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = documentTypeService.find(systemId);
+        MetadataHateoas metadataHateoas = documentTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -259,7 +259,7 @@ public class DocumentTypeController {
     )
     public ResponseEntity<MetadataHateoas> updateDocumentType(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody DocumentType documentType,

@@ -1,0 +1,24 @@
+{
+  "SignOffMethod": [
+    {
+      "code": "BU",
+      "name": "Besvart med brev"
+    },
+    {
+      "code": "BE",
+      "name": "Besvart med e-post"
+    },
+    {
+      "code": "TLF",
+      "name": "Besvart på telefon"
+    },
+    {
+      "code": "TE",
+      "name": "Tatt til etterretning"
+    },
+    {
+      "code": "TO",
+      "name": "Tatt til orientering"
+    }
+  ]
+}

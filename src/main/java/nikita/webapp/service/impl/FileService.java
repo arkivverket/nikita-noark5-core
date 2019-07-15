@@ -1,11 +1,10 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v5.hateoas.FileHateoas;
-import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
-import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
@@ -14,6 +13,7 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +49,7 @@ public class FileService
     private IFileHateoasHandler fileHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
+    private IPartService partService;
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
@@ -56,13 +57,15 @@ public class FileService
                        IFileRepository fileRepository,
                        IFileHateoasHandler fileHateoasHandler,
                        ISeriesHateoasHandler seriesHateoasHandler,
-                       IClassHateoasHandler classHateoasHandler) {
+                       IClassHateoasHandler classHateoasHandler,
+                       IPartService partService) {
         super(entityManager, applicationEventPublisher);
         this.recordService = recordService;
         this.fileRepository = fileRepository;
         this.fileHateoasHandler = fileHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
+        this.partService = partService;
     }
 
     public FileHateoas save(File file) {
@@ -89,6 +92,22 @@ public class FileService
         return recordService.save(record);
     }
 
+
+    @Override
+    public PartPersonHateoas
+    createPartPersonAssociatedWithFile(
+            @NotNull String systemID, @NotNull PartPerson partPerson) {
+        return partService.
+                createNewPartPerson(partPerson, getFileOrThrow(systemID));
+    }
+
+    @Override
+    public PartUnitHateoas
+    createPartUnitAssociatedWithFile(
+            @NotNull String systemID, @NotNull PartUnit partUnit) {
+        return partService.
+                createNewPartUnit(partUnit, getFileOrThrow(systemID));
+    }
 
     // All READ operations
     public List<File> findAll() {

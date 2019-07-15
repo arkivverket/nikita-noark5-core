@@ -3,7 +3,7 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.casehandling.ICorrespondencePartEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartEntity;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartUnitDeserializer;
 import org.hibernate.envers.Audited;

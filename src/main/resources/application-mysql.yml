@@ -15,13 +15,13 @@
 # Or whatever variation you use to create a user
 # ===================================================================
 # Leaving logging here so you can quickly turn it on when required
-logging:
-  level:
-    org:
-      springframework:
-        web: DEBUG
-      hibernate:
-        SQL: DEBUG
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+#      hibernate:
+#        SQL: DEBUG
 
 server:
   servlet:
@@ -36,13 +36,14 @@ spring:
     url: jdbc:mysql://localhost:3306/nikita_noark5_prod?serverTimezone=Europe/Oslo
     username: INSERT-USERNAME-HERE
     password: INSERT-PASSWORD-HERE
+    data: classpath:/noark5_metadata_values.sql
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     database: mysql
     show-sql: false
     properties:
       hibernate.hbm2ddl.auto: create
-      hibernate.discriminator.ignore_explicit_for_joined: true
+      discriminator.ignore_explicit_for_joined: true
       org.hibernate.envers.audit_table_prefix: aud_
   profiles:
     active: security-oauth2-authentication, mysql

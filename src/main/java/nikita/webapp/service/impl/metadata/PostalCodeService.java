@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.POST_CODE;
@@ -31,7 +30,6 @@ import static nikita.common.config.N5ResourceMappings.POST_CODE;
 
 @Service
 @Transactional
-@SuppressWarnings("unchecked")
 public class PostalCodeService
         extends NoarkService
         implements IPostalCodeService {
@@ -81,6 +79,7 @@ public class PostalCodeService
      * MetadataHateoas object
      */
     @Override
+    @SuppressWarnings("unchecked")
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
@@ -89,47 +88,9 @@ public class PostalCodeService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single PostalCode object identified by systemId
-     *
-     * @param systemId systemId of the PostalCode you wish to retrieve
-     * @return single PostalCode object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                postalCodeRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all PostalCode that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of PostalCode objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        postalCodeRepository
-                                .findByDescription(description), POST_CODE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all PostalCode that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of PostalCode objects wrapped as a MetadataHateoas
@@ -138,8 +99,7 @@ public class PostalCodeService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        postalCodeRepository.findByCode(code), POST_CODE);
+                postalCodeRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -154,17 +114,17 @@ public class PostalCodeService
 
         PostalCode postalCode = new PostalCode();
         postalCode.setCode(TEMPLATE_POST_CODE_CODE);
-        postalCode.setDescription(TEMPLATE_POST_CODE_DESCRIPTION);
+        postalCode.setName(TEMPLATE_POST_CODE_NAME);
 
         return postalCode;
     }
 
     /**
-     * Update a PostalCode identified by its systemId
+     * Update a PostalCode identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId   The systemId of the postalCode object you wish to
+     * @param code   The code of the postalCode object you wish to
      *                   update
      * @param incomingPostalCode The updated postalCode object. Note the
      *                           values you are allowed to change are copied
@@ -173,11 +133,11 @@ public class PostalCodeService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final PostalCode incomingPostalCode) {
 
-        PostalCode existingPostalCode = getPostalCodeOrThrow(systemId);
+        PostalCode existingPostalCode = getPostalCodeOrThrow(code);
         updateCodeAndDescription(incomingPostalCode, existingPostalCode);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -202,15 +162,15 @@ public class PostalCodeService
      * is no PostalCode object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the PostalCode object to retrieve
+     * @param code The code of the PostalCode object to retrieve
      * @return the PostalCode object
      */
-    private PostalCode getPostalCodeOrThrow(@NotNull String systemId) {
+    private PostalCode getPostalCodeOrThrow(@NotNull String code) {
         PostalCode postalCode = postalCodeRepository.
-                findBySystemId(UUID.fromString(systemId));
+                findByCode(code);
         if (postalCode == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " PostalCode, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

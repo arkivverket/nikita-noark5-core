@@ -13,11 +13,7 @@ public interface IClassifiedCodeService {
 
     MetadataHateoas createNewClassifiedCode(ClassifiedCode classificationType);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

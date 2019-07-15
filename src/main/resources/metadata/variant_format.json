@@ -1,0 +1,16 @@
+{
+  "VariantFormat": [
+    {
+      "code": "P",
+      "name": "Produksjonsformat"
+    },
+    {
+      "code": "A",
+      "name": "Arkivformat"
+    },
+    {
+      "code": "O",
+      "name": "Dokument hvor deler av innholdet er skjermet"
+    }
+  ]
+}

@@ -1,8 +1,16 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
@@ -10,6 +18,8 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
+import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +58,8 @@ public class RecordService
     private IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
     private IDocumentDescriptionRepository documentDescriptionRepository;
+    private ICorrespondencePartService correspondencePartService;
+    private IPartService partService;
 
     public RecordService(
             EntityManager entityManager,
@@ -60,7 +72,9 @@ public class RecordService
             IClassHateoasHandler classHateoasHandler,
             IDocumentDescriptionHateoasHandler
                     documentDescriptionHateoasHandler,
-            IDocumentDescriptionRepository documentDescriptionRepository) {
+            IDocumentDescriptionRepository documentDescriptionRepository,
+            ICorrespondencePartService correspondencePartService,
+            IPartService partService) {
         super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
@@ -72,6 +86,8 @@ public class RecordService
         this.documentDescriptionHateoasHandler =
                 documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
+        this.correspondencePartService = correspondencePartService;
+        this.partService = partService;
     }
 
     // All CREATE operations
@@ -220,10 +236,178 @@ public class RecordService
         return recordRepository.findByOwnedBy(ownedBy);
     }
 
+
+    @Override
+    public CorrespondencePartPersonHateoas
+    getCorrespondencePartPersonAssociatedWithRecord(
+            final String systemID) {
+        return new CorrespondencePartPersonHateoas(
+                (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
+                        getReferenceCorrespondencePartPerson());
+    }
+
+    @Override
+    public CorrespondencePartInternalHateoas
+    getCorrespondencePartInternalAssociatedWithRecord(
+            final String systemID) {
+        return new CorrespondencePartInternalHateoas(
+                (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
+                        getReferenceCorrespondencePartInternal());
+    }
+
+    @Override
+    public CorrespondencePartUnitHateoas
+    getCorrespondencePartUnitAssociatedWithRecord(String systemID) {
+        return new CorrespondencePartUnitHateoas(
+                (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
+                        getReferenceCorrespondencePartUnit());
+    }
+
+    /**
+     * Create a CorrespondencePartPerson object and associate it with the
+     * identified record
+     *
+     * @param systemID           The systemId of the record object you want to
+     *                           create an associated correspondencePartPerson for
+     * @param correspondencePart The incoming correspondencePartPerson
+     * @return The persisted CorrespondencePartPerson object wrapped as a
+     * CorrespondencePartPersonHateoas object
+     */
+    @Override
+    public CorrespondencePartPersonHateoas
+    createCorrespondencePartPersonAssociatedWithRecord(
+            @NotNull final String systemID,
+            @NotNull final CorrespondencePartPerson correspondencePart) {
+        return correspondencePartService.
+                createNewCorrespondencePartPerson(correspondencePart,
+                        getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public PartPersonHateoas
+    createPartPersonAssociatedWithRecord(
+            @NotNull String systemID, @NotNull PartPerson partPerson) {
+        return partService.
+                createNewPartPerson(partPerson,
+                        getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public PartUnitHateoas
+    createPartUnitAssociatedWithRecord(
+            @NotNull String systemID, @NotNull PartUnit partUnit) {
+        return partService.
+                createNewPartUnit(partUnit, getRecordOrThrow(systemID));
+    }
+
+    /**
+     * Create a CorrespondencePartInternal object and associate it with the
+     * identified record
+     *
+     * @param systemID           The systemId of the record object you want to
+     *                           create an associated correspondencePartInternal for
+     * @param correspondencePart The incoming correspondencePartInternal
+     * @return The persisted CorrespondencePartInternal object wrapped as a
+     * CorrespondencePartInternalHateoas object
+     */
+    @Override
+    public CorrespondencePartInternalHateoas
+    createCorrespondencePartInternalAssociatedWithRecord(
+            String systemID, CorrespondencePartInternal correspondencePart) {
+        return correspondencePartService.
+                createNewCorrespondencePartInternal(correspondencePart,
+                        getRecordOrThrow(systemID));
+    }
+
+    /**
+     * Create a CorrespondencePartUnit object and associate it with the
+     * identified record
+     *
+     * @param systemID           The systemId of the record object you want to
+     *                           create an associated correspondencePartUnit for
+     * @param correspondencePart The incoming correspondencePartUnit
+     * @return The persisted CorrespondencePartUnit object wrapped as a
+     * CorrespondencePartUnitHateoas object
+     */
+    @Override
+    public CorrespondencePartUnitHateoas
+    createCorrespondencePartUnitAssociatedWithRecord(
+            String systemID, CorrespondencePartUnit correspondencePart) {
+        return correspondencePartService.
+                createNewCorrespondencePartUnit(correspondencePart,
+                        getRecordOrThrow(systemID));
+    }
+
+    /**
+     * Generate a Default CorrespondencePartUnit object that can be
+     * associated with the identified Record.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param recordSystemId The systemId of the record object
+     *                       you wish to create a templated object for
+     * @return the CorrespondencePartUnit object wrapped as a
+     * CorrespondencePartUnitHateoas object
+     */
+    @Override
+    public CorrespondencePartInternalHateoas
+    generateDefaultCorrespondencePartInternal(
+            String recordSystemId) {
+        return correspondencePartService.
+                generateDefaultCorrespondencePartInternal(recordSystemId);
+    }
+
+    /**
+     * Generate a Default CorrespondencePartUnit object that can be
+     * associated with the identified Record.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param recordSystemId The systemId of the record object
+     *                       you wish to create a templated object for
+     * @return the CorrespondencePartUnit object wrapped as a
+     * CorrespondencePartUnitHateoas object
+     */
+    @Override
+    public CorrespondencePartPersonHateoas
+    generateDefaultCorrespondencePartPerson(
+            String recordSystemId) {
+        return correspondencePartService.
+                generateDefaultCorrespondencePartPerson(recordSystemId);
+    }
+
+    /**
+     * Generate a Default CorrespondencePartUnit object that can be
+     * associated with the identified Record.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param recordSystemId The systemId of the record object
+     *                       you wish to create a templated object for
+     * @return the CorrespondencePartUnit object wrapped as a
+     * CorrespondencePartUnitHateoas object
+     */
+    @Override
+    public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
+            String recordSystemId) {
+        return correspondencePartService.
+                generateDefaultCorrespondencePartUnit(
+                        recordSystemId);
+    }
+
+
     // All UPDATE operations
     public Record update(Record record) {
         return recordRepository.save(record);
     }
+
+
 
     // All UPDATE operations
 

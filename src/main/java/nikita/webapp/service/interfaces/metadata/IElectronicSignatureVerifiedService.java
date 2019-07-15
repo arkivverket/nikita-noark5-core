@@ -14,11 +14,7 @@ public interface IElectronicSignatureVerifiedService {
     MetadataHateoas createNewElectronicSignatureVerified(
             ElectronicSignatureVerified electronicSignatureVerified);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

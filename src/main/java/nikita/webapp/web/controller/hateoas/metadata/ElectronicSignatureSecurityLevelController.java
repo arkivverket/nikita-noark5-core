@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_SECURITY_LEVEL;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -143,12 +143,12 @@ public class ElectronicSignatureSecurityLevelController {
     }
 
     // Retrieves a given ElectronicSignatureSecurityLevel identified by a
-    // systemId
+    // code
     // GET [contextPath][api]/metadata/elektronisksignatursikkerhetsnivaa/
-    // {systemId}/
+    // {code}/
     @ApiOperation(
             value = "Gets ElectronicSignatureSecurityLevel identified by its " +
-                    "systemId",
+                    "code",
             notes = "Returns the requested ElectronicSignatureSecurityLevel " +
                     "object",
             response = ElectronicSignatureSecurityLevel.class)
@@ -182,15 +182,15 @@ public class ElectronicSignatureSecurityLevelController {
 
     @RequestMapping(
             value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH +
-                    LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH,
+                    LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                electronicSignatureSecurityLevelService.find(systemId);
+                electronicSignatureSecurityLevelService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -281,7 +281,7 @@ public class ElectronicSignatureSecurityLevelController {
     public ResponseEntity<MetadataHateoas>
     updateElectronicSignatureSecurityLevel(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody ElectronicSignatureSecurityLevel

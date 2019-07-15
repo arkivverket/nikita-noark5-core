@@ -128,10 +128,10 @@ public class PostalCodeController {
                 .body(postalCodeService.findAll());
     }
 
-    // Retrieves a given postalCode identified by a systemId
-    // GET [contextPath][api]/metadata/postnummer/{systemId}/
+    // Retrieves a given postalCode identified by a code
+    // GET [contextPath][api]/metadata/postnummer/kode/
     @ApiOperation(
-            value = "Gets postalCode identified by its systemId",
+            value = "Gets postalCode identified by its code",
             notes = "Returns the requested postalCode object",
             response = PostalCode.class)
     @ApiResponses(value = {
@@ -163,15 +163,15 @@ public class PostalCodeController {
     @Counted
 
     @RequestMapping(
-            value = POST_CODE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = POST_CODE + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
-    public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+    public ResponseEntity<MetadataHateoas> findByCode(
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = postalCodeService.find(systemId);
+        MetadataHateoas metadataHateoas = postalCodeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -258,7 +258,7 @@ public class PostalCodeController {
     )
     public ResponseEntity<MetadataHateoas> updatePostalCode(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody PostalCode postalCode,

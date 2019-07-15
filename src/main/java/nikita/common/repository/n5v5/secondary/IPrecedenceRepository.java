@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface IPrecedenceRepository extends NoarkEntityRepository<Precedence, Long> {
+public interface IPrecedenceRepository extends NoarkEntityRepository<Precedence, String> {
 }

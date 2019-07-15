@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.PART_ROLE;
@@ -87,61 +86,17 @@ public class PartRoleService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single PartRole object identified by systemId
-     *
-     * @param systemId systemId of the PartRole you wish to retrieve
-     * @return single PartRole object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                partyRoleRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all PartRole that have a given
-     * description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of PartRole objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        partyRoleRepository
-                                .findByDescription(description), PART_ROLE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all PartRole that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of PartRole objects wrapped as a MetadataHateoas
      * object
      */
     @Override
-    @SuppressWarnings("unchecked")
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        partyRoleRepository.findByCode
-                                (code), PART_ROLE);
+                partyRoleRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -153,20 +108,18 @@ public class PartRoleService
      */
     @Override
     public PartRole generateDefaultPartRole() {
-
         PartRole partyRole = new PartRole();
         partyRole.setCode(TEMPLATE_PART_ROLE_CODE);
-        partyRole.setDescription(TEMPLATE_PART_ROLE_DESCRIPTION);
-
+        partyRole.setName(TEMPLATE_PART_ROLE_NAME);
         return partyRole;
     }
 
     /**
-     * Update a PartRole identified by its systemId
+     * Update a PartRole identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId      The systemId of the PartRole object you wish to
+     * @param code      The code of the PartRole object you wish to
      *                      update
      * @param incomingPartRole The updated PartRole object. Note
      *                              the values you are allowed to change are
@@ -176,11 +129,11 @@ public class PartRoleService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final PartRole incomingPartRole) {
 
-        PartRole existingPartRole = getPartRoleOrThrow(systemId);
+        PartRole existingPartRole = getPartRoleOrThrow(code);
         updateCodeAndDescription(incomingPartRole, existingPartRole);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -205,16 +158,16 @@ public class PartRoleService
      * is no PartRole object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the PartRole object to retrieve
+     * @param code The code of the PartRole object to retrieve
      * @return the PartRole object
      */
     private PartRole
-    getPartRoleOrThrow(@NotNull String systemId) {
+    getPartRoleOrThrow(@NotNull String code) {
         PartRole partyRole =
-                partyRoleRepository.findBySystemId(UUID.fromString(systemId));
+                partyRoleRepository.findByCode(code);
         if (partyRole == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " PartRole, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

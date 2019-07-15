@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.COUNTRY;
@@ -86,47 +85,9 @@ public class CountryService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single Country object identified by systemId
-     *
-     * @param systemId systemId of the Country you wish to retrieve
-     * @return single Country object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                countryRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all Country that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of Country objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        countryRepository
-                                .findByDescription(description), COUNTRY);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all Country that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of Country objects wrapped as a MetadataHateoas
@@ -135,8 +96,7 @@ public class CountryService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        countryRepository.findByCode(code), COUNTRY);
+                getCountryOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -151,17 +111,17 @@ public class CountryService
 
         Country country = new Country();
         country.setCode(TEMPLATE_COUNTRY_CODE);
-        country.setDescription(TEMPLATE_COUNTRY_DESCRIPTION);
+        country.setName(TEMPLATE_COUNTRY_NAME);
 
         return country;
     }
 
     /**
-     * Update a Country identified by its systemId
+     * Update a Country identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId The systemId of the country object you wish to
+     * @param code The code of the country object you wish to
      *                 update
      * @param incomingCountry  The updated country object. Note the values
      *                         you are allowed to change are copied from this
@@ -170,11 +130,11 @@ public class CountryService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final Country incomingCountry) {
 
-        Country existingCountry = getCountryOrThrow(systemId);
+        Country existingCountry = getCountryOrThrow(code);
         updateCodeAndDescription(incomingCountry, existingCountry);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -199,15 +159,15 @@ public class CountryService
      * is no Country object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the Country object to retrieve
+     * @param code The code of the Country object to retrieve
      * @return the Country object
      */
-    private Country getCountryOrThrow(@NotNull String systemId) {
+    private Country getCountryOrThrow(@NotNull String code) {
         Country country = countryRepository.
-                findBySystemId(UUID.fromString(systemId));
+                findByCode(code);
         if (country == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " Country, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

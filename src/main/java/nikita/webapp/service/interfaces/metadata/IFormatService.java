@@ -13,11 +13,7 @@ public interface IFormatService {
 
     MetadataHateoas createNewFormat(Format format);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

@@ -1,10 +1,11 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_TYPE;
@@ -15,7 +16,7 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
 @Table(name = TABLE_CORRESPONDENCE_PART_TYPE)
 @Audited
 public class CorrespondencePartType
-        extends UniqueCodeMetadataSuperClass {
+        extends MetadataSuperClass {
 
     private static final long serialVersionUID = 1L;
     // Link to CorrespondencePart

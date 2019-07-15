@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CLASSIFIED_CODE;
@@ -87,49 +86,8 @@ public class ClassifiedCodeService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single ClassifiedCode object identified by systemId
-     *
-     * @param systemId systemId of the ClassifiedCode you wish to retrieve
-     * @return single ClassifiedCode object wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                classifiedCodeRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all ClassifiedCode that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of ClassifiedCode objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        classifiedCodeRepository
-                                .findByDescription(description),
-                CLASSIFIED_CODE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all ClassifiedCode that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of ClassifiedCode objects wrapped as a MetadataHateoas
@@ -138,9 +96,7 @@ public class ClassifiedCodeService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        classifiedCodeRepository.findByCode(code),
-                CLASSIFIED_CODE);
+                classifiedCodeRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -156,18 +112,18 @@ public class ClassifiedCodeService
 
         ClassifiedCode classifiedCode = new ClassifiedCode();
         classifiedCode.setCode(TEMPLATE_CLASSIFIED_CODE_CODE);
-        classifiedCode.setDescription(
-                TEMPLATE_CLASSIFIED_CODE_DESCRIPTION);
+        classifiedCode.setName(
+                TEMPLATE_CLASSIFIED_CODE_NAME);
 
         return classifiedCode;
     }
 
     /**
-     * Update a ClassifiedCode identified by its systemId
+     * Update a ClassifiedCode identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId       The systemId of the classifiedCode object you
+     * @param code       The code of the classifiedCode object you
      *                       wish to update
      * @param incomingClassifiedCode The updated classifiedCode object. Note
      *                               the values you are allowed to change are
@@ -177,12 +133,12 @@ public class ClassifiedCodeService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final ClassifiedCode incomingClassifiedCode) {
 
         ClassifiedCode existingClassifiedCode =
-                getClassifiedCodeOrThrow(systemId);
+                getClassifiedCodeOrThrow(code);
         updateCodeAndDescription(incomingClassifiedCode, existingClassifiedCode);
 
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -208,16 +164,16 @@ public class ClassifiedCodeService
      * there is no ClassifiedCode object, a NoarkEntityNotFoundException
      * exception is thrown
      *
-     * @param systemId The systemId of the ClassifiedCode object to retrieve
+     * @param code The code of the ClassifiedCode object to retrieve
      * @return the ClassifiedCode object
      */
     private ClassifiedCode getClassifiedCodeOrThrow(
-            @NotNull String systemId) {
+            @NotNull String code) {
         ClassifiedCode classifiedCode =
-                classifiedCodeRepository.findBySystemId(UUID.fromString(systemId));
+                classifiedCodeRepository.findByCode(code);
         if (classifiedCode == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                    " ClassifiedCode, using " + "systemId " + systemId;
+                    " ClassifiedCode, using " + "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

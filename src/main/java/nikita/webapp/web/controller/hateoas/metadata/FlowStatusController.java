@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.FLOW_STATUS;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -136,11 +136,11 @@ public class FlowStatusController {
     }
 
     // Retrieves a given FlowStatus identified by a
-    // systemId
+    // code
     // GET [contextPath][api]/metadata/flytstatus/
-    // {systemId}/
+    // {code}/
     @ApiOperation(
-            value = "Gets FlowStatus identified by its systemId",
+            value = "Gets FlowStatus identified by its code",
             notes = "Returns the requested FlowStatus object",
             response = FlowStatus.class)
     @ApiResponses(value = {
@@ -172,16 +172,16 @@ public class FlowStatusController {
     @Counted
 
     @RequestMapping(
-            value = FLOW_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = FLOW_STATUS + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                flowStatusService.find(systemId);
+                flowStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -270,7 +270,7 @@ public class FlowStatusController {
     public ResponseEntity<MetadataHateoas>
     updateFlowStatus(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody FlowStatus flowStatus,

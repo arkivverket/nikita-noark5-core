@@ -1,0 +1,16 @@
+{
+  "DocumentMedium": [
+    {
+      "code": "F",
+      "name": "Fysisk medium"
+    },
+    {
+      "code": "E",
+      "name": "Elektronisk arkiv"
+    },
+    {
+      "code": "B",
+      "name": "Blandet fysisk og elektronisk arkiv"
+    }
+  ]
+}

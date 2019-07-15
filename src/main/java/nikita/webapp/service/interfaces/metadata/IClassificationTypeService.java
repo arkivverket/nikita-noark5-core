@@ -11,13 +11,10 @@ import javax.validation.constraints.NotNull;
 
 public interface IClassificationTypeService {
 
-    MetadataHateoas createNewClassificationType(ClassificationType classificationType);
-
-    MetadataHateoas find(String systemId);
+    MetadataHateoas createNewClassificationType(
+            ClassificationType classificationType);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

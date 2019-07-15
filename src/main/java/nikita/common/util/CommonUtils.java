@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.DocumentFlow;
-import nikita.common.model.noark5.v5.FondsCreator;
-import nikita.common.model.noark5.v5.Part;
-import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
@@ -18,8 +15,9 @@ import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.*;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IAdministrativeUnitEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IUserEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.casehandling.*;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
+import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedHeaderException;
@@ -31,6 +29,8 @@ import org.springframework.http.HttpMethod;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -38,8 +38,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.time.format.DateTimeFormatter.ISO_DATE;
-import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
+import static java.time.OffsetDateTime.parse;
+import static java.time.format.DateTimeFormatter.*;
 import static java.time.temporal.ChronoField.HOUR_OF_DAY;
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static nikita.common.config.Constants.*;
@@ -318,15 +318,34 @@ public final class CommonUtils {
             if (false == servletPath.endsWith("/")) {
                 servletPath += SLASH;
             }
+
             //Next, we have to replace any occurrences of an actual UUID with the word systemID
+            String updatedServletPath = servletPath;
+            if (servletPath.startsWith(SLASH + HREF_BASE_METADATA)) {
+                Pattern pattern = Pattern.compile(SLASH + HREF_BASE_METADATA +
+                        "/[a-z]+/");
+                int ignoreFirstChars = (SLASH + HREF_BASE_METADATA).length();
+                String toCheck = servletPath.substring(ignoreFirstChars);
+                int slashLocation = toCheck.indexOf("/");
+                toCheck = toCheck.substring(0, slashLocation);
+                String path = SLASH + HREF_BASE_METADATA + toCheck + SLASH;
 
-            // The following pattern is taken from
-            // https://stackoverflow.com/questions/136505/searching-for-uuids-in-text-with-regex#6640851
-            Pattern pattern = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
-            Matcher matcher = pattern.matcher(servletPath.toLowerCase());
-            String updatedServletPath = matcher.replaceFirst(LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS);
+                if (!path.equals(servletPath)) {
+                    updatedServletPath = path + "{" + CODE + "}" + SLASH;
+                }
+            } else {
 
-            Set<HttpMethod> methods = requestMethodMap.get(updatedServletPath.toLowerCase());
+                // The following pattern is taken from
+                // https://stackoverflow.com/questions/136505/searching-for-uuids-in-text-with-regex#6640851
+                Pattern pattern = Pattern.compile(
+                        "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+                Matcher matcher = pattern.matcher(servletPath.toLowerCase());
+                updatedServletPath = matcher.replaceFirst(
+                        LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS);
+            }
+
+            Set<HttpMethod> methods = requestMethodMap.get(
+                    updatedServletPath.toLowerCase());
             if (methods == null) {
                 return null;
             }
@@ -353,19 +372,57 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        d = OffsetDateTime.parse(currentNode.textValue(),
-                                dateFormatter);
+                        String date = currentNode.textValue();
+                        if (date.endsWith("Z")) {
+                            d = ZonedDateTime.parse(date).toOffsetDateTime();
+                        } else {
+                            DateTimeFormatter dateFormatter =
+                                    new DateTimeFormatterBuilder().appendPattern(
+                                            "yyyy-MM-dd+HH:mm")
+                                            .parseDefaulting(HOUR_OF_DAY, 0)
+                                            .toFormatter()
+                                            .withZone(ZoneId.of("Europe/Oslo"));
+                            d = ZonedDateTime.parse(currentNode.textValue(),
+                                    dateFormatter).toOffsetDateTime();
+                        }
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
                         errors.append(fieldname);
-                        errors.append(". Make sure format is ");
-                        errors.append(NOARK_TIME_FORMAT_PATTERN + ". ");
+                        errors.append(". Make sure format is either ");
+                        errors.append(NOARK_DATE_FORMAT_PATTERN + " or ");
+                        errors.append(NOARK_ZONED_DATE_FORMAT_PATTERN + ". ");
+                        errors.append("Message is ");
+                        errors.append(e.getMessage());
                     }
                     objectNode.remove(fieldname);
                 } else if (required) {
                     errors.append(fieldname + " is missing. ");
                 }
                 return d;
+/*
+DateTimeFormatter dateFormatter =
+                                    DateTimeFormatter.ofPattern("yyyy-MM-ddZ").
+                                    withZone(OffsetDateTime.now().getOffset());
+                            d = ZonedDateTime.parse(currentNode.textValue(),
+                                    dateFormatter).toOffsetDateTime();
+                        DateTimeFormatter dateFormatter =
+                                new DateTimeFormatterBuilder().appendPattern(
+                                        "yyyy-MM-dd+HH:mm")
+                                        .parseDefaulting(HOUR_OF_DAY, 0)
+                                        .toFormatter()
+                                        .withZone(ZoneId.of("Europe/Oslo"));
+                        d = ZonedDateTime.parse(currentNode.textValue(),
+                                dateFormatter).toOffsetDateTime();
+
+                        DateTimeFormatter dateFormatter =
+                                new DateTimeFormatterBuilder().appendPattern(
+                                        "yyyy-MM-ddZ")
+                                        .toFormatter()
+                                        .withZone(ZoneId.of("Europe/Oslo"));
+                        d = ZonedDateTime.parse(currentNode.textValue(),
+                                dateFormatter).toOffsetDateTime();
+
+ */
             }
 
             public static OffsetDateTime deserializeDate(String fieldname,
@@ -382,8 +439,8 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        d = OffsetDateTime.parse(currentNode.textValue(),
-                                ISO_DATE_TIME);
+                        d = parse(currentNode.textValue(),
+                                ISO_OFFSET_DATE_TIME);
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
                         errors.append(fieldname);
@@ -434,10 +491,15 @@ public final class CommonUtils {
                     metadataEntity.setCode(currentNode.textValue());
                     objectNode.remove(CODE);
                 }
-                currentNode = objectNode.get(DESCRIPTION);
+                currentNode = objectNode.get(CODE_NAME);
                 if (null != currentNode) {
-                    metadataEntity.setCode(currentNode.textValue());
-                    objectNode.remove(DESCRIPTION);
+                    metadataEntity.setName(currentNode.textValue());
+                    objectNode.remove(CODE_NAME);
+                }
+                currentNode = objectNode.get(CODE_COMMENT);
+                if (null != currentNode) {
+                    metadataEntity.setComment(currentNode.textValue());
+                    objectNode.remove(CODE_COMMENT);
                 }
             }
 
@@ -782,83 +844,6 @@ public final class CommonUtils {
                 objectNode.remove(DELETION);
             }
 
-            public static void deserialiseCaseParties(
-                    IPart partyObject,
-                    ObjectNode objectNode,
-                    StringBuilder errors) {
-                List<Part> caseParties = partyObject.getReferencePart();
-                if (caseParties != null && caseParties.size() > 0) {
-                    for (Part part : caseParties) {
-                        deserialisePart(part, objectNode, errors);
-                        objectNode.remove(PART);
-                    }
-                }
-            }
-
-            public static void deserialisePart(IPartEntity partyEntity, ObjectNode objectNode, StringBuilder errors) {
-
-                // Deserialize partyId
-                JsonNode currentNode = objectNode.get(PART_ID);
-                if (null != currentNode) {
-                    partyEntity.setPartId(currentNode.textValue());
-                    objectNode.remove(PART_ID);
-                }
-                // Deserialize partyName
-                currentNode = objectNode.get(PART_NAME);
-                if (null != currentNode) {
-                    partyEntity.setPartName(currentNode.textValue());
-                    objectNode.remove(PART_NAME);
-                }
-                // Deserialize partyRole
-                currentNode = objectNode.get(PART_ROLE);
-                if (null != currentNode) {
-                    partyEntity.setPartRole(currentNode.textValue());
-                    objectNode.remove(PART_ROLE);
-                }
-                // Deserialize postalAddress
-                currentNode = objectNode.get(POSTAL_ADDRESS);
-                if (null != currentNode) {
-                    partyEntity.setPostalAddress(currentNode.textValue());
-                    objectNode.remove(POSTAL_ADDRESS);
-                }
-                // Deserialize postCode
-                currentNode = objectNode.get(POSTAL_NUMBER);
-                if (null != currentNode) {
-                    partyEntity.setPostCode(currentNode.textValue());
-                    objectNode.remove(POSTAL_NUMBER);
-                }
-                // Deserialize postalTown
-                currentNode = objectNode.get(POSTAL_TOWN);
-                if (null != currentNode) {
-                    partyEntity.setPostalTown(currentNode.textValue());
-                    objectNode.remove(POSTAL_TOWN);
-                }
-                // Deserialize foreignAddress
-                currentNode = objectNode.get(FOREIGN_ADDRESS);
-                if (null != currentNode) {
-                    partyEntity.setForeignAddress(currentNode.textValue());
-                    objectNode.remove(FOREIGN_ADDRESS);
-                }
-                // Deserialize emailAddress
-                currentNode = objectNode.get(EMAIL_ADDRESS);
-                if (null != currentNode) {
-                    partyEntity.setEmailAddress(currentNode.textValue());
-                    objectNode.remove(EMAIL_ADDRESS);
-                }
-                // Deserialize telephoneNumber
-                currentNode = objectNode.get(TELEPHONE_NUMBER);
-                if (null != currentNode) {
-                    partyEntity.setTelephoneNumber(currentNode.textValue());
-                    objectNode.remove(TELEPHONE_NUMBER);
-                }
-                // Deserialize contactPerson
-                currentNode = objectNode.get(CONTACT_PERSON);
-                if (null != currentNode) {
-                    partyEntity.setContactPerson(currentNode.textValue());
-                    objectNode.remove(CONTACT_PERSON);
-                }
-            }
-
             public static List<Precedence> deserialisePrecedences(ObjectNode objectNode, StringBuilder errors) {
 //                objectNode.remove(PRECEDENCE);
                 // TODO : Looks like I'm missing!!!
@@ -1032,39 +1017,15 @@ public final class CommonUtils {
             }
 
             public static void deserialiseCorrespondencePartPersonEntity(
-                    ICorrespondencePartPersonEntity
-                            correspondencePartPersonEntity,
+                    ICorrespondencePartPersonEntity partPerson,
                     ObjectNode objectNode, StringBuilder errors) {
 
                 deserialiseCorrespondencePartType(
-                        correspondencePartPersonEntity, objectNode, errors);
-
-                // Deserialize foedselsnummer
-                JsonNode currentNode = objectNode.get(SOCIAL_SECURITY_NUMBER);
-                if (null != currentNode) {
-                    correspondencePartPersonEntity.
-                            setSocialSecurityNumber(currentNode.textValue());
-                    objectNode.remove(SOCIAL_SECURITY_NUMBER);
-                }
-
-                // Deserialize dnummer
-                currentNode = objectNode.get(D_NUMBER);
-                if (null != currentNode) {
-                    correspondencePartPersonEntity.
-                            setdNumber(currentNode.textValue());
-                    objectNode.remove(D_NUMBER);
-                }
-
-                // Deserialize navn
-                currentNode = objectNode.get(NAME);
-                if (null != currentNode) {
-                    correspondencePartPersonEntity.
-                            setName(currentNode.textValue());
-                    objectNode.remove(NAME);
-                }
+                        partPerson, objectNode, errors);
+                deserialiseGenericPersonEntity(partPerson, objectNode, errors);
 
                 // Deserialize postalAddress
-                currentNode = objectNode.get(POSTAL_ADDRESS);
+                JsonNode currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
                     PostalAddress postalAddress = new PostalAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
@@ -1072,11 +1033,10 @@ public final class CommonUtils {
                             simpleAddress,
                             currentNode.deepCopy(), errors);
                     postalAddress.setSimpleAddress(simpleAddress);
-                    postalAddress.setCorrespondencePartPerson(
-                            (CorrespondencePartPerson)
-                                    correspondencePartPersonEntity);
-                    correspondencePartPersonEntity.
-                            setPostalAddress(postalAddress);
+                    postalAddress.
+                            setCorrespondencePartPerson(
+                                    (CorrespondencePartPerson) partPerson);
+                    partPerson.setPostalAddress(postalAddress);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
 
@@ -1090,11 +1050,10 @@ public final class CommonUtils {
                             simpleAddress,
                             currentNode.deepCopy(), errors);
                     residingAddress.setSimpleAddress(simpleAddress);
-                    residingAddress.setCorrespondencePartPerson(
-                            (CorrespondencePartPerson)
-                                    correspondencePartPersonEntity);
-                    correspondencePartPersonEntity.
-                            setResidingAddress(residingAddress);
+                    residingAddress.
+                            setCorrespondencePartPerson(
+                                    (CorrespondencePartPerson) partPerson);
+                    partPerson.setResidingAddress(residingAddress);
                     objectNode.remove(RESIDING_ADDRESS);
                 }
 
@@ -1105,11 +1064,180 @@ public final class CommonUtils {
                             new ContactInformation();
                     deserialiseContactInformationEntity(
                             contactInformation, currentNode.deepCopy(), errors);
-                    correspondencePartPersonEntity.
+                    partPerson.
                             setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
                 }
             }
+
+            public static void deserialisePartPersonEntity(
+                    IPartPersonEntity partPersonEntity,
+                    ObjectNode objectNode, StringBuilder errors) {
+
+                deserialisePartRole(
+                        partPersonEntity, objectNode, errors);
+
+                deserialiseGenericPersonEntity(partPersonEntity,
+                        objectNode, errors);
+
+                // Deserialize postalAddress
+                JsonNode currentNode = objectNode.get(POSTAL_ADDRESS);
+                if (null != currentNode) {
+                    PostalAddress postalAddress = new PostalAddress();
+                    SimpleAddress simpleAddress = new SimpleAddress();
+                    deserialiseSimpleAddressEntity(
+                            simpleAddress,
+                            currentNode.deepCopy(), errors);
+                    postalAddress.setSimpleAddress(simpleAddress);
+                    postalAddress.setPartPerson((PartPerson) partPersonEntity);
+                    partPersonEntity.setPostalAddress(postalAddress);
+                    objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
+                }
+
+                // Deserialize residingAddress
+                currentNode = objectNode.get(RESIDING_ADDRESS);
+                if (null != currentNode) {
+                    ResidingAddress residingAddress =
+                            new ResidingAddress();
+                    SimpleAddress simpleAddress = new SimpleAddress();
+                    deserialiseSimpleAddressEntity(
+                            simpleAddress,
+                            currentNode.deepCopy(), errors);
+                    residingAddress.setSimpleAddress(simpleAddress);
+                    residingAddress.setPartPerson((PartPerson) partPersonEntity);
+                    partPersonEntity.setResidingAddress(residingAddress);
+                    objectNode.remove(RESIDING_ADDRESS);
+                }
+
+                // Deserialize kontaktinformasjon
+                currentNode = objectNode.get(CONTACT_INFORMATION);
+                if (null != currentNode) {
+                    ContactInformation contactInformation =
+                            new ContactInformation();
+                    deserialiseContactInformationEntity(
+                            contactInformation, currentNode.deepCopy(), errors);
+                    partPersonEntity.
+                            setContactInformation(contactInformation);
+                    objectNode.remove(CONTACT_INFORMATION);
+                }
+            }
+
+            public static void deserialisePartUnitEntity(
+                    IPartUnitEntity partUnit,
+                    ObjectNode objectNode, StringBuilder errors) {
+
+                deserialisePartRole(partUnit, objectNode, errors);
+
+                // Deserialize kontaktperson
+                JsonNode currentNode = objectNode.get(CONTACT_PERSON);
+                if (null != currentNode) {
+                    partUnit.setContactPerson(currentNode.textValue());
+                    objectNode.remove(CONTACT_PERSON);
+                }
+
+                // Deserialize navn
+                currentNode = objectNode.get(NAME);
+                if (null != currentNode) {
+                    partUnit.setName(currentNode.textValue());
+                    objectNode.remove(NAME);
+                }
+
+                // Deserialize organisasjonsnummer
+                currentNode = objectNode.get(ORGANISATION_NUMBER);
+                if (null != currentNode) {
+                    partUnit.setOrganisationNumber(currentNode.textValue());
+                    objectNode.remove(ORGANISATION_NUMBER);
+                }
+
+                // Deserialize kontaktperson
+                currentNode = objectNode.get(CONTACT_PERSON);
+                if (null != currentNode) {
+                    partUnit.setContactPerson(currentNode.textValue());
+                    objectNode.remove(CONTACT_PERSON);
+                }
+
+                // Deserialize postadresse
+                currentNode = objectNode.get(POSTAL_ADDRESS);
+                if (null != currentNode) {
+                    PostalAddress postalAddressEntity = new PostalAddress();
+                    SimpleAddress simpleAddress = new SimpleAddress();
+                    deserialiseSimpleAddressEntity(simpleAddress,
+                            currentNode.deepCopy(), errors);
+                    postalAddressEntity.setSimpleAddress(simpleAddress);
+                    partUnit.setPostalAddress(postalAddressEntity);
+                    objectNode.remove(POSTAL_ADDRESS);
+                }
+
+                // Deserialize forretningsadresse
+                currentNode = objectNode.get(BUSINESS_ADDRESS);
+                if (null != currentNode) {
+                    BusinessAddress businessAddressEntity =
+                            new BusinessAddress();
+                    SimpleAddress simpleAddress = new SimpleAddress();
+                    deserialiseSimpleAddressEntity(simpleAddress,
+                            currentNode.deepCopy(), errors);
+                    businessAddressEntity.setSimpleAddress(simpleAddress);
+                    partUnit.setBusinessAddress(
+                            businessAddressEntity);
+                    objectNode.remove(BUSINESS_ADDRESS);
+                }
+
+                // Deserialize kontaktinformasjon
+                currentNode = objectNode.get(CONTACT_INFORMATION);
+                if (null != currentNode) {
+                    ContactInformation contactInformation =
+                            new ContactInformation();
+                    deserialiseContactInformationEntity(
+                            contactInformation, currentNode.deepCopy(), errors);
+                    partUnit.setContactInformation(contactInformation);
+                    objectNode.remove(CONTACT_INFORMATION);
+                }
+            }
+
+            private static void deserialisePartRole(
+                    IPartEntity part, ObjectNode objectNode,
+                    StringBuilder errors) {
+                PartRole partRole = new PartRole();
+                JsonNode currentNode = objectNode.get(PART_ROLE);
+                if (null != currentNode) {
+                    ObjectNode partRoleObjectNode = currentNode.deepCopy();
+                    deserialiseNoarkMetadataEntity(partRole, partRoleObjectNode, errors);
+                    part.setPartRole(partRole);
+                    objectNode.remove(PART_ROLE);
+                } else {
+                    errors.append("The PartRole object you tried to create is");
+                    errors.append(" missing  ");
+                    errors.append(CORRESPONDENCE_PART_TYPE);
+                }
+            }
+
+            public static void deserialiseGenericPersonEntity(
+                    IGenericPersonEntity person, ObjectNode objectNode,
+                    StringBuilder errors) {
+
+                // Deserialize foedselsnummer
+                JsonNode currentNode = objectNode.get(SOCIAL_SECURITY_NUMBER);
+                if (null != currentNode) {
+                    person.setSocialSecurityNumber(currentNode.textValue());
+                    objectNode.remove(SOCIAL_SECURITY_NUMBER);
+                }
+
+                // Deserialize dnummer
+                currentNode = objectNode.get(D_NUMBER);
+                if (null != currentNode) {
+                    person.setdNumber(currentNode.textValue());
+                    objectNode.remove(D_NUMBER);
+                }
+
+                // Deserialize navn
+                currentNode = objectNode.get(NAME);
+                if (null != currentNode) {
+                    person.setName(currentNode.textValue());
+                    objectNode.remove(NAME);
+                }
+
+            }
+
 
             public static void deserialiseCorrespondencePartInternalEntity(ICorrespondencePartInternalEntity
                                                                                    correspondencePartInternal,
@@ -1356,11 +1484,11 @@ public final class CommonUtils {
 
         public static final class Serialize {
             public static String formatDate(OffsetDateTime value) {
-                return value.format(ISO_DATE);
+                return value.format(ISO_OFFSET_DATE);
             }
 
             public static String formatDateTime(OffsetDateTime value) {
-                return value.format(ISO_DATE_TIME);
+                return value.format(ISO_OFFSET_DATE_TIME);
             }
 
             public static void printTitleAndDescription(JsonGenerator jgen,
@@ -1400,7 +1528,6 @@ public final class CommonUtils {
 
             }
 
-
             public static void printFinaliseEntity(JsonGenerator jgen,
                                                    INoarkFinaliseEntity finaliseEntity)
                     throws IOException {
@@ -1421,63 +1548,6 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printPart(JsonGenerator jgen, IPart partyObject)
-                    throws IOException {
-                if (partyObject != null) {
-                    List<Part> caseParties = partyObject.getReferencePart();
-                    if (caseParties != null && caseParties.size() > 0) {
-                        jgen.writeArrayFieldStart(PART);
-                        for (Part part : caseParties) {
-                            if (part != null) {
-                                jgen.writeObjectFieldStart(PART);
-
-                                if (part.getPartId() != null) {
-                                    jgen.writeStringField(PART_ID,
-                                            part.getPartId());
-                                }
-                                if (part.getPartName() != null) {
-                                    jgen.writeStringField(PART_NAME,
-                                            part.getPartName());
-                                }
-                                if (part.getPartRole() != null) {
-                                    jgen.writeStringField(PART_ROLE,
-                                            part.getPartRole());
-                                }
-                                if (part.getPostalAddress() != null) {
-                                    jgen.writeStringField(POSTAL_ADDRESS,
-                                            part.getPostalAddress());
-                                }
-                                if (part.getPostCode() != null) {
-                                    jgen.writeStringField(POSTAL_NUMBER,
-                                            part.getPostCode());
-                                }
-                                if (part.getPostalTown() != null) {
-                                    jgen.writeStringField(POSTAL_TOWN,
-                                            part.getPostalTown());
-                                }
-                                if (part.getForeignAddress() != null) {
-                                    jgen.writeStringField(FOREIGN_ADDRESS,
-                                            part.getForeignAddress());
-                                }
-                                if (part.getEmailAddress() != null) {
-                                    jgen.writeStringField(EMAIL_ADDRESS,
-                                            part.getEmailAddress());
-                                }
-                                if (part.getTelephoneNumber() != null) {
-                                    jgen.writeStringField(TELEPHONE_NUMBER,
-                                            part.getTelephoneNumber());
-                                }
-                                if (part.getContactPerson() != null) {
-                                    jgen.writeStringField(CONTACT_PERSON,
-                                            part.getContactPerson());
-                                }
-                                jgen.writeEndObject();
-                            }
-                        }
-                        jgen.writeEndArray();
-                    }
-                }
-            }
 
             /**
              * Note: This method assumes that the startObject has already been
@@ -1519,15 +1589,17 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printMetadataEntity(JsonGenerator jgen, IMetadataEntity metadataEntity)
+            public static void printMetadataEntity(
+                    JsonGenerator jgen, IMetadataEntity metadataEntity)
                     throws IOException {
                 // e.g."mappetype" {}
                 if (metadataEntity != null) {
                     jgen.writeFieldName(metadataEntity.getBaseTypeName());
                     jgen.writeStartObject();
-                    jgen.writeStringField(SYSTEM_ID, metadataEntity.getSystemId());
                     jgen.writeStringField(CODE, metadataEntity.getCode());
-                    jgen.writeStringField(DESCRIPTION, metadataEntity.getDescription());
+                    jgen.writeStringField(CODE_NAME, metadataEntity.getName());
+                    jgen.writeStringField(
+                            CODE_COMMENT, metadataEntity.getComment());
                     jgen.writeEndObject();
                 }
             }
@@ -1607,42 +1679,109 @@ public final class CommonUtils {
                     JsonGenerator jgen,
                     ICorrespondencePartPersonEntity correspondencePartPerson)
                     throws IOException {
-                if (null != correspondencePartPerson) {
-                    printCorrespondencePart(jgen, correspondencePartPerson);
+                printCorrespondencePart(jgen, correspondencePartPerson);
+                printGenericPerson(jgen, correspondencePartPerson);
+            }
 
-                    if (null !=
-                            correspondencePartPerson.getSocialSecurityNumber()) {
-                        jgen.writeStringField(SOCIAL_SECURITY_NUMBER,
-                                correspondencePartPerson.
-                                        getSocialSecurityNumber());
-                    }
-                    if (null != correspondencePartPerson.getdNumber()) {
-                        jgen.writeStringField(D_NUMBER,
-                                correspondencePartPerson.getdNumber());
-                    }
-                    if (null != correspondencePartPerson.getName()) {
-                        jgen.writeStringField(NAME,
-                                correspondencePartPerson.getName());
-                    }
-                    if (null != correspondencePartPerson.getPostalAddress()) {
-                        printAddress(jgen,
-                                correspondencePartPerson.
-                                        getPostalAddress().
-                                        getSimpleAddress());
-                    }
-                    if (null != correspondencePartPerson.getResidingAddress()) {
-                        printAddress(jgen, correspondencePartPerson.
-                                getResidingAddress().getSimpleAddress());
-                    }
-                    if (null !=
-                            correspondencePartPerson.getContactInformation()) {
-                        printContactInformation(jgen,
-                                correspondencePartPerson.
-                                        getContactInformation());
+            public static void printPartPerson(
+                    JsonGenerator jgen,
+                    IPartPersonEntity person)
+                    throws IOException {
+                printPart(jgen, person);
+                printGenericPerson(jgen, person);
+            }
+
+            public static void printPartUnit(
+                    JsonGenerator jgen,
+                    IGenericUnitEntity unit)
+                    throws IOException {
+                printPartUnit(jgen, unit);
+                printGenericUnit(jgen, unit);
+            }
+
+            private static void printPart(JsonGenerator jgen, IPartEntity part)
+                    throws IOException {
+                if (part != null) {
+                    printSystemIdEntity(jgen, part);
+                    if (part.getPartRole() != null) {
+                        printMetadataEntity(jgen, part.getPartRole());
                     }
                 }
             }
 
+            public static void printGenericUnit(
+                    JsonGenerator jgen,
+                    IGenericUnitEntity unit)
+                    throws IOException {
+                if (null != unit) {
+                    if (null != unit.getOrganisationNumber()) {
+                        jgen.writeStringField(ORGANISATION_NUMBER,
+                                unit.getOrganisationNumber());
+                    }
+                    if (null != unit.getName()) {
+                        jgen.writeStringField(NAME,
+                                unit.getName());
+                    }
+                    if (null != unit.getBusinessAddress()) {
+                        printAddress(jgen,
+                                unit.getBusinessAddress().
+                                        getSimpleAddress());
+                    }
+                    if (null != unit.getPostalAddress()) {
+                        printAddress(jgen, unit.
+                                getPostalAddress().getSimpleAddress());
+                    }
+
+                    if (null != unit.getContactInformation()) {
+                        printContactInformation(jgen,
+                                unit.getContactInformation());
+                    }
+                    if (null != unit.getContactPerson()) {
+                        jgen.writeStringField(CONTACT_PERSON,
+                                unit.getContactPerson());
+                    }
+                }
+            }
+
+            public static void printGenericPerson(
+                    JsonGenerator jgen,
+                    IGenericPersonEntity partPerson)
+                    throws IOException {
+                if (null != partPerson) {
+
+                    if (null !=
+                            partPerson.getSocialSecurityNumber()) {
+                        jgen.writeStringField(SOCIAL_SECURITY_NUMBER,
+                                partPerson.
+                                        getSocialSecurityNumber());
+                    }
+                    if (null != partPerson.getdNumber()) {
+                        jgen.writeStringField(D_NUMBER,
+                                partPerson.getdNumber());
+                    }
+                    if (null != partPerson.getName()) {
+                        jgen.writeStringField(NAME,
+                                partPerson.getName());
+                    }
+                    if (null != partPerson.getPostalAddress()) {
+                        printAddress(jgen,
+                                partPerson.
+                                        getPostalAddress().
+                                        getSimpleAddress());
+                    }
+                    if (null != partPerson.getResidingAddress()) {
+                        printAddress(jgen, partPerson.
+                                getResidingAddress().getSimpleAddress());
+                    }
+                    if (null !=
+                            partPerson.getContactInformation()) {
+                        printContactInformation(jgen,
+                                partPerson.
+                                        getContactInformation());
+                    }
+                }
+            }
+            
             public static void printCorrespondencePartInternal(JsonGenerator jgen,
                                                                ICorrespondencePartInternalEntity correspondencePartInternal)
                     throws IOException {
@@ -1670,41 +1809,7 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printCorrespondencePartUnit(
-                    JsonGenerator jgen,
-                    ICorrespondencePartUnitEntity correspondencePartUnit)
-                    throws IOException {
-                if (null != correspondencePartUnit) {
-                    printCorrespondencePart(jgen, correspondencePartUnit);
 
-                    if (null != correspondencePartUnit.getOrganisationNumber()) {
-                        jgen.writeStringField(ORGANISATION_NUMBER,
-                                correspondencePartUnit.getOrganisationNumber());
-                    }
-                    if (null != correspondencePartUnit.getName()) {
-                        jgen.writeStringField(NAME,
-                                correspondencePartUnit.getName());
-                    }
-                    if (null != correspondencePartUnit.getBusinessAddress()) {
-                        printAddress(jgen,
-                                correspondencePartUnit.getBusinessAddress().
-                                        getSimpleAddress());
-                    }
-                    if (null != correspondencePartUnit.getPostalAddress()) {
-                        printAddress(jgen, correspondencePartUnit.
-                                getPostalAddress().getSimpleAddress());
-                    }
-
-                    if (null != correspondencePartUnit.getContactInformation()) {
-                        printContactInformation(jgen,
-                                correspondencePartUnit.getContactInformation());
-                    }
-                    if (null != correspondencePartUnit.getContactPerson()) {
-                        jgen.writeStringField(CONTACT_PERSON,
-                                correspondencePartUnit.getContactPerson());
-                    }
-                }
-            }
 
             /*
             Temporarily out. n5v5 has a new way of dealing with correspondenceparts, but this also likely includes
@@ -1745,7 +1850,7 @@ public final class CommonUtils {
                     jgen.writeArrayFieldStart(CORRESPONDENCE_PART_UNIT);
                     for (ICorrespondencePartUnitEntity correspondencePart : correspondencePartUnits) {
                         jgen.writeStartObject();
-                        printCorrespondencePartUnit(jgen, correspondencePart);
+                        printGenericUnit(jgen, correspondencePart);
                         jgen.writeEndObject();
                     }
                     jgen.writeEndArray();

@@ -6,7 +6,7 @@ import nikita.common.model.noark5.v5.metadata.PartRole;
  * Created by tsodring on 21/02/18.
  */
 
-public interface IPartRoleRepository extends
-        MetadataRepository<PartRole, Long> {
+public interface IPartRoleRepository
+        extends MetadataRepository<PartRole, String> {
 
 }

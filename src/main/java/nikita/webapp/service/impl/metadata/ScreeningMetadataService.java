@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.SCREENING_METADATA;
@@ -87,48 +86,9 @@ public class ScreeningMetadataService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single ScreeningMetadata object identified by systemId
-     *
-     * @param systemId systemId of the ScreeningMetadata you wish to retrieve
-     * @return single ScreeningMetadata object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                screeningMetadataRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all ScreeningMetadata that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of ScreeningMetadata objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        screeningMetadataRepository
-                                .findByDescription(description),
-                SCREENING_METADATA);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all ScreeningMetadata that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of ScreeningMetadata objects wrapped as a MetadataHateoas
@@ -137,9 +97,7 @@ public class ScreeningMetadataService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        screeningMetadataRepository.findByCode(code),
-                SCREENING_METADATA);
+                getScreeningMetadataOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -151,20 +109,18 @@ public class ScreeningMetadataService
      */
     @Override
     public ScreeningMetadata generateDefaultScreeningMetadata() {
-
         ScreeningMetadata screeningMetadata = new ScreeningMetadata();
         screeningMetadata.setCode(TEMPLATE_SCREENING_METADATA_CODE);
-        screeningMetadata.setDescription(TEMPLATE_SCREENING_METADATA_DESCRIPTION);
-
+        screeningMetadata.setName(TEMPLATE_SCREENING_METADATA_NAME);
         return screeningMetadata;
     }
 
     /**
-     * Update a ScreeningMetadata identified by its systemId
+     * Update a ScreeningMetadata identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId          The systemId of the screeningMetadata object you wish to
+     * @param code          The code of the screeningMetadata object you wish to
      *                          update
      * @param incomingScreeningMetadata The updated screeningMetadata object.
      *                                  Note the values you are allowed to
@@ -174,12 +130,12 @@ public class ScreeningMetadataService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final ScreeningMetadata incomingScreeningMetadata) {
 
         ScreeningMetadata existingScreeningMetadata =
-                getScreeningMetadataOrThrow(systemId);
+                getScreeningMetadataOrThrow(code);
         updateCodeAndDescription(incomingScreeningMetadata,
                 existingScreeningMetadata);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -205,15 +161,15 @@ public class ScreeningMetadataService
      * is no ScreeningMetadata object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the ScreeningMetadata object to retrieve
+     * @param code The code of the ScreeningMetadata object to retrieve
      * @return the ScreeningMetadata object
      */
-    private ScreeningMetadata getScreeningMetadataOrThrow(@NotNull String systemId) {
+    private ScreeningMetadata getScreeningMetadataOrThrow(@NotNull String code) {
         ScreeningMetadata screeningMetadata = screeningMetadataRepository.
-                findBySystemId(UUID.fromString(systemId));
+                findByCode(code);
         if (screeningMetadata == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " ScreeningMetadata, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

@@ -2,11 +2,10 @@ package nikita.webapp.service.interfaces;
 
 
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
-import nikita.common.model.noark5.v5.hateoas.FileHateoas;
-import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
-import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.*;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -17,6 +16,12 @@ public interface IFileService {
 
     // -- All CREATE operations
     File createFile(File file);
+
+    PartPersonHateoas createPartPersonAssociatedWithFile(
+            String systemID, PartPerson partPerson);
+
+    PartUnitHateoas createPartUnitAssociatedWithFile(
+            String systemID, PartUnit partUnit);
 
     FileHateoas save(File file);
 

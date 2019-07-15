@@ -1,0 +1,16 @@
+{
+  "CommentType": [
+    {
+      "code": "MS",
+      "name": "Merknad fra saksbehandler"
+    },
+    {
+      "code": "ML",
+      "name": "Merknad fra leder"
+    },
+    {
+      "code": "MA",
+      "name": "Merknad fra arkivansvarlig"
+    }
+  ]
+}

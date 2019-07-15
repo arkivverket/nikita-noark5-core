@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.UUID;
 
 
 @Service
@@ -58,37 +56,6 @@ public class DocumentMediumService
         return documentMediumRepository.findAll();
     }
 
-    @Override
-    public List<DocumentMedium> findAll2() {
-        return documentMediumRepository.findAll();
-    }
-
-    // find by systemId
-
-    /**
-     * retrieve a single documentMedium identified by systemId
-     *
-     * @param systemId
-     * @return
-     */
-    @Override
-    public DocumentMedium findBySystemId(String systemId) {
-        return documentMediumRepository.
-                findBySystemId(UUID.fromString(systemId));
-    }
-
-    /**
-     * retrieve all documentMedium that have a particular description. <br>
-     * This will be replaced by OData search.
-     *
-     * @param description
-     * @return
-     */
-    @Override
-    public List<DocumentMedium> findByDescription(String description) {
-        return documentMediumRepository.findByDescription(description);
-    }
-
     /**
      * retrieve all documentMedium that have a particular code. <br>
      * This will be replaced by OData search.
@@ -97,7 +64,7 @@ public class DocumentMediumService
      * @return
      */
     @Override
-    public List<DocumentMedium> findByCode(String code) {
+    public DocumentMedium findByCode(String code) {
         return documentMediumRepository.findByCode(code);
     }
 

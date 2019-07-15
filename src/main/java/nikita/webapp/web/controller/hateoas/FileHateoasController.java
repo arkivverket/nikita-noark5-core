@@ -18,10 +18,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
-import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
@@ -37,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -54,22 +51,16 @@ public class FileHateoasController
     private IFileService fileService;
     private IFileHateoasHandler fileHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
-    private ISeriesHateoasHandler seriesHateoasHandler;
-    private IClassHateoasHandler classHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public FileHateoasController(IFileService fileService,
-                                 IFileHateoasHandler fileHateoasHandler,
-                                 IRecordHateoasHandler recordHateoasHandler,
-                                 ISeriesHateoasHandler seriesHateoasHandler,
-                                 IClassHateoasHandler classHateoasHandler,
-                                 ApplicationEventPublisher applicationEventPublisher) {
-
+    public FileHateoasController(
+            IFileService fileService,
+            IFileHateoasHandler fileHateoasHandler,
+            IRecordHateoasHandler recordHateoasHandler,
+            ApplicationEventPublisher applicationEventPublisher) {
         this.fileService = fileService;
         this.fileHateoasHandler = fileHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
-        this.seriesHateoasHandler = seriesHateoasHandler;
-        this.classHateoasHandler = classHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 

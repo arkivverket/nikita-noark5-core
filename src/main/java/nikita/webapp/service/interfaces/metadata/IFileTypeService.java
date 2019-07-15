@@ -13,11 +13,7 @@ public interface IFileTypeService {
 
     MetadataHateoas createNewFileType(FileType fileType);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

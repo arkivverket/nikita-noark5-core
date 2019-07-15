@@ -128,10 +128,10 @@ public class ScreeningMetadataController {
                 .body(postalCodeService.findAll());
     }
 
-    // Retrieves a given postalCode identified by a systemId
-    // GET [contextPath][api]/metadata/skjermingdokument/{systemId}/
+    // Retrieves a given postalCode identified by a kode
+    // GET [contextPath][api]/metadata/skjermingdokument/{kode}/
     @ApiOperation(
-            value = "Gets postalCode identified by its systemId",
+            value = "Gets postalCode identified by its kode",
             notes = "Returns the requested postalCode object",
             response = ScreeningMetadata.class)
     @ApiResponses(value = {
@@ -163,15 +163,15 @@ public class ScreeningMetadataController {
     @Counted
 
     @RequestMapping(
-            value = SCREENING_METADATA + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = SCREENING_METADATA + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
-    public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+    public ResponseEntity<MetadataHateoas> findByCode(
+            @PathVariable("kode") final String kode,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = postalCodeService.find(systemId);
+        MetadataHateoas metadataHateoas = postalCodeService.findByCode(kode);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -257,15 +257,15 @@ public class ScreeningMetadataController {
             value = SCREENING_METADATA + SLASH + SCREENING_METADATA
     )
     public ResponseEntity<MetadataHateoas> updateScreeningMetadata(
-            @ApiParam(name = "systemID",
-                    value = "systemId of ScreeningMetadata to update.",
+            @ApiParam(name = "kode",
+                    value = "kode of ScreeningMetadata to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable("kode") String kode,
             @RequestBody ScreeningMetadata postalCode,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = postalCodeService.handleUpdate
-                (systemID,
+                (kode,
                         CommonUtils.Validation.parseETAG(
                                 request.getHeader(ETAG)),
                         postalCode);

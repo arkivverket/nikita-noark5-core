@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.PartPerson;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -24,6 +25,9 @@ public class ResidingAddress
     @OneToOne(fetch = LAZY)
     CorrespondencePartPerson correspondencePartPerson;
 
+    @OneToOne(fetch = LAZY)
+    private PartPerson partPerson;
+
     public SimpleAddress getSimpleAddress() {
         return simpleAddress;
     }
@@ -39,6 +43,14 @@ public class ResidingAddress
     public void setCorrespondencePartPerson(
             CorrespondencePartPerson correspondencePartPerson) {
         this.correspondencePartPerson = correspondencePartPerson;
+    }
+
+    public PartPerson getPartPerson() {
+        return partPerson;
+    }
+
+    public void setPartPerson(PartPerson partPerson) {
+        this.partPerson = partPerson;
     }
 
     @Override

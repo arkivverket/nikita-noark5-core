@@ -14,13 +14,9 @@ public interface IRegistryEntryStatusService {
     MetadataHateoas createNewRegistryEntryStatus(
             RegistryEntryStatus RegistryEntryStatus);
 
-    MetadataHateoas find(String systemId);
+    MetadataHateoas findByCode(String code);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_TYPE;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -137,11 +137,11 @@ public class RegistryEntryTypeController {
     }
 
     // Retrieves a given RegistryEntryType identified by a
-    // systemId
+    // kode
     // GET [contextPath][api]/metadata/journalposttype/
-    // {systemId}/
+    // {kode}/
     @ApiOperation(
-            value = "Gets RegistryEntryType identified by its systemId",
+            value = "Gets RegistryEntryType identified by its kode",
             notes = "Returns the requested RegistryEntryType object",
             response = RegistryEntryType.class)
     @ApiResponses(value = {
@@ -173,16 +173,16 @@ public class RegistryEntryTypeController {
     @Counted
 
     @RequestMapping(
-            value = REGISTRY_ENTRY_TYPE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = REGISTRY_ENTRY_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
-    public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+    public ResponseEntity<MetadataHateoas> findByKode(
+            @PathVariable("kode") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                registryEntryTypeService.find(systemId);
+                registryEntryTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -270,17 +270,17 @@ public class RegistryEntryTypeController {
     )
     public ResponseEntity<MetadataHateoas>
     updateRegistryEntryType(
-            @ApiParam(name = "systemID",
-                    value = "systemId of registryEntryType to update.",
+            @ApiParam(name = "kode",
+                    value = "kode of registryEntryType to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable("kode") String code,
             @RequestBody RegistryEntryType registryEntryType,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
                 registryEntryTypeService
                         .handleUpdate
-                                (systemID, CommonUtils.Validation.
+                                (code, CommonUtils.Validation.
                                         parseETAG(request.getHeader
                                                 (ETAG)), registryEntryType);
 

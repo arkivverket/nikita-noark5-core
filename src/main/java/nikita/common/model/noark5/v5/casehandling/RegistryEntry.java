@@ -2,12 +2,8 @@ package nikita.common.model.noark5.v5.casehandling;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.DocumentFlow;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.IDocumentFlow;
 import nikita.common.model.noark5.v5.interfaces.IElectronicSignature;
@@ -162,43 +158,6 @@ public class RegistryEntry
     @Audited
 
     private String recordsManagementUnit;
-
-    // Links to CorrespondencePartPerson
-    @ManyToMany
-    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_PERSON,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<CorrespondencePartPerson>
-            referenceCorrespondencePartPerson = new ArrayList<>();
-
-    // Links to CorrespondencePartUnit
-    @ManyToMany
-    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_UNIT,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_CORRESPONDENCE_PART_UNIT_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<CorrespondencePartUnit>
-            referenceCorrespondencePartUnit = new ArrayList<>();
-
-    // Links to CorrespondencePartInternal
-    @ManyToMany
-    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns =
-            @JoinColumn(
-                    name = FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<CorrespondencePartInternal>
-            referenceCorrespondencePartInternal = new ArrayList<>();
 
     // Links to DocumentFlow
     @OneToMany(mappedBy = "referenceRegistryEntry")
@@ -372,49 +331,6 @@ public class RegistryEntry
         this.referenceDocumentFlow = referenceDocumentFlow;
     }
 
-    public List<CorrespondencePartPerson>
-    getReferenceCorrespondencePartPerson() {
-        return referenceCorrespondencePartPerson;
-    }
-
-    public void setReferenceCorrespondencePartPerson(
-            List<CorrespondencePartPerson> referenceCorrespondencePartPerson) {
-        this.referenceCorrespondencePartPerson =
-                referenceCorrespondencePartPerson;
-    }
-
-    public void addCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePartPerson) {
-        this.referenceCorrespondencePartPerson.add(
-                correspondencePartPerson);
-    }
-
-    public List<CorrespondencePartUnit> getReferenceCorrespondencePartUnit() {
-        return referenceCorrespondencePartUnit;
-    }
-
-    public void setReferenceCorrespondencePartUnit(
-            List<CorrespondencePartUnit> referenceCorrespondencePartUnit) {
-        this.referenceCorrespondencePartUnit = referenceCorrespondencePartUnit;
-    }
-
-    public void addCorrespondencePartUnit(
-            CorrespondencePartUnit correspondencePartUnit) {
-        this.referenceCorrespondencePartUnit.add(
-                correspondencePartUnit);
-    }
-
-    public List<CorrespondencePartInternal>
-    getReferenceCorrespondencePartInternal() {
-        return referenceCorrespondencePartInternal;
-    }
-
-    public void setReferenceCorrespondencePartInternal(
-            List<CorrespondencePartInternal>
-                    referenceCorrespondencePartInternal) {
-        this.referenceCorrespondencePartInternal =
-                referenceCorrespondencePartInternal;
-    }
 
     public List<SignOff> getReferenceSignOff() {
         return referenceSignOff;

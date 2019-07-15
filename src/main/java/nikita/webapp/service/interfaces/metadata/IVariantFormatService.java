@@ -13,11 +13,7 @@ public interface IVariantFormatService {
 
     MetadataHateoas createNewVariantFormat(VariantFormat variantFormat);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

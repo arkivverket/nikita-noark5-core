@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_SECURITY_LEVEL;
@@ -94,53 +93,9 @@ public class ElectronicSignatureSecurityLevelService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single ElectronicSignatureSecurityLevel object identified by
-     * systemId
-     *
-     * @param systemId systemId of the ElectronicSignatureSecurityLevel you wish
-     *                 to retrieve
-     * @return single ElectronicSignatureSecurityLevel object wrapped as a
-     * MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                electronicSignatureSecurityLevelRepository.save(
-                        electronicSignatureSecurityLevelRepository
-                                .findBySystemId(UUID.fromString(systemId))));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all ElectronicSignatureSecurityLevel that have a given
-     * description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of ElectronicSignatureSecurityLevel objects wrapped as a
-     * MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        electronicSignatureSecurityLevelRepository
-                                .findByDescription(description),
-                ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all ElectronicSignatureSecurityLevel that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of ElectronicSignatureSecurityLevel objects wrapped as a
@@ -149,10 +104,8 @@ public class ElectronicSignatureSecurityLevelService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        electronicSignatureSecurityLevelRepository.findByCode
-                                (code),
-                ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
+                electronicSignatureSecurityLevelRepository.
+                        findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -171,19 +124,18 @@ public class ElectronicSignatureSecurityLevelService
                 new ElectronicSignatureSecurityLevel();
         electronicSignatureSecurityLevel.setCode
                 (TEMPLATE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE);
-        electronicSignatureSecurityLevel.
-                setDescription(
-                        TEMPLATE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL_DESCRIPTION);
+        electronicSignatureSecurityLevel.setName(
+                TEMPLATE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL_NAME);
 
         return electronicSignatureSecurityLevel;
     }
 
     /**
-     * Update a ElectronicSignatureSecurityLevel identified by its systemId
+     * Update a ElectronicSignatureSecurityLevel identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId                         The systemId of the
+     * @param code                         The code of the
      *                                         electronicSignatureSecurityLevel
      *                                         object you wish to update
      * @param electronicSignatureSecurityLevel The updated
@@ -196,14 +148,14 @@ public class ElectronicSignatureSecurityLevelService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final ElectronicSignatureSecurityLevel
                     electronicSignatureSecurityLevel) {
 
         ElectronicSignatureSecurityLevel
                 existingElectronicSignatureSecurityLevel =
-                getElectronicSignatureSecurityLevelOrThrow(systemId);
+                getElectronicSignatureSecurityLevelOrThrow(code);
         updateCodeAndDescription(electronicSignatureSecurityLevel,
                 existingElectronicSignatureSecurityLevel);
         // Note setVersion can potentially result in a
@@ -231,19 +183,19 @@ public class ElectronicSignatureSecurityLevelService
      * object back. If there is no ElectronicSignatureSecurityLevel object,
      * a NoarkEntityNotFoundException exception is thrown
      *
-     * @param systemId The systemId of the ElectronicSignatureSecurityLevel
+     * @param code The code of the ElectronicSignatureSecurityLevel
      *                 object to retrieve
      * @return the ElectronicSignatureSecurityLevel object
      */
     private ElectronicSignatureSecurityLevel
-    getElectronicSignatureSecurityLevelOrThrow(@NotNull String systemId) {
+    getElectronicSignatureSecurityLevelOrThrow(@NotNull String code) {
         ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel =
                 electronicSignatureSecurityLevelRepository.
-                        findBySystemId(UUID.fromString(systemId));
+                        findByCode(code);
         if (electronicSignatureSecurityLevel == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                    " ElectronicSignatureSecurityLevel, using systemId " +
-                    systemId;
+                    " ElectronicSignatureSecurityLevel, using code " +
+                    code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

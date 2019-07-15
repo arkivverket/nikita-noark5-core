@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.casehandling.IContactInformationEntity;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.IContactInformationEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -50,6 +52,12 @@ public class ContactInformation
     @OneToOne(fetch = LAZY)
     private CorrespondencePartUnit correspondencePartUnit;
 
+    @OneToOne(fetch = LAZY)
+    private PartPerson partPerson;
+
+    @OneToOne(fetch = LAZY)
+    private PartUnit partUnit;
+
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -90,6 +98,22 @@ public class ContactInformation
     public void setCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePartUnit) {
         this.correspondencePartUnit = correspondencePartUnit;
+    }
+
+    public PartPerson getPartPerson() {
+        return partPerson;
+    }
+
+    public void setPartPerson(PartPerson partPerson) {
+        this.partPerson = partPerson;
+    }
+
+    public PartUnit getPartUnit() {
+        return partUnit;
+    }
+
+    public void setPartUnit(PartUnit partUnit) {
+        this.partUnit = partUnit;
     }
 
     @Override

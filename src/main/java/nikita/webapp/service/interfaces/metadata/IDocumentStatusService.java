@@ -2,9 +2,6 @@ package nikita.webapp.service.interfaces.metadata;
 
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 
-import java.util.List;
-import java.util.UUID;
-
 /**
  * Created by tsodring on 31/1/18.
  */
@@ -14,13 +11,7 @@ public interface IDocumentStatusService {
 
     Iterable<DocumentStatus> findAll();
 
-    List<DocumentStatus> findAllAsList();
-
-    DocumentStatus findBySystemId(String systemId);
-
     DocumentStatus update(DocumentStatus documentStatus);
 
-    List<DocumentStatus> findByDescription(String description);
-
-    List<DocumentStatus> findByCode(String code);
+    DocumentStatus findByCode(String code);
 }

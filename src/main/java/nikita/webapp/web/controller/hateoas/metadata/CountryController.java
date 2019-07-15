@@ -128,10 +128,10 @@ public class CountryController {
                 .body(countryService.findAll());
     }
 
-    // Retrieves a given country identified by a systemId
-    // GET [contextPath][api]/metadata/land/{systemId}/
+    // Retrieves a given country identified by a code
+    // GET [contextPath][api]/metadata/land/{code}/
     @ApiOperation(
-            value = "Gets country identified by its systemId",
+            value = "Gets country identified by its code",
             notes = "Returns the requested country object",
             response = Country.class)
     @ApiResponses(value = {
@@ -163,15 +163,15 @@ public class CountryController {
     @Counted
 
     @RequestMapping(
-            value = COUNTRY + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = COUNTRY + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = countryService.find(systemId);
+        MetadataHateoas metadataHateoas = countryService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -258,7 +258,7 @@ public class CountryController {
     )
     public ResponseEntity<MetadataHateoas> updateCountry(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody Country country,

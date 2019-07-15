@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_STATUS;
@@ -27,7 +26,6 @@ import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_STATUS;
 /**
  * Created by tsodring on 12/02/18.
  */
-
 
 @Service
 @Transactional
@@ -74,49 +72,15 @@ public class RegistryEntryStatusService
     /**
      * Retrieve a list of all RegistryEntryStatus objects
      *
-     * @return list of RegistryEntryStatus objects wrapped as a MetadataHateoas object
+     * @return list of RegistryEntryStatus objects wrapped as a
+     * MetadataHateoas object
      */
     @Override
+    @SuppressWarnings("unchecked")
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
-                        registryEntryStatusRepository.findAll(), REGISTRY_ENTRY_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    // find by systemId
-
-    /**
-     * Retrieve a single RegistryEntryStatus object identified by systemId
-     *
-     * @param systemId
-     * @return single RegistryEntryStatus object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                registryEntryStatusRepository.save(
-                        registryEntryStatusRepository.
-                                findBySystemId(UUID.fromString(systemId))));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all RegistryEntryStatus that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description
-     * @return A list of RegistryEntryStatus objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        registryEntryStatusRepository.findByDescription(description),
+                        registryEntryStatusRepository.findAll(),
                 REGISTRY_ENTRY_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
@@ -124,19 +88,16 @@ public class RegistryEntryStatusService
 
     /**
      * retrieve all RegistryEntryStatus that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
-     * @param code
+     * @param code Code to retrieve
      * @return A list of RegistryEntryStatus objects wrapped as a MetadataHateoas
      * object
      */
     @Override
     public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        registryEntryStatusRepository.findByCode(code),
-                REGISTRY_ENTRY_STATUS);
+        MetadataHateoas metadataHateoas =
+                new MetadataHateoas(getRegistryEntryStatusOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -144,24 +105,23 @@ public class RegistryEntryStatusService
     /**
      * Generate a default RegistryEntryStatus object
      *
-     * @return the RegistryEntryStatus object wrapped as a RegistryEntryStatusHateoas object
+     * @return the RegistryEntryStatus object wrapped as a
+     * RegistryEntryStatusHateoas object
      */
     @Override
     public RegistryEntryStatus generateDefaultRegistryEntryStatus() {
-
         RegistryEntryStatus RegistryEntryStatus = new RegistryEntryStatus();
         RegistryEntryStatus.setCode(TEMPLATE_REGISTRY_ENTRY_STATUS_CODE);
-        RegistryEntryStatus.setDescription(TEMPLATE_REGISTRY_ENTRY_STATUS_DESCRIPTION);
-
+        RegistryEntryStatus.setName(TEMPLATE_REGISTRY_ENTRY_STATUS_NAME);
         return RegistryEntryStatus;
     }
 
     /**
-     * Update a RegistryEntryStatus identified by its systemId
+     * Update a RegistryEntryStatus identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId        The systemId of the registryEntryStatus object
+     * @param code        The code of the registryEntryStatus object
      *                        you wish to update
      * @param incomingRegistryEntryStatus The updated registryEntryStatus
      *                                    object. Note the values you are
@@ -172,12 +132,12 @@ public class RegistryEntryStatusService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final RegistryEntryStatus incomingRegistryEntryStatus) {
 
         RegistryEntryStatus existingRegistryEntryStatus =
-                getRegistryEntryStatusOrThrow(systemId);
+                getRegistryEntryStatusOrThrow(code);
         updateCodeAndDescription(incomingRegistryEntryStatus,
                 existingRegistryEntryStatus);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -197,25 +157,24 @@ public class RegistryEntryStatusService
     /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid RegistryEntryStatus object back. If there
-     * is no RegistryEntryStatus object, a NoarkEntityNotFoundException exception
-     * is thrown
+     * that you will only ever get a valid RegistryEntryStatus object back.
+     * If there is no RegistryEntryStatus object, a
+     * NoarkEntityNotFoundException exception is thrown
      *
-     * @param systemId The systemId of the RegistryEntryStatus object to retrieve
+     * @param code The code of the RegistryEntryStatus object to retrieve
      * @return the RegistryEntryStatus object
      */
     private RegistryEntryStatus getRegistryEntryStatusOrThrow(
-            @NotNull String systemId) {
+            @NotNull String code) {
         RegistryEntryStatus registryEntryStatus =
                 registryEntryStatusRepository.
-                        findBySystemId(UUID.fromString(systemId));
+                        findByCode(code);
         if (registryEntryStatus  == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " RegistryEntryStatus, using " +
-                    "systemId " + systemId;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " RegistryEntryStatus, using code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }
         return registryEntryStatus ;
     }
-
 }

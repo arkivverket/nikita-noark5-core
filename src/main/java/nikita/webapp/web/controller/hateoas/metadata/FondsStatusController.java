@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
@@ -93,9 +93,9 @@ public class FondsStatusController {
                 .body(metadataHateoas);
     }
 
-    // Retrieves a given fondsStatus identified by a systemId
-    // GET [contextPath][api]/metadata/arkivstatus/{systemId}/
-    @ApiOperation(value = "Gets fondsStatus identified by its systemId", notes = "Returns the requested " +
+    // Retrieves a given fondsStatus identified by a code
+    // GET [contextPath][api]/metadata/arkivstatus/{code}/
+    @ApiOperation(value = "Gets fondsStatus identified by its code", notes = "Returns the requested " +
             " fondsStatus object", response = FondsStatus.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "FondsStatus " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
@@ -110,10 +110,10 @@ public class FondsStatusController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
-    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
+    @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
+    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String code,
                                                           HttpServletRequest request) {
-        FondsStatus fondsStatus = fondsStatusService.findBySystemId(systemId);
+        FondsStatus fondsStatus = fondsStatusService.findByCode(code);
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
@@ -138,7 +138,7 @@ public class FondsStatusController {
     public ResponseEntity<MetadataHateoas> getFondsStatusTemplate(HttpServletRequest request) {
         FondsStatus fondsStatus = new FondsStatus();
         fondsStatus.setCode(TEMPLATE_FONDS_STATUS_CODE);
-        fondsStatus.setDescription(TEMPLATE_FONDS_STATUS_DESCRIPTION);
+        fondsStatus.setName(TEMPLATE_FONDS_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

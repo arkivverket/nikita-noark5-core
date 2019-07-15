@@ -14,11 +14,8 @@ public interface IScreeningDocumentService {
     MetadataHateoas createNewScreeningDocument(
             ScreeningDocument screeningDocument);
 
-    MetadataHateoas find(String systemId);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

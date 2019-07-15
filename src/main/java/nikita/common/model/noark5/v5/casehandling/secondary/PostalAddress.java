@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.casehandling.ISimpleAddress;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -29,6 +31,12 @@ public class PostalAddress
     @OneToOne(fetch = LAZY)
     private CorrespondencePartUnit correspondencePartUnit;
 
+    @OneToOne(fetch = LAZY)
+    private PartPerson partPerson;
+
+    @OneToOne(fetch = LAZY)
+    private PartUnit partUnit;
+
     public SimpleAddress getSimpleAddress() {
         return simpleAddress;
     }
@@ -53,6 +61,22 @@ public class PostalAddress
     public void setCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePartUnit) {
         this.correspondencePartUnit = correspondencePartUnit;
+    }
+
+    public PartPerson getPartPerson() {
+        return partPerson;
+    }
+
+    public void setPartPerson(PartPerson partPerson) {
+        this.partPerson = partPerson;
+    }
+
+    public PartUnit getPartUnit() {
+        return partUnit;
+    }
+
+    public void setPartUnit(PartUnit partUnit) {
+        this.partUnit = partUnit;
     }
 
     @Override

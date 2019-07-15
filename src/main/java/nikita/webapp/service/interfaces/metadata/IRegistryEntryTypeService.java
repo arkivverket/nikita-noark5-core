@@ -14,11 +14,7 @@ public interface IRegistryEntryTypeService {
     MetadataHateoas createNewRegistryEntryType(RegistryEntryType
                                                        registryEntryType);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

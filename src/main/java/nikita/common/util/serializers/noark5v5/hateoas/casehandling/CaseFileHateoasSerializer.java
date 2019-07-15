@@ -145,7 +145,6 @@ public class CaseFileHateoasSerializer
         // TODO: Implement M209 referanseSekundaerKlassifikasjon
         //CommonCommonUtils.Hateoas.Serialize.
         // printSecondaryClassification(jgen, caseFile);
-        CommonUtils.Hateoas.Serialize.printPart(jgen, caseFile);
         CommonUtils.Hateoas.Serialize.printMetadataEntity(jgen,
                 caseFile.getReferenceCaseFileStatus());
         //CommonUtils.Hateoas.Serialize.printMetadataEntity(jgen,

@@ -29,7 +29,7 @@ public final class FileConstants {
     public static final String MIME_TYPE_PNG = "image/png";
     public static final String MIME_TYPE_GIF = "image/gif";
     public static final String MIME_TYPE_TEXT = "text/plain";
-
+    public static final String RESOURCE_METADATA = "classpath:metadata/*.json";
 
     private FileConstants() {
     }

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -129,10 +129,10 @@ public class CommentTypeController {
                 .body(commentTypeService.findAll());
     }
 
-    // Retrieves a given commentType identified by a systemId
-    // GET [contextPath][api]/metadata/merknadstype/{systemId}/
+    // Retrieves a given commentType identified by a code
+    // GET [contextPath][api]/metadata/merknadstype/{code}/
     @ApiOperation(
-            value = "Gets commentType identified by its systemId",
+            value = "Gets commentType identified by its code",
             notes = "Returns the requested commentType object",
             response = CommentType.class)
     @ApiResponses(value = {
@@ -164,15 +164,15 @@ public class CommentTypeController {
     @Counted
 
     @RequestMapping(
-            value = COMMENT_TYPE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = COMMENT_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = commentTypeService.find(systemId);
+        MetadataHateoas metadataHateoas = commentTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -259,7 +259,7 @@ public class CommentTypeController {
     )
     public ResponseEntity<MetadataHateoas> updateCommentType(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody CommentType commentType,

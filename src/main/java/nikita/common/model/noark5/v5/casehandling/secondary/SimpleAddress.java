@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.interfaces.entities.casehandling.ISimpleAddressEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddressEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;

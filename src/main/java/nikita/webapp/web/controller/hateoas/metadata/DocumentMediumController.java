@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
@@ -96,9 +96,9 @@ public class DocumentMediumController {
                 .body(metadataHateoas);
     }
 
-    // Retrieves a given documentMedium identified by a systemId
-    // GET [contextPath][api]/metadata/dokumentmedium/{systemId}/
-    @ApiOperation(value = "Gets documentMedium identified by its systemId", notes = "Returns the requested " +
+    // Retrieves a given documentMedium identified by a kode
+    // GET [contextPath][api]/metadata/dokumentmedium/{kode}/
+    @ApiOperation(value = "Gets documentMedium identified by its kode", notes = "Returns the requested " +
             " documentMedium object", response = DocumentMedium.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "DocumentMedium " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
@@ -113,10 +113,11 @@ public class DocumentMediumController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = DOCUMENT_MEDIUM + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
-    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
+    @RequestMapping(value =
+            DOCUMENT_MEDIUM + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
+    public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                           HttpServletRequest request) {
-        DocumentMedium documentMedium = documentMediumService.findBySystemId(systemId);
+        DocumentMedium documentMedium = documentMediumService.findByCode(code);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentMedium);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
@@ -141,7 +142,7 @@ public class DocumentMediumController {
     public ResponseEntity<MetadataHateoas> getDocumentMediumTemplate(HttpServletRequest request) {
         DocumentMedium documentMedium = new DocumentMedium();
         documentMedium.setCode(TEMPLATE_DOCUMENT_MEDIUM_CODE);
-        documentMedium.setDescription(TEMPLATE_DOCUMENT_MEDIUM_DESCRIPTION);
+        documentMedium.setName(TEMPLATE_DOCUMENT_MEDIUM_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentMedium);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.PRECEDENCE_STATUS;
@@ -86,50 +85,9 @@ public class PrecedenceStatusService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single PrecedenceStatus object identified by systemId
-     *
-     * @param systemId systemId of the PrecedenceStatus you wish to retrieve
-     * @return single PrecedenceStatus object wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                precedenceStatusRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all PrecedenceStatus that have a given
-     * description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of PrecedenceStatus objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        precedenceStatusRepository
-                                .findByDescription(description),
-                PRECEDENCE_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all PrecedenceStatus that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of PrecedenceStatus objects wrapped as a MetadataHateoas
@@ -138,9 +96,7 @@ public class PrecedenceStatusService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        precedenceStatusRepository.findByCode
-                                (code), PRECEDENCE_STATUS);
+                getPrecedenceStatusOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -152,20 +108,18 @@ public class PrecedenceStatusService
      */
     @Override
     public PrecedenceStatus generateDefaultPrecedenceStatus() {
-
         PrecedenceStatus precedenceStatus = new PrecedenceStatus();
         precedenceStatus.setCode(TEMPLATE_PRECEDENCE_STATUS_CODE);
-        precedenceStatus.setDescription(TEMPLATE_PRECEDENCE_STATUS_DESCRIPTION);
-
+        precedenceStatus.setName(TEMPLATE_PRECEDENCE_STATUS_NAME);
         return precedenceStatus;
     }
 
     /**
-     * Update a PrecedenceStatus identified by its systemId
+     * Update a PrecedenceStatus identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId         The systemId of the precedenceStatus object you wish to
+     * @param code         The code of the precedenceStatus object you wish to
      *                         update
      * @param incomingPrecedenceStatus The updated precedenceStatus object.
      *                                 Note the values you are allowed to
@@ -175,12 +129,12 @@ public class PrecedenceStatusService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final PrecedenceStatus incomingPrecedenceStatus) {
 
         PrecedenceStatus existingPrecedenceStatus =
-                getPrecedenceStatusOrThrow(systemId);
+                getPrecedenceStatusOrThrow(code);
         updateCodeAndDescription(incomingPrecedenceStatus,
                 existingPrecedenceStatus);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -207,17 +161,16 @@ public class PrecedenceStatusService
      * there is no PrecedenceStatus object, a NoarkEntityNotFoundException
      * exception is thrown
      *
-     * @param systemId The systemId of the PrecedenceStatus object to retrieve
+     * @param code The code of the PrecedenceStatus object to retrieve
      * @return the PrecedenceStatus object
      */
     private PrecedenceStatus
-    getPrecedenceStatusOrThrow(@NotNull String systemId) {
+    getPrecedenceStatusOrThrow(@NotNull String code) {
         PrecedenceStatus precedenceStatus =
-                precedenceStatusRepository.
-                        findBySystemId(UUID.fromString(systemId));
+                precedenceStatusRepository.findByCode(code);
         if (precedenceStatus == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " PrecedenceStatus,  " +
-                    "using systemId " + systemId;
+                    "using code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

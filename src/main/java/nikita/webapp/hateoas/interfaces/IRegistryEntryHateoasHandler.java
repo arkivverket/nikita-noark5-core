@@ -34,24 +34,6 @@ public interface IRegistryEntryHateoasHandler extends IRecordHateoasHandler {
     void addNewDocumentFlow(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCorrespondencePartPerson(INikitaEntity entity,
-                                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addCorrespondencePartUnit(INikitaEntity entity,
-                                   IHateoasNoarkObject hateoasNoarkObject);
-
-    void addCorrespondencePartInternal(INikitaEntity entity,
-                                       IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewCorrespondencePartPerson(INikitaEntity entity,
-                                        IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewCorrespondencePartUnit(INikitaEntity entity,
-                                      IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewCorrespondencePartInternal(INikitaEntity entity,
-                                          IHateoasNoarkObject hateoasNoarkObject);
-
     // Metadata entries
     void addRegistryEntryStatus(INikitaEntity entity,
                                 IHateoasNoarkObject hateoasNoarkObject);

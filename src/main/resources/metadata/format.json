@@ -1,0 +1,36 @@
+{
+  "Format": [
+    {
+      "code": "RA-TEKST",
+      "name": "Ren tekst"
+    },
+    {
+      "code": "RA-TIFF6",
+      "name": "TIFF versjon 6"
+    },
+    {
+      "code": "RA-PDF",
+      "name": "PDF/A - ISO 19005-1:2005"
+    },
+    {
+      "code": "RA-XML",
+      "name": "XML"
+    },
+    {
+      "code": "RA-JPEG",
+      "name": "JPEG"
+    },
+    {
+      "code": "RA-SOSI",
+      "name": "SOSI"
+    },
+    {
+      "code": "RA-MPEG-2",
+      "name": "MPEG-2"
+    },
+    {
+      "code": "RA-MP3",
+      "name": "MP3"
+    }
+  ]
+}

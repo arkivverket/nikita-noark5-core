@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.FORMAT;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -140,11 +140,11 @@ public class FormatController {
     }
 
     // Retrieves a given Format identified by a
-    // systemId
+    // code
     // GET [contextPath][api]/metadata/format/
-    // {systemId}/
+    // {code}/
     @ApiOperation(
-            value = "Gets Format identified by its systemId",
+            value = "Gets Format identified by its code",
             notes = "Returns the requested Format object",
             response = Format.class)
     @ApiResponses(value = {
@@ -176,16 +176,16 @@ public class FormatController {
     @Counted
 
     @RequestMapping(
-            value = FORMAT + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = FORMAT + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                formatService.find(systemId);
+                formatService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -275,7 +275,7 @@ public class FormatController {
     public ResponseEntity<MetadataHateoas>
     updateFormat(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody Format

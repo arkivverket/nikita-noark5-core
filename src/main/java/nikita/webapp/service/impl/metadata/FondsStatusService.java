@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 
 @Service
@@ -63,30 +61,6 @@ public class FondsStatusService
                         .findAll();
     }
 
-    // find by systemId
-
-    /**
-     * retrieve a single fondsStatus identified by systemId
-     *
-     * @param systemId
-     * @return
-     */
-    @Override
-    public FondsStatus findBySystemId(String systemId) {
-        return fondsStatusRepository.findBySystemId(UUID.fromString(systemId));
-    }
-
-    /**
-     * retrieve all fondsStatus that have a particular description. <br>
-     * This will be replaced by OData search.
-     *
-     * @param description
-     * @return
-     */
-    @Override
-    public List<FondsStatus> findByDescription(String description) {
-        return fondsStatusRepository.findByDescription(description);
-    }
 
     /**
      * retrieve all fondsStatus that have a particular code. <br>
@@ -96,7 +70,7 @@ public class FondsStatusService
      * @return
      */
     @Override
-    public List<FondsStatus> findByCode(String code) {
+    public FondsStatus findByCode(String code) {
         return fondsStatusRepository.findByCode(code);
     }
 

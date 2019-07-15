@@ -26,7 +26,8 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
  * Used to add Hateoas links with information
  */
 @Component
-public class HateoasHandler implements IHateoasHandler {
+public class HateoasHandler
+        implements IHateoasHandler {
 
  private static final Logger logger =
             LoggerFactory.getLogger(HateoasHandler.class);

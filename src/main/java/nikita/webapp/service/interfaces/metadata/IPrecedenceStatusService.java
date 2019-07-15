@@ -14,11 +14,7 @@ public interface IPrecedenceStatusService {
     MetadataHateoas createNewPrecedenceStatus(PrecedenceStatus
                                                       precedenceStatus);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

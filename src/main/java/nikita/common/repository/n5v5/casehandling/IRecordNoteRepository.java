@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface IRecordNoteRepository extends
-        PagingAndSortingRepository<RecordNote, Long> {
+        PagingAndSortingRepository<RecordNote, String> {
 
     RecordNote findBySystemId(UUID systemId);
 

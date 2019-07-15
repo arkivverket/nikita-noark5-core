@@ -1,0 +1,24 @@
+{
+  "RegistryEntryType": [
+    {
+      "code": "I",
+      "name": "Inngående dokument"
+    },
+    {
+      "code": "U",
+      "name": "Utgående dokument"
+    },
+    {
+      "code": "N",
+      "name": "Organinternt dokument for oppfølging"
+    },
+    {
+      "code": "X",
+      "name": "Organinternt dokument uten oppfølging"
+    },
+    {
+      "code": "S",
+      "name": "Saksframlegg"
+    }
+  ]
+}

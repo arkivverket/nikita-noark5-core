@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FORMAT;
@@ -86,60 +85,17 @@ public class FormatService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single Format object identified by systemId
-     *
-     * @param systemId systemId of the Format you wish to retrieve
-     * @return single Format object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                formatRepository.save(
-                        formatRepository
-                                .findBySystemId(UUID.fromString(systemId))));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all Format that have a given
-     * description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of Format objects wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        formatRepository
-                                .findByDescription(description),
-                FORMAT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all Format that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of Format objects wrapped as a MetadataHateoas object
      */
     @Override
     public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        formatRepository.findByCode
-                                (code),
-                FORMAT);
+        MetadataHateoas metadataHateoas =
+                new MetadataHateoas(formatRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -155,17 +111,17 @@ public class FormatService
 
         Format format = new Format();
         format.setCode(TEMPLATE_FORMAT_CODE);
-        format.setDescription(TEMPLATE_FORMAT_DESCRIPTION);
+        format.setName(TEMPLATE_FORMAT_NAME);
 
         return format;
     }
 
     /**
-     * Update a Format identified by its systemId
+     * Update a Format identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId The systemId of the format object you wish to update
+     * @param code The code of the format object you wish to update
      * @param incomingFormat The updated format object. Note the values you
      *                       are allowed to change are copied from this
      *                       object. This object is not persisted.
@@ -173,11 +129,11 @@ public class FormatService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final Format incomingFormat) {
 
-        Format existingFormat = getFormatOrThrow(systemId);
+        Format existingFormat = getFormatOrThrow(code);
         updateCodeAndDescription(incomingFormat, existingFormat);
 
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -200,17 +156,16 @@ public class FormatService
      * that you will only ever get a valid Format object back. If there is no
      * Format object, a NoarkEntityNotFoundException exception is thrown
      *
-     * @param systemId The systemId of the Format object to retrieve
+     * @param code The code of the Format object to retrieve
      * @return the Format object
      */
     private Format
-    getFormatOrThrow(@NotNull String systemId) {
+    getFormatOrThrow(@NotNull String code) {
         Format format =
-                formatRepository.
-                        findBySystemId(UUID.fromString(systemId));
+                formatRepository.findByCode(code);
         if (format == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Format, using systemId " +
-                    systemId;
+            String info = INFO_CANNOT_FIND_OBJECT + " Format, using code " +
+                    code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

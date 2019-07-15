@@ -6,12 +6,6 @@ import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
@@ -23,7 +17,6 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
-import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -60,7 +53,6 @@ public class RegistryEntryService
 
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryService.class);
-    private ICorrespondencePartService correspondencePartService;
     private IPrecedenceService precedenceService;
     private IRegistryEntryRepository registryEntryRepository;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
@@ -71,7 +63,6 @@ public class RegistryEntryService
     public RegistryEntryService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            ICorrespondencePartService correspondencePartService,
             IPrecedenceService precedenceService,
             IRegistryEntryRepository registryEntryRepository,
             IRegistryEntryHateoasHandler registryEntryHateoasHandler,
@@ -79,14 +70,12 @@ public class RegistryEntryService
             IUserRepository userRepository,
             IAdministrativeUnitService administrativeUnitService) {
         super(entityManager, applicationEventPublisher);
-        this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
         this.numberGeneratorService = numberGeneratorService;
         this.userRepository = userRepository;
         this.administrativeUnitService = administrativeUnitService;
-
     }
 
     @Override
@@ -107,32 +96,6 @@ public class RegistryEntryService
         }
         registryEntryRepository.save(registryEntry);
         return registryEntry;
-    }
-
-    @Override
-    public CorrespondencePartPersonHateoas
-    getCorrespondencePartPersonAssociatedWithRegistryEntry(
-            final String systemID) {
-        return new CorrespondencePartPersonHateoas(
-                (List<INikitaEntity>) (List) getRegistryEntryOrThrow(systemID).
-                        getReferenceCorrespondencePartPerson());
-    }
-
-    @Override
-    public CorrespondencePartInternalHateoas
-    getCorrespondencePartInternalAssociatedWithRegistryEntry(
-            final String systemID) {
-        return new CorrespondencePartInternalHateoas(
-                (List<INikitaEntity>) (List) getRegistryEntryOrThrow(systemID).
-                        getReferenceCorrespondencePartInternal());
-    }
-
-    @Override
-    public CorrespondencePartUnitHateoas
-    getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID) {
-        return new CorrespondencePartUnitHateoas(
-                (List<INikitaEntity>) (List) getRegistryEntryOrThrow(systemID).
-                        getReferenceCorrespondencePartUnit());
     }
 
 
@@ -157,127 +120,7 @@ public class RegistryEntryService
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(registryEntryHateoas);
     }
-    
-    /**
-     * Create a CorrespondencePartPerson object and associate it with the
-     * identified registryEntry
-     *
-     * @param systemID           The systemId of the registryEntry object you want to
-     *                           create an associated correspondencePartPerson for
-     * @param correspondencePart The incoming correspondencePartPerson
-     * @return The persisted CorrespondencePartPerson object wrapped as a
-     * CorrespondencePartPersonHateoas object
-     */
-    @Override
-    public CorrespondencePartPersonHateoas
-    createCorrespondencePartPersonAssociatedWithRegistryEntry(
-            @NotNull final String systemID,
-            @NotNull final CorrespondencePartPerson correspondencePart) {
-        return correspondencePartService.
-                createNewCorrespondencePartPerson(correspondencePart,
-                        getRegistryEntryOrThrow(systemID));
-    }
 
-    /**
-     * Create a CorrespondencePartInternal object and associate it with the
-     * identified registryEntry
-     *
-     * @param systemID           The systemId of the registryEntry object you want to
-     *                           create an associated correspondencePartInternal for
-     * @param correspondencePart The incoming correspondencePartInternal
-     * @return The persisted CorrespondencePartInternal object wrapped as a
-     * CorrespondencePartInternalHateoas object
-     */
-    @Override
-    public CorrespondencePartInternalHateoas
-    createCorrespondencePartInternalAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartInternal correspondencePart) {
-        return correspondencePartService.
-                createNewCorrespondencePartInternal(correspondencePart,
-                        getRegistryEntryOrThrow(systemID));
-    }
-
-    /**
-     * Create a CorrespondencePartUnit object and associate it with the
-     * identified registryEntry
-     *
-     * @param systemID           The systemId of the registryEntry object you want to
-     *                           create an associated correspondencePartUnit for
-     * @param correspondencePart The incoming correspondencePartUnit
-     * @return The persisted CorrespondencePartUnit object wrapped as a
-     * CorrespondencePartUnitHateoas object
-     */
-    @Override
-    public CorrespondencePartUnitHateoas
-    createCorrespondencePartUnitAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartUnit correspondencePart) {
-        return correspondencePartService.
-                createNewCorrespondencePartUnit(correspondencePart,
-                        getRegistryEntryOrThrow(systemID));
-    }
-
-    /**
-     * Generate a Default CorrespondencePartUnit object that can be
-     * associated with the identified RegistryEntry.
-     * <p>
-     * Note. Ideally this method would be configurable based on the logged in
-     * user and the business area they are working with. A generic Noark core
-     * like this does not have scope for that kind of functionality.
-     *
-     * @param registryEntrySystemId The systemId of the registryEntry object
-     *                              you wish to create a templated object for
-     * @return the CorrespondencePartUnit object wrapped as a
-     * CorrespondencePartUnitHateoas object
-     */
-    @Override
-    public CorrespondencePartInternalHateoas
-    generateDefaultCorrespondencePartInternal(
-            String registryEntrySystemId) {
-        return correspondencePartService.
-                generateDefaultCorrespondencePartInternal(registryEntrySystemId);
-    }
-
-    /**
-     * Generate a Default CorrespondencePartUnit object that can be
-     * associated with the identified RegistryEntry.
-     * <p>
-     * Note. Ideally this method would be configurable based on the logged in
-     * user and the business area they are working with. A generic Noark core
-     * like this does not have scope for that kind of functionality.
-     *
-     * @param registryEntrySystemId The systemId of the registryEntry object
-     *                              you wish to create a templated object for
-     * @return the CorrespondencePartUnit object wrapped as a
-     * CorrespondencePartUnitHateoas object
-     */
-    @Override
-    public CorrespondencePartPersonHateoas
-    generateDefaultCorrespondencePartPerson(
-            String registryEntrySystemId) {
-        return correspondencePartService.
-                generateDefaultCorrespondencePartPerson(registryEntrySystemId);
-    }
-
-    /**
-     * Generate a Default CorrespondencePartUnit object that can be
-     * associated with the identified RegistryEntry.
-     * <p>
-     * Note. Ideally this method would be configurable based on the logged in
-     * user and the business area they are working with. A generic Noark core
-     * like this does not have scope for that kind of functionality.
-     *
-     * @param registryEntrySystemId The systemId of the registryEntry object
-     *                              you wish to create a templated object for
-     * @return the CorrespondencePartUnit object wrapped as a
-     * CorrespondencePartUnitHateoas object
-     */
-    @Override
-    public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String registryEntrySystemId) {
-        return correspondencePartService.
-                generateDefaultCorrespondencePartUnit(
-                        registryEntrySystemId);
-    }
 
     // All READ operations
     public List<RegistryEntry> findRegistryEntryByOwnerPaginated(Integer top,

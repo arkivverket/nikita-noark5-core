@@ -13,11 +13,7 @@ public interface IFlowStatusService {
 
     MetadataHateoas createNewFlowStatus(FlowStatus flowStatus);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

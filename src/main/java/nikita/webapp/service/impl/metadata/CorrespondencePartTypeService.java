@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
@@ -46,7 +44,8 @@ public class CorrespondencePartTypeService
      * @return the newly persisted correspondencePartType object
      */
     @Override
-    public CorrespondencePartType createNewCorrespondencePartType(CorrespondencePartType correspondencePartType) {
+    public CorrespondencePartType createNewCorrespondencePartType(
+            CorrespondencePartType correspondencePartType) {
         return correspondencePartTypeRepository.save(correspondencePartType);
     }
 
@@ -62,32 +61,6 @@ public class CorrespondencePartTypeService
         return correspondencePartTypeRepository.findAll();
     }
 
-    // find by systemId
-
-    /**
-     * retrieve a single correspondencePartType identified by systemId
-     *
-     * @param systemId
-     * @return
-     */
-    @Override
-    public CorrespondencePartType findBySystemId(String systemId) {
-        return correspondencePartTypeRepository.
-                findBySystemId(UUID.fromString(systemId));
-    }
-
-    /**
-     * retrieve all correspondencePartType that have a particular description. <br>
-     * This will be replaced by OData search.
-     *
-     * @param description
-     * @return
-     */
-    @Override
-    public List<CorrespondencePartType> findByDescription(String description) {
-        return correspondencePartTypeRepository.findByDescription(description);
-    }
-
     /**
      * retrieve all correspondencePartType that have a particular code. <br>
      * This will be replaced by OData search.
@@ -97,7 +70,7 @@ public class CorrespondencePartTypeService
      */
     @Override
     public CorrespondencePartType findByCode(String code) {
-        return correspondencePartTypeRepository.findByCode(code);
+        return getCorrespondencePartTypeOrThrow(code);
     }
 
     /**
@@ -107,35 +80,35 @@ public class CorrespondencePartTypeService
      * @return the updated correspondencePartType
      */
     @Override
-    public CorrespondencePartType update(CorrespondencePartType correspondencePartType) {
+    public CorrespondencePartType update(
+            CorrespondencePartType correspondencePartType) {
         return correspondencePartTypeRepository.save(correspondencePartType);
     }
 
-    @Override
-    public List<CorrespondencePartType> findAllAsList() {
-        return correspondencePartTypeRepository.findAll();
-    }
     // All DELETE operations
 
-
     @Override
-    public void deleteEntity(@NotNull String correspondencePartTypeCode) {
-        CorrespondencePartType correspondencePartType = getCorrespondencePartTypeOrThrow(correspondencePartTypeCode);
-        correspondencePartTypeRepository.delete(correspondencePartType);
+    public void deleteEntity(@NotNull String code) {
+        correspondencePartTypeRepository.delete(
+                getCorrespondencePartTypeOrThrow(code));
     }
 
     /**
-     * Internal helper method. Rather than having a find and try catch in multiple methods, we have it here once.
-     * If you call this, be aware that you will only ever get a valid CorrespondencePartType back. If there is no valid
-     * CorrespondencePartType, an exception is thrown
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid CorrespondencePartType back. If
+     * there is no valid CorrespondencePartType, an exception is thrown
      *
-     * @param correspondencePartTypeCode
+     * @param code
      * @return
      */
-    protected CorrespondencePartType getCorrespondencePartTypeOrThrow(@NotNull String correspondencePartTypeCode) {
-        CorrespondencePartType correspondencePartType = correspondencePartTypeRepository.findByCode(correspondencePartTypeCode);
+    protected CorrespondencePartType
+    getCorrespondencePartTypeOrThrow(@NotNull String code) {
+        CorrespondencePartType correspondencePartType =
+                correspondencePartTypeRepository.findByCode(code);
         if (correspondencePartType == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " correspondencePartType, using kode " + correspondencePartTypeCode;
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " correspondencePartType, using kode " + code;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }

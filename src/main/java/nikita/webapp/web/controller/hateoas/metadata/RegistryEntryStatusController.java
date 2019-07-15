@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_STATUS;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -131,10 +131,10 @@ public class RegistryEntryStatusController {
                 .body(registryEntryStatusService.findAll());
     }
 
-    // Retrieves a given RegistryEntryStatus identified by a systemId
-    // GET [contextPath][api]/metadata/journalpoststatus/{systemId}/
+    // Retrieves a given RegistryEntryStatus identified by a code
+    // GET [contextPath][api]/metadata/journalpoststatus/{code}/
     @ApiOperation(
-            value = "Gets RegistryEntryStatus identified by its systemId",
+            value = "Gets RegistryEntryStatus identified by its code",
             notes = "Returns the requested RegistryEntryStatus object",
             response = RegistryEntryStatus.class)
     @ApiResponses(value = {
@@ -166,16 +166,15 @@ public class RegistryEntryStatusController {
     @Counted
 
     @RequestMapping(
-            value = REGISTRY_ENTRY_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = REGISTRY_ENTRY_STATUS + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = registryEntryStatusService.find
-                (systemId);
+        MetadataHateoas metadataHateoas = registryEntryStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -263,7 +262,7 @@ public class RegistryEntryStatusController {
     )
     public ResponseEntity<MetadataHateoas> updateRegistryEntryStatus(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody RegistryEntryStatus RegistryEntryStatus,

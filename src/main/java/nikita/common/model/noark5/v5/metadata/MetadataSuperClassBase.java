@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -42,6 +43,7 @@ public class MetadataSuperClassBase implements INikitaEntity,
                     name = "uuid_gen_strategy_class",
                     value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
     @Column(name = "system_id", updatable = false, nullable = false)
+    @Type(type = "uuid-char")
     protected UUID systemId;
 
     /**
@@ -212,11 +214,10 @@ public class MetadataSuperClassBase implements INikitaEntity,
         if (other.getClass() != getClass()) {
             return false;
         }
-        UniqueCodeMetadataSuperClass rhs = (UniqueCodeMetadataSuperClass) other;
+
+        MetadataSuperClass rhs = (MetadataSuperClass) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(systemId, rhs.systemId)
-                .append(description, rhs.getDescription())
                 .append(version, rhs.getVersion())
                 .append(createdBy, rhs.getCreatedBy())
                 .append(createdDate, rhs.getCreatedDate())

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -129,10 +129,10 @@ public class CaseStatusController {
                 .body(caseStatusService.findAll());
     }
 
-    // Retrieves a given caseStatus identified by a systemId
-    // GET [contextPath][api]/metadata/saksstatus/{systemId}/
+    // Retrieves a given caseStatus identified by a code
+    // GET [contextPath][api]/metadata/saksstatus/{code}/
     @ApiOperation(
-            value = "Gets caseStatus identified by its systemId",
+            value = "Gets caseStatus identified by its code",
             notes = "Returns the requested caseStatus object",
             response = CaseStatus.class)
     @ApiResponses(value = {
@@ -164,15 +164,15 @@ public class CaseStatusController {
     @Counted
 
     @RequestMapping(
-            value = CASE_STATUS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = CASE_STATUS + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = caseStatusService.find(systemId);
+        MetadataHateoas metadataHateoas = caseStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -259,7 +259,7 @@ public class CaseStatusController {
     )
     public ResponseEntity<MetadataHateoas> updateCaseStatus(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody CaseStatus caseStatus,

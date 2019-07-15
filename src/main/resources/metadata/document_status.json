@@ -1,0 +1,12 @@
+{
+  "DocumentStatus": [
+    {
+      "code": "B",
+      "name": "Dokumentet er under redigering"
+    },
+    {
+      "code": "F",
+      "name": "Dokumentet er ferdigstilt"
+    }
+  ]
+}

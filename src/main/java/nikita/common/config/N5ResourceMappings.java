@@ -30,8 +30,6 @@ public final class N5ResourceMappings {
 
     public static final String KEYWORD = "noekkelord";
 
-    public static final String CODE = "kode";
-
     public static final String FILE_TYPE = "mappetype";
     public static final String FLOW_STATUS = "flytstatus";
     public static final String EVENT_TYPE = "hendelsetype";
@@ -62,6 +60,11 @@ public final class N5ResourceMappings {
     public static final String NEW_DOCUMENT_MEDIUM = NEW + Constants.DASH + DOCUMENT_MEDIUM;
     public static final String SYSTEM_ID_PARAMETER =
             SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
+
+    // For metadata entities
+    public static final String CODE_NAME = "navn";
+    public static final String CODE_COMMENT = "merknad";
+    public static final String CODE = "kode";
 
     // Fonds
     public static final String FONDS_STATUS = "arkivstatus";
@@ -104,6 +107,8 @@ public final class N5ResourceMappings {
 
     // Part
     public static final String PART = "part";
+    public static final String PART_PERSON = "partperson";
+    public static final String PART_UNIT = "partenhet";
     public static final String PART_ID = "partID";
     public static final String PART_NAME = "partNavn";
     public static final String PART_ROLE = "partrolle";

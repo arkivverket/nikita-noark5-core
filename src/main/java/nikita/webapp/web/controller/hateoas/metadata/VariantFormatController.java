@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.VARIANT_FORMAT;
 import static org.springframework.http.HttpHeaders.ETAG;
 
@@ -129,10 +129,10 @@ public class VariantFormatController {
                 .body(variantFormatService.findAll());
     }
 
-    // Retrieves a given variantFormat identified by a systemId
-    // GET [contextPath][api]/metadata/mappetype/{systemId}/
+    // Retrieves a given variantFormat identified by a code
+    // GET [contextPath][api]/metadata/mappetype/{code}/
     @ApiOperation(
-            value = "Gets variantFormat identified by its systemId",
+            value = "Gets variantFormat identified by its code",
             notes = "Returns the requested variantFormat object",
             response = VariantFormat.class)
     @ApiResponses(value = {
@@ -164,15 +164,15 @@ public class VariantFormatController {
     @Counted
 
     @RequestMapping(
-            value = VARIANT_FORMAT + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = VARIANT_FORMAT + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = variantFormatService.find(systemId);
+        MetadataHateoas metadataHateoas = variantFormatService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -259,7 +259,7 @@ public class VariantFormatController {
     )
     public ResponseEntity<MetadataHateoas> updateVariantFormat(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody VariantFormat variantFormat,

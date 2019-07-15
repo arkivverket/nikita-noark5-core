@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.SCREENING_DOCUMENT;
@@ -87,49 +86,9 @@ public class ScreeningDocumentService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single ScreeningDocument object identified by systemId
-     *
-     * @param systemId systemId of the ScreeningDocument you wish to retrieve
-     * @return single ScreeningDocument object wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                screeningDocumentRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all ScreeningDocument that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of ScreeningDocument objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        screeningDocumentRepository
-                                .findByDescription(description),
-                SCREENING_DOCUMENT);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all ScreeningDocument that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of ScreeningDocument objects wrapped as a MetadataHateoas
@@ -137,10 +96,9 @@ public class ScreeningDocumentService
      */
     @Override
     public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        screeningDocumentRepository.findByCode(code),
-                SCREENING_DOCUMENT);
+        MetadataHateoas metadataHateoas =
+                new MetadataHateoas(
+                        screeningDocumentRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -153,20 +111,18 @@ public class ScreeningDocumentService
      */
     @Override
     public ScreeningDocument generateDefaultScreeningDocument() {
-
         ScreeningDocument screeningDocument = new ScreeningDocument();
         screeningDocument.setCode(TEMPLATE_SCREENING_DOCUMENT_CODE);
-        screeningDocument.setDescription(TEMPLATE_SCREENING_DOCUMENT_DESCRIPTION);
-
+        screeningDocument.setName(TEMPLATE_SCREENING_DOCUMENT_NAME);
         return screeningDocument;
     }
 
     /**
-     * Update a ScreeningDocument identified by its systemId
+     * Update a ScreeningDocument identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId          The systemId of the screeningDocument object you wish
+     * @param code          The code of the screeningDocument object you wish
      *                          to update
      * @param incomingScreeningDocument The updated screeningDocument object.
      *                                  Note the values you are allowed to
@@ -176,12 +132,12 @@ public class ScreeningDocumentService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final ScreeningDocument incomingScreeningDocument) {
 
         ScreeningDocument existingScreeningDocument =
-                getScreeningDocumentOrThrow(systemId);
+                getScreeningDocumentOrThrow(code);
         updateCodeAndDescription(incomingScreeningDocument,
                 existingScreeningDocument);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -207,16 +163,16 @@ public class ScreeningDocumentService
      * there is no ScreeningDocument object, a NoarkEntityNotFoundException
      * exception is thrown
      *
-     * @param systemId The systemId of the ScreeningDocument object to retrieve
+     * @param code The code of the ScreeningDocument object to retrieve
      * @return the ScreeningDocument object
      */
     private ScreeningDocument getScreeningDocumentOrThrow(
-            @NotNull String systemId) {
-        ScreeningDocument screeningDocument = screeningDocumentRepository.
-                findBySystemId(UUID.fromString(systemId));
+            @NotNull String code) {
+        ScreeningDocument screeningDocument =
+                screeningDocumentRepository.findByCode(code);
         if (screeningDocument == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " ScreeningDocument, using "
-                    + "systemId " + systemId;
+                    + "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

@@ -11,11 +11,11 @@ import nikita.common.model.noark5.v5.DocumentFlow;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.PrecedenceHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.CommonUtils;
@@ -66,132 +66,6 @@ public class RegistryEntryHateoasController extends NoarkController {
 
     // API - All POST Requests (CRUD - CREATE)
 
-    // Create a new CorrespondencePartPerson and associate it with the given journalpost
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartperson
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-korrespondansepartperson/
-    @ApiOperation(value = "Persists a CorrespondencePartPerson object associated with the given Record systemId",
-            notes = "Returns the newly created CorrespondencePartPerson object after it was associated with a " +
-                    "Record object and persisted to the database", response = CorrespondencePartPersonHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePartPerson " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CorrespondencePartPersonHateoas.class),
-            @ApiResponse(code = 201, message = "CorrespondencePartPerson " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = CorrespondencePartPersonHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type CorrespondencePartPerson"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_CORRESPONDENCE_PART_PERSON, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
-    public ResponseEntity<CorrespondencePartPersonHateoas>
-    createCorrespondencePartPersonAssociatedWithRecord(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemId of record to associate the CorrespondencePartPerson with.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
-            @ApiParam(name = "CorrespondencePartPerson",
-                    value = "Incoming CorrespondencePartPerson object",
-                    required = true)
-            @RequestBody CorrespondencePartPerson correspondencePartPerson)
-            throws NikitaException {
-
-        CorrespondencePartPersonHateoas createdCorrespondencePartPerson =
-                registryEntryService.
-                        createCorrespondencePartPersonAssociatedWithRegistryEntry(
-                                systemID, correspondencePartPerson);
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdCorrespondencePartPerson.getEntityVersion().toString())
-                .body(createdCorrespondencePartPerson);
-    }
-
-    // Create a new CorrespondencePartInternal and associate it with the given journalpost
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartintern
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-korrespondansepartintern/
-    @ApiOperation(value = "Persists a CorrespondencePartInternal object associated with the given Record systemId",
-            notes = "Returns the newly created CorrespondencePartInternal object after it was associated with a " +
-                    "Record object and persisted to the database", response = CorrespondencePartInternalHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePartInternal " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CorrespondencePartInternalHateoas.class),
-            @ApiResponse(code = 201, message = "CorrespondencePartInternal " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = CorrespondencePartInternalHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type CorrespondencePartInternal"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_CORRESPONDENCE_PART_INTERNAL, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
-    public ResponseEntity<CorrespondencePartInternalHateoas> createCorrespondencePartInternalAssociatedWithRecord(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemId of record to associate the CorrespondencePartInternal with.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
-            @ApiParam(name = "CorrespondencePartInternal",
-                    value = "Incoming CorrespondencePartInternal object",
-                    required = true)
-            @RequestBody CorrespondencePartInternal correspondencePartInternal)
-            throws NikitaException {
-
-        CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
-                registryEntryService.
-                        createCorrespondencePartInternalAssociatedWithRegistryEntry(
-                                systemID, correspondencePartInternal);
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(correspondencePartInternalHateoas.getEntityVersion().toString())
-                .body(correspondencePartInternalHateoas);
-    }
-
-    // Create a new CorrespondencePartUnit and associate it with the given journalpost
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartenhet
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-korrespondansepartenhet/
-    @ApiOperation(value = "Persists a CorrespondencePartUnit object associated with the given Record systemId",
-            notes = "Returns the newly created CorrespondencePartUnit object after it was associated with a " +
-                    "Record object and persisted to the database", response = CorrespondencePartUnitHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePartUnit " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CorrespondencePartUnitHateoas.class),
-            @ApiResponse(code = 201, message = "CorrespondencePartUnit " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = CorrespondencePartUnitHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type CorrespondencePartUnit"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_CORRESPONDENCE_PART_UNIT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
-    public ResponseEntity<CorrespondencePartUnitHateoas> createCorrespondencePartUnitAssociatedWithRecord(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemId of record to associate the CorrespondencePartUnit with.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
-            @ApiParam(name = "CorrespondencePartUnit",
-                    value = "Incoming CorrespondencePartUnit object",
-                    required = true)
-            @RequestBody CorrespondencePartUnit correspondencePartUnit)
-            throws NikitaException {
-
-        CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
-                registryEntryService.
-                        createCorrespondencePartUnitAssociatedWithRegistryEntry(
-                                systemID, correspondencePartUnit);
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(correspondencePartUnitHateoas.getEntityVersion().toString())
-                .body(correspondencePartUnitHateoas);
-    }
 
     /*
     // Create a new Precedence and associate it with the given journalpost
@@ -332,65 +206,6 @@ public class RegistryEntryHateoasController extends NoarkController {
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
-    // Retrieve all CorrespondencePartPerson associated with a RegistryEntry identified by systemId
-    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepartperson/
-    @ApiOperation(value = "Retrieves a list of CorrespondencePartPersons associated with a RegistryEntry",
-            response = CorrespondencePartPersonHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePartPerson returned",
-                    response = CorrespondencePartPersonHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            CORRESPONDENCE_PART_PERSON, method = RequestMethod.GET)
-    public ResponseEntity<CorrespondencePartPersonHateoas>
-    findAllCorrespondencePartPersonAssociatedWithRecord(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated Record",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryService.
-                        getCorrespondencePartPersonAssociatedWithRegistryEntry(
-                                systemID));
-    }
-
-    // Retrieve all CorrespondencePartUnit associated with a RegistryEntry identified by systemId
-    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepartperson/
-    @ApiOperation(value = "Retrieves a list of CorrespondencePartUnits associated with a RegistryEntry",
-            response = CorrespondencePartUnitHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePartUnit returned",
-                    response = CorrespondencePartUnitHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            CORRESPONDENCE_PART_UNIT, method = RequestMethod.GET)
-    public ResponseEntity<CorrespondencePartUnitHateoas>
-    findAllCorrespondencePartUnitAssociatedWithRecord(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated Record",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryService.
-                        getCorrespondencePartUnitAssociatedWithRegistryEntry(
-                                systemID));
-    }
-
     // Retrieve all CorrespondencePartInternal associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepartperson/
@@ -424,61 +239,6 @@ TODO: Temp disabled!
                 .body(correspondencePartHateoas);
    */
         return null;
-    }
-
-
-    // Create a suggested CorrespondencePartPerson (like a template) object with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartperson
-    @ApiOperation(value = "Suggests the contents of a new CorrespondencePart object",
-            notes = "Returns a pre-filled CorrespondencePart object" +
-                    " with values relevant for the logged-in user", response = CorrespondencePartPersonHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePart " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CorrespondencePartPersonHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @RequestMapping(method = RequestMethod.GET, value = {SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_PERSON})
-    public ResponseEntity<CorrespondencePartPersonHateoas>
-    getCorrespondencePartPersonTemplate(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated Record",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryService.
-                        generateDefaultCorrespondencePartPerson(systemID));
-    }
-
-    // Create a suggested CorrespondencePartUnit (like a template) object with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartenhet
-    @ApiOperation(value = "Suggests the contents of a new CorrespondencePart object",
-            notes = "Returns a pre-filled CorrespondencePart object" +
-                    " with values relevant for the logged-in user", response = CorrespondencePartUnitHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePart " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CorrespondencePartUnitHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = {SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_UNIT})
-    public ResponseEntity<CorrespondencePartUnitHateoas> getCorrespondencePartUnitTemplate(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemId of record to associate the CorrespondencePartPerson with.",
-                    required = true)
-            @PathVariable("systemID") String systemID) throws NikitaException {
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryService.
-                        generateDefaultCorrespondencePartUnit(systemID));
     }
 
     // Create a suggested CorrespondencePartInternal (like a template) object with default values (nothing persisted)

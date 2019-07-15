@@ -14,11 +14,7 @@ public interface ICaseStatusService {
 
     MetadataHateoas createNewCaseStatus(CaseStatus caseStatus);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

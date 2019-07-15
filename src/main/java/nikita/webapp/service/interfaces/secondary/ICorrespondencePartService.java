@@ -1,6 +1,6 @@
 package nikita.webapp.service.interfaces.secondary;
 
-import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
@@ -27,15 +27,15 @@ public interface ICorrespondencePartService {
 
     CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             @NotNull CorrespondencePartUnit correspondencePartUnit,
-            @NotNull RegistryEntry registryEntry);
+            @NotNull Record record);
 
     CorrespondencePartInternalHateoas createNewCorrespondencePartInternal(
             @NotNull CorrespondencePartInternal correspondencePartUnit,
-            @NotNull RegistryEntry registryEntry);
+            @NotNull Record record);
 
     CorrespondencePartPersonHateoas createNewCorrespondencePartPerson(
             @NotNull CorrespondencePartPerson correspondencePartPerson,
-            @NotNull RegistryEntry registryEntry);
+            @NotNull Record record);
 
     CorrespondencePart findBySystemId(@NotNull String systemID);
 
@@ -50,13 +50,13 @@ public interface ICorrespondencePartService {
 
     // All template operations
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String registryEntrySystemId);
+            String recordSystemId);
 
     CorrespondencePartPersonHateoas generateDefaultCorrespondencePartPerson(
-            String registryEntrySystemId);
+            String recordSystemId);
 
     CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
-            String registryEntrySystemId);
+            String recordSystemId);
 
 
 }

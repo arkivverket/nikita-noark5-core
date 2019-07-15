@@ -20,7 +20,6 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
@@ -90,47 +89,9 @@ public class CaseStatusService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single CaseStatus object identified by systemId
-     *
-     * @param systemId systemId of the CaseStatus you wish to retrieve
-     * @return single CaseStatus object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                caseStatusRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all CaseStatus that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of CaseStatus objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        caseStatusRepository
-                                .findByDescription(description), CASE_STATUS);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all CaseStatus that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of CaseStatus objects wrapped as a MetadataHateoas
@@ -139,8 +100,7 @@ public class CaseStatusService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        caseStatusRepository.findByCode(code), CASE_STATUS);
+                getCaseStatusOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -155,17 +115,17 @@ public class CaseStatusService
 
         CaseStatus caseStatus = new CaseStatus();
         caseStatus.setCode(TEMPLATE_CASE_STATUS_CODE);
-        caseStatus.setDescription(TEMPLATE_CASE_STATUS_DESCRIPTION);
+        caseStatus.setName(TEMPLATE_CASE_STATUS_NAME);
 
         return caseStatus;
     }
 
     /**
-     * Update a CaseStatus identified by its systemId
+     * Update a CaseStatus identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId   The systemId of the caseStatus object you wish to
+     * @param code   The code of the caseStatus object you wish to
      *                   update
      * @param incomingCaseStatus  The incoming caseStatus object. Note the
      *                            values you are allowed to change are copied
@@ -175,11 +135,11 @@ public class CaseStatusService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final CaseStatus incomingCaseStatus) {
 
-        CaseStatus existingCaseStatus = getCaseStatusOrThrow(systemId);
+        CaseStatus existingCaseStatus = getCaseStatusOrThrow(code);
         // Copy all the values you are allowed to copy ....
         updateCodeAndDescription(incomingCaseStatus, existingCaseStatus);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -204,15 +164,15 @@ public class CaseStatusService
      * is no CaseStatus object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the CaseStatus object to retrieve
+     * @param code The code of the CaseStatus object to retrieve
      * @return the CaseStatus object
      */
-    private CaseStatus getCaseStatusOrThrow(@NotNull String systemId) {
+    private CaseStatus getCaseStatusOrThrow(@NotNull String code) {
         CaseStatus caseStatus = caseStatusRepository.
-                findBySystemId(UUID.fromString(systemId));
+                findByCode(code);
         if (caseStatus == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " CaseStatus, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

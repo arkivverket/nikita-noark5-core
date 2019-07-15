@@ -1,24 +1,9 @@
 package nikita.webapp.run;
 
-import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Fonds;
-import nikita.common.model.noark5.v5.Series;
-import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v5.admin.Authority;
-import nikita.common.model.noark5.v5.admin.AuthorityName;
-import nikita.common.model.noark5.v5.admin.User;
-import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.CommonUtils;
-import nikita.webapp.service.impl.admin.AdministrativeUnitService;
-import nikita.webapp.service.impl.admin.UserService;
-import nikita.webapp.service.interfaces.ICaseFileService;
-import nikita.webapp.service.interfaces.IFondsService;
-import nikita.webapp.service.interfaces.IRecordService;
-import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.util.DemoData;
 import nikita.webapp.util.InternalNameTranslator;
+import nikita.webapp.util.MetadataInsert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,9 +25,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.lang.System.out;
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.FileConstants.*;
-import static nikita.common.model.noark5.v5.admin.AuthorityName.*;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
 import static nikita.common.util.CommonUtils.FileUtils.setDefaultMimeTypesAsConvertible;
 
@@ -59,6 +43,7 @@ public class AfterApplicationStartup {
     private ApplicationContext applicationContext;
     private InternalNameTranslator internalNameTranslator;
     private DemoData demoData;
+    private MetadataInsert metadataInsert;
 
 
     @Value("${nikita.startup.create-demo-users}")
@@ -76,10 +61,12 @@ public class AfterApplicationStartup {
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,
                                    DemoData demoData,
+                                   MetadataInsert metadataInsert,
                                    ApplicationContext applicationContext,
                                    InternalNameTranslator internalNameTranslator) {
         this.handlerMapping = handlerMapping;
         this.demoData = demoData;
+        this.metadataInsert = metadataInsert;
         this.applicationContext = applicationContext;
         this.internalNameTranslator = internalNameTranslator;
     }
@@ -97,6 +84,7 @@ public class AfterApplicationStartup {
         populateTranslatedNames();
         setDefaultMimeTypesAsConvertible();
 
+        metadataInsert.populateMetadataEntities();
         if (createDirectoryStore) {
             createDirectoryStoreIfNotExists();
         }

@@ -3,12 +3,6 @@ package nikita.webapp.service.interfaces;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import org.springframework.http.ResponseEntity;
 
@@ -19,27 +13,6 @@ public interface IRegistryEntryService {
 
     // All save methods
     RegistryEntry save(RegistryEntry registryEntry);
-
-    CorrespondencePartPersonHateoas
-    createCorrespondencePartPersonAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartPerson correspondencePart);
-
-    CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
-            String registryEntrySystemId);
-
-    CorrespondencePartPersonHateoas generateDefaultCorrespondencePartPerson(
-            String registryEntrySystemId);
-
-    CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String registryEntrySystemId);
-
-    CorrespondencePartUnitHateoas
-    createCorrespondencePartUnitAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartUnit correspondencePart);
-
-    CorrespondencePartInternalHateoas
-    createCorrespondencePartInternalAssociatedWithRegistryEntry(
-            String systemID, CorrespondencePartInternal correspondencePart);
 
     Precedence createPrecedenceAssociatedWithRecord(
             String registryEntrysystemID, Precedence precedence);
@@ -52,14 +25,6 @@ public interface IRegistryEntryService {
     ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryByCaseFile(
             CaseFile caseFile);
 
-    CorrespondencePartPersonHateoas
-    getCorrespondencePartPersonAssociatedWithRegistryEntry(String systemID);
-
-    CorrespondencePartInternalHateoas
-    getCorrespondencePartInternalAssociatedWithRegistryEntry(String systemID);
-
-    CorrespondencePartUnitHateoas
-    getCorrespondencePartUnitAssociatedWithRegistryEntry(String systemID);
 
     // All UPDATE operations
     RegistryEntry handleUpdate(@NotNull final String systemId,

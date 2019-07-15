@@ -1,8 +1,16 @@
 package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -16,6 +24,42 @@ public interface IRecordService {
 
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription);
+
+    CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
+            String recordSystemId);
+
+    CorrespondencePartPersonHateoas generateDefaultCorrespondencePartPerson(
+            String recordSystemId);
+
+    CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
+            String recordSystemId);
+
+    CorrespondencePartPersonHateoas
+    createCorrespondencePartPersonAssociatedWithRecord(
+            String systemID, CorrespondencePartPerson correspondencePart);
+
+    CorrespondencePartUnitHateoas
+    createCorrespondencePartUnitAssociatedWithRecord(
+            String systemID, CorrespondencePartUnit correspondencePart);
+
+    CorrespondencePartInternalHateoas
+    createCorrespondencePartInternalAssociatedWithRecord(
+            String systemID, CorrespondencePartInternal correspondencePart);
+
+    CorrespondencePartPersonHateoas
+    getCorrespondencePartPersonAssociatedWithRecord(String systemID);
+
+    CorrespondencePartInternalHateoas
+    getCorrespondencePartInternalAssociatedWithRecord(String systemID);
+
+    CorrespondencePartUnitHateoas
+    getCorrespondencePartUnitAssociatedWithRecord(String systemID);
+
+    PartPersonHateoas createPartPersonAssociatedWithRecord(
+            String systemID, PartPerson partPerson);
+
+    PartUnitHateoas createPartUnitAssociatedWithRecord(
+            String systemID, PartUnit partUnit);
 
     // -- All READ operations
     List<Record> findAll();

@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_TYPE;
@@ -83,46 +82,9 @@ public class DocumentTypeService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single documentType object identified by systemId
-     *
-     * @param systemId
-     * @return single documentType object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                documentTypeRepository.save(
-                        documentTypeRepository.findBySystemId(UUID.fromString(systemId))));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all documentType that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description
-     * @return A list of documentType objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        documentTypeRepository.findByDescription(description),
-                DOCUMENT_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all documentType that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code
      * @return A list of documentType objects wrapped as a MetadataHateoas
@@ -131,9 +93,7 @@ public class DocumentTypeService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        documentTypeRepository.findByCode(code),
-                DOCUMENT_TYPE);
+                documentTypeRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -148,17 +108,17 @@ public class DocumentTypeService
 
         DocumentType documentType = new DocumentType();
         documentType.setCode(TEMPLATE_DOCUMENT_TYPE_CODE);
-        documentType.setDescription(TEMPLATE_DOCUMENT_TYPE_DESCRIPTION);
+        documentType.setName(TEMPLATE_DOCUMENT_TYPE_NAME);
 
         return documentType;
     }
 
     /**
-     * Update a DocumentType identified by its systemId
+     * Update a DocumentType identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId    The systemId of the documentType object you wish to
+     * @param code    The code of the documentType object you wish to
      *                    update
      * @param incomingDocumentType The updated documentType object. Note the
      *                            values you are allowed to change are copied
@@ -168,11 +128,11 @@ public class DocumentTypeService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final DocumentType incomingDocumentType) {
 
-        DocumentType existingDocumentType = getDocumentTypeOrThrow(systemId);
+        DocumentType existingDocumentType = getDocumentTypeOrThrow(code);
         updateCodeAndDescription(incomingDocumentType, existingDocumentType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -195,16 +155,16 @@ public class DocumentTypeService
      * is no DocumentType object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the DocumentType object to retrieve
+     * @param code The code of the DocumentType object to retrieve
      * @return the DocumentType object
      */
-    private DocumentType getDocumentTypeOrThrow(@NotNull String systemId) {
+    private DocumentType getDocumentTypeOrThrow(@NotNull String code) {
         DocumentType documentType =
                 documentTypeRepository.
-                        findBySystemId(UUID.fromString(systemId));
+                        findByCode(code);
         if (documentType == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " DocumentType, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.FILE_TYPE;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -129,10 +129,10 @@ public class FileTypeController {
                 .body(fileTypeService.findAll());
     }
 
-    // Retrieves a given fileType identified by a systemId
-    // GET [contextPath][api]/metadata/mappetype/{systemId}/
+    // Retrieves a given fileType identified by a code
+    // GET [contextPath][api]/metadata/mappetype/{code}/
     @ApiOperation(
-            value = "Gets fileType identified by its systemId",
+            value = "Gets fileType identified by its code",
             notes = "Returns the requested fileType object",
             response = FileType.class)
     @ApiResponses(value = {
@@ -164,15 +164,15 @@ public class FileTypeController {
     @Counted
 
     @RequestMapping(
-            value = FILE_TYPE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = FILE_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = fileTypeService.find(systemId);
+        MetadataHateoas metadataHateoas = fileTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -259,7 +259,7 @@ public class FileTypeController {
     )
     public ResponseEntity<MetadataHateoas> updateFileType(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody FileType fileType,

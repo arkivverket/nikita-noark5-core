@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
@@ -86,47 +85,9 @@ public class CommentTypeService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single CommentType object identified by systemId
-     *
-     * @param systemId systemId of the CommentType you wish to retrieve
-     * @return single CommentType object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                commentTypeRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all CommentType that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of CommentType objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        commentTypeRepository
-                                .findByDescription(description), COMMENT_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all CommentType that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of CommentType objects wrapped as a MetadataHateoas
@@ -135,8 +96,7 @@ public class CommentTypeService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        commentTypeRepository.findByCode(code), COMMENT_TYPE);
+                commentTypeRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -151,17 +111,17 @@ public class CommentTypeService
 
         CommentType commentType = new CommentType();
         commentType.setCode(TEMPLATE_COMMENT_TYPE_CODE);
-        commentType.setDescription(TEMPLATE_COMMENT_TYPE_DESCRIPTION);
+        commentType.setName(TEMPLATE_COMMENT_TYPE_NAME);
 
         return commentType;
     }
 
     /**
-     * Update a CommentType identified by its systemId
+     * Update a CommentType identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId    The systemId of the commentType object you wish to
+     * @param code    The code of the commentType object you wish to
      *                    update
      * @param incomingCommentType The updated commentType object. Note the
      *                            values you are allowed to change are copied
@@ -171,11 +131,11 @@ public class CommentTypeService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final CommentType incomingCommentType) {
 
-        CommentType existingCommentType = getCommentTypeOrThrow(systemId);
+        CommentType existingCommentType = getCommentTypeOrThrow(code);
         updateCodeAndDescription(incomingCommentType, existingCommentType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -200,15 +160,15 @@ public class CommentTypeService
      * is no CommentType object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the CommentType object to retrieve
+     * @param code The code of the CommentType object to retrieve
      * @return the CommentType object
      */
-    private CommentType getCommentTypeOrThrow(@NotNull String systemId) {
+    private CommentType getCommentTypeOrThrow(@NotNull String code) {
         CommentType commentType =
-                commentTypeRepository.findBySystemId(UUID.fromString(systemId));
+                commentTypeRepository.findByCode(code);
         if (commentType == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " CommentType, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

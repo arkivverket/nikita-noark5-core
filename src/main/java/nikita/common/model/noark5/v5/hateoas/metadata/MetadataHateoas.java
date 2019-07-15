@@ -12,7 +12,9 @@ import java.util.List;
  * Created by tsodring on 4/3/17.
  */
 @JsonSerialize(using = MetadataHateoasSerializer.class)
-public class MetadataHateoas extends HateoasNoarkObject implements IHateoasNoarkObject {
+public class MetadataHateoas
+        extends HateoasNoarkObject
+        implements IHateoasNoarkObject {
 
     public MetadataHateoas(INikitaEntity entity) {
         super(entity);

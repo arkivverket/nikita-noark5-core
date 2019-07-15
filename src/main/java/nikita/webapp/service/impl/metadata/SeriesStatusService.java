@@ -5,25 +5,17 @@ import nikita.common.repository.n5v5.metadata.ISeriesStatusRepository;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ISeriesStatusService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.UUID;
-
 
 @Service
 @Transactional
 public class SeriesStatusService
         extends NoarkService
         implements ISeriesStatusService {
-
-    private static final Logger logger =
-            LoggerFactory.getLogger(SeriesStatusService.class);
 
     private ISeriesStatusRepository seriesStatusRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
@@ -56,60 +48,32 @@ public class SeriesStatusService
     /**
      * retrieve all seriesStatus
      *
-     * @return
+     * @return List of all SeriesStatus objects
      */
     @Override
     public Iterable<SeriesStatus> findAll() {
         return seriesStatusRepository.findAll();
     }
 
-    // find by systemId
-
     /**
-     * retrieve a single seriesStatus identified by systemId
+     * retrieve seriesStatus that has a particular code.
      *
-     * @param systemId
-     * @return
+     * @param code The SeriesStatus to retrieve
+     * @return the SeriesStatus object
      */
     @Override
-    public SeriesStatus findBySystemId(UUID systemId) {
-        return seriesStatusRepository.findBySystemId(systemId);
-    }
-
-    /**
-     * retrieve all seriesStatus that have a particular description. <br>
-     * This will be replaced by OData search.
-     *
-     * @param description
-     * @return
-     */
-    @Override
-    public List<SeriesStatus> findByDescription(String description) {
-        return seriesStatusRepository.findByDescription(description);
-    }
-
-    /**
-     * retrieve all seriesStatus that have a particular code. <br>
-     * This will be replaced by OData search.
-     *
-     * @param code
-     * @return
-     */
-    @Override
-    public List<SeriesStatus> findByCode(String code) {
+    public SeriesStatus findByCode(String code) {
         return seriesStatusRepository.findByCode(code);
     }
 
     /**
-     * update a particular seriesStatus. <br>
+     * update a particular seriesStatus.
      *
-     * @param seriesStatus
+     * @param seriesStatus incoming seriesStatus object to update
      * @return the updated seriesStatus
      */
     @Override
     public SeriesStatus update(SeriesStatus seriesStatus) {
-
-
         return seriesStatusRepository.save(seriesStatus);
     }
 }

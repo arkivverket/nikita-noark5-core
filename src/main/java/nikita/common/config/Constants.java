@@ -57,6 +57,8 @@ public final class Constants {
     public static final String UNIT = "enhet";
     public static final String INTERNAL = "intern";
 
+    public static final String NEW_PART = NEW + DASH + PART;
+
     // Other arkivstruktur commands
     public static final String FILE_END = "avslutt-mappe";
     public static final String FILE_EXPAND_TO_CASE_FILE = "utvid-til-" + CASE_FILE;
@@ -85,6 +87,8 @@ public final class Constants {
     public static final String NEW_CORRESPONDENCE_PART_PERSON = NEW_CORRESPONDENCE_PART + PERSON;
     public static final String NEW_CORRESPONDENCE_PART_UNIT = NEW_CORRESPONDENCE_PART + UNIT;
     public static final String NEW_CORRESPONDENCE_PART_INTERNAL = NEW_CORRESPONDENCE_PART + INTERNAL;
+    public static final String NEW_PART_PERSON = NEW_PART + PERSON;
+    public static final String NEW_PART_UNIT = NEW_PART + UNIT;
     public static final String NEW_SERIES_SUCCESSOR = NEW + DASH + SERIES_SUCCESSOR;
     public static final String NEW_SERIES_PRECURSOR = NEW + DASH + SERIES_PRECURSOR;
 
@@ -108,7 +112,7 @@ public final class Constants {
     public static final String NEW_REGISTRY_ENTRY = NEW + DASH + REGISTRY_ENTRY;
     public static final String NEW_RECORD_NOTE = NEW + DASH + RECORD_NOTE;
     public static final String NEW_PRECEDENCE = NEW + DASH + PRECEDENCE;
-    public static final String NEW_PART = NEW + DASH + PART;
+
     public static final String NEW_CASE_STATUS = NEW + DASH + CASE_STATUS;
     public static final String NEW_SECONDARY_CLASSIFICATION = NEW + DASH +
             "sekundaerklassifikasjon";
@@ -184,7 +188,8 @@ public final class Constants {
     public static final String TEST_RECORD_STATUS = "J";
     public static final String TEST_REGISTRY_ENTRY_TYPE = "I";
 
-    public static final String NOARK_DATE_FORMAT_PATTERN = "yyyy-MM-dd";
+    public static final String NOARK_DATE_FORMAT_PATTERN = "yyyy-MM-dd+HH:mm";
+    public static final String NOARK_ZONED_DATE_FORMAT_PATTERN = "yyyy-MM-ddZ";
     public static final String NOARK_TIME_FORMAT_PATTERN = "HH:mm:ss";
     public static final String NOARK_DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
@@ -223,93 +228,95 @@ public final class Constants {
     public static final String INFO_INVALID_STRUCTURE = "Invalid Noark structure";
 
     public static final String TEMPLATE_FONDS_STATUS_CODE = "Opprettet";
-    public static final String TEMPLATE_FONDS_STATUS_DESCRIPTION = "Arkivet er opprettet og i aktiv bruk";
-    public static final String TEMPLATE_DOCUMENT_MEDIUM_CODE = "Elektronisk arkiv";
-    public static final String TEMPLATE_DOCUMENT_MEDIUM_DESCRIPTION = "Bare elektroniske dokumenter";
+    public static final String TEMPLATE_FONDS_STATUS_NAME =
+            "Arkivet er opprettet og i aktiv bruk";
+    public static final String TEMPLATE_DOCUMENT_MEDIUM_CODE =
+            "Elektronisk arkiv";
+    public static final String TEMPLATE_DOCUMENT_MEDIUM_NAME =
+            "Bare elektroniske dokumenter";
     public static final String TEMPLATE_DOCUMENT_STATUS_CODE = "B";
-    public static final String TEMPLATE_DOCUMENT_STATUS_DESCRIPTION =
+    public static final String TEMPLATE_DOCUMENT_STATUS_NAME =
             "Dokumentet er under redigering";
     public static final String TEMPLATE_DOCUMENT_TYPE_CODE = "B";
-    public static final String TEMPLATE_DOCUMENT_TYPE_DESCRIPTION =
+    public static final String TEMPLATE_DOCUMENT_TYPE_NAME =
             "Brev";
 
     public static final String TEMPLATE_REGISTRY_ENTRY_STATUS_CODE = "J";
-    public static final String TEMPLATE_REGISTRY_ENTRY_STATUS_DESCRIPTION =
+    public static final String TEMPLATE_REGISTRY_ENTRY_STATUS_NAME =
             "Journalført";
 
     public static final String TEMPLATE_PRECEDENCE_STATUS_CODE = "G";
-    public static final String TEMPLATE_PRECEDENCE_STATUS_DESCRIPTION =
+    public static final String TEMPLATE_PRECEDENCE_STATUS_NAME =
             "Gjeldende";
 
     public static final String TEMPLATE_SIGN_OFF_METHOD_CODE = "BE";
-    public static final String TEMPLATE_SIGN_OFF_METHOD_DESCRIPTION =
+    public static final String TEMPLATE_SIGN_OFF_METHOD_NAME =
             "Besvart med e-post";
 
     public static final String
             TEMPLATE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE = "SK";
     public static final String
-            TEMPLATE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL_DESCRIPTION =
+            TEMPLATE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL_NAME =
             "Symmetrisk kryptert";
 
     public static final String
             TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_CODE = "I";
     public static final String
-            TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_DESCRIPTION =
+            TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_NAME =
             "Signatur påført, ikke verifisert";
 
     public static final String TEMPLATE_FORMAT_CODE = "RA-PDF";
-    public static final String TEMPLATE_FORMAT_DESCRIPTION = "PDF/A - ISO " +
+    public static final String TEMPLATE_FORMAT_NAME = "PDF/A - ISO " +
             "19005-1:2005";
 
     public static final String TEMPLATE_FLOW_STATUS_CODE = "G";
-    public static final String TEMPLATE_FLOW_STATUS_DESCRIPTION = "Godkjent";
+    public static final String TEMPLATE_FLOW_STATUS_NAME = "Godkjent";
 
     public static final String TEMPLATE_PART_ROLE_CODE = "KLI";
-    public static final String TEMPLATE_PART_ROLE_DESCRIPTION = "Klient";
+    public static final String TEMPLATE_PART_ROLE_NAME = "Klient";
 
     public static final String TEMPLATE_FILE_TYPE_CODE = "S";
-    public static final String TEMPLATE_FILE_TYPE_DESCRIPTION = "Saksmappe";
+    public static final String TEMPLATE_FILE_TYPE_NAME = "Saksmappe";
 
     public static final String TEMPLATE_VARIANT_FORMAT_CODE = "P";
-    public static final String TEMPLATE_VARIANT_FORMAT_DESCRIPTION =
+    public static final String TEMPLATE_VARIANT_FORMAT_NAME =
             "Produksjonsformat";
 
     public static final String TEMPLATE_CASE_STATUS_CODE = "R";
-    public static final String TEMPLATE_CASE_STATUS_DESCRIPTION =
+    public static final String TEMPLATE_CASE_STATUS_NAME =
             "Opprettet av saksbehandler";
 
     public static final String TEMPLATE_COUNTRY_CODE = "NO";
-    public static final String TEMPLATE_COUNTRY_DESCRIPTION =
-            "Norge";
+    public static final String TEMPLATE_COUNTRY_NAME = "Norge";
 
     public static final String TEMPLATE_POST_CODE_CODE = "0001";
-    public static final String TEMPLATE_POST_CODE_DESCRIPTION =
+    public static final String TEMPLATE_POST_CODE_NAME =
             "OSLO";
 
     public static final String TEMPLATE_CLASSIFICATION_TYPE_CODE = "FH";
-    public static final String TEMPLATE_CLASSIFICATION_TYPE_DESCRIPTION =
+    public static final String TEMPLATE_CLASSIFICATION_TYPE_NAME =
             "Funksjonsbasert, hierarkisk";
 
     public static final String TEMPLATE_CLASSIFIED_CODE_CODE = "SH";
-    public static final String TEMPLATE_CLASSIFIED_CODE_DESCRIPTION =
+    public static final String TEMPLATE_CLASSIFIED_CODE_NAME =
             "Strengt hemmelig (sikkerhetsgrad)";
 
     public static final String TEMPLATE_COMMENT_TYPE_CODE = "MS";
-    public static final String TEMPLATE_COMMENT_TYPE_DESCRIPTION =
+    public static final String TEMPLATE_COMMENT_TYPE_NAME =
             "Merknad fra saksbehandler";
 
     public static final String TEMPLATE_REGISTRY_ENTRY_TYPE_CODE = "I";
-    public static final String TEMPLATE_REGISTRY_ENTRY_TYPE_DESCRIPTION =
+    public static final String TEMPLATE_REGISTRY_ENTRY_TYPE_NAME =
             "Inngående dokument";
 
     public static final String TEMPLATE_REGISTRY_ENTRY_STATUS = "Journalført";
     public static final String TEMPLATE_REGISTRY_ENTRY_TYPE = "Journalført";
 
     public static final String TEMPLATE_SCREENING_METADATA_CODE = "H";
-    public static final String TEMPLATE_SCREENING_METADATA_DESCRIPTION =
+    public static final String TEMPLATE_SCREENING_METADATA_NAME =
             "Skjerming av hele dokumentet";
     public static final String TEMPLATE_SCREENING_DOCUMENT_CODE = "D";
-    public static final String TEMPLATE_SCREENING_DOCUMENT_DESCRIPTION =
+    public static final String TEMPLATE_SCREENING_DOCUMENT_NAME =
             "Skjerming av deler av dokumentet";
 
 
@@ -508,22 +515,39 @@ public final class Constants {
             REL_CASE_HANDLING + NEW_DOCUMENT_FLOW + SLASH;
 
     // CorrespondencePartPerson
-    public static final String REL_CASE_HANDLING_CORRESPONDENCE_PART_PERSON =
-            REL_CASE_HANDLING + CORRESPONDENCE_PART_PERSON + SLASH;
-    public static final String REL_CASE_HANDLING_NEW_CORRESPONDENCE_PART_PERSON =
-            REL_CASE_HANDLING + NEW_CORRESPONDENCE_PART_PERSON + SLASH;
+    public static final String REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_PERSON =
+            REL_FONDS_STRUCTURE + CORRESPONDENCE_PART_PERSON + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_PERSON =
+            REL_FONDS_STRUCTURE + NEW_CORRESPONDENCE_PART_PERSON + SLASH;
 
     // CorrespondencePartUnit
-    public static final String REL_CASE_HANDLING_CORRESPONDENCE_PART_UNIT =
-            REL_CASE_HANDLING + CORRESPONDENCE_PART_UNIT + SLASH;
-    public static final String REL_CASE_HANDLING_NEW_CORRESPONDENCE_PART_UNIT =
-            REL_CASE_HANDLING + NEW_CORRESPONDENCE_PART_UNIT + SLASH;
+    public static final String REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_UNIT =
+            REL_FONDS_STRUCTURE + CORRESPONDENCE_PART_UNIT + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_UNIT =
+            REL_FONDS_STRUCTURE + NEW_CORRESPONDENCE_PART_UNIT + SLASH;
 
     // CorrespondencePartInternal
-    public static final String REL_CASE_HANDLING_CORRESPONDENCE_PART_INTERNAL =
-            REL_CASE_HANDLING + CORRESPONDENCE_PART_INTERNAL + SLASH;
-    public static final String REL_CASE_HANDLING_NEW_CORRESPONDENCE_PART_INTERNAL =
-            REL_CASE_HANDLING + NEW_CORRESPONDENCE_PART_INTERNAL + SLASH;
+    public static final String REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_INTERNAL =
+            REL_FONDS_STRUCTURE + CORRESPONDENCE_PART_INTERNAL + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_INTERNAL =
+            REL_FONDS_STRUCTURE + NEW_CORRESPONDENCE_PART_INTERNAL + SLASH;
+
+    // PartUnit
+    public static final String REL_FONDS_STRUCTURE_NEW_PART_UNIT =
+            REL_FONDS_STRUCTURE + NEW_PART_UNIT + SLASH;
+
+    public static final String REL_FONDS_STRUCTURE_PART_UNIT =
+            REL_FONDS_STRUCTURE + PART_UNIT + SLASH;
+
+    // PartPerson
+    public static final String REL_FONDS_STRUCTURE_NEW_PART_PERSON =
+            REL_FONDS_STRUCTURE + NEW_PART_PERSON + SLASH;
+
+    public static final String REL_FONDS_STRUCTURE_PART_PERSON =
+            REL_FONDS_STRUCTURE + PART_PERSON + SLASH;
+
+
+
 
     // Fil
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_FILE =
@@ -544,6 +568,9 @@ public final class Constants {
 
     public static final String REL_METADATA_CORRESPONDENCE_PART_TYPE =
             REL_METADATA + CORRESPONDENCE_PART_TYPE + SLASH;
+
+    public static final String REL_METADATA_PART_ROLE =
+            REL_METADATA + PART_ROLE + SLASH;
 
     public static final String REL_METADATA_VARIANT_FORMAT = REL_METADATA +
             VARIANT_FORMAT + SLASH;
@@ -577,9 +604,6 @@ public final class Constants {
 
     public static final String REL_METADATA_PRECEDENCE_STATUS =
             REL_METADATA + PRECEDENCE_STATUS + SLASH;
-
-    public static final String REL_METADATA_PART_ROLE =
-            REL_METADATA + PART_ROLE + SLASH;
 
     public static final String REL_METADATA_FILE_TYPE =
             REL_METADATA + FILE_TYPE + SLASH;
@@ -653,7 +677,7 @@ public final class Constants {
     public static final String TABLE_DISPOSAL_UNDERTAKEN =
             "as_disposal_undertaken";
     public static final String TABLE_CORRESPONDENCE_PART =
-            "sa_correspondence_part";
+            "as_correspondence_part";
 
     public static final String TABLE_AUTHORITY_SEQ = "ad_authority_seq";
     public static final String TABLE_USER_AUTHORITY = "ad_user_authority";
@@ -693,6 +717,10 @@ public final class Constants {
             "sa_registry_entry_correspondence_part_person";
     public static final String TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_UNIT =
             "sa_registry_entry_correspondence_part_unit";
+    public static final String TABLE_REGISTRY_ENTRY_PART_UNIT =
+            "as_registry_entry_part_unit";
+    public static final String TABLE_REGISTRY_ENTRY_PART_PERSON =
+            "as_registry_entry_person_unit";
     public static final String TABLE_RECORD_DOCUMENT_DESCRIPTION =
             "as_record_document_description";
     public static final String TABLE_RECORD_PARTY = "as_record_party";
@@ -711,13 +739,18 @@ public final class Constants {
             "as_document_description_comment";
     public static final String TABLE_DOCUMENT_DESCRIPTION_AUTHOR =
             "as_document_description_author";
+
+    public static final String TABLE_PART_PERSON = "as_part_person";
+    public static final String TABLE_PART_UNIT = "as_part_unit";
+
     public static final String TABLE_CORRESPONDENCE_PART_INTERNAL =
-            "sa_correspondence_part_internal";
+            "as_correspondence_part_internal";
 
     public static final String TABLE_CORRESPONDENCE_PART_PERSON =
-            "sa_correspondence_part_person";
+            "as_correspondence_part_person";
+
     public static final String TABLE_CORRESPONDENCE_PART_UNIT =
-            "sa_correspondence_part_unit";
+            "as_correspondence_part_unit";
 
     public static final String TABLE_CASE_FILE_PRECEDENCE =
             "sa_case_file_precedence";
@@ -751,6 +784,7 @@ public final class Constants {
     public static final String TABLE_COMMENT_TYPE = "md_comment_type";
     public static final String TABLE_CORRESPONDENCE_PART_TYPE =
             "md_correspondence_part_type";
+    public static final String TABLE_PART_TYPE = "md_part_type";
     public static final String TABLE_COUNTRY = "md_country";
     public static final String TABLE_DELETION_TYPE = "md_deletion_type";
     public static final String TABLE_DISPOSAL_DECISION = "md_disposal_decision";
@@ -793,6 +827,10 @@ public final class Constants {
     public static final String FOREIGN_KEY_FONDS_PK = "f_pk_fonds_id";
     public static final String FOREIGN_KEY_CORRESPONDENCE_PART_UNIT_PK =
             "f_pk_correspondence_part_unit_id";
+    public static final String FOREIGN_KEY_PART_UNIT_PK =
+            "f_pk_part_unit_id";
+    public static final String FOREIGN_KEY_PART_PERSON_PK =
+            "f_pk_part_person_id";
     public static final String FOREIGN_KEY_SIGN_OFF_PK = "f_pk_sign_off_id";
     public static final String FOREIGN_KEY_SERIES_PK = "f_pk_series_id";
     public static final String FOREIGN_KEY_FONDS_CREATOR_PK =
@@ -856,6 +894,8 @@ public final class Constants {
 
     public static final String CORRESPONDENCE_PART_CORRESPONDENCE_PART_TYPE_ID =
             "correspondence_part_correspondence_part_type_id";
+
+    public static final String PART_PART_ROLE_ID = "part_part_role_id";
 
     public static final String SERIES_FONDS_ID = "series_fonds_id";
     public static final String SERIES_DISPOSAL_ID = "series_disposal_id";

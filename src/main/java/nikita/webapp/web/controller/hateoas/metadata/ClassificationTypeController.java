@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -133,10 +133,10 @@ public class ClassificationTypeController {
                 .body(classificationTypeService.findAll());
     }
 
-    // Retrieves a given classificationType identified by a systemId
-    // GET [contextPath][api]/metadata/mappetype/{systemId}/
+    // Retrieves a given classificationType identified by a code
+    // GET [contextPath][api]/metadata/mappetype/{code}/
     @ApiOperation(
-            value = "Gets classificationType identified by its systemId",
+            value = "Gets classificationType identified by its code",
             notes = "Returns the requested classificationType object",
             response = ClassificationType.class)
     @ApiResponses(value = {
@@ -168,16 +168,16 @@ public class ClassificationTypeController {
     @Counted
 
     @RequestMapping(
-            value = CLASSIFICATION_TYPE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+            value = CLASSIFICATION_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                classificationTypeService.find(systemId);
+                classificationTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -264,7 +264,7 @@ public class ClassificationTypeController {
     )
     public ResponseEntity<MetadataHateoas> updateClassificationType(
             @ApiParam(name = "systemID",
-                    value = "systemId of fonds to update.",
+                    value = "code of fonds to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody ClassificationType classificationType,

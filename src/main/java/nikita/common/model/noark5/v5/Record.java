@@ -1,6 +1,9 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
@@ -97,6 +100,67 @@ public class Record
     @JoinColumn(name = RECORD_FILE_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private File referenceFile;
+
+    // Links to PartPerson
+    @ManyToMany
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_PART_PERSON,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_PART_PERSON_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private List<PartPerson>
+            referencePartPerson = new ArrayList<>();
+
+    // Links to PartUnit
+    @ManyToMany
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_PART_UNIT,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_PART_UNIT_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private List<PartUnit>
+            referencePartUnit = new ArrayList<>();
+
+    // Links to CorrespondencePartPerson
+    @ManyToMany
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_PERSON,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private List<CorrespondencePartPerson>
+            referenceCorrespondencePartPerson = new ArrayList<>();
+
+    // Links to CorrespondencePartUnit
+    @ManyToMany
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_UNIT,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_UNIT_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private List<CorrespondencePartUnit>
+            referenceCorrespondencePartUnit = new ArrayList<>();
+
+    // Links to CorrespondencePartInternal
+    @ManyToMany
+    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns =
+            @JoinColumn(
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private List<CorrespondencePartInternal>
+            referenceCorrespondencePartInternal = new ArrayList<>();
 
     // Link to StorageLocation
     @ManyToMany(cascade = PERSIST)
@@ -338,6 +402,76 @@ public class Record
     public void addReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
     }
+
+    public List<PartPerson> getReferencePartPerson() {
+        return referencePartPerson;
+    }
+
+    public void setReferencePartPerson(List<PartPerson> referencePartPerson) {
+        this.referencePartPerson = referencePartPerson;
+    }
+
+    public void addPartPerson(PartPerson partPerson) {
+        this.referencePartPerson.add(partPerson);
+    }
+
+    public List<PartUnit> getReferencePartUnit() {
+        return referencePartUnit;
+    }
+
+    public void setReferencePartUnit(List<PartUnit> referencePartUnit) {
+        this.referencePartUnit = referencePartUnit;
+    }
+
+    public void addPartUnit(PartUnit partUnit) {
+        this.referencePartUnit.add(partUnit);
+    }
+
+    public List<CorrespondencePartPerson>
+    getReferenceCorrespondencePartPerson() {
+        return referenceCorrespondencePartPerson;
+    }
+
+    public void setReferenceCorrespondencePartPerson(
+            List<CorrespondencePartPerson> referenceCorrespondencePartPerson) {
+        this.referenceCorrespondencePartPerson =
+                referenceCorrespondencePartPerson;
+    }
+
+    public void addCorrespondencePartPerson(
+            CorrespondencePartPerson correspondencePartPerson) {
+        this.referenceCorrespondencePartPerson.add(
+                correspondencePartPerson);
+    }
+
+    public List<CorrespondencePartUnit> getReferenceCorrespondencePartUnit() {
+        return referenceCorrespondencePartUnit;
+    }
+
+    public void setReferenceCorrespondencePartUnit(
+            List<CorrespondencePartUnit> referenceCorrespondencePartUnit) {
+        this.referenceCorrespondencePartUnit = referenceCorrespondencePartUnit;
+    }
+
+    public void addCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePartUnit) {
+        this.referenceCorrespondencePartUnit.add(
+                correspondencePartUnit);
+    }
+
+    public List<CorrespondencePartInternal>
+    getReferenceCorrespondencePartInternal() {
+        return referenceCorrespondencePartInternal;
+    }
+
+    public void setReferenceCorrespondencePartInternal(
+            List<CorrespondencePartInternal>
+                    referenceCorrespondencePartInternal) {
+        this.referenceCorrespondencePartInternal =
+                referenceCorrespondencePartInternal;
+    }
+
+
     public List<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }

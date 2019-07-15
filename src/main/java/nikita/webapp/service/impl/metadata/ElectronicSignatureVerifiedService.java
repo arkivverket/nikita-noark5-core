@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_VERIFIED;
@@ -93,53 +92,9 @@ public class ElectronicSignatureVerifiedService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single ElectronicSignatureVerified object identified by
-     * systemId
-     *
-     * @param systemId systemId of the ElectronicSignatureVerified you wish
-     *                 to retrieve
-     * @return single ElectronicSignatureVerified object wrapped as a
-     * MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                electronicSignatureVerifiedRepository.save(
-                        electronicSignatureVerifiedRepository
-                                .findBySystemId(UUID.fromString(systemId))));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all ElectronicSignatureVerified that have a given
-     * description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of ElectronicSignatureVerified objects wrapped as a
-     * MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        electronicSignatureVerifiedRepository
-                                .findByDescription(description),
-                ELECTRONIC_SIGNATURE_VERIFIED);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all ElectronicSignatureVerified that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of ElectronicSignatureVerified objects wrapped as a
@@ -148,10 +103,7 @@ public class ElectronicSignatureVerifiedService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        electronicSignatureVerifiedRepository.findByCode
-                                (code),
-                ELECTRONIC_SIGNATURE_VERIFIED);
+                electronicSignatureVerifiedRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -171,18 +123,17 @@ public class ElectronicSignatureVerifiedService
         electronicSignatureVerified.setCode
                 (TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_CODE);
         electronicSignatureVerified.
-                setDescription(
-                        TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_DESCRIPTION);
+                setName(TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_NAME);
 
         return electronicSignatureVerified;
     }
 
     /**
-     * Update a ElectronicSignatureVerified identified by its systemId
+     * Update a ElectronicSignatureVerified identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId                    The systemId of the
+     * @param code                    The code of the
      *                                    electronicSignatureVerified
      *                                    object you wish to update
      * @param incomingElectronicSignatureVerified The updated
@@ -195,14 +146,14 @@ public class ElectronicSignatureVerifiedService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final ElectronicSignatureVerified
                     incomingElectronicSignatureVerified) {
 
         ElectronicSignatureVerified
                 existingElectronicSignatureVerified =
-                getElectronicSignatureVerifiedOrThrow(systemId);
+                getElectronicSignatureVerifiedOrThrow(code);
 
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -229,19 +180,19 @@ public class ElectronicSignatureVerifiedService
      * object back. If there is no ElectronicSignatureVerified object,
      * a NoarkEntityNotFoundException exception is thrown
      *
-     * @param systemId The systemId of the ElectronicSignatureVerified
+     * @param code The code of the ElectronicSignatureVerified
      *                 object to retrieve
      * @return the ElectronicSignatureVerified object
      */
     private ElectronicSignatureVerified
-    getElectronicSignatureVerifiedOrThrow(@NotNull String systemId) {
+    getElectronicSignatureVerifiedOrThrow(@NotNull String code) {
         ElectronicSignatureVerified electronicSignatureVerified =
                 electronicSignatureVerifiedRepository.
-                        findBySystemId(UUID.fromString(systemId));
+                        findByCode(code);
         if (electronicSignatureVerified == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                    " ElectronicSignatureVerified, using systemId " +
-                    systemId;
+                    " ElectronicSignatureVerified, using code " +
+                    code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

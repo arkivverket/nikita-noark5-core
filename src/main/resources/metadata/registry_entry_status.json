@@ -1,0 +1,32 @@
+{
+  "RegistryEntryStatus": [
+    {
+      "code": "J",
+      "name": "Journalført"
+    },
+    {
+      "code": "F",
+      "name": "Ferdigstilt fra saksbehandler"
+    },
+    {
+      "code": "G",
+      "name": "Godkjent av leder"
+    },
+    {
+      "code": "E",
+      "name": "Ekspedert"
+    },
+    {
+      "code": "A",
+      "name": "Arkivert"
+    },
+    {
+      "code": "U",
+      "name": "Utgår"
+    },
+    {
+      "code": "M",
+      "name": "Midlertidig registrering av"
+    }
+  ]
+}

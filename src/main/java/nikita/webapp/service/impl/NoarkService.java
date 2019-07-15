@@ -50,7 +50,7 @@ public class NoarkService {
         if (null != incomingEntity.getCode()) {
             existingEntity.setCode(incomingEntity.getCode());
         }
-        existingEntity.setDescription(incomingEntity.getDescription());
+        existingEntity.setName(incomingEntity.getName());
     }
 
     protected String getUser() {

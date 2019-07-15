@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.PART_ROLE;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static nikita.common.util.CommonUtils.Validation.parseETAG;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
@@ -118,10 +118,10 @@ public class PartRoleController {
                 .body(partyRoleService.findAll());
     }
 
-    // Retrieves a given PartRole identified by a systemId
-    // GET [contextPath][api]/metadata/partrolle/{systemId}/
+    // Retrieves a given PartRole identified by a code
+    // GET [contextPath][api]/metadata/partrolle/{code}/
     @ApiOperation(
-            value = "Gets PartRole identified by its systemId",
+            value = "Gets PartRole identified by its code",
             notes = "Returns the requested PartRole object",
             response = PartRole.class)
     @ApiResponses(value = {
@@ -146,13 +146,13 @@ public class PartRoleController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = PART_ROLE + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
+    @GetMapping(value = PART_ROLE + SLASH + LEFT_PARENTHESIS + CODE +
             RIGHT_PARENTHESIS + SLASH)
     public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String systemId,
+            @PathVariable("systemID") final String code,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = partyRoleService.find(systemId);
+        MetadataHateoas metadataHateoas = partyRoleService.findByCode(code);
 
         return ResponseEntity.status(OK)
                 .allow(
@@ -233,7 +233,7 @@ public class PartRoleController {
     @PutMapping(value = PART_ROLE + SLASH + PART_ROLE)
     public ResponseEntity<MetadataHateoas> updatePartRole(
             @ApiParam(name = "systemID",
-                    value = "systemId of partyRole to update.",
+                    value = "code of partyRole to update.",
                     required = true)
             @PathVariable("systemID") String systemID,
             @RequestBody PartRole partyRole,

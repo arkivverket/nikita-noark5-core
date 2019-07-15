@@ -1,11 +1,11 @@
 package nikita.webapp.service.impl.secondary;
 
-import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.casehandling.*;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v5.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.repository.n5v5.secondary.ICorrespondencePartRepository;
@@ -176,7 +176,7 @@ public class CorrespondencePartService
     public CorrespondencePartPersonHateoas
     createNewCorrespondencePartPerson(
             CorrespondencePartPerson correspondencePart,
-            RegistryEntry registryEntry) {
+            Record record) {
 
         setCorrespondencePartType(correspondencePart);
 
@@ -197,9 +197,9 @@ public class CorrespondencePartService
         }
         correspondencePart.setResidingAddress(residingAddress);
 
-        registryEntry.getReferenceCorrespondencePartPerson().
+        record.getReferenceCorrespondencePartPerson().
                 add(correspondencePart);
-        correspondencePart.addRegistryEntry(registryEntry);
+        correspondencePart.addRecord(record);
 
         correspondencePartRepository.save(correspondencePart);
 
@@ -218,7 +218,7 @@ public class CorrespondencePartService
     @Override
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePart,
-            RegistryEntry registryEntry) {
+            Record record) {
 
         setCorrespondencePartType(correspondencePart);
 
@@ -241,9 +241,9 @@ public class CorrespondencePartService
 
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
-        registryEntry.
+        record.
                 getReferenceCorrespondencePartUnit().add(correspondencePart);
-        correspondencePart.getReferenceRegistryEntry().add(registryEntry);
+        correspondencePart.addRecord(record);
 
         correspondencePartRepository.save(correspondencePart);
 
@@ -263,11 +263,11 @@ public class CorrespondencePartService
     public CorrespondencePartInternalHateoas
     createNewCorrespondencePartInternal(
             CorrespondencePartInternal correspondencePart,
-            RegistryEntry registryEntry) {
+            Record record) {
 
         setCorrespondencePartType(correspondencePart);
 
-        registryEntry.getReferenceCorrespondencePartInternal().
+        record.getReferenceCorrespondencePartInternal().
                 add(correspondencePart);
 
         correspondencePartRepository.save(correspondencePart);
@@ -469,20 +469,20 @@ public class CorrespondencePartService
 
     /**
      * Generate a Default CorrespondencePartUnit object that can be
-     * associated with the identified RegistryEntry.
+     * associated with the identified Record.
      * <p>
      * Note. Ideally this method would be configurable based on the logged in
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param registryEntrySystemId The systemId of the registryEntry object
+     * @param recordSystemId The systemId of the record object
      *                              you wish to create a templated object for
      * @return the CorrespondencePartUnit object wrapped as a
      * CorrespondencePartUnitHateoas object
      */
     @Override
     public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            final String registryEntrySystemId) {
+            final String recordSystemId) {
         CorrespondencePartUnit suggestedCorrespondencePart =
                 new CorrespondencePartUnit();
 
@@ -503,20 +503,20 @@ public class CorrespondencePartService
 
     /**
      * Generate a Default CorrespondencePartPerson object that can be
-     * associated with the identified RegistryEntry.
+     * associated with the identified Record.
      * <p>
      * Note. Ideally this method would be configurable based on the logged in
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param registryEntrySystemId The systemId of the registryEntry object
+     * @param recordSystemId The systemId of the record object
      *                              you wish to create a templated object for
      * @return the CorrespondencePartPerson object wrapped as a
      * CorrespondencePartPersonHateoas object
      */
     @Override
     public CorrespondencePartPersonHateoas
-    generateDefaultCorrespondencePartPerson(final String registryEntrySystemId) {
+    generateDefaultCorrespondencePartPerson(final String recordSystemId) {
         CorrespondencePartPerson suggestedCorrespondencePart =
                 new CorrespondencePartPerson();
 
@@ -539,13 +539,13 @@ public class CorrespondencePartService
 
     /**
      * Generate a Default CorrespondencePartInternal object that can be
-     * associated with the identified RegistryEntry.
+     * associated with the identified Record.
      * <p>
      * Note. Ideally this method would be configurable based on the logged in
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param registryEntrySystemId The systemId of the registryEntry object
+     * @param recordSystemId The systemId of the record object
      *                              you wish to create a templated object for
      * @return the CorrespondencePartInternal object wrapped as a
      * CorrespondencePartInternalHateoas object
@@ -553,7 +553,7 @@ public class CorrespondencePartService
     @Override
     public CorrespondencePartInternalHateoas
     generateDefaultCorrespondencePartInternal(
-            final String registryEntrySystemId) {
+            final String recordSystemId) {
         CorrespondencePartInternal suggestedCorrespondencePart =
                 new CorrespondencePartInternal();
 

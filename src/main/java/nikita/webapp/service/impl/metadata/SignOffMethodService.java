@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
@@ -85,47 +84,10 @@ public class SignOffMethodService
         return metadataHateoas;
     }
 
-    // find by systemId
-
+    // find by code
     /**
-     * Retrieve a single SignOffMethod object identified by systemId
-     *
-     * @param systemId
-     * @return single SignOffMethod object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                signOffMethodRepository.save(
-                        signOffMethodRepository.
-                                findBySystemId(UUID.fromString(systemId))));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
+     * retrieve a single SignOffMethod with the given code.
 
-    /**
-     * Retrieve all SignOffMethod that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description
-     * @return A list of SignOffMethod objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        signOffMethodRepository.findByDescription(description),
-                SIGN_OFF_METHOD);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * retrieve all SignOffMethod that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
      *
      * @param code
      * @return A list of SignOffMethod objects wrapped as a MetadataHateoas
@@ -134,9 +96,7 @@ public class SignOffMethodService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        signOffMethodRepository.findByCode(code),
-                SIGN_OFF_METHOD);
+                signOffMethodRepository.findByCode(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -148,20 +108,18 @@ public class SignOffMethodService
      */
     @Override
     public SignOffMethod generateDefaultSignOffMethod() {
-
         SignOffMethod SignOffMethod = new SignOffMethod();
         SignOffMethod.setCode(TEMPLATE_SIGN_OFF_METHOD_CODE);
-        SignOffMethod.setDescription(TEMPLATE_SIGN_OFF_METHOD_DESCRIPTION);
-
+        SignOffMethod.setName(TEMPLATE_SIGN_OFF_METHOD_NAME);
         return SignOffMethod;
     }
 
     /**
-     * Update a SignOffMethod identified by its systemId
+     * Update a SignOffMethod identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId          The systemId of the signOffMethod object you wish to
+     * @param code          The code of the signOffMethod object you wish to
      *                          update
      * @param incomingSignOffMethod The updated signOffMethod object.
      *                                  Note the values you are allowed to
@@ -171,11 +129,11 @@ public class SignOffMethodService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final SignOffMethod incomingSignOffMethod) {
 
-        SignOffMethod existingSignOffMethod = getSignOffMethodOrThrow(systemId);
+        SignOffMethod existingSignOffMethod = getSignOffMethodOrThrow(code);
         updateCodeAndDescription(incomingSignOffMethod, existingSignOffMethod);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -198,16 +156,16 @@ public class SignOffMethodService
      * is no SignOffMethod object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the SignOffMethod object to retrieve
+     * @param code The code of the SignOffMethod object to retrieve
      * @return the SignOffMethod object
      */
-    private SignOffMethod getSignOffMethodOrThrow(@NotNull String systemId) {
+    private SignOffMethod getSignOffMethodOrThrow(@NotNull String code) {
         SignOffMethod SignOffMethod =
                 signOffMethodRepository.
-                        findBySystemId(UUID.fromString(systemId));
+                        findByCode(code);
         if (SignOffMethod == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " SignOffMethod, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

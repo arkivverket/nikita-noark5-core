@@ -14,11 +14,7 @@ public interface ISignOffMethodService {
     MetadataHateoas createNewSignOffMethod(
             SignOffMethod signOffMethod);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

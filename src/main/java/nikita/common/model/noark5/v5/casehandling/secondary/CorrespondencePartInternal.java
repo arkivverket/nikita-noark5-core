@@ -1,12 +1,11 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.casehandling.ICorrespondencePartInternalEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartInternalEntity;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartInternalDeserializer;
 import nikita.webapp.hateoas.casehandling.CorrespondencePartInternalHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;

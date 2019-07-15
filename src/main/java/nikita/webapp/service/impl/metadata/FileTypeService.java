@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FILE_TYPE;
@@ -85,48 +84,9 @@ public class FileTypeService
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
-
-    // find by systemId
-
-    /**
-     * Retrieve a single FileType object identified by systemId
-     *
-     * @param systemId systemId of the FileType you wish to retrieve
-     * @return single FileType object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                fileTypeRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all FileType that have a given description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of FileType objects wrapped as a MetadataHateoas
-     * object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        fileTypeRepository
-                                .findByDescription(description), FILE_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all FileType that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of FileType objects wrapped as a MetadataHateoas
@@ -135,8 +95,7 @@ public class FileTypeService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        fileTypeRepository.findByCode(code), FILE_TYPE);
+                getFileTypeOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -148,20 +107,18 @@ public class FileTypeService
      */
     @Override
     public FileType generateDefaultFileType() {
-
         FileType fileType = new FileType();
         fileType.setCode(TEMPLATE_FILE_TYPE_CODE);
-        fileType.setDescription(TEMPLATE_FILE_TYPE_DESCRIPTION);
-
+        fileType.setName(TEMPLATE_FILE_TYPE_NAME);
         return fileType;
     }
 
     /**
-     * Update a FileType identified by its systemId
+     * Update a FileType identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId The systemId of the fileType object you wish to
+     * @param code The code of the fileType object you wish to
      *                 update
      * @param incomingFileType The updated fileType object. Note the values
      *                         you are allowed to change are copied from this
@@ -170,11 +127,11 @@ public class FileTypeService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final FileType incomingFileType) {
 
-        FileType existingFileType = getFileTypeOrThrow(systemId);
+        FileType existingFileType = getFileTypeOrThrow(code);
         updateCodeAndDescription(incomingFileType, existingFileType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -199,15 +156,15 @@ public class FileTypeService
      * is no FileType object, a NoarkEntityNotFoundException exception
      * is thrown
      *
-     * @param systemId The systemId of the FileType object to retrieve
+     * @param code The code of the FileType object to retrieve
      * @return the FileType object
      */
-    private FileType getFileTypeOrThrow(@NotNull String systemId) {
+    private FileType getFileTypeOrThrow(@NotNull String code) {
         FileType fileType =
-                fileTypeRepository.findBySystemId(UUID.fromString(systemId));
+                fileTypeRepository.findByCode(code);
         if (fileType == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " FileType, using " +
-                    "systemId " + systemId;
+                    "code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }

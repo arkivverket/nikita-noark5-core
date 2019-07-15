@@ -9,11 +9,7 @@ public interface IDocumentTypeService {
 
     MetadataHateoas createNewDocumentType(DocumentType documentType);
 
-    MetadataHateoas find(String systemId);
-
     MetadataHateoas findAll();
-
-    MetadataHateoas findByDescription(String description);
 
     MetadataHateoas findByCode(String code);
 

@@ -1,0 +1,20 @@
+{
+  "SeriesStatus": [
+    {
+      "code": "A",
+      "name": "Aktiv periode"
+    },
+    {
+      "code": "O",
+      "name": "Overlappingsperiode"
+    },
+    {
+      "code": "P",
+      "name": "Avsluttet periode"
+    },
+    {
+      "code": "U",
+      "name": "Uaktuelle mapper"
+    }
+  ]
+}

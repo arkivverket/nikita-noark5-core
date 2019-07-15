@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_TYPE;
@@ -86,59 +85,18 @@ public class RegistryEntryTypeService
         return metadataHateoas;
     }
 
-    // find by systemId
-
-    /**
-     * Retrieve a single RegistryEntryType object identified by systemId
-     *
-     * @param systemId systemId of the RegistryEntryType you wish to retrieve
-     * @return single RegistryEntryType object wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas find(String systemId) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                formatRepository
-                        .findBySystemId(UUID.fromString(systemId)));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * Retrieve all RegistryEntryType that have a given
-     * description.
-     * <br>
-     * Note, this will be replaced by OData search.
-     *
-     * @param description Description of object you wish to retrieve. The
-     *                    whole text, this is an exact search.
-     * @return A list of RegistryEntryType objects wrapped as a MetadataHateoas object
-     */
-    @Override
-    public MetadataHateoas findByDescription(String description) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        formatRepository
-                                .findByDescription(description),
-                REGISTRY_ENTRY_TYPE);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
     /**
      * retrieve all RegistryEntryType that have a particular code.
-     * <br>
-     * Note, this will be replaced by OData search.
+
      *
      * @param code The code of the object you wish to retrieve
-     * @return A list of RegistryEntryType objects wrapped as a MetadataHateoas object
+     * @return A list of RegistryEntryType objects wrapped as a
+     * MetadataHateoas object
      */
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        formatRepository.findByCode
-                                (code),
-                REGISTRY_ENTRY_TYPE);
+                getRegistryEntryTypeOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -153,17 +111,17 @@ public class RegistryEntryTypeService
 
         RegistryEntryType format = new RegistryEntryType();
         format.setCode(TEMPLATE_REGISTRY_ENTRY_TYPE_CODE);
-        format.setDescription(TEMPLATE_REGISTRY_ENTRY_TYPE_DESCRIPTION);
+        format.setName(TEMPLATE_REGISTRY_ENTRY_TYPE_NAME);
 
         return format;
     }
 
     /**
-     * Update a RegistryEntryType identified by its systemId
+     * Update a RegistryEntryType identified by its code
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param systemId The systemId of the format object you wish to update
+     * @param code The code of the format object you wish to update
      * @param incomingRegistryEntryType The updated format object. Note the
      *                                 values you are allowed to change are
      *                                  copied from this object. This object
@@ -172,12 +130,12 @@ public class RegistryEntryTypeService
      */
     @Override
     public MetadataHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final String code,
             @NotNull final Long version,
             @NotNull final RegistryEntryType incomingRegistryEntryType) {
 
         RegistryEntryType existingRegistryEntryType =
-                getRegistryEntryTypeOrThrow(systemId);
+                getRegistryEntryTypeOrThrow(code);
         updateCodeAndDescription(incomingRegistryEntryType,
                 existingRegistryEntryType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -201,16 +159,16 @@ public class RegistryEntryTypeService
      * there is no RegistryEntryType object, a NoarkEntityNotFoundException
      * exception is thrown
      *
-     * @param systemId The systemId of the RegistryEntryType object to retrieve
+     * @param code The code of the RegistryEntryType object to retrieve
      * @return the RegistryEntryType object
      */
     private RegistryEntryType
-    getRegistryEntryTypeOrThrow(@NotNull String systemId) {
+    getRegistryEntryTypeOrThrow(@NotNull String code) {
         RegistryEntryType format =
-                formatRepository.findBySystemId(UUID.fromString(systemId));
+                formatRepository.findByCode(code);
         if (format == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " RegistryEntryType,  " +
-                    "using systemId " + systemId;
+                    "using code " + code;
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }
