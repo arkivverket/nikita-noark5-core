@@ -92,7 +92,7 @@ public class ApplicationService {
 
     /**
      * Creates a list of the officially supported resource links.
-     * These are: arkivstruktur, casehandling, metadata, administrasjon and
+     * These are: arkivstruktur, casehandling, metadata, admin and
      * loggingogsporing
      *
      * @return
