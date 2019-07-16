@@ -5,7 +5,36 @@ These are the highlevel changes.  For details, see the git history.
 
 Release 0.5 2019-0X-XX (commit X)
 ----------------------
- *
+ * Updated to Noark 5 versjon 5.0 API specification.
+    - Changed formatting of _links from [] to {} to match IETF draft
+      on JSON HAL.
+    - Merged Registrering og Basisregistrering in version 4 to
+      combined Registrering.
+    - DokumentObjekt is now subtype of ArkivEnhet.
+    - Introducing new entity Arkivnotat.
+    - Changed all relation keys to use /v5/ instead of /v4/.
+    - Renamed Sakspart to Part and connect it to Mappe, Registrering
+      and Dokumentbeskrivelse instead of only Saksmappe.
+    - Moved Korrespondansepart connection from Journalpost to
+      Registrering.
+    - Moved Part and Korrespondansepart from package sakarkiv to
+      arkivstruktur.
+    - Moved Dokumentflyt from sakarkiv til arkivstruktur.
+    - Renamed presedensstatus to presedensStatus.
+    - Use new JSON content-type "application/vnd.noark5+json".
+ * Improved/implemented OData search and paging support for more entities.
+ * No longer exposes Dokumentobjekt.referanseDokumentfil, one should
+   use the relation in _links instead.
+ * Fixed several security and stability issues discovered by Coverity.
+ * Corrected handling  ETag errors, now return code 409.
+ * Improved handling of Kryssreferanse.
+ * Changed internal database model to use UUID/SystemID as primary keys
+   in tables.
+ * Changed internal database table names to use package prefix.
+ * Changed time zone handling for date and datetime attributes, to be
+   more according to the new definition in the API specification.
+ * Change revoke-token to only drop token on POST requests, not GET.
+ * Update to newere Spring version.
 
 Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
 ----------------------
