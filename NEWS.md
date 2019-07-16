@@ -6,7 +6,7 @@ These are the highlevel changes.  For details, see the git history.
 Release 0.5 2019-0X-XX (commit X)
 ----------------------
  * Updated to Noark 5 versjon 5.0 API specification.
-    - Changed formatting of _links from [] to {} to match IETF draft
+    - Changed formatting of \_links from [] to {} to match IETF draft
       on JSON HAL.
     - Merged Registrering og Basisregistrering in version 4 to
       combined Registrering.
@@ -21,9 +21,13 @@ Release 0.5 2019-0X-XX (commit X)
       arkivstruktur.
     - Renamed presedensstatus to presedensStatus.
     - Use new JSON content-type "application/vnd.noark5+json".
+    - Updated prepopulated format list to use PRONOM codes.
  * Improved/implemented OData search and paging support for more entities.
  * No longer exposes Dokumentobjekt.referanseDokumentfil, one should
-   use the relation in _links instead.
+   use the relation in \_links instead.
+ * Corrected relation keys under
+   https://rel.arkivverket.no/noark5/v5/api/administrasjon/, replacing
+   'administrasjon' with 'admin'.
  * Fixed several security and stability issues discovered by Coverity.
  * Corrected handling  ETag errors, now return code 409.
  * Improved handling of Kryssreferanse.
@@ -33,7 +37,7 @@ Release 0.5 2019-0X-XX (commit X)
  * Changed time zone handling for date and datetime attributes, to be
    more according to the new definition in the API specification.
  * Change revoke-token to only drop token on POST requests, not GET.
- * Update to newere Spring version.
+ * Update to newer Spring version.
 
 Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
 ----------------------
