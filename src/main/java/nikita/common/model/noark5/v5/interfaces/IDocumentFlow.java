@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.interfaces;
 
-import nikita.common.model.noark5.v5.DocumentFlow;
+import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
 
 import java.util.List;
 
