@@ -341,7 +341,7 @@ public final class Constants {
 
 
     public static final String REL_METADATA = "https://rel.arkivverket.no/noark5/v5/api/metadata/";
-    public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v5/api/administrasjon/";
+    public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v5/api/admin/";
     public static final String REL_FONDS_STRUCTURE = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/";
     public static final String REL_CASE_HANDLING = "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/";
 

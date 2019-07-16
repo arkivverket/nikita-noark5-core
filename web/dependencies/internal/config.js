@@ -38,7 +38,7 @@ var REL_SELF = 'self';
 var REL_LOGIN_OAUTH2 = 'https://nikita.arkivlab.no/noark5/v4/login/rfc6749/';
 var REL_LOGOUT_OAUTH2 = 'https://nikita.arkivlab.no/noark5/v4/logout/rfc6749/';
 var REL_CHECK_TOKEN = 'https://nikita.arkivlab.no/noark5/v4/oauth/check_token/rfc6749/';
-var REL_ADMIN_NEW_USER = 'https://rel.arkivverket.no/noark5/v5/api/administrasjon/ny-bruker/';
+var REL_ADMIN_NEW_USER = 'https://rel.arkivverket.no/noark5/v5/api/admin/ny-bruker/';
 
 
 
