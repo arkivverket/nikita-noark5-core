@@ -19,7 +19,6 @@ Release 0.5 2019-0X-XX (commit X)
       Registrering.
     - Moved Part and Korrespondansepart from package sakarkiv to
       arkivstruktur.
-    - Moved Dokumentflyt from sakarkiv til arkivstruktur.
     - Renamed presedensstatus to presedensStatus.
     - Use new JSON content-type "application/vnd.noark5+json".
  * Improved/implemented OData search and paging support for more entities.
