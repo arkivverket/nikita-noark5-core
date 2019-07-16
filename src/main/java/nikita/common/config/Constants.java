@@ -38,6 +38,7 @@ public final class Constants {
     public static final String LEFT_PARENTHESIS = "{";
     public static final String RIGHT_PARENTHESIS = "}";
     public static final String ENTITY_ROOT_NAME_LIST = "results";
+    public static final String ENTITY_ROOT_NAME_LIST_COUNT = "count";
 
     // Create for new arkivstruktur objects
     public static final String NEW_FONDS = NEW + DASH + FONDS;

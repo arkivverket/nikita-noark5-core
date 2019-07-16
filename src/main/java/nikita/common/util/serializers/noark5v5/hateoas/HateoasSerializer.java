@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST;
+import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST_COUNT;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
 
 
@@ -53,9 +54,7 @@ public class HateoasSerializer extends StdSerializer<HateoasNoarkObject> {
         // It's an empty object, so just returning Hateoas self links
         else {
             jgen.writeStartObject();
-            jgen.writeFieldName(ENTITY_ROOT_NAME_LIST);
-            jgen.writeStartObject();
-            jgen.writeEndObject();
+            jgen.writeNumberField(ENTITY_ROOT_NAME_LIST_COUNT, 0);
             printHateoasLinks(jgen, hateoasObject.getSelfLinks());
             jgen.writeEndObject();
         }
