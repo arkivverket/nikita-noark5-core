@@ -10,8 +10,12 @@ import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+
+import static nikita.common.config.HATEOASConstants.LINKS;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -38,7 +42,11 @@ import java.io.IOException;
  * - Unknown property values in the JSON will trigger an exception
  * - Missing obligatory property values in the JSON will trigger an exception
  */
-public class FondsDeserializer extends JsonDeserializer {
+public class FondsDeserializer
+        extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(FondsDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -62,6 +70,12 @@ public class FondsDeserializer extends JsonDeserializer {
         if (currentNode != null) {
             fonds.setFondsStatus(currentNode.textValue());
             objectNode.remove(N5ResourceMappings.FONDS_STATUS);
+        }
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
         }
 
         // Check that there are no additional values left after processing the tree

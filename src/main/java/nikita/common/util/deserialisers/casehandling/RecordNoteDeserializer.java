@@ -8,9 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
@@ -25,6 +28,9 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  */
 public class RecordNoteDeserializer
         extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(RecordNoteDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -117,6 +123,12 @@ public class RecordNoteDeserializer
         if (null != currentNode) {
             recordNote.setLoanedTo(currentNode.textValue());
             objectNode.remove(CASE_LOANED_TO);
+        }
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
         }
 
         // Check that there are no additional values left after processing

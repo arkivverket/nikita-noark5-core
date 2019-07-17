@@ -3,13 +3,17 @@ package nikita.common.util.deserialisers;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkEntity;
 
@@ -24,6 +28,9 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoar
  */
 public class ClassifiactionSystemDeserializer extends JsonDeserializer {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(ClassifiactionSystemDeserializer.class);
+
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
@@ -37,6 +44,12 @@ public class ClassifiactionSystemDeserializer extends JsonDeserializer {
 
         // Deserialise general properties
         deserialiseNoarkEntity(classificationSystem, objectNode, errors);
+
+        JsonNode currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
+        }
 
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception

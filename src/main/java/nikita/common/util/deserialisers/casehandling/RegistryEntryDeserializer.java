@@ -8,9 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
@@ -41,6 +44,9 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class RegistryEntryDeserializer
         extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(RegistryEntryDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -175,6 +181,12 @@ public class RegistryEntryDeserializer
         if (null != currentNode) {
             registryEntry.setLoanedTo(currentNode.textValue());
             objectNode.remove(CASE_LOANED_TO);
+        }
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
         }
 
         // Check that there are no additional values left after processing

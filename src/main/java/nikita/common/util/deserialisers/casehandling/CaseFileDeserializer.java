@@ -9,10 +9,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.UUID;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
@@ -33,7 +36,11 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * - Unknown property values in the JSON will trigger an exception
  * - Missing obligatory property values in the JSON will trigger an exception
  */
-public class CaseFileDeserializer extends JsonDeserializer {
+public class CaseFileDeserializer
+        extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(CaseFileDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -134,6 +141,12 @@ public class CaseFileDeserializer extends JsonDeserializer {
             }
             caseFile.setReferenceSeries(series);
             objectNode.remove(REFERENCE_SERIES);
+        }
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
         }
 
         // Check that there are no additional values left after processing the

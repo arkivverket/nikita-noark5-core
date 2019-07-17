@@ -3,13 +3,18 @@ package nikita.common.util.deserialisers;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+
+import static nikita.common.config.HATEOASConstants.LINKS;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -36,7 +41,11 @@ import java.io.IOException;
  * - Unknown property values in the JSON will trigger an exception
  * - Missing obligatory property values in the JSON will trigger an exception
  */
-public class FondsCreatorDeserializer extends JsonDeserializer {
+public class FondsCreatorDeserializer
+        extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(FondsCreatorDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -50,6 +59,12 @@ public class FondsCreatorDeserializer extends JsonDeserializer {
 
         // Deserialise general properties
         CommonUtils.Hateoas.Deserialize.deserialiseFondsCreator(fondsCreator, objectNode, errors);
+
+        JsonNode currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
+        }
 
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception

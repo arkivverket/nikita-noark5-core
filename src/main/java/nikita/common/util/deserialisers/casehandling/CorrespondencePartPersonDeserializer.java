@@ -3,13 +3,17 @@ package nikita.common.util.deserialisers.casehandling;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
@@ -17,7 +21,11 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * <p>
  * Deserialise an incoming CorrespondencePartPerson JSON object.
  */
-public class CorrespondencePartPersonDeserializer extends JsonDeserializer {
+public class CorrespondencePartPersonDeserializer
+        extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(CorrespondencePartPersonDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -35,6 +43,11 @@ public class CorrespondencePartPersonDeserializer extends JsonDeserializer {
         deserialiseCorrespondencePartPersonEntity(
                 correspondencePart, objectNode, errors);
 
+        JsonNode currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
+        }
         // Check that there are no additional values left after processing
         // the tree If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {

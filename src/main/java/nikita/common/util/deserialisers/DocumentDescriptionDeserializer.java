@@ -9,10 +9,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
@@ -41,6 +44,9 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  *   instantiation time
  */
 public class DocumentDescriptionDeserializer extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(DocumentDescriptionDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -122,6 +128,13 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
 
         // Deserialize general documentDescription properties
         deserialiseDocumentMedium(documentDescription, objectNode, errors);
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
+        }
+
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {

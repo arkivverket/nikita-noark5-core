@@ -8,9 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
@@ -40,7 +43,11 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * - Missing obligatory property values in the JSON will trigger an exception
  * - Record has no obligatory values required to be present at instantiation time
  */
-public class RecordDeserializer extends JsonDeserializer {
+public class RecordDeserializer
+        extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(RecordDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -90,8 +97,15 @@ public class RecordDeserializer extends JsonDeserializer {
             record.setDescription(currentNode.textValue());
             objectNode.remove(DESCRIPTION);
         }
+
         deserialiseDocumentMedium(record, objectNode, errors);
         deserialiseAuthor(record, objectNode, errors);
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
+        }
 
         // Check that there are no additional values left after processing
         // the tree. If there are additional throw a malformed input exception
