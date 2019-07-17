@@ -437,31 +437,63 @@ public class RecordHateoasController extends NoarkController {
                         generateDefaultCorrespondencePartPerson(systemID));
     }
 
-    // Create a suggested CorrespondencePartUnit (like a template) object with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartenhet
-    @ApiOperation(value = "Suggests the contents of a new CorrespondencePart object",
-            notes = "Returns a pre-filled CorrespondencePart object" +
-                    " with values relevant for the logged-in user", response = CorrespondencePartUnitHateoas.class)
+    // Create a suggested PartUnit (like a template) object with default values
+    // (nothing persisted)
+    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-partenhet
+    @ApiOperation(value = "Suggests the contents of a new Part object",
+            notes = "Returns a pre-filled Part object" +
+                    " with values relevant for the logged-in user",
+            response = PartUnitHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePart " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CorrespondencePartUnitHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200, message = "Part " +
+                    API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartUnitHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = {SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_UNIT})
-    public ResponseEntity<CorrespondencePartUnitHateoas> getCorrespondencePartUnitTemplate(
+    @GetMapping(value =
+            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT})
+    public ResponseEntity<PartUnitHateoas> getPartUnitTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
-                    value = "systemId of record to associate the CorrespondencePartPerson with.",
+                    value = "systemId of record to associate the PartPerson with.",
                     required = true)
             @PathVariable("systemID") String systemID) throws NikitaException {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
-                        generateDefaultCorrespondencePartUnit(systemID));
+                        generateDefaultPartUnit(systemID));
+    }
+
+    // Create a suggested PartUnit (like a template) object with default values (nothing persisted)
+    // GET [contextPath][api]/arkivstruktur/journalpost/{systemId}/ny-partperson
+    @ApiOperation(value = "Suggests the contents of a new Part object",
+            notes = "Returns a pre-filled Part object" +
+                    " with values relevant for the logged-in user", response = PartPersonHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Part " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartUnitHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value =
+            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON})
+    public ResponseEntity<PartPersonHateoas> getPartPersonTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of record to associate the PartPerson with.",
+                    required = true)
+            @PathVariable("systemID") String systemID) throws NikitaException {
+
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.
+                        generateDefaultPartPerson(systemID));
     }
 
 

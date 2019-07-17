@@ -381,6 +381,46 @@ public class RecordService
     }
 
     /**
+     * Generate a Default PartUnit object that can be
+     * associated with the identified Record.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param recordSystemId The systemId of the record object
+     *                       you wish to create a templated object for
+     * @return the PartUnit object wrapped as a
+     * PartUnitHateoas object
+     */
+    @Override
+    public PartPersonHateoas
+    generateDefaultPartPerson(
+            String recordSystemId) {
+        return partService.generateDefaultPartPerson(recordSystemId);
+    }
+
+    /**
+     * Generate a Default PartUnit object that can be
+     * associated with the identified Record.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param recordSystemId The systemId of the record object
+     *                       you wish to create a templated object for
+     * @return the PartUnit object wrapped as a
+     * PartUnitHateoas object
+     */
+    @Override
+    public PartUnitHateoas
+    generateDefaultPartUnit(
+            String recordSystemId) {
+        return partService.generateDefaultPartUnit(recordSystemId);
+    }
+
+    /**
      * Generate a Default CorrespondencePartUnit object that can be
      * associated with the identified Record.
      * <p>

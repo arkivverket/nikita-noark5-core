@@ -58,12 +58,12 @@ public class Part
 
     @Override
     public PartRole getPartRole() {
-        return null;
+        return referencePartRole;
     }
 
     @Override
     public void setPartRole(PartRole partRole) {
-
+        this.referencePartRole = partRole;
     }
 
     public void addReferenceFile(File file) {

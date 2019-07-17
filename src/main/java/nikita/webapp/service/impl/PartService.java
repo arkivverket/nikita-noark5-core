@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
+import static nikita.common.config.Constants.TEMPLATE_PART_ROLE_CODE;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @Service
@@ -419,8 +419,7 @@ public class PartService
         PartUnit suggestedPart =
                 new PartUnit();
 
-        findAndSetPartRole(CORRESPONDENCE_PART_CODE_EA,
-                suggestedPart);
+        findAndSetPartRole(TEMPLATE_PART_ROLE_CODE, suggestedPart);
 
         createTemplatePostalAddress(suggestedPart);
         createTemplateBusinessAddress(suggestedPart);
@@ -453,8 +452,7 @@ public class PartService
         PartPerson suggestedPart =
                 new PartPerson();
 
-        findAndSetPartRole(CORRESPONDENCE_PART_CODE_EA,
-                suggestedPart);
+        findAndSetPartRole(TEMPLATE_PART_ROLE_CODE, suggestedPart);
 
         createTemplatePostalAddress(suggestedPart);
         createTemplateResidingAddress(suggestedPart);
@@ -603,7 +601,7 @@ public class PartService
         PartRole partRole = partRoleRepository.findByCode(code);
         if (partRole == null) {
             throw new NikitaException("Internal error, metadata missing. [" +
-                    CORRESPONDENCE_PART_CODE_EA + "] returns no value");
+                    code + "] returns no value");
         }
         part.setPartRole(partRole);
     }

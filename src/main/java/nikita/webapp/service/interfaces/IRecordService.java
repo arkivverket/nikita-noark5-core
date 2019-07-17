@@ -34,6 +34,12 @@ public interface IRecordService {
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
             String recordSystemId);
 
+    PartPersonHateoas generateDefaultPartPerson(
+            String recordSystemId);
+
+    PartUnitHateoas generateDefaultPartUnit(
+            String recordSystemId);
+
     CorrespondencePartPersonHateoas
     createCorrespondencePartPersonAssociatedWithRecord(
             String systemID, CorrespondencePartPerson correspondencePart);

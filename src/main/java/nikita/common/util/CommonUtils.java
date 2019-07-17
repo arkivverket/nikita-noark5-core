@@ -1211,7 +1211,7 @@ DateTimeFormatter dateFormatter =
                 } else {
                     errors.append("The PartRole object you tried to create is");
                     errors.append(" missing  ");
-                    errors.append(CORRESPONDENCE_PART_TYPE);
+                    errors.append(PART_ROLE);
                 }
             }
 
@@ -1699,7 +1699,7 @@ DateTimeFormatter dateFormatter =
                     JsonGenerator jgen,
                     IGenericUnitEntity unit)
                     throws IOException {
-                printPartUnit(jgen, unit);
+                printPart(jgen, (IPartEntity) unit);
                 printGenericUnit(jgen, unit);
             }
 
