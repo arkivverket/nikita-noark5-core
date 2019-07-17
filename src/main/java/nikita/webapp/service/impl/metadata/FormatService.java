@@ -95,7 +95,7 @@ public class FormatService
     @Override
     public MetadataHateoas findByCode(String code) {
         MetadataHateoas metadataHateoas =
-                new MetadataHateoas(formatRepository.findByCode(code));
+                new MetadataHateoas(getFormatOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }

@@ -175,17 +175,17 @@ public class FormatController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(
+    @GetMapping(
             value = FORMAT + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+                    RIGHT_PARENTHESIS + SLASH + LEFT_PARENTHESIS + "value" +
+                    RIGHT_PARENTHESIS)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
+            @PathVariable("value") final String value,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                formatService.findByCode(code);
+                formatService.findByCode(code + SLASH + value);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
