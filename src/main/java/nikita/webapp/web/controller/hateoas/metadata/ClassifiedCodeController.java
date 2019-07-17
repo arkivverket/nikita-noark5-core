@@ -171,8 +171,8 @@ public class ClassifiedCodeController {
                     RIGHT_PARENTHESIS + SLASH,
             method = RequestMethod.GET
     )
-    public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String code,
+    public ResponseEntity<MetadataHateoas> findByCode(
+            @PathVariable("kode") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =

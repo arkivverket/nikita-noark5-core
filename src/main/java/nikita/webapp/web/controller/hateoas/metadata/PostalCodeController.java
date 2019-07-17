@@ -168,7 +168,7 @@ public class PostalCodeController {
             method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findByCode(
-            @PathVariable("systemID") final String code,
+            @PathVariable("kode") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = postalCodeService.findByCode(code);

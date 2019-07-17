@@ -113,7 +113,7 @@ public class SeriesStatusController {
 
     @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
     public ResponseEntity<MetadataHateoas> findByCode(
-            @PathVariable("systemID") final String code,
+            @PathVariable("kode") final String code,
             HttpServletRequest request) {
         SeriesStatus seriesStatus =
                 seriesStatusService.findByCode(code);

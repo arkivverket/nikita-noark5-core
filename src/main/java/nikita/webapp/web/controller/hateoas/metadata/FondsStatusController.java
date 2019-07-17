@@ -111,8 +111,8 @@ public class FondsStatusController {
     @Counted
 
     @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
-    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String code,
-                                                          HttpServletRequest request) {
+    public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
+                                                      HttpServletRequest request) {
         FondsStatus fondsStatus = fondsStatusService.findByCode(code);
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());

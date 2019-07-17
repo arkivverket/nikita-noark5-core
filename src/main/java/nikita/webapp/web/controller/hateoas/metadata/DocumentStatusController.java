@@ -121,8 +121,8 @@ public class DocumentStatusController {
     @Counted
 
     @RequestMapping(value = DOCUMENT_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
-    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String code,
-                                                          HttpServletRequest request) {
+    public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
+                                                      HttpServletRequest request) {
         DocumentStatus documentStatus =
                 documentStatusService.findByCode(code);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);

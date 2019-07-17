@@ -148,8 +148,8 @@ public class PartRoleController {
     @Counted
     @GetMapping(value = PART_ROLE + SLASH + LEFT_PARENTHESIS + CODE +
             RIGHT_PARENTHESIS + SLASH)
-    public ResponseEntity<MetadataHateoas> findBySystemId(
-            @PathVariable("systemID") final String code,
+    public ResponseEntity<MetadataHateoas> findByCode(
+            @PathVariable("kode") final String code,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = partyRoleService.findByCode(code);

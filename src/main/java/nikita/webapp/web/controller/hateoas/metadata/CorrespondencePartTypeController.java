@@ -115,8 +115,8 @@ public class CorrespondencePartTypeController extends NoarkController {
 
     @RequestMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS,
             method = RequestMethod.GET)
-    public ResponseEntity<MetadataHateoas> findBySystemId(@PathVariable("systemID") final String code,
-                                                          HttpServletRequest request) {
+    public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
+                                                      HttpServletRequest request) {
         CorrespondencePartType correspondencePartType = correspondencePartTypeService.findByCode(code);
         MetadataHateoas metadataHateoas = new MetadataHateoas(correspondencePartType);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
