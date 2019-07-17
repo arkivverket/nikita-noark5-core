@@ -49,8 +49,8 @@ public class ClassifiactionSystemDeserializer extends JsonDeserializer {
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +
                     "This value is being ignored.");
+            objectNode.remove(LINKS);
         }
-
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {

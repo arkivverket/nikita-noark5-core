@@ -1084,6 +1084,11 @@ DateTimeFormatter dateFormatter =
                 deserialiseGenericPersonEntity(partPersonEntity,
                         objectNode, errors);
 
+                // FIXME : Ugly hack as code evolved where metadataentity
+                // and nikitaentity suddenly no longer are the same
+                // just to keep things moving ...
+                ((INoarkGeneralEntity) partPersonEntity).setTitle("TEMP: REMOVE ME!");
+
                 // Deserialize postalAddress
                 JsonNode currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
@@ -1131,6 +1136,11 @@ DateTimeFormatter dateFormatter =
                     ObjectNode objectNode, StringBuilder errors) {
 
                 deserialisePartRole(partUnit, objectNode, errors);
+
+                // FIXME : Ugly hack as code evolved where metadataentity
+                // and nikitaentity suddenly no longer are the same
+                // just to keep things moving ...
+                ((INoarkGeneralEntity) partUnit).setTitle("TEMP: REMOVE ME!");
 
                 // Deserialize kontaktperson
                 JsonNode currentNode = objectNode.get(CONTACT_PERSON);
@@ -1700,6 +1710,14 @@ DateTimeFormatter dateFormatter =
                     IGenericUnitEntity unit)
                     throws IOException {
                 printPart(jgen, (IPartEntity) unit);
+                printGenericUnit(jgen, unit);
+            }
+
+            public static void printCorrespondencePartUnit(
+                    JsonGenerator jgen,
+                    IGenericUnitEntity unit)
+                    throws IOException {
+                printCorrespondencePart(jgen, (ICorrespondencePartEntity) unit);
                 printGenericUnit(jgen, unit);
             }
 
