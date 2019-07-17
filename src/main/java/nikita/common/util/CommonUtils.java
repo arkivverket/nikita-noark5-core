@@ -336,7 +336,7 @@ public final class CommonUtils {
 
                 if (!path.equals(servletPath)) {
                     updatedServletPath = path + "{" + CODE + "}" + SLASH;
-                    if (servletPath.contains("fmt")) {
+                    if (servletPath.contains("/format/")) {
                         updatedServletPath += "{value}/";
                     }
                 }
