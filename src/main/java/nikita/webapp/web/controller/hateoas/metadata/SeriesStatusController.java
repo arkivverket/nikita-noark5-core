@@ -1,4 +1,4 @@
-package no.arkivdellab.hioa.nikita.webapp.web.controller.hateoas.metadata;
+package nikita.webapp.web.controller.hateoas.metadata;
 
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.ApiOperation;
@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.metadata.SeriesStatus;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -17,10 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
+import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
@@ -63,7 +64,7 @@ public class SeriesStatusController {
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(seriesStatus.getVersion().toString())
                 .body(metadataHateoas);
     }
@@ -80,18 +81,16 @@ public class SeriesStatusController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = FONDS_STATUS)
+    @GetMapping(value = FONDS_STATUS)
+    @SuppressWarnings("unchecked")
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
-        return null;
-        /*MetadataHateoas metadataHateoas = new MetadataHateoas(new
-                List<>(seriesStatusService.findAllAsList()),
-                FONDS_STATUS);
+        MetadataHateoas metadataHateoas =
+                new MetadataHateoas((List<INikitaEntity>)
+                        (List) seriesStatusService.findAll(), SERIES_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(metadataHateoas);*/
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(metadataHateoas);
     }
 
     // Retrieves a given seriesStatus identified by a code
@@ -120,7 +119,7 @@ public class SeriesStatusController {
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(seriesStatus.getVersion().toString())
                 .body(metadataHateoas);
     }
@@ -144,7 +143,7 @@ public class SeriesStatusController {
         seriesStatus.setName(TEMPLATE_FONDS_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
@@ -171,7 +170,7 @@ public class SeriesStatusController {
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }
