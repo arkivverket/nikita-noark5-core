@@ -341,7 +341,7 @@ public class RecordHateoasHandler
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FONDS_STRUCTURE
                         + RECORD + SLASH + entity.getSystemId() + SLASH
-                        + NEW_PART_UNIT + SLASH,
+                        + NEW_CORRESPONDENCE_PART_UNIT + SLASH,
                         REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_UNIT));
     }
 
