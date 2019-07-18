@@ -81,7 +81,7 @@ public class SeriesStatusController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = FONDS_STATUS)
+    @GetMapping(value = SERIES_STATUS)
     @SuppressWarnings("unchecked")
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas =
@@ -110,7 +110,7 @@ public class SeriesStatusController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
+    @RequestMapping(value = SERIES_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -136,11 +136,11 @@ public class SeriesStatusController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.GET, value = NEW_FONDS_STATUS)
+    @RequestMapping(method = RequestMethod.GET, value = NEW_SERIES_STATUS)
     public ResponseEntity<MetadataHateoas> getSeriesStatusTemplate(HttpServletRequest request) {
-        SeriesStatus seriesStatus = new SeriesStatus();
-        seriesStatus.setCode(TEMPLATE_FONDS_STATUS_CODE);
-        seriesStatus.setName(TEMPLATE_FONDS_STATUS_NAME);
+        SeriesStatus seriesStatus =
+                seriesStatusService.findByCode(TEMPLATE_SERIES_STATUS_CODE);
+        seriesStatus.setCode(TEMPLATE_SERIES_STATUS_CODE);
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -161,8 +161,7 @@ public class SeriesStatusController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.PUT, value = FONDS_STATUS + SLASH + FONDS_STATUS)
+    @RequestMapping(method = RequestMethod.PUT, value = SERIES_STATUS + SLASH + SERIES_STATUS)
     public ResponseEntity<MetadataHateoas> updateSeriesStatus(@RequestBody SeriesStatus seriesStatus,
                                                               HttpServletRequest request)
             throws NikitaException {

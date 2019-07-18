@@ -66,6 +66,8 @@ public final class N5ResourceMappings {
     public static final String CODE_COMMENT = "merknad";
     public static final String CODE = "kode";
 
+    public static final String CODE_PARAMETER =
+            SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH;
     // Fonds
     public static final String FONDS_STATUS = "arkivstatus";
 

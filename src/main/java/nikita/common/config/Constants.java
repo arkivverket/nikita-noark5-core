@@ -122,6 +122,8 @@ public final class Constants {
     public static final String NEW_DOCUMENT_MEDIUM = NEW + DASH +
             DOCUMENT_MEDIUM;
     public static final String NEW_FONDS_STATUS = NEW + DASH + FONDS_STATUS;
+    public static final String NEW_SERIES_STATUS = NEW + DASH + SERIES_STATUS;
+
     public static final String NEW_DOCUMENT_STATUS = NEW + DASH +
             DOCUMENT_STATUS;
 
@@ -231,6 +233,9 @@ public final class Constants {
     public static final String TEMPLATE_FONDS_STATUS_CODE = "Opprettet";
     public static final String TEMPLATE_FONDS_STATUS_NAME =
             "Arkivet er opprettet og i aktiv bruk";
+
+    public static final String TEMPLATE_SERIES_STATUS_CODE = "O";
+
     public static final String TEMPLATE_DOCUMENT_MEDIUM_CODE =
             "Elektronisk arkiv";
     public static final String TEMPLATE_DOCUMENT_MEDIUM_NAME =
