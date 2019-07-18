@@ -9,8 +9,6 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 
 import java.io.IOException;
 
-import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
@@ -41,97 +39,10 @@ public class RegistryEntryHateoasSerializer
         RegistryEntry registryEntry = (RegistryEntry) noarkSystemIdEntity;
 
         jgen.writeStartObject();
+        printRecordEntity(jgen, registryEntry);
+        printRecordNoteEntity(jgen, registryEntry);
+        printRegistryEntryEntity(jgen, registryEntry);
 
-        printSystemIdEntity(jgen, registryEntry);
-        printCreateEntity(jgen, registryEntry);
-        if (registryEntry.getArchivedDate() != null) {
-            jgen.writeStringField(RECORD_ARCHIVED_DATE,
-                    Serialize.formatDateTime(registryEntry.getArchivedDate()));
-        }
-        if (registryEntry.getArchivedBy() != null) {
-            jgen.writeStringField(RECORD_ARCHIVED_BY,
-                    registryEntry.getArchivedBy());
-        }
-        printDisposal(jgen, registryEntry);
-        printScreening(jgen, registryEntry);
-        printClassified(jgen, registryEntry);
-
-        // handle general Record  properties
-        if (registryEntry.getRecordId() != null) {
-            jgen.writeStringField(RECORD_ID, registryEntry.getRecordId());
-        }
-        if (registryEntry.getTitle() != null) {
-            jgen.writeStringField(TITLE, registryEntry.getTitle());
-        }
-        if (registryEntry.getOfficialTitle() != null) {
-            jgen.writeStringField(FILE_PUBLIC_TITLE,
-                    registryEntry.getOfficialTitle());
-        }
-        if (registryEntry.getDescription() != null) {
-            jgen.writeStringField(DESCRIPTION, registryEntry.getDescription());
-        }
-        printKeyword(jgen, registryEntry);
-        printDocumentMedium(jgen, registryEntry);
-        printStorageLocation(jgen, registryEntry);
-        printComment(jgen, registryEntry);
-
-        // TODO: FIX THIS CommonprintCrossReference(jgen, registryEntry);
-        if (registryEntry.getRecordYear() != null) {
-            jgen.writeNumberField(REGISTRY_ENTRY_YEAR,
-                    registryEntry.getRecordYear());
-        }
-        if (registryEntry.getRecordSequenceNumber() != null) {
-            jgen.writeNumberField(REGISTRY_ENTRY_SEQUENCE_NUMBER,
-                    registryEntry.getRecordSequenceNumber());
-        }
-        if (registryEntry.getRegistryEntryNumber() != null) {
-            jgen.writeNumberField(REGISTRY_ENTRY_NUMBER,
-                    registryEntry.getRegistryEntryNumber());
-        }
-        if (registryEntry.getRegistryEntryType() != null) {
-            jgen.writeStringField(REGISTRY_ENTRY_TYPE,
-                    registryEntry.getRegistryEntryType());
-        }
-        if (registryEntry.getRecordStatus() != null) {
-            jgen.writeStringField(REGISTRY_ENTRY_STATUS,
-                    registryEntry.getRecordStatus());
-        }
-        if (registryEntry.getRecordDate() != null) {
-            jgen.writeStringField(REGISTRY_ENTRY_DATE,
-                    Serialize.formatDate(registryEntry.getRecordDate()));
-        }
-        if (registryEntry.getDocumentDate() != null) {
-            jgen.writeStringField(REGISTRY_ENTRY_DOCUMENT_DATE,
-                    Serialize.formatDate(registryEntry.getDocumentDate()));
-        }
-        if (registryEntry.getReceivedDate() != null) {
-            jgen.writeStringField(REGISTRY_ENTRY_RECEIVED_DATE,
-                    Serialize.formatDate(registryEntry.getReceivedDate()));
-        }
-        if (registryEntry.getSentDate() != null) {
-            jgen.writeStringField(REGISTRY_ENTRY_SENT_DATE,
-                    Serialize.formatDate(registryEntry.getSentDate()));
-        }
-        if (registryEntry.getDueDate() != null) {
-            jgen.writeStringField(REGISTRY_ENTRY_DUE_DATE,
-                    Serialize.formatDate(registryEntry.getDueDate()));
-        }
-        if (registryEntry.getFreedomAssessmentDate() != null) {
-            jgen.writeStringField(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
-                    Serialize.formatDate(
-                            registryEntry.getFreedomAssessmentDate()));
-        }
-        if (registryEntry.getNumberOfAttachments() != null) {
-            jgen.writeNumberField(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS,
-                    registryEntry.getNumberOfAttachments());
-        }
-        if (registryEntry.getLoanedDate() != null) {
-            jgen.writeStringField(CASE_LOANED_DATE,
-                    Serialize.formatDate(registryEntry.getLoanedDate()));
-        }
-        if (registryEntry.getLoanedTo() != null) {
-            jgen.writeStringField(CASE_LOANED_TO, registryEntry.getLoanedTo());
-        }
         /*
         TODO: Temp disabled!
         printCorrespondencePartPersons(jgen, registryEntry);

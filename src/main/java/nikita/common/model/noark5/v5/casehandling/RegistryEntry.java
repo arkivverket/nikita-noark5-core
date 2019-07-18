@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
-import nikita.common.model.noark5.v5.interfaces.IDocumentFlow;
-import nikita.common.model.noark5.v5.interfaces.IElectronicSignature;
-import nikita.common.model.noark5.v5.interfaces.IPrecedence;
-import nikita.common.model.noark5.v5.interfaces.ISignOff;
+import nikita.common.model.noark5.v5.interfaces.entities.IRegistryEntryEntity;
 import nikita.common.model.noark5.v5.secondary.ElectronicSignature;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.deserialisers.casehandling.RegistryEntryDeserializer;
@@ -39,7 +36,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasObject(using = RegistryEntryHateoas.class)
 public class RegistryEntry
         extends Record
-        implements IElectronicSignature, IPrecedence, ISignOff, IDocumentFlow {
+        implements IRegistryEntryEntity {
 
     /**
      * M013 - journalaar (xs:integer)

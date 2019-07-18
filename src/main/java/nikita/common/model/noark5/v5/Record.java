@@ -5,9 +5,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
-import nikita.common.model.noark5.v5.interfaces.*;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IRecordEntity;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.webapp.hateoas.RecordHateoasHandler;
@@ -40,9 +38,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasObject(using = RecordHateoas.class)
 public class Record
         extends NoarkEntity
-        implements INoarkCreateEntity, IClassified, IScreening, IDisposal,
-        IDocumentMedium, INoarkTitleDescriptionEntity, IStorageLocation,
-        IKeyword, IComment, ICrossReference, IAuthor {
+        implements IRecordEntity {
 
     /**
      * M604 - arkivertDato (xs:dateTime)

@@ -1536,6 +1536,114 @@ DateTimeFormatter dateFormatter =
                 }
             }
 
+            public static void printRecordEntity(JsonGenerator jgen,
+                                                 IRecordEntity record)
+                    throws IOException {
+                if (record != null) {
+                    printSystemIdEntity(jgen, record);
+                    printCreateEntity(jgen, record);
+                    if (record.getArchivedDate() != null) {
+                        jgen.writeStringField(RECORD_ARCHIVED_DATE,
+                                formatDateTime(record.getArchivedDate()));
+                    }
+                    if (record.getArchivedBy() != null) {
+                        jgen.writeStringField(RECORD_ARCHIVED_BY,
+                                record.getArchivedBy());
+                    }
+                    if (record.getArchivedDate() != null) {
+                        jgen.writeStringField(RECORD_ARCHIVED_DATE,
+                                formatDateTime(record.getArchivedDate()));
+                    }
+                    if (record.getArchivedBy() != null) {
+                        jgen.writeStringField(RECORD_ARCHIVED_BY,
+                                record.getArchivedBy());
+                    }
+                    if (record.getTitle() != null) {
+                        jgen.writeStringField(TITLE, record.getTitle());
+                    }
+                    if (record.getOfficialTitle() != null) {
+                        jgen.writeStringField(FILE_PUBLIC_TITLE,
+                                record.getOfficialTitle());
+                    }
+                    if (record.getDescription() != null) {
+                        jgen.writeStringField(DESCRIPTION,
+                                record.getDescription());
+                    }
+                }
+            }
+
+            public static void printRecordNoteEntity(
+                    JsonGenerator jgen, IRecordNoteEntity recordNote)
+                    throws IOException {
+                if (recordNote != null) {
+                    if (recordNote.getDocumentDate() != null) {
+                        jgen.writeStringField(REGISTRY_ENTRY_DOCUMENT_DATE,
+                                formatDate(recordNote.getDocumentDate()));
+                    }
+                    if (recordNote.getReceivedDate() != null) {
+                        jgen.writeStringField(REGISTRY_ENTRY_RECEIVED_DATE,
+                                formatDate(recordNote.getReceivedDate()));
+                    }
+                    if (recordNote.getSentDate() != null) {
+                        jgen.writeStringField(REGISTRY_ENTRY_SENT_DATE,
+                                formatDate(recordNote.getSentDate()));
+                    }
+                    if (recordNote.getDueDate() != null) {
+                        jgen.writeStringField(REGISTRY_ENTRY_DUE_DATE,
+                                formatDate(recordNote.getDueDate()));
+                    }
+                    if (recordNote.getFreedomAssessmentDate() != null) {
+                        jgen.writeStringField(
+                                REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
+                                formatDate(
+                                        recordNote.getFreedomAssessmentDate()));
+                    }
+                    if (recordNote.getNumberOfAttachments() != null) {
+                        jgen.writeNumberField(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS,
+                                recordNote.getNumberOfAttachments());
+                    }
+                    if (recordNote.getLoanedDate() != null) {
+                        jgen.writeStringField(CASE_LOANED_DATE,
+                                formatDate(recordNote.getLoanedDate()));
+                    }
+                    if (recordNote.getLoanedTo() != null) {
+                        jgen.writeStringField(CASE_LOANED_TO,
+                                recordNote.getLoanedTo());
+                    }
+                }
+            }
+
+            public static void printRegistryEntryEntity(
+                    JsonGenerator jgen, IRegistryEntryEntity registryEntry)
+                    throws IOException {
+                if (registryEntry != null) {
+                    if (registryEntry.getRecordYear() != null) {
+                        jgen.writeNumberField(REGISTRY_ENTRY_YEAR,
+                                registryEntry.getRecordYear());
+                    }
+                    if (registryEntry.getRecordSequenceNumber() != null) {
+                        jgen.writeNumberField(REGISTRY_ENTRY_SEQUENCE_NUMBER,
+                                registryEntry.getRecordSequenceNumber());
+                    }
+                    if (registryEntry.getRegistryEntryNumber() != null) {
+                        jgen.writeNumberField(REGISTRY_ENTRY_NUMBER,
+                                registryEntry.getRegistryEntryNumber());
+                    }
+                    if (registryEntry.getRegistryEntryType() != null) {
+                        jgen.writeStringField(REGISTRY_ENTRY_TYPE,
+                                registryEntry.getRegistryEntryType());
+                    }
+                    if (registryEntry.getRecordStatus() != null) {
+                        jgen.writeStringField(REGISTRY_ENTRY_STATUS,
+                                registryEntry.getRecordStatus());
+                    }
+                    if (registryEntry.getRecordDate() != null) {
+                        jgen.writeStringField(REGISTRY_ENTRY_DATE,
+                                formatDate(registryEntry.getRecordDate()));
+                    }
+                }
+            }
+
             public static void printDocumentMedium(JsonGenerator jgen,
                                                    IDocumentMedium documentMedium)
                     throws IOException {
