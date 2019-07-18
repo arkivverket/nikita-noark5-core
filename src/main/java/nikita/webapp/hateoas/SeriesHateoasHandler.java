@@ -183,7 +183,7 @@ public class SeriesHateoasHandler extends HateoasHandler
         if (authorisation.canCreateFileAttachedToSeries()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                     NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH + entity.getSystemId() + SLASH
-                    + NEW_CASE_FILE + SLASH, REL_FONDS_STRUCTURE_NEW_CASE_FILE, false));
+                    + NEW_CASE_FILE + SLASH, REL_CASE_HANDLING_NEW_CASE_FILE, false));
         }
     }
 
@@ -229,7 +229,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     public void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES +
-                SLASH + entity.getSystemId() + SLASH + CASE_FILE + SLASH, REL_FONDS_STRUCTURE_CASE_FILE,
+                SLASH + entity.getSystemId() + SLASH + CASE_FILE + SLASH, REL_CASE_HANDLING_CASE_FILE,
                 false));
     }
 

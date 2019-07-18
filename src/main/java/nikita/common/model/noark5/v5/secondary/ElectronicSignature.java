@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
@@ -13,8 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
-import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
@@ -105,6 +103,11 @@ public class ElectronicSignature
     @Override
     public String getBaseTypeName() {
         return ELECTRONIC_SIGNATURE;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE;
     }
 
     public RegistryEntry getReferenceRegistryEntry() {

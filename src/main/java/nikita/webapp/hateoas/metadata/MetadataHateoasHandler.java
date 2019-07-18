@@ -27,7 +27,11 @@ public class MetadataHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
                 SLASH + entity.getBaseTypeName() + SLASH + code + SLASH,
-                getRelSelfLink(), false));
+                getRelSelfLink()));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
+                SLASH + entity.getBaseTypeName() + SLASH + code + SLASH,
+                entity.getBaseRel()));
     }
 
     @Override

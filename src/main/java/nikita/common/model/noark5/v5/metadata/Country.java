@@ -1,12 +1,9 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.config.N5ResourceMappings;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.REL_METADATA_COUNTRY;
 import static nikita.common.config.Constants.TABLE_COUNTRY;
 import static nikita.common.config.N5ResourceMappings.COUNTRY;
 
@@ -20,5 +17,10 @@ public class Country extends MetadataSuperClass {
     @Override
     public String getBaseTypeName() {
         return COUNTRY;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_METADATA_COUNTRY;
     }
 }

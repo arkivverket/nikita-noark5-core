@@ -107,6 +107,11 @@ public class Fonds
         return FONDS;
     }
 
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_FONDS;
+    }
+
     public List<Series> getReferenceSeries() {
         return referenceSeries;
     }

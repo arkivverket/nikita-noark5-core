@@ -20,6 +20,7 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_PART_PERSON;
 import static nikita.common.config.Constants.TABLE_PART_PERSON;
 import static nikita.common.config.N5ResourceMappings.PART_PERSON;
 
@@ -139,6 +140,11 @@ public class PartPerson
     @Override
     public String getBaseTypeName() {
         return PART_PERSON;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_PART_PERSON;
     }
 
     @Override

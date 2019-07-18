@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkEntity;
@@ -19,6 +18,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_COMMENT;
 import static nikita.common.config.Constants.TABLE_COMMENT;
 import static nikita.common.config.N5ResourceMappings.COMMENT;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -107,6 +107,11 @@ public class Comment
     @Override
     public String getBaseTypeName() {
         return COMMENT;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_COMMENT;
     }
 
     public List<File> getReferenceFile() {

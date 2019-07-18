@@ -315,6 +315,11 @@ public class RegistryEntry
     }
 
     @Override
+    public String getBaseRel() {
+        return REL_CASE_HANDLING_REGISTRY_ENTRY;
+    }
+
+    @Override
     public String getFunctionalTypeName() {
         return Constants.NOARK_CASE_HANDLING_PATH;
     }

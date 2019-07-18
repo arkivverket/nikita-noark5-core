@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static nikita.common.config.Constants.REL_METADATA_CASE_STATUS;
 import static nikita.common.config.Constants.TABLE_CASE_STATUS;
 import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
 
@@ -33,6 +37,11 @@ public class CaseStatus
     @Override
     public String getBaseTypeName() {
         return CASE_STATUS;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_METADATA_CASE_STATUS;
     }
 
     public Boolean getCaseStatus() {

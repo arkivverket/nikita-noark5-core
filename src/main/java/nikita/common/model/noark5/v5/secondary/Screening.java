@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.IScreeningEntity;
@@ -17,6 +16,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_SCREENING;
 import static nikita.common.config.Constants.TABLE_SCREENING;
 import static nikita.common.config.N5ResourceMappings.SCREENING;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -143,6 +143,11 @@ public class Screening
     @Override
     public String getBaseTypeName() {
         return SCREENING;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_SCREENING;
     }
 
     public List<Series> getReferenceSeries() {

@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.InheritanceType.JOINED;
-import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
-import static nikita.common.config.Constants.TABLE_RECORD_NOTE;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.RECORD_NOTE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -180,6 +179,11 @@ public class RecordNote
     @Override
     public String getBaseTypeName() {
         return RECORD_NOTE;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_CASE_HANDLING_RECORD_NOTE;
     }
 
     @Override

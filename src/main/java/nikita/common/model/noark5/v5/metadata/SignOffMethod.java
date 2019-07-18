@@ -1,12 +1,9 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.config.N5ResourceMappings;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.REL_METADATA_SIGN_OFF_METHOD;
 import static nikita.common.config.Constants.TABLE_SIGN_OFF_METHOD;
 import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
 
@@ -21,5 +18,10 @@ public class SignOffMethod
     @Override
     public String getBaseTypeName() {
         return SIGN_OFF_METHOD;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_METADATA_SIGN_OFF_METHOD;
     }
 }

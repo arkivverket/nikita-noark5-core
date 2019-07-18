@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Record;
@@ -15,6 +14,7 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_AUTHOR;
 import static nikita.common.config.Constants.TABLE_CONTACT_AUTHOR;
 import static nikita.common.config.N5ResourceMappings.AUTHOR;
 
@@ -50,6 +50,11 @@ public class Author
     @Override
     public String getBaseTypeName() {
         return AUTHOR;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_AUTHOR;
     }
 
     public List<Record> getReferenceRecord() {

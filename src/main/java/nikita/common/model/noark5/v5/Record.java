@@ -319,6 +319,11 @@ public class Record
         return RECORD;
     }
 
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_RECORD;
+    }
+
     public File getReferenceFile() {
         return referenceFile;
     }

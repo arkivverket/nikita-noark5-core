@@ -111,7 +111,7 @@ public class Part
 
     @Override
     public String getFunctionalTypeName() {
-        return NOARK_CASE_HANDLING_PATH;
+        return NOARK_FONDS_STRUCTURE_PATH;
     }
 
 }

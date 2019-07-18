@@ -125,6 +125,11 @@ public class DocumentFlow
     }
 
     @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_DOCUMENT_FLOW;
+    }
+
+    @Override
     public String getFunctionalTypeName() {
         return Constants.NOARK_CASE_HANDLING_PATH;
     }

@@ -174,6 +174,11 @@ public class NoarkEntity
     }
 
     @Override
+    public String getBaseRel() {
+        return null;
+    }
+
+    @Override
 
     // Most entities belong to arkivstruktur. These entities pick the value
     // up here

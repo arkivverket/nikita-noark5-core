@@ -109,14 +109,27 @@ public class HateoasHandler
         }
     }
 
+    /**
+     * Create a self link and self pointing entity link. Allows a client to be
+     * able to identify the entity type. Described in:
+     * <p>
+     * https://github.com/arkivverket/noark5-tjenestegrensesnitt-standard/blob/master/kapitler/06-konsepter_og_prinsipper.md#identifisere-entitetstype
+     *
+     * @param entity             The Noark entity
+     * @param hateoasNoarkObject The Hateoas Noark Object
+     */
     @Override
     public void addSelfLink(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
-        String systemId = entity.getSystemId();
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
-                SLASH + entity.getBaseTypeName() + SLASH + systemId + SLASH,
-                getRelSelfLink(), false));
+                SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemId()
+                + SLASH, getRelSelfLink()));
+
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
+                SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemId()
+                + SLASH, entity.getBaseRel()));
     }
 
     @Override

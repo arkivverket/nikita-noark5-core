@@ -46,11 +46,11 @@ public class MetadataSuperClass
     protected String code;
 
     /**
-     * M -  (xs:string)
+     * M -  (xs:boolean)
      */
-    @Column(name = "comment")
+    @Column(name = "inactive")
     @Audited
-    protected String comment;
+    protected Boolean inactive = false;
 
     /**
      * M -  (xs:string)
@@ -114,17 +114,6 @@ public class MetadataSuperClass
         this.code = code;
     }
 
-
-    @Override
-    public String getComment() {
-        return comment;
-    }
-
-    @Override
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     @Override
     public String getName() {
         return name;
@@ -133,6 +122,16 @@ public class MetadataSuperClass
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Boolean getInactive() {
+        return inactive;
+    }
+
+    @Override
+    public void setInactive(Boolean inactive) {
+        this.inactive = inactive;
     }
 
     @Override
@@ -203,7 +202,7 @@ public class MetadataSuperClass
     public String toString() {
         return "MetadataSuperClass{" +
                 "code='" + code + '\'' +
-                ", comment='" + comment + '\'' +
+                ", inactive='" + inactive + '\'' +
                 ", name='" + name + '\'' +
                 ", ownedBy='" + ownedBy + '\'' +
                 ", version=" + version +
@@ -230,7 +229,7 @@ public class MetadataSuperClass
                 .appendSuper(super.equals(other))
                 .append(code, rhs.code)
                 .append(name, rhs.name)
-                .append(comment, rhs.comment)
+                .append(inactive, rhs.inactive)
                 .append(version, rhs.getVersion())
                 .append(createdBy, rhs.getCreatedBy())
                 .append(createdDate, rhs.getCreatedDate())
@@ -240,13 +239,18 @@ public class MetadataSuperClass
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, name, comment, createdDate,
+        return Objects.hash(code, name, inactive, createdDate,
                 createdBy, lastModifiedDate, lastModifiedBy, ownedBy, version);
     }
 
     @Override
     public String getBaseTypeName() {
         return "MetadataSuperClass";
+    }
+
+    @Override
+    public String getBaseRel() {
+        return null;
     }
 
     @Override

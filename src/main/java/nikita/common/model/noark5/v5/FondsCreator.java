@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_FONDS_CREATOR;
 import static nikita.common.config.Constants.TABLE_FONDS_CREATOR;
 import static nikita.common.config.N5ResourceMappings.FONDS_CREATOR;
 
@@ -85,6 +86,11 @@ public class FondsCreator
     @Override
     public String getBaseTypeName() {
         return FONDS_CREATOR;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_FONDS_CREATOR;
     }
 
     public List<Fonds> getReferenceFonds() {

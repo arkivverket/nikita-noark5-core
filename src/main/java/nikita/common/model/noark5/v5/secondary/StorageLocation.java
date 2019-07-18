@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.util.serializers.noark5v5.StorageLocationSerializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -13,6 +12,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_STORAGE_LOCATION;
 import static nikita.common.config.Constants.TABLE_STORAGE_LOCATION;
 import static nikita.common.config.N5ResourceMappings.STORAGE_LOCATION;
 
@@ -67,6 +67,11 @@ public class StorageLocation
     @Override
     public String getBaseTypeName() {
         return STORAGE_LOCATION;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_STORAGE_LOCATION;
     }
 
     public List<Series> getReferenceSeries() {

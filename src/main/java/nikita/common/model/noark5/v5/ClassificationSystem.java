@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.util.deserialisers.ClassifiactionSystemDeserializer;
 import nikita.webapp.hateoas.ClassificationSystemHateoasHandler;
@@ -18,6 +17,7 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM;
 import static nikita.common.config.Constants.TABLE_CLASSIFICATION_SYSTEM;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
 
@@ -57,6 +57,11 @@ public class ClassificationSystem
     @Override
     public String getBaseTypeName() {
         return CLASSIFICATION_SYSTEM;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM;
     }
 
     public List<Series> getReferenceSeries() {

@@ -16,9 +16,9 @@ public interface IMetadataEntity
 
     void setName(String name);
 
-    String getComment();
+    Boolean getInactive();
 
-    void setComment(String comment);
+    void setInactive(Boolean inactive);
 
     /**
      * Tell nikita what you are. A Fonds returns "arkiv", a File "mappe" and

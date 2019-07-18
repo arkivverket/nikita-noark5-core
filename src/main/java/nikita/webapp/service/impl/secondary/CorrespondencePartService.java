@@ -372,8 +372,6 @@ public class CorrespondencePartService
                             .getSimpleAddress());
             existingCorrespondencePart.setBusinessAddress(businessAddress);
         }
-        existingCorrespondencePart.getBusinessAddress().getSimpleAddress().
-                setAddressType(BUSINESS_ADDRESS);
     }
 
     /**
@@ -403,9 +401,6 @@ public class CorrespondencePartService
                             .getSimpleAddress());
             existingCorrespondencePart.setResidingAddress(residingAddress);
         }
-        // Make sure the addressType field is set
-        existingCorrespondencePart.getResidingAddress().
-                getSimpleAddress().setAddressType(RESIDING_ADDRESS);
     }
 
     /**

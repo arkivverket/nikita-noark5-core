@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartEntity;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
@@ -46,7 +45,7 @@ public class CorrespondencePart
 
     @Override
     public String getFunctionalTypeName() {
-        return Constants.NOARK_CASE_HANDLING_PATH;
+        return NOARK_FONDS_STRUCTURE_PATH;
     }
 
     @Override

@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.printMetadataEntity;
 
 /**
  * Serialise an outgoing Metadata entity as JSON.
@@ -35,7 +35,6 @@ public class MetadataHateoasSerializer
                                      HateoasNoarkObject metadataHateoas,
                                      JsonGenerator jgen)
             throws IOException {
-
         if (!(noarkSystemIdEntity instanceof IMetadataEntity)) {
             String msg = "Internal error when serialising " +
                     noarkSystemIdEntity + ". Not castable to nikita.common" +
@@ -43,19 +42,8 @@ public class MetadataHateoasSerializer
             logger.error(msg);
             throw new NikitaException(msg);
         }
-
         IMetadataEntity metadataEntity = (IMetadataEntity) noarkSystemIdEntity;
-
-        jgen.writeStartObject();
-        if (metadataEntity.getCode() != null) {
-            jgen.writeStringField(CODE, metadataEntity.getCode());
-        }
-        if (metadataEntity.getName() != null) {
-            jgen.writeStringField(CODE_NAME, metadataEntity.getName());
-        }
-        if (metadataEntity.getComment() != null) {
-            jgen.writeStringField(CODE_COMMENT, metadataEntity.getComment());
-        }
+        printMetadataEntity(jgen, metadataEntity);
         printHateoasLinks(jgen, metadataHateoas.getLinks(metadataEntity));
         jgen.writeEndObject();
     }

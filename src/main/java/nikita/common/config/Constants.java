@@ -377,8 +377,8 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_NEW_FILE = REL_FONDS_STRUCTURE + NEW_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_FILE = REL_FONDS_STRUCTURE + FILE + SLASH;
 
-    public static final String REL_FONDS_STRUCTURE_NEW_CASE_FILE = REL_CASE_HANDLING + NEW_CASE_FILE + SLASH;
-    public static final String REL_FONDS_STRUCTURE_CASE_FILE = REL_CASE_HANDLING + CASE_FILE + SLASH;
+    public static final String REL_CASE_HANDLING_NEW_CASE_FILE = REL_CASE_HANDLING + NEW_CASE_FILE + SLASH;
+    public static final String REL_CASE_HANDLING_CASE_FILE = REL_CASE_HANDLING + CASE_FILE + SLASH;
 
 
     // Common SeriesHateoas/ClassificationHateoas REL links
@@ -595,6 +595,27 @@ public final class Constants {
 
     public static final String REL_METADATA_DOCUMENT_TYPE = REL_METADATA +
             DOCUMENT_TYPE + SLASH;
+
+    public static final String REL_METADATA_DISPOSAL_DECISION = REL_METADATA +
+            DISPOSAL_DECISION + SLASH;
+
+    public static final String REL_METADATA_DELETION_TYPE = REL_METADATA +
+            DELETION_TYPE + SLASH;
+
+    public static final String REL_METADATA_EVENT_TYPE = REL_METADATA +
+            EVENT_TYPE + SLASH;
+
+    public static final String REL_METADATA_POSTAL_NUMBER = REL_METADATA +
+            POSTAL_NUMBER + SLASH;
+
+    public static final String REL_METADATA_ACCESS_CATEGORY = REL_METADATA +
+            ACCESS_CATEGORY + SLASH;
+
+    public static final String REL_METADATA_ACCESS_RESTRICTION = REL_METADATA +
+            ACCESS_RESTRICTION + SLASH;
+
+    public static final String REL_METADATA_ASSOCIATED_WITH_RECORD_AS =
+            REL_METADATA + ASSOCIATED_WITH_RECORD_AS + SLASH;
 
     public static final String REL_METADATA_SIGN_OFF_METHOD = REL_METADATA +
             SIGN_OFF_METHOD + SLASH;

@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.secondary.*;
@@ -183,6 +182,11 @@ public class Series
     @Override
     public String getBaseTypeName() {
         return SERIES;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_SERIES;
     }
 
     @Override

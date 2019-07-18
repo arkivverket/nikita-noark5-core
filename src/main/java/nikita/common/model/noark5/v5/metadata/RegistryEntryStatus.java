@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.metadata;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.REL_METADATA_REGISTRY_ENTRY_STATUS;
 import static nikita.common.config.Constants.TABLE_REGISTRY_ENTRY_STATUS;
 import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_STATUS;
 
@@ -17,5 +18,10 @@ public class RegistryEntryStatus
     @Override
     public String getBaseTypeName() {
         return REGISTRY_ENTRY_STATUS;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_METADATA_REGISTRY_ENTRY_STATUS;
     }
 }

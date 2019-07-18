@@ -170,6 +170,11 @@ public class File
     }
 
     @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_FILE;
+    }
+
+    @Override
     public Classified getReferenceClassified() {
         return referenceClassified;
     }

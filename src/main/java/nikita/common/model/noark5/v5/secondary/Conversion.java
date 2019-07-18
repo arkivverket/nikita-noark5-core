@@ -120,6 +120,11 @@ public class Conversion
         return CONVERSION;
     }
 
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_CONVERSION;
+    }
+
     public DocumentObject getReferenceDocumentObject() {
         return referenceDocumentObject;
     }

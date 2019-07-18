@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.interfaces.IConversion;
 import nikita.common.model.noark5.v5.interfaces.IElectronicSignature;
@@ -257,6 +256,11 @@ public class DocumentObject
     @Override
     public String getBaseTypeName() {
         return DOCUMENT_OBJECT;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_DOCUMENT_OBJECT;
     }
 
     public DocumentDescription getReferenceDocumentDescription() {

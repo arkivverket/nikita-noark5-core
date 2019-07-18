@@ -13,6 +13,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_SIGN_OFF;
 import static nikita.common.config.Constants.TABLE_SIGN_OFF;
 import static nikita.common.config.N5ResourceMappings.SIGN_OFF;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -93,6 +94,11 @@ public class SignOff
     @Override
     public String getBaseTypeName() {
         return SIGN_OFF;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_SIGN_OFF;
     }
 
     public RegistryEntry getReferenceSignedOffRecord() {

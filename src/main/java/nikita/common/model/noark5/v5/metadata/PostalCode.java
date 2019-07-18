@@ -1,15 +1,14 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.config.N5ResourceMappings;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.REL_METADATA_POSTAL_NUMBER;
 import static nikita.common.config.Constants.TABLE_POSTAL_CODE;
 import static nikita.common.config.N5ResourceMappings.POSTAL_NUMBER;
 
@@ -69,6 +68,11 @@ public class PostalCode
     @Override
     public String getBaseTypeName() {
         return POSTAL_NUMBER;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_METADATA_POSTAL_NUMBER;
     }
 
     @Override

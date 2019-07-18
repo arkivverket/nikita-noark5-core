@@ -503,10 +503,10 @@ DateTimeFormatter dateFormatter =
                     metadataEntity.setName(currentNode.textValue());
                     objectNode.remove(CODE_NAME);
                 }
-                currentNode = objectNode.get(CODE_COMMENT);
+                currentNode = objectNode.get(CODE_INACTIVE);
                 if (null != currentNode) {
-                    metadataEntity.setComment(currentNode.textValue());
-                    objectNode.remove(CODE_COMMENT);
+                    metadataEntity.setInactive(currentNode.booleanValue());
+                    objectNode.remove(CODE_INACTIVE);
                 }
             }
 
@@ -1611,12 +1611,16 @@ DateTimeFormatter dateFormatter =
                     throws IOException {
                 // e.g."mappetype" {}
                 if (metadataEntity != null) {
+                    jgen.writeStartObject();
                     jgen.writeFieldName(metadataEntity.getBaseTypeName());
                     jgen.writeStartObject();
                     jgen.writeStringField(CODE, metadataEntity.getCode());
                     jgen.writeStringField(CODE_NAME, metadataEntity.getName());
-                    jgen.writeStringField(
-                            CODE_COMMENT, metadataEntity.getComment());
+                    if (metadataEntity.getInactive() != null &&
+                            metadataEntity.getInactive()) {
+                        jgen.writeBooleanField(CODE_INACTIVE,
+                                metadataEntity.getInactive());
+                    }
                     jgen.writeEndObject();
                 }
             }

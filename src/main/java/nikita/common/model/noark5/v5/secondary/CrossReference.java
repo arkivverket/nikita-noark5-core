@@ -134,6 +134,11 @@ public class CrossReference
     }
 
     @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_CROSS_REFERENCE;
+    }
+
+    @Override
     public String toString() {
         return "CrossReference{" +
                 "fromSystemId='" + fromSystemId + '\'' +

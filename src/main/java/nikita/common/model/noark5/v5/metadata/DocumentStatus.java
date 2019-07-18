@@ -1,12 +1,9 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.config.N5ResourceMappings;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.REL_METADATA_DOCUMENT_STATUS;
 import static nikita.common.config.Constants.TABLE_DOCUMENT_STATUS;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_STATUS;
 
@@ -21,5 +18,10 @@ public class DocumentStatus
     @Override
     public String getBaseTypeName() {
         return DOCUMENT_STATUS;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_METADATA_DOCUMENT_STATUS;
     }
 }

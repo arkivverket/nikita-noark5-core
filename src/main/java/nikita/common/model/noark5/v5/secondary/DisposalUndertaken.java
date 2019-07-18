@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Series;
@@ -17,6 +16,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_DISPOSAL_UNDERTAKEN;
 import static nikita.common.config.Constants.TABLE_DISPOSAL_UNDERTAKEN;
 import static nikita.common.config.N5ResourceMappings.DISPOSAL_UNDERTAKEN;
 
@@ -70,6 +70,11 @@ public class DisposalUndertaken
     @Override
     public String getBaseTypeName() {
         return DISPOSAL_UNDERTAKEN;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_DISPOSAL_UNDERTAKEN;
     }
 
     public List<Series> getReferenceSeries() {

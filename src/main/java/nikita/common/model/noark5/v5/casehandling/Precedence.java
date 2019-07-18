@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling;
 
 import nikita.common.config.Constants;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IPrecedenceEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,6 +15,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_PRECEDENCE;
 import static nikita.common.config.Constants.TABLE_PRECEDENCE;
 import static nikita.common.config.N5ResourceMappings.PRECEDENCE;
 
@@ -127,6 +127,11 @@ public class Precedence
     @Override
     public String getBaseTypeName() {
         return PRECEDENCE;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_PRECEDENCE;
     }
 
     @Override

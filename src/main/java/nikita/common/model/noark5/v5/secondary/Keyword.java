@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_KEYWORD;
 import static nikita.common.config.Constants.TABLE_KEYWORD;
 import static nikita.common.config.N5ResourceMappings.KEYWORD;
 
@@ -53,6 +54,11 @@ public class Keyword
     @Override
     public String getBaseTypeName() {
         return KEYWORD;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_KEYWORD;
     }
 
     public List<Class> getReferenceClass() {

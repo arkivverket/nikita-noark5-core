@@ -25,8 +25,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_FILE;
@@ -198,6 +196,11 @@ public class CaseFile
     @Override
     public String getBaseTypeName() {
         return CASE_FILE;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_CASE_HANDLING_CASE_FILE;
     }
 
     @Override

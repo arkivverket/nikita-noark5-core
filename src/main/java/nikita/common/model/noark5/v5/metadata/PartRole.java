@@ -8,6 +8,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_METADATA_PART_ROLE;
 import static nikita.common.config.Constants.TABLE_PART_ROLE;
 import static nikita.common.config.N5ResourceMappings.PART_ROLE;
 
@@ -39,4 +40,10 @@ public class PartRole
     public String getBaseTypeName() {
         return PART_ROLE;
     }
+
+    @Override
+    public String getBaseRel() {
+        return REL_METADATA_PART_ROLE;
+    }
+
 }

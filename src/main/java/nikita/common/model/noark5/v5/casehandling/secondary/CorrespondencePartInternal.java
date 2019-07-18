@@ -18,6 +18,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_INTERNAL;
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_INTERNAL;
 import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
 
@@ -99,6 +100,11 @@ public class CorrespondencePartInternal
     @Override
     public String getBaseTypeName() {
         return CORRESPONDENCE_PART_INTERNAL;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_INTERNAL;
     }
 
     @Override

@@ -1,12 +1,9 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.config.N5ResourceMappings;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import static nikita.common.config.Constants.REL_METADATA_DELETION_TYPE;
 import static nikita.common.config.Constants.TABLE_DELETION_TYPE;
 import static nikita.common.config.N5ResourceMappings.DELETION_TYPE;
 
@@ -22,4 +19,10 @@ public class DeletionType
     public String getBaseTypeName() {
         return DELETION_TYPE;
     }
+
+    @Override
+    public String getBaseRel() {
+        return REL_METADATA_DELETION_TYPE;
+    }
+
 }

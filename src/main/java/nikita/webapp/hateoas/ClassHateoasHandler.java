@@ -18,7 +18,9 @@ import static nikita.common.config.N5ResourceMappings.*;
  * Used to add ClassHateoas links with Class specific information
  */
 @Component("classHateoasHandler")
-public class ClassHateoasHandler extends HateoasHandler implements IClassHateoasHandler {
+public class ClassHateoasHandler
+        extends HateoasHandler
+        implements IClassHateoasHandler {
 
     public ClassHateoasHandler() {
     }

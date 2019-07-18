@@ -8,6 +8,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_METADATA_CORRESPONDENCE_PART_TYPE;
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_TYPE;
 import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
 
@@ -25,11 +26,6 @@ public class CorrespondencePartType
     @OneToMany(mappedBy = "referenceCorrespondencePartType")
     private List<CorrespondencePart> referenceCorrespondencePart;
 
-    @Override
-    public String getBaseTypeName() {
-        return CORRESPONDENCE_PART_TYPE;
-    }
-
     public List<CorrespondencePart> getReferenceCorrespondencePart() {
         return referenceCorrespondencePart;
     }
@@ -40,17 +36,12 @@ public class CorrespondencePartType
     }
 
     @Override
-    public String toString() {
-        return super.toString();
+    public String getBaseTypeName() {
+        return CORRESPONDENCE_PART_TYPE;
     }
 
     @Override
-    public boolean equals(Object other) {
-        return super.equals(other);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
+    public String getBaseRel() {
+        return REL_METADATA_CORRESPONDENCE_PART_TYPE;
     }
 }

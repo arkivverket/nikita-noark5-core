@@ -274,6 +274,11 @@ public class DocumentDescription
         return DOCUMENT_DESCRIPTION;
     }
 
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION;
+    }
+
     public Integer getDocumentNumber() {
         return documentNumber;
     }

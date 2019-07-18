@@ -73,18 +73,12 @@ public class MetadataInsert {
                             JsonNode metadataObject = metadataValues.next();
                             String code = metadataObject.get("code").getTextValue();
                             String name = metadataObject.get("name").getTextValue();
-                            String comment = "";
-                            if (null != metadataObject.get("comment")) {
-                                comment = metadataObject.get("comment").
-                                        getTextValue();
-                            }
 
                             MetadataSuperClass metadataEntity =
                                     getEntityInstance(fieldName);
 
                             metadataEntity.setCode(code);
                             metadataEntity.setName(name);
-                            metadataEntity.setComment(comment);
                             metadataEntity.setSystemId(randomUUID());
                             metadataEntity.setCreatedBy(SYSTEM);
                             metadataEntity.setCreatedDate(OffsetDateTime.now());
@@ -96,7 +90,6 @@ public class MetadataInsert {
                             Optional<Object> repositoryOpt =
                                     repositories.getRepositoryFor(
                                             metadataEntity.getClass());
-
 
                             if (repositoryOpt.isPresent()) {
                                 MetadataRepository metadataRepository =

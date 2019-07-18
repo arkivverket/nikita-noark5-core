@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.IClassifiedEntity;
@@ -17,6 +16,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CLASSIFIED;
 import static nikita.common.config.Constants.TABLE_CONTACT_CLASSIFIED;
 import static nikita.common.config.N5ResourceMappings.CLASSIFIED;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -135,6 +135,11 @@ public class Classified
     @Override
     public String getBaseTypeName() {
         return CLASSIFIED;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_CLASSIFIED;
     }
 
     public List<Series> getReferenceSeries() {

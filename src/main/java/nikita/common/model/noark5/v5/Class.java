@@ -107,6 +107,11 @@ public class Class
         return CLASS;
     }
 
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_CLASS;
+    }
+
     public List<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }

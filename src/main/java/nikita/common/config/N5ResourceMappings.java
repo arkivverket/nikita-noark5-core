@@ -63,7 +63,7 @@ public final class N5ResourceMappings {
 
     // For metadata entities
     public static final String CODE_NAME = "navn";
-    public static final String CODE_COMMENT = "merknad";
+    public static final String CODE_INACTIVE = "inaktiv";
     public static final String CODE = "kode";
 
     public static final String CODE_PARAMETER =
