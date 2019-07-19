@@ -3,7 +3,8 @@ package nikita.common.model.noark5.v5;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
-import nikita.common.model.noark5.v5.interfaces.*;
+import nikita.common.model.noark5.v5.interfaces.ICrossReference;
+import nikita.common.model.noark5.v5.interfaces.entities.IFileEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.FileDeserializer;
@@ -34,8 +35,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @HateoasObject(using = FileHateoas.class)
 public class File
         extends NoarkGeneralEntity
-        implements IDocumentMedium, IStorageLocation, IKeyword, IClassified,
-        IDisposal, IScreening, IComment, ICrossReference {
+        implements IFileEntity {
     /**
      * M003 - mappeID (xs:string)
      */

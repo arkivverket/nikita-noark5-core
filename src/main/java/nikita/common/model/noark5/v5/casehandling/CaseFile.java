@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v5.interfaces.IPart;
-import nikita.common.model.noark5.v5.interfaces.IPrecedence;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ICaseFileEntity;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
 import nikita.common.util.deserialisers.casehandling.CaseFileDeserializer;
 import nikita.webapp.hateoas.casehandling.CaseFileHateoasHandler;
@@ -20,7 +18,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +35,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @HateoasObject(using = CaseFileHateoas.class)
 public class CaseFile
         extends File
-        implements Serializable, INikitaEntity, IPrecedence, IPart {
+        implements ICaseFileEntity {
 
     private static final long serialVersionUID = 1L;
 

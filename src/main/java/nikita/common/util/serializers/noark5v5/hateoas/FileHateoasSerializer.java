@@ -2,13 +2,13 @@ package nikita.common.util.serializers.noark5v5.hateoas;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
 
-import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
@@ -34,36 +34,23 @@ public class FileHateoasSerializer
         File file = (File) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        printSystemIdEntity(jgen, file);
-        printStorageLocation(jgen, file);
 
-        if (file.getFileId() != null) {
-            jgen.writeStringField(FILE_ID, file.getFileId());
+        printFileEntity(jgen, file);
+        if (file instanceof CaseFile) {
+            printCaseFileEntity(jgen, (CaseFile) file);
         }
-        if (file.getTitle() != null) {
-            jgen.writeStringField(TITLE, file.getTitle());
-        }
-        if (file.getOfficialTitle() != null) {
-            jgen.writeStringField(FILE_PUBLIC_TITLE, file.getOfficialTitle());
-        }
-        if (file.getDescription() != null) {
-            jgen.writeStringField(DESCRIPTION, file.getDescription());
-        }
-
         printDocumentMedium(jgen, file);
         printKeyword(jgen, file);
         printCreateEntity(jgen, file);
         printFinaliseEntity(jgen, file);
-        if (file.getReferenceSeries() != null &&
-                file.getReferenceSeries().getSystemId() != null) {
-            jgen.writeStringField(REFERENCE_SERIES,
-                    file.getReferenceSeries().getSystemId());
-        }
         printCrossReferences(jgen, file);
         printComment(jgen, file);
         printDisposal(jgen, file);
         printScreening(jgen, file);
         printClassified(jgen, file);
+        if (file instanceof CaseFile) {
+
+        }
         printHateoasLinks(jgen, fileHateoas.getLinks(file));
         jgen.writeEndObject();
     }

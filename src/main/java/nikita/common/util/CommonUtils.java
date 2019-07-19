@@ -1536,6 +1536,81 @@ DateTimeFormatter dateFormatter =
                 }
             }
 
+            public static void printFileEntity(JsonGenerator jgen,
+                                               IFileEntity file)
+                    throws IOException {
+                printSystemIdEntity(jgen, file);
+                printStorageLocation(jgen, file);
+
+                if (file.getFileId() != null) {
+                    jgen.writeStringField(FILE_ID, file.getFileId());
+                }
+                if (file.getTitle() != null) {
+                    jgen.writeStringField(TITLE, file.getTitle());
+                }
+                if (file.getOfficialTitle() != null) {
+                    jgen.writeStringField(FILE_PUBLIC_TITLE, file.getOfficialTitle());
+                }
+                if (file.getDescription() != null) {
+                    jgen.writeStringField(DESCRIPTION, file.getDescription());
+                }
+
+
+            }
+
+            public static void printCaseFileEntity(JsonGenerator jgen,
+                                                   ICaseFileEntity caseFile)
+                    throws IOException {
+
+                if (caseFile.getCreatedDate() != null) {
+                    jgen.writeStringField(CREATED_DATE,
+                            formatDateTime(caseFile.getCreatedDate()));
+                }
+                if (caseFile.getCreatedBy() != null) {
+                    jgen.writeStringField(CREATED_BY, caseFile.getCreatedBy());
+                }
+                if (caseFile.getFinalisedDate() != null) {
+                    jgen.writeStringField(FINALISED_DATE,
+                            formatDateTime(caseFile.getFinalisedDate()));
+                }
+                if (caseFile.getFinalisedBy() != null) {
+                    jgen.writeStringField(FINALISED_BY,
+                            caseFile.getFinalisedBy());
+                }
+                if (caseFile.getCaseYear() != null) {
+                    jgen.writeNumberField(CASE_YEAR,
+                            caseFile.getCaseYear());
+                }
+                if (caseFile.getCaseSequenceNumber() != null) {
+                    jgen.writeNumberField(CASE_SEQUENCE_NUMBER,
+                            caseFile.getCaseSequenceNumber());
+                }
+                if (caseFile.getCaseDate() != null) {
+                    jgen.writeStringField(CASE_DATE,
+                            formatDate(caseFile.getCaseDate()));
+                }
+                if (caseFile.getCaseResponsible() != null) {
+                    jgen.writeStringField(CASE_RESPONSIBLE,
+                            caseFile.getCaseResponsible());
+                }
+                if (caseFile.getRecordsManagementUnit() != null) {
+                    jgen.writeStringField(CASE_RECORDS_MANAGEMENT_UNIT,
+                            caseFile.getRecordsManagementUnit());
+                }
+                if (caseFile.getCaseStatus() != null) {
+                    jgen.writeStringField(CASE_STATUS,
+                            caseFile.getCaseStatus());
+                }
+                if (caseFile.getLoanedDate() != null) {
+                    jgen.writeStringField(CASE_LOANED_DATE,
+                            formatDate(caseFile.getLoanedDate()));
+                }
+                if (caseFile.getLoanedTo() != null) {
+                    jgen.writeStringField(CASE_LOANED_TO,
+                            caseFile.getLoanedTo());
+                }
+            }
+
             public static void printRecordEntity(JsonGenerator jgen,
                                                  IRecordEntity record)
                     throws IOException {
