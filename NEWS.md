@@ -38,6 +38,15 @@ Release 0.5 2019-0X-XX (commit X)
    more according to the new definition in the API specification.
  * Change revoke-token to only drop token on POST requests, not GET.
  * Update to newer Spring version.
+ * Changed primary key and URL component for metadata code lists to
+   use the 'kode' value instead of a SystemID.
+ * Corrected implementation of Part.
+ * Changed instance lists with subtypes (like .../registrering/ and
+   .../mappe/) to include the attributes and _links entries for the
+   subtype in the supertype lists.
+ * Adjusted _links relations to make it possible to figure out the
+   entity of an instance using the self->href->relation key lookup
+   method.
 
 Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
 ----------------------
