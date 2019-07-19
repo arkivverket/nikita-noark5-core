@@ -57,7 +57,7 @@ public class RecordHateoasSerializer
             printElectronicSignature(jgen, (RegistryEntry) record);
 
         } else if (record instanceof RecordNote) {
-            printDocumentFlow(jgen, (RegistryEntry) record);
+            printDocumentFlow(jgen, (RecordNote) record);
         }
 
         printHateoasLinks(jgen, recordHateoas.getLinks(record));
