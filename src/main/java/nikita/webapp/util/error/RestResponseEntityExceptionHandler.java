@@ -174,6 +174,15 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), BAD_REQUEST, request);
     }
 
+    @ExceptionHandler(ClassCastException.class)
+    public ResponseEntity<Object> handleMisconfigurationExceptionCast(
+            final RuntimeException ex, final WebRequest request) {
+        logger.error(INTERNAL_SERVER_ERROR + " Misconfiguration on ", ex);
+        logger.error(request.getDescription(true), ex);
+        return handleExceptionInternal(ex, message(CONFLICT, ex),
+                new HttpHeaders(), INTERNAL_SERVER_ERROR, request);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllException(
             final Exception ex, final WebRequest request) {
