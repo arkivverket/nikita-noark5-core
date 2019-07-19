@@ -42,9 +42,9 @@ Release 0.5 2019-0X-XX (commit X)
    use the 'kode' value instead of a SystemID.
  * Corrected implementation of Part.
  * Changed instance lists with subtypes (like .../registrering/ and
-   .../mappe/) to include the attributes and _links entries for the
+   .../mappe/) to include the attributes and \_links entries for the
    subtype in the supertype lists.
- * Adjusted _links relations to make it possible to figure out the
+ * Adjusted \_links relations to make it possible to figure out the
    entity of an instance using the self->href->relation key lookup
    method.
 
