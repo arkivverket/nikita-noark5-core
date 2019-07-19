@@ -174,6 +174,14 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), BAD_REQUEST, request);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleAllException(
+            final Exception ex, final WebRequest request) {
+        logger.error("500 Status Code", ex);
+        logger.error(request.getDescription(true), ex);
+        return handleExceptionInternal(ex, message(BAD_REQUEST, ex),
+                new HttpHeaders(), BAD_REQUEST, request);
+    }
     private ApiError message(final HttpStatus httpStatus, final Exception ex) {
         logger.error("REST Exception occurred " + ex.getMessage());
         final String message = ex.getMessage() == null ?
