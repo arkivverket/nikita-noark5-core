@@ -118,7 +118,7 @@ public class ApplicationService {
         ConformityLevel conformityLevelMetadata = new ConformityLevel();
         conformityLevelMetadata.setHref(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH);
-        conformityLevelMetadata.setRel(NIKITA_CONFORMANCE_REL +
+        conformityLevelMetadata.setRel(NOARK_CONFORMANCE_REL +
                 NOARK_METADATA_PATH + SLASH);
         conformityLevels.add(conformityLevelMetadata);
 
