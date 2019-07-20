@@ -331,14 +331,18 @@ public final class CommonUtils {
                 int ignoreFirstChars = (SLASH + HREF_BASE_METADATA).length();
                 String toCheck = servletPath.substring(ignoreFirstChars);
                 int slashLocation = toCheck.indexOf("/");
-                toCheck = toCheck.substring(0, slashLocation);
-                String path = SLASH + HREF_BASE_METADATA + toCheck + SLASH;
+                if (slashLocation > 0) {
+                    toCheck = toCheck.substring(0, slashLocation);
+                    String path = SLASH + HREF_BASE_METADATA + toCheck + SLASH;
 
-                if (!path.equals(servletPath)) {
-                    updatedServletPath = path + "{" + CODE + "}" + SLASH;
-                    if (servletPath.contains("/format/")) {
-                        updatedServletPath += "{value}/";
+                    if (!path.equals(servletPath)) {
+                        updatedServletPath = path + "{" + CODE + "}" + SLASH;
+                        if (servletPath.contains("/format/")) {
+                            updatedServletPath += "{value}/";
+                        }
                     }
+                } else {
+                    updatedServletPath = servletPath;
                 }
             } else {
 
