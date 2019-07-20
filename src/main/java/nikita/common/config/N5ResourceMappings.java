@@ -25,8 +25,6 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION = "dokumentbeskrivelse";
     public static final String DOCUMENT_OBJECT = "dokumentobjekt";
     public static final String STORAGE_LOCATION = "oppbevaringssted";
-    // Not part of interface standard
-    public static final String STORAGE_LOCATIONS = "oppbevaringssteder";
 
     public static final String KEYWORD = "noekkelord";
 

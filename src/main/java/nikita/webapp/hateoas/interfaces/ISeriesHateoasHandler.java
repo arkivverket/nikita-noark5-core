@@ -62,6 +62,4 @@ public interface ISeriesHateoasHandler extends IHateoasHandler {
 
     void addListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
 }
