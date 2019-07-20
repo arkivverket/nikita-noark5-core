@@ -1815,13 +1815,35 @@ DateTimeFormatter dateFormatter =
                 }
             }
 
-            private static void printCorrespondencePart(JsonGenerator jgen, ICorrespondencePartEntity correspondencePart)
+            public static void printMetadataEntity(
+                    JsonGenerator jgen, IMetadataEntity metadataEntity,
+                    String objectName)
+                    throws IOException {
+                // e.g."mappetype" {}
+                if (metadataEntity != null) {
+                    jgen.writeObjectFieldStart(objectName);
+                    printCode(jgen, metadataEntity.getCode(),
+                            metadataEntity.getCodeName());
+                    if (metadataEntity.getInactive() != null &&
+                            metadataEntity.getInactive()) {
+                        jgen.writeBooleanField(CODE_INACTIVE,
+                                metadataEntity.getInactive());
+                    }
+                    jgen.writeEndObject();
+                }
+            }
+
+            private static void printCorrespondencePart(
+                    JsonGenerator jgen,
+                    ICorrespondencePartEntity correspondencePart)
                     throws IOException {
 
                 if (correspondencePart != null) {
                     printSystemIdEntity(jgen, correspondencePart);
                     if (correspondencePart.getCorrespondencePartType() != null) {
-                        printMetadataEntity(jgen, correspondencePart.getCorrespondencePartType());
+                        printMetadataEntity(jgen,
+                                correspondencePart.getCorrespondencePartType(),
+                                CORRESPONDENCE_PART_TYPE);
                     }
                 }
             }
