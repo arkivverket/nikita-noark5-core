@@ -103,8 +103,8 @@ public class ClassHateoasHandler
     @Override
     public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + NEW_SUB_CLASS +
-                SLASH, REL_FONDS_STRUCTURE_NEW_SUB_CLASS, false));
+                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH + entity.getSystemId() + SLASH + NEW_CLASS +
+                SLASH, REL_FONDS_STRUCTURE_NEW_CLASS, false));
     }
 
     @Override

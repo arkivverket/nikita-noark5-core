@@ -162,7 +162,7 @@ public class FileHateoasHandler
     public void addNewSubFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH + entity.getSystemId() + SLASH +
-                NEW_SUB_FILE + SLASH, REL_FONDS_STRUCTURE_NEW_SUB_FILE, false));
+                NEW_FILE + SLASH, REL_FONDS_STRUCTURE_NEW_FILE, false));
     }
 
     /**

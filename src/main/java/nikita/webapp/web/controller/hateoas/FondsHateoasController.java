@@ -120,7 +120,7 @@ public class FondsHateoasController extends NoarkController {
                     message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
     @PostMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-                    RIGHT_PARENTHESIS + SLASH + NEW_SUB_FONDS,
+                    RIGHT_PARENTHESIS + SLASH + NEW_FONDS,
             consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<FondsHateoas> createFondsAssociatedWithFonds(
             HttpServletRequest request,

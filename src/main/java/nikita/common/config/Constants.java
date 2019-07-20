@@ -47,7 +47,6 @@ public final class Constants {
     public static final String NEW_CLASSIFICATION_SYSTEM = NEW + DASH + CLASSIFICATION_SYSTEM;
     public static final String NEW_SECONDARY_CLASSIFICATION_SYSTEM = NEW + DASH + CLASSIFICATION_SYSTEM;
     public static final String NEW_CLASS = NEW + DASH + CLASS;
-    public static final String NEW_SUB_CLASS = NEW + DASH + SUB_CLASS;
     public static final String NEW_FILE = NEW + DASH + FILE;
     public static final String NEW_RECORD = NEW + DASH + RECORD;
     public static final String NEW_DOCUMENT_DESCRIPTION = NEW + DASH + DOCUMENT_DESCRIPTION;
@@ -65,9 +64,7 @@ public final class Constants {
     public static final String FILE_EXPAND_TO_CASE_FILE = "utvid-til-" + CASE_FILE;
     public static final String FILE_EXPAND_TO_MEETING_FILE = "utvid-til-" + MEETING_FILE;
     public static final String NEW_COMMENT = NEW + DASH + COMMENT;
-    public static final String NEW_SUB_FILE = NEW + DASH + "undermappe";
     public static final String SUB_FILE = SUB + FILE;
-    public static final String NEW_SUB_FONDS = NEW + DASH + SUB + FONDS;
     public static final String NEW_CROSS_REFERENCE = NEW + DASH + CROSS_REFERENCE;
     public static final String NEW_REFERENCE_CLASS = NEW + DASH + "klassereferanse";
     public static final String REFERENCE_NEW_SERIES = NEW + DASH + "referanseArkivdel";
@@ -361,7 +358,6 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_PARENT_FONDS =
             NIKITA_CONFORMANCE_REL + PARENT_FONDS + SLASH;
 
-    public static final String REL_FONDS_STRUCTURE_NEW_SUB_FONDS = NIKITA_CONFORMANCE_REL + NEW_SUB_FONDS + SLASH;
     public static final String REL_FONDS_STRUCTURE_FONDS_STATUS = REL_METADATA + SLASH + FONDS_STATUS + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_FONDS = REL_FONDS_STRUCTURE + NEW_FONDS + SLASH;
 
@@ -426,7 +422,6 @@ public final class Constants {
     // Comment
     public static final String REL_FONDS_STRUCTURE_COMMENT = REL_FONDS_STRUCTURE + COMMENT + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_COMMENT = REL_FONDS_STRUCTURE + NEW_COMMENT + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_SUB_FILE = NIKITA_CONFORMANCE_REL + NEW_SUB_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_SUB_FILE = NOARK_CONFORMANCE_REL + SUB_FILE + SLASH;
 
     // CrossReference
@@ -439,7 +434,6 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_NEW_CLASS = REL_FONDS_STRUCTURE + NEW_CLASS + SLASH;
 
     public static final String REL_FONDS_STRUCTURE_SUB_CLASS = REL_FONDS_STRUCTURE + SUB + CLASS + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_SUB_CLASS = REL_FONDS_STRUCTURE + NEW + DASH + SUB + CLASS + SLASH;
 
     // Series
     public static final String REL_FONDS_STRUCTURE_REFERENCE_SERIES = NIKITA_CONFORMANCE_REL + REFERENCE_SERIES + SLASH;

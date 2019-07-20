@@ -197,8 +197,8 @@ public class FondsHateoasHandler
     public void addNewSubFonds(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS + entity.getSystemId() + SLASH + NEW_SUB_FONDS,
-                REL_FONDS_STRUCTURE_NEW_SUB_FONDS));
+                HREF_BASE_FONDS + entity.getSystemId() + SLASH + NEW_FONDS,
+                REL_FONDS_STRUCTURE_NEW_FONDS));
     }
 
     /**

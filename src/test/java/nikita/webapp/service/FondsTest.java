@@ -107,7 +107,7 @@ public class FondsTest
         requiredRels.add(REL_FONDS_STRUCTURE_SERIES);
         requiredRels.add(REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR);
         requiredRels.add(REL_FONDS_STRUCTURE_SUB_FONDS);
-        requiredRels.add(REL_FONDS_STRUCTURE_NEW_SUB_FONDS);
+        requiredRels.add(REL_FONDS_STRUCTURE_NEW_FONDS);
         requiredRels.add(REL_METADATA_FONDS_STATUS);
         requiredRels.add(REL_FONDS_STRUCTURE_NEW_SERIES);
     }

@@ -72,7 +72,7 @@ public class ClassHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SLASH + LEFT_PARENTHESIS + "systemID" +
-            RIGHT_PARENTHESIS + SLASH + NEW_SUB_CLASS,
+            RIGHT_PARENTHESIS + SLASH + NEW_CLASS,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas>
     createClassAssociatedWithClass(
