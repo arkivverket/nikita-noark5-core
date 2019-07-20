@@ -2,51 +2,51 @@
   "ScreeningMetadata": [
     {
       "code": "KID",
-      "name": "Skjerming klasseID"
+      "codename": "Skjerming klasseID"
     },
     {
       "code": "TKL",
-      "name": "Skjerming tittel klasse"
+      "codename": "Skjerming tittel klasse"
     },
     {
       "code": "TM1",
-      "name": "Skjerming tittel mappe - unntatt første linje"
+      "codename": "Skjerming tittel mappe - unntatt første linje"
     },
     {
       "code": "TMO",
-      "name": "Skjerming tittel mappe - utvalgte ord"
+      "codename": "Skjerming tittel mappe - utvalgte ord"
     },
     {
       "code": "NPS",
-      "name": "Skjerming navn part i sak"
+      "codename": "Skjerming navn part i sak"
     },
     {
       "code": "TR1",
-      "name": "Skjerming tittel registrering - unntatt første linje"
+      "codename": "Skjerming tittel registrering - unntatt første linje"
     },
     {
       "code": "TRO",
-      "name": "Skjerming tittel registrering - utvalgte ord"
+      "codename": "Skjerming tittel registrering - utvalgte ord"
     },
     {
       "code": "NA",
-      "name": "Skjerming navn avsender"
+      "codename": "Skjerming navn avsender"
     },
     {
       "code": "NM",
-      "name": "Skjerming navn mottaker"
+      "codename": "Skjerming navn mottaker"
     },
     {
       "code": "TD",
-      "name": "Skjerming tittel dokumentbeskrivelse"
+      "codename": "Skjerming tittel dokumentbeskrivelse"
     },
     {
       "code": "MT",
-      "name": "Skjerming merknadstekst"
+      "codename": "Skjerming merknadstekst"
     },
     {
       "code": "M",
-      "name": "Midlertidig skjerming"
+      "codename": "Midlertidig skjerming"
     }
   ]
 }

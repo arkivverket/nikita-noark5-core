@@ -2,23 +2,23 @@
   "SignOffMethod": [
     {
       "code": "BU",
-      "name": "Besvart med brev"
+      "codename": "Besvart med brev"
     },
     {
       "code": "BE",
-      "name": "Besvart med e-post"
+      "codename": "Besvart med e-post"
     },
     {
       "code": "TLF",
-      "name": "Besvart på telefon"
+      "codename": "Besvart på telefon"
     },
     {
       "code": "TE",
-      "name": "Tatt til etterretning"
+      "codename": "Tatt til etterretning"
     },
     {
       "code": "TO",
-      "name": "Tatt til orientering"
+      "codename": "Tatt til orientering"
     }
   ]
 }

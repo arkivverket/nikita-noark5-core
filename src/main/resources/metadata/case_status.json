@@ -2,31 +2,31 @@
   "CaseStatus": [
     {
       "code": "B",
-      "name": "Under behandling"
+      "codename": "Under behandling"
     },
     {
       "code": "A",
-      "name": "Avsluttet"
+      "codename": "Avsluttet"
     },
     {
       "code": "U",
-      "name": "Utgår"
+      "codename": "Utgår"
     },
     {
       "code": "R",
-      "name": "Opprettet av saksbehandler"
+      "codename": "Opprettet av saksbehandler"
     },
     {
       "code": "S",
-      "name": "Avsluttet av saksbehandler"
+      "codename": "Avsluttet av saksbehandler"
     },
     {
       "code": "P",
-      "name": "Unntatt prosesstyring"
+      "codename": "Unntatt prosesstyring"
     },
     {
       "code": "F",
-      "name": "Ferdig fra saksbehandler"
+      "codename": "Ferdig fra saksbehandler"
     }
   ]
 }

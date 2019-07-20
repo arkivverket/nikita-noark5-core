@@ -2,15 +2,15 @@
   "FlowStatus": [
     {
       "code": "G",
-      "name": "Godkjent"
+      "codename": "Godkjent"
     },
     {
       "code": "I",
-      "name": "Ikke godkjent"
+      "codename": "Ikke godkjent"
     },
     {
       "code": "S",
-      "name": "Sendt tilbake til saksbehandler med kommentarer"
+      "codename": "Sendt tilbake til saksbehandler med kommentarer"
     }
   ]
 }

@@ -2,39 +2,39 @@
   "Format": [
     {
       "code": "x-fmt/111",
-      "name": "Ren tekst"
+      "codename": "Ren tekst"
     },
     {
       "code": "fmt/353",
-      "name": "TIFF versjon 6"
+      "codename": "TIFF versjon 6"
     },
     {
       "code": "fmt/95",
-      "name": "PDF/A 1a - ISO 19005-1:2005"
+      "codename": "PDF/A 1a - ISO 19005-1:2005"
     },
     {
       "code": "fmt/354",
-      "name": "PDF/A 1b - ISO 19005-1:2005"
+      "codename": "PDF/A 1b - ISO 19005-1:2005"
     },
     {
       "code": "fmt/101",
-      "name": "XML"
+      "codename": "XML"
     },
     {
       "code": "fmt/42",
-      "name": "JPEG"
+      "codename": "JPEG"
     },
     {
       "code": "av/1",
-      "name": "SOSI"
+      "codename": "SOSI"
     },
     {
       "code": "x-fmt/386",
-      "name": "MPEG-2"
+      "codename": "MPEG-2"
     },
     {
       "code": "fmt/134",
-      "name": "MP3"
+      "codename": "MP3"
     }
   ]
 }

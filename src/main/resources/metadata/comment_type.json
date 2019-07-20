@@ -2,15 +2,15 @@
   "CommentType": [
     {
       "code": "MS",
-      "name": "Merknad fra saksbehandler"
+      "codename": "Merknad fra saksbehandler"
     },
     {
       "code": "ML",
-      "name": "Merknad fra leder"
+      "codename": "Merknad fra leder"
     },
     {
       "code": "MA",
-      "name": "Merknad fra arkivansvarlig"
+      "codename": "Merknad fra arkivansvarlig"
     }
   ]
 }

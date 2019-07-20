@@ -2,31 +2,31 @@
   "CorrespondencePartType": [
     {
       "code": "EA",
-      "name": "Avsender"
+      "codename": "Avsender"
     },
     {
       "code": "EM",
-      "name": "Mottaker"
+      "codename": "Mottaker"
     },
     {
       "code": "EK",
-      "name": "Kopimottaker"
+      "codename": "Kopimottaker"
     },
     {
       "code": "GM",
-      "name": "Gruppemottaker"
+      "codename": "Gruppemottaker"
     },
     {
       "code": "IA",
-      "name": "Intern avsender"
+      "codename": "Intern avsender"
     },
     {
       "code": "IM",
-      "name": "Intern mottaker"
+      "codename": "Intern mottaker"
     },
     {
       "code": "IK",
-      "name": "Intern kopimottaker"
+      "codename": "Intern kopimottaker"
     }
   ]
 }

@@ -2,11 +2,11 @@
   "ScreeningDocument": [
     {
       "code": "H",
-      "name": "Skjerming av hele dokumentet"
+      "codename": "Skjerming av hele dokumentet"
     },
     {
       "code": "D",
-      "name": "Skjerming av deler av dokumentet"
+      "codename": "Skjerming av deler av dokumentet"
     }
   ]
 }

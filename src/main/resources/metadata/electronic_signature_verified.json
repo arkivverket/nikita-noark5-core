@@ -2,11 +2,11 @@
   "ElectronicSignatureVerified": [
     {
       "code": "I",
-      "name": "Signatur påført, ikke verifisert"
+      "codename": "Signatur påført, ikke verifisert"
     },
     {
       "code": "V",
-      "name": "Signatur påført og verifisert"
+      "codename": "Signatur påført og verifisert"
     }
   ]
 }

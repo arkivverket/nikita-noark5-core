@@ -2,11 +2,11 @@
   "PrecedenceStatus": [
     {
       "code": "G",
-      "name": "Gjeldende"
+      "codename": "Gjeldende"
     },
     {
       "code": "F",
-      "name": "Foreldet"
+      "codename": "Foreldet"
     }
   ]
 }

@@ -72,13 +72,13 @@ public class MetadataInsert {
                         while (metadataValues.hasNext()) {
                             JsonNode metadataObject = metadataValues.next();
                             String code = metadataObject.get("code").getTextValue();
-                            String name = metadataObject.get("name").getTextValue();
+                            String codename = metadataObject.get("codename").getTextValue();
 
                             MetadataSuperClass metadataEntity =
                                     getEntityInstance(fieldName);
 
                             metadataEntity.setCode(code);
-                            metadataEntity.setCodeName(name);
+                            metadataEntity.setCodeName(codename);
                             metadataEntity.setSystemId(randomUUID());
                             metadataEntity.setCreatedBy(SYSTEM);
                             metadataEntity.setCreatedDate(OffsetDateTime.now());

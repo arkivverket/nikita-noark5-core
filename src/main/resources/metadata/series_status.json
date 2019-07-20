@@ -2,19 +2,19 @@
   "SeriesStatus": [
     {
       "code": "A",
-      "name": "Aktiv periode"
+      "codename": "Aktiv periode"
     },
     {
       "code": "O",
-      "name": "Overlappingsperiode"
+      "codename": "Overlappingsperiode"
     },
     {
       "code": "P",
-      "name": "Avsluttet periode"
+      "codename": "Avsluttet periode"
     },
     {
       "code": "U",
-      "name": "Uaktuelle mapper"
+      "codename": "Uaktuelle mapper"
     }
   ]
 }

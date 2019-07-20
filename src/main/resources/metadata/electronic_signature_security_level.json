@@ -2,19 +2,19 @@
   "ElectronicSignatureSecurityLevel": [
     {
       "code": "SK",
-      "name": "Symmetrisk kryptert"
+      "codename": "Symmetrisk kryptert"
     },
     {
       "code": "V",
-      "name": "Sendt med PKI/virksomhetssertifikat"
+      "codename": "Sendt med PKI/virksomhetssertifikat"
     },
     {
       "code": "PS",
-      "name": "Sendt med PKI \"personstandard\"-sertifikat"
+      "codename": "Sendt med PKI \"personstandard\"-sertifikat"
     },
     {
       "code": "PH",
-      "name": "Sendt med PKI \"person høy\"-sertifikat"
+      "codename": "Sendt med PKI \"person høy\"-sertifikat"
     }
   ]
 }

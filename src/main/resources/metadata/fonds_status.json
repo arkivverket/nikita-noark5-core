@@ -2,11 +2,11 @@
   "FondsStatus": [
     {
       "code": "O",
-      "name": "Opprettet"
+      "codename": "Opprettet"
     },
     {
       "code": "A",
-      "name": "Avsluttet"
+      "codename": "Avsluttet"
     }
   ]
 }

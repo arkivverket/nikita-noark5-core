@@ -2,31 +2,31 @@
   "RegistryEntryStatus": [
     {
       "code": "J",
-      "name": "Journalført"
+      "codename": "Journalført"
     },
     {
       "code": "F",
-      "name": "Ferdigstilt fra saksbehandler"
+      "codename": "Ferdigstilt fra saksbehandler"
     },
     {
       "code": "G",
-      "name": "Godkjent av leder"
+      "codename": "Godkjent av leder"
     },
     {
       "code": "E",
-      "name": "Ekspedert"
+      "codename": "Ekspedert"
     },
     {
       "code": "A",
-      "name": "Arkivert"
+      "codename": "Arkivert"
     },
     {
       "code": "U",
-      "name": "Utgår"
+      "codename": "Utgår"
     },
     {
       "code": "M",
-      "name": "Midlertidig registrering av"
+      "codename": "Midlertidig registrering av"
     }
   ]
 }

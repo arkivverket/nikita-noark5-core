@@ -2,15 +2,15 @@
   "VariantFormat": [
     {
       "code": "P",
-      "name": "Produksjonsformat"
+      "codename": "Produksjonsformat"
     },
     {
       "code": "A",
-      "name": "Arkivformat"
+      "codename": "Arkivformat"
     },
     {
       "code": "O",
-      "name": "Dokument hvor deler av innholdet er skjermet"
+      "codename": "Dokument hvor deler av innholdet er skjermet"
     }
   ]
 }

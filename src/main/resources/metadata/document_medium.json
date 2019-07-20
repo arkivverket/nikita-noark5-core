@@ -2,15 +2,15 @@
   "DocumentMedium": [
     {
       "code": "F",
-      "name": "Fysisk medium"
+      "codename": "Fysisk medium"
     },
     {
       "code": "E",
-      "name": "Elektronisk arkiv"
+      "codename": "Elektronisk arkiv"
     },
     {
       "code": "B",
-      "name": "Blandet fysisk og elektronisk arkiv"
+      "codename": "Blandet fysisk og elektronisk arkiv"
     }
   ]
 }

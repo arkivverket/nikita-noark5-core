@@ -2,35 +2,35 @@
   "ClassificationType": [
     {
       "code": "GBN",
-      "name": "Gårds- og bruksnummer Valgfri"
+      "codename": "Gårds- og bruksnummer Valgfri"
     },
     {
       "code": "FH",
-      "name": "Funksjonsbasert, hierarkisk Valgfri"
+      "codename": "Funksjonsbasert, hierarkisk Valgfri"
     },
     {
       "code": "EH",
-      "name": "Emnebasert, hierarkisk arkivnøkkel"
+      "codename": "Emnebasert, hierarkisk arkivnøkkel"
     },
     {
       "code": "E1",
-      "name": "Emnebasert, ett nivå"
+      "codename": "Emnebasert, ett nivå"
     },
     {
       "code": "KK",
-      "name": "K-koder"
+      "codename": "K-koder"
     },
     {
       "code": "MF",
-      "name": "Mangefasettert, ikke hierarki"
+      "codename": "Mangefasettert, ikke hierarki"
     },
     {
       "code": "UO",
-      "name": "Objektbasert"
+      "codename": "Objektbasert"
     },
     {
       "code": "PNR",
-      "name": "Fødselsnummer"
+      "codename": "Fødselsnummer"
     }
   ]
 }

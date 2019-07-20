@@ -2,19 +2,19 @@
   "DocumentType": [
     {
       "code": "B",
-      "name": "Brev"
+      "codename": "Brev"
     },
     {
       "code": "R",
-      "name": "Rundskriv"
+      "codename": "Rundskriv"
     },
     {
       "code": "F",
-      "name": "Faktura"
+      "codename": "Faktura"
     },
     {
       "code": "O",
-      "name": "Ordrebekreftelse"
+      "codename": "Ordrebekreftelse"
     }
   ]
 }

@@ -2,19 +2,19 @@
   "FileType": [
     {
       "code": "SKM",
-      "name": "Saksmappe"
+      "codename": "Saksmappe"
     },
     {
       "code": "PLM",
-      "name": "Personalmappe"
+      "codename": "Personalmappe"
     },
     {
       "code": "BYM",
-      "name": "Byggemappe"
+      "codename": "Byggemappe"
     },
     {
       "code": "MOM",
-      "name": "Møtemappe"
+      "codename": "Møtemappe"
     }
   ]
 }
