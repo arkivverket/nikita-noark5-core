@@ -63,7 +63,6 @@ public class SeriesHateoasHandler extends HateoasHandler
         addNewScreening(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
         addListStorageLocation(entity, hateoasNoarkObject);
-        addNewListStorageLocation(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -388,16 +387,6 @@ public class SeriesHateoasHandler extends HateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH + entity.getSystemId() + SLASH +
                 NEW_STORAGE_LOCATION + SLASH, REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
-    }
-
-    @Override
-    /**
-     * Add a new list of StorageLocation to be associated with the Series (POST)
-     */
-    public void addNewListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH + entity.getSystemId() + SLASH +
-                NEW_STORAGE_LOCATIONS + SLASH, REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION_LIST, false));
     }
 
     /**

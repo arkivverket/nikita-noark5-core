@@ -74,7 +74,6 @@ public final class Constants {
     public static final String NEW_DISPOSAL_UNDERTAKEN = NEW + DASH + DISPOSAL_UNDERTAKEN;
     public static final String NEW_DELETION = NEW + DASH + "sletting";
     public static final String NEW_STORAGE_LOCATION = NEW + DASH + STORAGE_LOCATION;
-    public static final String NEW_STORAGE_LOCATIONS = NEW + DASH + STORAGE_LOCATIONS;
     public static final String NEW_AUTHOR = NEW + DASH + AUTHOR;
     public static final String NEW_ELECTRONIC_SIGNATURE = NEW + DASH + ELECTRONIC_SIGNATURE;
     public static final String NEW_CONVERSION = NEW + DASH + CONVERSION;
@@ -458,7 +457,6 @@ public final class Constants {
     // StorageLocation
     public static final String REL_FONDS_STRUCTURE_STORAGE_LOCATION = NIKITA_CONFORMANCE_REL + STORAGE_LOCATION + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION = NIKITA_CONFORMANCE_REL + NEW_STORAGE_LOCATION + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION_LIST = NIKITA_CONFORMANCE_REL + NEW_STORAGE_LOCATIONS + SLASH;
 
     // DocumentObject
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_OBJECT = REL_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH;
