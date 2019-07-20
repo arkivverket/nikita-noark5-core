@@ -97,7 +97,10 @@ public class ApiError {
      */
     public final String toJSON() {
         final StringBuilder json = new StringBuilder();
-        json.append("{  \"status\" : ").append(status).append(", \"message\" : ").append(message).append(", \"developerMessage\" : ").append(developerMessage).append("}");
+        json.append("{  \"feil\": { \"kode\" : ").append(status)
+	    .append(", \"beskrivelse\" : ").append(message)
+	    .append(", \"developerMessage\" : ").append(developerMessage)
+	    .append("} }");
         return json.toString();
     }
 }
