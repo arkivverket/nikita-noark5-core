@@ -175,7 +175,7 @@ public final class Constants {
 
     // String used for default / template object
     public static final String DEFAULT_TITLE = "Default title for ";
-    public static final String DEFAULT_DESCRIPTION = "This object is, if " +
+    public static final String DEFAULT_DESCRIPTION = "This object, if " +
             "persisted, will be associated with ";
 
     // Some user identifiers used for testing
