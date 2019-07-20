@@ -1597,9 +1597,11 @@ DateTimeFormatter dateFormatter =
                     jgen.writeStringField(CASE_RECORDS_MANAGEMENT_UNIT,
                             caseFile.getRecordsManagementUnit());
                 }
-                if (caseFile.getCaseStatus() != null) {
-                    jgen.writeStringField(CASE_STATUS,
-                            caseFile.getCaseStatus());
+                if (caseFile.getCaseStatusCode() != null) {
+                    jgen.writeObjectFieldStart(CASE_STATUS);
+                    printCode(jgen, caseFile.getCaseStatusCode(),
+                            caseFile.getCaseStatusName());
+                    jgen.writeEndObject();
                 }
                 if (caseFile.getLoanedDate() != null) {
                     jgen.writeStringField(CASE_LOANED_DATE,
@@ -1608,6 +1610,15 @@ DateTimeFormatter dateFormatter =
                 if (caseFile.getLoanedTo() != null) {
                     jgen.writeStringField(CASE_LOANED_TO,
                             caseFile.getLoanedTo());
+                }
+            }
+
+            public static void printCode(
+                    JsonGenerator jgen, String code, String name)
+                    throws IOException {
+                jgen.writeStringField(CODE, code);
+                if (name != null) {
+                    jgen.writeStringField(CODE_NAME, name);
                 }
             }
 
@@ -1794,17 +1805,13 @@ DateTimeFormatter dateFormatter =
                     throws IOException {
                 // e.g."mappetype" {}
                 if (metadataEntity != null) {
-                    jgen.writeStartObject();
-                    jgen.writeFieldName(metadataEntity.getBaseTypeName());
-                    jgen.writeStartObject();
-                    jgen.writeStringField(CODE, metadataEntity.getCode());
-                    jgen.writeStringField(CODE_NAME, metadataEntity.getName());
+                    printCode(jgen, metadataEntity.getCode(),
+                            metadataEntity.getName());
                     if (metadataEntity.getInactive() != null &&
                             metadataEntity.getInactive()) {
                         jgen.writeBooleanField(CODE_INACTIVE,
                                 metadataEntity.getInactive());
                     }
-                    jgen.writeEndObject();
                 }
             }
 

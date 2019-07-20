@@ -79,12 +79,20 @@ public class CaseFile
     private String recordsManagementUnit;
 
     /**
-     * M052 - saksstatus (xs:string)
+     * M??? - saksstatus kode (xs:string)
      */
     @NotNull
-    @Column(name = "case_status", nullable = false)
+    @Column(name = "case_status_code", nullable = false)
     @Audited
-    private String caseStatus;
+    private String caseStatusCode;
+
+    /**
+     * M??? - saksstatus name (xs:string)
+     */
+    @NotNull
+    @Column(name = "case_status_name", nullable = false)
+    @Audited
+    private String caseStatusName;
 
     /**
      * M106 - utlaantDato (xs:date)
@@ -166,12 +174,24 @@ public class CaseFile
         this.recordsManagementUnit = recordsManagementUnit;
     }
 
-    public String getCaseStatus() {
-        return caseStatus;
+    @Override
+    public String getCaseStatusCode() {
+        return caseStatusCode;
     }
 
-    public void setCaseStatus(String caseStatus) {
-        this.caseStatus = caseStatus;
+    @Override
+    public void setCaseStatusCode(String caseStatusCode) {
+        this.caseStatusCode = caseStatusCode;
+    }
+
+    @Override
+    public String getCaseStatusName() {
+        return caseStatusName;
+    }
+
+    @Override
+    public void setCaseStatusName(String caseStatusName) {
+        this.caseStatusName = caseStatusName;
     }
 
     public OffsetDateTime getLoanedDate() {
@@ -235,7 +255,8 @@ public class CaseFile
         return super.toString() + " CaseFile{" +
                 "loanedTo='" + loanedTo + '\'' +
                 ", loanedDate=" + loanedDate +
-                ", caseStatus='" + caseStatus + '\'' +
+                ", caseStatusCode='" + caseStatusCode + '\'' +
+                ", caseStatusName='" + caseStatusName + '\'' +
                 ", recordsManagementUnit='" + recordsManagementUnit + '\'' +
                 ", caseResponsible='" + caseResponsible + '\'' +
                 ", caseDate=" + caseDate +
@@ -262,7 +283,8 @@ public class CaseFile
                 .append(caseYear, rhs.caseYear)
                 .append(caseDate, rhs.caseDate)
                 .append(caseResponsible, rhs.caseResponsible)
-                .append(caseStatus, rhs.caseStatus)
+                .append(caseStatusCode, rhs.caseStatusCode)
+                .append(caseStatusName, rhs.caseStatusName)
                 .append(recordsManagementUnit, rhs.recordsManagementUnit)
                 .append(loanedDate, rhs.loanedDate)
                 .append(loanedTo, rhs.loanedTo)
@@ -277,7 +299,8 @@ public class CaseFile
                 .append(caseYear)
                 .append(caseDate)
                 .append(caseResponsible)
-                .append(caseStatus)
+                .append(caseStatusCode)
+                .append(caseStatusName)
                 .append(recordsManagementUnit)
                 .append(loanedDate)
                 .append(loanedTo)

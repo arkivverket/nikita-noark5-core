@@ -55,6 +55,15 @@ public class CaseFileHateoasHandler
     }
 
     @Override
+    public void addEntityLinksOnNew(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        // Get a list of case status values
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + CASE_STATUS + SLASH,
+                REL_METADATA_CASE_STATUS));
+    }
+
+    @Override
     public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
                 NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CLASS

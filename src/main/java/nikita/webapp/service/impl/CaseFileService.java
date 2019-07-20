@@ -45,7 +45,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static org.springframework.http.HttpStatus.OK;
@@ -372,7 +371,11 @@ public class CaseFileService
         defaultCaseFile.setTitle(TEST_TITLE);
         defaultCaseFile.setOfficialTitle(TEST_TITLE);
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
-        defaultCaseFile.setCaseStatus(STATUS_OPEN);
+        defaultCaseFile.setCaseStatusCode(defaultCaseFile.
+                getReferenceCaseFileStatus().getCode());
+        defaultCaseFile.setCaseStatusName(defaultCaseFile.
+                getReferenceCaseFileStatus().getName());
+        defaultCaseFile.setDescription(TEST_DESCRIPTION);
 
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(defaultCaseFile);
@@ -484,33 +487,21 @@ public class CaseFileService
                 incomingCaseFile.getCaseResponsible());
         existingCaseFile.setOfficialTitle(
                 incomingCaseFile.getOfficialTitle());
-        if (null != incomingCaseFile.getCaseStatus()) {
-            existingCaseFile.setCaseStatus(
-                    incomingCaseFile.getCaseStatus());
+        if (null != incomingCaseFile.getCaseStatusCode()) {
+            existingCaseFile.setCaseStatusCode(
+                    incomingCaseFile.getCaseStatusCode());
+        }
+        if (null != incomingCaseFile.getCaseStatusName()) {
+            existingCaseFile.setCaseStatusName(
+                    incomingCaseFile.getCaseStatusName());
         }
     }
 
     private void checkCaseStatusUponCreation(CaseFile caseFile) {
-
-        // Set to default value if no value has been set.
-        // 1. See if there is a default value set in the database for caseStatus
-        // 2. If no default value is set, use a system defined default value
-        if (null == caseFile.getCaseStatus()) {
-            CaseStatus caseStatus =
-                    caseStatusService.generateDefaultCaseStatus();
-            if (null == caseStatus) {
-                caseFile.setCaseStatus(STATUS_OPEN);
-            } else {
-                caseFile.setCaseStatus(caseStatus.getCode());
-            }
-        } else {
-            // Make sure that the caseStatus that is set is in the list of
-            // default values. If it is not in the list throw a
-            // NoarkIllegalValueException
-//
-//            Optional<CaseStatus> caseStatus =
-//                    caseStatusService.getCaseStatusByDescription();
-//            if()
+        if (caseFile.getCaseStatusName() != null) {
+            CaseStatus caseStatus = caseStatusService.
+                    findCaseStatusByCode(caseFile.getCaseStatusCode());
+            caseFile.setCaseStatusName(caseStatus.getName());
         }
     }
 }

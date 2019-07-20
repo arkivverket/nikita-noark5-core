@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 import nikita.common.model.noark5.v5.interfaces.IPart;
 import nikita.common.model.noark5.v5.interfaces.IPrecedence;
+import nikita.common.model.noark5.v5.metadata.CaseStatus;
 
 import java.time.OffsetDateTime;
 
@@ -32,9 +33,13 @@ public interface ICaseFileEntity
 
     void setRecordsManagementUnit(String recordsManagementUnit);
 
-    String getCaseStatus();
+    String getCaseStatusName();
 
-    void setCaseStatus(String caseStatus);
+    void setCaseStatusName(String caseStatusName);
+
+    String getCaseStatusCode();
+
+    void setCaseStatusCode(String caseStatusCode);
 
     OffsetDateTime getLoanedDate();
 
@@ -43,4 +48,6 @@ public interface ICaseFileEntity
     String getLoanedTo();
 
     void setLoanedTo(String loanedTo);
+
+    CaseStatus getReferenceCaseFileStatus();
 }

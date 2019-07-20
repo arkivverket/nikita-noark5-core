@@ -32,8 +32,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.time.ZoneId;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -144,7 +144,7 @@ public class NikitaEventListener {
                     body.put(SERIES_STATUS, ((Series) entity).getSeriesStatus());
                 } else if (entityType.equals(CASE_FILE)) {
                     body.put(FILE_ID, ((CaseFile) entity).getFileId());
-                    body.put(CASE_STATUS, ((CaseFile) entity).getCaseStatus());
+                    body.put(CASE_STATUS, ((CaseFile) entity).getCaseStatusCode());
                 }
             } else if (entityType.equals(REGISTRY_ENTRY)) {
                 body.put(REGISTRY_ENTRY_NUMBER, ((RegistryEntry) entity).

@@ -90,11 +90,10 @@ public class CaseStatusService
     }
 
     /**
-     * retrieve all CaseStatus that have a particular code.
-
+     * retrieve a CaseStatus identified particular code.
      *
      * @param code The code of the object you wish to retrieve
-     * @return A list of CaseStatus objects wrapped as a MetadataHateoas
+     * @return The CaseStatus object wrapped as a MetadataHateoas
      * object
      */
     @Override
@@ -103,6 +102,17 @@ public class CaseStatusService
                 getCaseStatusOrThrow(code));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
+    }
+
+    /**
+     * retrieve a CaseStatus identified particular code.
+     *
+     * @param code The code of the object you wish to retrieve
+     * @return The CaseStatus object wrapped
+     */
+    @Override
+    public CaseStatus findCaseStatusByCode(String code) {
+        return getCaseStatusOrThrow(code);
     }
 
     /**
@@ -125,12 +135,12 @@ public class CaseStatusService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param code   The code of the caseStatus object you wish to
-     *                   update
-     * @param incomingCaseStatus  The incoming caseStatus object. Note the
-     *                            values you are allowed to change are copied
-     *                            from this object. This object is not
-     *                            persisted.
+     * @param code               The code of the caseStatus object you wish to
+     *                           update
+     * @param incomingCaseStatus The incoming caseStatus object. Note the
+     *                           values you are allowed to change are copied
+     *                           from this object. This object is not
+     *                           persisted.
      * @return the updated caseStatus
      */
     @Override

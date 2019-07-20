@@ -18,6 +18,8 @@ public interface ICaseStatusService {
 
     MetadataHateoas findByCode(String code);
 
+    CaseStatus findCaseStatusByCode(String code);
+
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,
             @NotNull final Long version,

@@ -43,6 +43,7 @@ public class MetadataHateoasSerializer
             throw new NikitaException(msg);
         }
         IMetadataEntity metadataEntity = (IMetadataEntity) noarkSystemIdEntity;
+        jgen.writeStartObject();
         printMetadataEntity(jgen, metadataEntity);
         printHateoasLinks(jgen, metadataHateoas.getLinks(metadataEntity));
         jgen.writeEndObject();

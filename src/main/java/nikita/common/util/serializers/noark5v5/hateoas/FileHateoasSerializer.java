@@ -48,9 +48,6 @@ public class FileHateoasSerializer
         printDisposal(jgen, file);
         printScreening(jgen, file);
         printClassified(jgen, file);
-        if (file instanceof CaseFile) {
-
-        }
         printHateoasLinks(jgen, fileHateoas.getLinks(file));
         jgen.writeEndObject();
     }
