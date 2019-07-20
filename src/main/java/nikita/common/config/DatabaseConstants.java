@@ -27,10 +27,6 @@ public final class DatabaseConstants {
             DELETE_FROM + TABLE_FONDS_FONDS_CREATOR + WHERE +
                     FOREIGN_KEY_FONDS_PK + EQUALS_ID;
 
-    public static final String METADATA_INSERT_STRING =
-            " (code, name, comment, system_id) VALUES ( :code, :name, " +
-                    ":comment, :systemId )";
-
     // Used for reflection
     public static final String METADATA_REPOSITORY_PACKAGE =
             "nikita.common.repository.n5v5.metadata";
