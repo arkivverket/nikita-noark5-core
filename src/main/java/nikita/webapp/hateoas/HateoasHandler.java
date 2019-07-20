@@ -29,7 +29,7 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
 public class HateoasHandler
         implements IHateoasHandler {
 
- private static final Logger logger =
+    private static final Logger logger =
             LoggerFactory.getLogger(HateoasHandler.class);
 
     protected IAuthorisation authorisation;
@@ -57,7 +57,7 @@ public class HateoasHandler
         // If hateoasNoarkObject is a list add a self link.
         // { "entity": [], "_links": [] }
         if (!hateoasNoarkObject.isSingleEntity()) {
-            String url = this.getOutgoingAddress();
+            String url = getRequestPathAndQueryString();
             Link selfLink = new Link(url, getRelSelfLink(), false);
             hateoasNoarkObject.addSelfLink(selfLink);
         }
@@ -214,7 +214,31 @@ public class HateoasHandler
         }
         return publicAddress + contextPath + SLASH;
     }
-    
+
+    protected String getRequestPathAndQueryString() {
+        RequestAttributes requestAttributes = RequestContextHolder.
+                getRequestAttributes();
+
+        String path = "";
+        if (requestAttributes != null) {
+            HttpServletRequest request =
+                    ((ServletRequestAttributes) requestAttributes).getRequest();
+            if (request != null) {
+                String servletPath = request.getServletPath();
+                String queryString = request.getQueryString();
+
+                if (null != queryString) {
+                    path = servletPath + "?" + queryString;
+                } else {
+                    path = servletPath;
+                }
+            }
+        }
+        String outgoingAddress = getOutgoingAddress();
+        // Take away the last slash as the servlet path starts with a slash
+        return outgoingAddress.substring(0, outgoingAddress.length() - 1) + path;
+    }
+
     public void setPublicAddress(String publicAddress) {
         this.publicAddress = publicAddress;
     }
