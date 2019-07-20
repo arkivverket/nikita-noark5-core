@@ -437,6 +437,33 @@ public class RecordHateoasController extends NoarkController {
                         generateDefaultCorrespondencePartPerson(systemID));
     }
 
+    // Create a suggested CorrespondencePartUnit (like a template) object with default values (nothing persisted)
+    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartenhet
+    @ApiOperation(value = "Suggests the contents of a new CorrespondencePart object",
+            notes = "Returns a pre-filled CorrespondencePart object" +
+                    " with values relevant for the logged-in user", response = CorrespondencePartUnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "CorrespondencePart " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = CorrespondencePartUnitHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value =
+            {SYSTEM_ID_PARAMETER + SLASH + NEW_CORRESPONDENCE_PART_UNIT})
+    public ResponseEntity<CorrespondencePartUnitHateoas>
+    getCorrespondencePartUnitTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated Record",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.
+                        generateDefaultCorrespondencePartUnit(systemID));
+    }
+
     // Create a suggested PartUnit (like a template) object with default values
     // (nothing persisted)
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-partenhet
@@ -495,7 +522,6 @@ public class RecordHateoasController extends NoarkController {
                 .body(recordService.
                         generateDefaultPartPerson(systemID));
     }
-
 
     // Create a new CorrespondencePartPerson and associate it with the given journalpost
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartperson
