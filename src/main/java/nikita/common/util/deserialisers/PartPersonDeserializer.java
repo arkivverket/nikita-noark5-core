@@ -51,11 +51,10 @@ public class PartPersonDeserializer
         // Check that there are no additional values left after processing
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The PartPerson you tried to create is malformed. ");
-            errors.append("The following fields are not recognised as ");
-            errors.append("PartPerson fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append("The partperson you tried to create is malformed. " +
+                          "The following fields are not recognised as " +
+                          "partperson fields " +
+                          "[" + checkNodeObjectEmpty(objectNode) + "]. ");
         }
 
         if (0 < errors.length())

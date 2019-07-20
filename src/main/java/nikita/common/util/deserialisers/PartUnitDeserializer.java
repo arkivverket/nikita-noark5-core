@@ -51,11 +51,10 @@ public class PartUnitDeserializer
         // Check that there are no additional values left after processing
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The PartUnit you tried to create is malformed. ");
-            errors.append("The following fields are not recognised as ");
-            errors.append("PartUnit fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append("The partenhet you tried to create is malformed. " +
+                          "The following fields are not recognised as " +
+                          "partenhet fields " +
+                          "[" + checkNodeObjectEmpty(objectNode) + "].");
         }
 
         if (0 < errors.length())

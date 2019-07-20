@@ -61,11 +61,10 @@ public class CorrespondencePartUnitDeserializer
         // Check that there are no additional values left after processing
         // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The korrespondansepartenhet you tried to create ");
-            errors.append("is malformed. The following fields are not ");
-            errors.append("recognised as korrespondansepartenhet fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append("The korrespondansepartenhet you tried to create " +
+                          "is malformed. The following fields are not " +
+                          "recognised as korrespondansepartenhet fields " +
+                          "[" + checkNodeObjectEmpty(objectNode) + "].");
         }
 
         if (0 < errors.length())

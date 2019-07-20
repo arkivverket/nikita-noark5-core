@@ -119,11 +119,10 @@ public class DocumentObjectDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The dokumentobjekt you tried to create is ");
-            errors.append("malformed. The following fields are not ");
-            errors.append("recognised as dokumentobjekt fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("].");
+            errors.append("The dokumentobjekt you tried to create is " +
+                          "malformed. The following fields are not " +
+                          "recognised as dokumentobjekt fields " +
+                          "[" + checkNodeObjectEmpty(objectNode) + "].");
         }
 
         if (0 < errors.length())

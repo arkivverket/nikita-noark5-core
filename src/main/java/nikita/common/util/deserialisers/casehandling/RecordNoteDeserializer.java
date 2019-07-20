@@ -135,11 +135,10 @@ public class RecordNoteDeserializer
         // Check that there are no additional values left after processing
         // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The arkivnotat you tried to create is malformed. ");
-            errors.append("The following fields are not recognised as ");
-            errors.append("arkivnotat fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append("The arkivnotat you tried to create is malformed. " +
+                          "The following fields are not recognised as " +
+                          "arkivnotat fields " +
+                          "[" + checkNodeObjectEmpty(objectNode) + "]. ");
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

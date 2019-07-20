@@ -163,11 +163,10 @@ public class CaseFileDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The saksmappe object you tried to create is  ");
-            errors.append("malformed. The following fields are not recognised");
-            errors.append("as saksmappe fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("].");
+            errors.append("The saksmappe object you tried to create is " +
+                          "malformed. The following fields are not recognised "+
+                          "as saksmappe fields " +
+                          "[" + checkNodeObjectEmpty(objectNode) + "].");
         }
 
         caseFile.setReferencePart(
