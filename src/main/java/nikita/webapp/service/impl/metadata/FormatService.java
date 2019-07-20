@@ -111,7 +111,7 @@ public class FormatService
 
         Format format = new Format();
         format.setCode(TEMPLATE_FORMAT_CODE);
-        format.setName(TEMPLATE_FORMAT_NAME);
+        format.setCodeName(TEMPLATE_FORMAT_NAME);
 
         return format;
     }

@@ -112,7 +112,7 @@ public class RegistryEntryStatusService
     public RegistryEntryStatus generateDefaultRegistryEntryStatus() {
         RegistryEntryStatus RegistryEntryStatus = new RegistryEntryStatus();
         RegistryEntryStatus.setCode(TEMPLATE_REGISTRY_ENTRY_STATUS_CODE);
-        RegistryEntryStatus.setName(TEMPLATE_REGISTRY_ENTRY_STATUS_NAME);
+        RegistryEntryStatus.setCodeName(TEMPLATE_REGISTRY_ENTRY_STATUS_NAME);
         return RegistryEntryStatus;
     }
 

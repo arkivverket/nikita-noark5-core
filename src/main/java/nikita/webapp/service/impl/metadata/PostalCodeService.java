@@ -114,7 +114,7 @@ public class PostalCodeService
 
         PostalCode postalCode = new PostalCode();
         postalCode.setCode(TEMPLATE_POST_CODE_CODE);
-        postalCode.setName(TEMPLATE_POST_CODE_NAME);
+        postalCode.setCodeName(TEMPLATE_POST_CODE_NAME);
 
         return postalCode;
     }

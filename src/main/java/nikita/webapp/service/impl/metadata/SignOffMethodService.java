@@ -110,7 +110,7 @@ public class SignOffMethodService
     public SignOffMethod generateDefaultSignOffMethod() {
         SignOffMethod SignOffMethod = new SignOffMethod();
         SignOffMethod.setCode(TEMPLATE_SIGN_OFF_METHOD_CODE);
-        SignOffMethod.setName(TEMPLATE_SIGN_OFF_METHOD_NAME);
+        SignOffMethod.setCodeName(TEMPLATE_SIGN_OFF_METHOD_NAME);
         return SignOffMethod;
     }
 

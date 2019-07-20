@@ -110,7 +110,7 @@ public class PrecedenceStatusService
     public PrecedenceStatus generateDefaultPrecedenceStatus() {
         PrecedenceStatus precedenceStatus = new PrecedenceStatus();
         precedenceStatus.setCode(TEMPLATE_PRECEDENCE_STATUS_CODE);
-        precedenceStatus.setName(TEMPLATE_PRECEDENCE_STATUS_NAME);
+        precedenceStatus.setCodeName(TEMPLATE_PRECEDENCE_STATUS_NAME);
         return precedenceStatus;
     }
 

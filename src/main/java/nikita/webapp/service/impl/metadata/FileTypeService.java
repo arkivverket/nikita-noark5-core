@@ -109,7 +109,7 @@ public class FileTypeService
     public FileType generateDefaultFileType() {
         FileType fileType = new FileType();
         fileType.setCode(TEMPLATE_FILE_TYPE_CODE);
-        fileType.setName(TEMPLATE_FILE_TYPE_NAME);
+        fileType.setCodeName(TEMPLATE_FILE_TYPE_NAME);
         return fileType;
     }
 

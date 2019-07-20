@@ -12,9 +12,9 @@ public interface IMetadataEntity
 
     void setCode(String code);
 
-    String getName();
+    String getCodeName();
 
-    void setName(String name);
+    void setCodeName(String codeName);
 
     Boolean getInactive();
 

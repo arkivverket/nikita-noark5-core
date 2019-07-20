@@ -109,7 +109,7 @@ public class FlowStatusService
     public FlowStatus generateDefaultFlowStatus() {
         FlowStatus flowStatus = new FlowStatus();
         flowStatus.setCode(TEMPLATE_FLOW_STATUS_CODE);
-        flowStatus.setName(TEMPLATE_FLOW_STATUS_NAME);
+        flowStatus.setCodeName(TEMPLATE_FLOW_STATUS_NAME);
         return flowStatus;
     }
 

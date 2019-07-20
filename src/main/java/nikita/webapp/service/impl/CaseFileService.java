@@ -374,7 +374,7 @@ public class CaseFileService
         defaultCaseFile.setCaseStatusCode(defaultCaseFile.
                 getReferenceCaseFileStatus().getCode());
         defaultCaseFile.setCaseStatusName(defaultCaseFile.
-                getReferenceCaseFileStatus().getName());
+                getReferenceCaseFileStatus().getCodeName());
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
 
         CaseFileHateoas caseFileHateoas = new
@@ -501,7 +501,7 @@ public class CaseFileService
         if (caseFile.getCaseStatusName() != null) {
             CaseStatus caseStatus = caseStatusService.
                     findCaseStatusByCode(caseFile.getCaseStatusCode());
-            caseFile.setCaseStatusName(caseStatus.getName());
+            caseFile.setCaseStatusName(caseStatus.getCodeName());
         }
     }
 }

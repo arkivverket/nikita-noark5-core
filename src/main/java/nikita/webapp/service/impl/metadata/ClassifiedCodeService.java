@@ -112,7 +112,7 @@ public class ClassifiedCodeService
 
         ClassifiedCode classifiedCode = new ClassifiedCode();
         classifiedCode.setCode(TEMPLATE_CLASSIFIED_CODE_CODE);
-        classifiedCode.setName(
+        classifiedCode.setCodeName(
                 TEMPLATE_CLASSIFIED_CODE_NAME);
 
         return classifiedCode;

@@ -142,7 +142,7 @@ public class CorrespondencePartTypeController extends NoarkController {
     public ResponseEntity<MetadataHateoas> getCorrespondencePartTypeTemplate(HttpServletRequest request) {
         CorrespondencePartType correspondencePartType = new CorrespondencePartType();
         correspondencePartType.setCode(TEMPLATE_FONDS_STATUS_CODE);
-        correspondencePartType.setName(TEMPLATE_FONDS_STATUS_NAME);
+        correspondencePartType.setCodeName(TEMPLATE_FONDS_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(correspondencePartType);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

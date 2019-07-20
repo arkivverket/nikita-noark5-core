@@ -500,7 +500,7 @@ DateTimeFormatter dateFormatter =
                 }
                 currentNode = objectNode.get(CODE_NAME);
                 if (null != currentNode) {
-                    metadataEntity.setName(currentNode.textValue());
+                    metadataEntity.setCodeName(currentNode.textValue());
                     objectNode.remove(CODE_NAME);
                 }
                 currentNode = objectNode.get(CODE_INACTIVE);
@@ -1806,7 +1806,7 @@ DateTimeFormatter dateFormatter =
                 // e.g."mappetype" {}
                 if (metadataEntity != null) {
                     printCode(jgen, metadataEntity.getCode(),
-                            metadataEntity.getName());
+                            metadataEntity.getCodeName());
                     if (metadataEntity.getInactive() != null &&
                             metadataEntity.getInactive()) {
                         jgen.writeBooleanField(CODE_INACTIVE,

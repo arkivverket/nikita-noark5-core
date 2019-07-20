@@ -55,9 +55,9 @@ public class MetadataSuperClass
     /**
      * M -  (xs:string)
      */
-    @Column(name = "name")
+    @Column(name = "code_name")
     @Audited
-    protected String name;
+    protected String codeName;
 
     @Column(name = "system_id", updatable = false, nullable = false)
     @Type(type = "uuid-char")
@@ -115,13 +115,13 @@ public class MetadataSuperClass
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getCodeName() {
+        return codeName;
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
+    public void setCodeName(String name) {
+        this.codeName = codeName;
     }
 
     @Override
@@ -203,7 +203,7 @@ public class MetadataSuperClass
         return "MetadataSuperClass{" +
                 "code='" + code + '\'' +
                 ", inactive='" + inactive + '\'' +
-                ", name='" + name + '\'' +
+                ", codeName='" + codeName + '\'' +
                 ", ownedBy='" + ownedBy + '\'' +
                 ", version=" + version +
                 ", createdDate=" + createdDate +
@@ -228,7 +228,7 @@ public class MetadataSuperClass
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(code, rhs.code)
-                .append(name, rhs.name)
+                .append(codeName, rhs.codeName)
                 .append(inactive, rhs.inactive)
                 .append(version, rhs.getVersion())
                 .append(createdBy, rhs.getCreatedBy())
@@ -239,7 +239,7 @@ public class MetadataSuperClass
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, name, inactive, createdDate,
+        return Objects.hash(code, codeName, inactive, createdDate,
                 createdBy, lastModifiedDate, lastModifiedBy, ownedBy, version);
     }
 

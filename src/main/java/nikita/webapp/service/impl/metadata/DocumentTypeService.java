@@ -108,7 +108,7 @@ public class DocumentTypeService
 
         DocumentType documentType = new DocumentType();
         documentType.setCode(TEMPLATE_DOCUMENT_TYPE_CODE);
-        documentType.setName(TEMPLATE_DOCUMENT_TYPE_NAME);
+        documentType.setCodeName(TEMPLATE_DOCUMENT_TYPE_NAME);
 
         return documentType;
     }

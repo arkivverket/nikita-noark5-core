@@ -111,7 +111,7 @@ public class ScreeningMetadataService
     public ScreeningMetadata generateDefaultScreeningMetadata() {
         ScreeningMetadata screeningMetadata = new ScreeningMetadata();
         screeningMetadata.setCode(TEMPLATE_SCREENING_METADATA_CODE);
-        screeningMetadata.setName(TEMPLATE_SCREENING_METADATA_NAME);
+        screeningMetadata.setCodeName(TEMPLATE_SCREENING_METADATA_NAME);
         return screeningMetadata;
     }
 

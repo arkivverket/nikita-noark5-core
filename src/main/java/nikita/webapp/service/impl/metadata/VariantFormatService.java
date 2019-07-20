@@ -110,7 +110,7 @@ public class VariantFormatService
     public VariantFormat generateDefaultVariantFormat() {
         VariantFormat variantFormat = new VariantFormat();
         variantFormat.setCode(TEMPLATE_VARIANT_FORMAT_CODE);
-        variantFormat.setName(TEMPLATE_VARIANT_FORMAT_NAME);
+        variantFormat.setCodeName(TEMPLATE_VARIANT_FORMAT_NAME);
         return variantFormat;
     }
 

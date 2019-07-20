@@ -138,7 +138,7 @@ public class FondsStatusController {
     public ResponseEntity<MetadataHateoas> getFondsStatusTemplate(HttpServletRequest request) {
         FondsStatus fondsStatus = new FondsStatus();
         fondsStatus.setCode(TEMPLATE_FONDS_STATUS_CODE);
-        fondsStatus.setName(TEMPLATE_FONDS_STATUS_NAME);
+        fondsStatus.setCodeName(TEMPLATE_FONDS_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

@@ -113,7 +113,7 @@ public class ScreeningDocumentService
     public ScreeningDocument generateDefaultScreeningDocument() {
         ScreeningDocument screeningDocument = new ScreeningDocument();
         screeningDocument.setCode(TEMPLATE_SCREENING_DOCUMENT_CODE);
-        screeningDocument.setName(TEMPLATE_SCREENING_DOCUMENT_NAME);
+        screeningDocument.setCodeName(TEMPLATE_SCREENING_DOCUMENT_NAME);
         return screeningDocument;
     }
 

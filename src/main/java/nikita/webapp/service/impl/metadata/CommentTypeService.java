@@ -111,7 +111,7 @@ public class CommentTypeService
 
         CommentType commentType = new CommentType();
         commentType.setCode(TEMPLATE_COMMENT_TYPE_CODE);
-        commentType.setName(TEMPLATE_COMMENT_TYPE_NAME);
+        commentType.setCodeName(TEMPLATE_COMMENT_TYPE_NAME);
 
         return commentType;
     }

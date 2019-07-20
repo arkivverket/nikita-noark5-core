@@ -124,7 +124,7 @@ public class ElectronicSignatureSecurityLevelService
                 new ElectronicSignatureSecurityLevel();
         electronicSignatureSecurityLevel.setCode
                 (TEMPLATE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE);
-        electronicSignatureSecurityLevel.setName(
+        electronicSignatureSecurityLevel.setCodeName(
                 TEMPLATE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL_NAME);
 
         return electronicSignatureSecurityLevel;

@@ -110,7 +110,7 @@ public class PartRoleService
     public PartRole generateDefaultPartRole() {
         PartRole partyRole = new PartRole();
         partyRole.setCode(TEMPLATE_PART_ROLE_CODE);
-        partyRole.setName(TEMPLATE_PART_ROLE_NAME);
+        partyRole.setCodeName(TEMPLATE_PART_ROLE_NAME);
         return partyRole;
     }
 

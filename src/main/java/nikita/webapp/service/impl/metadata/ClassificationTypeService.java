@@ -115,7 +115,7 @@ public class ClassificationTypeService
 
         ClassificationType classificationType = new ClassificationType();
         classificationType.setCode(TEMPLATE_CLASSIFICATION_TYPE_CODE);
-        classificationType.setName(
+        classificationType.setCodeName(
                 TEMPLATE_CLASSIFICATION_TYPE_NAME);
 
         return classificationType;

@@ -142,7 +142,7 @@ public class DocumentMediumController {
     public ResponseEntity<MetadataHateoas> getDocumentMediumTemplate(HttpServletRequest request) {
         DocumentMedium documentMedium = new DocumentMedium();
         documentMedium.setCode(TEMPLATE_DOCUMENT_MEDIUM_CODE);
-        documentMedium.setName(TEMPLATE_DOCUMENT_MEDIUM_NAME);
+        documentMedium.setCode(TEMPLATE_DOCUMENT_MEDIUM_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentMedium);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

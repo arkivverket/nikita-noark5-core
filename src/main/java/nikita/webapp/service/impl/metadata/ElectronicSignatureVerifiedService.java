@@ -123,7 +123,7 @@ public class ElectronicSignatureVerifiedService
         electronicSignatureVerified.setCode
                 (TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_CODE);
         electronicSignatureVerified.
-                setName(TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_NAME);
+                setCodeName(TEMPLATE_ELECTRONIC_SIGNATURE_VERIFIED_NAME);
 
         return electronicSignatureVerified;
     }

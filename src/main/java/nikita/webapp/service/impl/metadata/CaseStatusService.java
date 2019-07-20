@@ -125,7 +125,7 @@ public class CaseStatusService
 
         CaseStatus caseStatus = new CaseStatus();
         caseStatus.setCode(TEMPLATE_CASE_STATUS_CODE);
-        caseStatus.setName(TEMPLATE_CASE_STATUS_NAME);
+        caseStatus.setCodeName(TEMPLATE_CASE_STATUS_NAME);
 
         return caseStatus;
     }

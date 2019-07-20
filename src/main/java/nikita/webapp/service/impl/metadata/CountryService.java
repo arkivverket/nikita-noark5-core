@@ -111,7 +111,7 @@ public class CountryService
 
         Country country = new Country();
         country.setCode(TEMPLATE_COUNTRY_CODE);
-        country.setName(TEMPLATE_COUNTRY_NAME);
+        country.setCodeName(TEMPLATE_COUNTRY_NAME);
 
         return country;
     }

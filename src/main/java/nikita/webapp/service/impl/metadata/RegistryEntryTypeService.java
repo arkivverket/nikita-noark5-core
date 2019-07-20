@@ -111,7 +111,7 @@ public class RegistryEntryTypeService
 
         RegistryEntryType format = new RegistryEntryType();
         format.setCode(TEMPLATE_REGISTRY_ENTRY_TYPE_CODE);
-        format.setName(TEMPLATE_REGISTRY_ENTRY_TYPE_NAME);
+        format.setCodeName(TEMPLATE_REGISTRY_ENTRY_TYPE_NAME);
 
         return format;
     }

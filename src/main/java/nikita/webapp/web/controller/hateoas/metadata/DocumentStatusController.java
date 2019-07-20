@@ -149,7 +149,7 @@ public class DocumentStatusController {
     public ResponseEntity<MetadataHateoas> getDocumentStatusTemplate(HttpServletRequest request) {
         DocumentStatus documentStatus = new DocumentStatus();
         documentStatus.setCode(TEMPLATE_DOCUMENT_STATUS_CODE);
-        documentStatus.setName(TEMPLATE_DOCUMENT_STATUS_NAME);
+        documentStatus.setCodeName(TEMPLATE_DOCUMENT_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
