@@ -2,19 +2,19 @@
   "PartRole": [
     {
       "code": "KLI",
-      "codename": "Klient"
+      "name": "Klient"
     },
     {
-      "code": "PÅ",
-      "codename": "Pårørende"
+      "code": "PA",
+      "name": "Pårørende"
     },
     {
       "code": "FORM",
-      "codename": "Formynder"
+      "name": "Formynder"
     },
     {
       "code": "ADV",
-      "codename": "Advokat"
+      "name": "Advokat"
     }
   ]
 }

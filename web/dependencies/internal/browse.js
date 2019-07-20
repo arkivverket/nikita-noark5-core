@@ -52,41 +52,31 @@ var browseController = app.controller('BrowseController',
           $scope.results = [];
           $scope.results.push(response.data);
         }
+
         $scope.parentHrefStack = [];
         $scope.parentHrefStack.push(baseUrl);
         $scope.parentHref = baseUrl;
         $scope.selectedHref = baseUrl;
         console.log("$scope.parentHref:" + $scope.parentHref);
+        console.log("HERE XXXXX " + response.data._links[REL_LOGIN_OAUTH2]);
+        $scope.loginHref = response.data._links[REL_LOGIN_OAUTH2].href;
+        console.log("Setting login href to " + JSON.stringify($scope.loginHref));
+        $scope.newUserHref = response.data._links[REL_ADMIN_NEW_USER].href;
+        console.log("Setting new user href to " + JSON.stringify($scope.newUserHref));
+        $scope.hrefLogout = response.data._links[REL_LOGOUT_OAUTH2].href;
+        console.log("Setting logout href to " + JSON.stringify($scope.hrefLogout));
+        $scope.parentHref = response.data._links[REL_SELF].href;
+        console.log("Setting parent href to " + JSON.stringify($scope.parentHref));
 
-        for (var rel in response.data._links) {
-          var relation = response.data._links[rel].rel;
-          //console.log ("REL [" + relation + "], " + REL_CHECK_TOKEN)
-          if (relation === REL_LOGIN_OAUTH2) {
-            $scope.loginHref = response.data._links[rel].href;
-            console.log("Setting login href to " + JSON.stringify($scope.loginHref));
-          } else if (relation === REL_ADMIN_NEW_USER) {
-            $scope.newUserHref = response.data._links[rel].href;
-            console.log("Setting new user href to " + JSON.stringify($scope.newUserHref));
-          }
-          else if (relation === REL_LOGOUT_OAUTH2) {
-            $scope.hrefLogout = response.data._links[rel].href;
-            console.log("Setting logout href to " + JSON.stringify($scope.hrefLogout));
-          }
-          else if (relation === REL_SELF) {
-            $scope.parentHref = response.data._links[rel].href;
-            console.log("Setting parent href to " + JSON.stringify($scope.parentHref));
-          }
-          else if (relation === REL_CHECK_TOKEN) {
-            var token = $scope.token;
-            if ($scope.token.startsWith("Bearer ")) {
-              token = $scope.token.substr(7);
-            }
-            console.log("token is [" + token + "]");
-            $scope.hrefCheckToken = response.data._links[rel].href;
-            console.log("check-token address is [" + $scope.hrefCheckToken + "?token=" + token + "]");
-            console.log("Setting check-token href to " + JSON.stringify($scope.hrefCheckToken));
-          }
+        var token = $scope.token;
+        if ($scope.token.startsWith("Bearer ")) {
+          token = $scope.token.substr(7);
         }
+        console.log("token is [" + token + "]");
+        $scope.hrefCheckToken = response.data._links[REL_CHECK_TOKEN].href;
+        console.log("check-token address is [" + $scope.hrefCheckToken + "?token=" + token + "]");
+        console.log("Setting check-token href to " + JSON.stringify($scope.hrefCheckToken));
+
       }, function errorCallback(response) {
         if (response.status === -1) {
           console.log("Looks like nikita is down at the moment : " + JSON.stringify(response));
@@ -113,14 +103,8 @@ var browseController = app.controller('BrowseController',
             $scope.parentHref = baseUrl;
             $scope.selectedHref = baseUrl;
             console.log("$scope.parentHref:" + $scope.parentHref);
-
-            for (var rel in response.data._links) {
-              var relation = response.data._links[rel].rel;
-              if (relation === REL_LOGIN_OAUTH2) {
-                $scope.loginHref = response.data._links[rel].href;
-                console.log("Setting login href to " + JSON.stringify($scope.loginHref));
-              }
-            }
+            $scope.loginHref = response.data._links[REL_LOGIN_OAUTH2].href;
+            console.log("Setting login href to " + JSON.stringify($scope.loginHref));
           });
         }
       });
@@ -265,16 +249,13 @@ var browseController = app.controller('BrowseController',
               } else if (relation === REL_ADMIN_NEW_USER) {
                 $scope.newUserHref = response.data._links[rel].href;
                 console.log("Setting new user href to " + JSON.stringify($scope.newUserHref));
-              }
-              else if (relation === REL_LOGOUT_OAUTH2) {
+              } else if (relation === REL_LOGOUT_OAUTH2) {
                 $scope.hrefLogout = response.data._links[rel].href;
                 console.log("Setting logout href to " + JSON.stringify($scope.hrefLogout));
-              }
-              else if (relation === REL_SELF) {
+              } else if (relation === REL_SELF) {
                 $scope.parentHref = response.data._links[rel].href;
                 console.log("Setting parent href to " + JSON.stringify($scope.parentHref));
-              }
-              else if (relation === REL_CHECK_TOKEN) {
+              } else if (relation === REL_CHECK_TOKEN) {
                 var token = $scope.token;
                 if ($scope.token.startsWith("Bearer ")) {
                   token = $scope.token.substr(7);
