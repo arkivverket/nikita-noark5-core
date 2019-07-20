@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
@@ -39,9 +38,10 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  */
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH,
-        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
-public class CorrespondencePartHateoasController extends NoarkController {
+@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE,
+        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+public class CorrespondencePartHateoasController
+        extends NoarkController {
 
     private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
     private ICorrespondencePartService correspondencePartService;
