@@ -90,7 +90,7 @@ public class CaseFile
      * M??? - saksstatus name (xs:string)
      */
     @NotNull
-    @Column(name = "case_status_name", nullable = false)
+    @Column(name = "case_status_name")
     @Audited
     private String caseStatusName;
 
