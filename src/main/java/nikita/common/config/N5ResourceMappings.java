@@ -62,7 +62,7 @@ public final class N5ResourceMappings {
             SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
 
     // For metadata entities
-    public static final String CODE_NAME = "navn";
+    public static final String CODE_NAME = "kodenavn";
     public static final String CODE_INACTIVE = "inaktiv";
     public static final String CODE = "kode";
 
