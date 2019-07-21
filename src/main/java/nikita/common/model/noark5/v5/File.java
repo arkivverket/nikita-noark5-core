@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.interfaces.ICrossReference;
 import nikita.common.model.noark5.v5.interfaces.entities.IFileEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.FileDeserializer;
 import nikita.webapp.hateoas.FileHateoasHandler;
@@ -139,6 +140,11 @@ public class File
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Part> referencePart = new ArrayList<>();
+
+    // Links to NationalIdentifiers
+    @OneToMany(mappedBy = "referenceFile")
+    private List<NationalIdentifier> referenceNationalIdentifier =
+            new ArrayList<>();
 
     public String getFileId() {
         return fileId;
@@ -331,6 +337,20 @@ public class File
             ((ICrossReference) entity).
                     addReferenceCrossReference(crossReference);
         }
+    }
+
+    public List<NationalIdentifier> getReferenceNationalIdentifier() {
+        return referenceNationalIdentifier;
+    }
+
+    public void setReferenceNationalIdentifier(
+            List<NationalIdentifier> referenceNationalIdentifier) {
+        this.referenceNationalIdentifier = referenceNationalIdentifier;
+    }
+
+    public void addNationalIdentifier(
+            NationalIdentifier referenceNationalIdentifier) {
+        this.referenceNationalIdentifier.add(referenceNationalIdentifier);
     }
 
     @Override

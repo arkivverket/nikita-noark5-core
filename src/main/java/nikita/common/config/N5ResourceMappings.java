@@ -1,6 +1,5 @@
 package nikita.common.config;
 
-
 import static nikita.common.config.Constants.*;
 
 public final class N5ResourceMappings {
@@ -146,7 +145,7 @@ public final class N5ResourceMappings {
     public static final String NEW_POST_CODE = NEW + Constants.DASH + POST_CODE;
 
     public static final String SOCIAL_SECURITY_NUMBER = "foedselsnummer";
-    public static final String D_NUMBER = "dnummer";
+    public static final String D_NUMBER = "dNummer";
     public static final String CASE_HANDLER = "saksbehandler";
     // This is probably CORRESPONDENCE_PART_NAME. Waiting for clarification
     public static final String NAME = "navn";
@@ -296,6 +295,25 @@ public final class N5ResourceMappings {
     // Author
     public static final String AUTHOR = "forfatter";
 
+    // National Identifier
+    // CadastralUnit (Matrikkel)
+    public static final String MUNICIPALITY_NUMBER = "kommunenummer";
+    public static final String COUNTY_NUMBER = "fylkesnummer";
+    public static final String HOLDING_NUMBER = "gaardsnummer";
+    public static final String SUB_HOLDING_NUMBER = "bruksnummer";
+    public static final String LEASE_NUMBER = "festenummer";
+    public static final String SECTION_NUMBER = "seksjonsnummer";
+
+    // Building
+    public static final String BUILDING_NUMBER = "bygningsnummer";
+    public static final String BUILDING_CHANGE_NUMBER = "endringsloepenummer";
+    // dNumber
+    public static final String PLAN_IDENTIFICATION = "planidentifikasjon";
+
+    public static final String COORDINATE_SYSTEM = "koordinatsystem";
+    public static final String X = "x";
+    public static final String Y = "y";
+    public static final String Z = "z";
 
     public static final String SECONDARY_CLASSIFICATION = "sekundaerklassifikasjon";
 
