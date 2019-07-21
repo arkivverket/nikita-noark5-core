@@ -1,8 +1,14 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IUnitEntity;
+import nikita.common.util.deserialisers.nationalidentifier.UnitDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.UnitSerializer;
+import nikita.webapp.hateoas.nationalidentifier.UnitHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -19,9 +25,9 @@ import static nikita.common.config.Constants.TABLE_UNIT;
 @Table(name = TABLE_UNIT)
 @Inheritance(strategy = JOINED)
 @JsonSerialize(using = UnitSerializer.class)
-//@JsonDeserialize(using = UnitDeserializer.class)
-//@HateoasPacker(using = UnitHateoasHandler.class)
-//@HateoasObject(using = UnitHateoas.class)
+@JsonDeserialize(using = UnitDeserializer.class)
+@HateoasPacker(using = UnitHateoasHandler.class)
+@HateoasObject(using = UnitHateoas.class)
 public class Unit
         extends NationalIdentifier
         implements IUnitEntity {

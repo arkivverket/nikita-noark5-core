@@ -146,6 +146,8 @@ public final class N5ResourceMappings {
 
     public static final String SOCIAL_SECURITY_NUMBER = "foedselsnummer";
     public static final String D_NUMBER = "dNummer";
+    public static final String CADASTRAL_UNIT = "gaardsbruksnr";
+    public static final String BUILDING = "byggning";
     public static final String CASE_HANDLER = "saksbehandler";
     // This is probably CORRESPONDENCE_PART_NAME. Waiting for clarification
     public static final String NAME = "navn";

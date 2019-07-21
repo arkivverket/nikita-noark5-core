@@ -4,22 +4,22 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
-import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.CadastralUnitSerializer;
+import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.UnitSerializer;
 
 import java.util.List;
 
-import static nikita.common.config.N5ResourceMappings.CADASTRAL_UNIT;
+import static nikita.common.config.N5ResourceMappings.BUILDING;
 
-@JsonSerialize(using = CadastralUnitSerializer.class)
-public class CadastralUnitHateoas
+@JsonSerialize(using = UnitSerializer.class)
+public class BuildingHateoas
         extends HateoasNoarkObject
         implements IHateoasNoarkObject {
 
-    public CadastralUnitHateoas(INikitaEntity entity) {
+    public BuildingHateoas(INikitaEntity entity) {
         super(entity);
     }
 
-    public CadastralUnitHateoas(List<INikitaEntity> entityList) {
-        super(entityList, CADASTRAL_UNIT);
+    public BuildingHateoas(List<INikitaEntity> entityList) {
+        super(entityList, BUILDING);
     }
 }

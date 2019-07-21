@@ -2,9 +2,13 @@ package nikita.common.model.noark5.v5.nationalidentifier;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IBuilding;
 import nikita.common.util.deserialisers.nationalidentifier.BuildingDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.BuildingSerializer;
+import nikita.webapp.hateoas.nationalidentifier.BuildingHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -22,8 +26,8 @@ import static nikita.common.config.Constants.TABLE_BUILDING;
 @Inheritance(strategy = JOINED)
 @JsonSerialize(using = BuildingSerializer.class)
 @JsonDeserialize(using = BuildingDeserializer.class)
-//@HateoasPacker(using = BuildingHateoasHandler.class)
-//@HateoasObject(using = BuildingHateoas.class)
+@HateoasPacker(using = BuildingHateoasHandler.class)
+@HateoasObject(using = BuildingHateoas.class)
 public class Building
         extends NationalIdentifier
         implements IBuilding {
