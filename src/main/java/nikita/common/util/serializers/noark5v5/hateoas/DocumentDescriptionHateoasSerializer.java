@@ -59,7 +59,7 @@ public class DocumentDescriptionHateoasSerializer
         printCreateEntity(jgen, documentDescription);
         if (documentDescription.getAssociationDate() != null) {
             jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
-                    Serialize.formatDate(
+                    Serialize.formatDateTime(
                             documentDescription.getAssociationDate()));
         }
         if (documentDescription.getAssociationDate() != null) {
