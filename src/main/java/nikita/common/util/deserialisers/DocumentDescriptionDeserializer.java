@@ -99,7 +99,7 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
 
         // Deserialize associationDate
         documentDescription.setAssociationDate(
-                deserializeDate(DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
+                deserializeDateTime(DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
                 objectNode, errors));
 
         // Deserialize associatedBy
