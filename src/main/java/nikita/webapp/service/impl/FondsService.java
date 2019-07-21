@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -290,13 +289,6 @@ public class FondsService
     @Override
     public FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip) {
 
-        if (top == null || top > 10) {
-            top = 10;
-        }
-        if (skip == null) {
-            skip = 0;
-        }
-
         String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Fonds> criteriaQuery = criteriaBuilder.createQuery(Fonds.class);
@@ -305,8 +297,6 @@ public class FondsService
 
         criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), loggedInUser));
         TypedQuery<Fonds> typedQuery = entityManager.createQuery(select);
-        typedQuery.setFirstResult(skip);
-        typedQuery.setMaxResults(top);
 
         FondsHateoas fondsHateoas = new
                 FondsHateoas((List<INikitaEntity>)

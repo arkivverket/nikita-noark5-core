@@ -237,12 +237,6 @@ public class CaseFileService
     @Override
     public List<CaseFile> findCaseFileByOwnerPaginated(
             Integer top, Integer skip) {
-        if (top == null || top > 10) {
-            top = 10;
-        }
-        if (skip == null) {
-            skip = 0;
-        }
 
         String loggedInUser = SecurityContextHolder.getContext().
                 getAuthentication().getName();
@@ -255,8 +249,6 @@ public class CaseFileService
         criteriaQuery.where(criteriaBuilder.
                 equal(from.get("ownedBy"), loggedInUser));
         TypedQuery<CaseFile> typedQuery = entityManager.createQuery(select);
-        typedQuery.setFirstResult(skip);
-        typedQuery.setMaxResults(top);
         return typedQuery.getResultList();
     }
 
