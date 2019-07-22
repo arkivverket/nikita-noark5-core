@@ -5,13 +5,13 @@ import nikita.common.model.noark5.v5.metadata.PartRole;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.InheritanceType.JOINED;
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
+import static nikita.common.config.Constants.TABLE_PART;
 import static nikita.common.config.N5ResourceMappings.PART;
 
 /**
@@ -26,13 +26,23 @@ public class Part
         extends NoarkGeneralEntity
         implements IPartEntity {
 
+
     /**
-     * M0?? - partrolle(xs:string)
+     * M??? - partTypeKode kode (xs:string)
      */
-    // Link to PartRole
-    @ManyToOne(fetch = EAGER, cascade = PERSIST)
-    @JoinColumn(name = PART_PART_ROLE_ID,
-            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
+    @NotNull
+    @Column(name = "part_type_code", nullable = false)
+    @Audited
+    private String partTypeCode;
+
+    /**
+     * M??? - partTypeKodenavn name (xs:string)
+     */
+    @Column(name = "correspondence_part_type_code_name")
+    @Audited
+    private String partTypeCodeName;
+
+
     private PartRole referencePartRole;
 
     // Links to Files
@@ -54,6 +64,22 @@ public class Part
 
     public void setReferenceFile(List<File> referenceFile) {
         this.referenceFile = referenceFile;
+    }
+
+    public String getPartTypeCode() {
+        return partTypeCode;
+    }
+
+    public void setPartTypeCode(String partTypeCode) {
+        this.partTypeCode = partTypeCode;
+    }
+
+    public String getPartTypeCodeName() {
+        return partTypeCodeName;
+    }
+
+    public void setPartTypeCodeName(String partTypeCodeName) {
+        this.partTypeCodeName = partTypeCodeName;
     }
 
     @Override

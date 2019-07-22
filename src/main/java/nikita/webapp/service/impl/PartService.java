@@ -5,11 +5,8 @@ import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.PartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
-import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.repository.n5v5.IPartRepository;
 import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
-import nikita.common.util.exceptions.NikitaException;
-import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -25,8 +22,7 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.Constants.TEMPLATE_PART_ROLE_CODE;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @Service
@@ -76,12 +72,11 @@ public class PartService
     updatePartPerson(
             @NotNull String systemId, @NotNull Long version,
             @NotNull PartPerson incomingPart) {
-        PartPerson existingPart =
-                (PartPerson)
-                        getPartOrThrow(systemId);
+        PartPerson existingPart = (PartPerson) getPartOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
+        copyCodeValues(incomingPart, existingPart);
         existingPart.setdNumber(
                 incomingPart.getdNumber());
         existingPart.setName(
@@ -106,15 +101,27 @@ public class PartService
         return existingPart;
     }
 
+    private void copyCodeValues(@NotNull Part incomingPart,
+                                @NotNull Part existingPart) {
+        if (null != incomingPart.getPartTypeCode()) {
+            existingPart.setPartTypeCode(incomingPart.getPartTypeCode());
+            if (null != incomingPart.getPartTypeCodeName()) {
+                existingPart.setPartTypeCodeName(
+                        incomingPart.getPartTypeCodeName());
+            }
+        }
+    }
+
     @Override
     public PartUnit updatePartUnit(
             @NotNull String systemId, @NotNull Long version,
             @NotNull PartUnit incomingPart) {
-        PartUnit existingPart =
-                (PartUnit) getPartOrThrow(systemId);
+
+        PartUnit existingPart = (PartUnit) getPartOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
+        copyCodeValues(incomingPart, existingPart);
         existingPart.setName(
                 incomingPart.getName());
         existingPart.setOrganisationNumber(
@@ -132,6 +139,7 @@ public class PartService
         // Postal address
         updatePartPostalAddressCreateIfNull(
                 existingPart, incomingPart);
+
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingPart.setVersion(version);
@@ -143,7 +151,6 @@ public class PartService
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson part, @NotNull Record record) {
 
-        setPartRole(part);
         createPerson(part);
         record.addPartPerson(part);
         part.addRecord(record);
@@ -159,7 +166,6 @@ public class PartService
     @Override
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson part, @NotNull File file) {
-        setPartRole(part);
         createPerson(part);
         file.addPart(part);
         part.addReferenceFile(file);
@@ -173,7 +179,6 @@ public class PartService
 
     @Override
     public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
-        setPartRole(part);
         createUnit(part);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
@@ -192,7 +197,6 @@ public class PartService
     @Override
     public PartUnitHateoas createNewPartUnit(
             @NotNull PartUnit part, @NotNull File file) {
-        setPartRole(part);
         createUnit(part);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
@@ -416,20 +420,16 @@ public class PartService
     @Override
     public PartUnitHateoas generateDefaultPartUnit(
             final String recordSystemId) {
-        PartUnit suggestedPart =
-                new PartUnit();
+        PartUnit suggestedPart = new PartUnit();
 
-        findAndSetPartRole(TEMPLATE_PART_ROLE_CODE, suggestedPart);
-
+        setDefaultPartRole(suggestedPart);
         createTemplatePostalAddress(suggestedPart);
         createTemplateBusinessAddress(suggestedPart);
         createTemplateContactInformation(suggestedPart);
         suggestedPart.setContactPerson("Frank Grimes");
 
-        PartUnitHateoas partHateoas =
-                new PartUnitHateoas(suggestedPart);
-        partHateoasHandler.addLinksOnTemplate(
-                partHateoas, new Authorisation());
+        PartUnitHateoas partHateoas = new PartUnitHateoas(suggestedPart);
+        partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
         return partHateoas;
     }
 
@@ -447,13 +447,11 @@ public class PartService
      * PartPersonHateoas object
      */
     @Override
-    public PartPersonHateoas
-    generateDefaultPartPerson(final String recordSystemId) {
-        PartPerson suggestedPart =
-                new PartPerson();
+    public PartPersonHateoas generateDefaultPartPerson(
+            final String recordSystemId) {
+        PartPerson suggestedPart = new PartPerson();
 
-        findAndSetPartRole(TEMPLATE_PART_ROLE_CODE, suggestedPart);
-
+        setDefaultPartRole(suggestedPart);
         createTemplatePostalAddress(suggestedPart);
         createTemplateResidingAddress(suggestedPart);
         createTemplateContactInformation(suggestedPart);
@@ -461,10 +459,8 @@ public class PartService
         suggestedPart.setSocialSecurityNumber("01010012345");
         suggestedPart.setdNumber("01010012345");
 
-        PartPersonHateoas partHateoas =
-                new PartPersonHateoas(suggestedPart);
-        partHateoasHandler.addLinksOnTemplate(
-                partHateoas, new Authorisation());
+        PartPersonHateoas partHateoas = new PartPersonHateoas(suggestedPart);
+        partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
         return partHateoas;
     }
 
@@ -587,53 +583,8 @@ public class PartService
         existingAddress.setCountryCode(incomingAddress.getCountryCode());
     }
 
-    /**
-     * Internal helper method to retrieve a partRole object
-     * given a code e.g. EA returns EA, Avsender. Note if this does not find a
-     * code it throws an exception. So this should only be called as part of
-     * a process where that role of action is acceptable.
-     *
-     * @param code A code identifying a partRole
-     * @param part The correct partRole
-     */
-    private void findAndSetPartRole(
-            String code, Part part) {
-        PartRole partRole = partRoleRepository.findByCode(code);
-        if (partRole == null) {
-            throw new NikitaException("Internal error, metadata missing. [" +
-                    code + "] returns no value");
-        }
-        part.setPartRole(partRole);
-    }
-
-    /**
-     * The incoming PartRole does not have @id field set.
-     * Therefore, we have to look it up in the database and make sure the
-     * correct PartRole is associated with the Part
-     * <p>
-     * If PartRole type is not set, a
-     * NikitaMalformedInputDataException is thrown. This means that this
-     * method should originate based on a incoming request from a
-     * Controller.
-     *
-     * @param part Incoming part
-     */
-    private void setPartRole(
-            @NotNull Part part) {
-        PartRole incomingPartRole =
-                part.getPartRole();
-
-        if (incomingPartRole != null &&
-                incomingPartRole.getCode() != null) {
-            PartRole partRole = partRoleRepository.findByCode(
-                    incomingPartRole.getCode());
-            if (partRole == null) {
-                throw new NikitaMalformedInputDataException("Missing required " +
-                        "PartRole value");
-            }
-            part.setPartRole(partRole);
-        }
+    private void setDefaultPartRole(@NotNull Part part) {
+        part.setPartTypeCode(TEMPLATE_PART_ROLE_CODE);
+        part.setPartTypeCodeName(TEMPLATE_PART_ROLE_NAME);
     }
 }
-
-

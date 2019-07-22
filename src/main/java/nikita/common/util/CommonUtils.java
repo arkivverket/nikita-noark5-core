@@ -20,7 +20,6 @@ import nikita.common.model.noark5.v5.interfaces.entities.*;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IAdministrativeUnitEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IUserEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
-import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedHeaderException;
@@ -560,6 +559,32 @@ DateTimeFormatter dateFormatter =
                     errors.append("The CorrespondencePart object you tried to");
                     errors.append(" create is missing  ");
                     errors.append(CORRESPONDENCE_PART_TYPE);
+                }
+            }
+
+            private static void deserialisePartRole(
+                    IPartEntity part,
+                    ObjectNode objectNode, StringBuilder errors) {
+                // Deserialize parttype
+                JsonNode currentNode =
+                        objectNode.get(PART_ROLE);
+                if (null != currentNode) {
+
+                    JsonNode node = currentNode.get(CODE);
+                    if (null != node) {
+                        part.setPartTypeCode(node.textValue());
+                    }
+                    node = currentNode.get(CODE_NAME);
+                    if (null != node) {
+                        part.setPartTypeCodeName(node.textValue());
+                    }
+                    if (null != part.getPartTypeCode()) {
+                        objectNode.remove(PART_ROLE);
+                    }
+                } else {
+                    errors.append("The Part object you tried to");
+                    errors.append(" create is missing  ");
+                    errors.append(PART_ROLE);
                 }
             }
 
@@ -1226,23 +1251,6 @@ DateTimeFormatter dateFormatter =
                             contactInformation, currentNode.deepCopy(), errors);
                     partUnit.setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
-                }
-            }
-
-            private static void deserialisePartRole(
-                    IPartEntity part, ObjectNode objectNode,
-                    StringBuilder errors) {
-                PartRole partRole = new PartRole();
-                JsonNode currentNode = objectNode.get(PART_ROLE);
-                if (null != currentNode) {
-                    ObjectNode partRoleObjectNode = currentNode.deepCopy();
-                    deserialiseNoarkMetadataEntity(partRole, partRoleObjectNode, errors);
-                    part.setPartRole(partRole);
-                    objectNode.remove(PART_ROLE);
-                } else {
-                    errors.append("The PartRole object you tried to create is");
-                    errors.append(" missing  ");
-                    errors.append(PART_ROLE);
                 }
             }
 
@@ -1966,8 +1974,11 @@ DateTimeFormatter dateFormatter =
                     throws IOException {
                 if (part != null) {
                     printSystemIdEntity(jgen, part);
-                    if (part.getPartRole() != null) {
-                        printMetadataEntity(jgen, part.getPartRole());
+                    if (part.getPartTypeCode() != null) {
+                        jgen.writeObjectFieldStart(PART_ROLE);
+                        printCode(jgen, part.getPartTypeCode(),
+                                part.getPartTypeCodeName());
+                        jgen.writeEndObject();
                     }
                 }
             }

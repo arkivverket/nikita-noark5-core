@@ -9,6 +9,14 @@ import nikita.common.model.noark5.v5.metadata.PartRole;
 public interface IPartEntity
         extends INikitaEntity {
 
+    String getPartTypeCode();
+
+    void setPartTypeCode(String partTypeCode);
+
+    String getPartTypeCodeName();
+
+    void setPartTypeCodeName(String partTypeCodeName);
+
     PartRole getPartRole();
 
     void setPartRole(PartRole partRole);
