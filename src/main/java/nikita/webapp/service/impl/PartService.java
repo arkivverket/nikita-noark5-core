@@ -455,10 +455,6 @@ public class PartService
         PartUnit suggestedPart = new PartUnit();
 
         setDefaultPartRole(suggestedPart);
-        createTemplatePostalAddress(suggestedPart);
-        createTemplateBusinessAddress(suggestedPart);
-        createTemplateContactInformation(suggestedPart);
-        suggestedPart.setContactPerson("Frank Grimes");
 
         PartUnitHateoas partHateoas = new PartUnitHateoas(suggestedPart);
         partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
@@ -484,93 +480,11 @@ public class PartService
         PartPerson suggestedPart = new PartPerson();
 
         setDefaultPartRole(suggestedPart);
-        createTemplatePostalAddress(suggestedPart);
-        createTemplateResidingAddress(suggestedPart);
-        createTemplateContactInformation(suggestedPart);
-        suggestedPart.setName("Frank Grimes");
-        suggestedPart.setSocialSecurityNumber("01010012345");
-        suggestedPart.setdNumber("01010012345");
 
         PartPersonHateoas partHateoas = new PartPersonHateoas(suggestedPart);
         partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
         return partHateoas;
     }
-
-    /**
-     * Create a templated ContactInformation object
-     *
-     * @param part templated part
-     */
-    private void createTemplateContactInformation(final IContactInformation
-                                                          part) {
-        ContactInformation contactInformation = new ContactInformation();
-        contactInformation.setEmailAddress("nikita@example.com");
-        contactInformation.setMobileTelephoneNumber("123456789");
-        contactInformation.setTelephoneNumber("987654321");
-        part.setContactInformation(contactInformation);
-    }
-
-    /**
-     * Create a templated address for the business address object
-     *
-     * @param part templated part
-     */
-    private void createTemplateBusinessAddress(IBusinessAddress
-                                                       part) {
-        BusinessAddress businessAddress = new BusinessAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressType(BUSINESS_ADDRESS);
-        simpleAddress.setAddressLine1("ADRL1 Business : 742 Evergreen Terrace");
-        simpleAddress.setAddressLine2("ADRL2 Business : 742 Evergreen Terrace");
-        simpleAddress.setAddressLine3("ADRL3 Business : 742 Evergreen Terrace");
-        simpleAddress.setCountryCode("US");
-        simpleAddress.setPostalNumber(new PostalNumber("12345"));
-        simpleAddress.setPostalTown("Springfield");
-        businessAddress.setSimpleAddress(simpleAddress);
-        part.setBusinessAddress(businessAddress);
-    }
-
-
-    /**
-     * Create a templated address for the residing address object
-     *
-     * @param part templated part
-     */
-    private void createTemplateResidingAddress(final IResidingAddress
-                                                       part) {
-        ResidingAddress residingAddress = new ResidingAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressType(RESIDING_ADDRESS);
-        simpleAddress.setAddressLine1("ADRL1 Residing : 742 Evergreen Terrace");
-        simpleAddress.setAddressLine2("ADRL2 Residing : 742 Evergreen Terrace");
-        simpleAddress.setAddressLine3("ADRL3 Residing : 742 Evergreen Terrace");
-        simpleAddress.setCountryCode("US");
-        simpleAddress.setPostalNumber(new PostalNumber("12345"));
-        simpleAddress.setPostalTown("Springfield");
-        residingAddress.setSimpleAddress(simpleAddress);
-        part.setResidingAddress(residingAddress);
-    }
-
-    /**
-     * Create a templated address for the postal address object
-     *
-     * @param part templated part
-     */
-    private void createTemplatePostalAddress(IPostalAddress
-                                                     part) {
-        PostalAddress postalAddress = new PostalAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressType(POSTAL_ADDRESS);
-        simpleAddress.setAddressLine1("ADRL1 Postal: 742 Evergreen Terrace");
-        simpleAddress.setAddressLine2("ADRL2 Postal: 742 Evergreen Terrace");
-        simpleAddress.setAddressLine3("ADRL3 Postal: 742 Evergreen Terrace");
-        simpleAddress.setCountryCode("US");
-        simpleAddress.setPostalNumber(new PostalNumber("12345"));
-        simpleAddress.setPostalTown("Springfield");
-        postalAddress.setSimpleAddress(simpleAddress);
-        part.setPostalAddress(postalAddress);
-    }
-
 
     /**
      * Copy the values you are allowed to copy from the incoming

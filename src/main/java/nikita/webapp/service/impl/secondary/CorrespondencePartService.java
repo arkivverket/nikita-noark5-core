@@ -511,10 +511,6 @@ public class CorrespondencePartService
                 new CorrespondencePartUnit();
 
         createTemplateCorrespondencePartType(suggestedCorrespondencePart);
-        createTemplatePostalAddress(suggestedCorrespondencePart);
-        createTemplateBusinessAddress(suggestedCorrespondencePart);
-        createTemplateContactInformation(suggestedCorrespondencePart);
-        suggestedCorrespondencePart.setContactPerson("Frank Grimes");
 
         CorrespondencePartUnitHateoas correspondencePartHateoas =
                 new CorrespondencePartUnitHateoas(suggestedCorrespondencePart);
@@ -543,13 +539,6 @@ public class CorrespondencePartService
                 new CorrespondencePartPerson();
 
         createTemplateCorrespondencePartType(suggestedCorrespondencePart);
-
-        createTemplatePostalAddress(suggestedCorrespondencePart);
-        createTemplateResidingAddress(suggestedCorrespondencePart);
-        createTemplateContactInformation(suggestedCorrespondencePart);
-        suggestedCorrespondencePart.setName("Frank Grimes");
-        suggestedCorrespondencePart.setSocialSecurityNumber("01010012345");
-        suggestedCorrespondencePart.setdNumber("01010012345");
 
         CorrespondencePartPersonHateoas correspondencePartHateoas =
                 new CorrespondencePartPersonHateoas(suggestedCorrespondencePart);
@@ -587,82 +576,6 @@ public class CorrespondencePartService
                 correspondencePartHateoas, new Authorisation());
         return correspondencePartHateoas;
     }
-
-    /**
-     * Create a templated ContactInformation object
-     *
-     * @param correspondencePart templated correspondencePart
-     */
-    private void createTemplateContactInformation(final IContactInformation
-                                                          correspondencePart) {
-        ContactInformation contactInformation = new ContactInformation();
-        contactInformation.setEmailAddress("nikita@example.com");
-        contactInformation.setMobileTelephoneNumber("123456789");
-        contactInformation.setTelephoneNumber("987654321");
-        correspondencePart.setContactInformation(contactInformation);
-    }
-
-    /**
-     * Create a templated address for the business address object
-     *
-     * @param correspondencePart templated correspondencePart
-     */
-    private void createTemplateBusinessAddress(IBusinessAddress
-                                                       correspondencePart) {
-        BusinessAddress businessAddress = new BusinessAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressType(BUSINESS_ADDRESS);
-        simpleAddress.setAddressLine1("ADRL1 Business : 742 Evergreen Terrace");
-        simpleAddress.setAddressLine2("ADRL2 Business : 742 Evergreen Terrace");
-        simpleAddress.setAddressLine3("ADRL3 Business : 742 Evergreen Terrace");
-        simpleAddress.setCountryCode("US");
-        simpleAddress.setPostalNumber(new PostalNumber("12345"));
-        simpleAddress.setPostalTown("Springfield");
-        businessAddress.setSimpleAddress(simpleAddress);
-        correspondencePart.setBusinessAddress(businessAddress);
-    }
-
-
-    /**
-     * Create a templated address for the residing address object
-     *
-     * @param correspondencePart templated correspondencePart
-     */
-    private void createTemplateResidingAddress(final IResidingAddress
-                                                       correspondencePart) {
-        ResidingAddress residingAddress = new ResidingAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressType(RESIDING_ADDRESS);
-        simpleAddress.setAddressLine1("ADRL1 Residing : 742 Evergreen Terrace");
-        simpleAddress.setAddressLine2("ADRL2 Residing : 742 Evergreen Terrace");
-        simpleAddress.setAddressLine3("ADRL3 Residing : 742 Evergreen Terrace");
-        simpleAddress.setCountryCode("US");
-        simpleAddress.setPostalNumber(new PostalNumber("12345"));
-        simpleAddress.setPostalTown("Springfield");
-        residingAddress.setSimpleAddress(simpleAddress);
-        correspondencePart.setResidingAddress(residingAddress);
-    }
-
-    /**
-     * Create a templated address for the postal address object
-     *
-     * @param correspondencePart templated correspondencePart
-     */
-    private void createTemplatePostalAddress(IPostalAddress
-                                                     correspondencePart) {
-        PostalAddress postalAddress = new PostalAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressType(POSTAL_ADDRESS);
-        simpleAddress.setAddressLine1("ADRL1 Postal: 742 Evergreen Terrace");
-        simpleAddress.setAddressLine2("ADRL2 Postal: 742 Evergreen Terrace");
-        simpleAddress.setAddressLine3("ADRL3 Postal: 742 Evergreen Terrace");
-        simpleAddress.setCountryCode("US");
-        simpleAddress.setPostalNumber(new PostalNumber("12345"));
-        simpleAddress.setPostalTown("Springfield");
-        postalAddress.setSimpleAddress(simpleAddress);
-        correspondencePart.setPostalAddress(postalAddress);
-    }
-
 
     /**
      * Copy the values you are allowed to copy from the incoming
