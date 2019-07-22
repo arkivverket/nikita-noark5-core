@@ -35,7 +35,7 @@ public final class N5ResourceMappings {
     public static final String NEW_COUNTRY = NEW + Constants.DASH + COUNTRY;
 
     public static final String COUNTRY_CODE = "landkode";
-    public static final String CLASSIFIED_CODE = "grad";
+    public static final String CLASSIFIED_CODE = "graderingskode";
     public static final String CLASSIFICATION_TYPE = "klassifikasjonstype";
     public static final String ASSOCIATED_WITH_RECORD_AS = "tilknyttetregistreringsom";
     public static final String ACCESS_RESTRICTION = "tilgangsrestriksjon";
