@@ -35,7 +35,7 @@ public final class N5ResourceMappings {
     public static final String NEW_COUNTRY = NEW + Constants.DASH + COUNTRY;
 
     public static final String COUNTRY_CODE = "landkode";
-    public static final String CLASSIFIED_CODE = "grad";
+    public static final String CLASSIFIED_CODE = "graderingskode";
     public static final String CLASSIFICATION_TYPE = "klassifikasjonstype";
     public static final String ASSOCIATED_WITH_RECORD_AS = "tilknyttetregistreringsom";
     public static final String ACCESS_RESTRICTION = "tilgangsrestriksjon";
@@ -147,7 +147,7 @@ public final class N5ResourceMappings {
     public static final String SOCIAL_SECURITY_NUMBER = "foedselsnummer";
     public static final String D_NUMBER = "dNummer";
     public static final String CADASTRAL_UNIT = "gaardsbruksnr";
-    public static final String BUILDING = "byggning";
+    public static final String BUILDING = "bygning";
     public static final String CASE_HANDLER = "saksbehandler";
     // This is probably CORRESPONDENCE_PART_NAME. Waiting for clarification
     public static final String NAME = "navn";
