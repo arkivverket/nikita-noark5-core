@@ -20,7 +20,6 @@ import nikita.common.model.noark5.v5.interfaces.entities.*;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IAdministrativeUnitEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IUserEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
-import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
@@ -534,18 +533,33 @@ DateTimeFormatter dateFormatter =
                 }
             }
 
-            private static void deserialiseCorrespondencePartType(ICorrespondencePartEntity correspondencePart,
-                                                                  ObjectNode objectNode, StringBuilder errors) {
-                CorrespondencePartType correspondencePartType = new CorrespondencePartType();
-                JsonNode currentNode = objectNode.get(CORRESPONDENCE_PART_TYPE);
+            private static void deserialiseCorrespondencePartType(
+                    ICorrespondencePartEntity correspondencePart,
+                    ObjectNode objectNode, StringBuilder errors) {
+                // Deserialize korrespondanseparttype
+                JsonNode currentNode =
+                        objectNode.get(CORRESPONDENCE_PART_TYPE);
                 if (null != currentNode) {
-                    ObjectNode correspondencePartTypeObjectNode = currentNode.deepCopy();
-                    deserialiseNoarkMetadataEntity(correspondencePartType, correspondencePartTypeObjectNode, errors);
-                    correspondencePart.setCorrespondencePartType(correspondencePartType);
-                    objectNode.remove(CORRESPONDENCE_PART_TYPE);
+
+                    JsonNode node = currentNode.get(CODE);
+                    if (null != node) {
+                        correspondencePart.setCorrespondencePartTypeCode(
+                                node.textValue());
+                    }
+                    node = currentNode.get(CODE_NAME);
+                    if (null != node) {
+                        correspondencePart.
+                                setCorrespondencePartTypeCodeName(
+                                        node.textValue());
+                    }
+                    if (null != correspondencePart.
+                            getCorrespondencePartTypeCode()) {
+                        objectNode.remove(CORRESPONDENCE_PART_TYPE);
+                    }
                 } else {
-                    errors.append("The CorrespondencePartType object you tried to " +
-                            "create is missing  " + CORRESPONDENCE_PART_TYPE + ". ");
+                    errors.append("The CorrespondencePart object you tried to");
+                    errors.append(" create is missing  ");
+                    errors.append(CORRESPONDENCE_PART_TYPE);
                 }
             }
 
@@ -1844,14 +1858,18 @@ DateTimeFormatter dateFormatter =
 
                 if (correspondencePart != null) {
                     printSystemIdEntity(jgen, correspondencePart);
-                    if (correspondencePart.getCorrespondencePartType() != null) {
-                        printMetadataEntity(jgen,
-                                correspondencePart.getCorrespondencePartType(),
-                                CORRESPONDENCE_PART_TYPE);
+                    if (correspondencePart.
+                            getCorrespondencePartTypeCode() != null) {
+                        jgen.writeObjectFieldStart(CORRESPONDENCE_PART_TYPE);
+                        printCode(jgen,
+                                correspondencePart.
+                                        getCorrespondencePartTypeCode(),
+                                correspondencePart.
+                                        getCorrespondencePartTypeCodeName());
+                        jgen.writeEndObject();
                     }
                 }
             }
-
 
             public static void printContactInformation(JsonGenerator jgen, IContactInformationEntity contactInformation)
                     throws IOException {
@@ -2026,7 +2044,7 @@ DateTimeFormatter dateFormatter =
                     }
                 }
             }
-            
+
             public static void printCorrespondencePartInternal(JsonGenerator jgen,
                                                                ICorrespondencePartInternalEntity correspondencePartInternal)
                     throws IOException {

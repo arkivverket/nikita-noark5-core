@@ -6,11 +6,8 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInte
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
-import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v5.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.repository.n5v5.secondary.ICorrespondencePartRepository;
-import nikita.common.util.exceptions.NikitaException;
-import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -30,6 +27,7 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
+import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_DESCRIPTION_EA;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @Service
@@ -89,6 +87,9 @@ public class CorrespondencePartService
                 (CorrespondencePartPerson)
                         getCorrespondencePartOrThrow(systemId);
 
+        updateCorrespondencePartType(incomingCorrespondencePart,
+                existingCorrespondencePart);
+
         // Copy all the values you are allowed to copy ....
         // First the values
         existingCorrespondencePart.setdNumber(
@@ -115,6 +116,23 @@ public class CorrespondencePartService
         return existingCorrespondencePart;
     }
 
+    private void updateCorrespondencePartType(
+            CorrespondencePart incomingCorrespondencePart,
+            CorrespondencePart existingCorrespondencePart) {
+
+        if (null != incomingCorrespondencePart.
+                getCorrespondencePartTypeCode()) {
+            existingCorrespondencePart.setCorrespondencePartTypeCode(
+                    incomingCorrespondencePart.getCorrespondencePartTypeCode());
+        }
+        if (null != incomingCorrespondencePart.
+                getCorrespondencePartTypeCodeName()) {
+            existingCorrespondencePart.setCorrespondencePartTypeCodeName(
+                    incomingCorrespondencePart.
+                            getCorrespondencePartTypeCodeName());
+        }
+    }
+
     @Override
     public CorrespondencePartInternal updateCorrespondencePartInternal(
             @NotNull String systemId, @NotNull Long version,
@@ -123,6 +141,9 @@ public class CorrespondencePartService
                 (CorrespondencePartInternal)
                         getCorrespondencePartOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
+
+        updateCorrespondencePartType(incomingCorrespondencePart,
+                existingCorrespondencePart);
 
         existingCorrespondencePart.setAdministrativeUnit(
                 incomingCorrespondencePart.getAdministrativeUnit());
@@ -143,8 +164,12 @@ public class CorrespondencePartService
     public CorrespondencePartUnit updateCorrespondencePartUnit(
             @NotNull String systemId, @NotNull Long version,
             @NotNull CorrespondencePartUnit incomingCorrespondencePart) {
+
         CorrespondencePartUnit existingCorrespondencePart =
                 (CorrespondencePartUnit) getCorrespondencePartOrThrow(systemId);
+
+        updateCorrespondencePartType(incomingCorrespondencePart,
+                existingCorrespondencePart);
 
         // Copy all the values you are allowed to copy ....
         // First the values
@@ -177,8 +202,6 @@ public class CorrespondencePartService
     createNewCorrespondencePartPerson(
             CorrespondencePartPerson correspondencePart,
             Record record) {
-
-        setCorrespondencePartType(correspondencePart);
 
         ContactInformation contactInformation
                 = correspondencePart.getContactInformation();
@@ -215,12 +238,18 @@ public class CorrespondencePartService
         return correspondencePartPersonHateoas;
     }
 
+    private void createTemplateCorrespondencePartType(
+            CorrespondencePart correspondencePart) {
+        correspondencePart.setCorrespondencePartTypeCode(
+                CORRESPONDENCE_PART_CODE_EA);
+        correspondencePart.setCorrespondencePartTypeCodeName(
+                CORRESPONDENCE_PART_DESCRIPTION_EA);
+    }
+
     @Override
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePart,
             Record record) {
-
-        setCorrespondencePartType(correspondencePart);
 
         // Set NikitaEntity values for ContactInformation, PostalAddress,
         // BusinessAddress
@@ -264,8 +293,6 @@ public class CorrespondencePartService
     createNewCorrespondencePartInternal(
             CorrespondencePartInternal correspondencePart,
             Record record) {
-
-        setCorrespondencePartType(correspondencePart);
 
         record.getReferenceCorrespondencePartInternal().
                 add(correspondencePart);
@@ -483,12 +510,11 @@ public class CorrespondencePartService
     @Override
     public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
             final String recordSystemId) {
+
         CorrespondencePartUnit suggestedCorrespondencePart =
                 new CorrespondencePartUnit();
 
-        findAndSetCorrespondencePartType(CORRESPONDENCE_PART_CODE_EA,
-                suggestedCorrespondencePart);
-
+        createTemplateCorrespondencePartType(suggestedCorrespondencePart);
         createTemplatePostalAddress(suggestedCorrespondencePart);
         createTemplateBusinessAddress(suggestedCorrespondencePart);
         createTemplateContactInformation(suggestedCorrespondencePart);
@@ -520,8 +546,7 @@ public class CorrespondencePartService
         CorrespondencePartPerson suggestedCorrespondencePart =
                 new CorrespondencePartPerson();
 
-        findAndSetCorrespondencePartType(CORRESPONDENCE_PART_CODE_EA,
-                suggestedCorrespondencePart);
+        createTemplateCorrespondencePartType(suggestedCorrespondencePart);
 
         createTemplatePostalAddress(suggestedCorrespondencePart);
         createTemplateResidingAddress(suggestedCorrespondencePart);
@@ -557,8 +582,7 @@ public class CorrespondencePartService
         CorrespondencePartInternal suggestedCorrespondencePart =
                 new CorrespondencePartInternal();
 
-        findAndSetCorrespondencePartType(CORRESPONDENCE_PART_CODE_EA,
-                suggestedCorrespondencePart);
+        createTemplateCorrespondencePartType(suggestedCorrespondencePart);
 
         CorrespondencePartInternalHateoas correspondencePartHateoas =
                 new CorrespondencePartInternalHateoas(
@@ -685,58 +709,5 @@ public class CorrespondencePartService
         existingAddress.setPostalNumber(incomingAddress.getPostalNumber());
         existingAddress.setPostalTown(incomingAddress.getPostalTown());
         existingAddress.setCountryCode(incomingAddress.getCountryCode());
-    }
-
-    /**
-     * The incoming CorrespondencePartType does not have @id field set.
-     * Therefore, we have to look it up in the database and make sure the
-     * correct CorrespondencePartType is associated with the CorrespondencePart
-     * <p>
-     * If CorrespondencePartType type is not set, a
-     * NikitaMalformedInputDataException is thrown. This means that this
-     * method should originate based on a incoming request from a
-     * Controller.
-     *
-     * @param correspondencePart Incoming correspondencePart
-     */
-    private void setCorrespondencePartType(
-            @NotNull CorrespondencePart correspondencePart) {
-        CorrespondencePartType incomingCorrespondencePartType =
-                correspondencePart.getCorrespondencePartType();
-
-        if (incomingCorrespondencePartType != null &&
-                incomingCorrespondencePartType.getCode() != null) {
-            CorrespondencePartType actualCorrespondencePartType =
-                    correspondencePartTypeRepository.findByCode(
-                            incomingCorrespondencePartType.getCode());
-            if (actualCorrespondencePartType != null) {
-                correspondencePart.setCorrespondencePartType(
-                        actualCorrespondencePartType);
-            }
-        } else {
-            throw new NikitaMalformedInputDataException("Missing required " +
-                    "CorrespondencePartType value");
-        }
-    }
-
-    /**
-     * Internal helper method to retrieve a correspondencePartType object
-     * given a code e.g. EA returns EA, Avsender. Note if this does not find a
-     * code it throws an exception. So this should only be called as part of
-     * a process where that type of action is acceptable.
-     *
-     * @param code               A code identifying a correspondencePartType
-     * @param correspondencePart The correct correspondencePartType
-     */
-    private void findAndSetCorrespondencePartType(
-            String code, CorrespondencePart correspondencePart) {
-        CorrespondencePartType correspondencePartType =
-                correspondencePartTypeService.
-                        findByCode(code);
-        if (correspondencePartType == null) {
-            throw new NikitaException("Internal error, metadata missing. [" +
-                    CORRESPONDENCE_PART_CODE_EA + "] returns no value");
-        }
-        correspondencePart.setCorrespondencePartType(correspondencePartType);
     }
 }

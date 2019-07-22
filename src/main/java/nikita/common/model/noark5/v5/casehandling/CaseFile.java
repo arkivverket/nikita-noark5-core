@@ -89,7 +89,7 @@ public class CaseFile
     /**
      * M??? - saksstatus name (xs:string)
      */
-    @Column(name = "case_status_name")
+    @Column(name = "case_status_code_name")
     @Audited
     private String caseStatusName;
 
