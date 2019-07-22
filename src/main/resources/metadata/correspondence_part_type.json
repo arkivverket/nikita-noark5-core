@@ -27,6 +27,10 @@
     {
       "code": "IK",
       "codename": "Intern kopimottaker"
+    },
+    {
+      "code": "IS",
+      "codename": "Medavsender"
     }
   ]
 }
