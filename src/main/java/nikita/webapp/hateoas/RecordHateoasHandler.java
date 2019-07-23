@@ -166,7 +166,7 @@ public class RecordHateoasHandler
             hateoasNoarkObject.addLink(entity,
                     new Link(getOutgoingAddress() + HREF_BASE_SERIES +
                             record.getReferenceSeries().getSystemId(),
-                            REL_FONDS_STRUCTURE_SERIES, true));
+                            REL_FONDS_STRUCTURE_SERIES));
         }
     }
 
@@ -188,7 +188,7 @@ public class RecordHateoasHandler
             hateoasNoarkObject.addLink(entity,
                     new Link(getOutgoingAddress() + HREF_BASE_FILE +
                             record.getReferenceFile().getSystemId(),
-                            REL_FONDS_STRUCTURE_FILE, true));
+                            REL_FONDS_STRUCTURE_FILE));
         }
     }
 
@@ -210,7 +210,7 @@ public class RecordHateoasHandler
             hateoasNoarkObject.addLink(entity,
                     new Link(getOutgoingAddress() + HREF_BASE_CLASS +
                             record.getReferenceClass().getSystemId(),
-                            REL_FONDS_STRUCTURE_CLASS, true));
+                            REL_FONDS_STRUCTURE_CLASS));
         }
     }
 
