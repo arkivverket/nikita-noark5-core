@@ -667,7 +667,6 @@ public class RecordHateoasController extends NoarkController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
             SLASH + NEW_CORRESPONDENCE_PART_INTERNAL, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
     public ResponseEntity<CorrespondencePartInternalHateoas> createCorrespondencePartInternalAssociatedWithRecord(
@@ -681,7 +680,7 @@ public class RecordHateoasController extends NoarkController {
                     required = true)
             @RequestBody CorrespondencePartInternal correspondencePartInternal)
             throws NikitaException {
-
+/*
         CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
                 recordService.
                         createCorrespondencePartInternalAssociatedWithRecord(
@@ -689,7 +688,8 @@ public class RecordHateoasController extends NoarkController {
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(correspondencePartInternalHateoas.getEntityVersion().toString())
-                .body(correspondencePartInternalHateoas);
+                .body(correspondencePartInternalHateoas);*/
+        return ResponseEntity.status(NOT_IMPLEMENTED).body(null);
     }
 
     // Create a new CorrespondencePartUnit and associate it with the given journalpost

@@ -396,11 +396,15 @@ public class RecordHateoasHandler
 
     @Override
     public void addNewCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        /*
+        Temporary disabled as it causes problems for clients.
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FONDS_STRUCTURE +
                         RECORD + SLASH + entity.getSystemId() + SLASH +
                         NEW_CORRESPONDENCE_PART_INTERNAL + SLASH,
                         REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_INTERNAL, false));
+
+         */
     }
 
     /**

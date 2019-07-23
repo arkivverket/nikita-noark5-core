@@ -13,7 +13,6 @@ import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
@@ -241,32 +240,6 @@ TODO: Temp disabled!
         return null;
     }
 
-    // Create a suggested CorrespondencePartInternal (like a template) object with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartintern
-    @ApiOperation(value = "Suggests the contents of a new CorrespondencePartInternal object",
-            notes = "Returns a pre-filled CorrespondencePartInternal object" +
-                    " with values relevant for the logged-in user", response = CorrespondencePartInternalHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePart " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CorrespondencePartInternalHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @RequestMapping(method = RequestMethod.GET, value = {SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_INTERNAL})
-    public ResponseEntity<CorrespondencePartUnitHateoas>
-    getCorrespondencePartInternalTemplate(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated Record",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(correspondencePartService.
-                        generateDefaultCorrespondencePartUnit(systemID));
-    }
 
     // Retrieve all SignOff associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/avskrivning
