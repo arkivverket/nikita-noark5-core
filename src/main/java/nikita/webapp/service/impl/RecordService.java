@@ -61,6 +61,7 @@ public class RecordService
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private ICorrespondencePartService correspondencePartService;
     private IPartService partService;
+    private IPartHateoasHandler partHateoasHandler;
 
     public RecordService(
             EntityManager entityManager,
@@ -75,7 +76,8 @@ public class RecordService
                     documentDescriptionHateoasHandler,
             IDocumentDescriptionRepository documentDescriptionRepository,
             ICorrespondencePartService correspondencePartService,
-            IPartService partService) {
+            IPartService partService,
+            IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
@@ -89,6 +91,7 @@ public class RecordService
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.correspondencePartService = correspondencePartService;
         this.partService = partService;
+        this.partHateoasHandler = partHateoasHandler;
     }
 
     // All CREATE operations
@@ -250,9 +253,11 @@ public class RecordService
     public PartHateoas
     getPartAssociatedWithRecord(
             final String systemID) {
-        return new PartHateoas(
+        PartHateoas partHateoas = new PartHateoas(
                 (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
                         getReferencePart());
+        partHateoasHandler.addLinks(partHateoas, new Authorisation());
+        return partHateoas;
     }
 
     /**

@@ -10,6 +10,7 @@ import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
@@ -48,6 +49,7 @@ public class DocumentDescriptionService
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
     private IPartService partService;
+    private IPartHateoasHandler partHateoasHandler;
 
     public DocumentDescriptionService(
             EntityManager entityManager,
@@ -58,7 +60,8 @@ public class DocumentDescriptionService
                     documentDescriptionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
-            IPartService partService) {
+            IPartService partService,
+            IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
@@ -67,6 +70,7 @@ public class DocumentDescriptionService
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
         this.partService = partService;
+        this.partHateoasHandler = partHateoasHandler;
     }
 
     // All CREATE operations
@@ -193,12 +197,15 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public PartHateoas getPartAssociatedWithDocumentDescription(
             @NotNull final String systemID) {
-        return new PartHateoas(
+        PartHateoas partHateoas = new PartHateoas(
                 (List<INikitaEntity>) (List)
                         getDocumentDescriptionOrThrow(systemID).
                                 getReferencePart());
+        partHateoasHandler.addLinks(partHateoas, new Authorisation());
+        return partHateoas;
     }
 
 

@@ -10,6 +10,7 @@ import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
@@ -51,6 +52,7 @@ public class FileService
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
     private IPartService partService;
+    private IPartHateoasHandler partHateoasHandler;
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
@@ -59,7 +61,8 @@ public class FileService
                        IFileHateoasHandler fileHateoasHandler,
                        ISeriesHateoasHandler seriesHateoasHandler,
                        IClassHateoasHandler classHateoasHandler,
-                       IPartService partService) {
+                       IPartService partService,
+                       IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.recordService = recordService;
         this.fileRepository = fileRepository;
@@ -67,6 +70,7 @@ public class FileService
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
         this.partService = partService;
+        this.partHateoasHandler = partHateoasHandler;
     }
 
     public FileHateoas save(File file) {
@@ -137,11 +141,14 @@ public class FileService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public PartHateoas getPartAssociatedWithFile(
             @NotNull final String systemID) {
-        return new PartHateoas(
+        PartHateoas partHateoas = new PartHateoas(
                 (List<INikitaEntity>) (List) getFileOrThrow(systemID).
                         getReferencePart());
+        partHateoasHandler.addLinks(partHateoas, new Authorisation());
+        return partHateoas;
     }
 
     // All UPDATE operations
