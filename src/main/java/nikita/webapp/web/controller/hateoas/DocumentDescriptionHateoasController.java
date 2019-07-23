@@ -8,9 +8,9 @@ import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
-import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
+import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.UUID;
-
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -31,9 +29,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH +
-        SLASH + DOCUMENT_DESCRIPTION, produces = {NOARK5_V5_CONTENT_TYPE_JSON
-        , NOARK5_V5_CONTENT_TYPE_JSON_XML})
+@RequestMapping(value = HREF_BASE_DOCUMENT_DESCRIPTION,
+        produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class DocumentDescriptionHateoasController
         extends NoarkController {
@@ -108,6 +105,117 @@ public class DocumentDescriptionHateoasController
                 .body(documentObjectHateoas);
     }
 
+    // Create a new PartUnit and associate it with the given documentDescription
+    // POST [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-partenhet
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-partenhet/
+    @ApiOperation(value = "Persists a PartUnit object " +
+            "associated with the given DocumentDescription systemId",
+            notes = "Returns the newly created PartUnit object " +
+                    "after it was associated with a DocumentDescription object and " +
+                    "persisted to the database",
+            response = PartUnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "PartUnit " +
+                    API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartUnitHateoas.class),
+            @ApiResponse(code = 201, message = "PartUnit " +
+                    API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = PartUnitHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type PartUnit"),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value =
+            SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT,
+            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    public ResponseEntity<PartUnitHateoas>
+    createPartUnitAssociatedWithDocumentDescription(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of documentDescription to associate the " +
+                            "PartUnit with.",
+                    required = true)
+            @PathVariable("systemID") String systemID,
+            @ApiParam(name = "PartUnit",
+                    value = "Incoming PartUnit object",
+                    required = true)
+            @RequestBody PartUnit partUnit)
+            throws NikitaException {
+
+        PartUnitHateoas partUnitHateoas =
+                documentDescriptionService.
+                        createPartUnitAssociatedWithDocumentDescription(
+                                systemID, partUnit);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(partUnitHateoas.getEntityVersion().toString())
+                .body(partUnitHateoas);
+    }
+
+    // Create a new PartPerson and associate it with the given documentDescription
+    // POST [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-partenhet
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-partenhet/
+    @ApiOperation(value = "Persists a PartPerson object " +
+            "associated with the given DocumentDescription systemId",
+            notes = "Returns the newly created PartPerson object after it " +
+                    "was associated with a DocumentDescription object and " +
+                    "persisted to the database",
+            response = PartPersonHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "PartPerson " +
+                    API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartPersonHateoas.class),
+            @ApiResponse(code = 201, message = "PartPerson " +
+                    API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = PartPersonHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type PartPerson"),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value =
+            SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON,
+            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    public ResponseEntity<PartPersonHateoas>
+    createPartPersonAssociatedWithDocumentDescription(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of documentDescription to associate the " +
+                            "PartPerson with.",
+                    required = true)
+            @PathVariable("systemID") String systemID,
+            @ApiParam(name = "PartPerson",
+                    value = "Incoming PartPerson object",
+                    required = true)
+            @RequestBody PartPerson partPerson)
+            throws NikitaException {
+
+        PartPersonHateoas partPersonHateoas =
+                documentDescriptionService.
+                        createPartPersonAssociatedWithDocumentDescription(
+                                systemID, partPerson);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(partPersonHateoas.getEntityVersion().toString())
+                .body(partPersonHateoas);
+    }
+
+
     // API - All GET Requests (CRUD - READ)
 
     @ApiOperation(value = "Retrieves a single DocumentDescription entity " +
@@ -131,6 +239,76 @@ public class DocumentDescriptionHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         return documentDescriptionService.findBySystemId(systemID);
+    }
+
+    // Create a suggested PartUnit (like a template) object
+    // with default values (nothing persisted)
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-partenhet
+    @ApiOperation(value = "Suggests the contents of a new Part " +
+            "object", notes = "Returns a pre-filled Part object" +
+            " with values relevant for the logged-in user",
+            response = PartUnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Part " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartUnitHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value =
+            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT})
+    public ResponseEntity<PartUnitHateoas>
+    getPartUnitTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the documentDescription to retrieve " +
+                            "associated Record",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentDescriptionService.
+                        generateDefaultPartUnit(systemID));
+    }
+
+    // Create a suggested PartPerson (like a template) object
+    // with default values (nothing persisted)
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-partenhet
+    @ApiOperation(value = "Suggests the contents of a new Part " +
+            "object", notes = "Returns a pre-filled Part object" +
+            " with values relevant for the logged-in user",
+            response = PartPersonHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Part " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartPersonHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value =
+            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON})
+    public ResponseEntity<PartPersonHateoas>
+    getPartPersonTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the documentDescription to retrieve " +
+                            "associated Record",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentDescriptionService.
+                        generateDefaultPartPerson(systemID));
     }
 
     @ApiOperation(value = "Retrieves multiple DocumentDescription entities " +
@@ -220,6 +398,30 @@ public class DocumentDescriptionHateoasController
                         systemID);
     }
 
+    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/part
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/part/
+    @ApiOperation(value = "Retrieves a list of Part associated with a DocumentDescription",
+            response = PartHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Part returned",
+                    response = PartHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + PART)
+    public ResponseEntity<PartHateoas>
+    findAllPartAssociatedWithDocumentDescription(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated DocumentDescription",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentDescriptionService.getPartAssociatedWithDocumentDescription(systemID));
+    }
     // Retrieve all Record associated with a DocumentDescription identified
     // by systemId
     // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/registrering

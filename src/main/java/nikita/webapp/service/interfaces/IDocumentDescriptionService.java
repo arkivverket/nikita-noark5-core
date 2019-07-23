@@ -2,9 +2,9 @@ package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
-import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
+import nikita.common.model.noark5.v5.hateoas.*;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -19,7 +19,18 @@ public interface IDocumentDescriptionService {
             String documentDescriptionSystemId,
             DocumentObject documentObject);
 
+    PartPersonHateoas createPartPersonAssociatedWithDocumentDescription(
+            String systemID, PartPerson partPerson);
+
+    PartUnitHateoas createPartUnitAssociatedWithDocumentDescription(
+            String systemID, PartUnit partUnit);
+
     // -- All READ operations
+
+    PartPersonHateoas generateDefaultPartPerson(String systemID);
+
+    PartUnitHateoas generateDefaultPartUnit(String systemID);
+
     ResponseEntity<DocumentDescriptionHateoas> findAll();
 
     ResponseEntity<DocumentDescriptionHateoas> findBySystemId(
@@ -34,6 +45,9 @@ public interface IDocumentDescriptionService {
 
     DocumentDescription findDocumentDescriptionBySystemId(
             @NotNull String systemId);
+
+    PartHateoas getPartAssociatedWithDocumentDescription(
+            @NotNull final String systemID);
     // -- All UPDATE operations
 
     DocumentDescription handleUpdate(@NotNull final String systemId,

@@ -2,9 +2,9 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
-import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
-import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
+import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -13,6 +13,7 @@ import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
+import nikita.webapp.service.interfaces.secondary.IPartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -46,6 +47,7 @@ public class DocumentDescriptionService
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
+    private IPartService partService;
 
     public DocumentDescriptionService(
             EntityManager entityManager,
@@ -55,7 +57,8 @@ public class DocumentDescriptionService
             IDocumentDescriptionHateoasHandler
                     documentDescriptionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
-            IRecordHateoasHandler recordHateoasHandler) {
+            IRecordHateoasHandler recordHateoasHandler,
+            IPartService partService) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
@@ -63,6 +66,7 @@ public class DocumentDescriptionService
                 documentDescriptionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
+        this.partService = partService;
     }
 
     // All CREATE operations
@@ -77,6 +81,35 @@ public class DocumentDescriptionService
                 .getReferenceDocumentObject();
         documentObjects.add(documentObject);
         return documentObjectService.save(documentObject);
+    }
+
+
+    @Override
+    public PartPersonHateoas
+    createPartPersonAssociatedWithDocumentDescription(
+            String systemID, PartPerson partPerson) {
+        return partService.
+                createNewPartPerson(partPerson,
+                        getDocumentDescriptionOrThrow(systemID));
+    }
+
+    @Override
+    public PartUnitHateoas
+    createPartUnitAssociatedWithDocumentDescription(
+            String systemID, PartUnit partUnit) {
+        return partService.
+                createNewPartUnit(partUnit,
+                        getDocumentDescriptionOrThrow(systemID));
+    }
+
+    @Override
+    public PartPersonHateoas generateDefaultPartPerson(String systemID) {
+        return partService.generateDefaultPartPerson(systemID);
+    }
+
+    @Override
+    public PartUnitHateoas generateDefaultPartUnit(String systemID) {
+        return partService.generateDefaultPartUnit(systemID);
     }
 
     /*
@@ -158,6 +191,17 @@ public class DocumentDescriptionService
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(recordHateoas);
     }
+
+    @Override
+    public PartHateoas getPartAssociatedWithDocumentDescription(
+            @NotNull final String systemID) {
+        return new PartHateoas(
+                (List<INikitaEntity>) (List)
+                        getDocumentDescriptionOrThrow(systemID).
+                                getReferencePart());
+    }
+
+
 
     // -- All UPDATE operations
 

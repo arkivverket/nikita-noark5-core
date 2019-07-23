@@ -512,6 +512,9 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW =
             REL_CASE_HANDLING + NEW_DOCUMENT_FLOW + SLASH;
 
+    public static final String REL_FONDS_STRUCTURE_CORRESPONDENCE_PART =
+            REL_FONDS_STRUCTURE + CORRESPONDENCE_PART + SLASH;
+
     // CorrespondencePartPerson
     public static final String REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_PERSON =
             REL_FONDS_STRUCTURE + CORRESPONDENCE_PART_PERSON + SLASH;
@@ -707,6 +710,13 @@ public final class Constants {
     public static final String TABLE_CONTACT_INFORMATION =
             "as_contact_information";
 
+
+    public static final String TABLE_RECORD_PART =
+            "as_record_part";
+
+    public static final String TABLE_RECORD_CORRESPONDENCE_PART =
+            "as_record_correspondence_part";
+
     public static final String TABLE_CASE_FILE_SEQUENCE =
             "sa_sequence_generator";
     public static final String TABLE_ADMINISTRATIVE_UNIT =
@@ -882,6 +892,8 @@ public final class Constants {
     public static final String FOREIGN_KEY_FILE_PK = "f_pk_file_id";
     public static final String FOREIGN_KEY_COMMENT_PK = "f_pk_comment_id";
     public static final String FOREIGN_KEY_PART_PK = "f_pk_part_id";
+    public static final String FOREIGN_KEY_CORRESPONDENCE_PART_PK =
+            "f_pk_correspondence_part_id";
     public static final String FOREIGN_KEY_RECORD_PK = "f_pk_record_id";
 
     public static final String FOREIGN_KEY_STORAGE_LOCATION_PK =

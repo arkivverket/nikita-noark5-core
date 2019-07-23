@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
@@ -236,31 +237,22 @@ public class RecordService
         return recordRepository.findByOwnedBy(ownedBy);
     }
 
-
     @Override
-    public CorrespondencePartPersonHateoas
-    getCorrespondencePartPersonAssociatedWithRecord(
+    public CorrespondencePartHateoas
+    getCorrespondencePartAssociatedWithRecord(
             final String systemID) {
-        return new CorrespondencePartPersonHateoas(
+        return new CorrespondencePartHateoas(
                 (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
-                        getReferenceCorrespondencePartPerson());
+                        getReferenceCorrespondencePart());
     }
 
     @Override
-    public CorrespondencePartInternalHateoas
-    getCorrespondencePartInternalAssociatedWithRecord(
+    public PartHateoas
+    getPartAssociatedWithRecord(
             final String systemID) {
-        return new CorrespondencePartInternalHateoas(
+        return new PartHateoas(
                 (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
-                        getReferenceCorrespondencePartInternal());
-    }
-
-    @Override
-    public CorrespondencePartUnitHateoas
-    getCorrespondencePartUnitAssociatedWithRecord(String systemID) {
-        return new CorrespondencePartUnitHateoas(
-                (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
-                        getReferenceCorrespondencePartUnit());
+                        getReferencePart());
     }
 
     /**

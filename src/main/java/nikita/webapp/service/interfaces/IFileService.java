@@ -30,6 +30,11 @@ public interface IFileService {
             @NotNull final Record record);
 
     // -- All READ operations
+
+    PartPersonHateoas generateDefaultPartPerson(String systemID);
+
+    PartUnitHateoas generateDefaultPartUnit(String systemID);
+
     List<File> findAll();
 
     Optional<File> findById(Long id);
@@ -43,6 +48,8 @@ public interface IFileService {
 
     ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithFile(@NotNull final String systemId);
+
+    PartHateoas getPartAssociatedWithFile(@NotNull final String systemID);
 
     // -- All UPDATE operations
     File handleUpdate(@NotNull String systemId,

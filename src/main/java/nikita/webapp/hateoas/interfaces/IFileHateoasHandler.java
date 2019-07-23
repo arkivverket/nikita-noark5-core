@@ -68,8 +68,11 @@ public interface IFileHateoasHandler
             IHateoasNoarkObject hateoasNoarkObject);
 
     void addPart(INikitaEntity entity,
-                  IHateoasNoarkObject hateoasNoarkObject);
+                 IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPart(INikitaEntity entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
+    void addNewPartPerson(INikitaEntity entity,
+                          IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewPartUnit(INikitaEntity entity,
+                        IHateoasNoarkObject hateoasNoarkObject);
 }

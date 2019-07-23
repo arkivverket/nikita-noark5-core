@@ -437,7 +437,7 @@ public class DocumentDescription
         this.referencePart = referencePart;
     }
 
-    public void addReferencePart(Part part) {
+    public void addPart(Part part) {
         this.referencePart.add(part);
     }
 

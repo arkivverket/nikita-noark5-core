@@ -32,6 +32,14 @@ public interface IPartService {
             @NotNull PartPerson partPerson,
             @NotNull File file);
 
+    PartUnitHateoas createNewPartUnit(
+            @NotNull PartUnit partUnit,
+            @NotNull DocumentDescription documentDescription);
+
+    PartPersonHateoas createNewPartPerson(
+            @NotNull PartPerson partPerson,
+            @NotNull DocumentDescription documentDescription);
+
     Part findBySystemId(@NotNull String systemID);
 
     // All DELETE operations

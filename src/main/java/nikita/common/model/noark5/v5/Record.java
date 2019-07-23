@@ -1,11 +1,11 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
-import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.interfaces.IPart;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePart;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.webapp.hateoas.RecordHateoasHandler;
@@ -38,7 +38,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasObject(using = RecordHateoas.class)
 public class Record
         extends NoarkEntity
-        implements IRecordEntity {
+        implements IRecordEntity, IPart, ICorrespondencePart {
 
     /**
      * M604 - arkivertDato (xs:dateTime)
@@ -97,66 +97,28 @@ public class Record
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private File referenceFile;
 
-    // Links to PartPerson
+    // Links to Part
     @ManyToMany
-    @JoinTable(name = TABLE_REGISTRY_ENTRY_PART_PERSON,
+    @JoinTable(name = TABLE_RECORD_PART,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_RECORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_PART_PERSON_PK,
+                    name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<PartPerson>
-            referencePartPerson = new ArrayList<>();
+    private List<Part> referencePart = new ArrayList<>();
 
-    // Links to PartUnit
+    // Links to CorrespondencePart
     @ManyToMany
-    @JoinTable(name = TABLE_REGISTRY_ENTRY_PART_UNIT,
+    @JoinTable(name = TABLE_RECORD_CORRESPONDENCE_PART,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_RECORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_PART_UNIT_PK,
+                    name = FOREIGN_KEY_CORRESPONDENCE_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<PartUnit>
-            referencePartUnit = new ArrayList<>();
-
-    // Links to CorrespondencePartPerson
-    @ManyToMany
-    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_PERSON,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<CorrespondencePartPerson>
-            referenceCorrespondencePartPerson = new ArrayList<>();
-
-    // Links to CorrespondencePartUnit
-    @ManyToMany
-    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_UNIT,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_CORRESPONDENCE_PART_UNIT_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<CorrespondencePartUnit>
-            referenceCorrespondencePartUnit = new ArrayList<>();
-
-    // Links to CorrespondencePartInternal
-    @ManyToMany
-    @JoinTable(name = TABLE_REGISTRY_ENTRY_CORRESPONDENCE_PART_INTERNAL,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns =
-            @JoinColumn(
-                    name = FOREIGN_KEY_CORRESPONDENCE_PART_INTERNAL_ID,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<CorrespondencePartInternal>
-            referenceCorrespondencePartInternal = new ArrayList<>();
+    private List<CorrespondencePart>
+            referenceCorrespondencePart = new ArrayList<>();
 
     // Link to StorageLocation
     @ManyToMany(cascade = PERSIST)
@@ -244,15 +206,6 @@ public class Record
     @JoinColumn(name = "record_screening_id",
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
-
-    // Links to Part
-    @ManyToMany
-    @JoinTable(name = TABLE_RECORD_PARTY,
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Part> referencePart = new ArrayList<>();
 
     public OffsetDateTime getArchivedDate() {
         return archivedDate;
@@ -404,75 +357,6 @@ public class Record
         this.referenceStorageLocation.add(storageLocation);
     }
 
-    public List<PartPerson> getReferencePartPerson() {
-        return referencePartPerson;
-    }
-
-    public void setReferencePartPerson(List<PartPerson> referencePartPerson) {
-        this.referencePartPerson = referencePartPerson;
-    }
-
-    public void addPartPerson(PartPerson partPerson) {
-        this.referencePartPerson.add(partPerson);
-    }
-
-    public List<PartUnit> getReferencePartUnit() {
-        return referencePartUnit;
-    }
-
-    public void setReferencePartUnit(List<PartUnit> referencePartUnit) {
-        this.referencePartUnit = referencePartUnit;
-    }
-
-    public void addPartUnit(PartUnit partUnit) {
-        this.referencePartUnit.add(partUnit);
-    }
-
-    public List<CorrespondencePartPerson>
-    getReferenceCorrespondencePartPerson() {
-        return referenceCorrespondencePartPerson;
-    }
-
-    public void setReferenceCorrespondencePartPerson(
-            List<CorrespondencePartPerson> referenceCorrespondencePartPerson) {
-        this.referenceCorrespondencePartPerson =
-                referenceCorrespondencePartPerson;
-    }
-
-    public void addCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePartPerson) {
-        this.referenceCorrespondencePartPerson.add(
-                correspondencePartPerson);
-    }
-
-    public List<CorrespondencePartUnit> getReferenceCorrespondencePartUnit() {
-        return referenceCorrespondencePartUnit;
-    }
-
-    public void setReferenceCorrespondencePartUnit(
-            List<CorrespondencePartUnit> referenceCorrespondencePartUnit) {
-        this.referenceCorrespondencePartUnit = referenceCorrespondencePartUnit;
-    }
-
-    public void addCorrespondencePartUnit(
-            CorrespondencePartUnit correspondencePartUnit) {
-        this.referenceCorrespondencePartUnit.add(
-                correspondencePartUnit);
-    }
-
-    public List<CorrespondencePartInternal>
-    getReferenceCorrespondencePartInternal() {
-        return referenceCorrespondencePartInternal;
-    }
-
-    public void setReferenceCorrespondencePartInternal(
-            List<CorrespondencePartInternal>
-                    referenceCorrespondencePartInternal) {
-        this.referenceCorrespondencePartInternal =
-                referenceCorrespondencePartInternal;
-    }
-
-
     public List<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }
@@ -525,18 +409,40 @@ public class Record
         this.referenceCrossReference.add(crossReference);
     }
 
+    @Override
     public List<Part> getReferencePart() {
         return referencePart;
     }
 
+    @Override
     public void setReferencePart(List<Part> referencePart) {
         this.referencePart = referencePart;
     }
 
-    public void addReferencePart(Part part) {
+    @Override
+    public void addPart(Part part) {
         this.referencePart.add(part);
     }
 
+
+    @Override
+    public List<CorrespondencePart> getReferenceCorrespondencePart() {
+        return referenceCorrespondencePart;
+    }
+
+    @Override
+    public void setReferenceCorrespondencePart(
+            List<CorrespondencePart> referenceCorrespondencePart) {
+        this.referenceCorrespondencePart = referenceCorrespondencePart;
+    }
+
+    @Override
+    public void addCorrespondencePart(CorrespondencePart part) {
+        this.referenceCorrespondencePart.add(part);
+    }
+
+    
+    
     @Override
     public String toString() {
         return "Record{" + super.toString() +

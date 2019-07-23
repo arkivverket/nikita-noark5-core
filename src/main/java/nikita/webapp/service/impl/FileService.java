@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
@@ -92,7 +93,6 @@ public class FileService
         return recordService.save(record);
     }
 
-
     @Override
     public PartPersonHateoas
     createPartPersonAssociatedWithFile(
@@ -119,11 +119,29 @@ public class FileService
         return fileRepository.findById(id);
     }
 
+    @Override
+    public PartPersonHateoas generateDefaultPartPerson(String systemID) {
+        return partService.generateDefaultPartPerson(systemID);
+    }
+
+    @Override
+    public PartUnitHateoas generateDefaultPartUnit(String systemID) {
+        return partService.generateDefaultPartUnit(systemID);
+    }
+
     // ownedBy
     public List<File> findByOwnedBy(String ownedBy) {
         ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().
                 getAuthentication().getName() : ownedBy;
         return fileRepository.findByOwnedBy(ownedBy);
+    }
+
+    @Override
+    public PartHateoas getPartAssociatedWithFile(
+            @NotNull final String systemID) {
+        return new PartHateoas(
+                (List<INikitaEntity>) (List) getFileOrThrow(systemID).
+                        getReferencePart());
     }
 
     // All UPDATE operations

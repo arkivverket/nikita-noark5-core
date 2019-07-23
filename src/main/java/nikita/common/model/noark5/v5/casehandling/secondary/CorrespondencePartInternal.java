@@ -3,7 +3,6 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
-import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartInternalEntity;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartInternalDeserializer;
@@ -14,9 +13,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_INTERNAL;
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_INTERNAL;
@@ -51,10 +51,6 @@ public class CorrespondencePartInternal
     @ManyToOne
     private User user;
 
-    // Links to RegistryEntry
-    @ManyToMany(mappedBy = "referenceCorrespondencePartInternal")
-    private List<RegistryEntry> referenceRegistryEntry = new ArrayList<>();
-
     public String getAdministrativeUnit() {
         return administrativeUnit;
     }
@@ -86,15 +82,6 @@ public class CorrespondencePartInternal
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<RegistryEntry> getReferenceRegistryEntry() {
-        return referenceRegistryEntry;
-    }
-
-    public void setReferenceRegistryEntry(
-            List<RegistryEntry> referenceRegistryEntry) {
-        this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
     @Override

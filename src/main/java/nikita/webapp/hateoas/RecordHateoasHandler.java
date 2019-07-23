@@ -36,15 +36,14 @@ public class RecordHateoasHandler
         addReferenceFile(entity, hateoasNoarkObject);
         addReferenceClass(entity, hateoasNoarkObject);
         // Add the secondary entity links
-        addPartPerson(entity, hateoasNoarkObject);
+        // Part
+        addPart(entity, hateoasNoarkObject);
         addNewPartPerson(entity, hateoasNoarkObject);
-        addPartUnit(entity, hateoasNoarkObject);
         addNewPartUnit(entity, hateoasNoarkObject);
-        addCorrespondencePartPerson(entity, hateoasNoarkObject);
+        // CorrespondencePart
+        addCorrespondencePart(entity, hateoasNoarkObject);
         addNewCorrespondencePartPerson(entity, hateoasNoarkObject);
-        addCorrespondencePartUnit(entity, hateoasNoarkObject);
         addNewCorrespondencePartUnit(entity, hateoasNoarkObject);
-        addCorrespondencePartInternal(entity, hateoasNoarkObject);
         addNewCorrespondencePartInternal(entity, hateoasNoarkObject);
         addClassified(entity, hateoasNoarkObject);
         addNewClassified(entity, hateoasNoarkObject);
@@ -305,17 +304,6 @@ public class RecordHateoasHandler
                 NEW_SCREENING + SLASH, REL_FONDS_STRUCTURE_NEW_SCREENING, false));
     }
 
-
-    @Override
-    public void addCorrespondencePartPerson(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HREF_BASE_FONDS_STRUCTURE
-                        + RECORD + SLASH + entity.getSystemId() + SLASH +
-                        CORRESPONDENCE_PART_PERSON + SLASH,
-                        REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_PERSON, false));
-    }
-
     @Override
     public void addNewCorrespondencePartPerson(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
@@ -327,12 +315,13 @@ public class RecordHateoasHandler
     }
 
     @Override
-    public void addCorrespondencePartUnit(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addCorrespondencePart(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FONDS_STRUCTURE
                         + RECORD + SLASH + entity.getSystemId() + SLASH +
-                        CORRESPONDENCE_PART_UNIT + SLASH,
-                        REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_UNIT, true));
+                        CORRESPONDENCE_PART + SLASH,
+                        REL_FONDS_STRUCTURE_CORRESPONDENCE_PART, true));
     }
 
     @Override
@@ -346,12 +335,12 @@ public class RecordHateoasHandler
     }
 
     @Override
-    public void addPartPerson(
+    public void addPart(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FONDS_STRUCTURE +
                         RECORD + SLASH + entity.getSystemId() + SLASH +
-                        PART_PERSON + SLASH, REL_FONDS_STRUCTURE_PART_PERSON,
+                        PART + SLASH, REL_FONDS_STRUCTURE_PART,
                         true));
     }
 
@@ -366,16 +355,6 @@ public class RecordHateoasHandler
     }
 
     @Override
-    public void addPartUnit(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HREF_BASE_FONDS_STRUCTURE +
-                        RECORD + SLASH + entity.getSystemId() + SLASH +
-                        PART_UNIT + SLASH, REL_FONDS_STRUCTURE_PART_UNIT,
-                        true));
-    }
-
-    @Override
     public void addNewPartUnit(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
@@ -383,15 +362,6 @@ public class RecordHateoasHandler
                         RECORD + SLASH + entity.getSystemId() + SLASH +
                         NEW_PART_UNIT + SLASH,
                         REL_FONDS_STRUCTURE_NEW_PART_UNIT));
-    }
-
-    @Override
-    public void addCorrespondencePartInternal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HREF_BASE_FONDS_STRUCTURE +
-                        RECORD + SLASH + entity.getSystemId() + SLASH +
-                        CORRESPONDENCE_PART_INTERNAL + SLASH,
-                        REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_INTERNAL, false));
     }
 
     @Override

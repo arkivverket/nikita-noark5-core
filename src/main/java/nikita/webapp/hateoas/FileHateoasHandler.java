@@ -39,12 +39,13 @@ public class FileHateoasHandler
         addExpandToCaseFile(entity, hateoasNoarkObject);
         addExpandToMeetingFile(entity, hateoasNoarkObject);
         // Add the secondary entity links
+        addPart(entity, hateoasNoarkObject);
+        addNewPartPerson(entity, hateoasNoarkObject);
+        addNewPartUnit(entity, hateoasNoarkObject);
         addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
         addSubFile(entity, hateoasNoarkObject);
         addNewSubFile(entity, hateoasNoarkObject);
-        addNewPart(entity, hateoasNoarkObject);
-        addPart(entity, hateoasNoarkObject);
         addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         addClass(entity, hateoasNoarkObject);
@@ -176,31 +177,30 @@ public class FileHateoasHandler
      * @param hateoasNoarkObject hateoasFile
      */
     @Override
-    public void addPart(INikitaEntity entity,
-                         IHateoasNoarkObject hateoasNoarkObject) {
+    public void addPart(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
-                        entity.getSystemId() + SLASH + PART,
+                        entity.getSystemId() + SLASH + PART + SLASH,
                         REL_FONDS_STRUCTURE_PART, true));
     }
 
-    /**
-     * Create a REL/HREF pair to create a new Part associated with the given
-     * File.
-     * <p>
-     * "../hateoas-api/arkivstruktur/mappe/1234/ny-part"
-     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-part/"
-     *
-     * @param entity             file
-     * @param hateoasNoarkObject hateoasFile
-     */
     @Override
-    public void addNewPart(INikitaEntity entity,
-                            IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewPartPerson(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
-                        entity.getSystemId() + SLASH + NEW_PART,
-                        REL_FONDS_STRUCTURE_NEW_PART));
+                        entity.getSystemId() + SLASH + NEW_PART_PERSON + SLASH,
+                        REL_FONDS_STRUCTURE_NEW_PART_PERSON));
+    }
+
+    @Override
+    public void addNewPartUnit(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() + HREF_BASE_FILE +
+                        entity.getSystemId() + SLASH + NEW_PART_UNIT + SLASH,
+                        REL_FONDS_STRUCTURE_NEW_PART_UNIT));
     }
 
     @Override

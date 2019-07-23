@@ -8,9 +8,8 @@ import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Class;
-import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
@@ -40,7 +39,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE,
@@ -341,7 +340,7 @@ public class FileHateoasController
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + RECORD,
             method = RequestMethod.GET)
     public ResponseEntity<RecordHateoas> findAllRecordsAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve associated Record",
                     required = true)
@@ -349,7 +348,8 @@ public class FileHateoasController
 
         File file = fileService.findBySystemId(systemID);
         if (file == null) {
-            throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
+            throw new NoarkEntityNotFoundException(
+                    "Could not find File object with systemID " + systemID);
         }
         RecordHateoas recordHateoas = new
                 RecordHateoas((List<INikitaEntity>)
@@ -358,6 +358,101 @@ public class FileHateoasController
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
+    }
+
+    // Create a suggested PartUnit (like a template) object 
+    // with default values (nothing persisted)
+    // GET [contextPath][api]/casehandling/mappe/{systemId}/ny-korrespondansepartenhet
+    @ApiOperation(value = "Suggests the contents of a new Part " +
+            "object", notes = "Returns a pre-filled Part object" +
+            " with values relevant for the logged-in user",
+            response = PartUnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Part " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartUnitHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT)
+    public ResponseEntity<PartUnitHateoas>
+    getPartUnitTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated Record",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.
+                        generateDefaultPartUnit(systemID));
+    }
+
+    // Create a suggested PartPerson (like a template) object 
+    // with default values (nothing persisted)
+    // GET [contextPath][api]/casehandling/mappe/{systemId}/ny-korrespondansepartenhet
+    @ApiOperation(value = "Suggests the contents of a new Part " +
+            "object", notes = "Returns a pre-filled Part object" +
+            " with values relevant for the logged-in user",
+            response = PartPersonHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Part " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartPersonHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value =
+            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON})
+    public ResponseEntity<PartPersonHateoas>
+    getPartPersonTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated Record",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.
+                        generateDefaultPartPerson(systemID));
+    }
+
+    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/part
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/part/
+    @ApiOperation(value = "Retrieves a list of Part associated with a File",
+            response = PartHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Part returned",
+                    response = PartHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + PART)
+    public ResponseEntity<PartHateoas>
+    findAllPartAssociatedWithFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated File",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.getPartAssociatedWithFile(systemID));
     }
 
     // Retrieve all Series associated with File identified by a systemId
@@ -730,6 +825,116 @@ public class FileHateoasController
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
+
+    // Create a new PartUnit and associate it with the given file
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-partenhet
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-partenhet/
+    @ApiOperation(value = "Persists a PartUnit object " +
+            "associated with the given File systemId",
+            notes = "Returns the newly created PartUnit object " +
+                    "after it was associated with a File object and " +
+                    "persisted to the database",
+            response = PartUnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "PartUnit " +
+                    API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartUnitHateoas.class),
+            @ApiResponse(code = 201, message = "PartUnit " +
+                    API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = PartUnitHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type PartUnit"),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value =
+            SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT,
+            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    public ResponseEntity<PartUnitHateoas>
+    createPartUnitAssociatedWithFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of file to associate the " +
+                            "PartUnit with.",
+                    required = true)
+            @PathVariable("systemID") String systemID,
+            @ApiParam(name = "PartUnit",
+                    value = "Incoming PartUnit object",
+                    required = true)
+            @RequestBody PartUnit partUnit)
+            throws NikitaException {
+
+        PartUnitHateoas partUnitHateoas =
+                fileService.createPartUnitAssociatedWithFile(
+                        systemID, partUnit);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(partUnitHateoas.getEntityVersion().toString())
+                .body(partUnitHateoas);
+    }
+
+    // Create a new PartPerson and associate it with the given file
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-partenhet
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-partenhet/
+    @ApiOperation(value = "Persists a PartPerson object " +
+            "associated with the given File systemId",
+            notes = "Returns the newly created PartPerson object " +
+                    "after it was associated with a File object and " +
+                    "persisted to the database",
+            response = PartPersonHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "PartPerson " +
+                    API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PartPersonHateoas.class),
+            @ApiResponse(code = 201, message = "PartPerson " +
+                    API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = PartPersonHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type PartPerson"),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value =
+            SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON,
+            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    public ResponseEntity<PartPersonHateoas>
+    createPartPersonAssociatedWithFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of file to associate the " +
+                            "PartPerson with.",
+                    required = true)
+            @PathVariable("systemID") String systemID,
+            @ApiParam(name = "PartPerson",
+                    value = "Incoming PartPerson object",
+                    required = true)
+            @RequestBody PartPerson partPerson)
+            throws NikitaException {
+
+        PartPersonHateoas partPersonHateoas =
+                fileService.createPartPersonAssociatedWithFile(
+                        systemID, partPerson);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(partPersonHateoas.getEntityVersion().toString())
+                .body(partPersonHateoas);
+    }
+
+
     // Expand a File to a MeetingFile
     // PUT [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-moetemappe
     // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-moetemappe/
@@ -791,7 +996,7 @@ public class FileHateoasController
         File file = fileService.findBySystemId(systemID);
         fileService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, file));
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body("deleted");
     }

@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartUnitEntity;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartUnitDeserializer;
@@ -12,9 +11,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
@@ -63,10 +63,6 @@ public class CorrespondencePartUnit
     @OneToOne(mappedBy = "correspondencePartUnit",
             fetch = LAZY, cascade = ALL)
     private ContactInformation contactInformation;
-
-    // Links to Record
-    @ManyToMany(mappedBy = "referenceCorrespondencePartUnit")
-    private List<Record> referenceRecord = new ArrayList<>();
 
     public String getOrganisationNumber() {
         return organisationNumber;
@@ -124,22 +120,6 @@ public class CorrespondencePartUnit
     @Override
     public String getBaseRel() {
         return REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_UNIT;
-    }
-
-    @Override
-    public List<Record> getReferenceRecord() {
-        return referenceRecord;
-    }
-
-    @Override
-    public void setReferenceRecord(
-            List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
-    @Override
-    public void addRecord(Record referenceRecord) {
-        this.referenceRecord.add(referenceRecord);
     }
 
     @Override

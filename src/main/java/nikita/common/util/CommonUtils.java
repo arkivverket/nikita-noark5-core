@@ -2103,48 +2103,6 @@ DateTimeFormatter dateFormatter =
             }
             */
 
-            public static void printCorrespondencePartInternals(JsonGenerator jgen, ICorrespondencePart correspondencePartObject)
-                    throws IOException {
-                List<CorrespondencePartInternal> correspondencePartInternals = correspondencePartObject.getReferenceCorrespondencePartInternal();
-                if (correspondencePartInternals != null && correspondencePartInternals.size() > 0) {
-                    jgen.writeArrayFieldStart(CORRESPONDENCE_PART_INTERNAL);
-                    for (ICorrespondencePartInternalEntity correspondencePart : correspondencePartInternals) {
-                        jgen.writeStartObject();
-                        printCorrespondencePartInternal(jgen, correspondencePart);
-                        jgen.writeEndObject();
-                    }
-                    jgen.writeEndArray();
-                }
-            }
-
-            public static void printCorrespondencePartUnits(JsonGenerator jgen, ICorrespondencePart correspondencePartObject)
-                    throws IOException {
-                List<CorrespondencePartUnit> correspondencePartUnits = correspondencePartObject.getReferenceCorrespondencePartUnit();
-                if (correspondencePartUnits != null && correspondencePartUnits.size() > 0) {
-                    jgen.writeArrayFieldStart(CORRESPONDENCE_PART_UNIT);
-                    for (ICorrespondencePartUnitEntity correspondencePart : correspondencePartUnits) {
-                        jgen.writeStartObject();
-                        printGenericUnit(jgen, correspondencePart);
-                        jgen.writeEndObject();
-                    }
-                    jgen.writeEndArray();
-                }
-            }
-
-            public static void printCorrespondencePartPersons(JsonGenerator jgen, ICorrespondencePart correspondencePartObject)
-                    throws IOException {
-                List<CorrespondencePartPerson> correspondencePartPersons = correspondencePartObject.getReferenceCorrespondencePartPerson();
-                if (correspondencePartPersons != null && correspondencePartPersons.size() > 0) {
-                    jgen.writeArrayFieldStart(CORRESPONDENCE_PART_PERSON);
-                    for (ICorrespondencePartPersonEntity correspondencePart : correspondencePartPersons) {
-                        jgen.writeStartObject();
-                        printCorrespondencePartPerson(jgen, correspondencePart);
-                        jgen.writeEndObject();
-                    }
-                    jgen.writeEndArray();
-                }
-            }
-
             public static void printSignOff(JsonGenerator jgen, ISignOff signOffEntity)
                     throws IOException {
                 List<SignOff> signOffs = signOffEntity.getReferenceSignOff();
@@ -2165,7 +2123,6 @@ DateTimeFormatter dateFormatter =
                             if (signOff.getSignOffMethod() != null) {
                                 jgen.writeStringField(SIGN_OFF_METHOD, signOff.getSignOffMethod());
                             }
-
                             jgen.writeEndObject();
                         }
                     }

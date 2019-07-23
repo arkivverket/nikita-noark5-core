@@ -42,7 +42,6 @@ public class Part
     @Audited
     private String partTypeCodeName;
 
-
     private PartRole referencePartRole;
 
     // Links to Files

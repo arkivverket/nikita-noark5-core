@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
@@ -34,6 +35,11 @@ public interface IRecordService {
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
             String recordSystemId);
 
+    CorrespondencePartHateoas getCorrespondencePartAssociatedWithRecord(
+            final String systemID);
+
+    PartHateoas getPartAssociatedWithRecord(final String systemID);
+
     PartPersonHateoas generateDefaultPartPerson(
             String recordSystemId);
 
@@ -51,15 +57,6 @@ public interface IRecordService {
     CorrespondencePartInternalHateoas
     createCorrespondencePartInternalAssociatedWithRecord(
             String systemID, CorrespondencePartInternal correspondencePart);
-
-    CorrespondencePartPersonHateoas
-    getCorrespondencePartPersonAssociatedWithRecord(String systemID);
-
-    CorrespondencePartInternalHateoas
-    getCorrespondencePartInternalAssociatedWithRecord(String systemID);
-
-    CorrespondencePartUnitHateoas
-    getCorrespondencePartUnitAssociatedWithRecord(String systemID);
 
     PartPersonHateoas createPartPersonAssociatedWithRecord(
             String systemID, PartPerson partPerson);

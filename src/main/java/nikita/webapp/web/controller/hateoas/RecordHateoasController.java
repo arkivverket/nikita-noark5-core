@@ -13,6 +13,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
@@ -47,7 +48,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD,
         produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
-public class RecordHateoasController extends NoarkController {
+public class RecordHateoasController
+        extends NoarkController {
 
     private IRecordService recordService;
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
@@ -116,24 +118,20 @@ public class RecordHateoasController extends NoarkController {
         return body;
     }
 
-
-    // Retrieve all CorrespondencePartPerson associated with a Record identified by systemId
-    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepartperson/
-    @ApiOperation(value = "Retrieves a list of CorrespondencePartPersons associated with a Record",
-            response = CorrespondencePartPersonHateoas.class)
+    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/part
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/part/
+    @ApiOperation(value = "Retrieves a list of Part associated with a Record",
+            response = PartHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CorrespondencePartPerson returned",
-                    response = CorrespondencePartPersonHateoas.class),
+            @ApiResponse(code = 200, message = "Part returned",
+                    response = PartHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            CORRESPONDENCE_PART_PERSON, method = RequestMethod.GET)
-    public ResponseEntity<CorrespondencePartPersonHateoas>
-    findAllCorrespondencePartPersonAssociatedWithRecord(
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + PART)
+    public ResponseEntity<PartHateoas>
+    findAllPartAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve associated Record",
@@ -142,28 +140,24 @@ public class RecordHateoasController extends NoarkController {
 
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.
-                        getCorrespondencePartPersonAssociatedWithRecord(
-                                systemID));
+                .body(recordService.getPartAssociatedWithRecord(systemID));
     }
 
-
-    // Retrieve all CorrespondencePartUnit associated with a Record identified by systemId
-    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepartperson/
-    @ApiOperation(value = "Retrieves a list of CorrespondencePartUnits associated with a Record",
-            response = CorrespondencePartUnitHateoas.class)
+    // Retrieve all CorrespondencePart associated with a Record identified by
+    // systemId
+    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/korrespondansepart
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepart/
+    @ApiOperation(value = "Retrieves a list of CorrespondencePartHateoas associated with a Record",
+            response = CorrespondencePartHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CorrespondencePartUnit returned",
-                    response = CorrespondencePartUnitHateoas.class),
+                    response = CorrespondencePartHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            CORRESPONDENCE_PART_UNIT, method = RequestMethod.GET)
-    public ResponseEntity<CorrespondencePartUnitHateoas>
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CORRESPONDENCE_PART)
+    public ResponseEntity<CorrespondencePartHateoas>
     findAllCorrespondencePartUnitAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -172,8 +166,7 @@ public class RecordHateoasController extends NoarkController {
             @PathVariable("systemID") final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.
-                        getCorrespondencePartUnitAssociatedWithRecord(
+                .body(recordService.getCorrespondencePartAssociatedWithRecord(
                                 systemID));
     }
 

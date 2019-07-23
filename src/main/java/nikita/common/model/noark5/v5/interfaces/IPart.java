@@ -9,4 +9,8 @@ import java.util.List;
  */
 public interface IPart {
     List<Part> getReferencePart();
+
+    void setReferencePart(List<Part> part);
+
+    void addPart(Part part);
 }

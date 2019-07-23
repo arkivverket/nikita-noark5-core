@@ -37,8 +37,9 @@ public class DocumentDescriptionHateoasHandler
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
         addNewScreening(entity, hateoasNoarkObject);
-        addNewPart(entity, hateoasNoarkObject);
         addPart(entity, hateoasNoarkObject);
+        addNewPartPerson(entity, hateoasNoarkObject);
+        addNewPartUnit(entity, hateoasNoarkObject);
         // links for secondary entities 1:M
         addStorageLocation(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
@@ -219,30 +220,32 @@ public class DocumentDescriptionHateoasHandler
      * @param hateoasNoarkObject hateoasDocumentDescription
      */
     @Override
-    public void addPart(INikitaEntity entity,
-                         IHateoasNoarkObject hateoasNoarkObject) {
+    public void addPart(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +
                         HREF_BASE_DOCUMENT_DESCRIPTION + entity.getSystemId() +
-                        SLASH + PART, REL_FONDS_STRUCTURE_PART, true));
+                        SLASH + PART + SLASH, REL_FONDS_STRUCTURE_PART, true));
     }
 
-    /**
-     * Create a REL/HREF pair to create a new Part associated with the given
-     * DocumentDescription.
-     * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/ny-part"
-     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-part/"
-     *
-     * @param entity             documentDescription
-     * @param hateoasNoarkObject hateoasDocumentDescription
-     */
     @Override
-    public void addNewPart(INikitaEntity entity,
-                            IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewPartPerson(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +
                         HREF_BASE_DOCUMENT_DESCRIPTION + entity.getSystemId() +
-                        SLASH + NEW_PART, REL_FONDS_STRUCTURE_NEW_PART));
+                        SLASH + NEW_PART_PERSON + SLASH,
+                        REL_FONDS_STRUCTURE_NEW_PART_PERSON));
     }
+
+    @Override
+    public void addNewPartUnit(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() +
+                        HREF_BASE_DOCUMENT_DESCRIPTION + entity.getSystemId() +
+                        SLASH + NEW_PART_UNIT + SLASH,
+                        REL_FONDS_STRUCTURE_NEW_PART_UNIT));
+    }
+
 }

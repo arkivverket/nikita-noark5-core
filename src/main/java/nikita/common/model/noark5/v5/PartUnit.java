@@ -129,22 +129,6 @@ public class PartUnit
     }
 
     @Override
-    public List<Record> getReferenceRecord() {
-        return referenceRecord;
-    }
-
-    @Override
-    public void setReferenceRecord(
-            List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
-    @Override
-    public void addRecord(Record referenceRecord) {
-        this.referenceRecord.add(referenceRecord);
-    }
-
-    @Override
     public String toString() {
         return super.toString() +
                 ", organisationNumber='" + organisationNumber + '\'' +

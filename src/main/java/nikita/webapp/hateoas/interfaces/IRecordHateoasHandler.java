@@ -90,26 +90,8 @@ public interface IRecordHateoasHandler
     void addNewKeyword(INikitaEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCorrespondencePartPerson(INikitaEntity entity,
-                                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addCorrespondencePartUnit(INikitaEntity entity,
-                                   IHateoasNoarkObject hateoasNoarkObject);
-
-    void addPartPerson(INikitaEntity entity,
-                       IHateoasNoarkObject hateoasNoarkObject);
-
-    void addPartUnit(INikitaEntity entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addCorrespondencePartInternal(INikitaEntity entity,
-                                       IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewCorrespondencePartPerson(INikitaEntity entity,
-                                        IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewCorrespondencePartUnit(INikitaEntity entity,
-                                      IHateoasNoarkObject hateoasNoarkObject);
+    void addPart(INikitaEntity entity,
+                 IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewPartPerson(INikitaEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject);
@@ -117,7 +99,15 @@ public interface IRecordHateoasHandler
     void addNewPartUnit(INikitaEntity entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
+    void addCorrespondencePart(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewCorrespondencePartPerson(INikitaEntity entity,
+                                        IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewCorrespondencePartUnit(INikitaEntity entity,
+                                      IHateoasNoarkObject hateoasNoarkObject);
+
     void addNewCorrespondencePartInternal(INikitaEntity entity,
                                           IHateoasNoarkObject hateoasNoarkObject);
-
 }

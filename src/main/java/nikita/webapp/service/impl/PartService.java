@@ -152,7 +152,7 @@ public class PartService
             @NotNull PartPerson part, @NotNull Record record) {
 
         createPerson(part);
-        record.addPartPerson(part);
+        record.addPart(part);
         part.addRecord(record);
         partRepository.save(part);
 
@@ -182,7 +182,7 @@ public class PartService
         createUnit(part);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
-        record.getReferencePartUnit().add(part);
+        record.addPart(part);
         part.getReferenceRecord().add(record);
         partRepository.save(part);
 
@@ -208,6 +208,38 @@ public class PartService
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this, part));
         return partUnitHateoas;
+    }
+
+    @Override
+    public PartUnitHateoas createNewPartUnit(
+            @NotNull PartUnit partUnit,
+            @NotNull DocumentDescription documentDescription) {
+        createUnit(partUnit);
+        // bidirectional relationship @ManyToMany, set both sides of
+        // relationship
+        documentDescription.addPart(partUnit);
+        partUnit.addReferenceDocumentDescription(documentDescription);
+        partRepository.save(partUnit);
+        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
+        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, partUnit));
+        return partUnitHateoas;
+    }
+
+    @Override
+    public PartPersonHateoas createNewPartPerson(
+            @NotNull PartPerson partPerson,
+            @NotNull DocumentDescription documentDescription) {
+        createPerson(partPerson);
+        documentDescription.addPart(partPerson);
+        partPerson.addReferenceDocumentDescription(documentDescription);
+        partRepository.save(partPerson);
+        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
+        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, partPerson));
+        return partPersonHateoas;
     }
 
     @Override
