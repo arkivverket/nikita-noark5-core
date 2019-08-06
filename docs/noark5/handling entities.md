@@ -51,7 +51,7 @@ Primary entities are the entities that make up the fondsstructure (arkivstruktur
       "offentligTittel": "***** *****: Klage på barnehage tildeling ",
       _links [
       "href": "http://localhost/noark5v5/hateoas-api/arkivstruktur/sakarkiv/sakspart/a7b447ae-f559-4f47-afc4-a5b2a4b0219e"
-      "rel": https://rel.arkivverket.no/noark5/v4/api/sakarkiv/saksparter/
+      "rel": https://rel.arkivverket.no/noark5/v5/api/sakarkiv/saksparter/
       ]
    }
   ```
@@ -118,7 +118,7 @@ Primary entities are the entities that make up the fondsstructure (arkivstruktur
   ```
    {
     "href" : "http://localhost:8092/noark5v5/hateoas-api/metadata/dokumentmedium/",
-    "rel" : "https://rel.arkivverket.no/noark5/v4/api/metadata/dokumentmedium/"
+    "rel" : "https://rel.arkivverket.no/noark5/v5/api/metadata/dokumentmedium/"
    }
   ```  
   The list of Noark code entities is as follows:

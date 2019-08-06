@@ -49,7 +49,7 @@ will return the following js:
       "links": [
        {
          "href": "http://localhost:8092/noark5v5/oauth",
-         "rel": "http://nikita.arkivlab.no/noark5/v4/login/rfc6749/"
+         "rel": "http://nikita.arkivlab.no/noark5/v5/login/rfc6749/"
        }
       ]
     }

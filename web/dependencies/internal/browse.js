@@ -58,8 +58,8 @@ var browseController = app.controller('BrowseController',
         $scope.parentHref = baseUrl;
         $scope.selectedHref = baseUrl;
         console.log("$scope.parentHref:" + $scope.parentHref);
-        console.log("HERE XXXXX " + response.data._links[REL_LOGIN_OAUTH2]);
-        $scope.loginHref = response.data._links[REL_LOGIN_OAUTH2].href;
+        console.log("HERE XXXXX " + JSON.stringify(response.data._links[REL_LOGIN_OAUTH2]));
+        $scope.loginHref = response.data._links.REL_LOGIN_OAUTH2.href;
         console.log("Setting login href to " + JSON.stringify($scope.loginHref));
         $scope.newUserHref = response.data._links[REL_ADMIN_NEW_USER].href;
         console.log("Setting new user href to " + JSON.stringify($scope.newUserHref));

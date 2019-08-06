@@ -35,9 +35,9 @@ var REL_NEW_SERIES = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-
 var REL_NEW_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivskaper/";
 var REL_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivskaper/";
 var REL_SELF = 'self';
-var REL_LOGIN_OAUTH2 = 'https://nikita.arkivlab.no/noark5/v4/login/rfc6749/';
-var REL_LOGOUT_OAUTH2 = 'https://nikita.arkivlab.no/noark5/v4/logout/rfc6749/';
-var REL_CHECK_TOKEN = 'https://nikita.arkivlab.no/noark5/v4/oauth/check_token/rfc6749/';
+var REL_LOGIN_OAUTH2 = 'https://nikita.arkivlab.no/noark5/v5/login/rfc6749/';
+var REL_LOGOUT_OAUTH2 = 'https://nikita.arkivlab.no/noark5/v5/logout/rfc6749/';
+var REL_CHECK_TOKEN = 'https://nikita.arkivlab.no/noark5/v5/oauth/check_token/rfc6749/';
 var REL_ADMIN_NEW_USER = 'https://rel.arkivverket.no/noark5/v5/api/admin/ny-bruker/';
 
 
