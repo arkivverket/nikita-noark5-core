@@ -19,7 +19,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.misc.UUDecoder;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;

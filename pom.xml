@@ -156,6 +156,26 @@
       <version>${spring-security-jwt.version}</version>
     </dependency>
 
+    <!-- For JDK 11, JAXB has been removed from Java SE and needs to added in the pom to the
+    code continues to work. -->
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+      <version>2.3.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+
     <!-- In memory database, used for demo mode only -->
     <dependency>
       <groupId>com.h2database</groupId>
