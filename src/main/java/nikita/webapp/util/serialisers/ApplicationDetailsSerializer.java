@@ -12,13 +12,13 @@ import java.lang.reflect.Type;
 
 import static nikita.common.config.HATEOASConstants.*;
 
-public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetails> {
+public class ApplicationDetailsSerializer
+        extends StdSerializer<ApplicationDetails> {
 
     public ApplicationDetailsSerializer() {
         super(ApplicationDetails.class);
     }
 
-    // TODO: Add some error handling, if application details is empty  etc
     @Override
     public void serialize(ApplicationDetails applicationDetails,
                           JsonGenerator jgen, SerializerProvider provider)
