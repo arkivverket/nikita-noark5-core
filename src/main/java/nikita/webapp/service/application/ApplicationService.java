@@ -64,17 +64,18 @@ public class ApplicationService {
     }
 
     public ApplicationDetails getApplicationDetails() {
-        ApplicationDetails applicationDetails;
         ArrayList<ConformityLevel> conformityLevels = new ArrayList<>();
+        ApplicationDetails applicationDetails =
+                new ApplicationDetails(conformityLevels);
+        applicationDetails.setSelfHref(getOutgoingAddress());
+
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
         // If you are logged in, add more information
         if (!username.equals("anonymousUser")) {
             addConformityLevels(conformityLevels);
         }
-
         addOpenIdConfiguration(conformityLevels);
-        applicationDetails = new ApplicationDetails(conformityLevels);
         return applicationDetails;
     }
 

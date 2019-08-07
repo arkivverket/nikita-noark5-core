@@ -11,8 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Iterator;
 
-import static nikita.common.config.HATEOASConstants.HREF;
-import static nikita.common.config.HATEOASConstants.LINKS;
+import static nikita.common.config.HATEOASConstants.*;
 
 public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetails> {
 
@@ -27,14 +26,11 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
             throws IOException {
 
         jgen.writeStartObject();
+        jgen.writeObjectFieldStart(LINKS);
+
         Iterator<ConformityLevel> iterator =
                 applicationDetails.getConformityLevels().iterator();
 
-        boolean writeLinks = iterator.hasNext() == true;
-
-        if (writeLinks) {
-            jgen.writeObjectFieldStart(LINKS);
-        }
         while (iterator.hasNext()) {
             ConformityLevel conformityLevel = iterator.next();
             jgen.writeObjectFieldStart(conformityLevel.getRel());
@@ -42,9 +38,11 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
             jgen.writeEndObject();
         }
 
-        if (writeLinks) {
-            jgen.writeEndObject();
-        }
+        jgen.writeObjectFieldStart(SELF);
+        jgen.writeStringField(HREF, applicationDetails.getSelfHref());
+        jgen.writeEndObject();
+
+        jgen.writeEndObject();
         jgen.writeEndObject();
     }
 
