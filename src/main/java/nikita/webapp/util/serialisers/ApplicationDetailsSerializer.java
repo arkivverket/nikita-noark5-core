@@ -9,7 +9,6 @@ import nikita.webapp.application.ConformityLevel;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Iterator;
 
 import static nikita.common.config.HATEOASConstants.*;
 
@@ -28,11 +27,8 @@ public class ApplicationDetailsSerializer extends StdSerializer<ApplicationDetai
         jgen.writeStartObject();
         jgen.writeObjectFieldStart(LINKS);
 
-        Iterator<ConformityLevel> iterator =
-                applicationDetails.getConformityLevels().iterator();
-
-        while (iterator.hasNext()) {
-            ConformityLevel conformityLevel = iterator.next();
+        for (ConformityLevel conformityLevel :
+                applicationDetails.getConformityLevels()) {
             jgen.writeObjectFieldStart(conformityLevel.getRel());
             jgen.writeStringField(HREF, conformityLevel.getHref());
             jgen.writeEndObject();
