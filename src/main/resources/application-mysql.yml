@@ -34,8 +34,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/nikita_noark5_prod?serverTimezone=Europe/Oslo
-    username: INSERT-USERNAME-HERE
-    password: INSERT-PASSWORD-HERE
+    username: USERNAME-HERE
+    password: PASSWORD-HERE
     data: classpath:/noark5_metadata_values.sql
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
