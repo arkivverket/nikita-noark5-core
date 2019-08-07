@@ -26,6 +26,21 @@ public class ApplicationService {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    @Value("${spring.application.name}")
+    private String product;
+
+    @Value("${nikita.system.vendor.version}")
+    private String productVersion;
+
+    @Value("${nikita.system.vendor.name}")
+    private String vendor;
+
+    @Value("${nikita.system.protocol.version}")
+    private String protocolVersion;
+
+    @Value("${nikita.system.build}")
+    private String versionDate;
+
     /**
      * Add OIDC as an option
      * https://rel.arkivverket.no/noark5/v5/api/login/oidc/
@@ -93,6 +108,16 @@ public class ApplicationService {
 
     public CaseHandlingDetails getCaseHandlingDetails() {
         return new CaseHandlingDetails(getOutgoingAddress());
+    }
+
+    public SystemInformation getSystemInformation() {
+        SystemInformation systemInformation = new SystemInformation();
+        systemInformation.setProduct(product);
+        systemInformation.setProtocolVersion(protocolVersion);
+        systemInformation.setVendor(vendor);
+        systemInformation.setVersion(productVersion);
+        systemInformation.setVersionDate(versionDate);
+        return systemInformation;
     }
 
     /**

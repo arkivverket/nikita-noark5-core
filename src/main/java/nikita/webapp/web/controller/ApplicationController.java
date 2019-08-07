@@ -54,6 +54,15 @@ public class ApplicationController {
     }
 
     @Counted
+    @GetMapping(value = HREF_SYSTEM_INFORMATION)
+    public ResponseEntity<SystemInformation> getSystemInformation(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(applicationService.getSystemInformation());
+    }
+
+    @Counted
     @GetMapping(value = HREF_BASE_FONDS_STRUCTURE)
     public ResponseEntity<FondsStructureDetails> getFondsStructure(
             HttpServletRequest request) {

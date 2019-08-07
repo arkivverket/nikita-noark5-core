@@ -11,6 +11,8 @@ public final class Constants {
     public static final String DASH = "-";
     public static final String SUB = "under";
     public static final String PARENT = "forelder";
+    public static final String DM_OWNED_BY = "ownedBy";
+    public static final String SYSTEM = "system";
 
     // Spring profile for development and production
     public static final String SPRING_PROFILE_SWAGGER = "swagger";
@@ -353,6 +355,10 @@ public final class Constants {
             NOARK_BASE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH;
     public static final String REL_CASE_HANDLING =
             NOARK_BASE_REL + NOARK_CASE_HANDLING_PATH + SLASH;
+
+    public static final String REL_SYSTEM_INFORMATION =
+            REL_ADMINISTRATION + SYSTEM + SLASH;
+
     // FondsHateoas REL links
     public static final String REL_METADATA_FONDS_STATUS =
             REL_METADATA + FONDS_STATUS + SLASH;
@@ -993,9 +999,6 @@ public final class Constants {
     public static final String JOIN_CASE_FILE_STATUS =
             "case_file_case_file_status_id";
 
-    public static final String DM_OWNED_BY = "ownedBy";
-    public static final String SYSTEM = "system";
-
     public static final String HREF_OPENID_CONFIGURATION =
             ".well-known/openid-configuration";
 
@@ -1010,6 +1013,9 @@ public final class Constants {
 
     public static final String HREF_BASE_CASE_HANDLING =
             HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH;
+
+    public static final String HREF_SYSTEM_INFORMATION =
+            HREF_BASE_ADMIN + SYSTEM;
 
     public static final String HREF_BASE_DOCUMENT_DESCRIPTION =
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH;
