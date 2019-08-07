@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.OK;
  * REST controller that returns information about the Noark 5 cores
  * conformity to standards.
  */
-@RestController("ApplicationController")
+@RestController
 @RequestMapping(produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class ApplicationController {
 
