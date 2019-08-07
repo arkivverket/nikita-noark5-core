@@ -31,7 +31,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
-        produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
+        produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class AdministrativeUnitController extends NoarkController {
 
     private IAdministrativeUnitService administrativeUnitService;

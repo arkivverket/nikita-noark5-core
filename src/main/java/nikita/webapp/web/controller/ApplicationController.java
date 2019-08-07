@@ -7,25 +7,19 @@ import nikita.webapp.service.application.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.ResponseEntity.status;
 
 /**
  * REST controller that returns information about the Noark 5 cores conformity to standards.
  */
 @RestController("ApplicationController")
-@RequestMapping(produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
+@RequestMapping(produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @Api(value = "Application", description = "Links to where the various interfaces can be accessed from")
 public class ApplicationController {
 

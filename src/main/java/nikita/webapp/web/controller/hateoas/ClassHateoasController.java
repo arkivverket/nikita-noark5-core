@@ -32,8 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(
         value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
-                CLASS, produces = {NOARK5_V5_CONTENT_TYPE_JSON,
-        NOARK5_V5_CONTENT_TYPE_JSON_XML})
+                CLASS, produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class ClassHateoasController
         extends NoarkController {
 

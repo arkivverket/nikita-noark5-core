@@ -97,7 +97,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(method = RequestMethod.GET, produces = {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
+    @RequestMapping(method = RequestMethod.GET, produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> findAllDocumentObject(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request) {
         DocumentObjectHateoas documentObjectHateoas = new
@@ -202,8 +202,7 @@ public class DocumentObjectHateoasController
     @Counted
     @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + REFERENCE_FILE,
             headers = "Accept=*/*",
-            produces = {NOARK5_V5_CONTENT_TYPE_JSON,
-                    NOARK5_V5_CONTENT_TYPE_JSON_XML})
+            produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> handleFileUpload(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -230,8 +229,8 @@ public class DocumentObjectHateoasController
     @Counted
     @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
             RIGHT_PARENTHESIS + SLASH + "konverterFil",
-            method = RequestMethod.PUT, headers = "Accept=*/*", produces =
-            {NOARK5_V5_CONTENT_TYPE_JSON, NOARK5_V5_CONTENT_TYPE_JSON_XML})
+            method = RequestMethod.PUT, headers = "Accept=*/*",
+            produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> convertFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
