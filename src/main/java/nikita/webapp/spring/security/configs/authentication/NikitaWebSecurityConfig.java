@@ -9,11 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.stereotype.Component;
 
-import static nikita.common.config.Constants.ROLE_RECORDS_MANAGER;
-import static nikita.common.config.Constants.SLASH;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FONDS;
 import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
 import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
+import static org.springframework.http.HttpMethod.GET;
 
 @Component
 @Profile({"security-oauth2-jwt-authentication",
@@ -49,6 +49,7 @@ public class NikitaWebSecurityConfig
                 // GET [api]/metadata/**, public to read basic structure
                     .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH)
                         .permitAll()
+                    .antMatchers(GET, "/**well-known/**").permitAll()
                 // POST GET [api]/arkivstruktur/ny-*, need role of record keeper
                     .antMatchers(HttpMethod.POST, PATTERN_NEW_FONDS_STRUCTURE_ALL)
                         .hasAuthority(ROLE_RECORDS_MANAGER)

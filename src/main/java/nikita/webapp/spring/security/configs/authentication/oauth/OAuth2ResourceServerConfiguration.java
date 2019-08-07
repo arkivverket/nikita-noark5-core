@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.PATHPatterns.PATTERN_ADMIN_NEW_USER;
 import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
+import static org.springframework.http.HttpMethod.GET;
 
 /**
  * This is the ResourceServerConfiguration for the application. It sets up the
@@ -96,7 +97,8 @@ public class OAuth2ResourceServerConfiguration
                 .anonymous()
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/").permitAll()
+                .antMatchers(GET, "/").permitAll()
+                .antMatchers(GET, "/**well-known/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, LOGIN_OAUTH2_PATH).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, LOGOUT_PATH).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, CHECK_TOKEN_PATH).permitAll()
@@ -104,10 +106,10 @@ public class OAuth2ResourceServerConfiguration
                 .antMatchers(HttpMethod.POST, PATTERN_ADMIN_NEW_USER)
                     .permitAll()
                 // POST [api]/admin/ny-bruker, public to read basic structure
-                .antMatchers(HttpMethod.GET, PATTERN_ADMIN_NEW_USER)
+                .antMatchers(GET, PATTERN_ADMIN_NEW_USER)
                     .permitAll()
                 // GET [api]/metadata/**, public to read basic structure
-                .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH)
+                .antMatchers(GET, PATTERN_METADATA_PATH)
                     .permitAll()
                 .anyRequest().authenticated()
                 .and()

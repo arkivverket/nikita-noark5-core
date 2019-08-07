@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -12,6 +14,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -62,6 +65,17 @@ public class ApplicationService {
         logoutOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGOUT_REL_PATH + SLASH +
                 LOGIN_OAUTH + SLASH);
         conformityLevels.add(logoutOauth2);
+    }
+
+    /**
+     * Add OIDC as an option
+     * https://rel.arkivverket.no/noark5/v5/api/login/oidc/
+     */
+    public void addOpenIdConfiguration(List<ConformityLevel> conformityLevels) {
+        ConformityLevel openId = new ConformityLevel();
+        openId.setHref(getOutgoingAddress() + HREF_OPENID_CONFIGURATION);
+        openId.setRel(REL_LOGIN_OIDC);
+        conformityLevels.add(openId);
     }
 
     /**
@@ -156,6 +170,8 @@ public class ApplicationService {
         // change also when logged in.
         addLoginInformation(conformityLevels);
 
+        addOpenIdConfiguration(conformityLevels);
+
         // Show account creation relation
         addAccountCreationInformation(conformityLevels);
 
@@ -177,6 +193,37 @@ public class ApplicationService {
 
     public CaseHandlingDetails getCaseHandlingDetails() {
         return new CaseHandlingDetails(getOutgoingAddress());
+    }
+
+    /**
+     * Create a minimal OIDCConfiguration that can be used to login to the
+     * server. It is a little unclear to us at the moment how this should be
+     * populated. Very little is said in the standard about this, and we have
+     * to make things up as we go along. The client_id to log onto the server
+     * is not exposed here so it will have to be manually configured in
+     * clients when logging on. Or we can switch off Basic Auth for the OAuth2
+     * endpoints.
+     *
+     * @return A minimal OIDCConfiguration that can be used to login to the
+     * server
+     */
+    public OIDCConfiguration getOpenIdConfiguration() {
+        String baseAddress = getOutgoingAddress();
+        String issuer = baseAddress;
+        String authorisationEndpoint = baseAddress + LOGIN_PATH;
+        String revocationEndpoint = baseAddress + LOGOUT_PATH;
+
+        ArrayList <String> grantTypes = new ArrayList<>(Arrays.asList(
+                "password", "authorization_code", "refresh_token"));
+
+        OIDCConfiguration oidcConfiguration = new OIDCConfiguration();
+        oidcConfiguration.setAuthorizationEndpoint(authorisationEndpoint);
+        oidcConfiguration.setRevocationEndpoint(revocationEndpoint);
+        oidcConfiguration.setGrantTypesSupported(grantTypes);
+        oidcConfiguration.setTokenEndpointAuthMethodsSupported(
+                Arrays.asList("client_secret_basic"));
+        oidcConfiguration.setRequestParameterSupported(true);
+        return oidcConfiguration;
     }
 
     /**

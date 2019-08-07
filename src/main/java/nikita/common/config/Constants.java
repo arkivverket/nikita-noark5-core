@@ -341,6 +341,8 @@ public final class Constants {
     public static final String API_MESSAGE_MALFORMED_PAYLOAD = "Incoming data is malformed";
 
 
+    public static final String REL_LOGIN =
+            "https://rel.arkivverket.no/noark5/v5/api/login/";
     public static final String REL_METADATA = "https://rel.arkivverket.no/noark5/v5/api/metadata/";
     public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v5/api/admin/";
     public static final String REL_FONDS_STRUCTURE = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/";
@@ -547,9 +549,6 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_PART_PERSON =
             REL_FONDS_STRUCTURE + PART_PERSON + SLASH;
 
-
-
-
     // Fil
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_FILE =
             REL_FONDS_STRUCTURE + DOCUMENT_FILE + SLASH;
@@ -652,7 +651,6 @@ public final class Constants {
     public static final String REL_ADMIN_USER =
             REL_ADMINISTRATION + USER + SLASH;
 
-
     public static final String REL_METADATA_SCREENING_DOCUMENT =
             REL_METADATA + SCREENING_DOCUMENT + SLASH;
 
@@ -662,9 +660,8 @@ public final class Constants {
     public static final String REL_METADATA_SCREENING_METADATA =
             REL_METADATA + SCREENING_METADATA + SLASH;
 
-    public static final String REL_LOGIN_OAUTH2 =
-            NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
-                    LOGIN_OAUTH + SLASH;
+    public static final String REL_LOGIN_OIDC = REL_LOGIN + "oidc/";
+    public static final String REL_LOGIN_OAUTH2 = REL_LOGIN + "rfc6749/";
 
     public static final String REL_LOGOUT_OAUTH2 =
             NIKITA_CONFORMANCE_REL + LOGOUT_REL_PATH + SLASH +
@@ -984,6 +981,8 @@ public final class Constants {
     public static final String DM_OWNED_BY = "ownedBy";
     public static final String SYSTEM = "system";
 
+    public static final String HREF_OPENID_CONFIGURATION =
+            ".well-known/openid-configuration";
 
     public static final String HREF_BASE_FONDS_STRUCTURE =
             HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH;

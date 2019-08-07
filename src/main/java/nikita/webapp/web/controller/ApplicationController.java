@@ -2,21 +2,24 @@ package nikita.webapp.web.controller;
 
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.Api;
-import nikita.common.util.CommonUtils;
 import nikita.webapp.application.*;
 import nikita.webapp.service.application.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.status;
 
 /**
  * REST controller that returns information about the Noark 5 cores conformity to standards.
@@ -45,17 +48,26 @@ public class ApplicationController {
     @ResponseBody
     public ResponseEntity <ApplicationDetails> identify(HttpServletRequest request) {
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(applicationService. getApplicationDetails(request));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(applicationService.getApplicationDetails(request));
+    }
+
+    @Counted
+    @GetMapping(value = HREF_OPENID_CONFIGURATION)
+    public ResponseEntity <OIDCConfiguration> getOpenIdConfiguration(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(applicationService.getOpenIdConfiguration());
     }
 
     @Counted
     @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH, method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<FondsStructureDetails> fondsStructure(HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(applicationService.getFondsStructureDetails());
     }
 
@@ -63,8 +75,8 @@ public class ApplicationController {
     @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH, method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<MetadataDetails> metadataPath(HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(applicationService.getMetadataDetails());
     }
 
@@ -72,8 +84,8 @@ public class ApplicationController {
     @RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH, method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<AdministrationDetails> adminPath(HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(applicationService.getAdministrationDetails());
     }
 
@@ -82,8 +94,8 @@ public class ApplicationController {
     @ResponseBody
     public ResponseEntity<CaseHandlingDetails> caseHandling(HttpServletRequest request) {
         CaseHandlingDetails c1 = applicationService.getCaseHandlingDetails();
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(c1);
     }
 }
