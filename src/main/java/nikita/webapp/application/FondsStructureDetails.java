@@ -19,21 +19,21 @@ public class FondsStructureDetails extends APIDetails {
         // Add Fonds
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS + SLASH,
+                REL_FONDS_STRUCTURE + FONDS + SLASH,
                 true
         ));
 
         // Add new-fonds
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + NEW_FONDS,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + NEW_FONDS + SLASH,
+                REL_FONDS_STRUCTURE + NEW_FONDS + SLASH,
                 false
         ));
 
         // Add FondsCreator
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS_CREATOR,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS_CREATOR + SLASH,
+                REL_FONDS_STRUCTURE + FONDS_CREATOR + SLASH,
                 true
         ));
 
@@ -41,14 +41,14 @@ public class FondsStructureDetails extends APIDetails {
         // Add new FondsCreator
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + NEW_FONDS_CREATOR,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + NEW_FONDS_CREATOR + SLASH,
+                REL_FONDS_STRUCTURE + NEW_FONDS_CREATOR + SLASH,
                 true
         ));
 
         // Add Series
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES + SLASH,
+                REL_FONDS_STRUCTURE + SERIES + SLASH,
                 true
         ));
 
@@ -56,28 +56,28 @@ public class FondsStructureDetails extends APIDetails {
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
                         CLASSIFICATION_SYSTEM,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASSIFICATION_SYSTEM + SLASH,
+                REL_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH,
                 true
         ));
 
         // Add Class
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS + SLASH,
+                REL_FONDS_STRUCTURE + CLASS + SLASH,
                 true
         ));
 
         // Add File
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE + SLASH,
+                REL_FONDS_STRUCTURE + FILE + SLASH,
                 true
         ));
 
         // Add Registration
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD + SLASH,
+                REL_FONDS_STRUCTURE + RECORD + SLASH,
                 true
         ));
 
@@ -85,14 +85,14 @@ public class FondsStructureDetails extends APIDetails {
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
                         DOCUMENT_DESCRIPTION,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_DESCRIPTION + SLASH,
+                REL_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH,
                 true
         ));
 
         // Add DocumentObject
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT,
-                NOARK_CONFORMANCE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH,
+                REL_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH,
                 true
         ));
     }

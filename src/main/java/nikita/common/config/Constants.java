@@ -195,11 +195,13 @@ public final class Constants {
     public static final String REFERENCE_FILE = "referanseFil";
 
     // namespace definition
-    public static final String NOARK_CONFORMANCE_REL =
-            "https://rel.arkivverket.no/noark5/v5/api/";
+    public static final String NOARK_VERSION = "noark5/v5";
+    public static final String BASE_REL = "https://rel.arkivverket.no/";
+
+    public static final String NOARK_BASE_REL =
+            BASE_REL + NOARK_VERSION + "/api/";
     public static final String NIKITA_CONFORMANCE_REL =
-            "https://nikita.arkivlab.no/noark5/v5/";
-    public static final String NOARK_VERSION = "noark5v5";
+            "https://nikita.arkivlab.no/" + NOARK_VERSION + "/";
 
     public static final String NOARK_FONDS_STRUCTURE_PATH = "arkivstruktur";
     public static final String NOARK_METADATA_PATH = "metadata";
@@ -341,20 +343,27 @@ public final class Constants {
     public static final String API_MESSAGE_MALFORMED_PAYLOAD = "Incoming data is malformed";
 
 
-    public static final String REL_LOGIN =
-            "https://rel.arkivverket.no/noark5/v5/api/login/";
-    public static final String REL_METADATA = "https://rel.arkivverket.no/noark5/v5/api/metadata/";
-    public static final String REL_ADMINISTRATION = "https://rel.arkivverket.no/noark5/v5/api/admin/";
-    public static final String REL_FONDS_STRUCTURE = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/";
-    public static final String REL_CASE_HANDLING = "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/";
+    public static final String REL_LOGIN = NOARK_BASE_REL + "login/";
 
+    public static final String REL_METADATA =
+            NOARK_BASE_REL + NOARK_METADATA_PATH + SLASH;
+    public static final String REL_ADMINISTRATION =
+            NOARK_BASE_REL + NOARK_ADMINISTRATION_PATH + SLASH;
+    public static final String REL_FONDS_STRUCTURE =
+            NOARK_BASE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH;
+    public static final String REL_CASE_HANDLING =
+            NOARK_BASE_REL + NOARK_CASE_HANDLING_PATH + SLASH;
     // FondsHateoas REL links
-
-    public static final String REL_METADATA_FONDS_STATUS = REL_METADATA + FONDS_STATUS + SLASH;
-    public static final String REL_FONDS_STRUCTURE_FONDS_CREATOR = REL_FONDS_STRUCTURE + FONDS_CREATOR + SLASH;
-    public static final String REL_FONDS_STRUCTURE_FONDS = REL_FONDS_STRUCTURE + FONDS + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR = REL_FONDS_STRUCTURE + NEW_FONDS_CREATOR + SLASH;
-    public static final String REL_FONDS_STRUCTURE_SUB_FONDS = NOARK_CONFORMANCE_REL + SUB_FONDS + SLASH;
+    public static final String REL_METADATA_FONDS_STATUS =
+            REL_METADATA + FONDS_STATUS + SLASH;
+    public static final String REL_FONDS_STRUCTURE_FONDS_CREATOR =
+            REL_FONDS_STRUCTURE + FONDS_CREATOR + SLASH;
+    public static final String REL_FONDS_STRUCTURE_FONDS =
+            REL_FONDS_STRUCTURE + FONDS + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR =
+            REL_FONDS_STRUCTURE + NEW_FONDS_CREATOR + SLASH;
+    public static final String REL_FONDS_STRUCTURE_SUB_FONDS =
+            REL_FONDS_STRUCTURE + SUB_FONDS + SLASH;
 
     public static final String REL_FONDS_STRUCTURE_PARENT_FONDS =
             NIKITA_CONFORMANCE_REL + PARENT_FONDS + SLASH;
@@ -416,14 +425,20 @@ public final class Constants {
             REL_CASE_HANDLING + NEW_RECORD_NOTE + SLASH;
 
     // FileHateoas REL links
-    public static final String REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE = NOARK_CONFORMANCE_REL + FILE_EXPAND_TO_CASE_FILE + SLASH;
-    public static final String REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE = NOARK_CONFORMANCE_REL + FILE_EXPAND_TO_MEETING_FILE + SLASH;
-    public static final String REL_FONDS_STRUCTURE_END_FILE = NIKITA_CONFORMANCE_REL + FILE_END + SLASH;
+    public static final String REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE =
+            REL_FONDS_STRUCTURE + FILE_EXPAND_TO_CASE_FILE + SLASH;
+    public static final String REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE =
+            REL_FONDS_STRUCTURE + FILE_EXPAND_TO_MEETING_FILE + SLASH;
+    public static final String REL_FONDS_STRUCTURE_END_FILE =
+            NIKITA_CONFORMANCE_REL + FILE_END + SLASH;
 
     // Comment
-    public static final String REL_FONDS_STRUCTURE_COMMENT = REL_FONDS_STRUCTURE + COMMENT + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_COMMENT = REL_FONDS_STRUCTURE + NEW_COMMENT + SLASH;
-    public static final String REL_FONDS_STRUCTURE_SUB_FILE = NOARK_CONFORMANCE_REL + SUB_FILE + SLASH;
+    public static final String REL_FONDS_STRUCTURE_COMMENT =
+            REL_FONDS_STRUCTURE + COMMENT + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_COMMENT =
+            REL_FONDS_STRUCTURE + NEW_COMMENT + SLASH;
+    public static final String REL_FONDS_STRUCTURE_SUB_FILE =
+            REL_FONDS_STRUCTURE + SUB_FILE + SLASH;
 
     // CrossReference
     public static final String REL_FONDS_STRUCTURE_NEW_CROSS_REFERENCE = REL_FONDS_STRUCTURE + NEW_CROSS_REFERENCE + SLASH;

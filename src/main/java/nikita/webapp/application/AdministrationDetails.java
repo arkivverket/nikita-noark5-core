@@ -14,42 +14,42 @@ public class AdministrationDetails extends APIDetails {
         // Add support for AdministrativeUnit
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH + ADMINISTRATIVE_UNIT,
-                NOARK_CONFORMANCE_REL + NOARK_ADMINISTRATION_PATH + SLASH + ADMINISTRATIVE_UNIT + SLASH,
+                REL_ADMINISTRATION + ADMINISTRATIVE_UNIT + SLASH,
                 true
         ));
 
         // Add support for new AdministrativeUnit
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH + NEW_ADMINISTRATIVE_UNIT,
-                NIKITA_CONFORMANCE_REL + NOARK_ADMINISTRATION_PATH + SLASH + NEW_ADMINISTRATIVE_UNIT + SLASH,
+                REL_ADMINISTRATION + NEW_ADMINISTRATIVE_UNIT + SLASH,
                 true
         ));
 
         // Add support for User
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH + USER,
-                NIKITA_CONFORMANCE_REL + NOARK_ADMINISTRATION_PATH + SLASH + USER + SLASH,
+                REL_ADMINISTRATION + USER + SLASH,
                 true
         ));
 
         // Add support for new User
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER,
-                NIKITA_CONFORMANCE_REL + NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER + SLASH,
+                REL_ADMINISTRATION + NEW_USER + SLASH,
                 true
         ));
 
         // Add support for Right
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH + RIGHT,
-                NIKITA_CONFORMANCE_REL + NOARK_ADMINISTRATION_PATH + SLASH + RIGHT + SLASH,
+                REL_ADMINISTRATION + RIGHT + SLASH,
                 true
         ));
 
         // Add support for new Right
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH + NEW_RIGHT,
-                NIKITA_CONFORMANCE_REL + NOARK_ADMINISTRATION_PATH + SLASH + NEW_RIGHT + SLASH,
+                REL_ADMINISTRATION + NEW_RIGHT + SLASH,
                 true
         ));
     }
