@@ -55,7 +55,7 @@ public class ApplicationController {
 
     @Counted
     @GetMapping(value = HREF_BASE_FONDS_STRUCTURE)
-    public ResponseEntity<FondsStructureDetails> fondsStructure(
+    public ResponseEntity<FondsStructureDetails> getFondsStructure(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -64,7 +64,7 @@ public class ApplicationController {
 
     @Counted
     @GetMapping(value = HREF_BASE_METADATA)
-    public ResponseEntity<MetadataDetails> metadataPath(
+    public ResponseEntity<MetadataDetails> getMetadataPath(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -72,8 +72,8 @@ public class ApplicationController {
     }
 
     @Counted
-    @GetMapping(value = HREF_BASE_METADATA)
-    public ResponseEntity<AdministrationDetails> adminPath(
+    @GetMapping(value = HREF_BASE_ADMIN)
+    public ResponseEntity<AdministrationDetails> getAdminPath(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -82,7 +82,7 @@ public class ApplicationController {
 
     @Counted
     @GetMapping(value = HREF_BASE_CASE_HANDLING)
-    public ResponseEntity<CaseHandlingDetails> caseHandling(
+    public ResponseEntity<CaseHandlingDetails> getCaseHandling(
             HttpServletRequest request) {
         CaseHandlingDetails c1 = applicationService.getCaseHandlingDetails();
         return ResponseEntity.status(OK)

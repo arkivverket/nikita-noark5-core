@@ -38,60 +38,28 @@ public class ApplicationService {
     }
 
     /**
-     * Adds check token mechanism to hateoas links
-     */
-    public void addCheckToken(List<ConformityLevel> conformityLevels) {
-        ConformityLevel checkTokenOauth2 = new ConformityLevel();
-
-        checkTokenOauth2.setHref(getOutgoingAddress() + CHECK_TOKEN_PATH);
-        checkTokenOauth2.setRel(NIKITA_CONFORMANCE_REL + CHECK_TOKEN_PATH
-                + SLASH + LOGIN_OAUTH + SLASH);
-        conformityLevels.add(checkTokenOauth2);
-    }
-
-    /**
      * Creates a list of the officially supported resource links.
      * These are: arkivstruktur, casehandling, metadata, admin and
      * loggingogsporing
      *
      */
     public void addConformityLevels(List<ConformityLevel> conformityLevels) {
-        // ConformityLevel : arkivstruktur
-        ConformityLevel conformityLevelFondsStructure = new ConformityLevel();
-        conformityLevelFondsStructure.setHref(
-                getOutgoingAddress() + HREF_BASE_FONDS_STRUCTURE);
-        conformityLevelFondsStructure.setRel(REL_FONDS_STRUCTURE);
-        conformityLevels.add(conformityLevelFondsStructure);
-
-        // ConformityLevel : casehandling
-        ConformityLevel conformityLevelCaseHandling = new ConformityLevel();
-        conformityLevelCaseHandling.setHref(
-                getOutgoingAddress() + HREF_BASE_CASE_HANDLING);
-        conformityLevelCaseHandling.setRel(REL_CASE_HANDLING);
-        conformityLevels.add(conformityLevelCaseHandling);
-
-        // ConformityLevel : metadata
-        ConformityLevel conformityLevelMetadata = new ConformityLevel();
-        conformityLevelMetadata.setHref(
-                getOutgoingAddress() + HREF_BASE_METADATA);
-        conformityLevelMetadata.setRel(REL_METADATA);
-        conformityLevels.add(conformityLevelMetadata);
-
-        // ConformityLevel : administrasjon
-        ConformityLevel conformityLevelAdministration = new ConformityLevel();
-        conformityLevelAdministration.setHref(getOutgoingAddress() +
-                HREF_BASE_ADMIN);
-        conformityLevelAdministration.setRel(REL_ADMINISTRATION);
-        conformityLevels.add(conformityLevelAdministration);
-
+        // arkivstruktur
+        addConformityLevel(conformityLevels, HREF_BASE_FONDS_STRUCTURE,
+                REL_FONDS_STRUCTURE);
+        // sakarkiv
+        addConformityLevel(conformityLevels, HREF_BASE_CASE_HANDLING,
+                REL_CASE_HANDLING);
+        // metadata
+        addConformityLevel(conformityLevels, HREF_BASE_METADATA, REL_METADATA);
+        // administrasjon
+        addConformityLevel(conformityLevels, HREF_BASE_ADMIN,
+                REL_ADMINISTRATION);
         /*
         // Will be introduced as project mature
-        // ConformityLevel : loggingogsporing
-        ConformityLevel conformityLevelLogging = new ConformityLevel();
-        conformityLevelLogging.setHref(getOutgoingAddress() +
-        HREF_BASE_LOGGING);
-        conformityLevelLogging.setRel(REL_LOGGING);
-        conformityLevels.add(conformityLevelLogging);
+        // loggingogsporing
+        addConformityLevel(conformityLevels, HREF_BASE_LOGGING,
+                REL_LOGGING);
         */
     }
 
@@ -103,8 +71,8 @@ public class ApplicationService {
         // If you are logged in, add more information
         if (!username.equals("anonymousUser")) {
             addConformityLevels(conformityLevels);
-            addCheckToken(conformityLevels);
         }
+
         addOpenIdConfiguration(conformityLevels);
         applicationDetails = new ApplicationDetails(conformityLevels);
         return applicationDetails;
@@ -140,23 +108,19 @@ public class ApplicationService {
      */
     public OIDCConfiguration getOpenIdConfiguration() {
         String baseAddress = getOutgoingAddress();
-
-        String authorisationEndpoint = baseAddress + LOGIN_PATH;
-        String revocationEndpoint = baseAddress + LOGOUT_PATH;
-        String registrationEndpoint = baseAddress + HREF_BASE_ADMIN + NEW_USER;
-        ArrayList <String> grantTypes = new ArrayList<>(Arrays.asList(
-                "password", "authorization_code", "refresh_token"));
-
         OIDCConfiguration oidcConfiguration = new OIDCConfiguration();
         oidcConfiguration.setIssuer(baseAddress);
-        oidcConfiguration.setAuthorizationEndpoint(authorisationEndpoint);
-        oidcConfiguration.setRevocationEndpoint(revocationEndpoint);
-        oidcConfiguration.setRegistrationEndpoint(registrationEndpoint);
-        oidcConfiguration.setGrantTypesSupported(grantTypes);
+        oidcConfiguration.setAuthorizationEndpoint(baseAddress + LOGIN_PATH);
+        oidcConfiguration.setRevocationEndpoint(baseAddress + LOGOUT_PATH);
+        oidcConfiguration.setRegistrationEndpoint(
+                baseAddress + HREF_BASE_ADMIN + NEW_USER);
+        oidcConfiguration.setIntrospectionEndpoint(
+                baseAddress + CHECK_TOKEN_PATH);
+        oidcConfiguration.setGrantTypesSupported(Arrays.asList(
+                "password", "authorization_code", "refresh_token"));
         oidcConfiguration.setTokenEndpointAuthMethodsSupported(
                 Arrays.asList("client_secret_basic"));
         oidcConfiguration.setRequestParameterSupported(true);
-
         return oidcConfiguration;
     }
 
@@ -190,5 +154,20 @@ public class ApplicationService {
         } else {
             return publicAddress + contextPath + SLASH;
         }
+    }
+
+    /**
+     * Add a conformity level
+     *
+     * @param conformityLevels ArrayList of conformityLevels
+     * @param href             http address of endpoint
+     * @param rel              rel associated with endpoint
+     */
+    private void addConformityLevel(List<ConformityLevel> conformityLevels,
+                                    String href, String rel) {
+        ConformityLevel conformityLevel = new ConformityLevel();
+        conformityLevel.setHref(getOutgoingAddress() + href);
+        conformityLevel.setRel(rel);
+        conformityLevels.add(conformityLevel);
     }
 }
