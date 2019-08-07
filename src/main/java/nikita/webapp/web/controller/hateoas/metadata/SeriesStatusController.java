@@ -18,7 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.CODE;
+import static nikita.common.config.N5ResourceMappings.SERIES_STATUS;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -65,7 +66,7 @@ public class SeriesStatusController {
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = FONDS_STATUS + SLASH + NEW_FONDS_STATUS)
+    @PostMapping(value = SERIES_STATUS + SLASH + NEW_SERIES_STATUS)
     public ResponseEntity<MetadataHateoas> createSeriesStatus(
             HttpServletRequest request,
             @RequestBody SeriesStatus seriesStatus)

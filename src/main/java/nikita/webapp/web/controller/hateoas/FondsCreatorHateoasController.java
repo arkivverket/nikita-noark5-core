@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
@@ -39,9 +38,10 @@ import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH,
+@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE,
         produces = NOARK5_V5_CONTENT_TYPE_JSON)
-public class FondsCreatorHateoasController extends NoarkController {
+public class FondsCreatorHateoasController
+        extends NoarkController {
 
     private IFondsCreatorService fondsCreatorService;
     private IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
@@ -306,7 +306,7 @@ public class FondsCreatorHateoasController extends NoarkController {
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping
+    @DeleteMapping(value = FONDS_CREATOR)
     public ResponseEntity<Count> deleteAllFondsCreator() {
         return ResponseEntity.status(NO_CONTENT).
                 body(new Count(fondsCreatorService.deleteAllByOwnedBy()));

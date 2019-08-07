@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
@@ -31,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * Created by tsodring on 4/25/17.
@@ -344,25 +342,5 @@ public class CorrespondencePartHateoasController
         correspondencePartService.deleteCorrespondencePartInternal(kode);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("{\"status\" : \"Success\"}");
-    }
-
-    // Delete all CorrespondencePart
-    // DELETE [contextPath][api]/arkivstruktur/registrering/
-    @ApiOperation(value = "Deletes all CorrespondencePart",
-            response = Count.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all CorrespondencePart",
-                    response = Count.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @DeleteMapping
-    public ResponseEntity<Count> deleteAllCorrespondencePart() {
-        return ResponseEntity.status(NO_CONTENT).
-                body(new Count(correspondencePartService.deleteAllByOwnedBy()));
     }
 }

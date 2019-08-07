@@ -224,9 +224,28 @@ public class UserController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping
+    @DeleteMapping(value = USER)
     public ResponseEntity<Count> deleteAllUser() {
         return ResponseEntity.status(NO_CONTENT).
                 body(new Count(userService.deleteAllByUsername()));
+    }
+
+    // DELETE [contextPath][api]/admin/bruker/
+    @ApiOperation(value = "Deletes all User", response = Count.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Deleted all User",
+                    response = Count.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping(value = USER + SYSTEM_ID_PARAMETER)
+    public ResponseEntity<Count> deleteSingleUser(
+            @PathVariable("username") final String username) {
+        return ResponseEntity.status(NO_CONTENT).
+                body(new Count(userService.deleteByUsername(username)));
     }
 }

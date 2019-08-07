@@ -26,4 +26,6 @@ public interface IUserService {
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByUsername();
+
+    long deleteByUsername(String username);
 }

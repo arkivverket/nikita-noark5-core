@@ -193,6 +193,16 @@ public class UserService
     }
 
     /**
+     * Delete all objects belonging to the user identified by username
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    public long deleteByUsername(String username) {
+        return userRepository.deleteByUsername(username);
+    }
+
+    /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. If you call this, be aware
      * that you will only ever get a valid User back. If there is no valid
