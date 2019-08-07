@@ -44,7 +44,7 @@ public class ApplicationController {
 
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(applicationService.getApplicationDetails(request));
+                .body(applicationService.getApplicationDetails());
     }
 
     @Counted

@@ -1002,6 +1002,9 @@ public final class Constants {
     public static final String HREF_BASE_FONDS_STRUCTURE =
             HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH;
 
+    public static final String HREF_BASE_ADMIN =
+            HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH;
+
     public static final String HREF_BASE_METADATA =
             HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH;
 

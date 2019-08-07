@@ -1,12 +1,8 @@
 package nikita.webapp.service.application;
 
 import nikita.webapp.application.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -24,48 +20,11 @@ import static nikita.common.config.N5ResourceMappings.NEW_USER;
 @Transactional
 public class ApplicationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(
-            ApplicationService.class);
-
     @Value("${nikita.server.hateoas.publicAddress}")
     private String publicAddress;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
-
-    /**
-     * Creates a list of the supported supported login methods.
-     * These are: OAUTH2, JWT via OAUTH2, Basic and Form-based
-     * <p>
-     * Currently the code only returns OAUTH2. This should detect which
-     * profile is running and set links accordingly
-     *
-     * @return
-     */
-    public void addLoginInformation(List<ConformityLevel> conformityLevels) {
-        ConformityLevel loginOauth2 = new ConformityLevel();
-        loginOauth2.setHref(getOutgoingAddress() + LOGIN_PATH);
-        loginOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGIN_REL_PATH + SLASH +
-                LOGIN_OAUTH + SLASH);
-        conformityLevels.add(loginOauth2);
-    }
-
-    /**
-     * Creates a list of the supported supported logout methods.
-     * These are: OAUTH2, JWT via OAUTH2
-     * <p>
-     * Currently the code only returns OAUTH2. This should detect which
-     * profile is running and set links accordingly
-     *
-     * @return
-     */
-    public void addLogoutInformation(List<ConformityLevel> conformityLevels) {
-        ConformityLevel logoutOauth2 = new ConformityLevel();
-        logoutOauth2.setHref(getOutgoingAddress() + LOGOUT_PATH);
-        logoutOauth2.setRel(NIKITA_CONFORMANCE_REL + LOGOUT_REL_PATH + SLASH +
-                LOGIN_OAUTH + SLASH);
-        conformityLevels.add(logoutOauth2);
-    }
 
     /**
      * Add OIDC as an option
@@ -91,25 +50,10 @@ public class ApplicationService {
     }
 
     /**
-     * Creates a method to create an account
-     *
-     * @return
-     */
-    public void addAccountCreationInformation(
-            List<ConformityLevel> conformityLevels) {
-        ConformityLevel accountCreation = new ConformityLevel();
-        accountCreation.setHref(getOutgoingAddress() + HATEOAS_API_PATH +
-                SLASH + NOARK_ADMINISTRATION_PATH + SLASH + NEW_USER);
-        accountCreation.setRel(REL_ADMIN_NEW_USER);
-        conformityLevels.add(accountCreation);
-    }
-
-    /**
      * Creates a list of the officially supported resource links.
      * These are: arkivstruktur, casehandling, metadata, admin and
      * loggingogsporing
      *
-     * @return
      */
     public void addConformityLevels(List<ConformityLevel> conformityLevels) {
         // ConformityLevel : arkivstruktur
@@ -133,45 +77,35 @@ public class ApplicationService {
         conformityLevelMetadata.setRel(REL_METADATA);
         conformityLevels.add(conformityLevelMetadata);
 
-        /*
-        // These will be added as the development progresses.
-        // They are not really specified properly in the interface standard.
         // ConformityLevel : administrasjon
         ConformityLevel conformityLevelAdministration = new ConformityLevel();
-        conformityLevelAdministration.setHref(getOutgoingAddress()+ SLASH + HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH);
-        conformityLevelAdministration.setRel(NOARK_CONFORMANCE_REL + NOARK_ADMINISTRATION_PATH + SLASH);
+        conformityLevelAdministration.setHref(getOutgoingAddress() +
+                HREF_BASE_ADMIN);
+        conformityLevelAdministration.setRel(REL_ADMINISTRATION);
         conformityLevels.add(conformityLevelAdministration);
 
+        /*
+        // Will be introduced as project mature
         // ConformityLevel : loggingogsporing
         ConformityLevel conformityLevelLogging = new ConformityLevel();
-        conformityLevelLogging.setHref(getOutgoingAddress()+ SLASH + HATEOAS_API_PATH + SLASH + NOARK_LOGGING_PATH);
-        conformityLevelLogging.setRel(NOARK_CONFORMANCE_REL + NOARK_LOGGING_PATH + SLASH);
+        conformityLevelLogging.setHref(getOutgoingAddress() +
+        HREF_BASE_LOGGING);
+        conformityLevelLogging.setRel(REL_LOGGING);
         conformityLevels.add(conformityLevelLogging);
         */
     }
 
-    public ApplicationDetails getApplicationDetails(HttpServletRequest request) {
+    public ApplicationDetails getApplicationDetails() {
         ApplicationDetails applicationDetails;
-        ArrayList<ConformityLevel> conformityLevels = new ArrayList(10);
+        ArrayList<ConformityLevel> conformityLevels = new ArrayList<>();
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
-
         // If you are logged in, add more information
         if (!username.equals("anonymousUser")) {
             addConformityLevels(conformityLevels);
-            addLogoutInformation(conformityLevels);
             addCheckToken(conformityLevels);
         }
-
-        // Show login relation also for logged in users to allow user
-        // change also when logged in.
-        addLoginInformation(conformityLevels);
-
         addOpenIdConfiguration(conformityLevels);
-
-        // Show account creation relation
-        addAccountCreationInformation(conformityLevels);
-
         applicationDetails = new ApplicationDetails(conformityLevels);
         return applicationDetails;
     }
@@ -206,20 +140,23 @@ public class ApplicationService {
      */
     public OIDCConfiguration getOpenIdConfiguration() {
         String baseAddress = getOutgoingAddress();
-        String issuer = baseAddress;
+
         String authorisationEndpoint = baseAddress + LOGIN_PATH;
         String revocationEndpoint = baseAddress + LOGOUT_PATH;
-
+        String registrationEndpoint = baseAddress + HREF_BASE_ADMIN + NEW_USER;
         ArrayList <String> grantTypes = new ArrayList<>(Arrays.asList(
                 "password", "authorization_code", "refresh_token"));
 
         OIDCConfiguration oidcConfiguration = new OIDCConfiguration();
+        oidcConfiguration.setIssuer(baseAddress);
         oidcConfiguration.setAuthorizationEndpoint(authorisationEndpoint);
         oidcConfiguration.setRevocationEndpoint(revocationEndpoint);
+        oidcConfiguration.setRegistrationEndpoint(registrationEndpoint);
         oidcConfiguration.setGrantTypesSupported(grantTypes);
         oidcConfiguration.setTokenEndpointAuthMethodsSupported(
                 Arrays.asList("client_secret_basic"));
         oidcConfiguration.setRequestParameterSupported(true);
+
         return oidcConfiguration;
     }
 
