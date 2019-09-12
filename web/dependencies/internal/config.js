@@ -39,10 +39,17 @@ var REL_LOGIN_OAUTH2 = 'https://rel.arkivverket.no/noark5/v5/api/login/rfc6749/'
 var REL_LOGOUT_OAUTH2 = 'https://rel.arkivverket.no/noark5/v5/api/logout/rfc6749/';
 var REL_CHECK_TOKEN = 'https://nikita.arkivlab.no/noark5/v5/oauth/check_token/rfc6749/';
 var REL_ADMIN_NEW_USER = 'https://rel.arkivverket.no/noark5/v5/api/admin/ny-bruker/';
+var REL_OIDC = 'https://rel.arkivverket.no/noark5/v5/api/login/oidc/';
 
+let ROLE_CASE_HANDLER = "saksbehandler";
+let ROLE_RECORDS_MANAGER = "arkivar";
 
+let LOGIN_ENDPOINT = "authorization_endpoint";
+let LOGOUT_ENDPOINT = "revocation_endpoint";
+let CHECK_TOKEN_ENDPOINT = "introspection_endpoint";
+let OAUTH_ACCESS_TOKEN = "access_token";
 
-var MSG_NIKITA_DOWN = "Problemer med å koble meg opp mot nikita-kjernen. Ser ut som om nikita er nede. Prøv igjen senere eller kontakt administrator.";
+var MSG_NIKITA_DOWN = "Nikita-tjeneren ser ut til å være nede. Prøv igjen senere. Prøv igjen senere eller kontakt administrator.";
 var MSG_NIKITA_DOWN_LOG = "Looks like nikita is down at the moment : ";
 var MSG_NIKITA_UNKNOWN_ERROR = "Ukjent problem med å koble meg opp mot nikita-kjernen. Prøv igjen senere eller kontakt administrator.";
 var MSG_NIKITA_UNKNOWN_ERROR_LOG = "Unknown error when connecting to nikita. Message is : " ;
@@ -157,6 +164,15 @@ var SetUserToken = function (t) {
 
 var GetUserToken = function () {
     return localStorage.getItem("token");
+};
+
+var SetUserTokenInfo = function (t) {
+    localStorage.setItem("tokenInfo", t);
+    console.log("Adding tokenInfo " + t + " to local storage");
+};
+
+var GetUserTokenInfo = function () {
+    return localStorage.getItem("tokenInfos");
 };
 
 var GetBaseURLForODataSearch = function () {

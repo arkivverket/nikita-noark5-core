@@ -1,5 +1,3 @@
-var app = angular.module('nikita-arkivar', ['ngFileUpload']);
-
 /**
  * Enables the following functionality:
  *  1. Sets the caseFile object correctly for the arkiv.html page
@@ -16,67 +14,14 @@ var app = angular.module('nikita-arkivar', ['ngFileUpload']);
  *  So to keep things simple, we always issue a GET on the load of arkiv.html so we have an ETAG handy!
  *
  */
-app.directive('newCaseFileModalDir', function () {
-  return {
-    restrict: 'A',
-    link: function (scope, element) {
-      scope.dismissNewCaseFileModal = function () {
-        element.modal('hide');
-      };
-    }
-  };
-});
 
-app.directive('newDocumentDescriptionModalDir', function () {
-  return {
-    restrict: 'A',
-    link: function (scope, element) {
-      scope.dismissNewDocumentDescriptionModal = function () {
-        element.modal('hide');
-      };
-    }
-  };
-});
 
-app.directive('newDocumentObjectModalDir', function () {
-  return {
-    restrict: 'A',
-    link: function (scope, element) {
-      scope.dismissNewDocumentObjectModal = function () {
-        element.modal('hide');
-      };
-    }
-  };
-});
-
-app.directive('newCorrespondencePartModalDir', function () {
-  return {
-    restrict: 'A',
-    link: function (scope, element) {
-      scope.dismissNewCorrespondencePartModal = function () {
-        element.modal('hide');
-      };
-    }
-  };
-});
-
-app.directive('newRegistryEntryModalDir', function () {
-  return {
-    restrict: 'A',
-    link: function (scope, element) {
-      scope.dismissNewRegistryEntryModal = function () {
-        element.modal('hide');
-      };
-    }
-  };
-});
-
-var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope', '$http',
-    function ($scope, $http) {
-
+var caseHandlerController = app.controller('CaseHandlerController',
+    ['$scope', '$http', 'loginService',
+      function ($scope, $http, loginService) {
       // Grab a copy of the authentication token
       $scope.token = GetUserToken();
-
+        console.log("CaseHandler view. Token is " + $scope.token);
       // get values used in drop downs. These will probably be replaced
       // by metadata calls to nikita
       $scope.documentMediumList = documentMediumList;
@@ -1066,22 +1011,14 @@ var saksbehandlerController = app.controller('SaksbehandlerController', ['$scope
       };
 
       $scope.doLogout = function () {
-        console.log("Attempting logout on [" + $scope.hrefLogout + "]. using token [" +
-          $scope.token + "]");
-        $http({
-          method: 'GET',
-          url: $scope.hrefLogout,
-          headers: {'Authorization': $scope.token}
-        }).then(function successCallback(response) {
-          $scope.token = "";
-          console.log(" GET to doLogout [" + $scope.hrefLogout +
-            "] returned " + JSON.stringify(response));
-          changeLocation($scope, "login.html", false);
-        }, function errorCallback(response) {
-          alert("Problemer med å logge ut. Du kan se bort fra denne meldingen!");
-          console.log(" GET urlForLogout[" + $scope.hrefLogout +
-            "] returned " + JSON.stringify(response));
-        });
+        (async () => {
+          try {
+            $scope.oidc = await loginService.doLogout();
+            changeLocation($scope, "login.html", false);
+          } catch (error) {
+            console.log("Problem logging out " + error.message)
+          }
+        })();
       };
 
       /**
