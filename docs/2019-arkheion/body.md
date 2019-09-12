@@ -1,9 +1,3 @@
-# Bilder
-
-Skjermbilde av Nikita
-UML-diagram av noe?
-JSON-eksempel?
-
 # Nikita og Noark 5 tjenestegrensesnittet tilbyr ny måte å tenke arkivering
 
 av Thomas Sødring (OsloMet) og Petter Reinholdtsen (foreningen NUUG)
@@ -199,7 +193,7 @@ https://nikita.oslomet.no/browse.html og der se hvordan API-et
 fungerer mer i detalj.  Innloggingsdetaljer her er det samme som for
 brukergrensesnittet.
 
-# Test fremtiden med Nikita 
+# Test fremtiden med Nikita
 
 Fremover er fokuset på forbedring av spesifikasjonen Noark 5
 Tjenestegrensesnitt. De som skrev tjenestegrensesnittet gjorde et
@@ -229,3 +223,11 @@ en kan følge med eller være med oss på den spennende veien videre.
 **OData er også viktig fordi det kan bli en ny måte å svare innsynsforespørsler på i tråd med offentlighetsloven § 9**
 
 **Fri programvare representerer en demokratisering av kunnskap der tolkning- og innlåsingsmakt flyttes fra leverandør til almenheten.**
+
+# Figurer
+
+![Skjermbilde fra nettsidegrensesnittet til Nikita](images/nikita-innlogging.png)
+
+![UML-utsnitt for mappe fra spesifikasjonen](images/uml-arkivstruktur-mappe.png){width=80%}
+
+![Protokoll-eksempel (JSON)]

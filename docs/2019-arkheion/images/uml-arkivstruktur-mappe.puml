@@ -1,0 +1,18 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam nodesep 180
+
+class Arkivstruktur.Klasse <Arkivenhet>
+class Arkivstruktur.Arkivdel <Arkivenhet>
+class Arkivstruktur.Registrering <Arkivenhet>
+!include images/uml-class-mappe-all.iuml
+!include images/uml-class-merknad.iuml
+!include images/uml-class-nasjonalidentifikator.iuml
+
+Arkivstruktur.Klasse "+klasse 0..1" o--> "+mappe 0..*" Arkivstruktur.Mappe
+Arkivstruktur.Arkivdel "+arkivdel 0..1" o--> "+mappe 0..*" Arkivstruktur.Mappe
+Arkivstruktur.Mappe "+overmappe 0..1" o--> "+undermappe 0..*" Arkivstruktur.Mappe
+Arkivstruktur.Mappe "+mappe 0..1" o--> "+registrering 0..*" Arkivstruktur.Registrering
+Arkivstruktur.Mappe *-> "+merknad 0..*" Arkivstruktur.Merknad
+Arkivstruktur.NasjonaleIdentifikatorer.Nasjonalidentifikator "+nasjonalidentifikator 0..*" <-* Arkivstruktur.Mappe
+@enduml
