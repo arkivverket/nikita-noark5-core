@@ -630,11 +630,13 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-lg btn-primary float-left" data-dismiss="modal"
-                            ng-click="doDismissNewFondsModal()">
+                    <button class="btn btn-lg btn-primary float-left"
+                            data-dismiss="modal" ng-click="doDismissNewFondsModal()">
                         Lukk
                     </button>
-                    <button class="btn btn-lg btn-success float-right" ng-click="createFonds()">Opprett arkiv</button>
+                    <button class="btn btn-lg btn-success float-right" ng-click="createFonds()"
+                            ng-disabled="!newTitleForFonds">Opprett arkiv
+                    </button>
                 </div>
             </div>
         </div>
