@@ -1,753 +1,768 @@
 <!DOCTYPE html>
 <html ng-app="nikita">
 <head>
-  <meta charset="UTF-8">
-  <title>nikita-noark5</title>
-  <script src="dependencies/internal/config.js"></script>
-  <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
-  <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
-  <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-  <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
-  <script
-          src="dependencies/vendor/META-INF/resources/webjars/angular-file-upload/12.2.13/ng-file-upload-all.js"></script>
+    <meta charset="UTF-8">
+    <title>nikita-noark5</title>
+    <script src="dependencies/internal/config.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+    <script
+            src="dependencies/vendor/META-INF/resources/webjars/angular-file-upload/12.2.13/ng-file-upload-all.js"></script>
 
-  <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
-        rel="stylesheet" type="text/css">
-
-  <link
-          href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+    <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
           rel="stylesheet" type="text/css">
 
-  <script src="dependencies/internal/common_functionality.js"></script>
-  <script src="dependencies/internal/arkivar.js"></script>
+    <link
+            href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+            rel="stylesheet" type="text/css">
 
-  <!-- Manually setting the size of the modal for creating a new user -->
-  <style media="screen" type="text/css">
-    .col-padding-right {
-      padding-right: 15px;
-    }
-  </style>
+    <script src="dependencies/internal/common_functionality.js"></script>
+    <script src="dependencies/internal/arkivar.js"></script>
+
+    <!-- Manually setting the size of the modal for creating a new user -->
+    <style media="screen" type="text/css">
+        .col-padding-right {
+            padding-right: 15px;
+        }
+    </style>
 </head>
 
 <body ng-controller="ArkivarController">
 
 <nav class="navbar navbar-expand-sm bg-light">
-  <a class="navbar-brand">nikita-noark5-core@oslomet</a>
+    <a class="navbar-brand">nikita-noark5-core@oslomet</a>
 
-  <ul class="nav navbar-nav ml-auto">
-    <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#" id="navbardrop">
-        <span class="fa fa-bars"></span>
-      </a>
-      <div class="dropdown-menu dropdown-menu-right">
-        <a class="nav-link" href="#" ng-show="userIsAdmin">Innstillinger &nbsp; <span class="fas fa-cog"></span></a>
-        <a class="nav-link" href="#" ng-click="doLogout()">Logg ut &nbsp; <span
-                class="fas fa-sign-out-alt"></span></a>
-      </div>
-    </li>
-  </ul>
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#" id="navbardrop">
+                <span class="fa fa-bars"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="nav-link" href="#" ng-show="userIsAdmin">Innstillinger &nbsp; <span class="fas fa-cog"></span></a>
+                <a class="nav-link" href="#" ng-click="doLogout()">Logg ut &nbsp; <span
+                        class="fas fa-sign-out-alt"></span></a>
+            </div>
+        </li>
+    </ul>
 </nav>
 
 <div>
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item" ng-click="doShowFondsListCard()"><a href="#">Start</a></li>
-      <li class="breadcrumb-item" ng-click="doShowFondsCard()" ng-show="showFondsBreadcrumb"><a href="#">Arkiv
-        <span
-                ng-show="showFondsCreatorBreadcrumb==true||showSeriesBreadcrumb==true">({{fonds.tittel | limitTo:30}})</span></a>
-      </li>
-      <li class="breadcrumb-item" ng-click="doShowFondsCreatorListCard()" ng-show="showFondsCreatorBreadcrumb"><a
-              href="#">Arkivskaper</a></li>
-      <li class="breadcrumb-item" ng-click="doShowSeriesListCard()" ng-show="showSeriesBreadcrumb"><a
-              href="#">Arkivdel</a>
-      </li>
-    </ol>
-  </nav>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" ng-click="doShowFondsListCard()"><a href="#">Start</a></li>
+            <li class="breadcrumb-item" ng-click="doShowFondsCard()" ng-show="showFondsBreadcrumb"><a href="#">Arkiv
+                <span
+                        ng-show="showFondsCreatorBreadcrumb==true||showSeriesBreadcrumb==true">({{fonds.tittel | limitTo:30}})</span></a>
+            </li>
+            <li class="breadcrumb-item" ng-click="doShowFondsCreatorListCard()" ng-show="showFondsCreatorBreadcrumb"><a
+                    href="#">Arkivskaper</a></li>
+            <li class="breadcrumb-item" ng-click="doShowSeriesListCard()" ng-show="showSeriesBreadcrumb"><a href="#">Arkivdel</a>
+            </li>
+        </ol>
+    </nav>
 
-  <!-- Card for the Fonds list view -->
-  <div class="card border-light mb-3" ng-show="showFondsListCard">
-    <div class="card-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col col-12">
-            <button class="btn btn-primary float-right" data-target="#newFondsModal"
-                    data-toggle="modal" type="button">
-              Opprett arkiv
-            </button>
-          </div>
+    <!-- Card for the Fonds list view -->
+    <div class="card border-light mb-3" ng-show="showFondsListCard">
+        <div class="card-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-12">
+                        <button class="btn btn-primary float-right" data-target="#newFondsModal"
+                                data-toggle="modal" type="button">
+                            Opprett arkiv
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-12">
-            <table class="table table-hover">
-              <thead>
-              <tr>
-                <th style="width: 50%">tittel</th>
-                <th style="width: 20%">status</th>
-                <th style="width: 15%">opprettetDato</th>
-                <th style="width: 15%">avsluttetDato</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-click="fondsSelected(fonds)" ng-repeat="fonds in fondsList">
-                <td>
-                  {{fonds.tittel}}
-                </td>
-                <td>
-                  {{fonds.arkivstatus}}
-                </td>
-                <td>
-                  {{fonds.opprettetDato | date:'yyyy-MM-dd'}}
-                </td>
-                <td>
-                  {{fonds.avsluttetDato | date:'yyyy-MM-dd'}}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="width: 50%">tittel</th>
+                                <th style="width: 20%">status</th>
+                                <th style="width: 15%">opprettetDato</th>
+                                <th style="width: 15%">avsluttetDato</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-click="fondsSelected(fonds)" ng-repeat="fonds in fondsList">
+                                <td>
+                                    {{fonds.tittel}}
+                                </td>
+                                <td>
+                                    {{fonds.arkivstatus}}
+                                </td>
+                                <td>
+                                    {{fonds.opprettetDato | date:'yyyy-MM-dd'}}
+                                </td>
+                                <td>
+                                    {{fonds.avsluttetDato | date:'yyyy-MM-dd'}}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- End card for the Fonds list view -->
+    <!-- End card for the Fonds list view -->
 
-  <!-- Card for the FondsCreator list view -->
-  <div class="card border-light mb-3" ng-show="showFondsCreatorListCard">
-    <div class="card-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col col-12">
-          </div>
+    <!-- Card for the FondsCreator list view -->
+    <div class="card border-light mb-3" ng-show="showFondsCreatorListCard">
+        <div class="card-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-12">
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-12">
-            <table class="table table-hover">
-              <thead>
-              <tr>
-                <th style="width: 20%">arkivskaperID</th>
-                <th style="width: 20%">arkivskaperNavn</th>
-                <th style="width: 60%">beskrivelse</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-click="fondsCreatorSelected(fondsCreator)"
-                  ng-repeat="fondsCreator in fondsCreatorList">
-                <td>
-                  {{ fondsCreator.arkivskaperID }}
-                </td>
-                <td>
-                  {{ fondsCreator.arkivskaperNavn }}
-                </td>
-                <td>
-                  {{ fondsCreator.beskrivelse | limitTo:60 }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="width: 20%">arkivskaperID</th>
+                                <th style="width: 20%">arkivskaperNavn</th>
+                                <th style="width: 60%">beskrivelse</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-click="fondsCreatorSelected(fondsCreator)"
+                                ng-repeat="fondsCreator in fondsCreatorList">
+                                <td>
+                                    {{ fondsCreator.arkivskaperID }}
+                                </td>
+                                <td>
+                                    {{ fondsCreator.arkivskaperNavn }}
+                                </td>
+                                <td>
+                                    {{ fondsCreator.beskrivelse | limitTo:60 }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- End card for the FondsCreator list view -->
+    <!-- End card for the FondsCreator list view -->
 
-  <!-- Card for the Series list view -->
-  <div class="card border-light mb-3" ng-show="showSeriesListCard">
-    <div class="card-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col col-12">
-          </div>
+    <!-- Card for the Series list view -->
+    <div class="card border-light mb-3" ng-show="showSeriesListCard">
+        <div class="card-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-12">
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-12">
-            <table class="table table-hover">
-              <thead>
-              <tr>
-                <th style="width: 50%">tittel</th>
-                <th style="width: 20%">status</th>
-                <th style="width: 15%">opprettetDato</th>
-                <th style="width: 15%">avsluttetDato</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-click="seriesSelected(series)" ng-repeat="series in seriesList">
-                <td>
-                  {{ series.tittel }}
-                </td>
-                <td>
-                  {{ series.arkivdelstatus }}
-                </td>
-                <td>
-                  {{ series.opprettetDato | date:'yyyy-MM-dd' }}
-                </td>
-                <td>
-                  {{ series.avsluttetDato | date:'yyyy-MM-dd' }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="width: 50%">tittel</th>
+                                <th style="width: 20%">status</th>
+                                <th style="width: 15%">opprettetDato</th>
+                                <th style="width: 15%">avsluttetDato</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-click="seriesSelected(series)" ng-repeat="series in seriesList">
+                                <td>
+                                    {{ series.tittel }}
+                                </td>
+                                <td>
+                                    {{ series.arkivdelstatus }}
+                                </td>
+                                <td>
+                                    {{ series.opprettetDato | date:'yyyy-MM-dd' }}
+                                </td>
+                                <td>
+                                    {{ series.avsluttetDato | date:'yyyy-MM-dd' }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- End card for the Series list view -->
+    <!-- End card for the Series list view -->
 
-  <!-- Card for an individual fonds -->
-  <div class="card border-light mb-3" ng-show="showFondsCard">
-    <div class="card-header">
-      <div class="col-lg-12">
-        <div class="btn-toolbar float-right">
-          <button class="btn btn-primary" data-target="#newSeriesModal"
-                  data-toggle="modal" ng-click="doLoadSeriesModal()" type="button">
-            Opprett arkivdel
-          </button>
-          <button class="btn btn-primary" ng-click="doShowSeriesListCard()" type="button">
-            Se arkivdeler
-          </button>
-          <button class="btn btn-primary" data-target="#newFondsCreatorModal"
-                  data-toggle="modal" type="button">
-            Opprett arkivskaper
-          </button>
-          <button class="btn btn-primary" ng-click="doShowFondsCreatorListCard()" type="button">
-            Se arkivskapere
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="container-fluid">
-        <div class="col-lg-12">
-
-          <div class="row">
+    <!-- Card for an individual fonds -->
+    <div class="card border-light mb-3" ng-show="showFondsCard">
+        <div class="card-header">
             <div class="col-lg-12">
-              <label for="systemID">systemID</label>
-              <input class="form-control form-control-lg rounded-1" disabled id="systemID"
-                     ng-model="fonds.systemID" type="text"/>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="tittelArkiv">Tittel</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
-                         id="tittelArkiv"
-                         ng-model="fonds.tittel" title="Navnet på arkivet feks 'Eksempel kommune hovedarkiv'."
-                         type="text"/>
+                <div class="btn-toolbar float-right">
+                    <button class="btn btn-primary" data-target="#newSeriesModal"
+                            data-toggle="modal" ng-click="doLoadSeriesModal()" type="button">
+                        Opprett arkivdel
+                    </button>
+                    <button class="btn btn-primary" ng-click="doShowSeriesListCard()" type="button">
+                        Se arkivdeler
+                    </button>
+                    <button class="btn btn-primary" data-target="#newFondsCreatorModal"
+                            data-toggle="modal" type="button">
+                        Opprett arkivskaper
+                    </button>
+                    <button class="btn btn-primary" ng-click="doShowFondsCreatorListCard()" type="button">
+                        Se arkivskapere
+                    </button>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="beskrivelseArkiv">Beskrivelse</label>
-                  <textarea class="form-control  form-control-lg rounded-1" data-placement="top"
-                            data-toggle="tooltip"
-                            id="beskrivelseArkiv"
-                            ng-model="fonds.beskrivelse" rows="5"
-                            title="En beskrivelse av arkivet. Merk at dette er ikke en beskrivelse av organisasjonen."/>
-                </div>
-              </div>
             </div>
-            <div class="col-lg-6">
-              <div class="row">
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
                 <div class="col-lg-12">
-                  <label class="control-label" for="arkivstatus">Arkivstatus:</label>
-                  <select class="form-control form-control-lg rounded-1" data-placement="top"
-                          data-toggle="tooltip"
-                          id="arkivstatus" ng-model="selectedFondsStatus"
-                          title="En arkiv kan enten være aktiv (status Opprettet) eller avsluttet (status Avsluttet). Merk! Å sette status til Avlsuttet angir at du er ferdig med arkivdanning i dette arkivet">
-                    <option ng-repeat="fondsStatus in fondsStatusList"
-                            ng-selected="{{fondsStatus.value == selectedFondsStatus}}"
-                            value="{{fondsStatus.value}}">{{fondsStatus.value}}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- sistEndretDato sistEndretAv. Note these fields are not supported yet!
-               Note. These fields are only shown if sistEndretDato has a value
-          -->
-          <div class="row" ng-show="fonds.sistEndretDato">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="sistEndretDatoArkiv">sist endretDato</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top"
-                         data-toggle="tooltip"
-                         disabled
-                         id="sistEndretDatoArkiv" ng-model="fonds.sistEndretDato"
-                         title="Når den sisten endringen skjedde på denne arkivenheten."
-                         type="text"/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="systemID">systemID</label>
+                            <input class="form-control form-control-lg rounded-1" disabled id="systemID"
+                                   ng-model="fonds.systemID" type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="tittelArkiv">Tittel</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           id="tittelArkiv"
+                                           ng-model="fonds.tittel"
+                                           title="Navnet på arkivet feks 'Eksempel kommune hovedarkiv'."
+                                           type="text"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="beskrivelseArkiv">Beskrivelse</label>
+                                    <textarea class="form-control  form-control-lg rounded-1" data-placement="top"
+                                              data-toggle="tooltip"
+                                              id="beskrivelseArkiv"
+                                              ng-model="fonds.beskrivelse" rows="5"
+                                              title="En beskrivelse av arkivet. Merk at dette er ikke en beskrivelse av organisasjonen.">
+                </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="arkivstatus">Arkivstatus:</label>
+                                    <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                            data-toggle="tooltip"
+                                            id="arkivstatus" ng-model="selectedFondsStatus"
+                                            title="En arkiv kan enten være aktiv (status Opprettet) eller avsluttet (status Avsluttet). Merk! Å sette status til Avlsuttet angir at du er ferdig med arkivdanning i dette arkivet">
+                                        <option ng-repeat="fondsStatus in fondsStatusList"
+                                                ng-selected="{{fondsStatus.value == selectedFondsStatus}}"
+                                                value="{{fondsStatus.value}}">{{fondsStatus.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- sistEndretDato sistEndretAv. Note these fields are not supported yet!
+                         Note. These fields are only shown if sistEndretDato has a value
+                    -->
+                    <div class="row" ng-show="fonds.sistEndretDato">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="sistEndretDatoArkiv">sist endretDato</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="sistEndretDatoArkiv" ng-model="fonds.sistEndretDato"
+                                           title="Når den sisten endringen skjedde på denne arkivenheten."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="sistEndretAvArkiv">sist endretAv</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="sistEndretAvArkiv" ng-model="fonds.sistEndretAv"
+                                   title="Hvem som gjorde en endring på denne arkivenheten."
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <!-- opprettetDato and opprettetAv. -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="opprettetDatoArkiv">opprettetDato</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="opprettetDatoArkiv" ng-model="fonds.opprettetDato"
+                                           title="Når denne arkivenheten ble opprettet."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="opprettetAvArkiv">opprettetAv</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="opprettetAvArkiv" ng-model="fonds.opprettetAv"
+                                           title="Hvem som opprettet denne arkivenheten."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- avsluttetDato and avsluttetAv. Note. These fields are only shown if avsluttetDato has a value -->
+                    <div class="row" ng-show="fonds.avsluttetDato">
+                        <div class="col-lg-6">
+                            <label class="control-label" for="avsluttetDatoArkiv">avsluttetDato</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="avsluttetDatoArkiv" ng-model="fonds.avsluttetDato"
+                                   title="Når denne arkivenheten ble avsluttet."
+                                   type="text"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="avsluttetAvArkiv">avsluttetAv</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="avsluttetAvArkiv" ng-model="fonds.avsluttetAv"
+                                   title="Hvem som avsluttet denne arkivenheten."
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button class="btn btn-primary float-right" ng-click="updateFonds()" type="button">
+                                Oppdater arkiv
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div class="col-lg-6">
-              <label class="control-label" for="sistEndretAvArkiv">sist endretAv</label>
-              <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
-                     disabled
-                     id="sistEndretAvArkiv" ng-model="fonds.sistEndretAv"
-                     title="Hvem som gjorde en endring på denne arkivenheten."
-                     type="text"/>
-            </div>
-          </div>
-          <!-- opprettetDato and opprettetAv. -->
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="opprettetDatoArkiv">opprettetDato</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top"
-                         data-toggle="tooltip"
-                         disabled
-                         id="opprettetDatoArkiv" ng-model="fonds.opprettetDato"
-                         title="Når denne arkivenheten ble opprettet."
-                         type="text"/>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="opprettetAvArkiv">opprettetAv</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top"
-                         data-toggle="tooltip"
-                         disabled
-                         id="opprettetAvArkiv" ng-model="fonds.opprettetAv"
-                         title="Hvem som opprettet denne arkivenheten."
-                         type="text"/>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- avsluttetDato and avsluttetAv. Note. These fields are only shown if avsluttetDato has a value -->
-          <div class="row" ng-show="fonds.avsluttetDato">
-            <div class="col-lg-6">
-              <label class="control-label" for="avsluttetDatoArkiv">avsluttetDato</label>
-              <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
-                     disabled
-                     id="avsluttetDatoArkiv" ng-model="fonds.avsluttetDato"
-                     title="Når denne arkivenheten ble avsluttet."
-                     type="text"/>
-            </div>
-            <div class="col-lg-6">
-              <label class="control-label" for="avsluttetAvArkiv">avsluttetAv</label>
-              <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
-                     disabled
-                     id="avsluttetAvArkiv" ng-model="fonds.avsluttetAv"
-                     title="Hvem som avsluttet denne arkivenheten."
-                     type="text"/>
-            </div>
-          </div>
-          <div class="row">
+        </div>
+    </div>
+    <!-- End card for an individual fonds -->
+
+    <!-- Card for an individual series -->
+    <div class="card border-light mb-3" ng-show="showSeriesCard">
+        <div class="card-header">
             <div class="col-lg-12">
-              <button class="btn btn-primary float-right" ng-click="updateFonds()" type="button">
-                Oppdater arkiv
-              </button>
+                <div class="btn-toolbar float-right">
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <!-- End card for an individual fonds -->
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="col-lg-12">
 
-  <!-- Card for an individual series -->
-  <div class="card border-light mb-3" ng-show="showSeriesCard">
-    <div class="card-header">
-      <div class="col-lg-12">
-        <div class="btn-toolbar float-right">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="systemIDForSeries">systemID</label>
+                            <input class="form-control form-control-lg rounded-1" disabled id="systemIDForSeries"
+                                   ng-model="series.systemID" type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="titleForSeries">Tittel</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           id="titleForSeries"
+                                           ng-model="series.tittel"
+                                           title="Navnet på arkivet feks 'Eksempel kommune hovedarkiv'."
+                                           type="text"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="descriptionForSeries">Beskrivelse</label>
+                                    <textarea class="form-control  form-control-lg rounded-1" data-placement="top"
+                                              data-toggle="tooltip"
+                                              id="descriptionForSeries"
+                                              ng-model="series.beskrivelse" rows="5"
+                                              title="En beskrivelse av arkivet. Merk at dette er ikke en beskrivelse av organisasjonen.">
+                </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="seriesStatus">Arkivdelstatus:</label>
+                                    <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                            data-toggle="tooltip"
+                                            id="seriesStatus" ng-model="selectedSeriesStatus"
+                                            title="En arkivdek kan enten være aktiv (status Opprettet) eller avsluttet (status Avsluttet). Merk! Å sette status til Avlsuttet angir at du er ferdig med arkivdanning i denne arkivdelen">
+                                        <option ng-repeat="seriesStatus in seriesStatusList"
+                                                ng-selected="{{seriesStatus.value == selectedSeriesStatus}}"
+                                                value="{{seriesStatus.value}}">{{seriesStatus.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- sistEndretDato sistEndretAv. Note these fields are not supported yet!
+                         Note. These fields are only shown if sistEndretDato has a value
+                    -->
+                    <div class="row" ng-show="series.sistEndretDato">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="lastChangedDateForSeries">sist endretDato</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="lastChangedDateForSeries" ng-model="series.sistEndretDato"
+                                           title="Når den sisten endringen skjedde på denne arkivenheten."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="lastChangedByForSeries">sist endretAv</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="lastChangedByForSeries" ng-model="series.sistEndretAv"
+                                   title="Hvem som gjorde en endring på denne arkivenheten."
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <!-- opprettetDato and opprettetAv. -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="createdDateForSeries">opprettetDato</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="createdDateForSeries" ng-model="series.opprettetDato"
+                                           title="Når denne arkivenheten ble opprettet."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="createdByForSeries">opprettetAv</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="createdByForSeries" ng-model="series.opprettetAv"
+                                           title="Hvem som opprettet denne arkivenheten."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- avsluttetDato and avsluttetAv. Note. These fields are only shown if avsluttetDato has a value -->
+                    <div class="row" ng-show="series.avsluttetDato">
+                        <div class="col-lg-6">
+                            <label class="control-label" for="finalisedDateForSeries">avsluttetDato</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="finalisedDateForSeries" ng-model="series.avsluttetDato"
+                                   title="Når denne arkivenheten ble avsluttet."
+                                   type="text"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="finalisedByForSeries">avsluttetAv</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="finalisedByForSeries" ng-model="series.avsluttetAv"
+                                   title="Hvem som avsluttet denne arkivenheten."
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button class="btn btn-primary float-right" ng-click="updateSeries()" type="button">
+                                Oppdater arkivdel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    <div class="card-body">
-      <div class="container-fluid">
-        <div class="col-lg-12">
+    <!-- End card for an individual series -->
 
-          <div class="row">
+    <!-- Card for an individual fondsCreator -->
+    <div class="card border-light mb-3" ng-show="showFondsCreatorCard">
+        <div class="card-header">
             <div class="col-lg-12">
-              <label for="systemIDForSeries">systemID</label>
-              <input class="form-control form-control-lg rounded-1" disabled id="systemIDForSeries"
-                     ng-model="series.systemID" type="text"/>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="titleForSeries">Tittel</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top"
-                         data-toggle="tooltip"
-                         id="titleForSeries"
-                         ng-model="series.tittel" title="Navnet på arkivet feks 'Eksempel kommune hovedarkiv'."
-                         type="text"/>
+                <div class="btn-toolbar float-right">
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="descriptionForSeries">Beskrivelse</label>
-                  <textarea class="form-control  form-control-lg rounded-1" data-placement="top"
-                            data-toggle="tooltip"
-                            id="descriptionForSeries"
-                            ng-model="series.beskrivelse" rows="5"
-                            title="En beskrivelse av arkivet. Merk at dette er ikke en beskrivelse av organisasjonen."/>
-                </div>
-              </div>
             </div>
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="seriesStatus">Arkivdelstatus:</label>
-                  <select class="form-control form-control-lg rounded-1" data-placement="top"
-                          data-toggle="tooltip"
-                          id="seriesStatus" ng-model="selectedSeriesStatus"
-                          title="En arkivdek kan enten være aktiv (status Opprettet) eller avsluttet (status Avsluttet). Merk! Å sette status til Avlsuttet angir at du er ferdig med arkivdanning i denne arkivdelen">
-                    <option ng-repeat="seriesStatus in seriesStatusList"
-                            ng-selected="{{seriesStatus.value == selectedSeriesStatus}}"
-                            value="{{seriesStatus.value}}">{{seriesStatus.value}}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- sistEndretDato sistEndretAv. Note these fields are not supported yet!
-               Note. These fields are only shown if sistEndretDato has a value
-          -->
-          <div class="row" ng-show="series.sistEndretDato">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="lastChangedDateForSeries">sist endretDato</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top"
-                         data-toggle="tooltip"
-                         disabled
-                         id="lastChangedDateForSeries" ng-model="series.sistEndretDato"
-                         title="Når den sisten endringen skjedde på denne arkivenheten."
-                         type="text"/>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <label class="control-label" for="lastChangedByForSeries">sist endretAv</label>
-              <input class="form-control form-control-lg rounded-1" data-placement="top"
-                     data-toggle="tooltip"
-                     disabled
-                     id="lastChangedByForSeries" ng-model="series.sistEndretAv"
-                     title="Hvem som gjorde en endring på denne arkivenheten."
-                     type="text"/>
-            </div>
-          </div>
-          <!-- opprettetDato and opprettetAv. -->
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="createdDateForSeries">opprettetDato</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top"
-                         data-toggle="tooltip"
-                         disabled
-                         id="createdDateForSeries" ng-model="series.opprettetDato"
-                         title="Når denne arkivenheten ble opprettet."
-                         type="text"/>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="createdByForSeries">opprettetAv</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top"
-                         data-toggle="tooltip"
-                         disabled
-                         id="createdByForSeries" ng-model="series.opprettetAv"
-                         title="Hvem som opprettet denne arkivenheten."
-                         type="text"/>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- avsluttetDato and avsluttetAv. Note. These fields are only shown if avsluttetDato has a value -->
-          <div class="row" ng-show="series.avsluttetDato">
-            <div class="col-lg-6">
-              <label class="control-label" for="finalisedDateForSeries">avsluttetDato</label>
-              <input class="form-control form-control-lg rounded-1" data-placement="top"
-                     data-toggle="tooltip"
-                     disabled
-                     id="finalisedDateForSeries" ng-model="series.avsluttetDato"
-                     title="Når denne arkivenheten ble avsluttet."
-                     type="text"/>
-            </div>
-            <div class="col-lg-6">
-              <label class="control-label" for="finalisedByForSeries">avsluttetAv</label>
-              <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
-                     disabled
-                     id="finalisedByForSeries" ng-model="series.avsluttetAv"
-                     title="Hvem som avsluttet denne arkivenheten."
-                     type="text"/>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-12">
-              <button class="btn btn-primary float-right" ng-click="updateSeries()" type="button">
-                Oppdater arkivdel
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="systemIDForFondsCreator">systemID</label>
+                            <input class="form-control form-control-lg rounded-1" disabled
+                                   id="systemIDForFondsCreator"
+                                   ng-model="fondsCreator.systemID" type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="fondsCreatorId">arkivskaperID</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           id="fondsCreatorId"
+                                           ng-model="fondsCreator.arkivskaperID"
+                                           title="Unik identifikator feks organisasjonsnummer"
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="fondsCreatorName">arkivskaperNavn</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   id="fondsCreatorName"
+                                   ng-model="fondsCreator.arkivskaperNavn" title="Navnet på arkivskaperen"
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="descriptionForFondsCreator">Beskrivelse</label>
+                                    <textarea class="form-control  form-control-lg rounded-1"
+                                              data-placement="top" data-toggle="tooltip"
+                                              id="descriptionForFondsCreator"
+                                              ng-model="fondsCreator.beskrivelse" rows="5"
+                                              title="En beskrivelse av arkivskaperen.">
+                </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button class="btn btn-primary float-right" ng-click="updateFondsCreator()" type="button">
+                                Oppdater arkivskaper
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <!-- End card for an individual series -->
+    <!-- End card for an individual fondsCreator -->
 
-  <!-- Card for an individual fondsCreator -->
-  <div class="card border-light mb-3" ng-show="showFondsCreatorCard">
-    <div class="card-header">
-      <div class="col-lg-12">
-        <div class="btn-toolbar float-right">
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="container-fluid">
-        <div class="col-lg-12">
-          <div class="row">
-            <div class="col-lg-12">
-              <label for="systemIDForFondsCreator">systemID</label>
-              <input class="form-control form-control-lg rounded-1" disabled
-                     id="systemIDForFondsCreator"
-                     ng-model="fondsCreator.systemID" type="text"/>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="fondsCreatorId">arkivskaperID</label>
-                  <input class="form-control form-control-lg rounded-1" data-placement="top"
-                         data-toggle="tooltip"
-                         id="fondsCreatorId"
-                         ng-model="fondsCreator.arkivskaperID" title="Unik identifikator feks organisasjonsnummer"
-                         type="text"/>
+    <!--modal to create new fonds -->
+    <div aria-hidden="true" class="modal fade" id="newFondsModal"
+         new-fonds-modal-dir role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Opprett nytt arkiv</h4>
+                    <button class="close" data-dismiss="modal" type="button">×</button>
                 </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <label class="control-label" for="fondsCreatorName">arkivskaperNavn</label>
-              <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
-                     id="fondsCreatorName"
-                     ng-model="fondsCreator.arkivskaperNavn" title="Navnet på arkivskaperen"
-                     type="text"/>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <label class="control-label" for="descriptionForFondsCreator">Beskrivelse</label>
-                  <textarea class="form-control  form-control-lg rounded-1"
-                            data-placement="top" data-toggle="tooltip"
-                            id="descriptionForFondsCreator"
-                            ng-model="fondsCreator.beskrivelse" rows="5"
-                            title="En beskrivelse av arkivskaperen."/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="control-label" for="nyTittelArkiv">Tittel</label>
+                                <input class="form-control" data-placement="top" data-toggle="tooltip"
+                                       id="nyTittelArkiv" ng-model="newTitleForFonds"
+                                       title="Navnet på arkivet feks 'Eksempel kommune hovedarkiv'."
+                                       type="text"/>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="control-label" for="nyBeskrivelseArkiv">Beskrivelse</label>
+                                <textarea class="form-control" data-placement="top" data-toggle="tooltip"
+                                          id="nyBeskrivelseArkiv" ng-model="newDescriptionForFonds"
+                                          rows="5"
+                                          title="En beskrivelse av arkivet. Merk at dette er ikke en beskrivelse av organisasjonen.">
+              </textarea>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-12">
-              <button class="btn btn-primary float-right" ng-click="updateFondsCreator()" type="button">
-                Oppdater arkivskaper
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End card for an individual fondsCreator -->
-
-  <!--modal to create new fonds -->
-  <div aria-hidden="true" class="modal fade" id="newFondsModal"
-       new-fonds-modal-dir role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4>Opprett nytt arkiv</h4>
-          <button class="close" data-dismiss="modal" type="button">×</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-10">
-                <label class="control-label" for="nyTittelArkiv">Tittel</label>
-                <input class="form-control" data-placement="top" data-toggle="tooltip"
-                       id="nyTittelArkiv" ng-model="newTitleForFonds"
-                       title="Navnet på arkivet feks 'Eksempel kommune hovedarkiv'."
-                       type="text"/>
-              </div>
-              <div class="col-1"></div>
-            </div>
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-10">
-                <label class="control-label" for="nyBeskrivelseArkiv">Beskrivelse</label>
-                <textarea class="form-control" data-placement="top" data-toggle="tooltip"
-                          id="nyBeskrivelseArkiv" ng-model="newDescriptionForFonds"
-                          rows="5"
-                          title="En beskrivelse av arkivet. Merk at dette er ikke en beskrivelse av organisasjonen."/>
-              </div>
-              <div class="col-1"></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-lg btn-primary float-left" data-dismiss="modal"
-                  ng-click="doDismissNewFondsModal()">
-            Lukk
-          </button>
-          <button class="btn btn-lg btn-success float-right" ng-click="createFonds()">Opprett arkiv</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End modal to create a new fonds -->
-
-  <!-- modal to create a new fondsCreator -->
-  <div class="modal fade" id="newFondsCreatorModal" new-fonds-creator-modal-dir>
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4>Opprett ny arkivskaper</h4>
-          <button class="close" data-dismiss="modal" type="button">×</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-10">
-                <label class="control-label" for="newFondsCreatorId">arkivskaperID</label>
-                <input class="form-control" data-placement="top" data-toggle="tooltip"
-                       id="newFondsCreatorId"
-                       ng-model="newIdForFondsCreator" title="Organisasjonsnummer"
-                       type="text"/>
-              </div>
-              <div class="col-1"></div>
-            </div>
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-10">
-                <label class="control-label" for="newFondsCreatorName">arkivskaperNavn</label>
-                <input class="form-control" data-placement="top" data-toggle="tooltip"
-                       id="newFondsCreatorName"
-                       ng-model="newNameForFondsCreator" title="Navnet på arkivskaperen feks Oslo kommune"
-                       type="text"/>
-              </div>
-              <div class="col-1"></div>
-            </div>
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-10">
-                <label class="control-label" for="nyBeskrivelseArkivskaper">Beskrivelse</label>
-                <textarea class="form-control" data-placement="top" data-toggle="tooltip"
-                          id="nyBeskrivelseArkivskaper" ng-model="newDescriptionForFondsCreator"
-                          rows="5"
-                          title="En beskrivelse av arkivskaperen."/>
-              </div>
-              <div class="col-1"></div>
-            </div>
-
-          </div>
-        </div>
-        <div class="modal-footer">
-          <div class="container col-md-12">
-            <div class="row" ng-show="missingValues">
-              <div class="justify-content-center">
-                <div class="alert alert-danger">
-                  Både organisasjonsnavn og prosjektnavn må ha en verdi!
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-primary float-left" data-dismiss="modal"
+                            ng-click="doDismissNewFondsModal()">
+                        Lukk
+                    </button>
+                    <button class="btn btn-lg btn-success float-right" ng-click="createFonds()">Opprett arkiv</button>
                 </div>
-              </div>
             </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="float-right">
-                  <button class="btn btn-success" ng-click="createFondsCreator()"
-                          type="button">Opprett arkivskaper
-                  </button>
-                  <button class="btn btn-primary" data-dismiss="modal" type="button">Lukk</button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- End modal to create a new fondsCreator -->
+    <!-- End modal to create a new fonds -->
 
-  <!-- modal to create a new series -->
-  <div aria-hidden="true" class="modal fade"
-       id="newSeriesModal" new-series-modal-dir role="dialog">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4>Opprett ny arkivdel</h4>
-          <button class="close" data-dismiss="modal" type="button">×</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-10">
-                <label class="control-label" for="nyTittelArkivdel">Tittel</label>
-                <input class="form-control" data-placement="top" data-toggle="tooltip"
-                       id="nyTittelArkivdel" ng-model="newTitleForSeries"
-                       title="Navnet på arkivdelen feks 'Byggesak-, oppmåling- og delingsarkiv'."
-                       type="text"/>
-              </div>
-              <div class="col-1"></div>
+    <!-- modal to create a new fondsCreator -->
+    <div class="modal fade" id="newFondsCreatorModal" new-fonds-creator-modal-dir>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Opprett ny arkivskaper</h4>
+                    <button class="close" data-dismiss="modal" type="button">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="control-label" for="newFondsCreatorId">arkivskaperID</label>
+                                <input class="form-control" data-placement="top" data-toggle="tooltip"
+                                       id="newFondsCreatorId"
+                                       ng-model="newIdForFondsCreator" title="Organisasjonsnummer"
+                                       type="text"/>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="control-label" for="newFondsCreatorName">arkivskaperNavn</label>
+                                <input class="form-control" data-placement="top" data-toggle="tooltip"
+                                       id="newFondsCreatorName"
+                                       ng-model="newNameForFondsCreator"
+                                       title="Navnet på arkivskaperen feks Oslo kommune"
+                                       type="text"/>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="control-label" for="nyBeskrivelseArkivskaper">Beskrivelse</label>
+                                <textarea class="form-control" data-placement="top" data-toggle="tooltip"
+                                          id="nyBeskrivelseArkivskaper" ng-model="newDescriptionForFondsCreator"
+                                          rows="5"
+                                          title="En beskrivelse av arkivskaperen.">
+              </textarea>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="container col-md-12">
+                        <div class="row" ng-show="missingValues">
+                            <div class="justify-content-center">
+                                <div class="alert alert-danger">
+                                    Både organisasjonsnavn og prosjektnavn må ha en verdi!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="float-right">
+                                    <button class="btn btn-success" ng-click="createFondsCreator()"
+                                            type="button">Opprett arkivskaper
+                                    </button>
+                                    <button class="btn btn-primary" data-dismiss="modal" type="button">Lukk</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-              <div class="col-1"></div>
-              <div class="col-10">
-                <label class="control-label" for="nyBeskrivelseArkivdel">Beskrivelse</label>
-                <textarea class="form-control" data-placement="top" data-toggle="tooltip"
-                          id="nyBeskrivelseArkivdel" ng-model="newDescriptionForSeries"
-                          rows="5"
-                          title="En beskrivelse av arkivdelen."/>
-              </div>
-              <div class="col-1"></div>
-            </div>
-          </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-lg btn-primary float-left" data-dismiss="modal"
-                  ng-click="doDismissNewSeriesModal()">
-            Lukk
-          </button>
-          <button class="btn btn-lg btn-success float-right" ng-click="createSeries()">Opprett arkivdel
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
-  <!-- End modal to create a new series -->
+    <!-- End modal to create a new fondsCreator -->
+
+    <!-- modal to create a new series -->
+    <div aria-hidden="true" class="modal fade"
+         id="newSeriesModal" new-series-modal-dir role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Opprett ny arkivdel</h4>
+                    <button class="close" data-dismiss="modal" type="button">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="control-label" for="nyTittelArkivdel">Tittel</label>
+                                <input class="form-control" data-placement="top" data-toggle="tooltip"
+                                       id="nyTittelArkivdel" ng-model="newTitleForSeries"
+                                       title="Navnet på arkivdelen feks 'Byggesak-, oppmåling- og delingsarkiv'."
+                                       type="text"/>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="control-label" for="nyBeskrivelseArkivdel">Beskrivelse</label>
+                                <textarea class="form-control" data-placement="top" data-toggle="tooltip"
+                                          id="nyBeskrivelseArkivdel" ng-model="newDescriptionForSeries"
+                                          rows="5"
+                                          title="En beskrivelse av arkivdelen.">
+              </textarea>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-primary float-left" data-dismiss="modal"
+                            ng-click="doDismissNewSeriesModal()">
+                        Lukk
+                    </button>
+                    <button class="btn btn-lg btn-success float-right" ng-click="createSeries()">Opprett arkivdel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End modal to create a new series -->
 </div>
 
 </body>
