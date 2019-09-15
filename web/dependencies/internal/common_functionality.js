@@ -56,6 +56,39 @@ let app = angular.module('nikita', ['ngFileUpload'])
                 return data;
             }
         })
+    .service('nikitaService', function () {
+        /**
+         * Using the baseUrl (manually set in config.js), get the root of arkivstruktur.
+         * First you use the url corresponding to the root of the application, then
+         */
+        this.getFondsStructureRoot = async function (token) {
+            let response = await fetch(baseUrl, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+            let data = await response.json();
+            response = await fetch(data._links[REL_FONDS_STRUCTURE].href, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+            return await response.json();
+        };
+
+        /**
+         * Using the given URL (rel=https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/"),
+         * get the list of fonds
+         */
+        this.getFondsList = async function (urlFonds, token) {
+            let response = await fetch(urlFonds, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+            return await response.json();
+        }
+    })
     .directive('newUserModalDir', function () {
         return {
             restrict: 'A',
