@@ -251,11 +251,11 @@ app.controller('ArkivarController',
              * updated so the newly returned fonds is shown.
              */
             $scope.createFonds = function () {
-                let urlFonds = $scope.fonds._links[REL_NEW_FONDS_CREATOR].href;
+                let urlFonds = $scope.fondsStructure._links[REL_FONDS_STRUCTURE_NEW_FONDS].href;
                 console.log("Create fonds with following address " + urlFonds);
 
                 $http({
-                    url: $scope.fondsStructure._links[REL_FONDS_STRUCTURE_NEW_FONDS].href,
+                    url: urlFonds,
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/vnd.noark5+json',
