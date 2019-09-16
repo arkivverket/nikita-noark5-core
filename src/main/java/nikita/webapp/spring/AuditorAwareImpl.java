@@ -25,6 +25,9 @@ public class AuditorAwareImpl
         if (authentication == null || !authentication.isAuthenticated()) {
             return Optional.of("system");
         }
+        if (authentication.getPrincipal().equals("anonymousUser")) {
+            return Optional.of("system");
+        }
         NikitaUserPrincipal principal =
                 (NikitaUserPrincipal) authentication.getPrincipal();
         return Optional.of(principal.getUsername());
