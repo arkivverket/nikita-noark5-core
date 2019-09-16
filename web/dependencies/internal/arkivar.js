@@ -24,6 +24,7 @@ app.controller('ArkivarController',
             }
             checkToken();
 
+            $scope.fondsList = [];
             // get values used in drop downs. These will probably be replaced
             // by metadata calls to nikita
             $scope.fondsStatusList = fondsStatusList;
@@ -64,7 +65,10 @@ app.controller('ArkivarController',
                     $scope.fondsStructure = await nikitaService.getFondsStructureRoot($scope.token);
                     let fondsListObject = await nikitaService.getFondsList(
                         $scope.fondsStructure._links[REL_FONDS_STRUCTURE_FONDS].href, $scope.token);
-                    $scope.$apply($scope.fondsList = fondsListObject.results);
+                    if ("results" in fondsListObject) {
+                        $scope.fondsList = await fondsListObject.results;
+                    }
+                    $scope.$apply($scope.fondsList);
                 } catch (error) {
                     console.log(error.message);
                 }

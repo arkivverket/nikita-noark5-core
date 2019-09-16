@@ -19,8 +19,8 @@ var login = app.controller('LoginController',
             $scope.errorMessage = MSG_NIKITA_DOWN;
             $scope.error = false;
 
-            $scope.emailAddress = "admin@example.com";
-            $scope.password = "password";
+            //$scope.emailAddress = "admin@example.com";
+            //$scope.password = "password";
 
             // This sets 'arkivar' to be the default choice on the webpage
             $scope.selectedLoginRole = "arkivar";
@@ -59,7 +59,6 @@ var login = app.controller('LoginController',
             $scope.doLogin = function () {
                 (async () => {
                     try {
-                        $scope.emailAddress = $scope.emailAddress;
                         $scope.tokenInfo = await loginService.doLogin($scope.oidc[LOGIN_ENDPOINT],
                             $scope.emailAddress, $scope.password);
                         $scope.token = $scope.tokenInfo[OAUTH_ACCESS_TOKEN];
@@ -89,10 +88,11 @@ var login = app.controller('LoginController',
              *
              */
             $scope.createUser = function () {
-                console.log("Attempting to create User using [" + $scope.newUserHref + "]");
+                let url = $scope.oidc[REGISTRATION];
+                console.log("Attempting to create User using [" + url + "]");
                 if ($scope.repeatPasswordRegister === $scope.passwordRegister) {
                     $http({
-                        url: $scope.newUserHref,
+                        url: url,
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json',
@@ -109,7 +109,8 @@ var login = app.controller('LoginController',
                         $scope.dismissNewUserModal();
                         $scope.emailAddress = $scope.emailAddressRegister;
                     }, function (response) {
-                        alert(JSON.stringify(response));
+                        $scope.dismissNewUserModal();
+                        console.log(JSON.stringify(response));
                     });
                 } else {
                     $scope.passwordNotMatching = true;

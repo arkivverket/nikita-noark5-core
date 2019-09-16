@@ -49,6 +49,7 @@ let LOGIN_ENDPOINT = "authorization_endpoint";
 let LOGOUT_ENDPOINT = "revocation_endpoint";
 let CHECK_TOKEN_ENDPOINT = "introspection_endpoint";
 let OAUTH_ACCESS_TOKEN = "access_token";
+let REGISTRATION = "registration_endpoint";
 
 var MSG_NIKITA_DOWN = "Nikita-tjeneren ser ut til å være nede. Prøv igjen senere. Prøv igjen senere eller kontakt administrator.";
 var MSG_NIKITA_DOWN_LOG = "Looks like nikita is down at the moment : ";
