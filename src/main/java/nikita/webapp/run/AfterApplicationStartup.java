@@ -1,6 +1,5 @@
 package nikita.webapp.run;
 
-import nikita.common.util.CommonUtils;
 import nikita.webapp.util.DemoData;
 import nikita.webapp.util.InternalNameTranslator;
 import nikita.webapp.util.MetadataInsert;
@@ -29,6 +28,8 @@ import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.FileConstants.*;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
 import static nikita.common.util.CommonUtils.FileUtils.setDefaultMimeTypesAsConvertible;
+import static nikita.common.util.CommonUtils.WebUtils.addRequestToMethodMap;
+import static org.springframework.http.HttpMethod.*;
 
 /**
  * Create som basic data if application is in demo mode
@@ -202,26 +203,26 @@ public class AfterApplicationStartup {
                         Set<HttpMethod> httpMethods = new TreeSet<>();
                         for (RequestMethod requestMethod : httpMethodRequests) {
                             if (requestMethod.equals(RequestMethod.GET)) {
-                                httpMethods.add(HttpMethod.GET);
+                                httpMethods.add(GET);
                             } else if (requestMethod.equals(RequestMethod.DELETE)) {
-                                httpMethods.add(HttpMethod.DELETE);
+                                httpMethods.add(DELETE);
                             } else if (requestMethod.equals(RequestMethod.OPTIONS)) {
-                                httpMethods.add(HttpMethod.OPTIONS);
+                                httpMethods.add(OPTIONS);
                             } else if (requestMethod.equals(RequestMethod.HEAD)) {
-                                httpMethods.add(HttpMethod.HEAD);
+                                httpMethods.add(HEAD);
                             } else if (requestMethod.equals(RequestMethod.PATCH)) {
-                                httpMethods.add(HttpMethod.PATCH);
+                                httpMethods.add(PATCH);
                             } else if (requestMethod.equals(RequestMethod.POST)) {
-                                httpMethods.add(HttpMethod.POST);
+                                httpMethods.add(POST);
                             } else if (requestMethod.equals(RequestMethod.PUT)) {
-                                httpMethods.add(HttpMethod.PUT);
+                                httpMethods.add(PUT);
                             } else if (requestMethod.equals(RequestMethod
                                     .TRACE)) {
-                                httpMethods.add(HttpMethod.TRACE);
+                                httpMethods.add(TRACE);
                             }
                         }
                         out.println("Adding " + servletPath + " methods " + httpMethods);
-                        CommonUtils.WebUtils.addRequestToMethodMap(servletPath, httpMethods);
+                        addRequestToMethodMap(servletPath, httpMethods);
                     } else {
                         logger.warn("Missing HTTP Methods for the following servletPath [" + servletPath + "]");
                     }
@@ -229,15 +230,17 @@ public class AfterApplicationStartup {
             }
         }
 
-
         // This has to be a temporary addition. This approach to cors is silly!!
         // Cors should just work, we should not have to do this work!!
         Set<HttpMethod> httpMethods = new TreeSet<>();
-        httpMethods.add(HttpMethod.GET);
-        httpMethods.add(HttpMethod.OPTIONS);
-        httpMethods.add(HttpMethod.POST);
-        String servletPath = "/oauth/token/";
-        logger.info("Adding " + servletPath + " methods " + httpMethods);
-        CommonUtils.WebUtils.addRequestToMethodMap(servletPath, httpMethods);
+        httpMethods.add(GET);
+        httpMethods.add(OPTIONS);
+        httpMethods.add(POST);
+        String path = "/oauth/token/";
+        logger.info("Adding " + path + " methods " + httpMethods);
+        addRequestToMethodMap(path, httpMethods);
+        path = "/oauth/check_token/";
+        logger.info("Adding " + path + " methods " + httpMethods);
+        addRequestToMethodMap(path, httpMethods);
     }
 }
