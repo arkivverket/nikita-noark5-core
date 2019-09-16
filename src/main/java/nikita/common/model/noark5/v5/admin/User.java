@@ -258,6 +258,11 @@ public class User
     }
 
     @Override
+    public String getBaseRel() {
+        return REL_ADMIN_USER;
+    }
+
+    @Override
     public String toString() {
         return "User{" + super.toString() +
                 "username='" + username + '\'' +
