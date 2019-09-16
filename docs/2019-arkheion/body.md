@@ -226,8 +226,6 @@ en kan følge med eller være med oss på den spennende veien videre.
 
 # Figurer
 
-![Skjermbilde fra nettsidegrensesnittet til Nikita](images/nikita-innlogging.png)
+![Skjermbilde fra nettsidegrensesnittet til Nikita](images/nikita-arkivdel.png)
 
 ![UML-utsnitt for mappe fra spesifikasjonen](images/uml-arkivstruktur-mappe.png){width=80%}
-
-![Protokoll-eksempel (JSON)]
