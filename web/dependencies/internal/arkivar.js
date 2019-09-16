@@ -17,6 +17,12 @@ app.controller('ArkivarController',
 
             // Grab a copy of the authentication token
             $scope.token = GetUserToken();
+            $scope.oidc = GetOIDCInfo();
+
+            if ($scope.oidc === undefined) {
+                console.log("Missing OIDC information. Missing token functionality");
+            }
+            checkToken();
 
             // get values used in drop downs. These will probably be replaced
             // by metadata calls to nikita
@@ -172,10 +178,12 @@ app.controller('ArkivarController',
             /**
              * function createFondsCreator
              *
-             * Undertakes a POST request to the core with applicable data fields from the webpage.
-             * Adds the following headers: Content-Type and Authorization
+             * Undertakes a POST request to the core to create a FondsCreator with applicable
+             * data fields from the webpage. Adds the following headers:
+             * Content-Type and Authorization
              *
              */
+
             $scope.createFondsCreator = function () {
                 let urlFondsCreator = $scope.fonds._links[REL_NEW_FONDS_CREATOR].href;
                 console.log("Create fondsCreator with following address " + urlFondsCreator);
@@ -194,30 +202,31 @@ app.controller('ArkivarController',
                 }).then(function successCallback(response) {
                     console.log("POST on fondsCreator data returned= " +
                         JSON.stringify(response.data));
-
                     $scope.doDismissNewFondsCreatorModal();
-
                     // Update the fondsCreator object so fields in GUI are changed
                     $scope.fondsCreator = response.data;
-
                     // Pick up and make a note of the ETAG so we can update the object
                     $scope.fondsCreatorETag = response.headers('eTag');
-                    $scope.fondsCreatorETag = '"' + $scope.fondsCreatorETag + '"';
                     console.log("Etag after post on fondsCreator is = " + $scope.fondsCreatorETag);
+                    $scope.reloadFonds();
                 }, function errorCallback(request) {
                     console.log("POST request (new FondsCreator) failed = " + JSON.stringify(request));
                 });
             };
 
             /**
+             * function createSeries
              *
-             * create a new Series associated with the current fonds
+             * Undertakes a POST request to the core to create a Series with applicable
+             * data fields from the webpage. Adds the following headers:
+             * Content-Type and Authorization
+             *
              */
             $scope.createSeries = function () {
-
-                console.log("href for creating a fondsCreator is " + $scope.fonds._links[REL_NEW_SERIES]);
+                let urlNewSeries = $scope.fonds._links[REL_NEW_SERIES].href;
+                console.log("Create series with following address " + urlNewSeries);
                 $http({
-                    url: $scope.fonds._links[REL_NEW_SERIES].href,
+                    url: urlNewSeries,
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/vnd.noark5+json',
@@ -226,20 +235,20 @@ app.controller('ArkivarController',
                     data: {
                         tittel: $scope.newTitleForSeries,
                         beskrivelse: $scope.newDescriptionForSeries,
-                        dokumentmedium: $scope.selectedDocumentMediumNewSeries,
                         arkivdelstatus: "Opprettet"
                     },
                 }).then(function successCallback(response) {
-                    console.log("POST on series data returned= " + JSON.stringify(response.data));
+                    console.log("POST on series data returned= " +
+                        JSON.stringify(response.data));
                     $scope.doDismissNewSeriesModal();
-                    // Update the fondsCreator object so fields in GUI are changed
+                    // Update the series object so fields in GUI are changed
                     $scope.series = response.data;
                     // Pick up and make a note of the ETAG so we can update the object
                     $scope.seriesETag = response.headers('eTag');
-                    $scope.seriesETag = '"' + $scope.seriesETag + '"';
-                    console.log("Etag after post on series is = " + $scope.seriesETag);
+                    console.log("Etag after POST on series is = " + $scope.seriesETag);
+                    $scope.reloadFonds();
                 }, function errorCallback(request) {
-                    console.log("POST request (new FondsCreator) failed = " + JSON.stringify(request));
+                    console.log("POST request (new Series) failed = " + JSON.stringify(request));
                 });
             };
 
@@ -275,7 +284,6 @@ app.controller('ArkivarController',
                     $scope.fondsList.push($scope.fonds);
                     // Pick up and make a note of the ETAG so we can update the object
                     $scope.fondsETag = response.headers('eTag');
-                    $scope.fondsETag = '"' + $scope.fondsETag + '"';
                 }, function errorCallback(request) {
                     console.log("POST request (new FondsCreator) failed = " + JSON.stringify(request));
                 })
@@ -302,7 +310,6 @@ app.controller('ArkivarController',
                 $scope.showFondsBreadcrumb = false;
                 $scope.showFondsCreatorBreadcrumb = false;
                 $scope.showSeriesBreadcrumb = false;
-                pageLoad();
             };
 
             $scope.doShowFondsCard = function () {
@@ -418,51 +425,108 @@ app.controller('ArkivarController',
                 }).then(function successCallback(response) {
                     $scope.fondsCreator = response.data;
                     $scope.fondsCreatorETag = response.headers('eTag');
-                    console.log("Retrieved the following fondsCreator " + JSON.stringify($scope.fondsCreator));
-                    console.log("The ETAG header for the fondsCreator is " + $scope.fondsCreatorETag);
+                    console.log("Retrieved the following fondsCreator " +
+                        JSON.stringify($scope.fondsCreator));
+                    console.log("The ETAG header for the fondsCreator is " +
+                        $scope.fondsCreatorETag);
                 });
             };
 
             $scope.getListFondsCreator = function () {
-                $http({
-                    method: 'GET',
-                    url: $scope.fonds._links[REL_FONDS_CREATOR].href,
-                    headers: {'Authorization': $scope.token}
-                }).then(function successCallback(response) {
-                    $scope.fondsCreatorList = response.data.results;
-                    console.log("Retrieved the following fondsCreatorList " + JSON.stringify($scope.fondsCreatorList));
-                });
+                if (REL_FONDS_CREATOR in $scope.fonds._links) {
+                    $http({
+                        method: 'GET',
+                        url: $scope.fonds._links[REL_FONDS_CREATOR].href,
+                        headers: {'Authorization': $scope.token}
+                    }).then(function successCallback(response) {
+                        $scope.fondsCreatorList = response.data.results;
+                        console.log("Retrieved the following fondsCreatorList " +
+                            JSON.stringify($scope.fondsCreatorList));
+                    });
+                } else {
+                    console.log("Fonds " + JSON.stringify($scope.fonds)
+                        + "has no child " + REL_FONDS_CREATOR);
+                }
             };
 
             $scope.getSeriesList = function () {
-                $http({
-                    method: 'GET',
-                    url: $scope.fonds._links[REL_SERIES].href,
-                    headers: {'Authorization': $scope.token}
-                }).then(function successCallback(response) {
-                    $scope.seriesList = response.data.results;
-                    console.log("Retrieved the following seriesList " + JSON.stringify($scope.seriesList));
-                });
+                if (REL_SERIES in $scope.fonds._links) {
+                    $http({
+                        method: 'GET',
+                        url: $scope.fonds._links[REL_SERIES].href,
+                        headers: {'Authorization': $scope.token}
+                    }).then(function successCallback(response) {
+                        $scope.seriesList = response.data.results;
+                        console.log("Retrieved the following seriesList " +
+                            JSON.stringify($scope.seriesList));
+                    });
+                } else {
+                    console.log("Fonds " + JSON.stringify($scope.fonds)
+                        + " has no child " + REL_SERIES);
+                }
             };
 
             $scope.doLogout = function () {
-                console.log("Attempting logout on [" + $scope.hrefLogout + "]. using token [" +
+                console.log("Attempting logout on [" + $scope.oidc[LOGOUT_ENDPOINT].href + "]. using token [" +
                     $scope.token + "]");
-                $http({
-                    method: 'GET',
-                    url: $scope.hrefLogout,
-                    headers: {'Authorization': $scope.token}
-                }).then(function successCallback(response) {
-                    $scope.token = "";
-                    console.log("GET to doLogout [" + $scope.hrefLogout +
-                        "] returned " + JSON.stringify(response));
-                    changeLocation($scope, "login.html", false);
-                }, function errorCallback(response) {
-                    alert("Problemer med å logge ut. Du kan se bort fra denne meldingen!");
-                    console.log("GET urlForLogout[" + $scope.hrefLogout +
-                        "] returned " + JSON.stringify(response));
-                });
+
+                (async () => {
+                    try {
+                        await loginService.doLogout(
+                            $scope.oidc[LOGOUT_ENDPOINT].href);
+                    } catch (error) {
+                        console.log(error.message);
+                    }
+                })();
+                changeLocation($scope, loginPage, false);
             };
+
+            /**
+             * function reloadFonds
+             *
+             * There is a requirement to reload the fonds object in response to _links that
+             * will be added when the first series or the first fondsCreator object is added
+             */
+            $scope.reloadFonds = function () {
+                (async () => {
+                    try {
+                        $scope.fonds = await nikitaService.getObject(
+                            $scope.fonds._links[REL_SELF].href, $scope.token);
+                        $scope.$apply($scope.fondsList = $scope.fonds);
+                    } catch (error) {
+                        console.log(error.message);
+                    }
+                })();
+            };
+
+            /**
+             * function checkToken
+             *
+             * Check to see if the token is still valid. If not redirect to
+             * login page.
+             */
+            function checkToken() {
+                (async () => {
+                    try {
+
+                        if ($scope.token !== undefined) {
+                            let values = $scope.token.split(" ");
+                            if (values.length === 2) {
+                                let token = values[1];
+                                let changeToLogin = await loginService.doCheckToken(
+                                    $scope.oidc[CHECK_TOKEN_ENDPOINT], token);
+                                if (changeToLogin === false) {
+                                    changeLocation($scope, loginPage, true);
+                                }
+                            } else {
+                                changeLocation($scope, loginPage, true);
+                            }
+                        }
+                    } catch (error) {
+                        console.log(error.message);
+                    }
+                })();
+            }
         }
     ])
 ;

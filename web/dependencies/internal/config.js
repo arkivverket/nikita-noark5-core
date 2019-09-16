@@ -8,6 +8,7 @@ var baseUrl = 'http://localhost:8092/noark5v5/';
 console.log("Setting nikita app_url: " + baseUrl);
 var recordsManagerPage = 'arkivar.html';
 var caseHandlerPage = 'saksbehandler.html';
+var loginPage = 'login.html';
 var oauthClientId = "nikita-client";
 
 /*
@@ -172,7 +173,15 @@ var SetUserTokenInfo = function (t) {
 };
 
 var GetUserTokenInfo = function () {
-    return localStorage.getItem("tokenInfos");
+    return localStorage.getItem("tokenInfo");
+};
+var SetOIDCInfo = function (t) {
+    localStorage.setItem("oidcInfo", JSON.stringify(t));
+    console.log("Adding oidcInfo " + t + " to local storage");
+};
+
+var GetOIDCInfo = function () {
+    return JSON.parse(localStorage.getItem("oidcInfo"));
 };
 
 var GetBaseURLForODataSearch = function () {
@@ -429,7 +438,7 @@ var GetLinkToGetRegistryEntry = function () {
 
 var changeLocation = function ($scope, url, forceReload) {
     $scope = $scope || angular.element(document).scope();
-    console.log("URL" + url);
+    console.log("Change location to URL" + url);
     if (forceReload || $scope.$$phase) {
         window.location = url;
     }

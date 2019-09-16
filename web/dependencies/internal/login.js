@@ -44,6 +44,7 @@ var login = app.controller('LoginController',
             (async () => {
                 try {
                     $scope.oidc = await loginService.getLoginHrefViaOIDC();
+                    SetOIDCInfo($scope.oidc);
                 } catch (error) {
                     $scope.$apply($scope.error = true);
                 }

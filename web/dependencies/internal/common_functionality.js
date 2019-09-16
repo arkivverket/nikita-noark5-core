@@ -3,59 +3,78 @@
  */
 let app = angular.module('nikita', ['ngFileUpload'])
     .service('loginService', function () {
+        /**
+         * Using the baseUrl (manually set in config.js), get the OIDC details of the server
+         */
+        this.getLoginHrefViaOIDC = async function () {
+            let response = await fetch(baseUrl);
+            if (typeof response !== undefined) {
+                let data = await response.json();
+                response = await fetch(data._links[REL_OIDC].href);
+                data = await response.json();
+                console.log("OIDC Data " + JSON.stringify(data));
+                return data;
+            }
+        },
             /**
-             * Using the baseUrl (manually set in config.js), get the OIDC details of the server
+             * Do the actual login to nikita
              */
-            this.getLoginHrefViaOIDC = async function () {
-                let response = await fetch(baseUrl);
-                if (typeof response !== 'undefined') {
+            this.doLogin = async function (url, userId, password) {
+                let queryString =
+                    "?grant_type=password&" +
+                    "username=" + encodeURIComponent(userId) + "&" +
+                    "password=" + encodeURIComponent(password) + "&" +
+                    "client_id=" + encodeURIComponent(oauthClientId);
+
+                console.log("Attempting to login using [" + url + "], " + "Username [" + userId + "]");
+                let response = await fetch(url + queryString, {
+                    method: 'POST',
+                    headers: {
+                        "Content-type": "application/x-www-form-urlencoded; charset=utf-8",
+                        'Authorization': 'Basic ' + btoa('nikita-client:secret')
+                    }
+                });
+                if (typeof response !== undefined) {
                     let data = await response.json();
-                    response = await fetch(data._links[REL_OIDC].href);
-                    data = await response.json();
-                    console.log("OIDC Data " + JSON.stringify(data));
                     return data;
                 }
             },
-                /**
-                 * Do the actual login to nikita
-                 */
-                this.doLogin = async function (url, userId, password) {
-                    let queryString =
-                        "?grant_type=password&" +
-                        "username=" + encodeURIComponent(userId) + "&" +
-                        "password=" + encodeURIComponent(password) + "&" +
-                        "client_id=" + encodeURIComponent(oauthClientId);
-
-                    console.log("Attempting to login using [" + url + "], " + "Username [" + userId + "]");
-                    let response = await fetch(url + queryString, {
-                        method: 'POST',
-                        headers: {
-                            "Content-type": "application/x-www-form-urlencoded; charset=utf-8",
-                            'Authorization': 'Basic ' + btoa('nikita-client:secret')
-                        }
-                    });
-                    if (typeof response !== 'undefined') {
-                        let data = await response.json();
-                        return data;
+            /**
+             * Do the actual login to nikita
+             */
+            this.doLogout = async function (url, token) {
+                console.log("Attempting logout on [" + url + "]. using token [" + token + "]");
+                let response = await fetch(url + "?token=" + token, {
+                    headers: {
+                        'Authorization': token
                     }
+                });
+                if (typeof response !== undefined) {
+                    let data = await response.json();
+                    return data;
                 }
-        },
-        /**
-         * Do the actual login to nikita
-         */
-        this.doLogout = async function (url, token) {
-
-            console.log("Attempting logout on [" + url + "]. using token [" + token + "]");
-            let response = await fetch(url + queryString, {
-                headers: {
-                    'Authorization': token
-                }
-            });
-            if (typeof response !== 'undefined') {
-                let data = await response.json();
-                return data;
+            },
+            /**
+             * Check tokens validity
+             *
+             * 401 is returned for unauthorized,
+             * 200 if token is authorised along with a payload
+             *
+             * Assuming 200 means token is OK
+             */
+            this.doCheckToken = async function (url, token) {
+                let tokenValid = false;
+                console.log("Checking validity of token [" + token + "]. using [" + url + "]");
+                await fetch(url + "?token=" + token).then(function (response) {
+                    if (response.status === 200) {
+                        tokenValid = true;
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+                return tokenValid;
             }
-        })
+    })
     .service('nikitaService', function () {
         /**
          * Using the baseUrl (manually set in config.js), get the root of arkivstruktur.
@@ -80,8 +99,16 @@ let app = angular.module('nikita', ['ngFileUpload'])
          * Using the given URL (rel=https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/"),
          * get the list of fonds
          */
-        this.getFondsList = async function (urlFonds, token) {
-            let response = await fetch(urlFonds, {
+        this.getFondsList = async function (urlFondsList, token) {
+            let response = await fetch(urlFondsList, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+            return await response.json();
+        };
+        this.getObject = async function (url, token) {
+            let response = await fetch(url, {
                 headers: {
                     'Authorization': token
                 }
