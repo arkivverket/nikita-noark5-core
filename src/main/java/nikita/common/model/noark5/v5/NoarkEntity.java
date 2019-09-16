@@ -202,7 +202,6 @@ public class NoarkEntity
                 .appendSuper(super.hashCode())
                 .append(systemId)
                 .append(ownedBy)
-                .append(version)
                 .toHashCode();
     }
 
@@ -214,7 +213,6 @@ public class NoarkEntity
         return new CompareToBuilder()
                 .append(this.systemId, otherEntity.systemId)
                 .append(ownedBy, otherEntity.getOwnedBy())
-                .append(version, otherEntity.getVersion())
                 .toComparison();
     }
 
@@ -234,7 +232,6 @@ public class NoarkEntity
                 .appendSuper(super.equals(other))
                 .append(systemId, rhs.getSystemId())
                 .append(ownedBy, rhs.getOwnedBy())
-                .append(version, rhs.getVersion())
                 .isEquals();
     }
 
