@@ -34,6 +34,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -91,6 +93,9 @@ public class RegistryEntryService
             AdministrativeUnit administrativeUnit =
                     getAdministrativeUnitIfMemberOrThrow(registryEntry);
 
+            // TODO. Pick up ZoneId value from spring configuration file
+            int year = Year.now(ZoneId.of("Europe/Oslo")).getValue();
+            registryEntry.setRecordYear(year);
             registryEntry.setRecordSequenceNumber(
                     numberGeneratorService.getNextRecordSequenceNumber(administrativeUnit));
         }
