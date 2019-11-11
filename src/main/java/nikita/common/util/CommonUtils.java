@@ -1675,6 +1675,10 @@ DateTimeFormatter dateFormatter =
                         jgen.writeStringField(RECORD_ARCHIVED_BY,
                                 record.getArchivedBy());
                     }
+                    if (record.getRecordId() != null) {
+                        jgen.writeStringField(RECORD_ID,
+                                record.getRecordId());
+                    }
                     if (record.getTitle() != null) {
                         jgen.writeStringField(TITLE, record.getTitle());
                     }
