@@ -16,6 +16,15 @@
 var login = app.controller('LoginController',
     ['$scope', '$http', 'loginService',
         function ($scope, $http, loginService) {
+
+            // Grab a copy of the authentication token
+            $scope.token = GetUserToken();
+            $scope.oidc = GetOIDCInfo();
+
+            if ($scope.oidc === undefined) {
+                console.log("Missing OIDC information. Missing token functionality");
+            }
+
             $scope.errorMessage = MSG_NIKITA_DOWN;
             $scope.error = false;
 

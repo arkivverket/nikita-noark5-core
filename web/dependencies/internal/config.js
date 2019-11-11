@@ -21,8 +21,9 @@ var REL_NEW_DOCUMENT_DESCRIPTION = 'https://rel.arkivverket.no/noark5/v5/api/ark
 var REL_DOCUMENT_DESCRIPTION = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/dokumentbeskrivelse/';
 var REL_DOCUMENT_OBJECT = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/dokumentobjekt/';
 var REL_NEW_DOCUMENT_OBJECT = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-dokumentobjekt/';
-var REL_NEW_CORRESPONDENCE_PART_PERSON = 'https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-korrespondansepartperson/';
-var REL_CORRESPONDENCE_PART_PERSON = 'https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepartperson/';
+var REL_NEW_CORRESPONDENCE_PART_PERSON = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-korrespondansepartperson/';
+var REL_CORRESPONDENCE_PART = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/korrespondansepart/';
+var REL_CORRESPONDENCE_PART_PERSON = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/korrespondansepartperson/';
 var REL_CASE_FILE = 'https://rel.arkivverket.no/noark5/v5/api/sakarkiv/saksmappe/';
 var REL_NEW_CASE_FILE = 'https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-saksmappe/';
 var REL_DOCUMENT_FILE = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/fil/';
@@ -31,7 +32,6 @@ var REL_FONDS_STRUCTURE = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktu
 var REL_FONDS_STRUCTURE_FONDS = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/';
 var REL_FONDS_STRUCTURE_NEW_FONDS = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkiv/';
 var REL_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivskaper/";
-var REL_SERIES = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/";
 var REL_NEW_SERIES = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivdel/";
 var REL_NEW_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivskaper/";
 var REL_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivskaper/";
@@ -107,11 +107,14 @@ var fondsStatusList = [
     {id: 'A', value: 'Avsluttet'}];
 
 var caseFileStatusList = [
-  {id: 'OS', value: 'Opprettet av saksbehandler'},
-  {id: 'OA', value: 'Opprettet av arkivtjenesten'},
-    {id: 'UB', value: 'Under behandling'},
-    {id: 'U', value: 'Utgår'},
-    {id: 'A', value: 'Avsluttet'}];
+    {"id": "B", "value": "Under behandling"},
+    {"id": "A", "value": "Avsluttet"},
+    {"id": "U", "value": "Utgår"},
+    {"id": "R", "value": "Opprettet av saksbehandler"},
+    {"id": "S", "value": "Avsluttet av saksbehandler"},
+    {"id": "P", "value": "Unntatt prosesstyring"},
+    {"id": "F", "value": "Ferdig fra saksbehandler"}
+];
 
 var seriesStatusList = [
     {id: 'O', value: 'Opprettet'},

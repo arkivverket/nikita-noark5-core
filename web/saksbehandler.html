@@ -140,7 +140,7 @@
                   {{caseFile.mappeID}}
                 </td>
                 <td>
-                  {{caseFile.saksstatus}}
+                  {{caseFile.saksstatus.kodenavn | limitTo:28}}
                 </td>
                 <td>
                   {{caseFile.opprettetDato | date:'yyyy-MM-dd'}}
@@ -194,7 +194,7 @@
                   {{ registryEntry.journalposttype }}
                 </td>
                 <td>
-                  {{ registryEntry.journaldato }}
+                  {{ registryEntry.journaldato | date: 'dd-mm-yyyy'}}
                 </td>
               </tr>
               </tbody>
@@ -652,23 +652,23 @@
               -->
             </div>
           </div>
-
-          <div class="row">
-            <ul class="nav nav-tabs">
-              <li class="active dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Korrespondansepart
-                  <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Ny korrespondansepart (person)</a></li>
-                  <li><a href="#">Ny korrespondansepart (intern)</a></li>
-                  <li><a href="#">Ny korrespondansepart (enhet)</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Merknader</a></li>
-              <li><a href="#">Menu 3</a></li>
-            </ul>
-          </div>
-
+          <!--
+                    <div class="row" >
+                      <ul class="nav nav-tabs">
+                        <li class="active dropdown">
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Korrespondansepart
+                            <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                            <li><a href="#">Ny korrespondansepart (person)</a></li>
+                            <li><a href="#">Ny korrespondansepart (intern)</a></li>
+                            <li><a href="#">Ny korrespondansepart (enhet)</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="#">Merknader</a></li>
+                        <li><a href="#">Menu 3</a></li>
+                      </ul>
+                    </div>
+          -->
           <!-- sistEndretDato sistEndretAv. Note these fields are not supported yet!
                Note. These fields are only shown if sistEndretDato has a value
           -->
@@ -1325,6 +1325,13 @@
             <div class="col-1"></div>
             <div class="col-10">
               <label class="control-label" for="nyDokumentmedium">Dokumentmedium:</label>
+              <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
+                     disabled="true" id="nyDokumentmedium"
+                     title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.'"
+                     type="text"
+                     value="Elektronisk arkiv"/>
+              <!--
+              <label class="control-label" for="nyDokumentmedium">Dokumentmedium:</label>
               <select id="nyDokumentmedium" class="form-control form-control-lg rounded-1"
                       ng-model="selectedDocumentMediumNewCaseFile"
                       data-toggle="tooltip" data-placement="top"
@@ -1333,6 +1340,8 @@
                         ng-repeat="documentMedium in documentMediumList"
                         value="{{documentMedium.value}}">{{documentMedium.value}}
                 </option>
+
+                -->
               </select>
             </div>
             <div class="col-1"></div>
@@ -1359,15 +1368,11 @@
             <div class="col-1"></div>
             <div class="col-10">
               <label class="control-label" for="nySaksstatus">Saksstatus:</label>
-              <select id="nySaksstatus" class="form-control form-control-lg rounded-1"
-                      ng-model="newCaseStatusForCaseFile"
-                      data-toggle="tooltip" data-placement="top"
-                      title="Status på saken.">
-                <option ng-selected="{{caseFileStatus.value == newCaseStatusForCaseFile}}"
-                        ng-repeat="caseFileStatus in caseFileStatusList"
-                        value="{{caseFileStatus.value}}">{{caseFileStatus.value}}
-                </option>
-              </select>
+              <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
+                     disabled="true" id="nySaksstatus"
+                     title="Status på saken. I utgangspunktet er det 'Opprettet av saksbehandler'"
+                     type="text"
+                     value="Opprettet av saksbehandler"/>
             </div>
             <div class="col-1"></div>
           </div>
@@ -1377,9 +1382,8 @@
               <label class="control-label" for="nySaksansvarlig">Saksansvarlig</label>
               <input id="nySaksansvarlig" class="form-control form-control-lg rounded-1"
                      data-toggle="tooltip" data-placement="top"
-                     ng-model="newCaseResponsibleForCaseFile"
-                     title="Hvem som er ansvarlig for saken.">
-              </textarea>
+                     disabled="true" ng-model="newCaseResponsibleForCaseFile"
+                     title="Hvem som er ansvarlig for saken."/>
             </div>
             <div class="col-1"></div>
           </div>
@@ -1445,6 +1449,13 @@
           <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
+              <label class="control-label" for="nyDokumentmediumJournalpost">Dokumentmedium:</label>
+              <input class="form-control form-control-lg rounded-1" data-placement="top" data-toggle="tooltip"
+                     disabled="true" id="nyDokumentmediumJournalpost"
+                     title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.'"
+                     type="text"
+                     value="Elektronisk arkiv"/>
+              <!--
               <label class="control-label" for="nyDokumentmedium">Dokumentmedium:</label>
               <select id="nyDokumentmediumJournalpost" class="form-control form-control-lg rounded-1"
                       ng-model="selectedDocumentMediumNewRegistryEntry"
@@ -1455,6 +1466,7 @@
                         value="{{documentMedium.value}}">{{documentMedium.value}}
                 </option>
               </select>
+              -->
             </div>
             <div class="col-1"></div>
           </div>
@@ -1565,7 +1577,7 @@
               <select id="newAssociatedWithRecordAs" class="form-control form-control-lg rounded-1"
                       ng-model="selectedAssociatedWithRecordAs"
                       data-toggle="tooltip" data-placement="top"
-                      title="Status på saken.">
+                      title="Dokumentet kan enten være tilknyttet som Hoveddokument eller Vedlegg">
                 <option ng-selected="{{associatedWithRecordAs.value == selectedAssociatedWithRecordAs}}"
                         ng-repeat="associatedWithRecordAs in associatedWithRecordAsList"
                         value="{{associatedWithRecordAs.value}}">{{associatedWithRecordAs.value}}
@@ -1812,8 +1824,8 @@
                                    class="form-control form-control-lg rounded-1"
                                    type="text"
                                    data-toggle="tooltip" data-placement="top"
-                                   ng-model="newCorrespondencepartPerson.postadresse.adresselinje1"
-                                   title=">Adresselinje nummer 1"/>
+                                   ng-model="newCorrespondencepartPerson.postadresse.adresselinje3"
+                                   title=">Adresselinje nummer 3"/>
                           </div>
                           <div class="col-1"></div>
                         </div>

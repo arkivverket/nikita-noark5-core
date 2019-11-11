@@ -453,23 +453,6 @@ app.controller('ArkivarController',
                 }
             };
 
-            $scope.getSeriesList = function () {
-                if (REL_SERIES in $scope.fonds._links) {
-                    $http({
-                        method: 'GET',
-                        url: $scope.fonds._links[REL_SERIES].href,
-                        headers: {'Authorization': $scope.token}
-                    }).then(function successCallback(response) {
-                        $scope.seriesList = response.data.results;
-                        console.log("Retrieved the following seriesList " +
-                            JSON.stringify($scope.seriesList));
-                    });
-                } else {
-                    console.log("Fonds " + JSON.stringify($scope.fonds)
-                        + " has no child " + REL_SERIES);
-                }
-            };
-
             $scope.doLogout = function () {
                 console.log("Attempting logout on [" + $scope.oidc[LOGOUT_ENDPOINT].href + "]. using token [" +
                     $scope.token + "]");

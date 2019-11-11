@@ -94,6 +94,43 @@ let app = angular.module('nikita', ['ngFileUpload'])
         };
 
         /**
+         * Using the baseUrl (manually set in config.js), get the root of arkivstruktur.
+         * First you use the url corresponding to the root of the application, then
+         */
+        this.getSeriesList = async function (token) {
+            let response = await fetch(baseUrl, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+
+            let fondsStructure = await this.getFondsStructureRoot(token);
+            let seriesList = await this.getObject(
+                fondsStructure._links[REL_SERIES].href, token);
+            return await seriesList;
+        };
+        /**
+         * Using the baseUrl (manually set in config.js), get the root of arkivstruktur.
+         * First you use the url corresponding to the root of the application, then
+         */
+        this.getCaseFileList = async function (token, series) {
+
+            url = series._links[REL_CASE_FILE].href;
+            console.log("curl -v " + url + " -H \"Authorization: " + token + "\"");
+
+            let response = await fetch(url, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+            let result = await response.json();
+            if (Object.keys(result).length === 0) {
+                return [];
+            }
+            return result.results;
+        };
+
+        /**
          * Using the given URL (rel=https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/"),
          * get the list of fonds
          */
@@ -105,6 +142,7 @@ let app = angular.module('nikita', ['ngFileUpload'])
             });
             return await response.json();
         };
+
         this.getObject = async function (url, token) {
             let response = await fetch(url, {
                 headers: {
