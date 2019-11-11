@@ -206,8 +206,8 @@ public class RegistryEntryHateoasController extends NoarkController {
     }
 
     // Retrieve all CorrespondencePartInternal associated with a RegistryEntry identified by systemId
-    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartperson
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepartperson/
+    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/korrespondansepartintern
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepartintenrn/
     @ApiOperation(value = "Retrieves a list of CorrespondencePartInternals associated with a RegistryEntry",
             response = CorrespondencePartInternalHateoas.class)
     @ApiResponses(value = {
