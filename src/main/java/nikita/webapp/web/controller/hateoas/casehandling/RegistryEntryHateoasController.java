@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE,
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH +
+        SLASH + REGISTRY_ENTRY,
         produces = NOARK5_V5_CONTENT_TYPE_JSON)
-
 public class RegistryEntryHateoasController extends NoarkController {
 
     private final IRegistryEntryService registryEntryService;
