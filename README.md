@@ -17,7 +17,7 @@ Read [INSTALL](docs/general/Install.md) to get started.
 
 You are encouraged to contribute. You can either hack on the code and send 
 pull requests or join us on
-[IRC](http://webchat.freenode.net?randomnick=1&channels=%23nikita&uio=d4) 
+[Freenode IRC channel #nikita](http://webchat.freenode.net?randomnick=1&channels=%23nikita&uio=d4) 
 for discussions. Feedback is greatly appreciated. The project has an open ethos 
 and welcomes all forms of feedback. The project maintains a mailing list 
 (https://lists.nuug.no/mailman/listinfo/nikita-noark) and issues can be raised 
