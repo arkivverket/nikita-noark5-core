@@ -15,7 +15,7 @@ maven-build:
   - apt-get update
   # - apt-get install mvn
   #  - apt-get install -y openjfx
-  image: openjdk:11-jdk-slim
+  image: maven:3.6.1-jdk-11
   stage: build
   script: "mvn package -B"
   artifacts:
