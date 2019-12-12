@@ -13,7 +13,7 @@ stages:
 maven-build:
   before_script:
   - apt-get update
-  - apt-get install mvn
+  # - apt-get install mvn
   #  - apt-get install -y openjfx
   image: openjdk:11-jdk-slim
   stage: build
