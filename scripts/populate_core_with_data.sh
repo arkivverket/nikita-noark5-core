@@ -36,8 +36,8 @@ echo "Token is " $authToken;
 
 
 # Setup common curl options
-contentTypeForPost+=(--header "Content-Type:application/vnd.noark5-v5+json");
-curlOpts+=( -s --header "Accept:application/vnd.noark5-v5+json" --header "'Authorization:Bearer $authToken'");
+contentTypeForPost+=(--header "Content-Type:application/vnd.noark5+json");
+curlOpts+=( -s --header "Accept:application/vnd.noark5+json" --header "'Authorization:Bearer $authToken'");
 curlPostOpts+=("${curlOpts[@]}" "${contentTypeForPost[@]}" -X POST );
 curlPutOpts+=("${curlOpts[@]}" "${contentTypeForPost[@]}" -X PUT );
 
@@ -159,7 +159,7 @@ printf "created      DocumentObject      ($systemIDCreatedDocumentObject) associ
 # Setup curl options for uploading file associated with documentObject
 # Note /dev/null means this won't work on windows, probably want to pipe the output with >> or similar approach
 # For windows, just remove  -o /dev/null and ignore output on screen
-curlPostFileOpts+=( -s  -X POST --header "Accept:application/vnd.noark5-v5+json" --header "Authorization:Bearer $authToken" --header CONTENT-Length:19610 --header Content-Type:application/vnd.oasis.opendocument.text -o /dev/null  --data-binary "@nikita_test_doc.odt");
+curlPostFileOpts+=( -s  -X POST --header "Accept:application/vnd.noark5+json" --header "Authorization:Bearer $authToken" --header CONTENT-Length:19610 --header Content-Type:application/vnd.oasis.opendocument.text -o /dev/null  --data-binary "@nikita_test_doc.odt");
 curloptsUploadFile+=("${curlPostFileOpts[@]}");
 curloptsUploadFile+=( -w "%{http_code}" 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
 echo "${curloptsUploadFile[@]} ";
@@ -298,7 +298,7 @@ printf "created      DocumentObject      ($systemIDCreatedDocumentObject) associ
 
 exit;
 
-curlGetNewEntityOpts+=( -s -S -X GET --header "Accept:application/vnd.noark5-v5+json" -b /tmp/cookie.txt -w "%{http_code} ");
+curlGetNewEntityOpts+=( -s -S -X GET --header "Accept:application/vnd.noark5+json" -b /tmp/cookie.txt -w "%{http_code} ");
 
 curloptsNewFonds+=("${curlGetNewEntityOpts[@]}" -o ./fonds-data.json );
 curloptsNewFonds+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv' )
@@ -397,33 +397,33 @@ printf "$output \n";
 #curl -i -X POST -d username=admin -d password=password -c/tmp/cookie.txt http://localhost:8092/noark5v5/doLogin
 #
 ## Get template for arkiv
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv
 ## Create an arkiv
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5-v5+json --data @fonds-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @fonds-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv
 #
 ## Get template for arkivdel using ny-arkivdel
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/f7c3077f-d40b-494a-bc77-da7b0ec8debc/ny-arkivdel
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/f7c3077f-d40b-494a-bc77-da7b0ec8debc/ny-arkivdel
 ## Create an arkivdel
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5-v5+json --data @series-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/f7c3077f-d40b-494a-bc77-da7b0ec8debc/ny-arkivdelcurl -v -s -S --header Accept:application/vnd.noark5-v5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @series-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/f7c3077f-d40b-494a-bc77-da7b0ec8debc/ny-arkivdelcurl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe
 #
 ## Get template for File using ny-mappe
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe/
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe/
 ## Create a mappe
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5-v5+json --data @file-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @file-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe
 #
 ## Get template for record using ny-registrering
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-registrering/
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-registrering/
 #
 ## Create a record
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5-v5+json --data @record-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-registrering
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @record-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-registrering
 #
 ## Get template for record using ny-dokumentbeskrivelse
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-dokumentbeskrivelse/
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-dokumentbeskrivelse/
 #
 ## Create a dokumentbeskrivelse
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5-v5+json --data @record-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/registrering/7dec239f-05d7-4e65-acb1-be562759e01d/ny-dokumentbeskrivelse
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @record-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/registrering/7dec239f-05d7-4e65-acb1-be562759e01d/ny-dokumentbeskrivelse
 #
 ## Get tempate for CaseFile using ny-saksmappe
-#curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-saksmappe/
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-saksmappe/
 ## Create a casefile
-# curl -v -s -S --header Accept:application/vnd.noark5-v5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5-v5+json --data @case-file-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-saksmappe/
+# curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @case-file-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-saksmappe/
