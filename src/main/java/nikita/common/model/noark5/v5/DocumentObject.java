@@ -28,7 +28,9 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Table(name = TABLE_DOCUMENT_OBJECT)
+@Table(name = TABLE_DOCUMENT_OBJECT,
+        indexes = {@Index(name = "filname_index",
+                columnList = "original_filename")})
 @JsonDeserialize(using = DocumentObjectDeserializer.class)
 @HateoasPacker(using = DocumentObjectHateoasHandler.class)
 @HateoasObject(using = DocumentObjectHateoas.class)
