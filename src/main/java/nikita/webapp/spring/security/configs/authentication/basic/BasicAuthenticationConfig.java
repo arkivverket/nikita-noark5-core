@@ -45,9 +45,9 @@ public class BasicAuthenticationConfig
     }
 
     @Override
-    protected void configure(HttpSecurity http)
+    protected void configure(HttpSecurity httpSecurity)
             throws Exception { // @formatter:off
-        http
+        httpSecurity
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
