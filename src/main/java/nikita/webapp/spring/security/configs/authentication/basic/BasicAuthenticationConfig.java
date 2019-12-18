@@ -50,7 +50,6 @@ public class BasicAuthenticationConfig
         httpSecurity
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
                 .antMatchers("*").permitAll()
                 // GET [api]/metadata/**, public to read basic structure
                 .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH).permitAll()
