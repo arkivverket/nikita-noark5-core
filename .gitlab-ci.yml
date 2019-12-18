@@ -54,10 +54,11 @@ dast:
   allow_failure: true
   script:
   - mkdir /zap/wrk/
+  - /zap/zap-baseline.py -h || true
   - /zap/zap-baseline.py -w gl-dast-report.md -t $website || true
   - cp /zap/wrk/gl-dast-report.md .
   artifacts:
-    paths: [gl-dast-report.json]
+    paths: [gl-dast-report.md]
 
 #sast:
 #  image: docker:stable
