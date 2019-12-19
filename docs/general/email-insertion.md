@@ -12,12 +12,15 @@ IMAP account, and procmail to store the emails in a mbox folder, and
 import it using import-email.  This will require storing incoming
 email in a temporary mbox file.
 
-Another setup proposal is to let fetchmail call import-email --mda,
-which will read the incoming email from stdin and store it in the
-archive.
+Another setup proposal is to let fetchmail call import-email --mda
+directly, which will read the incoming email from stdin and store it
+in the archive.
 
 Using import-email will create one file (or case file) per email
 thread.
+
+Using fetchmail to fetch from IMAP server
+-----------------------------------------
 
 This script instructs fetchmail to download email via IMAP and pass it
 on to import-email.  The password is in the fetchmailrc file.  The
@@ -46,10 +49,22 @@ poll imap.example.com with proto IMAP
   port 993
   user imapuser
   pass secretpwd
-  mda "/usr/bin/import-email --mda --storageurl $storageurl
+  mda "/usr/bin/import-email --mda --storageurl $storageurl"
   fetchall
   ssl
 EOF
 
 fetchmail -f $fetchmailrc
 ```
+
+
+Using a .forward file
+---------------------
+
+This script set up a .forward file using import-email to insert emails
+into the archive.
+
+#!/bin/sh
+cat > ~/.forward <<EOF
+|"/usr/bin/import-email --mda --storageurl $storageurl"
+EOF
