@@ -30,6 +30,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@Table(indexes = @Index(name = "index_owned_by",
+        columnList = "owned_by"))
 public class NoarkEntity
         implements INikitaEntity, Comparable<NoarkEntity> {
 

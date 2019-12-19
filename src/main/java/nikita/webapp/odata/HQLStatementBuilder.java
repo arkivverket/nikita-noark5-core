@@ -80,7 +80,7 @@ public class HQLStatementBuilder {
     public void addSelect(String entity) {
         select.append(" from ");
         select.append(entity);
-        select.append("'");
+        select.append(" where ");
         logger.info(select.toString());
     }
 
@@ -159,10 +159,15 @@ public class HQLStatementBuilder {
         // Coding with 'and'. Will figure out how to handle this properly later
         // We always start limiting based on logged in person, so we have to
         // add an 'and' here.
-        for (String where : whereList) {
-            hqlStatement.append(" and ");
-            hqlStatement.append(where);
+
+        for (int i = 0; i < whereList.size(); i++) {
+            if (i != 0) {
+                hqlStatement.append(" and ");
+            }
+            hqlStatement.append(whereList.get(i));
+            hqlStatement.append(" ");
         }
+
 
         hqlStatement.append(" ");
         Query query = session.createQuery(hqlStatement.toString());

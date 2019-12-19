@@ -69,9 +69,9 @@ public class ODataRedirectFilter
                 map.containsKey(DOLLAR_ORDER_BY)) ||
                 (map.containsKey(DOLLAR_ID) &&
                         urlString.contains(DOLLAR_REF_URL))) {
+            String urlVal = sanitiseUrlForOData(urlString);
             RequestDispatcher requestDispatcher = request.
-                    getRequestDispatcher(
-                            sanitiseUrlForOData(urlString));
+                    getRequestDispatcher(urlVal);
             if (requestDispatcher == null) {
                 String message = "Unable to forward request [" +
                         request.getRequestURL() + "/" +
@@ -118,8 +118,10 @@ public class ODataRedirectFilter
         @Override
         public String[] getParameterValues(String paramName) {
             String[] values = super.getParameterValues(paramName);
-            for (int index = 0; index < values.length; index++) {
-                values[index] = sanitiseUrlForOData(values[index]);
+            if (values != null) {
+                for (int index = 0; index < values.length; index++) {
+                    values[index] = sanitiseUrlForOData(values[index]);
+                }
             }
             return values;
         }

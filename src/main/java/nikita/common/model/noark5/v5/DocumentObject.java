@@ -29,8 +29,11 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_DOCUMENT_OBJECT,
-        indexes = {@Index(name = "filname_index",
-                columnList = "original_filename")})
+        indexes = {
+                @Index(name = "index_filname",
+                        columnList = "original_filename"),
+                @Index(name = "index_owned_by",
+                        columnList = "owned_by")})
 @JsonDeserialize(using = DocumentObjectDeserializer.class)
 @HateoasPacker(using = DocumentObjectHateoasHandler.class)
 @HateoasObject(using = DocumentObjectHateoas.class)

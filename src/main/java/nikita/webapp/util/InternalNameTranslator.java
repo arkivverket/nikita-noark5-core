@@ -2,6 +2,7 @@ package nikita.webapp.util;
 
 import org.springframework.stereotype.Component;
 
+import static nikita.common.config.Constants.DM_OWNED_BY;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.addNorToEnglishNameMap;
 
@@ -30,6 +31,10 @@ public class InternalNameTranslator {
      * domain model.
      */
     public void populateTranslatedNames() {
+
+        addNorToEnglishNameMap
+                ("eier", "owned_by", DM_OWNED_BY);
+
 
         // Add entity name mappings
         addNorToEnglishNameMap

@@ -54,7 +54,7 @@ public class NikitaODataToHQLWalker
 
     @Override
     public void processEntityBase(String entity) {
-        hqlStatement.addSelect(getNameObject(entity));
+        hqlStatement.addSelect(getNameObject(entity) + " x ");
     }
 
     /**
@@ -110,7 +110,7 @@ public class NikitaODataToHQLWalker
     @Override
     public void processComparatorCommand(String attribute, String comparator,
                                          String value) {
-        hqlStatement.addEqualsWhere(getNameDatabase(attribute), comparator,
+        hqlStatement.addEqualsWhere("x." + getNameObject(attribute), comparator,
                 value);
     }
 

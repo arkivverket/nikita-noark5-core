@@ -53,7 +53,7 @@ import static nikita.common.config.ODataConstants.*;
  * very immature.
  */
 @RestController
-@RequestMapping(value = "odata")
+@RequestMapping(value = "/odata")
 public class ODataController {
 
     private final Logger logger =

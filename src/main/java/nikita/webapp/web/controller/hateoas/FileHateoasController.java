@@ -319,7 +319,7 @@ public class FileHateoasController
                     value = "Class",
                     required = true)
             @RequestBody Class klass) throws NikitaException {
-        // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
+        // applicationEventPublisher.publishEvent(new AfterNoa  rkEntityCreatedEvent(this, ));
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 

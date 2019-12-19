@@ -3,6 +3,7 @@ package nikita.webapp.service.impl.odata;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.odata.NikitaODataToHQLWalker;
 import nikita.webapp.odata.NikitaObjectWorker;
@@ -33,6 +34,8 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +45,6 @@ import static nikita.common.config.Constants.REGEX_UUID;
 import static nikita.common.config.ODataConstants.DOLLAR_ID;
 import static nikita.common.config.ODataConstants.ODATA_DELETE_REF;
 import static org.antlr.v4.runtime.CharStreams.fromString;
-import static org.apache.commons.lang3.CharEncoding.UTF_8;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -54,7 +56,7 @@ public class ODataService
     private final Logger logger =
             LoggerFactory.getLogger(ODataController.class);
 
-    private final Pattern pairRegex = Pattern.compile(REGEX_UUID);
+    private final Pattern pairRegex = Pattern.compile("\\/" + REGEX_UUID + "\\/");
     private final EntityManager entityManager;
     private final AddressComponent address;
     private ODataRefHandler refHandler;
@@ -84,8 +86,10 @@ public class ODataService
     @Override
     public ResponseEntity<HateoasNoarkObject> processODataQueryGet
             (HttpServletRequest request) throws Exception {
-        return packAsHateoasObject(convertODataToHQL(request,
-                null).getResultList());
+        List<NoarkEntity> listResults = convertODataToHQL(request,
+                null).getResultList();
+
+        return packAsHateoasObject(listResults);
     }
 
     // Internal helper methods
@@ -111,10 +115,13 @@ public class ODataService
             handler.setPublicAddress(address.getAddress());
             handler.setContextPath(address.getContextPath());
         } else {
-            noarkObject = new HateoasNoarkObject();
+            noarkObject =
+                    new HateoasNoarkObject(new ArrayList<INikitaEntity>(),
+                            "unknown");
             handler = new HateoasHandler();
+            handler.setPublicAddress(address.getAddress());
+            handler.setContextPath(address.getContextPath());
         }
-
         handler.addLinks(noarkObject, new Authorisation());
         return ResponseEntity.status(OK)
                 .body(noarkObject);
@@ -138,10 +145,11 @@ public class ODataService
 
         StringBuffer originalRequest = request.getRequestURL();
         originalRequest.append("?");
-        originalRequest.append(decode(request.getQueryString(), UTF_8));
+        originalRequest.append(decode(request.getQueryString(), StandardCharsets.UTF_8));
         // Add owned by to the query as first parameter
         addOwnedBy(originalRequest);
-        int start = originalRequest.indexOf("/odata/");
+        int start = originalRequest.indexOf("hateoas-api/");
+        start += "hateoas-api/".length();
         String odataCommand = originalRequest.substring(start);
         return convertODataToHQL(odataCommand, dmlStatementType);
     }
@@ -149,7 +157,7 @@ public class ODataService
     private void addOwnedBy(StringBuffer originalRequest) {
         int start =
                 originalRequest.lastIndexOf("$filter=") + "$filter=".length();
-        originalRequest.insert(start, " owned_by eq " + getUser() + " and ");
+        originalRequest.insert(start, " eier eq '" + getUser() + "' and ");
     }
 
     @Override
@@ -168,7 +176,7 @@ public class ODataService
             (HttpServletRequest request) throws UnsupportedEncodingException {
 
         String url = decode(((ODataRedirectFilter.ODataFilteredRequest) request).
-                getURLSanitised(), UTF_8);
+                getURLSanitised(), StandardCharsets.UTF_8);
         String queryString = request.getQueryString();
         logger.info("Request has following query string: " + queryString);
         logger.info("Request has following URL: " + url);
@@ -187,7 +195,7 @@ public class ODataService
             (HttpServletRequest request) throws UnsupportedEncodingException {
 
         String url = decode(((ODataRedirectFilter.ODataFilteredRequest) request).
-                getURLSanitised(), UTF_8);
+                getURLSanitised(), StandardCharsets.UTF_8);
         String queryString = request.getQueryString();
         logger.info("Request has following query string: " + queryString);
         logger.info("Request has following URL: " + url);
@@ -215,7 +223,12 @@ public class ODataService
         if (matcher.find()) {
             hqlWalker.setParentIdPrimaryKey(matcher.group());
         }
-        return hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
+
+        Query query = hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
+        String queryS = query.getQueryString();
+        logger.info(queryS);
+        return query;
+        //return hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
     }
 
     public Ref retrieveRefValues(String request) {

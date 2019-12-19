@@ -236,7 +236,9 @@ public final class CommonUtils {
          * @return the sanitised URL as a String
          */
         public static String sanitiseUrlForOData(String url) {
-            if (url.contains("http://") || url.contains("https://")) {
+            if (url != null &&
+                    (url.contains("http://") || url.contains("https" +
+                            "://"))) {
                 String[] split = url.split(HATEOAS_API_PATH);
                 if (split != null && split.length != 2) {
                     throw new NikitaMalformedInputDataException(
