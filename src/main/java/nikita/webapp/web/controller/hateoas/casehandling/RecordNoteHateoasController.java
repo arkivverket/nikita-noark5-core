@@ -135,7 +135,7 @@ public class RecordNoteHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PutMapping(value = SYSTEM_ID_PARAMETER,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordNoteHateoas> updateRecordNote(
             @ApiParam(name = "systemID",
                     value = "systemId of recordNote to update",

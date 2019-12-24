@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * Created by tsodring on 4/25/17.
@@ -66,8 +67,8 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.GET)
+    @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SYSTEM_ID_PARAMETER,
+                    method = GET)
     public ResponseEntity<CorrespondencePartPersonHateoas> findOneCorrespondencePartPersonBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -97,8 +98,8 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.GET)
+    @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SYSTEM_ID_PARAMETER,
+            method = GET)
     public ResponseEntity<CorrespondencePartInternalHateoas> findOneCorrespondencePartInternalBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -128,8 +129,8 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.GET)
+    @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SYSTEM_ID_PARAMETER,
+            method = GET)
     public ResponseEntity<CorrespondencePartUnitHateoas> findOneCorrespondencePartUnitBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -163,8 +164,9 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SYSTEM_ID_PARAMETER,
+                    method = PUT,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartUnitHateoas> updateCorrespondencePartUnit(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -207,8 +209,9 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SYSTEM_ID_PARAMETER,
+                    method = PUT,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartPersonHateoas> updateCorrespondencePartPerson(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -251,8 +254,9 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SYSTEM_ID_PARAMETER,
+                    method = PUT,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartInternalHateoas> updateCorrespondencePartInternal(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -289,7 +293,7 @@ public class CorrespondencePartHateoasController
     @Counted
 
     @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
+                    method = DELETE)
     public ResponseEntity<String> deleteCorrespondencePartUnit(
             @ApiParam(name = "kode",
                     value = "kode of the correspondencePartUnit to delete",
@@ -311,7 +315,7 @@ public class CorrespondencePartHateoasController
     @Counted
 
     @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
+                    method = DELETE)
     public ResponseEntity<String> deleteCorrespondencePartPerson(
             @ApiParam(name = "kode",
                     value = "kode of the correspondencePartPerson to delete",
@@ -333,7 +337,7 @@ public class CorrespondencePartHateoasController
     @Counted
 
     @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
+                    method = DELETE)
     public ResponseEntity<String> deleteCorrespondencePartInternal(
             @ApiParam(name = "kode",
                     value = "kode of the correspondencePartInternal to delete",

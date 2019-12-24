@@ -95,7 +95,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = ADMINISTRATIVE_UNIT + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH,
+    @RequestMapping(value = ADMINISTRATIVE_UNIT + SYSTEM_ID_PARAMETER + SLASH,
             method = RequestMethod.GET)
     public ResponseEntity<UserHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
                                                                                    HttpServletRequest request) {

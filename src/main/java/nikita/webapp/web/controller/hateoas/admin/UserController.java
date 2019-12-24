@@ -25,9 +25,8 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH +
-        NOARK_ADMINISTRATION_PATH + SLASH,
-        produces = {NOARK5_V5_CONTENT_TYPE_JSON})
+@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class UserController
         extends NoarkController {
 
@@ -121,9 +120,8 @@ public class UserController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
     @Counted
-    @RequestMapping(value = USER + SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET)
+    @RequestMapping(value = USER + SYSTEM_ID_PARAMETER + SLASH,
+                    method = RequestMethod.GET)
     public ResponseEntity<UserHateoas>
     findBySystemId(@PathVariable("username") final String username,
                    HttpServletRequest request) {
@@ -190,7 +188,7 @@ public class UserController
     @Counted
 
     @RequestMapping(method = RequestMethod.PUT, value = USER +
-            SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS)
+            SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
     updateUser(HttpServletRequest request,
                @ApiParam(name = "systemID",

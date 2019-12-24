@@ -77,7 +77,7 @@ public class DocumentDescriptionHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_OBJECT,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas>
     createDocumentObjectAssociatedWithDocumentDescription(
             HttpServletRequest request,
@@ -133,9 +133,8 @@ public class DocumentDescriptionHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value =
-            SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartUnitHateoas>
     createPartUnitAssociatedWithDocumentDescription(
             HttpServletRequest request,
@@ -188,9 +187,8 @@ public class DocumentDescriptionHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value =
-            SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartPersonHateoas>
     createPartPersonAssociatedWithDocumentDescription(
             HttpServletRequest request,
@@ -260,8 +258,7 @@ public class DocumentDescriptionHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value =
-            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT})
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT)
     public ResponseEntity<PartUnitHateoas>
     getPartUnitTemplate(
             HttpServletRequest request,
@@ -295,8 +292,7 @@ public class DocumentDescriptionHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value =
-            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON})
+    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON)
     public ResponseEntity<PartPersonHateoas>
     getPartPersonTemplate(
             HttpServletRequest request,
@@ -529,7 +525,7 @@ public class DocumentDescriptionHateoasController
     @Counted
 
     @PutMapping(value = SYSTEM_ID_PARAMETER,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentDescriptionHateoas> updateDocumentDescription(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
