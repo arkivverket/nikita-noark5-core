@@ -44,4 +44,6 @@ public interface IClassificationSystemService {
     void deleteEntity(@NotNull String classificationSystemSystemId);
 
     long deleteAllByOwnedBy();
+
+    ClassificationSystemHateoas generateDefaultClassificationSystem();
 }
