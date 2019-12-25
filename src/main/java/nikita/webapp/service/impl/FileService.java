@@ -275,9 +275,9 @@ public class FileService
         File defaultFile = new File();
         defaultFile.setTitle(TEST_TITLE);
         defaultFile.setDescription(TEST_DESCRIPTION);
-        FileHateoas fondsHateoas = new FileHateoas(defaultFile);
-        fileHateoasHandler.addLinksOnNew(fondsHateoas, new Authorisation());
-        return fondsHateoas;
+        FileHateoas fileHateoas = new FileHateoas(defaultFile);
+        fileHateoasHandler.addLinksOnNew(fileHateoas, new Authorisation());
+        return fileHateoas;
     }
 
     // All HELPER operations
