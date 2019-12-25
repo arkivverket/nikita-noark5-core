@@ -10,6 +10,31 @@ stages:
 - test
 #- package
 
+noark5tester:
+  stage: test
+  variables:
+    baseurl: "http://localhost:8092/noark5v5/"
+  image: debian:buster
+  allow_failure: true
+  before_script:
+  - apt update
+  - apt install -y git maven curl python python-mechanize
+  - git clone https://github.com/petterreinholdtsen/noark5-tester
+  - locale || true
+  - locale charmap || true
+  - LC_ALL=C.UTF-8 locale charmap || true
+  script:
+  - atexit() { if [ "$serverpid" ]; then kill $serverpid; sleep 1; fi }
+  - trap atexit EXIT
+  - mvn spring-boot:run > build-run.log 2>&1 &
+  - serverpid=$!
+  - echo "Waiting for nikita to start"
+  - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done
+  - (cd noark5-tester && LC_ALL=C.UTF-8 ./runtest --verbose --baseurl $baseurl)
+  artifacts:
+    paths:
+    - build-run.log
+
 maven-build:
   before_script:
   - apt-get update
