@@ -17,7 +17,9 @@ maven-build:
   #  - apt-get install -y openjfx
   image: maven:3.6.1-jdk-11
   stage: build
-  script: "mvn package -B"
+  script:
+  - "mvn package -B"
+  - "mvn test"
   artifacts:
     paths:
     - target/*.jar
