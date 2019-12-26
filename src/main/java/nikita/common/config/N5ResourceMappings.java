@@ -54,7 +54,7 @@ public final class N5ResourceMappings {
     public static final String FINALISED_DATE = "avsluttetDato";
     public static final String FINALISED_BY = "avsluttetAv";
     public static final String DOCUMENT_MEDIUM = "dokumentmedium";
-    public static final String NEW_DOCUMENT_MEDIUM = NEW + Constants.DASH + DOCUMENT_MEDIUM;
+
     public static final String SYSTEM_ID_PARAMETER =
             LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
 
