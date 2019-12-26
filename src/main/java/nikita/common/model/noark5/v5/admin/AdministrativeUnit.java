@@ -25,6 +25,7 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
