@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART;
+import static nikita.common.config.N5ResourceMappings.*;
 
 //import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 
@@ -36,8 +36,8 @@ public class PrecedenceHateoasController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SYSTEM_ID_PARAMETER,
-            method = RequestMethod.GET)
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
+                    method = RequestMethod.GET)
     public ResponseEntity<PrecedenceHateoas> findOnePrecedenceBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",

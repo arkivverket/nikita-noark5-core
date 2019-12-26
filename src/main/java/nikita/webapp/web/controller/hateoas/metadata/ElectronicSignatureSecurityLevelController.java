@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_SECURITY_LEVEL;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -179,10 +178,8 @@ public class ElectronicSignatureSecurityLevelController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(
-            value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH +
-                    LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
+    @RequestMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH + CODE_PARAMETER + SLASH,
+                    method = RequestMethod.GET
     )
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,

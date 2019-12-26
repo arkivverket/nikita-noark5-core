@@ -46,7 +46,6 @@ import static java.time.temporal.ChronoField.HOUR_OF_DAY;
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
-import static nikita.common.config.N5ResourceMappings.REFERENCE_ADMINISTRATIVE_UNIT;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpMethod.*;
 
@@ -356,8 +355,7 @@ public final class CommonUtils {
                 Pattern pattern = Pattern.compile(
                         "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
                 Matcher matcher = pattern.matcher(servletPath.toLowerCase());
-                updatedServletPath = matcher.replaceFirst(
-                        LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS);
+                updatedServletPath = matcher.replaceFirst(SYSTEM_ID_PARAMETER);
             }
 
             Set<HttpMethod> methods = requestMethodMap.get(

@@ -21,8 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_STATUS;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Created by tsodring on 31/1/18.
@@ -120,7 +119,8 @@ public class DocumentStatusController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = DOCUMENT_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
+    @RequestMapping(value = DOCUMENT_STATUS + SLASH + CODE_PARAMETER + SLASH,
+                    method = RequestMethod.GET)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
         DocumentStatus documentStatus =

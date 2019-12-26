@@ -72,7 +72,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER,
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> findOneDocumentObjectBySystemId(
             HttpServletRequest request,
@@ -124,7 +124,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_DESCRIPTION)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_DESCRIPTION)
     public ResponseEntity<DocumentDescriptionHateoas>
     findDocumentDescriptionAssociatedWithDocumentObject(
             @ApiParam(name = "systemID",
@@ -151,7 +151,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + REFERENCE_FILE)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REFERENCE_FILE)
     public void handleFileDownload(
             HttpServletRequest request, HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -200,7 +200,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + REFERENCE_FILE,
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REFERENCE_FILE,
                  headers = "Accept=*/*",
                  produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> handleFileUpload(
@@ -227,7 +227,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + "konverterFil",
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + "konverterFil",
                     method = PUT,
                     headers = "Accept=*/*",
                     produces = NOARK5_V5_CONTENT_TYPE_JSON)
@@ -257,7 +257,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping(value = SYSTEM_ID_PARAMETER)
+    @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<Count> deleteDocumentObjectBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -306,7 +306,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                     method = PUT,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> updateDocumentObject(

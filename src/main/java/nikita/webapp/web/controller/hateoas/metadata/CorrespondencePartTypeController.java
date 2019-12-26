@@ -23,8 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
@@ -113,8 +112,8 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS,
-            method = RequestMethod.GET)
+    @RequestMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + CODE_PARAMETER,
+                    method = RequestMethod.GET)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
         CorrespondencePartType correspondencePartType = correspondencePartTypeService.findByCode(code);
@@ -189,8 +188,8 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
+    @RequestMapping(value = SLASH + CODE_PARAMETER,
+                    method = RequestMethod.DELETE)
     public ResponseEntity<String> deletecorrespondencePartTypeByCode(
             @ApiParam(name = "kode",
                     value = "kode of the correspondencePartType to delete",

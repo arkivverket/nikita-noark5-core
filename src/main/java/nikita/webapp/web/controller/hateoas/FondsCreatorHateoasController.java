@@ -113,7 +113,7 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS,
+    @RequestMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FONDS,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsHateoas> createFondsAssociatedWithFondsCreator(
@@ -148,7 +148,7 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER,
                     method = GET)
     public ResponseEntity<FondsCreatorHateoas> findOne(HttpServletRequest request,
                                                        @ApiParam(name = "systemId",
@@ -213,7 +213,7 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER,
                     method = PUT,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsCreatorHateoas> updateFondsCreator(HttpServletRequest request,
@@ -250,7 +250,7 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = {NEW_FONDS_CREATOR, FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS_CREATOR},
+    @RequestMapping(value = {NEW_FONDS_CREATOR, FONDS + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FONDS_CREATOR},
                     method = GET)
     public ResponseEntity<FondsCreatorHateoas> getFondsCreatorTemplate(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response
@@ -277,7 +277,7 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = SLASH + FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER,
                     method = DELETE)
     public ResponseEntity<String> deleteSeriesBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
