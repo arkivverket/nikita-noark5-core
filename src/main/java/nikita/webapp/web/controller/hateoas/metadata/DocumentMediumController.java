@@ -21,8 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
@@ -113,8 +112,8 @@ public class DocumentMediumController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value =
-            DOCUMENT_MEDIUM + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
+    @RequestMapping(value = DOCUMENT_MEDIUM + SLASH + CODE_PARAMETER + SLASH,
+                    method = RequestMethod.GET)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                           HttpServletRequest request) {
         DocumentMedium documentMedium = documentMediumService.findByCode(code);

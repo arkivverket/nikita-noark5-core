@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
@@ -110,7 +109,8 @@ public class FondsStatusController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = FONDS_STATUS + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH, method = RequestMethod.GET)
+    @RequestMapping(value = FONDS_STATUS + SLASH + CODE_PARAMETER + SLASH,
+                    method = RequestMethod.GET)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
         FondsStatus fondsStatus = fondsStatusService.findByCode(code);

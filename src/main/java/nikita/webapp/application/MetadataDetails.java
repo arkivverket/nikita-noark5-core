@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.webapp.util.serialisers.APIDetailsSerializer;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.NEW_DOCUMENT_MEDIUM;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @JsonSerialize(using = APIDetailsSerializer.class)

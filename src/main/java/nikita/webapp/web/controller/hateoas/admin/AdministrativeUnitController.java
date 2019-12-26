@@ -117,8 +117,8 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = ADMINISTRATIVE_UNIT + SYSTEM_ID_PARAMETER + SLASH,
-            method = RequestMethod.GET)
+    @RequestMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH,
+                    method = RequestMethod.GET)
     public ResponseEntity<AdministrativeUnitHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
                                                                     HttpServletRequest request) {
         AdministrativeUnit administrativeUnit =

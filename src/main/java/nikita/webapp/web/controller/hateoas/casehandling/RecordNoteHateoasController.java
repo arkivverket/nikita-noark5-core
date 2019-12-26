@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_PARAMETER;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_RECORD_NOTE,
@@ -45,7 +45,7 @@ public class RecordNoteHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<RecordNoteHateoas> findRecordNoteBySystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the recordNote to retrieve",
@@ -88,7 +88,7 @@ public class RecordNoteHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping(value = SYSTEM_ID_PARAMETER)
+    @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<Count> deleteRecordNoteBySystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the recordNote to delete",
@@ -134,7 +134,7 @@ public class RecordNoteHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = SYSTEM_ID_PARAMETER,
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordNoteHateoas> updateRecordNote(
             @ApiParam(name = "systemID",

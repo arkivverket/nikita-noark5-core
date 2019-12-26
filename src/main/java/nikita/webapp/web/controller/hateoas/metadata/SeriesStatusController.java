@@ -18,8 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.SERIES_STATUS;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -131,9 +130,7 @@ public class SeriesStatusController {
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value =
-            SERIES_STATUS + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH)
+    @GetMapping(value = SERIES_STATUS + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -198,9 +195,7 @@ public class SeriesStatusController {
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value =
-            SERIES_STATUS + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH)
+    @PutMapping(value = SERIES_STATUS + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas>
     updateSeriesStatus(@RequestBody SeriesStatus seriesStatus,
                        HttpServletRequest request)

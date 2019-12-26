@@ -54,9 +54,9 @@ public final class N5ResourceMappings {
     public static final String FINALISED_DATE = "avsluttetDato";
     public static final String FINALISED_BY = "avsluttetAv";
     public static final String DOCUMENT_MEDIUM = "dokumentmedium";
-    public static final String NEW_DOCUMENT_MEDIUM = NEW + Constants.DASH + DOCUMENT_MEDIUM;
+
     public static final String SYSTEM_ID_PARAMETER =
-            SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
+            LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
 
     // For metadata entities
     public static final String CODE_NAME = "kodenavn";
@@ -64,7 +64,7 @@ public final class N5ResourceMappings {
     public static final String CODE = "kode";
 
     public static final String CODE_PARAMETER =
-            SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH;
+            LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS;
     // Fonds
     public static final String FONDS_STATUS = "arkivstatus";
 

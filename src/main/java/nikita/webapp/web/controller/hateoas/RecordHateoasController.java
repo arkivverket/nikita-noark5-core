@@ -88,7 +88,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_DOCUMENT_DESCRIPTION,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_DESCRIPTION,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentDescriptionHateoas>
@@ -130,7 +130,7 @@ public class RecordHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + PART)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + PART)
     public ResponseEntity<PartHateoas>
     findAllPartAssociatedWithRecord(
             HttpServletRequest request,
@@ -157,7 +157,7 @@ public class RecordHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CORRESPONDENCE_PART)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CORRESPONDENCE_PART)
     public ResponseEntity<CorrespondencePartHateoas>
     findAllCorrespondencePartUnitAssociatedWithRecord(
             HttpServletRequest request,
@@ -189,7 +189,7 @@ public class RecordHateoasController
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_REFERENCE_SERIES,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_REFERENCE_SERIES,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addReferenceSeriesToRecord(
@@ -229,7 +229,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CLASSIFIED,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFIED,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewClassifiedToRecord(
@@ -268,7 +268,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_DISPOSAL,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DISPOSAL,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewDisposalToRecord(
@@ -308,7 +308,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_SCREENING,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewScreeningToRecord(
@@ -348,7 +348,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_DISPOSAL_UNDERTAKEN,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DISPOSAL_UNDERTAKEN,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewDisposalUndertakenToRecord(
@@ -388,7 +388,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_DELETION,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DELETION,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewDeletionToRecord(
@@ -422,7 +422,7 @@ public class RecordHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_PERSON,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CORRESPONDENCE_PART_PERSON,
                     method = GET)
     public ResponseEntity<CorrespondencePartPersonHateoas>
     getCorrespondencePartPersonTemplate(
@@ -449,8 +449,7 @@ public class RecordHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value =
-            {SYSTEM_ID_PARAMETER + SLASH + NEW_CORRESPONDENCE_PART_UNIT})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CORRESPONDENCE_PART_UNIT)
     public ResponseEntity<CorrespondencePartUnitHateoas>
     getCorrespondencePartUnitTemplate(
             HttpServletRequest request,
@@ -482,8 +481,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value =
-            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT)
     public ResponseEntity<PartUnitHateoas> getPartUnitTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -508,8 +506,7 @@ public class RecordHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value =
-            {SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON)
     public ResponseEntity<PartPersonHateoas> getPartPersonTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -541,7 +538,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_PERSON,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CORRESPONDENCE_PART_PERSON,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartPersonHateoas>
@@ -585,7 +582,7 @@ public class RecordHateoasController
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON,
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartPersonHateoas>
     createPartPersonAssociatedWithRecord(
@@ -627,7 +624,7 @@ public class RecordHateoasController
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT,
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartUnitHateoas>
     createPartUnitAssociatedWithRecord(
@@ -668,7 +665,7 @@ public class RecordHateoasController
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_INTERNAL,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CORRESPONDENCE_PART_INTERNAL,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartInternalHateoas> createCorrespondencePartInternalAssociatedWithRecord(
@@ -712,7 +709,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CORRESPONDENCE_PART_UNIT,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CORRESPONDENCE_PART_UNIT,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartUnitHateoas> createCorrespondencePartUnitAssociatedWithRecord(
@@ -771,7 +768,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                     method = GET)
     public ResponseEntity<RecordHateoas> findOneRecordbySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
@@ -803,7 +800,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + FILE)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE)
     public ResponseEntity<FileHateoas> findParentFileByRecordSystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve",
@@ -828,7 +825,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + SERIES)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES)
     public ResponseEntity<SeriesHateoas> findParentSeriesByRecordSystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the series to retrieve",
@@ -853,7 +850,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + CLASS)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASS)
     public ResponseEntity<ClassHateoas> findParentClassByRecordSystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the class to retrieve",
@@ -906,7 +903,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + REFERENCE_SERIES,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REFERENCE_SERIES,
                     method = GET)
     public ResponseEntity<String> findSecondarySeriesAssociatedWithRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
@@ -927,7 +924,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_DOCUMENT_DESCRIPTION,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_DESCRIPTION,
                     method = GET)
     public ResponseEntity<DocumentDescriptionHateoas> createDefaultDocumentDescription(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response) {
@@ -958,7 +955,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + DOCUMENT_DESCRIPTION,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_DESCRIPTION,
                     method = GET)
     public ResponseEntity<DocumentDescriptionHateoas> findAllDocumentDescriptionAssociatedWithRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
@@ -988,7 +985,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                     method = DELETE)
     public ResponseEntity<String> deleteRecordBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
@@ -1041,7 +1038,7 @@ public class RecordHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                     method = PUT,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordHateoas> updateRecord(

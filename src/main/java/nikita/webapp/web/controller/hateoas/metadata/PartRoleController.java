@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.PART_ROLE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Validation.parseETAG;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
@@ -146,7 +145,7 @@ public class PartRoleController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = PART_ROLE + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH)
+    @GetMapping(value = PART_ROLE + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {

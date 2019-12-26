@@ -115,7 +115,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CLASS,
+    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS,
                     method = POST,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas>
@@ -143,7 +143,7 @@ public class ClassificationSystemHateoasController
 
     // API - All GET Requests (CRUD - READ)
 
-    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER,
                     method = GET)
     public ResponseEntity<ClassificationSystemHateoas> findOne(
             HttpServletRequest request,
@@ -179,7 +179,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + SERIES)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES)
     public ResponseEntity<SeriesHateoas>
     findParentClassificationSystemByFileSystemId(
             @ApiParam(name = "systemID",
@@ -236,7 +236,7 @@ public class ClassificationSystemHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + CLASS
+    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASS
     )
     public ResponseEntity<ClassHateoas>
     findClassAssociatedWithClassificationSystem(
@@ -274,7 +274,7 @@ public class ClassificationSystemHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_CLASS
+    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS
     )
     public ResponseEntity<ClassHateoas> createDefaultClass(
             HttpServletRequest request,
@@ -303,7 +303,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = SLASH + CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = SLASH + CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER,
                     method = DELETE)
     public ResponseEntity<FondsStructureDetails>
     deleteClassificationSystemBySystemId(
@@ -366,7 +366,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER,
                     method = PUT,
                     consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>

@@ -120,7 +120,7 @@ public class UserController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
     @Counted
-    @RequestMapping(value = USER + SYSTEM_ID_PARAMETER + SLASH,
+    @RequestMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER + SLASH,
                     method = RequestMethod.GET)
     public ResponseEntity<UserHateoas>
     findBySystemId(@PathVariable("username") final String username,
@@ -187,8 +187,8 @@ public class UserController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.PUT, value = USER +
-            SYSTEM_ID_PARAMETER)
+    @RequestMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER,
+                    method = RequestMethod.PUT)
     public ResponseEntity<UserHateoas>
     updateUser(HttpServletRequest request,
                @ApiParam(name = "systemID",
@@ -240,7 +240,7 @@ public class UserController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping(value = USER + SYSTEM_ID_PARAMETER)
+    @DeleteMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<Count> deleteSingleUser(
             @PathVariable("username") final String username) {
         return ResponseEntity.status(NO_CONTENT).
