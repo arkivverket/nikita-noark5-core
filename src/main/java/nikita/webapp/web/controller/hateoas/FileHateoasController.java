@@ -84,9 +84,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "fileSystemId",
@@ -118,9 +117,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CROSS_REFERENCE,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CROSS_REFERENCE,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> createCrossReferenceAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -159,9 +157,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> createSubFileAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -196,9 +193,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addCommentToFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -234,9 +230,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addClassToFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -273,9 +268,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_REFERENCE_SERIES,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_REFERENCE_SERIES,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addReferenceSeriesToFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -314,9 +308,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SECONDARY_CLASSIFICATION,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SECONDARY_CLASSIFICATION,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addReferenceToSecondaryClassToFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -345,8 +338,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + RECORD,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + RECORD)
     public ResponseEntity<RecordHateoas> findAllRecordsAssociatedWithFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -523,8 +515,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_FILE,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_FILE)
     public ResponseEntity<String> findAllSubFileAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -544,8 +535,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
     public ResponseEntity<RecordHateoas> createDefaultRecord(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response) {
 
@@ -572,8 +562,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<FileHateoas> findOneFileBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -605,7 +594,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = GET)
+    @GetMapping
     public ResponseEntity<FileHateoas> findAllFiles(
             HttpServletRequest request) {
 
@@ -633,8 +622,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + COMMENT,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + COMMENT)
     public ResponseEntity<String> findAllCommentsAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -657,8 +645,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CROSS_REFERENCE,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CROSS_REFERENCE)
     public ResponseEntity<String> findAllCrossReferenceAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -680,8 +667,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SECONDARY_CLASSIFICATION,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SECONDARY_CLASSIFICATION)
     public ResponseEntity<String> findSecondaryClassAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -706,8 +692,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REFERENCE_SERIES,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REFERENCE_SERIES)
     public ResponseEntity<String> findSecondarySeriesAssociatedWithFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -735,9 +720,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FileHateoas> updateFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -777,9 +761,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_END,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_END,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> finaliseFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -816,9 +799,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_EXPAND_TO_CASE_FILE,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_EXPAND_TO_CASE_FILE,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> expandFileToCaseFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -965,9 +947,8 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_EXPAND_TO_MEETING_FILE,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_EXPAND_TO_MEETING_FILE,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> expandFileToMeetingFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -995,8 +976,7 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
-                    method = DELETE)
+    @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteFileBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
