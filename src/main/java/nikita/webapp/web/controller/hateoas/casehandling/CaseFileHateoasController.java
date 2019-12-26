@@ -42,6 +42,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE,
@@ -94,7 +95,7 @@ public class CaseFileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD_NOTE,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordNoteHateoas> createRecordNoteAssociatedWithFile(
             @ApiParam(name = "systemID",
                     value = "systemId of file to associate the recordNote with",
@@ -123,8 +124,8 @@ public class CaseFileHateoasController
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_REGISTRY_ENTRY, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(method = RequestMethod.POST, value = SYSTEM_ID_PARAMETER + SLASH + NEW_REGISTRY_ENTRY,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RegistryEntryHateoas> createRegistryEntryAssociatedWithFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -210,7 +211,7 @@ public class CaseFileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = RequestMethod.GET)
+    @RequestMapping(value = SYSTEM_ID_PARAMETER, method = RequestMethod.GET)
     public ResponseEntity<CaseFileHateoas> findOneCaseFilebySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -321,7 +322,7 @@ public class CaseFileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = SYSTEM_ID_PARAMETER,
             method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteCaseFileBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
@@ -374,8 +375,9 @@ public class CaseFileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = SYSTEM_ID_PARAMETER,
+                    method = PUT,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas> updateCaseFile(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",

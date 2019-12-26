@@ -41,6 +41,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY,
@@ -85,8 +86,9 @@ public class RegistryEntryHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_PRECEDENCE, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_PRECEDENCE,
+                    method = POST,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PrecedenceHateoas> createPrecedenceAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -130,8 +132,9 @@ public class RegistryEntryHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS +
-            SLASH + NEW_DOCUMENT_DESCRIPTION, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_DESCRIPTION,
+                    method = POST,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SignOffHateoas>
     createSignOffAssociatedWithRecord(
             HttpServletRequest request,
@@ -177,8 +180,9 @@ public class RegistryEntryHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.POST, value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS
-            + SLASH + NEW_DOCUMENT_OBJECT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_OBJECT,
+                    method = POST,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String>
     createDocumentObjectAssociatedWithRegistryEntry(
             HttpServletRequest request,
@@ -218,8 +222,8 @@ public class RegistryEntryHateoasController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            CORRESPONDENCE_PART_INTERNAL, method = RequestMethod.GET)
+    @RequestMapping(value = SYSTEM_ID_PARAMETER + SLASH + CORRESPONDENCE_PART_INTERNAL,
+                    method = GET)
     public ResponseEntity<CorrespondencePartInternalHateoas> findAllCorrespondencePartInternalAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -253,8 +257,8 @@ TODO: Temp disabled!
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            SIGN_OFF, method = RequestMethod.GET)
+    @RequestMapping(value = SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF,
+                    method = GET)
     public ResponseEntity<String> findAllSignOffAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -287,8 +291,8 @@ TODO: Temp disabled!
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            PRECEDENCE, method = RequestMethod.GET)
+    @RequestMapping(value = SYSTEM_ID_PARAMETER + SLASH + PRECEDENCE,
+                    method = GET)
     public ResponseEntity<String> findAllPrecedenceAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -321,8 +325,8 @@ TODO: Temp disabled!
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH +
-            DOCUMENT_FLOW, method = RequestMethod.GET)
+    @RequestMapping(value = SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_FLOW,
+                    method = GET)
     public ResponseEntity<String> findAllDocumentFlowAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -354,7 +358,8 @@ TODO: Temp disabled!
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = RequestMethod.GET)
+    @RequestMapping(value = SYSTEM_ID_PARAMETER,
+                    method = GET)
     public ResponseEntity<RegistryEntryHateoas> findOneRegistryEntrybySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -388,7 +393,7 @@ TODO: Temp disabled!
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = GET)
     public ResponseEntity<RegistryEntryHateoas> findAllRegistryEntry(
             HttpServletRequest request,
             @RequestParam(name = "top", required = false) Integer top,
@@ -412,8 +417,8 @@ TODO: Temp disabled!
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
+    @RequestMapping(value = SYSTEM_ID_PARAMETER,
+                    method = DELETE)
     public ResponseEntity<String> deleteRecordBySystemId(HttpServletRequest request,
                                                          @ApiParam(name = "systemID",
                                                                  value = "systemID of the record to delete",
@@ -464,7 +469,9 @@ TODO: Temp disabled!
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS, method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = SYSTEM_ID_PARAMETER,
+                    method = PUT,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RegistryEntryHateoas> updateRegistryEntry(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",

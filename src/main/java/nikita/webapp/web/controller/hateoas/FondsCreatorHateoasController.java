@@ -36,6 +36,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE,
@@ -76,7 +77,9 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = {RequestMethod.POST}, value = NEW_FONDS_CREATOR, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = NEW_FONDS_CREATOR,
+                    method = POST,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsCreatorHateoas> createFondsCreator(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "FondsCreator",
@@ -110,8 +113,9 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.POST, value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + NEW_FONDS, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @RequestMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS,
+                    method = POST,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsHateoas> createFondsAssociatedWithFondsCreator(
             HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemId",
@@ -145,7 +149,7 @@ public class FondsCreatorHateoasController
     @Counted
 
     @RequestMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.GET)
+                    method = GET)
     public ResponseEntity<FondsCreatorHateoas> findOne(HttpServletRequest request,
                                                        @ApiParam(name = "systemId",
                                                                value = "systemId of FondsCreator to retrieve.",
@@ -179,7 +183,8 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.GET, value = FONDS_CREATOR)
+    @RequestMapping(value = FONDS_CREATOR,
+                    method = GET)
     public ResponseEntity<FondsCreatorHateoas> findAllFondsCreator(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @RequestParam(name = "top", required = false) Integer top,
@@ -209,7 +214,8 @@ public class FondsCreatorHateoasController
     @Counted
 
     @RequestMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.PUT, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+                    method = PUT,
+                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsCreatorHateoas> updateFondsCreator(HttpServletRequest request,
                                                                   @ApiParam(name = "fondsCreator",
                                                                           value = "Incoming fondsCreator object",
@@ -244,8 +250,8 @@ public class FondsCreatorHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.GET, value = {NEW_FONDS_CREATOR, FONDS + SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS_CREATOR})
+    @RequestMapping(value = {NEW_FONDS_CREATOR, FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS_CREATOR},
+                    method = GET)
     public ResponseEntity<FondsCreatorHateoas> getFondsCreatorTemplate(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response
     ) throws NikitaException {
@@ -272,7 +278,7 @@ public class FondsCreatorHateoasController
     @Counted
 
     @RequestMapping(value = SLASH + FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
-            method = RequestMethod.DELETE)
+                    method = DELETE)
     public ResponseEntity<String> deleteSeriesBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",

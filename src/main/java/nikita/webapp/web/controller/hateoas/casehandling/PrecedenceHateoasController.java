@@ -36,7 +36,7 @@ public class PrecedenceHateoasController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+    @RequestMapping(value = SYSTEM_ID_PARAMETER,
             method = RequestMethod.GET)
     public ResponseEntity<PrecedenceHateoas> findOnePrecedenceBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,

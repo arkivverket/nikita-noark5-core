@@ -146,8 +146,7 @@ public class PartRoleController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = PART_ROLE + SLASH + LEFT_PARENTHESIS + CODE +
-            RIGHT_PARENTHESIS + SLASH)
+    @GetMapping(value = PART_ROLE + SLASH + LEFT_PARENTHESIS + CODE + RIGHT_PARENTHESIS + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {

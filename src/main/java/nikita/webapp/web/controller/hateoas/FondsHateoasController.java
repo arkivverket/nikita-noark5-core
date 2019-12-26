@@ -29,7 +29,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class FondsHateoasController
         extends NoarkController {
 
@@ -74,7 +74,8 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = NEW_FONDS, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @PostMapping(value = NEW_FONDS,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsHateoas> createFonds(
             HttpServletRequest request,
             @ApiParam(name = "fonds",
@@ -118,9 +119,8 @@ public class FondsHateoasController
             @ApiResponse(code = 501,
                     message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-    @PostMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-                    RIGHT_PARENTHESIS + SLASH + NEW_FONDS,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @PostMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsHateoas> createFondsAssociatedWithFonds(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -182,9 +182,8 @@ public class FondsHateoasController
                     code = 501,
                     message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-    @PostMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-                    RIGHT_PARENTHESIS + SLASH + NEW_SERIES,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @PostMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_SERIES,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SeriesHateoas> createSeriesAssociatedWithFonds(
             HttpServletRequest request,
             @ApiParam(
@@ -247,9 +246,8 @@ public class FondsHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
     @Counted
-    @PostMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-                    RIGHT_PARENTHESIS + SLASH + NEW_FONDS_CREATOR,
-            consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @PostMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS_CREATOR,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsCreatorHateoas>
     createFondsCreatorAssociatedWithFonds(
             HttpServletRequest request,
@@ -294,8 +292,7 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS)
+    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS)
     public ResponseEntity<FondsHateoas> findOne(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -331,8 +328,7 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + NEW_SERIES)
+    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_SERIES)
     public ResponseEntity<SeriesHateoas> createDefaultSeries(
             HttpServletRequest request,
             @ApiParam(
@@ -364,8 +360,7 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + FONDS_CREATOR)
+    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + FONDS_CREATOR)
     public ResponseEntity<FondsCreatorHateoas>
     findFondsCreatorAssociatedWithFonds(
             @ApiParam(
@@ -397,8 +392,7 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + SERIES)
+    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + SERIES)
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithFonds(
             HttpServletRequest request,
@@ -437,8 +431,7 @@ public class FondsHateoasController
                     message = API_MESSAGE_NOT_IMPLEMENTED)
     })
     @Counted
-    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS + SLASH + SUB_FONDS)
+    @GetMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + SUB_FONDS)
     public ResponseEntity<String> findSubfondsAssociatedWithFonds(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -515,8 +508,7 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS)
+    @GetMapping(value = FONDS_CREATOR + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS + SLASH + NEW_FONDS)
     public ResponseEntity<FondsHateoas> getSubFondsTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -595,8 +587,8 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID +
-            RIGHT_PARENTHESIS, consumes = {NOARK5_V5_CONTENT_TYPE_JSON})
+    @PutMapping(value = FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsHateoas> updateFonds(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -639,8 +631,7 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping(value = SLASH + FONDS + SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS)
+    @DeleteMapping(value = SLASH + FONDS + SLASH + LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS)
     public ResponseEntity<String> deleteFondsBySystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the series to delete",
