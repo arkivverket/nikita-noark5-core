@@ -306,6 +306,24 @@ public class ClassificationSystemService
     public long deleteAllByOwnedBy() {
         return classificationSystemRepository.deleteByOwnedBy(getUser());
     }
+
+    /**
+     * Generate a Default ClassificationSystem object
+     * <br>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @return the ClassificationSystem object wrapped as a ClassificationSystemHateoas object
+     */
+    @Override
+    public ClassificationSystemHateoas generateDefaultClassificationSystem() {
+        ClassificationSystem defaultClassificationSystem = new ClassificationSystem();
+        ClassificationSystemHateoas classificationSystemHateoas = new ClassificationSystemHateoas(defaultClassificationSystem);
+        classificationSystemHateoasHandler.addLinksOnNew(classificationSystemHateoas, new Authorisation());
+        return classificationSystemHateoas;
+    }
+
     // All HELPER operations
 
     /**

@@ -16,6 +16,7 @@ import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
+import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -46,6 +47,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class SeriesHateoasController
         extends NoarkController {
 
+    private IClassificationSystemService classificationSystemService;
     private ISeriesService seriesService;
     private ICaseFileService caseFileService;
     private IFileService fileService;
@@ -54,7 +56,8 @@ public class SeriesHateoasController
     private IFileHateoasHandler fileHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public SeriesHateoasController(ISeriesService seriesService,
+    public SeriesHateoasController(IClassificationSystemService classificationSystemService,
+                                   ISeriesService seriesService,
                                    ICaseFileService caseFileService,
                                    ISeriesHateoasHandler seriesHateoasHandler,
                                    ICaseFileHateoasHandler caseFileHateoasHandler,
@@ -62,6 +65,7 @@ public class SeriesHateoasController
                                    IFileService fileService,
                                    ApplicationEventPublisher applicationEventPublisher) {
 
+        this.classificationSystemService = classificationSystemService;
         this.seriesService = seriesService;
         this.caseFileService = caseFileService;
         this.seriesHateoasHandler = seriesHateoasHandler;
@@ -429,6 +433,23 @@ public class SeriesHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         return seriesService.findBySystemId(systemID);
+    }
+
+    // Create a ClassificationSystem object with default values
+    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-klassifikasjonssystem/
+    @ApiOperation(value = "Create a ClassificationSystem with default values", response = ClassificationSystem.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "ClassificationSystem returned", response = File.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM)
+    public ResponseEntity<ClassificationSystemHateoas> createClassificationSystem(
+            HttpServletRequest request, final HttpServletResponse response) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(classificationSystemService.generateDefaultClassificationSystem());
     }
 
     // Create a File object with default values
