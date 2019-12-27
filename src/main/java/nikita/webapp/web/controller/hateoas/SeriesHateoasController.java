@@ -91,9 +91,8 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystemAssociatedWithSeries(
             HttpServletRequest request,
@@ -135,9 +134,8 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FileHateoas> createFileAssociatedWithSeries(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -177,9 +175,8 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas> createCaseFileAssociatedWithSeries(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -218,9 +215,8 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> createRecordAssociatedWithSeries(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -261,9 +257,8 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES_ASSOCIATE_AS_SUCCESSOR,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES_ASSOCIATE_AS_SUCCESSOR,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> associateSeriesWithSeriesPrecursor(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -305,9 +300,8 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES_ASSOCIATE_AS_PRECURSOR,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES_ASSOCIATE_AS_PRECURSOR,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> associateSeriesWithSeriesSuccessor(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -347,9 +341,8 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> associateSeriesWithClassificationSystem(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -389,9 +382,8 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SeriesHateoas> updateSeries(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -449,8 +441,7 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE)
     public ResponseEntity<FileHateoas> createDefaultFile(
             HttpServletRequest request, final HttpServletResponse response) {
         return ResponseEntity.status(OK)
@@ -468,8 +459,7 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE)
     public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
             HttpServletRequest request, final HttpServletResponse response) {
 
@@ -493,8 +483,7 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES_PRECURSOR,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES_PRECURSOR)
     public ResponseEntity<String> findPrecursorToSeriesBySystemId(
             HttpServletRequest request,
             @ApiParam(name = " systemID",
@@ -525,8 +514,7 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES_SUCCESSOR,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES_SUCCESSOR)
     public ResponseEntity<String> findSuccessorToSeriesBySystemId(
             HttpServletRequest request,
             @ApiParam(name = " systemID",
@@ -561,7 +549,7 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = GET)
+    @GetMapping
     public ResponseEntity<SeriesHateoas> findAllSeries() {
         return seriesService.findAll();
     }
@@ -688,8 +676,7 @@ public class SeriesHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CASE_FILE,
-                    method = GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CASE_FILE)
     public ResponseEntity<CaseFileHateoas> findAllCaseFileAssociatedWithCaseFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
