@@ -110,7 +110,7 @@ public final class N5ResourceMappings {
     public static final String PART_UNIT = "partenhet";
     public static final String PART_ID = "partID";
     public static final String PART_NAME = "partNavn";
-    public static final String PART_ROLE = "partRolle";
+    public static final String PART_ROLE = "partrolle";
 
     // Record
     public static final String RECORD_ARCHIVED_BY = "arkivertAv";
@@ -199,7 +199,7 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_SOURCE_OF_LAW = "rettskildefaktor";
     public static final String PRECEDENCE_APPROVED_DATE = "presedensGodkjentDato";
     public static final String PRECEDENCE_APPROVED_BY = "presedensGodkjentAv";
-    public static final String PRECEDENCE_STATUS = "presedensStatus";
+    public static final String PRECEDENCE_STATUS = "presedensstatus";
 
     // Disposal
     public static final String DISPOSAL = "kassasjon";
@@ -217,8 +217,8 @@ public final class N5ResourceMappings {
     public static final String SCREENING = "skjerming";
     public static final String SCREENING_ACCESS_RESTRICTION = "tilgangsrestriksjon";
     public static final String SCREENING_AUTHORITY = "skjermingshjemmel";
-    public static final String SCREENING_METADATA = "skjermingMetadata";
-    public static final String SCREENING_DOCUMENT = "skjermingDokument";
+    public static final String SCREENING_METADATA = "skjermingmetadata";
+    public static final String SCREENING_DOCUMENT = "skjermingdokument";
     public static final String NEW_SCREENING_METADATA = NEW + DASH +
             SCREENING_METADATA;
     public static final String NEW_SCREENING_DOCUMENT = NEW + DASH +
