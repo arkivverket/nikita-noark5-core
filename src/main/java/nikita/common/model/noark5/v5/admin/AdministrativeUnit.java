@@ -25,7 +25,6 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -79,7 +78,7 @@ public class AdministrativeUnit
     private Boolean defaultAdministrativeUnit;
 
     // Links to SequenceNumberGenerator
-    @OneToMany(mappedBy = REFERENCE_ADMINISTRATIVE_UNIT,
+    @OneToMany(mappedBy = "referenceAdministrativeUnit",
             cascade = ALL, orphanRemoval = true)
     private Set <SequenceNumberGenerator>
             referenceSequenceNumberGenerator = new HashSet<>();
@@ -97,7 +96,7 @@ public class AdministrativeUnit
     private Set<User> users = new HashSet<>();
 
     // Links to CaseFile
-    @OneToMany(mappedBy = REFERENCE_ADMINISTRATIVE_UNIT, cascade = ALL)
+    @OneToMany(mappedBy = "referenceAdministrativeUnit", cascade = ALL)
     @JsonIgnore
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
