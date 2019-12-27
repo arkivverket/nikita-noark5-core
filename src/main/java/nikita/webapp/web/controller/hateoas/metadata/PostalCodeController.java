@@ -26,9 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class PostalCodeController {
 
@@ -72,11 +71,7 @@ public class PostalCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = POST_CODE + SLASH + NEW_POST_CODE
-    )
+    @PostMapping(value = POST_CODE + SLASH + NEW_POST_CODE)
     public ResponseEntity<MetadataHateoas> createPostalCode(
             HttpServletRequest request,
             @RequestBody PostalCode postalCode)
@@ -116,11 +111,7 @@ public class PostalCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = POST_CODE
-    )
+    @GetMapping(value = POST_CODE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -161,12 +152,7 @@ public class PostalCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = POST_CODE + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = POST_CODE + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -204,11 +190,7 @@ public class PostalCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_POST_CODE
-    )
+    @GetMapping(value = NEW_POST_CODE)
     public ResponseEntity<MetadataHateoas>
     generateDefaultPostalCode(HttpServletRequest request) {
 
@@ -251,11 +233,7 @@ public class PostalCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = POST_CODE + SLASH + POST_CODE
-    )
+    @PutMapping(value = POST_CODE + SLASH + POST_CODE)
     public ResponseEntity<MetadataHateoas> updatePostalCode(
             @ApiParam(name = "systemID",
                     value = "code of fonds to update.",

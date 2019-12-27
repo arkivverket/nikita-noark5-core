@@ -30,7 +30,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_DOCUMENT_DESCRIPTION,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class DocumentDescriptionHateoasController
         extends NoarkController {

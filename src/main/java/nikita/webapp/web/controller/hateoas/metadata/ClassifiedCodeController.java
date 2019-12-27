@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CLASSIFIED_CODE;
-import static nikita.common.config.N5ResourceMappings.CODE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
@@ -28,10 +27,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
-                SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class ClassifiedCodeController {
 
@@ -76,10 +73,7 @@ public class ClassifiedCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = CLASSIFIED_CODE + SLASH + NEW_CLASSIFIED_CODE
-    )
+    @PostMapping(value = CLASSIFIED_CODE + SLASH + NEW_CLASSIFIED_CODE)
     public ResponseEntity<MetadataHateoas> createClassifiedCode(
             HttpServletRequest request,
             @RequestBody ClassifiedCode classifiedCode)
@@ -119,11 +113,7 @@ public class ClassifiedCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = CLASSIFIED_CODE
-    )
+    @GetMapping(value = CLASSIFIED_CODE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(
@@ -164,12 +154,7 @@ public class ClassifiedCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = CLASSIFIED_CODE + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = CLASSIFIED_CODE + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -208,11 +193,7 @@ public class ClassifiedCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_CLASSIFIED_CODE
-    )
+    @GetMapping(value = NEW_CLASSIFIED_CODE)
     public ResponseEntity<MetadataHateoas>
     generateDefaultClassifiedCode(HttpServletRequest request) {
 
@@ -255,11 +236,7 @@ public class ClassifiedCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = CLASSIFIED_CODE + SLASH + CLASSIFIED_CODE
-    )
+    @PutMapping(value = CLASSIFIED_CODE + SLASH + CLASSIFIED_CODE)
     public ResponseEntity<MetadataHateoas> updateClassifiedCode(
             @ApiParam(name = "systemID",
                     value = "code of fonds to update.",

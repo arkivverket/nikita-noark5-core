@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
-import static nikita.common.config.N5ResourceMappings.CODE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -27,10 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
-                SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class ClassificationTypeController {
 
@@ -75,11 +72,7 @@ public class ClassificationTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = CLASSIFICATION_TYPE + SLASH + NEW_CLASSIFICATION_TYPE
-    )
+    @PostMapping(value = CLASSIFICATION_TYPE + SLASH + NEW_CLASSIFICATION_TYPE)
     public ResponseEntity<MetadataHateoas> createClassificationType(
             HttpServletRequest request,
             @RequestBody ClassificationType classificationType)
@@ -120,11 +113,7 @@ public class ClassificationTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = CLASSIFICATION_TYPE
-    )
+    @GetMapping(value = CLASSIFICATION_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -165,12 +154,7 @@ public class ClassificationTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = CLASSIFICATION_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = CLASSIFICATION_TYPE + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -209,11 +193,7 @@ public class ClassificationTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_CLASSIFICATION_TYPE
-    )
+    @GetMapping(value = NEW_CLASSIFICATION_TYPE)
     public ResponseEntity<MetadataHateoas>
     generateDefaultClassificationType(HttpServletRequest request) {
 
@@ -256,11 +236,7 @@ public class ClassificationTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = CLASSIFICATION_TYPE + SLASH + CLASSIFICATION_TYPE
-    )
+    @PutMapping(value = CLASSIFICATION_TYPE + SLASH + CLASSIFICATION_TYPE)
     public ResponseEntity<MetadataHateoas> updateClassificationType(
             @ApiParam(name = "systemID",
                     value = "code of fonds to update.",

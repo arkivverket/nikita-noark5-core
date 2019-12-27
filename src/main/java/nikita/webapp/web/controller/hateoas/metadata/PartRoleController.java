@@ -27,9 +27,8 @@ import static org.springframework.http.HttpStatus.OK;
  */
 
 @RestController
-@RequestMapping(
-        value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class PartRoleController {
 
@@ -68,10 +67,7 @@ public class PartRoleController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = PART_ROLE + SLASH + NEW_PART_ROLE
-    )
+    @PostMapping(value = PART_ROLE + SLASH + NEW_PART_ROLE)
     public ResponseEntity<MetadataHateoas> createPartRole(
             HttpServletRequest request,
             @RequestBody PartRole partyRole)
@@ -183,10 +179,7 @@ public class PartRoleController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_PART_ROLE
-    )
+    @GetMapping(value = NEW_PART_ROLE)
     public ResponseEntity<MetadataHateoas>
     generateDefaultPartRole(HttpServletRequest request) {
 

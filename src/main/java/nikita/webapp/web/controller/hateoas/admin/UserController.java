@@ -25,7 +25,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class UserController
         extends NoarkController {
@@ -63,7 +63,7 @@ public class UserController
             @ApiResponse(code = 501,
                     message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-    @RequestMapping(method = RequestMethod.POST, value = NEW_USER)
+    @PostMapping(value = NEW_USER)
     public ResponseEntity<UserHateoas> createUser(
             HttpServletRequest request,
             @RequestBody User user)
@@ -94,7 +94,7 @@ public class UserController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(method = RequestMethod.GET, value = USER)
+    @GetMapping(value = USER)
     public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
         UserHateoas userHateoas = userService.findAll();
         return ResponseEntity.status(HttpStatus.OK)
@@ -120,8 +120,7 @@ public class UserController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
     @Counted
-    @RequestMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER + SLASH,
-                    method = RequestMethod.GET)
+    @GetMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER + SLASH)
     public ResponseEntity<UserHateoas>
     findBySystemId(@PathVariable("username") final String username,
                    HttpServletRequest request) {
@@ -150,8 +149,7 @@ public class UserController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = NEW_USER)
+    @GetMapping(value = NEW_USER)
     public ResponseEntity<UserHateoas>
     getUserTemplate(HttpServletRequest request) {
         User user = new User();
@@ -186,9 +184,7 @@ public class UserController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER,
-                    method = RequestMethod.PUT)
+    @PutMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
     updateUser(HttpServletRequest request,
                @ApiParam(name = "systemID",

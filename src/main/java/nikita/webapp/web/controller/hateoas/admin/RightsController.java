@@ -2,14 +2,13 @@ package nikita.webapp.web.controller.hateoas.admin;
 
 import nikita.common.config.Constants;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static nikita.common.config.Constants.*;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class RightsController extends NoarkController {
 /*
     private IUserService administrativeUnitService;
@@ -40,7 +39,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.POST, value = NEW_ADMINISTRATIVE_UNIT)
+    @PostMapping(value = NEW_ADMINISTRATIVE_UNIT)
     public ResponseEntity<UserHateoas> createUser(
             HttpServletRequest request,
             @RequestBody User administrativeUnit)
@@ -67,7 +66,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.GET, value = ADMINISTRATIVE_UNIT)
+    @GetMapping(value = ADMINISTRATIVE_UNIT)
     public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
         UserHateoas adminHateoas = new UserHateoas(
                 (List<INikitaEntity>) (List) administrativeUnitService.findAll());
@@ -95,8 +94,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH,
-                    method = RequestMethod.GET)
+    @GetMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH)
     public ResponseEntity<UserHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
                                                                                    HttpServletRequest request) {
         User administrativeUnit = administrativeUnitService.findBySystemId(UUID.fromString(systemId));
@@ -120,7 +118,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.GET, value = NEW_ADMINISTRATIVE_UNIT)
+    @GetMapping(value = NEW_ADMINISTRATIVE_UNIT)
     public ResponseEntity<UserHateoas> getUserTemplate(HttpServletRequest request) {
         User administrativeUnit = new User();
         administrativeUnit.setShortName("kortnavn på administrativtenhet");
@@ -147,8 +145,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.PUT, value = ADMINISTRATIVE_UNIT + SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS)
+    @PutMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas> updateUser(HttpServletRequest request,
                                                                               @ApiParam(name = "systemID",
                                                                                       value = "systemID of documentDescription to update.",

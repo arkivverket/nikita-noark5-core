@@ -30,8 +30,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class AdministrativeUnitController extends NoarkController {
 
     private IAdministrativeUnitService administrativeUnitService;
@@ -62,7 +62,7 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.POST, value = NEW_ADMINISTRATIVE_UNIT)
+    @PostMapping(value = NEW_ADMINISTRATIVE_UNIT)
     public ResponseEntity<AdministrativeUnitHateoas> createAdministrativeUnit(
             HttpServletRequest request,
             @RequestBody AdministrativeUnit administrativeUnit)
@@ -88,8 +88,7 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = ADMINISTRATIVE_UNIT)
+    @GetMapping(value = ADMINISTRATIVE_UNIT)
     public ResponseEntity<AdministrativeUnitHateoas> findAll(HttpServletRequest request) {
         AdministrativeUnitHateoas adminHateoas = new AdministrativeUnitHateoas(
                 (List<INikitaEntity>) (List) administrativeUnitService.findAll());
@@ -116,9 +115,7 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-
-    @RequestMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH,
-                    method = RequestMethod.GET)
+    @GetMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH)
     public ResponseEntity<AdministrativeUnitHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
                                                                     HttpServletRequest request) {
         AdministrativeUnit administrativeUnit =
@@ -142,8 +139,7 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = NEW_ADMINISTRATIVE_UNIT)
+    @GetMapping(value = NEW_ADMINISTRATIVE_UNIT)
     public ResponseEntity<AdministrativeUnitHateoas> getAdministrativeUnitTemplate(HttpServletRequest request) {
         AdministrativeUnit administrativeUnit = new AdministrativeUnit();
         administrativeUnit.setShortName("kortnavn på administrativtenhet");
@@ -170,8 +166,7 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(method = RequestMethod.PUT, value = ADMINISTRATIVE_UNIT + SLASH + LEFT_PARENTHESIS +
-            SYSTEM_ID + RIGHT_PARENTHESIS)
+    @PutMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<AdministrativeUnitHateoas> updateAdministrativeUnit(HttpServletRequest request,
                                                                               @ApiParam(name = "systemID",
                                                                                       value = "systemID of documentDescription to update.",

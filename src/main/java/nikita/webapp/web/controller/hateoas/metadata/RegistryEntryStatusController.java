@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_STATUS;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -27,9 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class RegistryEntryStatusController {
 
@@ -74,11 +72,7 @@ public class RegistryEntryStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = REGISTRY_ENTRY_STATUS + SLASH + NEW_REGISTRY_ENTRY_STATUS
-    )
+    @PostMapping(value = REGISTRY_ENTRY_STATUS + SLASH + NEW_REGISTRY_ENTRY_STATUS)
     public ResponseEntity<MetadataHateoas> createRegistryEntryStatus(
             HttpServletRequest request,
             @RequestBody RegistryEntryStatus registryEntryStatus)
@@ -119,11 +113,7 @@ public class RegistryEntryStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = REGISTRY_ENTRY_STATUS
-    )
+    @GetMapping(value = REGISTRY_ENTRY_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -164,12 +154,7 @@ public class RegistryEntryStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = REGISTRY_ENTRY_STATUS + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = REGISTRY_ENTRY_STATUS + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -207,11 +192,7 @@ public class RegistryEntryStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_REGISTRY_ENTRY_STATUS
-    )
+    @GetMapping(value = NEW_REGISTRY_ENTRY_STATUS)
     public ResponseEntity<MetadataHateoas>
     generateDefaultRegistryEntryStatus(HttpServletRequest request) {
 
@@ -255,11 +236,7 @@ public class RegistryEntryStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = REGISTRY_ENTRY_STATUS + SLASH + REGISTRY_ENTRY_STATUS
-    )
+    @PutMapping(value = REGISTRY_ENTRY_STATUS + SLASH + REGISTRY_ENTRY_STATUS)
     public ResponseEntity<MetadataHateoas> updateRegistryEntryStatus(
             @ApiParam(name = "systemID",
                     value = "code of fonds to update.",

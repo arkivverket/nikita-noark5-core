@@ -26,10 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
-                SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class ElectronicSignatureSecurityLevelController {
 
@@ -79,12 +77,7 @@ public class ElectronicSignatureSecurityLevelController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH +
-                    NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL
-    )
+    @PostMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH + NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
     public ResponseEntity<MetadataHateoas>
     createElectronicSignatureSecurityLevel(
             HttpServletRequest request,
@@ -128,11 +121,7 @@ public class ElectronicSignatureSecurityLevelController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL
-    )
+    @GetMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -178,9 +167,7 @@ public class ElectronicSignatureSecurityLevelController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH + CODE_PARAMETER + SLASH,
-                    method = RequestMethod.GET
-    )
+    @GetMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -219,11 +206,7 @@ public class ElectronicSignatureSecurityLevelController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL
-    )
+    @GetMapping(value = NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
     public ResponseEntity<MetadataHateoas>
     generateDefaultElectronicSignatureSecurityLevel(HttpServletRequest request) {
 
@@ -268,12 +251,7 @@ public class ElectronicSignatureSecurityLevelController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH +
-                    ELECTRONIC_SIGNATURE_SECURITY_LEVEL
-    )
+    @PutMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH + ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
     public ResponseEntity<MetadataHateoas>
     updateElectronicSignatureSecurityLevel(
             @ApiParam(name = "systemID",

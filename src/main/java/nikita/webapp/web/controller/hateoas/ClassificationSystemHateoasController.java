@@ -70,9 +70,8 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = NEW_CLASSIFICATION_SYSTEM,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = NEW_CLASSIFICATION_SYSTEM,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystem(
             HttpServletRequest request,
@@ -115,9 +114,8 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS,
-                    method = POST,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas>
     createClassAssociatedWithClassificationSystem(
             HttpServletRequest request,
@@ -143,8 +141,7 @@ public class ClassificationSystemHateoasController
 
     // API - All GET Requests (CRUD - READ)
 
-    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER,
-                    method = GET)
+    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<ClassificationSystemHateoas> findOne(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -204,8 +201,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = CLASSIFICATION_SYSTEM,
-                    method = GET)
+    @GetMapping(value = CLASSIFICATION_SYSTEM)
     public ResponseEntity<ClassificationSystemHateoas>
     findAllClassificationSystem(
             HttpServletRequest request) {
@@ -236,8 +232,7 @@ public class ClassificationSystemHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASS
-    )
+    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASS)
     public ResponseEntity<ClassHateoas>
     findClassAssociatedWithClassificationSystem(
             HttpServletRequest request,
@@ -274,8 +269,7 @@ public class ClassificationSystemHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS
-    )
+    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS)
     public ResponseEntity<ClassHateoas> createDefaultClass(
             HttpServletRequest request,
             @ApiParam(
@@ -303,8 +297,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = SLASH + CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER,
-                    method = DELETE)
+    @DeleteMapping(value = SLASH + CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<FondsStructureDetails>
     deleteClassificationSystemBySystemId(
             HttpServletRequest request,
@@ -366,9 +359,8 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @RequestMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     updateClassificationSystem(
             HttpServletRequest request,

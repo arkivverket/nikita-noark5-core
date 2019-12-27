@@ -26,8 +26,8 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class CorrespondencePartTypeController extends NoarkController {
 
     private ICorrespondencePartTypeService correspondencePartTypeService;
@@ -56,8 +56,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = CORRESPONDENCE_PART_TYPE + SLASH + NEW_CORRESPONDENCE_PART_TYPE)
+    @PostMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + NEW_CORRESPONDENCE_PART_TYPE)
     public ResponseEntity<MetadataHateoas> createCorrespondencePartType(
             HttpServletRequest request,
             @RequestBody CorrespondencePartType correspondencePartType)
@@ -82,8 +81,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = CORRESPONDENCE_PART_TYPE)
+    @GetMapping(value = CORRESPONDENCE_PART_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>)
@@ -112,8 +110,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + CODE_PARAMETER,
-                    method = RequestMethod.GET)
+    @GetMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
         CorrespondencePartType correspondencePartType = correspondencePartTypeService.findByCode(code);
@@ -136,8 +133,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = NEW_CORRESPONDENCE_PART_TYPE)
+    @GetMapping(value = NEW_CORRESPONDENCE_PART_TYPE)
     public ResponseEntity<MetadataHateoas> getCorrespondencePartTypeTemplate(HttpServletRequest request) {
         CorrespondencePartType correspondencePartType = new CorrespondencePartType();
         correspondencePartType.setCode(TEMPLATE_FONDS_STATUS_CODE);
@@ -162,9 +158,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.PUT, value = CORRESPONDENCE_PART_TYPE + UNIT + SLASH + LEFT_PARENTHESIS +
-            CODE + RIGHT_PARENTHESIS)
+    @PutMapping(value = CORRESPONDENCE_PART_TYPE + UNIT + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateCorrespondencePartTypeUnit(
             @RequestBody CorrespondencePartType correspondencePartType,
             HttpServletRequest request)
@@ -188,8 +182,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + CODE_PARAMETER,
-                    method = RequestMethod.DELETE)
+    @DeleteMapping(value = SLASH + CODE_PARAMETER)
     public ResponseEntity<String> deletecorrespondencePartTypeByCode(
             @ApiParam(name = "kode",
                     value = "kode of the correspondencePartType to delete",
