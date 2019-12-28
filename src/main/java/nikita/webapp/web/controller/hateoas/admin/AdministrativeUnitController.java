@@ -199,7 +199,7 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping
+    @DeleteMapping(value = ADMINISTRATIVE_UNIT)
     public ResponseEntity<Count> deleteAllAdministrativeUnit() {
         return ResponseEntity.status(NO_CONTENT).
                 body(new Count(administrativeUnitService.deleteAllByOwnedBy()));
