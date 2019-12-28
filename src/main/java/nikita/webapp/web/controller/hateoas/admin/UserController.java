@@ -120,7 +120,7 @@ public class UserController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
     @Counted
-    @GetMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER + SLASH)
+    @GetMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
     findBySystemId(@PathVariable("username") final String username,
                    HttpServletRequest request) {
