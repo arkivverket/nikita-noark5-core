@@ -32,7 +32,7 @@ public final class N5ResourceMappings {
     public static final String EVENT_TYPE = "hendelsetype";
     // Might be confusion if it's land or lankode
     public static final String COUNTRY = "land";
-    public static final String NEW_COUNTRY = NEW + Constants.DASH + COUNTRY;
+    public static final String NEW_COUNTRY = NEW + DASH + COUNTRY;
 
     public static final String COUNTRY_CODE = "landkode";
     public static final String CLASSIFIED_CODE = "graderingskode";
@@ -142,7 +142,7 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_TYPE = "korrespondanseparttype";
     public static final String CORRESPONDENCE_PART_NAME = "navn";
     public static final String POST_CODE = "postnummer";
-    public static final String NEW_POST_CODE = NEW + Constants.DASH + POST_CODE;
+    public static final String NEW_POST_CODE = NEW + DASH + POST_CODE;
 
     public static final String SOCIAL_SECURITY_NUMBER = "foedselsnummer";
     public static final String D_NUMBER = "dNummer";
@@ -358,17 +358,17 @@ public final class N5ResourceMappings {
 
     public static final String USER = "bruker";
     public static final String USER_NAME = "brukerNavn";
-    public static final String NEW_USER = NEW + Constants.DASH + USER;
+    public static final String NEW_USER = NEW + DASH + USER;
 
     public static final String FIRST_NAME = "fornavn";
     public static final String SECOND_NAME = "etternavn";
     public static final String PASSWORD = "passord";
 
     public static final String RIGHT = "rettighet";
-    public static final String NEW_RIGHT = NEW + Constants.DASH + RIGHT;
+    public static final String NEW_RIGHT = NEW + DASH + RIGHT;
 
     public static final String ADMINISTRATIVE_UNIT = "administrativenhet";
-    public static final String NEW_ADMINISTRATIVE_UNIT = NEW + Constants.DASH + ADMINISTRATIVE_UNIT;
+    public static final String NEW_ADMINISTRATIVE_UNIT = NEW + DASH + ADMINISTRATIVE_UNIT;
 
     public static final String ADMINISTRATIVE_UNIT_STATUS = "administrativEnhetsstatus";
     public static final String ADMINISTRATIVE_UNIT_NAME = "administrativEnhetNavn";
