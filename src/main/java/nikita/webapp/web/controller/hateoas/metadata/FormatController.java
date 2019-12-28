@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.FORMAT;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -164,10 +163,7 @@ public class FormatController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @GetMapping(
-            value = FORMAT + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH + LEFT_PARENTHESIS + "value" +
-                    RIGHT_PARENTHESIS)
+    @GetMapping(value = FORMAT + SLASH + CODE_PARAMETER + SLASH + LEFT_PARENTHESIS + "value" + RIGHT_PARENTHESIS)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             @PathVariable("value") final String value,
