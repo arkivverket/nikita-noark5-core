@@ -26,10 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
-                SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class ElectronicSignatureVerifiedController {
 
@@ -79,12 +77,7 @@ public class ElectronicSignatureVerifiedController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH +
-                    NEW_ELECTRONIC_SIGNATURE_VERIFIED
-    )
+    @PostMapping(value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH + NEW_ELECTRONIC_SIGNATURE_VERIFIED)
     public ResponseEntity<MetadataHateoas>
     createElectronicSignatureVerified(
             HttpServletRequest request,
@@ -128,11 +121,7 @@ public class ElectronicSignatureVerifiedController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = ELECTRONIC_SIGNATURE_VERIFIED
-    )
+    @GetMapping(value = ELECTRONIC_SIGNATURE_VERIFIED)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -178,9 +167,7 @@ public class ElectronicSignatureVerifiedController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH + CODE_PARAMETER + SLASH,
-                    method = RequestMethod.GET
-    )
+    @GetMapping(value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -219,11 +206,7 @@ public class ElectronicSignatureVerifiedController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_ELECTRONIC_SIGNATURE_VERIFIED
-    )
+    @GetMapping(value = NEW_ELECTRONIC_SIGNATURE_VERIFIED)
     public ResponseEntity<MetadataHateoas>
     generateDefaultElectronicSignatureVerified(HttpServletRequest request) {
 
@@ -268,12 +251,7 @@ public class ElectronicSignatureVerifiedController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH +
-                    ELECTRONIC_SIGNATURE_VERIFIED
-    )
+    @PutMapping(value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH + ELECTRONIC_SIGNATURE_VERIFIED)
     public ResponseEntity<MetadataHateoas>
     updateElectronicSignatureVerified(
             @ApiParam(name = "systemID",

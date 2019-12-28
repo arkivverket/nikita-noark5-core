@@ -28,8 +28,8 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class DocumentStatusController {
 
     private IDocumentStatusService documentStatusService;
@@ -58,8 +58,7 @@ public class DocumentStatusController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = DOCUMENT_STATUS + SLASH + NEW_DOCUMENT_STATUS)
+    @PostMapping(value = DOCUMENT_STATUS + SLASH + NEW_DOCUMENT_STATUS)
     public ResponseEntity<MetadataHateoas> createDocumentStatus(
             HttpServletRequest request,
             @RequestBody DocumentStatus documentStatus)
@@ -85,8 +84,7 @@ public class DocumentStatusController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = DOCUMENT_STATUS)
+    @GetMapping(value = DOCUMENT_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>)
@@ -119,8 +117,7 @@ public class DocumentStatusController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = DOCUMENT_STATUS + SLASH + CODE_PARAMETER + SLASH,
-                    method = RequestMethod.GET)
+    @GetMapping(value = DOCUMENT_STATUS + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
         DocumentStatus documentStatus =
@@ -144,8 +141,7 @@ public class DocumentStatusController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = NEW_DOCUMENT_STATUS)
+    @GetMapping(value = NEW_DOCUMENT_STATUS)
     public ResponseEntity<MetadataHateoas> getDocumentStatusTemplate(HttpServletRequest request) {
         DocumentStatus documentStatus = new DocumentStatus();
         documentStatus.setCode(TEMPLATE_DOCUMENT_STATUS_CODE);
@@ -170,8 +166,7 @@ public class DocumentStatusController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.PUT, value = DOCUMENT_STATUS + SLASH + DOCUMENT_STATUS)
+    @PutMapping(value = DOCUMENT_STATUS + SLASH + DOCUMENT_STATUS)
     public ResponseEntity<MetadataHateoas> updateDocumentStatus(@RequestBody DocumentStatus documentStatus,
                                                                 HttpServletRequest request)
             throws NikitaException {

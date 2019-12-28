@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.PRECEDENCE_STATUS;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -27,10 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
-                SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class PrecedenceStatusController {
 
@@ -75,11 +72,7 @@ public class PrecedenceStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = PRECEDENCE_STATUS + SLASH + NEW_PRECEDENCE_STATUS
-    )
+    @PostMapping(value = PRECEDENCE_STATUS + SLASH + NEW_PRECEDENCE_STATUS)
     public ResponseEntity<MetadataHateoas>
     createPrecedenceStatus(
             HttpServletRequest request,
@@ -123,11 +116,7 @@ public class PrecedenceStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = PRECEDENCE_STATUS
-    )
+    @GetMapping(value = PRECEDENCE_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -170,12 +159,7 @@ public class PrecedenceStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = PRECEDENCE_STATUS + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = PRECEDENCE_STATUS + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -214,11 +198,7 @@ public class PrecedenceStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_PRECEDENCE_STATUS
-    )
+    @GetMapping(value = NEW_PRECEDENCE_STATUS)
     public ResponseEntity<MetadataHateoas>
     generateDefaultPrecedenceStatus(HttpServletRequest request) {
 
@@ -262,11 +242,7 @@ public class PrecedenceStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = PRECEDENCE_STATUS + SLASH + PRECEDENCE_STATUS
-    )
+    @PutMapping(value = PRECEDENCE_STATUS + SLASH + PRECEDENCE_STATUS)
     public ResponseEntity<MetadataHateoas>
     updatePrecedenceStatus(
             @ApiParam(name = "systemID",

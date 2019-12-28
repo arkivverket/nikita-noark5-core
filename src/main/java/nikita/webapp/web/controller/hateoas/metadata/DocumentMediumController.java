@@ -24,8 +24,8 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class DocumentMediumController {
 
     private IDocumentMediumService documentMediumService;
@@ -54,8 +54,7 @@ public class DocumentMediumController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = DOCUMENT_MEDIUM + SLASH + NEW_DOCUMENT_MEDIUM)
+    @PostMapping(value = DOCUMENT_MEDIUM + SLASH + NEW_DOCUMENT_MEDIUM)
     public ResponseEntity<MetadataHateoas> createDocumentMedium(
             HttpServletRequest request,
             @RequestBody DocumentMedium documentMedium)
@@ -81,8 +80,7 @@ public class DocumentMediumController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = DOCUMENT_MEDIUM)
+    @GetMapping(value = DOCUMENT_MEDIUM)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         //ArrayList <DocumentMedium> documentMediumList = (ArrayList<DocumentMedium>) documentMediumService.findAll2();
         MetadataHateoas metadataHateoas = new MetadataHateoas(
@@ -112,8 +110,7 @@ public class DocumentMediumController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = DOCUMENT_MEDIUM + SLASH + CODE_PARAMETER + SLASH,
-                    method = RequestMethod.GET)
+    @GetMapping(value = DOCUMENT_MEDIUM + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                           HttpServletRequest request) {
         DocumentMedium documentMedium = documentMediumService.findByCode(code);
@@ -136,8 +133,7 @@ public class DocumentMediumController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = NEW_DOCUMENT_MEDIUM)
+    @GetMapping(value = NEW_DOCUMENT_MEDIUM)
     public ResponseEntity<MetadataHateoas> getDocumentMediumTemplate(HttpServletRequest request) {
         DocumentMedium documentMedium = new DocumentMedium();
         documentMedium.setCode(TEMPLATE_DOCUMENT_MEDIUM_CODE);
@@ -162,8 +158,7 @@ public class DocumentMediumController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.PUT, value = DOCUMENT_MEDIUM + SLASH + DOCUMENT_MEDIUM)
+    @PutMapping(value = DOCUMENT_MEDIUM + SLASH + DOCUMENT_MEDIUM)
     public ResponseEntity<MetadataHateoas> updateDocumentMedium(@RequestBody DocumentMedium documentMedium,
                                                                 HttpServletRequest request)
             throws NikitaException {

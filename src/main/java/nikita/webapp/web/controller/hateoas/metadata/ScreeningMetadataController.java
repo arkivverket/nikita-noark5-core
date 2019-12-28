@@ -26,9 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class ScreeningMetadataController {
 
@@ -72,11 +71,7 @@ public class ScreeningMetadataController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = SCREENING_METADATA + SLASH + NEW_SCREENING_METADATA
-    )
+    @PostMapping(value = SCREENING_METADATA + SLASH + NEW_SCREENING_METADATA)
     public ResponseEntity<MetadataHateoas> createScreeningMetadata(
             HttpServletRequest request,
             @RequestBody ScreeningMetadata postalCode)
@@ -116,11 +111,7 @@ public class ScreeningMetadataController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = SCREENING_METADATA
-    )
+    @GetMapping(value = SCREENING_METADATA)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -161,12 +152,7 @@ public class ScreeningMetadataController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = SCREENING_METADATA + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = SCREENING_METADATA + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String kode,
             HttpServletRequest request) {
@@ -204,11 +190,7 @@ public class ScreeningMetadataController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_SCREENING_METADATA
-    )
+    @GetMapping(value = NEW_SCREENING_METADATA)
     public ResponseEntity<MetadataHateoas>
     generateDefaultScreeningMetadata(HttpServletRequest request) {
 
@@ -251,11 +233,7 @@ public class ScreeningMetadataController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = SCREENING_METADATA + SLASH + SCREENING_METADATA
-    )
+    @PutMapping(value = SCREENING_METADATA + SLASH + SCREENING_METADATA)
     public ResponseEntity<MetadataHateoas> updateScreeningMetadata(
             @ApiParam(name = "kode",
                     value = "kode of ScreeningMetadata to update.",

@@ -27,10 +27,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
-                SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class FormatController {
 
@@ -78,11 +76,7 @@ public class FormatController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = FORMAT + SLASH + NEW_FORMAT
-    )
+    @PostMapping(value = FORMAT + SLASH + NEW_FORMAT)
     public ResponseEntity<MetadataHateoas>
     createFormat(
             HttpServletRequest request,
@@ -126,11 +120,7 @@ public class FormatController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = FORMAT
-    )
+    @GetMapping(value = FORMAT)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -217,11 +207,7 @@ public class FormatController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_FORMAT
-    )
+    @GetMapping(value = NEW_FORMAT)
     public ResponseEntity<MetadataHateoas>
     generateDefaultFormat(HttpServletRequest request) {
 
@@ -265,12 +251,7 @@ public class FormatController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = FORMAT + SLASH +
-                    FORMAT
-    )
+    @PutMapping(value = FORMAT + SLASH + FORMAT)
     public ResponseEntity<MetadataHateoas>
     updateFormat(
             @ApiParam(name = "systemID",

@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_TYPE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -27,10 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
-                SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class RegistryEntryTypeController {
 
@@ -75,11 +72,7 @@ public class RegistryEntryTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = REGISTRY_ENTRY_TYPE + SLASH + NEW_REGISTRY_ENTRY_TYPE
-    )
+    @PostMapping(value = REGISTRY_ENTRY_TYPE + SLASH + NEW_REGISTRY_ENTRY_TYPE)
     public ResponseEntity<MetadataHateoas>
     createRegistryEntryType(
             HttpServletRequest request,
@@ -123,11 +116,7 @@ public class RegistryEntryTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = REGISTRY_ENTRY_TYPE
-    )
+    @GetMapping(value = REGISTRY_ENTRY_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -170,12 +159,7 @@ public class RegistryEntryTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = REGISTRY_ENTRY_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = REGISTRY_ENTRY_TYPE + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByKode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -214,11 +198,7 @@ public class RegistryEntryTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_REGISTRY_ENTRY_TYPE
-    )
+    @GetMapping(value = NEW_REGISTRY_ENTRY_TYPE)
     public ResponseEntity<MetadataHateoas>
     generateDefaultRegistryEntryType(HttpServletRequest request) {
 
@@ -262,11 +242,7 @@ public class RegistryEntryTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = REGISTRY_ENTRY_TYPE + SLASH + REGISTRY_ENTRY_TYPE
-    )
+    @PutMapping(value = REGISTRY_ENTRY_TYPE + SLASH + REGISTRY_ENTRY_TYPE)
     public ResponseEntity<MetadataHateoas>
     updateRegistryEntryType(
             @ApiParam(name = "kode",

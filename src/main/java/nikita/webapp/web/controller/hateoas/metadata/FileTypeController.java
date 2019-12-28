@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.FILE_TYPE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -27,9 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class FileTypeController {
 
@@ -73,11 +71,7 @@ public class FileTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = FILE_TYPE + SLASH + NEW_FILE_TYPE
-    )
+    @PostMapping(value = FILE_TYPE + SLASH + NEW_FILE_TYPE)
     public ResponseEntity<MetadataHateoas> createFileType(
             HttpServletRequest request,
             @RequestBody FileType fileType)
@@ -117,11 +111,7 @@ public class FileTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = FILE_TYPE
-    )
+    @GetMapping(value = FILE_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -162,12 +152,7 @@ public class FileTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = FILE_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = FILE_TYPE + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -205,11 +190,7 @@ public class FileTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_FILE_TYPE
-    )
+    @GetMapping(value = NEW_FILE_TYPE)
     public ResponseEntity<MetadataHateoas>
     generateDefaultFileType(HttpServletRequest request) {
 
@@ -252,11 +233,7 @@ public class FileTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = FILE_TYPE + SLASH + FILE_TYPE
-    )
+    @PutMapping(value = FILE_TYPE + SLASH + FILE_TYPE)
     public ResponseEntity<MetadataHateoas> updateFileType(
             @ApiParam(name = "systemID",
                     value = "code of fonds to update.",

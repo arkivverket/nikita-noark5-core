@@ -26,9 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class CountryController {
 
@@ -72,11 +71,7 @@ public class CountryController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = COUNTRY + SLASH + NEW_COUNTRY
-    )
+    @PostMapping(value = COUNTRY + SLASH + NEW_COUNTRY)
     public ResponseEntity<MetadataHateoas> createCountry(
             HttpServletRequest request,
             @RequestBody Country country)
@@ -116,11 +111,7 @@ public class CountryController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = COUNTRY
-    )
+    @GetMapping(value = COUNTRY)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -161,12 +152,7 @@ public class CountryController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = COUNTRY + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = COUNTRY + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -204,11 +190,7 @@ public class CountryController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_COUNTRY
-    )
+    @GetMapping(value = NEW_COUNTRY)
     public ResponseEntity<MetadataHateoas>
     generateDefaultCountry(HttpServletRequest request) {
 
@@ -251,11 +233,7 @@ public class CountryController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = COUNTRY + SLASH + COUNTRY
-    )
+    @PutMapping(value = COUNTRY + SLASH + COUNTRY)
     public ResponseEntity<MetadataHateoas> updateCountry(
             @ApiParam(name = "systemID",
                     value = "code of fonds to update.",

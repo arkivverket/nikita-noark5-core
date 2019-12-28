@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -27,9 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class CommentTypeController {
 
@@ -73,11 +71,7 @@ public class CommentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = COMMENT_TYPE + SLASH + NEW_COMMENT_TYPE
-    )
+    @PostMapping(value = COMMENT_TYPE + SLASH + NEW_COMMENT_TYPE)
     public ResponseEntity<MetadataHateoas> createCommentType(
             HttpServletRequest request,
             @RequestBody CommentType commentType)
@@ -117,11 +111,7 @@ public class CommentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = COMMENT_TYPE
-    )
+    @GetMapping(value = COMMENT_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -162,12 +152,7 @@ public class CommentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = COMMENT_TYPE + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = COMMENT_TYPE + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -205,11 +190,7 @@ public class CommentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_COMMENT_TYPE
-    )
+    @GetMapping(value = NEW_COMMENT_TYPE)
     public ResponseEntity<MetadataHateoas>
     generateDefaultCommentType(HttpServletRequest request) {
 
@@ -252,11 +233,7 @@ public class CommentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = COMMENT_TYPE + SLASH + COMMENT_TYPE
-    )
+    @PutMapping(value = COMMENT_TYPE + SLASH + COMMENT_TYPE)
     public ResponseEntity<MetadataHateoas> updateCommentType(
             @ApiParam(name = "systemID",
                     value = "code of fonds to update.",

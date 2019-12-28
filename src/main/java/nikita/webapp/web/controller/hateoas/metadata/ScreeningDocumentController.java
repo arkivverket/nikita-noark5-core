@@ -26,9 +26,8 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(
-        value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class ScreeningDocumentController {
 
@@ -72,11 +71,7 @@ public class ScreeningDocumentController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = SCREENING_DOCUMENT + SLASH + NEW_SCREENING_DOCUMENT
-    )
+    @PostMapping(value = SCREENING_DOCUMENT + SLASH + NEW_SCREENING_DOCUMENT)
     public ResponseEntity<MetadataHateoas> createScreeningDocument(
             HttpServletRequest request,
             @RequestBody ScreeningDocument postalCode)
@@ -116,11 +111,7 @@ public class ScreeningDocumentController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = SCREENING_DOCUMENT
-    )
+    @GetMapping(value = SCREENING_DOCUMENT)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -161,12 +152,7 @@ public class ScreeningDocumentController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            value = SCREENING_DOCUMENT + SLASH + LEFT_PARENTHESIS + CODE +
-                    RIGHT_PARENTHESIS + SLASH,
-            method = RequestMethod.GET
-    )
+    @GetMapping(value = SCREENING_DOCUMENT + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
@@ -204,11 +190,7 @@ public class ScreeningDocumentController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = NEW_SCREENING_DOCUMENT
-    )
+    @GetMapping(value = NEW_SCREENING_DOCUMENT)
     public ResponseEntity<MetadataHateoas>
     generateDefaultScreeningDocument(HttpServletRequest request) {
 
@@ -251,11 +233,7 @@ public class ScreeningDocumentController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = SCREENING_DOCUMENT + SLASH + SCREENING_DOCUMENT
-    )
+    @PutMapping(value = SCREENING_DOCUMENT + SLASH + SCREENING_DOCUMENT)
     public ResponseEntity<MetadataHateoas> updateScreeningDocument(
             @ApiParam(name = "systemID",
                     value = "code of ScreeningDocument to update.",

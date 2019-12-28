@@ -22,8 +22,8 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class FondsStatusController {
 
     private IFondsStatusService fondsStatusService;
@@ -52,8 +52,7 @@ public class FondsStatusController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.POST, value = FONDS_STATUS + SLASH + NEW_FONDS_STATUS)
+    @PostMapping(value = FONDS_STATUS + SLASH + NEW_FONDS_STATUS)
     public ResponseEntity<MetadataHateoas> createFondsStatus(
             HttpServletRequest request,
             @RequestBody FondsStatus fondsStatus)
@@ -79,8 +78,7 @@ public class FondsStatusController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = FONDS_STATUS)
+    @GetMapping(value = FONDS_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 fondsStatusService.findAll(),
@@ -109,8 +107,7 @@ public class FondsStatusController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
-    @RequestMapping(value = FONDS_STATUS + SLASH + CODE_PARAMETER + SLASH,
-                    method = RequestMethod.GET)
+    @GetMapping(value = FONDS_STATUS + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
         FondsStatus fondsStatus = fondsStatusService.findByCode(code);
@@ -133,8 +130,7 @@ public class FondsStatusController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.GET, value = NEW_FONDS_STATUS)
+    @GetMapping(value = NEW_FONDS_STATUS)
     public ResponseEntity<MetadataHateoas> getFondsStatusTemplate(HttpServletRequest request) {
         FondsStatus fondsStatus = new FondsStatus();
         fondsStatus.setCode(TEMPLATE_FONDS_STATUS_CODE);
@@ -159,8 +155,7 @@ public class FondsStatusController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @RequestMapping(method = RequestMethod.PUT, value = FONDS_STATUS + SLASH + FONDS_STATUS)
+    @PutMapping(value = FONDS_STATUS + SLASH + FONDS_STATUS)
     public ResponseEntity<MetadataHateoas> updateFondsStatus(@RequestBody FondsStatus fondsStatus,
                                                              HttpServletRequest request)
             throws NikitaException {

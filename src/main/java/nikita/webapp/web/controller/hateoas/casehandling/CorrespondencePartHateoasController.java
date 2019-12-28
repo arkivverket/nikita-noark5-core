@@ -38,7 +38,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class CorrespondencePartHateoasController
         extends NoarkController {
 
@@ -67,8 +67,7 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER,
-                    method = GET)
+    @GetMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartPersonHateoas> findOneCorrespondencePartPersonBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -98,8 +97,7 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + SYSTEM_ID_PARAMETER,
-            method = GET)
+    @GetMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartInternalHateoas> findOneCorrespondencePartInternalBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -129,8 +127,7 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + SYSTEM_ID_PARAMETER,
-            method = GET)
+    @GetMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartUnitHateoas> findOneCorrespondencePartUnitBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -164,9 +161,8 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + SYSTEM_ID_PARAMETER,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + SYSTEM_ID_PARAMETER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartUnitHateoas> updateCorrespondencePartUnit(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -209,9 +205,8 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartPersonHateoas> updateCorrespondencePartPerson(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -254,9 +249,8 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + SYSTEM_ID_PARAMETER,
-                    method = PUT,
-                    consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PutMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + SYSTEM_ID_PARAMETER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartInternalHateoas> updateCorrespondencePartInternal(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
@@ -292,8 +286,7 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + CODE_PARAMETER,
-                    method = DELETE)
+    @DeleteMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + CODE_PARAMETER)
     public ResponseEntity<String> deleteCorrespondencePartUnit(
             @ApiParam(name = "kode",
                     value = "kode of the correspondencePartUnit to delete",
@@ -314,8 +307,7 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + CODE_PARAMETER,
-                    method = DELETE)
+    @DeleteMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + CODE_PARAMETER)
     public ResponseEntity<String> deleteCorrespondencePartPerson(
             @ApiParam(name = "kode",
                     value = "kode of the correspondencePartPerson to delete",
@@ -336,8 +328,7 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + CODE_PARAMETER,
-                    method = DELETE)
+    @DeleteMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + CODE_PARAMETER)
     public ResponseEntity<String> deleteCorrespondencePartInternal(
             @ApiParam(name = "kode",
                     value = "kode of the correspondencePartInternal to delete",

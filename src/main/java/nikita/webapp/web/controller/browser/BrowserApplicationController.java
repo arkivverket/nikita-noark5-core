@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/")
 public class BrowserApplicationController {
 /*
-    @RequestMapping(method = {RequestMethod.GET})
+    @GetMapping
     public ModelAndView identifyForBrowser(HttpServletRequest request) {
         return new ModelAndView("webapp/browser/applicationlist", "applicationDetails", getApplicationDetails());
     }

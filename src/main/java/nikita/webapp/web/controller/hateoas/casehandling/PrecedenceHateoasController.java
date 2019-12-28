@@ -14,8 +14,8 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 
 @RestController
-@RequestMapping(value = Constants.HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + CORRESPONDENCE_PART,
-        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + CORRESPONDENCE_PART,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class PrecedenceHateoasController {
 /*
     IPrecedenceHateoasHandler precedenceHateoasHandler;
@@ -36,8 +36,7 @@ public class PrecedenceHateoasController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @RequestMapping(value = SLASH + SYSTEM_ID_PARAMETER,
-                    method = RequestMethod.GET)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PrecedenceHateoas> findOnePrecedenceBySystemId(
             final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
             @ApiParam(name = "systemID",
