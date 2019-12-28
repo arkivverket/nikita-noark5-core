@@ -98,14 +98,16 @@ public class DocumentObjectHateoasHandler
 
     @Override
     public void addVariantFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_METADATA_PATH + SLASH + VARIANT_FORMAT, REL_METADATA_VARIANT_FORMAT, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + VARIANT_FORMAT,
+                REL_METADATA_VARIANT_FORMAT, false));
     }
 
     @Override
     public void addFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_METADATA_PATH + SLASH + FORMAT, REL_METADATA_FORMAT, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + FORMAT,
+                REL_METADATA_FORMAT, false));
     }
 
     // Internal helper methods

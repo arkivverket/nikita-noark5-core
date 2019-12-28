@@ -44,18 +44,15 @@ public class MetadataHateoasHandler
     public void addCode(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         String code = ((IMetadataEntity) entity).getCode();
-        hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                        NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName() + SLASH +
-                        code + SLASH, REL_METADATA +
-                        entity.getBaseTypeName() + SLASH));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + entity.getBaseTypeName() + SLASH + code + SLASH,
+                REL_METADATA + entity.getBaseTypeName() + SLASH));
     }
     @Override
     public void addNewCode(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH + NEW +
-                DASH + entity.getBaseTypeName(), NIKITA_CONFORMANCE_REL +
-                NEW + DASH + entity.getBaseTypeName() + SLASH));
+                HREF_BASE_METADATA + NEW + DASH + entity.getBaseTypeName(),
+                NIKITA_CONFORMANCE_REL + NEW + DASH + entity.getBaseTypeName() + SLASH));
     }
 }

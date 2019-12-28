@@ -136,8 +136,8 @@ public class HateoasHandler
     public void addDocumentMedium(INikitaEntity entity,
                                   IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH +
-                DOCUMENT_MEDIUM, REL_METADATA_DOCUMENT_MEDIUM, false));
+                HREF_BASE_METADATA + DOCUMENT_MEDIUM,
+                REL_METADATA_DOCUMENT_MEDIUM, false));
     }
 
     // Sub class should handle this, empty links otherwise!
