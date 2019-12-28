@@ -38,6 +38,7 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -100,7 +101,7 @@ public class RecordService
         RecordHateoas recordHateoas =
                 new RecordHateoas(recordRepository.save(record));
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(recordHateoas.getEntityVersion().toString())
                 .body(recordHateoas);
