@@ -24,7 +24,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH,
+@RequestMapping(value = HREF_BASE_METADATA,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class DocumentMediumController {
 

@@ -1049,9 +1049,6 @@ public final class Constants {
     public static final String HREF_BASE_DOCUMENT_FLOW =
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW + SLASH;
 
-    public static final String HREF_METADATA_PATH =
-            HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH;
-
     private Constants() {
     }
 }
