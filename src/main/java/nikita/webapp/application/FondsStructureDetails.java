@@ -18,21 +18,21 @@ public class FondsStructureDetails extends APIDetails {
         }
         // Add Fonds
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + FONDS,
                 REL_FONDS_STRUCTURE + FONDS + SLASH,
                 true
         ));
 
         // Add new-fonds
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + NEW_FONDS,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + NEW_FONDS,
                 REL_FONDS_STRUCTURE + NEW_FONDS + SLASH,
                 false
         ));
 
         // Add FondsCreator
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS_CREATOR,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + FONDS_CREATOR,
                 REL_FONDS_STRUCTURE + FONDS_CREATOR + SLASH,
                 true
         ));
@@ -40,21 +40,21 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add new FondsCreator
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + NEW_FONDS_CREATOR,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + NEW_FONDS_CREATOR,
                 REL_FONDS_STRUCTURE + NEW_FONDS_CREATOR + SLASH,
                 true
         ));
 
         // Add Series
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SERIES,
                 REL_FONDS_STRUCTURE + SERIES + SLASH,
                 true
         ));
 
         // Add Classification_system
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE +
                         CLASSIFICATION_SYSTEM,
                 REL_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH,
                 true
@@ -62,28 +62,28 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add Class
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASS,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + CLASS,
                 REL_FONDS_STRUCTURE + CLASS + SLASH,
                 true
         ));
 
         // Add File
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + FILE,
                 REL_FONDS_STRUCTURE + FILE + SLASH,
                 true
         ));
 
         // Add Registration
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + RECORD,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + RECORD,
                 REL_FONDS_STRUCTURE + RECORD + SLASH,
                 true
         ));
 
         // Add DocumentDescription
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH +
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE +
                         DOCUMENT_DESCRIPTION,
                 REL_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH,
                 true
@@ -91,7 +91,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add DocumentObject
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT,
                 REL_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH,
                 true
         ));

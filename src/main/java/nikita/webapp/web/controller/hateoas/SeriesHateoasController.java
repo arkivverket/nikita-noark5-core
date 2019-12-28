@@ -38,7 +38,7 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + SERIES,
+@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SERIES,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @Api(value = "SeriesController", description = "Contains CRUD operations for Series. Create operations are only for " +
         "entities that can be associated with a series e.g. File / ClassificationSystem. Update and delete operations" +

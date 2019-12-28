@@ -43,7 +43,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + FILE,
+@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + FILE,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class FileHateoasController
         extends NoarkController {

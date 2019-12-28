@@ -38,7 +38,7 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT)
+@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT)
 public class DocumentObjectHateoasController
         extends NoarkController {
 
