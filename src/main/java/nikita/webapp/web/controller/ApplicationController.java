@@ -45,7 +45,8 @@ public class ApplicationController {
     }
 
     @Counted
-    @GetMapping(value = HREF_OPENID_CONFIGURATION)
+    @GetMapping(value = HREF_OPENID_CONFIGURATION,
+                produces = CONTENT_TYPE_JSON)
     public ResponseEntity<OIDCConfiguration> getOpenIdConfiguration(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)

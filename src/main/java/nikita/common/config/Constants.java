@@ -226,6 +226,8 @@ public final class Constants {
     public static final String NOARK5_V5_CONTENT_TYPE_JSON =
             "application/vnd.noark5+json";
 
+    public static final String CONTENT_TYPE_JSON = "application/json";
+
     public static final String INFO_CANNOT_FIND_OBJECT = "Cannot find object of type ";
     public static final String INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT = "Cannot associate with a closed object";
     public static final String INFO_INVALID_STRUCTURE = "Invalid Noark structure";
