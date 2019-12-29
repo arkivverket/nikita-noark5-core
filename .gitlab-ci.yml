@@ -44,7 +44,7 @@ maven-build:
   stage: build
   script:
   - "mvn package -B"
-  - "mvn test"
+  - "mvn test -Dtest=FondsIT"
   artifacts:
     paths:
     - target/*.jar
