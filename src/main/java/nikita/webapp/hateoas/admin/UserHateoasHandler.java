@@ -46,14 +46,14 @@ public class UserHateoasHandler
     public void addNewAdministrativeUnit(INikitaEntity entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_ADMIN + ADMINISTRATIVE_UNIT + SLASH + entity.getSystemId() + SLASH + NEW_ADMINISTRATIVE_UNIT + SLASH,
+                HREF_BASE_ADMIN + entity.getSystemId() + SLASH + NEW_ADMINISTRATIVE_UNIT + SLASH,
                 REL_ADMIN_NEW_ADMINISTRATIVE_UNIT, false));
     }
 
     public void addAdministrativeUnit(INikitaEntity entity,
                                       IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_ADMIN + ADMINISTRATIVE_UNIT + SLASH + entity.getSystemId() + SLASH,
+		HREF_BASE_ADMIN + entity.getSystemId() + SLASH + ADMINISTRATIVE_UNIT + SLASH,
                 REL_ADMIN_ADMINISTRATIVE_UNIT, false));
     }
 }
