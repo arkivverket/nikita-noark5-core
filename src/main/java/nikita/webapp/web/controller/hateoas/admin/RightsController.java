@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import static nikita.common.config.Constants.*;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
+@RequestMapping(value = HREF_BASE_ADMIN,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class RightsController extends NoarkController {
 /*

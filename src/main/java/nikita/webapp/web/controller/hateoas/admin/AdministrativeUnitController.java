@@ -30,7 +30,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH,
+@RequestMapping(value = HREF_BASE_ADMIN,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class AdministrativeUnitController extends NoarkController {
 
