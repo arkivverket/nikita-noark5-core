@@ -1047,7 +1047,7 @@ public final class Constants {
             HREF_BASE_FONDS_STRUCTURE + FONDS;
 
     public static final String HREF_BASE_DOCUMENT_FLOW =
-            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW;
 
     private Constants() {
     }
