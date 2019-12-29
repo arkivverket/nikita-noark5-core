@@ -13,7 +13,7 @@ public interface IUserService {
 
     UserHateoas findAll();
 
-    UserHateoas findByUsername(String username);
+    UserHateoas findBySystemID(String username);
 
     UserHateoas handleUpdate(String userSystemId, Long version, User
             incomingUser);
@@ -25,7 +25,7 @@ public interface IUserService {
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);
 
-    long deleteAllByUsername();
+    long deleteAll();
 
     long deleteByUsername(String username);
 }
