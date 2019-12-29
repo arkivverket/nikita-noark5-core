@@ -1,5 +1,8 @@
 package nikita.webapp.structure;
 
+import java.time.OffsetDateTime;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nikita.N5CoreApp;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +30,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /*import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
@@ -115,6 +120,97 @@ public class FondsIT {
 
         MockHttpServletResponse response = actions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
+    }
+
+    @Test
+    public void validdates() throws Exception {
+	System.out.println("info: testing date parsing");
+	String[] datetimemust = {
+            "1997-07-16T19:20+01:00",
+            "1997-07-16T19:20:30+01:00",
+            "1997-07-16T19:20:30.45+01:00",
+            "2012-10-10T15:00:00Z",
+            "2014-11-22T15:15:02.956+01:00",
+
+	    // These could be handled too
+            "1997-07-16Z",
+            "1865-02-13T00:00:00Z",
+        };
+        String[] datetimereject = {
+            "1997-07-16T19:20+0100",
+            "1997-07-16T19:20-0100",
+            "1997-07-16T19:20+01",
+            "1997-07-16T19:20-01",
+            "1997",
+            "1997-07",
+            "1997-07-16",
+        };
+	for (String teststr : datetimemust) {
+	    StringBuilder errors = new StringBuilder();
+	    String json = "{ \"d\": \"" + teststr+ "\"}";
+	    ObjectNode objectNode =
+		(ObjectNode) new ObjectMapper().readTree(json);
+	    OffsetDateTime d =
+		deserializeDateTime("d", objectNode, errors);
+	    if (null != d) {
+		System.out.println("success: datetime '" + teststr + "' parsed to " + d);
+	    } else {
+		System.out.println("error: unable to parse datetime '" + teststr + "'");
+	    }
+	}
+	for (String teststr : datetimereject) {
+	    StringBuilder errors = new StringBuilder();
+	    String json = "{ \"d\": \"" + teststr+ "\"}";
+	    ObjectNode objectNode =
+		(ObjectNode) new ObjectMapper().readTree(json);
+	    OffsetDateTime d =
+		deserializeDateTime("d", objectNode, errors);
+	    if (null != d) {
+		System.out.println("error: datetime '" + teststr + "' parsed to " + d);
+	    } else {
+		System.out.println("success: unable to parse datetime '" + teststr + "'");
+	    }
+	}
+
+	String[] datemust = {
+            "1997-07-16+01:00",
+            "1997-07-16-01:00",
+            "1997-07-16Z",
+            "1865-02-13Z",
+	};
+	String[] datereject = {
+            "1997-07-16+0100",
+            "1997-07-16-0100",
+            "1997-07-16+01",
+            "1997-07-16-01",
+            "1997-07-16",
+	};
+	for (String teststr : datemust) {
+	    StringBuilder errors = new StringBuilder();
+	    String json = "{ \"d\": \"" + teststr+ "\"}";
+	    ObjectNode objectNode =
+		(ObjectNode) new ObjectMapper().readTree(json);
+	    OffsetDateTime d =
+		deserializeDate("d", objectNode, errors);
+	    if (null != d) {
+		System.out.println("success: date '" + teststr + "' parsed to " + d);
+	    } else {
+		System.out.println("error: unable to parse date '" + teststr + "'");
+	    }
+	}
+	for (String teststr : datereject) {
+	    StringBuilder errors = new StringBuilder();
+	    String json = "{ \"d\": \"" + teststr+ "\"}";
+	    ObjectNode objectNode =
+		(ObjectNode) new ObjectMapper().readTree(json);
+	    OffsetDateTime d =
+		deserializeDate("d", objectNode, errors);
+	    if (null != d) {
+		System.out.println("error: date '" + teststr + "' parsed to " + d);
+	    } else {
+		System.out.println("success: unable to parse date '" + teststr + "'");
+	    }
+	}
     }
 
 /*
