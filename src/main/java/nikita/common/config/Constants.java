@@ -1035,7 +1035,7 @@ public final class Constants {
             HREF_BASE_CASE_HANDLING + CASE_FILE;
 
     public static final String HREF_BASE_SERIES =
-            HREF_BASE_FONDS_STRUCTURE + SERIES + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + SERIES;
 
     public static final String HREF_BASE_CLASS =
             HREF_BASE_FONDS_STRUCTURE + CLASS + SLASH;

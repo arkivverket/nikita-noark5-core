@@ -74,7 +74,7 @@ public class FileHateoasHandler
         File file = getFile(entity);
         if (file.getReferenceSeries() != null) {
             hateoasNoarkObject.addLink(entity,
-                    new Link(getOutgoingAddress() + HREF_BASE_SERIES +
+                    new Link(getOutgoingAddress() + HREF_BASE_SERIES + SLASH +
                             file.getReferenceSeries().getSystemId(),
                             REL_FONDS_STRUCTURE_SERIES, true));
         }
