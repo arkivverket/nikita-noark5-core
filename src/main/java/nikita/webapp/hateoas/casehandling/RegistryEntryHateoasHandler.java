@@ -49,58 +49,58 @@ public class RegistryEntryHateoasHandler
 
     @Override
     public void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + ELECTRONIC_SIGNATURE + SLASH, REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + ELECTRONIC_SIGNATURE + SLASH,
+                REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE, false));
     }
 
     @Override
     public void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + NEW_ELECTRONIC_SIGNATURE + SLASH, REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_ELECTRONIC_SIGNATURE + SLASH,
+                REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE, false));
     }
 
     @Override
     public void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + PRECEDENCE + SLASH, REL_FONDS_STRUCTURE_PRECEDENCE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + PRECEDENCE + SLASH,
+                REL_FONDS_STRUCTURE_PRECEDENCE, false));
     }
 
     @Override
     public void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + NEW_PRECEDENCE + SLASH, REL_FONDS_STRUCTURE_NEW_PRECEDENCE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_PRECEDENCE + SLASH,
+                REL_FONDS_STRUCTURE_NEW_PRECEDENCE, false));
     }
 
     @Override
     public void addSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + SIGN_OFF + SLASH, REL_FONDS_STRUCTURE_SIGN_OFF, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + SIGN_OFF + SLASH,
+                REL_FONDS_STRUCTURE_SIGN_OFF, false));
     }
 
     @Override
     public void addNewSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + NEW_SIGN_OFF + SLASH, REL_FONDS_STRUCTURE_NEW_SIGN_OFF, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_SIGN_OFF + SLASH,
+                REL_FONDS_STRUCTURE_NEW_SIGN_OFF, false));
     }
 
     @Override
     public void addDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + DOCUMENT_FLOW + SLASH, REL_FONDS_STRUCTURE_DOCUMENT_FLOW, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + DOCUMENT_FLOW + SLASH,
+                REL_FONDS_STRUCTURE_DOCUMENT_FLOW, false));
     }
 
     @Override
     public void addNewDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY + SLASH +
-                entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW + SLASH, REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW + SLASH,
+                REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW, false));
     }
 
     // Metadata entries

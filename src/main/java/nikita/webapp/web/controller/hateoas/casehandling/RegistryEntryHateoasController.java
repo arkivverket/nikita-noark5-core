@@ -44,7 +44,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY,
+@RequestMapping(value = HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class RegistryEntryHateoasController extends NoarkController {
 
