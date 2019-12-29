@@ -14,7 +14,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for DocumentMedium
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + DOCUMENT_MEDIUM,
-                publicUrlPath + NOARK_METADATA_PATH + SLASH + DOCUMENT_MEDIUM + SLASH,
+                REL_METADATA_DOCUMENT_MEDIUM,
                 true
         ));
 
