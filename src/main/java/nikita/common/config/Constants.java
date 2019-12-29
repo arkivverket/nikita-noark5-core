@@ -1017,37 +1017,37 @@ public final class Constants {
             HREF_BASE_ADMIN + SYSTEM;
 
     public static final String HREF_BASE_DOCUMENT_DESCRIPTION =
-            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION;
 
     public static final String HREF_BASE_DOCUMENT_OBJECT =
-            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT;
 
     public static final String HREF_BASE_RECORD =
-            HREF_BASE_FONDS_STRUCTURE + RECORD + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + RECORD;
 
     public static final String HREF_BASE_RECORD_NOTE =
             HREF_BASE_CASE_HANDLING + RECORD_NOTE;
 
     public static final String HREF_BASE_FILE =
-            HREF_BASE_FONDS_STRUCTURE + FILE + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + FILE;
 
     public static final String HREF_BASE_CASE_FILE =
-            HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH;
+            HREF_BASE_CASE_HANDLING + CASE_FILE;
 
     public static final String HREF_BASE_SERIES =
-            HREF_BASE_FONDS_STRUCTURE + SERIES + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + SERIES;
 
     public static final String HREF_BASE_CLASS =
-            HREF_BASE_FONDS_STRUCTURE + CLASS + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + CLASS;
 
     public static final String HREF_BASE_CLASSIFICATION_SYSTEM =
-            HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM;
 
     public static final String HREF_BASE_FONDS =
-            HREF_BASE_FONDS_STRUCTURE + FONDS + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + FONDS;
 
     public static final String HREF_BASE_DOCUMENT_FLOW =
-            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW;
 
     private Constants() {
     }

@@ -46,7 +46,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + RECORD,
+@RequestMapping(value = HREF_BASE_RECORD,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class RecordHateoasController
         extends NoarkController {

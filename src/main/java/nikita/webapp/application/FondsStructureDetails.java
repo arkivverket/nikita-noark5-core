@@ -18,7 +18,7 @@ public class FondsStructureDetails extends APIDetails {
         }
         // Add Fonds
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + FONDS,
+                publicUrlPath + SLASH + HREF_BASE_FONDS,
                 REL_FONDS_STRUCTURE + FONDS + SLASH,
                 true
         ));
@@ -47,7 +47,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add Series
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SERIES,
+                publicUrlPath + SLASH + HREF_BASE_SERIES,
                 REL_FONDS_STRUCTURE + SERIES + SLASH,
                 true
         ));
@@ -62,21 +62,21 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add Class
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + CLASS,
+                publicUrlPath + SLASH + HREF_BASE_CLASS,
                 REL_FONDS_STRUCTURE + CLASS + SLASH,
                 true
         ));
 
         // Add File
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + FILE,
+                publicUrlPath + SLASH + HREF_BASE_FILE,
                 REL_FONDS_STRUCTURE + FILE + SLASH,
                 true
         ));
 
         // Add Registration
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + RECORD,
+                publicUrlPath + SLASH + HREF_BASE_RECORD,
                 REL_FONDS_STRUCTURE + RECORD + SLASH,
                 true
         ));
@@ -91,7 +91,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add DocumentObject
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT,
+                publicUrlPath + SLASH + HREF_BASE_DOCUMENT_OBJECT,
                 REL_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH,
                 true
         ));
