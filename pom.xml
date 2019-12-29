@@ -58,7 +58,7 @@
     <springfox-swagger-ui.version>2.7.0</springfox-swagger-ui.version>
     <antlr.version>4.7.2</antlr.version>
     <antlr-maven-plugin.version>4.7.2</antlr-maven-plugin.version>
-    <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+      <maven-surefire-plugin.version>3.0.0-M1</maven-surefire-plugin.version>
     <tika-parsers.version>1.18</tika-parsers.version>
 
     <!-- JS / GUI -->
@@ -461,18 +461,33 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M1</version>
         <configuration>
           <includes>
             <include>**/*Documentation.java</include>
           </includes>
         </configuration>
+          <executions>
+              <execution>
+                  <id>integration-test</id>
+                  <goals>
+                      <goal>test</goal>
+                  </goals>
+                  <phase>integration-test</phase>
+                  <configuration>
+                      <excludes>
+                          <exclude>**/*IntegrationTest</exclude>
+                      </excludes>
+                  </configuration>
+              </execution>
+          </executions>
       </plugin>
       <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>
         <version>1.5.3</version>
         <executions>
-          <execution>
+            <execution>
             <id>generate-docs</id>
             <phase>prepare-package</phase>
             <goals>

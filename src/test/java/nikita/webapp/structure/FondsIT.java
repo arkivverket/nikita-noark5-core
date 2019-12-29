@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.HATEOASConstants.SELF;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -67,7 +68,7 @@ public class FondsIT {
     public void contextLoads() {
     }
 
-    @Test
+    //@Test
   //  @WithMockUser(roles=ROLE_ADMIN)
     public void applicationRootCheck() throws Exception {
 
@@ -91,7 +92,7 @@ public class FondsIT {
     }
 
     @Test
-    public void createUserCheck() throws Exception {
+    public void oidcLinkPublished() throws Exception {
 
         ResultActions actions =
                 mockMvc.perform(get("/")
@@ -102,15 +103,13 @@ public class FondsIT {
                         .andDo(document("home",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
-                                links(atomLinks(),
+                                links(halLinks(),
                                         linkWithRel
-                                                (REL_ADMIN_NEW_ADMINISTRATIVE_UNIT).
-                                                description("Create a new " +
-                                                        "administrative unit"),
-                                        linkWithRel(REL_ADMIN_ADMINISTRATIVE_UNIT).
-                                                description("Retrieve a list" +
-                                                        "of associated " +
-                                                        "administrative units")
+                                                (REL_LOGIN_OIDC).
+                                                description("Get login " +
+                                                        "information"),
+                                        linkWithRel(SELF).
+                                                description("Self REL")
                                 )
                         ));
 
