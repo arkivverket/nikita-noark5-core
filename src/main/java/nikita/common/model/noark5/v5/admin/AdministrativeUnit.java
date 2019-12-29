@@ -25,6 +25,7 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.ADMINISTRATIVE_UNIT;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -227,6 +228,16 @@ public class AdministrativeUnit
             AdministrativeUnit referenceParentAdministrativeUnit) {
         this.referenceParentAdministrativeUnit =
                 referenceParentAdministrativeUnit;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return ADMINISTRATIVE_UNIT;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_ADMIN_ADMINISTRATIVE_UNIT;
     }
 
     @Override
