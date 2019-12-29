@@ -31,14 +31,14 @@ public class CaseHandlingDetails extends APIDetails {
 
         // Add support for caeFile object
         aPIDetails.add(new APIDetail(
-                publicUrlPath + HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE,
+                publicUrlPath + HREF_BASE_CASE_HANDLING + CASE_FILE,
                 REL_CASE_HANDLING + CASE_FILE + SLASH,
                 true
         ));
 
         // Add support for registryEntry object
         aPIDetails.add(new APIDetail(
-                publicUrlPath + HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + REGISTRY_ENTRY,
+                publicUrlPath + HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY,
                 REL_CASE_HANDLING + REGISTRY_ENTRY + SLASH,
                 true
         ));

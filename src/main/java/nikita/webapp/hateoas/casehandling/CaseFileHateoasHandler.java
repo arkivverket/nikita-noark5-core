@@ -65,73 +65,72 @@ public class CaseFileHateoasHandler
 
     @Override
     public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CLASS
-                + SLASH, REL_CASE_HANDLING_NEW_CLASS,
-                false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CLASS + SLASH,
+                REL_CASE_HANDLING_NEW_CLASS, false));
     }
 
     @Override
     public void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CLASS +
-                SLASH, REL_CASE_HANDLING_CLASS, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CLASS + SLASH,
+                REL_CASE_HANDLING_CLASS, false));
     }
 
     @Override
     public void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_PRECEDENCE
-                + SLASH, REL_CASE_HANDLING_NEW_PRECEDENCE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_PRECEDENCE + SLASH,
+                REL_CASE_HANDLING_NEW_PRECEDENCE, false));
     }
 
     @Override
     public void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
-                PRECEDENCE + SLASH, REL_CASE_HANDLING_PRECEDENCE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + PRECEDENCE + SLASH,
+                REL_CASE_HANDLING_PRECEDENCE, false));
     }
 
     @Override
     public void addCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CASE_STATUS
-                + SLASH, REL_METADATA_CASE_STATUS, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CASE_STATUS + SLASH,
+                REL_METADATA_CASE_STATUS, false));
     }
 
     @Override
     public void addNewCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_STATUS
-                + SLASH, REL_METADATA_CASE_STATUS, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_STATUS + SLASH,
+                REL_METADATA_CASE_STATUS, false));
     }
 
     @Override
     public void addSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
-                SECONDARY_CLASSIFICATION + SLASH, REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
+                REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
     public void addNewSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
-                NEW_SECONDARY_CLASSIFICATION + SLASH, REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION + SLASH,
+                REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
     public void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
-                REGISTRY_ENTRY + SLASH, REL_CASE_HANDLING_REGISTRY_ENTRY, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + REGISTRY_ENTRY + SLASH,
+                REL_CASE_HANDLING_REGISTRY_ENTRY, false));
     }
 
     @Override
     public void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_CASE_HANDLING_PATH + SLASH + CASE_FILE + SLASH + entity.getSystemId() + SLASH +
-                NEW_REGISTRY_ENTRY + SLASH, REL_CASE_HANDLING_NEW_REGISTRY_ENTRY, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_REGISTRY_ENTRY + SLASH,
+                REL_CASE_HANDLING_NEW_REGISTRY_ENTRY, false));
     }
 
     /**

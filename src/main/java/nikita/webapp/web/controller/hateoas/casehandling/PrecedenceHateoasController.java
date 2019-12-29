@@ -14,7 +14,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH + CORRESPONDENCE_PART,
+@RequestMapping(value = HREF_BASE_CASE_HANDLING + CORRESPONDENCE_PART,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class PrecedenceHateoasController {
 /*
