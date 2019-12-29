@@ -388,9 +388,9 @@ public final class CommonUtils {
                     try {
                         String date = currentNode.textValue();
                         if (date.endsWith("Z")) {
-                            DateTimeFormatter formatter = ISO_INSTANT;
-                            d = ZonedDateTime.parse(date,
-                                    formatter.withZone(ZoneId.of("UTC"))).
+
+                            DateTimeFormatter formatter = ISO_OFFSET_DATE;
+                            d = ZonedDateTime.parse(date, formatter).
                                     toOffsetDateTime();
                             // d = ZonedDateTime.parse(date).toOffsetDateTime();
                         } else {
