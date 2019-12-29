@@ -91,7 +91,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add DocumentObject
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT,
+                publicUrlPath + SLASH + HREF_BASE_DOCUMENT_OBJECT,
                 REL_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH,
                 true
         ));
