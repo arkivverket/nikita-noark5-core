@@ -1017,7 +1017,7 @@ public final class Constants {
             HREF_BASE_ADMIN + SYSTEM;
 
     public static final String HREF_BASE_DOCUMENT_DESCRIPTION =
-            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION;
 
     public static final String HREF_BASE_DOCUMENT_OBJECT =
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH;

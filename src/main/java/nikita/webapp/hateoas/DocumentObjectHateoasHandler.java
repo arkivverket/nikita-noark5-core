@@ -81,11 +81,9 @@ public class DocumentObjectHateoasHandler
     @Override
     public void addDocumentDescription(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(
-                entity, new Link(getOutgoingAddress() +
-                        HREF_BASE_DOCUMENT_DESCRIPTION +
-                        getDocumentDescriptionSystemId(entity),
-                        REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + getDocumentDescriptionSystemId(entity),
+                REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION));
     }
 
     @Override
