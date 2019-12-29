@@ -25,7 +25,7 @@ public interface IUserService {
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);
 
-    long deleteAllByUsername();
+    long deleteAll();
 
     long deleteByUsername(String username);
 }

@@ -183,12 +183,12 @@ public class UserService
     }
 
     /**
-     * Delete all objects belonging to the user identified by username
+     * Delete all user objects
      *
      * @return the number of objects deleted
      */
     @Override
-    public long deleteAllByUsername() {
+    public long deleteAll() {
         return userRepository.deleteByUsername(getUser());
     }
 

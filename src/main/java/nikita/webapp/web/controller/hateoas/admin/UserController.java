@@ -221,7 +221,7 @@ public class UserController
     @DeleteMapping(value = USER)
     public ResponseEntity<Count> deleteAllUser() {
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(userService.deleteAllByUsername()));
+                body(new Count(userService.deleteAll()));
     }
 
     // DELETE [contextPath][api]/admin/bruker/
