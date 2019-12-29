@@ -258,7 +258,7 @@ public class SeriesHateoasHandler extends HateoasHandler
         Series series = getSeries(entity);
         if (series.getReferenceFonds() != null) {
             hateoasNoarkObject.addLink(entity,
-                    new Link(getOutgoingAddress() + HREF_BASE_FONDS +
+                    new Link(getOutgoingAddress() + HREF_BASE_FONDS + SLASH +
                             series.getReferenceFonds().getSystemId(),
                             REL_FONDS_STRUCTURE_FONDS));
         }

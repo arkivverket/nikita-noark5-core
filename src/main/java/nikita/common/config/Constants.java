@@ -1044,7 +1044,7 @@ public final class Constants {
             HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM;
 
     public static final String HREF_BASE_FONDS =
-            HREF_BASE_FONDS_STRUCTURE + FONDS + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + FONDS;
 
     public static final String HREF_BASE_DOCUMENT_FLOW =
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW + SLASH;
