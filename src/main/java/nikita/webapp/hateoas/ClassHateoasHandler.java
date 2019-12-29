@@ -70,11 +70,9 @@ public class ClassHateoasHandler
                                         IHateoasNoarkObject hateoasNoarkObject) {
         Class klass = getClass(entity);
         if (klass.getReferenceClassificationSystem() != null) {
-            hateoasNoarkObject.addLink(entity,
-                    new Link(getOutgoingAddress() +
-                            HREF_BASE_CLASSIFICATION_SYSTEM +
-                            klass.getReferenceClassificationSystem().getSystemId(),
-                            REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM));
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + klass.getReferenceClassificationSystem().getSystemId(),
+                    REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM));
         }
     }
 
