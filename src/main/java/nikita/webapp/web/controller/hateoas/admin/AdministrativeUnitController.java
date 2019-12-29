@@ -145,6 +145,7 @@ public class AdministrativeUnitController extends NoarkController {
         administrativeUnit.setShortName("kortnavn på administrativtenhet");
         administrativeUnit.setAdministrativeUnitName("Formell navn på administrativtenhet");
         AdministrativeUnitHateoas adminHateoas = new AdministrativeUnitHateoas(administrativeUnit);
+        administrativeUnitHateoasHandler.addLinksOnTemplate(adminHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(adminHateoas);
