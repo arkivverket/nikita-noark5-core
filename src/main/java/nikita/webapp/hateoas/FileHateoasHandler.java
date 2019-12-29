@@ -241,14 +241,14 @@ public class FileHateoasHandler
     public void addReferenceSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
-                REL_FONDS_STRUCTURE_SECONDARY_CLASSIFICATION, false));
+                REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
     public void addNewReferenceSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION_SYSTEM + SLASH,
-                REL_FONDS_STRUCTURE_NEW_SECONDARY_CLASSIFICATION, false));
+                REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
     /**

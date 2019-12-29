@@ -97,14 +97,14 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
     public void addNewSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION + SLASH,
-                REL_FONDS_STRUCTURE_NEW_SECONDARY_CLASSIFICATION, false));
+                REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
     public void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
-                REL_FONDS_STRUCTURE_SECONDARY_CLASSIFICATION, false));
+                REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
