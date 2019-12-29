@@ -18,7 +18,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @RestController
-@RequestMapping(value = HREF_BASE_RECORD_NOTE,
+@RequestMapping(value = HREF_BASE_RECORD_NOTE + SLASH,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class RecordNoteHateoasController
         extends NoarkController {
