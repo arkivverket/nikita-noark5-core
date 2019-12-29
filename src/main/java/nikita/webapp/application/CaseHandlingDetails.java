@@ -31,7 +31,7 @@ public class CaseHandlingDetails extends APIDetails {
 
         // Add support for caeFile object
         aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_CASE_HANDLING + CASE_FILE,
+                publicUrlPath + HREF_BASE_CASE_FILE,
                 REL_CASE_HANDLING + CASE_FILE + SLASH,
                 true
         ));

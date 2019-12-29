@@ -66,70 +66,70 @@ public class CaseFileHateoasHandler
     @Override
     public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CLASS + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CLASS + SLASH,
                 REL_CASE_HANDLING_NEW_CLASS, false));
     }
 
     @Override
     public void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CLASS + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + CLASS + SLASH,
                 REL_CASE_HANDLING_CLASS, false));
     }
 
     @Override
     public void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_PRECEDENCE + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_PRECEDENCE + SLASH,
                 REL_CASE_HANDLING_NEW_PRECEDENCE, false));
     }
 
     @Override
     public void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + PRECEDENCE + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + PRECEDENCE + SLASH,
                 REL_CASE_HANDLING_PRECEDENCE, false));
     }
 
     @Override
     public void addCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + CASE_STATUS + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + CASE_STATUS + SLASH,
                 REL_METADATA_CASE_STATUS, false));
     }
 
     @Override
     public void addNewCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_STATUS + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_STATUS + SLASH,
                 REL_METADATA_CASE_STATUS, false));
     }
 
     @Override
     public void addSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
                 REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
     public void addNewSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION + SLASH,
                 REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
     public void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + REGISTRY_ENTRY + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + REGISTRY_ENTRY + SLASH,
                 REL_CASE_HANDLING_REGISTRY_ENTRY, false));
     }
 
     @Override
     public void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_REGISTRY_ENTRY + SLASH,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_REGISTRY_ENTRY + SLASH,
                 REL_CASE_HANDLING_NEW_REGISTRY_ENTRY, false));
     }
 
@@ -146,10 +146,9 @@ public class CaseFileHateoasHandler
     @Override
     public void addRecordNote(INikitaEntity entity,
                               IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HREF_BASE_CASE_FILE +
-                        entity.getSystemId() + SLASH + RECORD_NOTE,
-                        REL_CASE_HANDLING_RECORD_NOTE));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+		HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + RECORD_NOTE,
+                REL_CASE_HANDLING_RECORD_NOTE));
     }
 
     /**
@@ -165,9 +164,8 @@ public class CaseFileHateoasHandler
     @Override
     public void addNewRecordNote(INikitaEntity entity,
                                  IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HREF_BASE_CASE_FILE +
-                        entity.getSystemId() + SLASH + NEW_RECORD_NOTE,
-                        REL_CASE_HANDLING_NEW_RECORD_NOTE));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_RECORD_NOTE,
+                REL_CASE_HANDLING_NEW_RECORD_NOTE));
     }
 }

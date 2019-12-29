@@ -45,7 +45,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(value = HREF_BASE_CASE_HANDLING + CASE_FILE,
+@RequestMapping(value = HREF_BASE_CASE_FILE,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class CaseFileHateoasController
         extends NoarkController {
