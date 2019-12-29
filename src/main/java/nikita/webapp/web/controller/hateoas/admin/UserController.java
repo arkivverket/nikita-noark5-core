@@ -122,9 +122,12 @@ public class UserController
     @Counted
     @GetMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
-    findBySystemId(@PathVariable("username") final String username,
-                   HttpServletRequest request) {
-        UserHateoas userHateoas = userService.findByUsername(username);
+    findBySystemId(HttpServletRequest request,
+		   @ApiParam(name = "systemID",
+			     value = "systemID of the user to retrieve",
+			     required = true)
+		   @PathVariable("systemID") final String systemID) {
+        UserHateoas userHateoas = userService.findBySystemID(systemID);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
                         getMethodsForRequestOrThrow(request.getServletPath()))

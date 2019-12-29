@@ -13,7 +13,7 @@ public interface IUserService {
 
     UserHateoas findAll();
 
-    UserHateoas findByUsername(String username);
+    UserHateoas findBySystemID(String username);
 
     UserHateoas handleUpdate(String userSystemId, Long version, User
             incomingUser);

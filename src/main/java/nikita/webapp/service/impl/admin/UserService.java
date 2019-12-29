@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.SYSTEM;
 
@@ -98,8 +99,8 @@ public class UserService
     }
 
     @Override
-    public UserHateoas findByUsername(String username) {
-        User user = getUserOrThrow(username);
+    public UserHateoas findBySystemID(String systemID) {
+        User user = getUserOrThrow(systemID);
         UserHateoas userHateoas = new UserHateoas(user);
         userHateoasHandler.addLinks(userHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -212,7 +213,8 @@ public class UserService
      * @return the user object
      */
     private User getUserOrThrow(@NotNull String systemId) {
-        Optional<User> userOptional = userRepository.findById(systemId);
+        Optional<User> userOptional =
+	    userRepository.findBySystemId(UUID.fromString(systemId));
         if (!userOptional.isPresent()) {
             String info = systemId + " User, using systemId " +
                     systemId;
