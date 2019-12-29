@@ -373,7 +373,7 @@ public class ClassHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS)
     public ResponseEntity<ClassHateoas> createDefaultClass(
             HttpServletRequest request,
             @ApiParam(
