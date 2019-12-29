@@ -67,44 +67,44 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
 
     @Override
     public void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + CLASS
-                + SLASH, REL_FONDS_STRUCTURE_CLASS, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + CLASS + SLASH,
+                REL_FONDS_STRUCTURE_CLASS, false));
     }
 
     @Override
     public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_CLASS
-                + SLASH, REL_FONDS_STRUCTURE_NEW_CLASS, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_CLASS + SLASH,
+                REL_FONDS_STRUCTURE_NEW_CLASS, false));
     }
 
     @Override
     public void addSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SERIES
-                + SLASH, REL_FONDS_STRUCTURE_SERIES, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
+                REL_FONDS_STRUCTURE_SERIES, false));
     }
 
     @Override
     public void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH +
-                NEW_CLASSIFICATION_SYSTEM + SLASH, REL_FONDS_STRUCTURE_NEW_CLASSIFICATION_SYSTEM, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_CLASSIFICATION_SYSTEM + SLASH,
+                REL_FONDS_STRUCTURE_NEW_CLASSIFICATION_SYSTEM, false));
     }
 
     @Override
     public void addNewSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH +
-                NEW_SECONDARY_CLASSIFICATION + SLASH, REL_FONDS_STRUCTURE_NEW_SECONDARY_CLASSIFICATION, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION + SLASH,
+                REL_FONDS_STRUCTURE_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
     public void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH +
-                SECONDARY_CLASSIFICATION + SLASH, REL_FONDS_STRUCTURE_SECONDARY_CLASSIFICATION, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
+                REL_FONDS_STRUCTURE_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override

@@ -29,7 +29,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(value = HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH,
+@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class ClassificationSystemHateoasController
         extends NoarkController {

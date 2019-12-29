@@ -26,15 +26,15 @@ public class FondsCreatorHateoasHandler extends HateoasHandler implements IFonds
 
     @Override
     public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS + SLASH + entity.getSystemId() + SLASH +
-                FONDS + SLASH, REL_FONDS_STRUCTURE_FONDS, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + FONDS + SLASH + entity.getSystemId() + SLASH + FONDS + SLASH,
+                REL_FONDS_STRUCTURE_FONDS, false));
     }
 
     @Override
     public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + FONDS_CREATOR + SLASH + entity.getSystemId() + SLASH +
-                NEW_FONDS + SLASH, REL_FONDS_STRUCTURE_NEW_FONDS, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + FONDS_CREATOR + SLASH + entity.getSystemId() + SLASH + NEW_FONDS + SLASH,
+                REL_FONDS_STRUCTURE_NEW_FONDS, false));
     }
 }

@@ -42,31 +42,30 @@ public class DocumentObjectHateoasHandler
 
     @Override
     public void addConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
-                CONVERSION + SLASH, REL_FONDS_STRUCTURE_CONVERSION, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + CONVERSION + SLASH,
+                REL_FONDS_STRUCTURE_CONVERSION, false));
     }
 
     @Override
     public void addNewConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
-                NEW_CONVERSION + SLASH, REL_FONDS_STRUCTURE_NEW_CONVERSION, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + NEW_CONVERSION + SLASH,
+                REL_FONDS_STRUCTURE_NEW_CONVERSION, false));
     }
 
     @Override
     public void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
-                ELECTRONIC_SIGNATURE + SLASH, REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + ELECTRONIC_SIGNATURE + SLASH,
+                REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE, false));
     }
 
     @Override
     public void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                        NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
-                        NEW_ELECTRONIC_SIGNATURE + SLASH, REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + NEW_ELECTRONIC_SIGNATURE + SLASH,
+                REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE, false));
     }
 
     /**
@@ -91,9 +90,9 @@ public class DocumentObjectHateoasHandler
 
     @Override
     public void addReferenceDocumentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
-                NOARK_FONDS_STRUCTURE_PATH + SLASH + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH +
-                REFERENCE_FILE + SLASH, REL_FONDS_STRUCTURE_DOCUMENT_FILE, false));
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + REFERENCE_FILE + SLASH,
+                REL_FONDS_STRUCTURE_DOCUMENT_FILE, false));
     }
 
     @Override
