@@ -241,6 +241,11 @@ public class AdministrativeUnit
     }
 
     @Override
+    public String getFunctionalTypeName() {
+        return NOARK_ADMINISTRATION_PATH;
+    }
+
+    @Override
     public String toString() {
         return "AdministrativeUnit{" + super.toString() +
                 ", finalisedDate=" + finalisedDate +
