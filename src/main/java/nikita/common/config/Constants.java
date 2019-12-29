@@ -113,8 +113,8 @@ public final class Constants {
     public static final String NEW_PRECEDENCE = NEW + DASH + PRECEDENCE;
 
     public static final String NEW_CASE_STATUS = NEW + DASH + CASE_STATUS;
-    public static final String NEW_SECONDARY_CLASSIFICATION = NEW + DASH +
-            "sekundaerklassifikasjon";
+    public static final String NEW_SECONDARY_CLASSIFICATION =
+	NEW + DASH + SECONDARY_CLASSIFICATION;
 
     // Create for new metadata objects
     public static final String NEW_DOCUMENT_MEDIUM = NEW + DASH +
@@ -417,7 +417,7 @@ public final class Constants {
     public static final String REL_CASE_HANDLING_CLASS = REL_FONDS_STRUCTURE + CLASS + SLASH;
     public static final String REL_CASE_HANDLING_PRECEDENCE = REL_CASE_HANDLING + PRECEDENCE + SLASH;
     public static final String REL_CASE_HANDLING_NEW_PRECEDENCE = REL_CASE_HANDLING + NEW_PRECEDENCE + SLASH;
-    public static final String REL_CASE_HANDLING_SECONDARY_CLASSIFICATION = NIKITA_CONFORMANCE_REL + SECONDARY_CLASSIFICATION + SLASH;
+    public static final String REL_CASE_HANDLING_SECONDARY_CLASSIFICATION = REL_CASE_HANDLING + SECONDARY_CLASSIFICATION + SLASH;
     public static final String REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION = NIKITA_CONFORMANCE_REL + NEW_SECONDARY_CLASSIFICATION + SLASH;
     public static final String REL_METADATA_CASE_STATUS = REL_METADATA + CASE_STATUS + SLASH;
 
@@ -575,12 +575,6 @@ public final class Constants {
     // Fil
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_FILE =
             REL_FONDS_STRUCTURE + DOCUMENT_FILE + SLASH;
-
-    // SecondaryClassification
-    public static final String REL_FONDS_STRUCTURE_SECONDARY_CLASSIFICATION =
-            NIKITA_CONFORMANCE_REL + SECONDARY_CLASSIFICATION + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_SECONDARY_CLASSIFICATION
-            = NIKITA_CONFORMANCE_REL + NEW_SECONDARY_CLASSIFICATION + SLASH;
 
     // Metadata RELS
     public static final String REL_METADATA_DOCUMENT_MEDIUM =
