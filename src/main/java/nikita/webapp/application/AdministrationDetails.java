@@ -21,28 +21,28 @@ public class AdministrationDetails extends APIDetails {
         // Add support for AdministrativeUnit
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_ADMIN + ADMINISTRATIVE_UNIT,
-                REL_ADMINISTRATION + ADMINISTRATIVE_UNIT + SLASH,
+                REL_ADMIN_ADMINISTRATIVE_UNIT,
                 true
         ));
 
         // Add support for new AdministrativeUnit
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_ADMIN + NEW_ADMINISTRATIVE_UNIT,
-                REL_ADMINISTRATION + NEW_ADMINISTRATIVE_UNIT + SLASH,
+                REL_ADMIN_NEW_ADMINISTRATIVE_UNIT,
                 false
         ));
 
         // Add support for User
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_ADMIN + USER,
-                REL_ADMINISTRATION + USER + SLASH,
+                REL_ADMIN_USER,
                 true
         ));
 
         // Add support for new User
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_ADMIN + NEW_USER,
-                REL_ADMINISTRATION + NEW_USER + SLASH,
+                REL_ADMIN_NEW_USER,
                 false
         ));
 
