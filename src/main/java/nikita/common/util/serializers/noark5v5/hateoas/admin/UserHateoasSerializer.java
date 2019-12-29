@@ -35,9 +35,6 @@ public class UserHateoasSerializer
 
         jgen.writeStartObject();
         CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, user);
-        if (user.getSystemId() != null) {
-            jgen.writeStringField(USER_NAME, user.getSystemId());
-        }
         if (user.getUsername() != null) {
             jgen.writeStringField(USER_NAME, user.getUsername());
         }
