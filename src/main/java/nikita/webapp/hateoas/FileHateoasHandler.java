@@ -95,10 +95,9 @@ public class FileHateoasHandler
                          IHateoasNoarkObject hateoasNoarkObject) {
         File file = getFile(entity);
         if (file.getReferenceClass() != null) {
-            hateoasNoarkObject.addLink(entity,
-                    new Link(getOutgoingAddress() + HREF_BASE_CLASS +
-                            file.getReferenceClass().getSystemId(),
-                            REL_FONDS_STRUCTURE_CLASS, true));
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_CLASS + SLASH + file.getReferenceClass().getSystemId(),
+                    REL_FONDS_STRUCTURE_CLASS, true));
         }
     }
 

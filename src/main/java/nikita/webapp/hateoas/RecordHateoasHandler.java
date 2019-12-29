@@ -204,10 +204,9 @@ public class RecordHateoasHandler
                                   IHateoasNoarkObject hateoasNoarkObject) {
         Record record = getRecord(entity);
         if (record.getReferenceClass() != null) {
-            hateoasNoarkObject.addLink(entity,
-                    new Link(getOutgoingAddress() + HREF_BASE_CLASS +
-                            record.getReferenceClass().getSystemId(),
-                            REL_FONDS_STRUCTURE_CLASS));
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_CLASS + SLASH + record.getReferenceClass().getSystemId(),
+                    REL_FONDS_STRUCTURE_CLASS));
         }
     }
 

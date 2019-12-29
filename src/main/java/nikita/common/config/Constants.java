@@ -1038,7 +1038,7 @@ public final class Constants {
             HREF_BASE_FONDS_STRUCTURE + SERIES;
 
     public static final String HREF_BASE_CLASS =
-            HREF_BASE_FONDS_STRUCTURE + CLASS + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + CLASS;
 
     public static final String HREF_BASE_CLASSIFICATION_SYSTEM =
             HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH;
