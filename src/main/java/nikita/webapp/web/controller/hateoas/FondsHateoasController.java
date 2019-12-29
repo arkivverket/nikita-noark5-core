@@ -631,7 +631,7 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping(value = SLASH + FONDS + SLASH + SYSTEM_ID_PARAMETER)
+    @DeleteMapping(value = FONDS + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteFondsBySystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the series to delete",
