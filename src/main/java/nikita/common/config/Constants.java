@@ -1023,7 +1023,7 @@ public final class Constants {
             HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT;
 
     public static final String HREF_BASE_RECORD =
-            HREF_BASE_FONDS_STRUCTURE + RECORD + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + RECORD;
 
     public static final String HREF_BASE_RECORD_NOTE =
             HREF_BASE_CASE_HANDLING + RECORD_NOTE;

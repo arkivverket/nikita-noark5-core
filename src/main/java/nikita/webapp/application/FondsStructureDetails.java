@@ -76,7 +76,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add Registration
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + RECORD,
+                publicUrlPath + SLASH + HREF_BASE_RECORD,
                 REL_FONDS_STRUCTURE + RECORD + SLASH,
                 true
         ));
