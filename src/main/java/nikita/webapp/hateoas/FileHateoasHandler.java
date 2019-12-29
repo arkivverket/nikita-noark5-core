@@ -105,7 +105,7 @@ public class FileHateoasHandler
     @Override
     public void addEndFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + FILE_END + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_END + SLASH,
                 REL_FONDS_STRUCTURE_END_FILE,
                 false));
     }
@@ -113,56 +113,56 @@ public class FileHateoasHandler
     @Override
     public void addExpandToCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_CASE_FILE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_CASE_FILE + SLASH,
                 REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE, false));
     }
 
     @Override
     public void addExpandToMeetingFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_MEETING_FILE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_MEETING_FILE + SLASH,
                 REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE, false));
     }
 
     @Override
     public void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + RECORD + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + RECORD + SLASH,
                 REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override
     public void addNewRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + NEW_RECORD + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_RECORD + SLASH,
                 REL_FONDS_STRUCTURE_NEW_RECORD, false));
     }
 
     @Override
     public void addComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + COMMENT + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_COMMENT, false));
     }
 
     @Override
     public void addNewComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + NEW_COMMENT + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_COMMENT, false));
     }
 
     @Override
     public void addSubFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + SUB_FILE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SUB_FILE + SLASH,
                 REL_FONDS_STRUCTURE_SUB_FILE, false));
     }
 
     @Override
     public void addNewSubFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + NEW_FILE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_FILE + SLASH,
                 REL_FONDS_STRUCTURE_NEW_FILE, false));
     }
 
@@ -180,7 +180,7 @@ public class FileHateoasHandler
     public void addPart(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HREF_BASE_FILE +
+                new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
                         entity.getSystemId() + SLASH + PART + SLASH,
                         REL_FONDS_STRUCTURE_PART, true));
     }
@@ -189,7 +189,7 @@ public class FileHateoasHandler
     public void addNewPartPerson(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HREF_BASE_FILE +
+                new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
                         entity.getSystemId() + SLASH + NEW_PART_PERSON + SLASH,
                         REL_FONDS_STRUCTURE_NEW_PART_PERSON));
     }
@@ -198,7 +198,7 @@ public class FileHateoasHandler
     public void addNewPartUnit(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
-                new Link(getOutgoingAddress() + HREF_BASE_FILE +
+                new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
                         entity.getSystemId() + SLASH + NEW_PART_UNIT + SLASH,
                         REL_FONDS_STRUCTURE_NEW_PART_UNIT));
     }
@@ -206,49 +206,49 @@ public class FileHateoasHandler
     @Override
     public void addCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + CROSS_REFERENCE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_CROSS_REFERENCE, false));
     }
 
     @Override
     public void addNewCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + NEW_CROSS_REFERENCE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CROSS_REFERENCE, false));
     }
 
     @Override
     public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + NEW_REFERENCE_CLASS + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_REFERENCE_CLASS + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CLASS, false));
     }
 
     @Override
     public void addReferenceSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
                 REL_FONDS_STRUCTURE_REFERENCE_SERIES, false));
     }
 
     @Override
     public void addNewReferenceSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
                 REL_FONDS_STRUCTURE_NEW_REFERENCE_SERIES, false));
     }
 
     @Override
     public void addReferenceSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
                 REL_FONDS_STRUCTURE_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
     public void addNewReferenceSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION_SYSTEM + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION_SYSTEM + SLASH,
                 REL_FONDS_STRUCTURE_NEW_SECONDARY_CLASSIFICATION, false));
     }
 

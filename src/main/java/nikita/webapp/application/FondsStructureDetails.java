@@ -69,7 +69,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add File
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + FILE,
+                publicUrlPath + SLASH + HREF_BASE_FILE,
                 REL_FONDS_STRUCTURE + FILE + SLASH,
                 true
         ));

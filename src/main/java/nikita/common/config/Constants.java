@@ -1029,7 +1029,7 @@ public final class Constants {
             HREF_BASE_CASE_HANDLING + RECORD_NOTE;
 
     public static final String HREF_BASE_FILE =
-            HREF_BASE_FONDS_STRUCTURE + FILE + SLASH;
+            HREF_BASE_FONDS_STRUCTURE + FILE;
 
     public static final String HREF_BASE_CASE_FILE =
             HREF_BASE_CASE_HANDLING + CASE_FILE + SLASH;

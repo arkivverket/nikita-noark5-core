@@ -184,7 +184,7 @@ public class RecordHateoasHandler
         Record record = getRecord(entity);
         if (record.getReferenceFile() != null) {
             hateoasNoarkObject.addLink(entity,
-                    new Link(getOutgoingAddress() + HREF_BASE_FILE +
+                    new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
                             record.getReferenceFile().getSystemId(),
                             REL_FONDS_STRUCTURE_FILE));
         }
