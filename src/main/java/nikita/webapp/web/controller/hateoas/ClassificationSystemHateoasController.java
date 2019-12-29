@@ -176,7 +176,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES)
+    @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES)
     public ResponseEntity<SeriesHateoas>
     findParentClassificationSystemByFileSystemId(
             @ApiParam(name = "systemID",
@@ -297,7 +297,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping(value = SLASH + CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER)
+    @DeleteMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<FondsStructureDetails>
     deleteClassificationSystemBySystemId(
             HttpServletRequest request,
@@ -326,7 +326,7 @@ public class ClassificationSystemHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping(CLASSIFICATION_SYSTEM)
+    @DeleteMapping(value = CLASSIFICATION_SYSTEM)
     public ResponseEntity<Count> deleteAllClassificationSystem() {
         return ResponseEntity.status(NO_CONTENT).
                 body(new Count(classificationSystemService.deleteAllByOwnedBy()));
