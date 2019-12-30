@@ -188,7 +188,7 @@ public class RecordNote
 
     @Override
     public String getFunctionalTypeName() {
-        return NOARK_FONDS_STRUCTURE_PATH;
+        return NOARK_CASE_HANDLING_PATH;
     }
 
     @Override
