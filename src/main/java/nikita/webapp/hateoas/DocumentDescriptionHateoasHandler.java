@@ -200,14 +200,14 @@ public class DocumentDescriptionHateoasHandler
     @Override
     public void addDocumentType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + DOCUMENT_STATUS,
+                HREF_BASE_METADATA + SLASH + DOCUMENT_STATUS,
                 REL_METADATA_DOCUMENT_STATUS, false));
     }
 
     @Override
     public void addDocumentStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + DOCUMENT_TYPE,
+                HREF_BASE_METADATA + SLASH + DOCUMENT_TYPE,
                 REL_METADATA_DOCUMENT_TYPE, false));
     }
 

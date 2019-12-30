@@ -996,52 +996,52 @@ public final class Constants {
             ".well-known/openid-configuration";
 
     public static final String HREF_BASE_FONDS_STRUCTURE =
-            HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH + SLASH;
+            HATEOAS_API_PATH + SLASH + NOARK_FONDS_STRUCTURE_PATH;
 
     public static final String HREF_BASE_ADMIN =
-            HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH + SLASH;
+            HATEOAS_API_PATH + SLASH + NOARK_ADMINISTRATION_PATH;
 
     public static final String HREF_BASE_METADATA =
-            HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH + SLASH;
+            HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH;
 
     public static final String HREF_BASE_CASE_HANDLING =
-            HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH + SLASH;
+            HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH;
 
     public static final String HREF_SYSTEM_INFORMATION =
-            HREF_BASE_ADMIN + SYSTEM;
+            HREF_BASE_ADMIN + SLASH + SYSTEM;
 
     public static final String HREF_BASE_DOCUMENT_DESCRIPTION =
-            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + DOCUMENT_DESCRIPTION;
 
     public static final String HREF_BASE_DOCUMENT_OBJECT =
-            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_OBJECT;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + DOCUMENT_OBJECT;
 
     public static final String HREF_BASE_RECORD =
-            HREF_BASE_FONDS_STRUCTURE + RECORD;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + RECORD;
 
     public static final String HREF_BASE_RECORD_NOTE =
-            HREF_BASE_CASE_HANDLING + RECORD_NOTE;
+            HREF_BASE_CASE_HANDLING + SLASH + RECORD_NOTE;
 
     public static final String HREF_BASE_FILE =
-            HREF_BASE_FONDS_STRUCTURE + FILE;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + FILE;
 
     public static final String HREF_BASE_CASE_FILE =
-            HREF_BASE_CASE_HANDLING + CASE_FILE;
+            HREF_BASE_CASE_HANDLING + SLASH + CASE_FILE;
 
     public static final String HREF_BASE_SERIES =
-            HREF_BASE_FONDS_STRUCTURE + SERIES;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + SERIES;
 
     public static final String HREF_BASE_CLASS =
-            HREF_BASE_FONDS_STRUCTURE + CLASS;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + CLASS;
 
     public static final String HREF_BASE_CLASSIFICATION_SYSTEM =
-            HREF_BASE_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + CLASSIFICATION_SYSTEM;
 
     public static final String HREF_BASE_FONDS =
-            HREF_BASE_FONDS_STRUCTURE + FONDS;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + FONDS;
 
     public static final String HREF_BASE_DOCUMENT_FLOW =
-            HREF_BASE_FONDS_STRUCTURE + DOCUMENT_FLOW;
+            HREF_BASE_FONDS_STRUCTURE + SLASH + DOCUMENT_FLOW;
 
     private Constants() {
     }

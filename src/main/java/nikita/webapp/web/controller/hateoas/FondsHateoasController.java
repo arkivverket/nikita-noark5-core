@@ -28,7 +28,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE,
+@RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class FondsHateoasController
         extends NoarkController {

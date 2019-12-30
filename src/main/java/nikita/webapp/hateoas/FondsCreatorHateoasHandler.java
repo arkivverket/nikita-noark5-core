@@ -34,7 +34,7 @@ public class FondsCreatorHateoasHandler extends HateoasHandler implements IFonds
     @Override
     public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + FONDS_CREATOR + SLASH + entity.getSystemId() + SLASH + NEW_FONDS + SLASH,
+                HREF_BASE_FONDS_STRUCTURE + SLASH + FONDS_CREATOR + SLASH + entity.getSystemId() + SLASH + NEW_FONDS + SLASH,
                 REL_FONDS_STRUCTURE_NEW_FONDS, false));
     }
 }

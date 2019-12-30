@@ -329,15 +329,15 @@ public final class CommonUtils {
 
             //Next, we have to replace any occurrences of an actual UUID with the word systemID
             String updatedServletPath = servletPath;
-            if (servletPath.startsWith(SLASH + HREF_BASE_METADATA)) {
-                Pattern pattern = Pattern.compile(SLASH + HREF_BASE_METADATA +
+            if (servletPath.startsWith(SLASH + HREF_BASE_METADATA + SLASH)) {
+                Pattern pattern = Pattern.compile(SLASH + HREF_BASE_METADATA + SLASH +
                         "/[a-z]+/");
-                int ignoreFirstChars = (SLASH + HREF_BASE_METADATA).length();
+                int ignoreFirstChars = (SLASH + HREF_BASE_METADATA + SLASH).length();
                 String toCheck = servletPath.substring(ignoreFirstChars);
                 int slashLocation = toCheck.indexOf("/");
                 if (slashLocation > 0) {
                     toCheck = toCheck.substring(0, slashLocation);
-                    String path = SLASH + HREF_BASE_METADATA + toCheck + SLASH;
+                    String path = SLASH + HREF_BASE_METADATA + SLASH + toCheck + SLASH;
 
                     if (!path.equals(servletPath)) {
                         updatedServletPath = path + "{" + CODE + "}" + SLASH;

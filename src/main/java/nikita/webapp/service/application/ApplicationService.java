@@ -60,15 +60,15 @@ public class ApplicationService {
      */
     public void addConformityLevels(List<ConformityLevel> conformityLevels) {
         // arkivstruktur
-        addConformityLevel(conformityLevels, HREF_BASE_FONDS_STRUCTURE,
+        addConformityLevel(conformityLevels, HREF_BASE_FONDS_STRUCTURE + SLASH,
                 REL_FONDS_STRUCTURE);
         // sakarkiv
-        addConformityLevel(conformityLevels, HREF_BASE_CASE_HANDLING,
+        addConformityLevel(conformityLevels, HREF_BASE_CASE_HANDLING + SLASH,
                 REL_CASE_HANDLING);
         // metadata
-        addConformityLevel(conformityLevels, HREF_BASE_METADATA, REL_METADATA);
+        addConformityLevel(conformityLevels, HREF_BASE_METADATA + SLASH, REL_METADATA);
         // administrasjon
-        addConformityLevel(conformityLevels, HREF_BASE_ADMIN,
+        addConformityLevel(conformityLevels, HREF_BASE_ADMIN + SLASH,
                 REL_ADMINISTRATION);
         /*
         // Will be introduced as project mature
@@ -139,7 +139,7 @@ public class ApplicationService {
         oidcConfiguration.setAuthorizationEndpoint(baseAddress + LOGIN_PATH);
         oidcConfiguration.setRevocationEndpoint(baseAddress + LOGOUT_PATH);
         oidcConfiguration.setRegistrationEndpoint(
-                baseAddress + HREF_BASE_ADMIN + NEW_USER);
+                baseAddress + HREF_BASE_ADMIN + SLASH + NEW_USER);
         oidcConfiguration.setIntrospectionEndpoint(
                 baseAddress + CHECK_TOKEN_PATH);
         oidcConfiguration.setGrantTypesSupported(Arrays.asList(

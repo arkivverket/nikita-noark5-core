@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping(value = HREF_BASE_METADATA,
+@RequestMapping(value = HREF_BASE_METADATA + SLASH,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class SeriesStatusController {
 
