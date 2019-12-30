@@ -506,11 +506,8 @@ public class DocumentObjectService
 
     // All DELETE operations
     @Override
-    public int deleteEntity(@NotNull String systemId) {
-        // Make sure documentObject exists
-        getDocumentObjectOrThrow(systemId);
-        documentObjectRepository.deleteBySystemId(UUID.fromString(systemId));
-        return 1;
+    public void deleteEntity(@NotNull String systemId) {
+        deleteEntity(getDocumentObjectOrThrow(systemId));
     }
 
     /**

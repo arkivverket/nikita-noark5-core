@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface IRegistryEntryRepository extends
-        PagingAndSortingRepository<RegistryEntry, Long> {
+        PagingAndSortingRepository<RegistryEntry, UUID> {
 
     // -- All SAVE operations
     @Override

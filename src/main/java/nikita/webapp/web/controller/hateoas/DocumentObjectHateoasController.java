@@ -31,11 +31,11 @@ import java.io.InputStream;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_PARAMETER;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_DOCUMENT_OBJECT)
@@ -257,15 +257,16 @@ public class DocumentObjectHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Count> deleteDocumentObjectBySystemId(
+    public ResponseEntity<Void> deleteDocumentObjectBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the documentObject to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
+        documentObjectService.deleteEntity(systemID);
         return ResponseEntity.
                 status(NO_CONTENT).
-                body(new Count(documentObjectService.deleteEntity(systemID)));
+                body(null);
     }
 
     // Delete all DocumentObject

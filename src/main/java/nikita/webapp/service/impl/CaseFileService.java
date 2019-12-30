@@ -305,8 +305,7 @@ public class CaseFileService
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String caseFileSystemId) {
-        CaseFile caseFile = getCaseFileOrThrow(caseFileSystemId);
-        caseFileRepository.delete(caseFile);
+        deleteEntity(getCaseFileOrThrow(caseFileSystemId));
     }
 
     /**

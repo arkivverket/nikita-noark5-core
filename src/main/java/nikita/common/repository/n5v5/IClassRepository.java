@@ -10,9 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface IClassRepository
-        extends PagingAndSortingRepository<Class, Long> {
-    // id
-    Optional<Class> findById(Long id);
+        extends PagingAndSortingRepository<Class, UUID> {
 
     // systemId
     Optional<Class> findBySystemId(UUID systemId);

@@ -291,11 +291,9 @@ public class ClassificationSystemService
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String classificationSystemSystemId) {
-        ClassificationSystem classificationSystem =
-                getClassificationSystemOrThrow(classificationSystemSystemId);
-        classificationSystemRepository.delete(classificationSystem);
+        deleteEntity(getClassificationSystemOrThrow(
+                classificationSystemSystemId));
     }
-
 
     /**
      * Delete all objects belonging to the user identified by ownedBy

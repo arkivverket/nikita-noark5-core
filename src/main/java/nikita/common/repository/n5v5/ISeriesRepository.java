@@ -5,12 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface ISeriesRepository
-        extends PagingAndSortingRepository<Series, Long> {
+        extends PagingAndSortingRepository<Series, UUID> {
 
     // -- All SAVE operations
     @Override
@@ -19,9 +18,6 @@ public interface ISeriesRepository
     // -- All READ operations
     @Override
     List<Series> findAll();
-
-    // id
-    Optional<Series> findById(Long id);
 
     // systemId
     Series findBySystemId(UUID systemId);

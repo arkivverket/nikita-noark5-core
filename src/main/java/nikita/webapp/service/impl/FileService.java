@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
@@ -116,11 +115,6 @@ public class FileService
     // All READ operations
     public List<File> findAll() {
         return fileRepository.findAll();
-    }
-
-    // id
-    public Optional<File> findById(Long id) {
-        return fileRepository.findById(id);
     }
 
     @Override
@@ -247,8 +241,7 @@ public class FileService
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String fileSystemId) {
-        File file = getFileOrThrow(fileSystemId);
-        fileRepository.delete(file);
+        deleteEntity(getFileOrThrow(fileSystemId));
     }
 
     /**

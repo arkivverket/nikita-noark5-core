@@ -35,7 +35,7 @@ public interface IDocumentObjectService {
                                 @NotNull final DocumentObject documentObject);
 
     // All DELETE operations
-    int deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull String systemId);
 
     long deleteAll();
 

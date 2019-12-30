@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -92,11 +91,6 @@ public class FondsCreatorService
     @Override
     public List<FondsCreator> findByOwnedBy(String ownedBy) {
         return fondsCreatorRepository.findByOwnedBy(ownedBy);
-    }
-
-    @Override
-    public Optional<FondsCreator> findById(Long id) {
-        return fondsCreatorRepository.findById(id);
     }
 
     @Override

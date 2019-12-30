@@ -27,7 +27,6 @@ import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThro
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_CLASS,
@@ -403,22 +402,15 @@ public class ClassHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<HateoasNoarkObject> deleteClass(
+    public ResponseEntity<String> deleteClass(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the class to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        HateoasNoarkObject parentObject = classService.deleteEntity(systemID);
-        if (parentObject != null) {
-            return ResponseEntity.status(OK)
-                    .allow(getMethodsForRequestOrThrow(
-                            request.getServletPath()))
-                    .body(parentObject);
-        } else {
-            return ResponseEntity.status(OK)
-                    .body(null);
-        }
+        classService.deleteEntity(systemID);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("{\"status\" : \"Success\"}");
     }
 
     // Delete all Class

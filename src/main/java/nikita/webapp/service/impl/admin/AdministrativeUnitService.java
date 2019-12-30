@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.Constants.SYSTEM;
 
 /**
  * Service class for AdministrativeUnit
@@ -147,8 +146,7 @@ public class AdministrativeUnitService
      */
     @Override
     public void deleteEntity(@NotNull String systemId) {
-        administrativeUnitRepository.delete(
-                getAdministrativeUnitOrThrow(systemId));
+        deleteEntity(getAdministrativeUnitOrThrow(systemId));
     }
 
     /**

@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface IAdministrativeUnitRepository
-        extends PagingAndSortingRepository<AdministrativeUnit, Long> {
+        extends PagingAndSortingRepository<AdministrativeUnit, UUID> {
 
 
     // -- All SAVE operations
@@ -20,9 +20,6 @@ public interface IAdministrativeUnitRepository
     // -- All READ operations
     @Override
     List<AdministrativeUnit> findAll();
-
-    // id
-    Optional<AdministrativeUnit> findById(Long id);
 
     Optional<AdministrativeUnit> findFirstByOrderByCreatedDateAsc();
 

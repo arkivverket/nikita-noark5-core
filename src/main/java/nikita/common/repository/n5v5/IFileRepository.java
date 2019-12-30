@@ -5,12 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface IFileRepository extends
-        PagingAndSortingRepository<File, Long> {
+        PagingAndSortingRepository<File, UUID> {
 
     // -- All SAVE operations
     @Override
@@ -19,9 +18,6 @@ public interface IFileRepository extends
     // -- All READ operations
     @Override
     List<File> findAll();
-
-    // id
-    Optional<File> findById(Long id);
 
     // systemId
     File findBySystemId(UUID systemId);

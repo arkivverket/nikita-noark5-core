@@ -35,7 +35,6 @@ import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThro
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_SERIES,
@@ -724,15 +723,15 @@ public class SeriesHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Count> deleteSeriesBySystemId(
+    public ResponseEntity<Void> deleteSeriesBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the series to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-
+        seriesService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(seriesService.deleteEntity(systemID)));
+                body(null);
     }
 
     // Delete all Series

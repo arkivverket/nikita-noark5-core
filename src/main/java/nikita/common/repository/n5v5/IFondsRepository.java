@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface IFondsRepository extends
-        PagingAndSortingRepository<Fonds, Long> {
+        PagingAndSortingRepository<Fonds, UUID> {
 
     Fonds findBySystemId(UUID systemId);
 

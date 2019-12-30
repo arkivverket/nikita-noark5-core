@@ -28,9 +28,7 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @Service
 @Transactional
@@ -209,7 +207,7 @@ public class RecordNoteService
             @NotNull final String recordNoteSystemId) {
         RecordNote recordNote = getRecordNoteOrThrow(recordNoteSystemId);
         if (deletePossible(recordNote)) {
-            recordNoteRepository.delete(recordNote);
+            deleteEntity(recordNote);
             applicationEventPublisher.publishEvent(
                     new AfterNoarkEntityDeletedEvent(this, recordNote));
         }

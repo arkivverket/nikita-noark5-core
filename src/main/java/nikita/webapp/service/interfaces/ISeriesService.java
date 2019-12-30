@@ -10,7 +10,6 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 
 public interface ISeriesService {
 
@@ -33,9 +32,6 @@ public interface ISeriesService {
     ResponseEntity<CaseFileHateoas>
     findCaseFilesBySeries(@NotNull String systemId);
 
-    // id
-    Optional<Series> findById(Long id);
-
     // systemId
     ResponseEntity<SeriesHateoas> findBySystemId(@NotNull String systemId);
 
@@ -57,7 +53,7 @@ public interface ISeriesService {
                         @NotNull final Series incomingSeries);
 
     // All DELETE operations
-    int deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
 }

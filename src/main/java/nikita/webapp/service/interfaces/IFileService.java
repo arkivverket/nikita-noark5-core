@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 public interface IFileService {
 
@@ -36,8 +35,6 @@ public interface IFileService {
     PartUnitHateoas generateDefaultPartUnit(String systemID);
 
     List<File> findAll();
-
-    Optional<File> findById(Long id);
 
     File findBySystemId(String systemId);
 
