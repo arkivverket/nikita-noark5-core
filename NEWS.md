@@ -13,6 +13,7 @@ Release 0.5 2019-0X-XX (commit X)
     - DokumentObjekt is now subtype of ArkivEnhet.
     - Introducing new entity Arkivnotat.
     - Changed all relation keys to use /v5/ instead of /v4/.
+    - Corrected to use new official relation keys when possible.
     - Renamed Sakspart to Part and connect it to Mappe, Registrering
       and Dokumentbeskrivelse instead of only Saksmappe.
     - Moved Korrespondansepart connection from Journalpost to
@@ -22,9 +23,11 @@ Release 0.5 2019-0X-XX (commit X)
     - Renamed presedensstatus to presedensStatus.
     - Use new JSON content-type "application/vnd.noark5+json".
     - Updated prepopulated format list to use PRONOM codes.
+    - Implemented endpoint for system information.
+    - Started on implementation of national identifiers.
  * Improved/implemented OData search and paging support for more entities.
- * No longer exposes Dokumentobjekt.referanseDokumentfil, one should
-   use the relation in \_links instead.
+ * No longer exposes attribute Dokumentobjekt.referanseDokumentfil,
+   one should use the relation in \_links instead.
  * Corrected relation keys under
    https://rel.arkivverket.no/noark5/v5/api/administrasjon/, replacing
    'administrasjon' with 'admin'.
@@ -37,16 +40,25 @@ Release 0.5 2019-0X-XX (commit X)
  * Changed time zone handling for date and datetime attributes, to be
    more according to the new definition in the API specification.
  * Change revoke-token to only drop token on POST requests, not GET.
- * Update to newer Spring version.
+ * Updated to newer Spring version.
  * Changed primary key and URL component for metadata code lists to
    use the 'kode' value instead of a SystemID.
- * Corrected implementation of Part.
+ * Corrected implementation of Part and Sakspart.
  * Changed instance lists with subtypes (like .../registrering/ and
    .../mappe/) to include the attributes and \_links entries for the
    subtype in the supertype lists.
  * Adjusted \_links relations to make it possible to figure out the
    entity of an instance using the self->href->relation key lookup
    method.
+ * Fixed several end points to make sure GET, PUT, POST and DELETE
+   match each other.
+ * Updated DELETE endpoints to work with UUID based entity
+   identifiers.
+ * Restructured code to use more common URL related constants in entry
+   point values and replace @RequestMapping with method specific
+   annotations.
+ * Added first unit test code.
+ * Updated web GUI to work with the updated API.
 
 Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
 ----------------------
