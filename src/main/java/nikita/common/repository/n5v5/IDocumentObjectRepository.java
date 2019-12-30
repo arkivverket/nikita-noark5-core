@@ -6,12 +6,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface IDocumentObjectRepository extends
-        PagingAndSortingRepository<DocumentObject, Long> {
+        PagingAndSortingRepository<DocumentObject, UUID> {
 
     // -- All SAVE operations
     @Override
@@ -21,9 +20,6 @@ public interface IDocumentObjectRepository extends
     @Override
     List<DocumentObject> findAll();
 
-    // id
-    Optional<DocumentObject> findById(Long id);
-
     // systemId
     DocumentObject findBySystemId(UUID systemId);
 
@@ -31,6 +27,8 @@ public interface IDocumentObjectRepository extends
     List<DocumentObject> findByOwnedBy(String ownedBy);
 
     long deleteByOwnedBy(String ownedBy);
+
+    long deleteBySystemId(UUID uuid);
 
     Long countByReferenceDocumentDescriptionAndVariantFormat(
             DocumentDescription documentDescription, String variantFormat);
