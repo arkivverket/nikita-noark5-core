@@ -26,7 +26,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
  */
 
 @RestController
-@RequestMapping(value = HREF_BASE_METADATA,
+@RequestMapping(value = HREF_BASE_METADATA + SLASH,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
 @SuppressWarnings("unchecked")
 public class PostalCodeController {

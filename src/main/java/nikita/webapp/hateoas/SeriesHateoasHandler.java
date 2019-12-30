@@ -73,7 +73,7 @@ public class SeriesHateoasHandler extends HateoasHandler
                                 IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +
-                        HREF_BASE_METADATA + SERIES_STATUS,
+                        HREF_BASE_METADATA + SLASH + SERIES_STATUS,
                         REL_METADATA_SERIES_STATUS, true));
     }
 

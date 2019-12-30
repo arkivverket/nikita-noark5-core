@@ -41,7 +41,7 @@ public class PrecedenceHateoasHandler extends HateoasHandler implements IPrecede
     @Override
     public void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + entity.getBaseTypeName(),
+                HREF_BASE_METADATA + SLASH + entity.getBaseTypeName(),
                 REL_METADATA_CASE_STATUS, false));
     }
 

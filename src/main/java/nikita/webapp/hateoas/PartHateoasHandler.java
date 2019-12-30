@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.HREF_BASE_METADATA;
 import static nikita.common.config.Constants.REL_METADATA_PART_ROLE;
+import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.N5ResourceMappings.PART_ROLE;
 
 /**
@@ -32,7 +33,7 @@ public class PartHateoasHandler
     public void addPartRole(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + PART_ROLE, REL_METADATA_PART_ROLE,
+                HREF_BASE_METADATA + SLASH + PART_ROLE, REL_METADATA_PART_ROLE,
                 false));
     }
 }

@@ -96,14 +96,14 @@ public class DocumentObjectHateoasHandler
     @Override
     public void addVariantFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + VARIANT_FORMAT,
+                HREF_BASE_METADATA + SLASH + VARIANT_FORMAT,
                 REL_METADATA_VARIANT_FORMAT, false));
     }
 
     @Override
     public void addFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + FORMAT,
+                HREF_BASE_METADATA + SLASH + FORMAT,
                 REL_METADATA_FORMAT, false));
     }
 

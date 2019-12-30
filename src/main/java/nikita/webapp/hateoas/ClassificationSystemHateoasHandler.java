@@ -110,7 +110,7 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
     @Override
     public void addClassificationType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + CLASSIFICATION_SYSTEM_TYPE + SLASH,
+                HREF_BASE_METADATA + SLASH + CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + CLASSIFICATION_SYSTEM_TYPE + SLASH,
                 REL_METADATA_CLASSIFICATION_SYSTEM_TYPE, false));
     }
 }

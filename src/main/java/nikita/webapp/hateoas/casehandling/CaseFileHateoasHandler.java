@@ -59,7 +59,7 @@ public class CaseFileHateoasHandler
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         // Get a list of case status values
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + CASE_STATUS + SLASH,
+                HREF_BASE_METADATA + SLASH + CASE_STATUS + SLASH,
                 REL_METADATA_CASE_STATUS));
     }
 

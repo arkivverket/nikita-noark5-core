@@ -25,14 +25,14 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add new-fonds
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + NEW_FONDS,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SLASH + NEW_FONDS,
                 REL_FONDS_STRUCTURE + NEW_FONDS + SLASH,
                 false
         ));
 
         // Add FondsCreator
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + FONDS_CREATOR,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SLASH + FONDS_CREATOR,
                 REL_FONDS_STRUCTURE + FONDS_CREATOR + SLASH,
                 true
         ));
@@ -40,7 +40,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add new FondsCreator
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + NEW_FONDS_CREATOR,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SLASH + NEW_FONDS_CREATOR,
                 REL_FONDS_STRUCTURE + NEW_FONDS_CREATOR + SLASH,
                 true
         ));
@@ -54,8 +54,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add Classification_system
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE +
-                        CLASSIFICATION_SYSTEM,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SLASH + CLASSIFICATION_SYSTEM,
                 REL_FONDS_STRUCTURE + CLASSIFICATION_SYSTEM + SLASH,
                 true
         ));
@@ -83,8 +82,7 @@ public class FondsStructureDetails extends APIDetails {
 
         // Add DocumentDescription
         aPIDetails.add(new APIDetail(
-                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE +
-                        DOCUMENT_DESCRIPTION,
+                publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SLASH + DOCUMENT_DESCRIPTION,
                 REL_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH,
                 true
         ));

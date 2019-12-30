@@ -31,7 +31,7 @@ public class CorrespondencePartHateoasHandler
     public void addCorrespondencePartType(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + CORRESPONDENCE_PART_TYPE,
+                HREF_BASE_METADATA + SLASH + CORRESPONDENCE_PART_TYPE,
                 REL_METADATA_CORRESPONDENCE_PART_TYPE, false));
     }
 }

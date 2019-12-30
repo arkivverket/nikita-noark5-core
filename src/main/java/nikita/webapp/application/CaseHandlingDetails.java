@@ -38,7 +38,7 @@ public class CaseHandlingDetails extends APIDetails {
 
         // Add support for registryEntry object
         aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_CASE_HANDLING + REGISTRY_ENTRY,
+                publicUrlPath + HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY,
                 REL_CASE_HANDLING + REGISTRY_ENTRY + SLASH,
                 true
         ));

@@ -235,7 +235,7 @@ public class FondsHateoasHandler
     public void addFondsStatus(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + FONDS_STATUS,
+                HREF_BASE_METADATA + SLASH + FONDS_STATUS,
                 REL_METADATA_FONDS_STATUS, true));
     }
 
