@@ -503,9 +503,9 @@ public final class Constants {
 
     // ElectronicSignature
     public static final String REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE =
-            REL_FONDS_STRUCTURE + ELECTRONIC_SIGNATURE + SLASH;
+            NIKITA_CONFORMANCE_REL + ELECTRONIC_SIGNATURE + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE =
-            REL_FONDS_STRUCTURE + NEW_ELECTRONIC_SIGNATURE + SLASH;
+            NIKITA_CONFORMANCE_REL + NEW_ELECTRONIC_SIGNATURE + SLASH;
 
     // DocumentDescription
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION =
