@@ -42,7 +42,7 @@ public class RecordNoteHateoasHandler
     public void addDocumentFlow(INikitaEntity entity,
                                 IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_FLOW + SLASH + entity.getSystemId() + SLASH + DOCUMENT_FLOW,
+                HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemId() + SLASH + DOCUMENT_FLOW,
                 REL_FONDS_STRUCTURE_DOCUMENT_FLOW));
     }
 
@@ -61,7 +61,7 @@ public class RecordNoteHateoasHandler
                                    IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_FLOW + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW,
+                HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW,
                 REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW));
     }
 }
