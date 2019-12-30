@@ -29,6 +29,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -60,7 +61,7 @@ public class RecordNoteService
                 RecordNoteHateoas(recordNoteRepository.save(recordNote));
         recordNoteHateoasHandler.addLinks(recordNoteHateoas,
                 new Authorisation());
-        return ResponseEntity.status(OK)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(recordNoteHateoas.getEntityVersion().toString())
                 .body(recordNoteHateoas);
