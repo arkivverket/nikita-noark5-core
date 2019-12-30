@@ -68,14 +68,6 @@ public class DocumentObjectHateoasSerializer
             jgen.writeStringField(DOCUMENT_OBJECT_MIME_TYPE,
                     documentObject.getMimeType());
         }
-        if (documentObject.getPronomMIME() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_PRONOM_MIME,
-                    documentObject.getPronomMIME());
-        }
-        if (documentObject.getPronomPUID() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_PRONOM_PUID,
-                    documentObject.getPronomPUID());
-        }
         printElectronicSignature(jgen, documentObject);
         printConversion(jgen, documentObject);
         printHateoasLinks(jgen, documentObjectHateoas.getLinks(documentObject));
