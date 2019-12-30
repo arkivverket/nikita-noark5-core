@@ -124,7 +124,7 @@ public class FondsIT {
 
     @Test
     public void validdates() throws Exception {
-	System.out.println("info: testing date parsing");
+	System.out.println("info: testing date and datetime parsing");
 	String[] datetimemust = {
             "1997-07-16T19:20+01:00",
             "1997-07-16T19:20:30+01:00",
