@@ -180,7 +180,7 @@ public class UserService
      */
     @Override
     public void deleteEntity(@NotNull String systemId) {
-        userRepository.delete(getUserOrThrow(systemId));
+        deleteEntity(getUserOrThrow(systemId));
     }
 
     /**

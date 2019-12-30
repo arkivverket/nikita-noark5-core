@@ -268,8 +268,7 @@ public class RegistryEntryService
      */
     @Override
     public void deleteEntity(@NotNull String registryEntrySystemId) {
-        registryEntryRepository.delete(
-                getRegistryEntryOrThrow(registryEntrySystemId));
+        deleteEntity(getRegistryEntryOrThrow(registryEntrySystemId));
     }
 
 

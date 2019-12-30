@@ -5,12 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface IFondsCreatorRepository extends
-        PagingAndSortingRepository<FondsCreator, Long> {
+        PagingAndSortingRepository<FondsCreator, UUID> {
 
     // -- All SAVE operations
     @Override
@@ -19,8 +18,6 @@ public interface IFondsCreatorRepository extends
     // -- All READ operations
     @Override
     List<FondsCreator> findAll();
-
-    Optional<FondsCreator> findById(Long id);
 
     FondsCreator findBySystemId(UUID systemId);
 

@@ -244,12 +244,12 @@ public class PartService
 
     @Override
     public void deletePartPerson(@NotNull String systemId) {
-        partRepository.delete(getPartOrThrow(systemId));
+        deleteEntity(getPartOrThrow(systemId));
     }
 
     @Override
     public void deletePartUnit(@NotNull String systemId) {
-        partRepository.delete(getPartOrThrow(systemId));
+        deleteEntity(getPartOrThrow(systemId));
     }
 
     // Internal helper methods

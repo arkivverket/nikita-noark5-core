@@ -4,7 +4,10 @@ import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.repository.n5v5.IClassRepository;
@@ -17,7 +20,6 @@ import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -356,30 +358,8 @@ public class ClassService
      * @param classSystemId systemId of the Class object to delete
      */
     @Override
-    public HateoasNoarkObject deleteEntity(@NotNull String classSystemId) {
-
-        Class klass = getClassOrThrow(classSystemId);
-        classRepository.delete(klass);
-        applicationEventPublisher
-                .publishEvent
-                        (new AfterNoarkEntityDeletedEvent(this, klass));
-        // Now find out if it has a parent class or classificationSystem as
-        // parent and return appropriately
-        if (null != klass.getReferenceParentClass()) {
-            ClassHateoas classHateoas = new
-                    ClassHateoas(klass.getReferenceParentClass());
-            classHateoasHandler.addLinks(classHateoas, new Authorisation());
-            return classHateoas;
-        } else if (null != klass.getReferenceClassificationSystem()) {
-
-            ClassificationSystemHateoas classificationSystemHateoas = new
-                    ClassificationSystemHateoas(
-                    klass.getReferenceClassificationSystem());
-            classHateoasHandler.addLinks(classificationSystemHateoas,
-                    new Authorisation());
-            return classificationSystemHateoas;
-        }
-        return null;
+    public void deleteEntity(@NotNull String classSystemId) {
+        deleteEntity(getClassOrThrow(classSystemId));
     }
 
     /**

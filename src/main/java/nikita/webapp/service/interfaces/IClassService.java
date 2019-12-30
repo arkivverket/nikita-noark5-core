@@ -4,7 +4,10 @@ import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import org.springframework.http.ResponseEntity;
 
@@ -48,7 +51,7 @@ public interface IClassService {
                               @NotNull final Class klass);
 
 	// All DELETE operations
-    HateoasNoarkObject deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
 }

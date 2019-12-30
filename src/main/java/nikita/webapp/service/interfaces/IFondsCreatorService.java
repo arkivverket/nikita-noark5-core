@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 public interface IFondsCreatorService {
 
@@ -21,7 +20,6 @@ public interface IFondsCreatorService {
 
     List<FondsCreator> findByOwnedBy(String ownedBy);
 
-    Optional<FondsCreator> findById(Long id);
     FondsCreator findBySystemId(String systemId);
 
     ResponseEntity<FondsHateoas> findFondsAssociatedWithFondsCreator(

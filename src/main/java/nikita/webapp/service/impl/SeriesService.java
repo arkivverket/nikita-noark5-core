@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
@@ -205,12 +204,6 @@ public class SeriesService
                 .body(fondsHateoas);
     }
 
-    // id
-    @Override
-    public Optional<Series> findById(Long id) {
-        return seriesRepository.findById(id);
-    }
-
     // systemId
     @Override
     public ResponseEntity<SeriesHateoas> findBySystemId(String systemId) {
@@ -254,9 +247,8 @@ public class SeriesService
 
     // All DELETE operations
     @Override
-    public int deleteEntity(@NotNull String seriesSystemId) {
-        seriesRepository.delete(getSeriesOrThrow(seriesSystemId));
-        return 1;
+    public void deleteEntity(@NotNull String seriesSystemId) {
+        deleteEntity(getSeriesOrThrow(seriesSystemId));
     }
 
     /**

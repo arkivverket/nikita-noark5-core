@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -136,11 +135,6 @@ public class RecordService
     // All READ operations
     public List<Record> findAll() {
         return recordRepository.findAll();
-    }
-
-    // id
-    public Optional<Record> findById(Long id) {
-        return recordRepository.findById(id);
     }
 
     /**
@@ -496,17 +490,7 @@ public class RecordService
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String systemID) {
-        Record record = getRecordOrThrow(systemID);
-
-        // See issue for a description of why this code was written this way
-        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
-        //Query q = entityManager.createNativeQuery("DELETE FROM
-        // fonds_fonds_creator WHERE pk_fonds_creator_id  = :id ;");
-        //q.setParameter("id", record.getId());
-        //q.executeUpdate();
-        entityManager.remove(record);
-        entityManager.flush();
-        entityManager.clear();
+        deleteEntity(getRecordOrThrow(systemID));
     }
 
     /**

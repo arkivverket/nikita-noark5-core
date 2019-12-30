@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface ICaseFileRepository
-        extends PagingAndSortingRepository<CaseFile, Long> {
+        extends PagingAndSortingRepository<CaseFile, UUID> {
 
     // -- All SAVE operations
     CaseFile save(CaseFile caseFile);

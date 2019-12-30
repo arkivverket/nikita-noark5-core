@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 public interface IRecordService {
 
@@ -78,8 +77,6 @@ public interface IRecordService {
 
     ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithRecord(@NotNull final String systemId);
-
-    Optional<Record> findById(Long id);
 
     Record findBySystemId(String systemId);
 
