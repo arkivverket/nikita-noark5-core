@@ -434,7 +434,7 @@ public final class Constants {
 
     // FileHateoas REL links
     public static final String REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE =
-            REL_FONDS_STRUCTURE + FILE_EXPAND_TO_CASE_FILE + SLASH;
+            REL_CASE_HANDLING + FILE_EXPAND_TO_CASE_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE =
             REL_FONDS_STRUCTURE + FILE_EXPAND_TO_MEETING_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_END_FILE =
