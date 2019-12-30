@@ -9,8 +9,7 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 
 import java.io.IOException;
 
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.printDocumentFlow;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
  * Serialise an outgoing RecordNote object as JSON.
@@ -28,6 +27,8 @@ public class RecordNoteHateoasSerializer
         RecordNote recordNote = (RecordNote) noarkSystemIdEntity;
 
         jgen.writeStartObject();
+        printRecordEntity(jgen, recordNote);
+        printRecordNoteEntity(jgen, recordNote);
 
         printDocumentFlow(jgen, recordNote);
         printHateoasLinks(jgen, recordNoteHateoas.getLinks(recordNote));
