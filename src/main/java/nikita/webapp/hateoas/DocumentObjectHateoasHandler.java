@@ -38,6 +38,7 @@ public class DocumentObjectHateoasHandler
         // links for metadata entities
         addVariantFormat(entity, hateoasNoarkObject);
         addFormat(entity, hateoasNoarkObject);
+        addConvertFile(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -91,6 +92,13 @@ public class DocumentObjectHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + REFERENCE_FILE + SLASH,
                 REL_FONDS_STRUCTURE_DOCUMENT_FILE, false));
+    }
+
+    @Override
+    public void addConvertFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + CONVERT_FILE,
+                REL_FONDS_STRUCTURE_CONVERT_FILE, false));
     }
 
     @Override
