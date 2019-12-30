@@ -371,13 +371,6 @@ public final class CommonUtils {
 
         public static final class Deserialize {
 
-            private final static DateTimeFormatter dateFormatter =
-                    new DateTimeFormatterBuilder()
-                            .append(ISO_DATE)
-                            .parseDefaulting(HOUR_OF_DAY, 0)
-                            .parseDefaulting(MINUTE_OF_HOUR, 0)
-                            .toFormatter();
-
             public static OffsetDateTime deserializeDate(String fieldname,
                                                          ObjectNode objectNode,
                                                          StringBuilder errors,
@@ -387,22 +380,14 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     try {
                         String date = currentNode.textValue();
-                        if (date.endsWith("Z")) {
-
-                            DateTimeFormatter formatter = ISO_OFFSET_DATE;
-                            d = ZonedDateTime.parse(date, formatter).
-                                    toOffsetDateTime();
-                            // d = ZonedDateTime.parse(date).toOffsetDateTime();
-                        } else {
-                            DateTimeFormatter dateFormatter =
-                                    new DateTimeFormatterBuilder().appendPattern(
-                                            "yyyy-MM-dd+HH:mm")
-                                            .parseDefaulting(HOUR_OF_DAY, 0)
-                                            .toFormatter()
-                                            .withZone(ZoneId.of("Europe/Oslo"));
-                            d = ZonedDateTime.parse(currentNode.textValue(),
-                                    dateFormatter).toOffsetDateTime();
-                        }
+			DateTimeFormatter dateFormatter =
+			    new DateTimeFormatterBuilder().appendPattern(
+                                     "yyyy-MM-ddX")
+			             .parseDefaulting(HOUR_OF_DAY, 0)
+			             .toFormatter()
+                                     .withZone(ZoneId.of("Europe/Oslo"));
+			d = ZonedDateTime.parse(currentNode.textValue(),
+                            dateFormatter).toOffsetDateTime();
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
                         errors.append(fieldname);
