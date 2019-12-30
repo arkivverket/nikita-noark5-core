@@ -22,6 +22,8 @@ public interface IDocumentObjectHateoasHandler extends IHateoasHandler {
 
     void addReferenceDocumentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
+    void addConvertFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+
     void addVariantFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);

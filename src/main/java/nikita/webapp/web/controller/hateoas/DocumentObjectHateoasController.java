@@ -227,7 +227,7 @@ public class DocumentObjectHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + "konverterFil",
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CONVERT_FILE,
                 headers = "Accept=*/*",
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> convertFile(
