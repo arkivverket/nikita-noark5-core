@@ -30,10 +30,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -462,7 +460,7 @@ TODO: Temp disabled!
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RegistryEntryHateoas> updateRegistryEntry(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of registryEntry to update",
                     required = true)

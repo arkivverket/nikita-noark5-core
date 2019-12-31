@@ -26,10 +26,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -450,7 +448,7 @@ public class SeriesHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM)
     public ResponseEntity<ClassificationSystemHateoas> createClassificationSystem(
-            HttpServletRequest request, final HttpServletResponse response) {
+            HttpServletRequest request) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.generateDefaultClassificationSystem());
@@ -468,7 +466,7 @@ public class SeriesHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE)
     public ResponseEntity<FileHateoas> createDefaultFile(
-            HttpServletRequest request, final HttpServletResponse response) {
+            HttpServletRequest request) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileService.generateDefaultFile());
@@ -486,7 +484,7 @@ public class SeriesHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE)
     public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
-            HttpServletRequest request, final HttpServletResponse response) {
+            HttpServletRequest request) {
 
 
         CaseFileHateoas caseFileHateoas =
@@ -508,9 +506,7 @@ public class SeriesHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
     public ResponseEntity<RecordHateoas> createDefaultRecord(
-            final UriComponentsBuilder uriBuilder,
-            HttpServletRequest request,
-            final HttpServletResponse response) {
+            HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.generateDefaultRecord());

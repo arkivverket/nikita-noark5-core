@@ -26,10 +26,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -80,7 +78,7 @@ public class FondsCreatorHateoasController
     @PostMapping(value = NEW_FONDS_CREATOR,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsCreatorHateoas> createFondsCreator(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "FondsCreator",
                     value = "Incoming FondsCreator object",
                     required = true)
@@ -115,7 +113,7 @@ public class FondsCreatorHateoasController
     @PostMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FONDS,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsHateoas> createFondsAssociatedWithFondsCreator(
-            HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemId",
                     value = "systemId of FondsCreator to associate the Fonds with.",
                     required = true)
@@ -182,7 +180,7 @@ public class FondsCreatorHateoasController
 
     @GetMapping(value = FONDS_CREATOR)
     public ResponseEntity<FondsCreatorHateoas> findAllFondsCreator(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @RequestParam(name = "top", required = false) Integer top,
             @RequestParam(name = "skip", required = false) Integer skip) {
         String ownedBy = SecurityContextHolder.getContext().getAuthentication()
@@ -247,7 +245,7 @@ public class FondsCreatorHateoasController
 
     @GetMapping(value = {NEW_FONDS_CREATOR, FONDS + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FONDS_CREATOR})
     public ResponseEntity<FondsCreatorHateoas> getFondsCreatorTemplate(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response
+            HttpServletRequest request
     ) throws NikitaException {
         FondsCreator suggestedFondsCreator = new FondsCreator();
         // TODO: This should be replaced with configurable data based on whoever is logged in
@@ -273,7 +271,7 @@ public class FondsCreatorHateoasController
 
     @DeleteMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteSeriesBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the fondsCreator to delete",
                     required = true)

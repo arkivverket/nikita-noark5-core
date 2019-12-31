@@ -22,10 +22,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -69,7 +67,7 @@ public class CorrespondencePartHateoasController
 
     @GetMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartPersonHateoas> findOneCorrespondencePartPersonBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the correspondencePartPerson to retrieve",
                     required = true)
@@ -99,7 +97,7 @@ public class CorrespondencePartHateoasController
 
     @GetMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartInternalHateoas> findOneCorrespondencePartInternalBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the correspondencePartInternal to retrieve",
                     required = true)
@@ -129,7 +127,7 @@ public class CorrespondencePartHateoasController
 
     @GetMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartUnitHateoas> findOneCorrespondencePartUnitBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the correspondencePartUnit to retrieve",
                     required = true)
@@ -164,7 +162,7 @@ public class CorrespondencePartHateoasController
     @PutMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartUnitHateoas> updateCorrespondencePartUnit(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of correspondencePartUnit to update",
                     required = true)
@@ -208,7 +206,7 @@ public class CorrespondencePartHateoasController
     @PutMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartPersonHateoas> updateCorrespondencePartPerson(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of correspondencePartPerson to update",
                     required = true)
@@ -252,7 +250,7 @@ public class CorrespondencePartHateoasController
     @PutMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartInternalHateoas> updateCorrespondencePartInternal(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of correspondencePartInternal to update",
                     required = true)

@@ -22,7 +22,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -99,7 +98,7 @@ public class DocumentObjectHateoasController
     @Counted
     @GetMapping(produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> findAllDocumentObject(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request) {
+            HttpServletRequest request) {
         DocumentObjectHateoas documentObjectHateoas = new
                 DocumentObjectHateoas((List<INikitaEntity>) (List)
                 documentObjectService.findDocumentObjectByOwner());
@@ -309,7 +308,7 @@ public class DocumentObjectHateoasController
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> updateDocumentObject(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of documentObject to update.",
                     required = true)
