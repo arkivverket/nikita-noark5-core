@@ -354,7 +354,7 @@ public class RecordService
         defaultRecord.setTitle(TEST_TITLE);
         defaultRecord.setDescription(TEST_DESCRIPTION);
         RecordHateoas recordHateoas = new RecordHateoas(defaultRecord);
-        recordHateoasHandler.addLinksOnNew(recordHateoas, new Authorisation());
+        recordHateoasHandler.addLinksOnTemplate(recordHateoas, new Authorisation());
         return recordHateoas;
     }
 

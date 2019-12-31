@@ -59,8 +59,8 @@ public class FondsHateoasHandler
     }
 
     @Override
-    public void addEntityLinksOnNew(INikitaEntity entity,
-                                    IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinksOnTemplate(INikitaEntity entity,
+                                         IHateoasNoarkObject hateoasNoarkObject) {
         addDocumentMedium(entity, hateoasNoarkObject);
     }
 

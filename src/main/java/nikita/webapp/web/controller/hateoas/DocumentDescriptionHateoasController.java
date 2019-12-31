@@ -356,7 +356,7 @@ public class DocumentDescriptionHateoasController
 
         DocumentObjectHateoas documentObjectHateoas = new
                 DocumentObjectHateoas(defaultDocumentObject);
-        documentObjectHateoasHandler.addLinksOnNew(documentObjectHateoas,
+        documentObjectHateoasHandler.addLinksOnTemplate(documentObjectHateoas,
                 new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))

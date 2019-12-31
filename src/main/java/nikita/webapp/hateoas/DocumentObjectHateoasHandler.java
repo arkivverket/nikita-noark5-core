@@ -42,6 +42,12 @@ public class DocumentObjectHateoasHandler
     }
 
     @Override
+    public void addEntityLinksOnTemplate(INikitaEntity entity,
+                                         IHateoasNoarkObject hateoasNoarkObject) {
+        addVariantFormat(entity, hateoasNoarkObject);
+    }
+
+    @Override
     public void addConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + CONVERSION + SLASH,
