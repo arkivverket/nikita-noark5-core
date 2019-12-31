@@ -622,6 +622,27 @@ public class FileHateoasController
                 .body(fileHateoas);
     }
 
+    // Create a Comment with default values
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-merknad
+    @ApiOperation(value = "Create a Comment with default values", response = Comment.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comment returned", response = Comment.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT)
+    public ResponseEntity<String> createDefaultComment(
+            HttpServletRequest request) {
+        /*
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(commentService.generateDefaultComment());
+        */
+        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED,
+                                    HttpStatus.NOT_IMPLEMENTED);
+    }
+
     // Retrieve all Comments associated with a File
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/merknad
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/merknad/
