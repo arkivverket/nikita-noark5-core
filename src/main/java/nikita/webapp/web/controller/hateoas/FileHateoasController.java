@@ -358,7 +358,7 @@ public class FileHateoasController
                 RecordHateoas((List<INikitaEntity>)
                 (List) file.getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
     }
@@ -585,7 +585,7 @@ public class FileHateoasController
         // TODO: If null return not found exception
         FileHateoas fileHateoas = new FileHateoas(file);
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(file.getVersion().toString())
                 .body(fileHateoas);
@@ -617,7 +617,7 @@ public class FileHateoasController
                     fileService.findByOwnedBy(ownedBy));
 
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileHateoas);
     }
