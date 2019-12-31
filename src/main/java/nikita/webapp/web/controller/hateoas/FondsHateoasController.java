@@ -92,7 +92,7 @@ public class FondsHateoasController
     }
 
     // Create a sub-fonds and associate it with the Fonds identified by systemId
-    // POST [contextPath][api]/arkivstruktur/arkiv/{systemId}/ny-underarkiv
+    // POST [contextPath][api]/arkivstruktur/arkiv/{systemId}/ny-arkiv
     @ApiOperation(
             value = "Persists a child Fonds object",
             notes = "Returns the newly created child Fonds object after it is" +
@@ -508,7 +508,8 @@ public class FondsHateoasController
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FONDS)
+    @GetMapping(value = {FONDS + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FONDS,
+                         FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FONDS})
     public ResponseEntity<FondsHateoas> getSubFondsTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",

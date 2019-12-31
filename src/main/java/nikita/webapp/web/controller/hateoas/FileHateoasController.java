@@ -140,11 +140,12 @@ public class FileHateoasController
     }
 
     // Create a (sub) File
-    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-undermappe
-    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-undermappe/
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-mappe
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-mappe/
     @ApiOperation(value = "Create a new File and associate it, with the given File identified by systemId, as a " +
             "(sub)File", notes = "Returns the newly created (sub)File after it was associated with a File and " +
-            "persisted to the database", response = FileHateoas.class)
+            "persisted to the database",
+                  response = FileHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = FILE + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
                     response = FileHateoas.class),
@@ -156,7 +157,6 @@ public class FileHateoasController
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> createSubFileAssociatedWithFile(
@@ -358,6 +358,23 @@ public class FileHateoasController
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
+    }
+
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-mappe/
+    @ApiOperation(value = "Return a template File with default values",
+                  response = File.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "File returned", response = File.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE)
+    public ResponseEntity<FileHateoas> createDefaultFile(
+            HttpServletRequest request, final HttpServletResponse response) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.generateDefaultFile());
     }
 
     // Create a suggested PartUnit (like a template) object 
