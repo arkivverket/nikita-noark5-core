@@ -36,6 +36,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -389,13 +390,14 @@ public final class CommonUtils {
                                             .withZone(ZoneId.of("Europe/Oslo"));
                             d = ZonedDateTime.parse(currentNode.textValue(),
                                     dateFormatter).toOffsetDateTime();
-                        } else if (date.contains("+")) {
+                        } else {
                             DateTimeFormatter dateFormatter =
-                                    new DateTimeFormatterBuilder().appendPattern(
-                                            "yyyy-MM-dd+HH:mm")
-                                            .parseDefaulting(HOUR_OF_DAY, 0)
-                                            .toFormatter()
-                                            .withZone(ZoneId.of("Europe/Oslo"));
+                                    new DateTimeFormatterBuilder()
+                                            .append(DateTimeFormatter.ISO_OFFSET_DATE)
+                                            // default values for hour and minute
+                                            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                                            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                                            .toFormatter();
                             d = ZonedDateTime.parse(currentNode.textValue(),
                                     dateFormatter).toOffsetDateTime();
                         }
