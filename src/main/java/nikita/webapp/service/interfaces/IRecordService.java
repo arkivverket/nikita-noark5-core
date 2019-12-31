@@ -25,6 +25,8 @@ public interface IRecordService {
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription);
 
+    RecordHateoas generateDefaultRecord();
+
     CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
             String recordSystemId);
 

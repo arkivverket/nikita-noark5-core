@@ -32,10 +32,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -328,6 +330,32 @@ public class RecordService
         return correspondencePartService.
                 createNewCorrespondencePartUnit(correspondencePart,
                         getRecordOrThrow(systemID));
+    }
+
+    /**
+     * Generate a Default CorrespondencePartUnit object that can be
+     * associated with the identified Record.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param recordSystemId The systemId of the record object
+     *                       you wish to create a templated object for
+     * @return the CorrespondencePartUnit object wrapped as a
+     * CorrespondencePartUnitHateoas object
+     */
+    @Override
+    public RecordHateoas
+    generateDefaultRecord() {
+        Record defaultRecord = new Record();
+        defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
+        defaultRecord.setArchivedDate(OffsetDateTime.now());
+        defaultRecord.setTitle(TEST_TITLE);
+        defaultRecord.setDescription(TEST_DESCRIPTION);
+        RecordHateoas recordHateoas = new RecordHateoas(defaultRecord);
+        recordHateoasHandler.addLinksOnNew(recordHateoas, new Authorisation());
+        return recordHateoas;
     }
 
     /**

@@ -18,6 +18,7 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
+import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -25,6 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +52,7 @@ public class SeriesHateoasController
     private ISeriesService seriesService;
     private ICaseFileService caseFileService;
     private IFileService fileService;
+    private IRecordService recordService;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
     private IFileHateoasHandler fileHateoasHandler;
@@ -62,6 +65,7 @@ public class SeriesHateoasController
                                    ICaseFileHateoasHandler caseFileHateoasHandler,
                                    IFileHateoasHandler fileHateoasHandler,
                                    IFileService fileService,
+                                   IRecordService recordService,
                                    ApplicationEventPublisher applicationEventPublisher) {
 
         this.classificationSystemService = classificationSystemService;
@@ -71,6 +75,7 @@ public class SeriesHateoasController
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
         this.fileService = fileService;
+        this.recordService = recordService;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -490,6 +495,25 @@ public class SeriesHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(caseFileHateoas);
+    }
+
+    // Create a Record with default values
+    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-registrering
+    @ApiOperation(value = "Create a Record with default values", response = Record.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Record returned", response = Record.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
+    public ResponseEntity<RecordHateoas> createDefaultRecord(
+            final UriComponentsBuilder uriBuilder,
+            HttpServletRequest request,
+            final HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.generateDefaultRecord());
     }
 
     // Retrieve the precursor to a Series given a systemId

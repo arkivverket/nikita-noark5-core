@@ -14,12 +14,15 @@ import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.IClassService;
+import nikita.webapp.service.interfaces.IRecordService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -35,9 +38,12 @@ public class ClassHateoasController
         extends NoarkController {
 
     private IClassService classService;
+    private IRecordService recordService;
 
-    public ClassHateoasController(IClassService classService) {
+    public ClassHateoasController(IClassService classService,
+				  IRecordService recordService) {
         this.classService = classService;
+        this.recordService = recordService;
     }
 
     // API - All POST Requests (CRUD - CREATE)
@@ -383,6 +389,25 @@ public class ClassHateoasController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classService.generateDefaultSubClass(systemID));
+    }
+
+    // Create a Record with default values
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-registrering
+    @ApiOperation(value = "Create a Record with default values", response = Record.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Record returned", response = Record.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
+    public ResponseEntity<RecordHateoas> createDefaultRecord(
+            final UriComponentsBuilder uriBuilder,
+            HttpServletRequest request,
+            final HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.generateDefaultRecord());
     }
 
     // Delete a Class identified by systemID
