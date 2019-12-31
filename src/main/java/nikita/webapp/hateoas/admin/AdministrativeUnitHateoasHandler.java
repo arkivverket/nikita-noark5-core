@@ -28,6 +28,8 @@ public class AdministrativeUnitHateoasHandler
     @Override
     public void addEntityLinks(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
+        addUser(entity, hateoasNoarkObject);
+        addAdministrativeUnit(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -42,6 +44,14 @@ public class AdministrativeUnitHateoasHandler
         addEntityLinks(entity, hateoasNoarkObject);
     }
 
+    @Override
+    public void addEntityLinksOnTemplate(
+            INikitaEntity entity,
+            IHateoasNoarkObject hateoasNoarkObject) {
+        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addEntityLinks(entity, hateoasNoarkObject);
+    }
+
     public void addChildAdministrativeUnit(
             INikitaEntity entity,
             IHateoasNoarkObject hateoasNoarkObject) {
@@ -50,4 +60,17 @@ public class AdministrativeUnitHateoasHandler
                 REL_ADMIN_ADMINISTRATIVE_UNIT, false));
     }
 
+    public void addAdministrativeUnit(INikitaEntity entity,
+                             IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_ADMIN + SLASH + ADMINISTRATIVE_UNIT,
+                REL_ADMIN_USER, true));
+    }
+
+    public void addUser(INikitaEntity entity,
+                             IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_ADMIN + SLASH + USER,
+                REL_ADMIN_USER, true));
+    }
 }
