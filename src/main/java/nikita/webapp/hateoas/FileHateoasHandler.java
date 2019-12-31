@@ -56,6 +56,15 @@ public class FileHateoasHandler
         addNewReferenceSecondaryClassification(entity, hateoasNoarkObject);
     }
 
+    @Override
+    public void addEntityLinksOnTemplate(
+            INikitaEntity entity,
+            IHateoasNoarkObject hateoasNoarkObject) {
+        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addDocumentMedium(entity, hateoasNoarkObject);
+        addMetadataFileType(entity, hateoasNoarkObject);
+    }
+
     /**
      * Create a REL/HREF pair for the parent Series associated with the given
      * File. Checks if the File is actually associated with a Series. Note every
@@ -249,6 +258,13 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION_SYSTEM + SLASH,
                 REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
+    }
+
+    public void addMetadataFileType(INikitaEntity entity,
+                             IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + FILE_TYPE,
+                REL_METADATA_FILE_TYPE, false));
     }
 
     /**
