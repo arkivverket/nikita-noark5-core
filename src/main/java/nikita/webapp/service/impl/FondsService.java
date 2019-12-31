@@ -355,7 +355,7 @@ public class FondsService
                 fondsSystemId);
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(defaultSeries);
-        seriesHateoasHandler.addLinksOnNew(seriesHateoas, new Authorisation());
+        seriesHateoasHandler.addLinksOnTemplate(seriesHateoas, new Authorisation());
         return seriesHateoas;
     }
 

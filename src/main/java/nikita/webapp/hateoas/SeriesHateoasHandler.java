@@ -66,6 +66,12 @@ public class SeriesHateoasHandler extends HateoasHandler
     }
 
     @Override
+    public void addEntityLinksOnTemplate(INikitaEntity entity,
+                                         IHateoasNoarkObject hateoasNoarkObject) {
+        addDocumentMedium(entity, hateoasNoarkObject);
+    }
+
+    @Override
     /**
      * Get a list of Series status values (GET)
      */
