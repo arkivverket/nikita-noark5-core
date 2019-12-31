@@ -21,6 +21,7 @@ import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
+import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,7 +33,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -50,16 +50,19 @@ public class FileHateoasController
 
     private IFileService fileService;
     private IFileHateoasHandler fileHateoasHandler;
+    private IRecordService recordService;
     private IRecordHateoasHandler recordHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
 
     public FileHateoasController(
             IFileService fileService,
             IFileHateoasHandler fileHateoasHandler,
+            IRecordService recordService,
             IRecordHateoasHandler recordHateoasHandler,
             ApplicationEventPublisher applicationEventPublisher) {
         this.fileService = fileService;
         this.fileHateoasHandler = fileHateoasHandler;
+        this.recordService = recordService;
         this.recordHateoasHandler = recordHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
     }
@@ -551,22 +554,14 @@ public class FileHateoasController
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
     public ResponseEntity<RecordHateoas> createDefaultRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response) {
-
-        Record defaultRecord = new Record();
-        defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
-        defaultRecord.setArchivedDate(OffsetDateTime.now());
-        defaultRecord.setTitle(TEST_TITLE);
-        defaultRecord.setDescription(TEST_DESCRIPTION);
-        RecordHateoas recordHateoas = new
-                RecordHateoas(defaultRecord);
-        recordHateoasHandler.addLinksOnNew(recordHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.CREATED)
+            final UriComponentsBuilder uriBuilder,
+            HttpServletRequest request,
+            final HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordHateoas);
+                .body(recordService.generateDefaultRecord());
     }
 
     // Retrieve a file identified by a systemId
