@@ -32,10 +32,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -92,7 +90,7 @@ public class RecordHateoasController
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentDescriptionHateoas>
     createDocumentDescriptionAssociatedWithRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of record to associate the documentDescription with.",
                     required = true)
@@ -191,7 +189,7 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_REFERENCE_SERIES,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addReferenceSeriesToRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of Record to associate the secondary Series with",
                     required = true)
@@ -230,7 +228,7 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFIED,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewClassifiedToRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of Record to associate the Classified with",
                     required = true)
@@ -267,7 +265,7 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DISPOSAL,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewDisposalToRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of Record to associate the Disposal with",
                     required = true)
@@ -305,7 +303,7 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewScreeningToRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of Record to associate the Screening with",
                     required = true)
@@ -344,7 +342,7 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DISPOSAL_UNDERTAKEN,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewDisposalUndertakenToRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of Record to associate the DisposalUndertaken with",
                     required = true)
@@ -382,7 +380,7 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DELETION,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNewDeletionToRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of Record to associate the Deletion with",
                     required = true)
@@ -753,7 +751,7 @@ public class RecordHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<RecordHateoas> findOneRecordbySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the record to retrieve",
                     required = true)
@@ -858,7 +856,7 @@ public class RecordHateoasController
     @Counted
     @GetMapping
     public ResponseEntity<RecordHateoas> findAllRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @RequestParam(name = "top", required = false) Integer top,
             @RequestParam(name = "skip", required = false) Integer skip) {
 
@@ -885,7 +883,7 @@ public class RecordHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REFERENCE_SERIES)
     public ResponseEntity<String> findSecondarySeriesAssociatedWithRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the Record to retrieve secondary Class for",
                     required = true)
@@ -904,7 +902,7 @@ public class RecordHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_DESCRIPTION)
     public ResponseEntity<DocumentDescriptionHateoas> createDefaultDocumentDescription(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response) {
+            HttpServletRequest request) {
 
         DocumentDescription defaultDocumentDescription = new DocumentDescription();
 
@@ -933,7 +931,7 @@ public class RecordHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_DESCRIPTION)
     public ResponseEntity<DocumentDescriptionHateoas> findAllDocumentDescriptionAssociatedWithRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve associated Record",
                     required = true)
@@ -961,7 +959,7 @@ public class RecordHateoasController
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteRecordBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the record to delete",
                     required = true)
@@ -1013,7 +1011,7 @@ public class RecordHateoasController
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordHateoas> updateRecord(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of record to update",
                     required = true)

@@ -29,10 +29,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -90,7 +88,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "fileSystemId",
                     value = "systemId of file to associate the record with",
                     required = true)
@@ -123,7 +121,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CROSS_REFERENCE,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> createCrossReferenceAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of file to associate the Record with",
                     required = true)
@@ -163,7 +161,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> createSubFileAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of the parent file",
                     required = true)
@@ -199,7 +197,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addCommentToFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the Comment with",
                     required = true)
@@ -236,7 +234,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addClassToFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the Class with",
                     required = true)
@@ -274,7 +272,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_REFERENCE_SERIES,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addReferenceSeriesToFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the secondary Series with",
                     required = true)
@@ -314,7 +312,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SECONDARY_CLASSIFICATION,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addReferenceToSecondaryClassToFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the secondary Class with",
                     required = true)
@@ -374,7 +372,7 @@ public class FileHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE)
     public ResponseEntity<FileHateoas> createDefaultFile(
-            HttpServletRequest request, final HttpServletResponse response) {
+            HttpServletRequest request) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileService.generateDefaultFile());
@@ -537,7 +535,7 @@ public class FileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_FILE)
     public ResponseEntity<String> findAllSubFileAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve associated (sub)File",
                     required = true)
@@ -556,9 +554,7 @@ public class FileHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
     public ResponseEntity<RecordHateoas> createDefaultRecord(
-            final UriComponentsBuilder uriBuilder,
-            HttpServletRequest request,
-            final HttpServletResponse response) {
+            HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.generateDefaultRecord());
@@ -576,7 +572,7 @@ public class FileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<FileHateoas> findOneFileBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve",
                     required = true)
@@ -636,7 +632,7 @@ public class FileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + COMMENT)
     public ResponseEntity<String> findAllCommentsAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve comments for",
                     required = true)
@@ -659,7 +655,7 @@ public class FileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CROSS_REFERENCE)
     public ResponseEntity<String> findAllCrossReferenceAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the File to retrieve CrossReferences for",
                     required = true)
@@ -681,7 +677,7 @@ public class FileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SECONDARY_CLASSIFICATION)
     public ResponseEntity<String> findSecondaryClassAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the File to retrieve secondary Class for",
                     required = true)
@@ -706,7 +702,7 @@ public class FileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REFERENCE_SERIES)
     public ResponseEntity<String> findSecondarySeriesAssociatedWithFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the File to retrieve secondary Class for",
                     required = true)
@@ -735,7 +731,7 @@ public class FileHateoasController
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FileHateoas> updateFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of file to update",
                     required = true)
@@ -776,7 +772,7 @@ public class FileHateoasController
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_END,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> finaliseFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of file to update",
                     required = true)
@@ -814,7 +810,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_EXPAND_TO_CASE_FILE,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> expandFileToCaseFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of file to expand",
                     required = true)
@@ -962,7 +958,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_EXPAND_TO_MEETING_FILE,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> expandFileToMeetingFile(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of file to expand",
                     required = true)
@@ -990,7 +986,7 @@ public class FileHateoasController
 
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteFileBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to delete",
                     required = true)

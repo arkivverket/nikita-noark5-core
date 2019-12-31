@@ -38,7 +38,7 @@ public class PrecedenceHateoasController {
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PrecedenceHateoas> findOnePrecedenceBySystemId(
-            final UriComponentsBuilder uriBuilder, HttpServletRequest request, final HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the precedence to retrieve",
                     required = true)
