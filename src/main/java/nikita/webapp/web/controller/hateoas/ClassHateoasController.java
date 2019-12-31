@@ -14,6 +14,7 @@ import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.IClassService;
+import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +37,12 @@ public class ClassHateoasController
         extends NoarkController {
 
     private IClassService classService;
+    private IFileService fileService;
     private IRecordService recordService;
 
     public ClassHateoasController(IClassService classService,
-				  IRecordService recordService) {
+                                  IFileService fileService,
+                                  IRecordService recordService) {
         this.classService = classService;
         this.recordService = recordService;
     }
@@ -387,6 +390,24 @@ public class ClassHateoasController
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classService.generateDefaultSubClass(systemID));
+    }
+
+    // Create a File object with default values
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-mappe/
+    @ApiOperation(value = "Create a File with default values", response = File.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "File returned", response = File.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE)
+    public ResponseEntity<FileHateoas> createDefaultFile(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.generateDefaultFile());
     }
 
     // Create a Record with default values

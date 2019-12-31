@@ -269,7 +269,7 @@ public class FileService
         defaultFile.setTitle(TEST_TITLE);
         defaultFile.setDescription(TEST_DESCRIPTION);
         FileHateoas fileHateoas = new FileHateoas(defaultFile);
-        fileHateoasHandler.addLinksOnNew(fileHateoas, new Authorisation());
+        fileHateoasHandler.addLinksOnTemplate(fileHateoas, new Authorisation());
         return fileHateoas;
     }
 
