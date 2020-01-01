@@ -318,7 +318,7 @@ public class ClassificationSystemService
     public ClassificationSystemHateoas generateDefaultClassificationSystem() {
         ClassificationSystem defaultClassificationSystem = new ClassificationSystem();
         ClassificationSystemHateoas classificationSystemHateoas = new ClassificationSystemHateoas(defaultClassificationSystem);
-        classificationSystemHateoasHandler.addLinksOnNew(classificationSystemHateoas, new Authorisation());
+        classificationSystemHateoasHandler.addLinksOnTemplate(classificationSystemHateoas, new Authorisation());
         return classificationSystemHateoas;
     }
 
