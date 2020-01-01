@@ -54,7 +54,7 @@ public interface IHateoasHandler {
                            IHateoasNoarkObject hateoasNoarkObject);
 
 
-    // The following are required ti give @Value during reflection
+    // The following are required to give @Value during reflection
     void setPublicAddress(String publicAddress);
 
     void setContextPath(String contextPath);
