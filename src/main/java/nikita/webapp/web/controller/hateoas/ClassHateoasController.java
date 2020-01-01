@@ -13,6 +13,7 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
+import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
@@ -36,14 +37,18 @@ import static org.springframework.http.HttpStatus.OK;
 public class ClassHateoasController
         extends NoarkController {
 
+    private ICaseFileService caseFileService;
     private IClassService classService;
     private IFileService fileService;
     private IRecordService recordService;
 
-    public ClassHateoasController(IClassService classService,
+    public ClassHateoasController(ICaseFileService caseFileService,
+                                  IClassService classService,
                                   IFileService fileService,
                                   IRecordService recordService) {
+        this.caseFileService = caseFileService;
         this.classService = classService;
+        this.fileService = fileService;
         this.recordService = recordService;
     }
 
@@ -408,6 +413,23 @@ public class ClassHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileService.generateDefaultFile());
+    }
+
+    // Create a CaseFile object with default values
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-saksmappe/
+    @ApiOperation(value = "Create a CaseFile with default values", response = CaseFile.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "CaseFile returned", response = CaseFile.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE)
+    public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(caseFileService.generateDefaultCaseFile());
     }
 
     // Create a Record with default values
