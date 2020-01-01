@@ -85,9 +85,8 @@ public final class N5ResourceMappings {
     public static final String CLASS = "klasse";
     public static final String CLASS_ID = "klasseID";
 
-    // Note, PARENT_CLASS is not part of the standard
-    public static final String PARENT_CLASS = "overklasse";
-    public static final String SUB_CLASS = "underklasse";
+    public static final String PARENT_CLASS = PARENT + CLASS;
+    public static final String SUB_CLASS = SUB + CLASS;
 
     // File
     public static final String FILE_ID = "mappeID";

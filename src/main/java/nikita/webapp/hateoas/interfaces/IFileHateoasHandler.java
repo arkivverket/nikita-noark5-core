@@ -35,6 +35,9 @@ public interface IFileHateoasHandler
     void addNewComment(INikitaEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
+    void addParentFile(INikitaEntity entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
+
     void addSubFile(INikitaEntity entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 

@@ -107,9 +107,12 @@ public class ClassHateoasHandler
 
     @Override
     public void addParentClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + PARENT_CLASS + SLASH,
-                REL_FONDS_STRUCTURE_PARENT_CLASS, false));
+        Class cls = getClass(entity).getReferenceParentClass();
+        if (cls != null) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_CLASS + SLASH + cls.getSystemId(),
+                    REL_FONDS_STRUCTURE_PARENT_CLASS, false));
+        }
     }
 
     @Override

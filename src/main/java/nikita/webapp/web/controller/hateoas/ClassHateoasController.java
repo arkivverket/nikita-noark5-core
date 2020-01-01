@@ -54,7 +54,7 @@ public class ClassHateoasController
 
     // API - All POST Requests (CRUD - CREATE)
 
-    // POST [contextPath][api]/arkivstruktur/klasse/{systemID}/ny-underklasse
+    // POST [contextPath][api]/arkivstruktur/klasse/{systemID}/ny-klasse
     @ApiOperation(value = "Persists a Class object associated with the " +
             "(other) given Class systemId", notes = "Returns the newly " +
             "created class object after it was associated with a class" +
@@ -366,7 +366,7 @@ public class ClassHateoasController
     }
     
     // Return a Class object with default values
-    //GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-underklasse
+    //GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-klasse
     @ApiOperation(
             value = "Create a Class with default values",
             response = Class.class)

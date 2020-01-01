@@ -161,6 +161,16 @@ public class FileHateoasHandler
     }
 
     @Override
+    public void addParentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        File file = getFile(entity).getReferenceParentFile();
+        if (file != null) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FILE + SLASH + file.getSystemId(),
+                    REL_FONDS_STRUCTURE_PARENT_FILE));
+        }
+    }
+
+    @Override
     public void addSubFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SUB_FILE + SLASH,
