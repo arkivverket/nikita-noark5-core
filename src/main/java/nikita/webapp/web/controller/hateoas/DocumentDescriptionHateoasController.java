@@ -16,6 +16,7 @@ import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
+import nikita.webapp.service.interfaces.IDocumentObjectService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +37,17 @@ public class DocumentDescriptionHateoasController
         extends NoarkController {
 
     private IDocumentDescriptionService documentDescriptionService;
+    private IDocumentObjectService documentObjectService;
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
 
     public DocumentDescriptionHateoasController(
             IDocumentDescriptionService documentDescriptionService,
+            IDocumentObjectService documentObjectService,
             IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler) {
         this.documentDescriptionService = documentDescriptionService;
+        this.documentObjectService = documentObjectService;
         this.documentDescriptionHateoasHandler = documentDescriptionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
     }
@@ -327,7 +331,6 @@ public class DocumentDescriptionHateoasController
         return documentDescriptionService.findAll();
     }
 
-    // Create a DocumentObject with default values
     // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-dokumentobjekt
     @ApiOperation(value = "Create a DocumentObject with default values",
             response = DocumentObjectHateoas.class)
@@ -341,26 +344,12 @@ public class DocumentDescriptionHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_OBJECT)
     public ResponseEntity<DocumentObjectHateoas> createDefaultDocumentObject(
             HttpServletRequest request) {
-
-        DocumentObject defaultDocumentObject = new DocumentObject();
-        // This is just temporary code as this will have to be replaced if
-        // this ever goes into production
-        defaultDocumentObject.setMimeType(MediaType.APPLICATION_XML.toString());
-        defaultDocumentObject.setVariantFormat(PRODUCTION_VERSION);
-        defaultDocumentObject.setFormat("XML");
-        defaultDocumentObject.setVersionNumber(1);
-
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas(defaultDocumentObject);
-        documentObjectHateoasHandler.addLinksOnTemplate(documentObjectHateoas,
-                new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentObjectHateoas);
+                .body(documentObjectService.generateDefaultDocumentObject());
     }
 
     // Retrieve all DocumentObjects associated with a DocumentDescription

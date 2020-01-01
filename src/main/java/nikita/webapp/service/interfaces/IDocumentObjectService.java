@@ -20,6 +20,9 @@ public interface IDocumentObjectService {
     DocumentObject save(@NotNull DocumentObject documentObject);
 
     // -- All READ operations
+
+    DocumentObjectHateoas generateDefaultDocumentObject();
+
     List<DocumentObject> findDocumentObjectByOwner();
 
     ResponseEntity<DocumentDescriptionHateoas>

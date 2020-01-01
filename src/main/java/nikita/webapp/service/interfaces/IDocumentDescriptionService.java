@@ -27,6 +27,8 @@ public interface IDocumentDescriptionService {
 
     // -- All READ operations
 
+    DocumentDescriptionHateoas generateDefaultDocumentDescription();
+
     PartPersonHateoas generateDefaultPartPerson(String systemID);
 
     PartUnitHateoas generateDefaultPartUnit(String systemID);
