@@ -1,7 +1,6 @@
 package nikita.common.util.serializers.noark5v5.hateoas;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import nikita.common.config.N5ResourceMappings.CLASS_ID;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
@@ -33,9 +32,6 @@ public class ClassHateoasSerializer extends HateoasSerializer implements IHateoa
 
         jgen.writeStartObject();
         CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, klass);
-        if (klass.getClassId() != null) {
-            jgen.writeStringField(N5ResourceMappings.CLASS_ID, klass.getClassId());
-        }
         CommonUtils.Hateoas.Serialize.printTitleAndDescription(jgen, klass);
         CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, klass);
         CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, klass);
