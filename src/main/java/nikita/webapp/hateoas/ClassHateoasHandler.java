@@ -51,7 +51,15 @@ public class ClassHateoasHandler
         addNewDeletion(entity, hateoasNoarkObject);
         addNewScreening(entity, hateoasNoarkObject);
         // links for metadata entities
-        // Class has no metadata entities
+        addAccessRestriction(entity,hateoasNoarkObject);
+        addDisposalDecision(entity,hateoasNoarkObject);
+    }
+
+    @Override
+    public void addEntityLinksOnTemplate(INikitaEntity entity,
+                                         IHateoasNoarkObject hateoasNoarkObject) {
+        addAccessRestriction(entity,hateoasNoarkObject);
+        addDisposalDecision(entity,hateoasNoarkObject);
     }
 
     /**
@@ -219,6 +227,22 @@ public class ClassHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CROSS_REFERENCE, false));
+    }
+
+    @Override
+    public void addAccessRestriction(INikitaEntity entity,
+                                  IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + ACCESS_RESTRICTION,
+                REL_METADATA_ACCESS_RESTRICTION, false));
+    }
+
+    @Override
+    public void addDisposalDecision(INikitaEntity entity,
+                                  IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + DISPOSAL_DECISION,
+                REL_METADATA_DISPOSAL_DECISION, false));
     }
 
     /**

@@ -48,5 +48,8 @@ public interface IClassHateoasHandler extends IHateoasHandler {
 
     void addNewCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
+    void addAccessRestriction(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+
+    void addDisposalDecision(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
 }
