@@ -29,9 +29,6 @@ public interface IHateoasHandler {
     void addLinksOnDelete(IHateoasNoarkObject hateoasNoarkObject,
                           IAuthorisation authorisation);
 
-    void addLinksOnNew(IHateoasNoarkObject hateoasNoarkObject,
-                       IAuthorisation authorisation);
-
     void addSelfLink(INikitaEntity entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
@@ -46,9 +43,6 @@ public interface IHateoasHandler {
 
     void addEntityLinksOnRead(INikitaEntity entity,
                               IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinksOnNew(INikitaEntity entity,
-                             IHateoasNoarkObject hateoasNoarkObject);
 
     void addDocumentMedium(INikitaEntity entity,
                            IHateoasNoarkObject hateoasNoarkObject);

@@ -70,17 +70,6 @@ public class HateoasHandler
     }
 
     @Override
-    public void addLinksOnNew(IHateoasNoarkObject hateoasNoarkObject,
-                              IAuthorisation authorisation) {
-        this.authorisation = authorisation;
-
-        Iterable<INikitaEntity> entities = hateoasNoarkObject.getList();
-        for (INikitaEntity entity : entities) {
-            addEntityLinksOnNew(entity, hateoasNoarkObject);
-        }
-    }
-
-    @Override
     public void addLinksOnRead(IHateoasNoarkObject hateoasNoarkObject,
                                IAuthorisation authorisation) {
         addLinks(hateoasNoarkObject, authorisation);
@@ -157,12 +146,6 @@ public class HateoasHandler
     @Override
     public void addEntityLinksOnTemplate(INikitaEntity entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
-    }
-
-    // Sub class should handle this, empty links otherwise!
-    @Override
-    public void addEntityLinksOnNew(INikitaEntity entity,
-                                    IHateoasNoarkObject hateoasNoarkObject) {
     }
 
     // Sub class should handle this, empty links otherwise!
