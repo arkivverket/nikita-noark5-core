@@ -259,6 +259,32 @@ public class FondsCreatorHateoasController
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsCreatorHateoas);
     }
+
+    // GET [contextPath][api]/arkivstruktur/arkivskaper/{systemId}/arkiv
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/
+    @ApiOperation(value = "Retrieve the Fonds associated with the " +
+                  "Fonds Creator identified by the given systemId",
+                  response = FondsHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Fonds returned",
+                    response = FondsHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER + SLASH + FONDS)
+    public ResponseEntity<FondsHateoas> findParentFondsAssociatedWithSeries(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the Series ",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return fondsCreatorService.findFondsAssociatedWithFondsCreator(systemID);
+    }
+
     // Delete a FondsCreator identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/arkivskaper/{systemId}/
     @ApiOperation(value = "Deletes a single FondsCreator entity identified by systemID", response = FondsHateoas.class)
