@@ -194,9 +194,7 @@ public class DocumentObjectService
         DocumentObject defaultDocumentObject = new DocumentObject();
         // This is just temporary code as this will have to be replaced if
         // this ever goes into production
-        defaultDocumentObject.setMimeType(MediaType.APPLICATION_XML.toString());
         defaultDocumentObject.setVariantFormat(PRODUCTION_VERSION);
-        defaultDocumentObject.setFormat("XML");
         defaultDocumentObject.setVersionNumber(1);
 
         DocumentObjectHateoas documentObjectHateoas =
