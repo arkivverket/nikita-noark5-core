@@ -53,6 +53,14 @@ public class DocumentDescriptionHateoasHandler
         addDocumentStatus(entity, hateoasNoarkObject);
     }
 
+    @Override
+    public void addEntityLinksOnTemplate(INikitaEntity entity,
+                                         IHateoasNoarkObject hateoasNoarkObject) {
+        addDocumentMedium(entity, hateoasNoarkObject);
+        addDocumentType(entity, hateoasNoarkObject);
+        addDocumentStatus(entity, hateoasNoarkObject);
+    }
+
     /**
      * Create a REL/HREF pair for the parent Record associated
      * with the given DocumentDescription

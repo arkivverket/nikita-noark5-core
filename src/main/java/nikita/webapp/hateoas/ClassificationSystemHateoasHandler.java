@@ -66,6 +66,12 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
     }
 
     @Override
+    public void addEntityLinksOnTemplate(INikitaEntity entity,
+                                         IHateoasNoarkObject hateoasNoarkObject) {
+        addClassificationType(entity, hateoasNoarkObject);
+    }
+
+    @Override
     public void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + CLASS + SLASH,

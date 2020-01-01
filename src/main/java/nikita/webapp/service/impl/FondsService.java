@@ -380,7 +380,7 @@ public class FondsService
         defaultFonds.setDescription(TEST_DESCRIPTION);
         defaultFonds.setDocumentMedium(DOCUMENT_MEDIUM_ELECTRONIC);
         FondsHateoas fondsHateoas = new FondsHateoas(defaultFonds);
-        fondsHateoasHandler.addLinksOnNew(fondsHateoas, new Authorisation());
+        fondsHateoasHandler.addLinksOnTemplate(fondsHateoas, new Authorisation());
         return fondsHateoas;
     }
 

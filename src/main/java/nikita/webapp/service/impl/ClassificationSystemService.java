@@ -157,7 +157,7 @@ public class ClassificationSystemService
                 "systemID " + classificationSystemSystemId);
         ClassHateoas classHateoas = new
                 ClassHateoas(defaultClass);
-        classHateoasHandler.addLinksOnNew(classHateoas, new Authorisation());
+        classHateoasHandler.addLinksOnTemplate(classHateoas, new Authorisation());
         return classHateoas;
     }
 
