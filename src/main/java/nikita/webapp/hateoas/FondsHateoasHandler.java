@@ -62,6 +62,7 @@ public class FondsHateoasHandler
     public void addEntityLinksOnTemplate(INikitaEntity entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         addDocumentMedium(entity, hateoasNoarkObject);
+        addFondsStatus(entity, hateoasNoarkObject);
     }
 
     /**

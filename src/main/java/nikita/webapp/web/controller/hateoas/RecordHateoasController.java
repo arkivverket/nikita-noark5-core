@@ -912,7 +912,7 @@ public class RecordHateoasController
 
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas(defaultDocumentDescription);
-        documentDescriptionHateoasHandler.addLinksOnNew(documentDescriptionHateoas, new Authorisation());
+        documentDescriptionHateoasHandler.addLinksOnTemplate(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
