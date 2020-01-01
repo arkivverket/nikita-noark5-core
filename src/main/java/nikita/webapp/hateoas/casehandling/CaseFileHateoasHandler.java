@@ -55,7 +55,7 @@ public class CaseFileHateoasHandler
     }
 
     @Override
-    public void addEntityLinksOnNew(
+    public void addEntityLinksOnTemplate(
             INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         // Get a list of case status values
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +

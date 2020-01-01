@@ -254,7 +254,7 @@ public class FondsCreatorHateoasController
         suggestedFondsCreator.setFondsCreatorName("Eksempel kommune");
         suggestedFondsCreator.setDescription("Eksempel kommune ligger i eksempel fylke nord for nord");
         FondsCreatorHateoas fondsCreatorHateoas = new FondsCreatorHateoas(suggestedFondsCreator);
-        fondsHateoasHandler.addLinksOnNew(fondsCreatorHateoas, new Authorisation());
+        fondsHateoasHandler.addLinksOnTemplate(fondsCreatorHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsCreatorHateoas);

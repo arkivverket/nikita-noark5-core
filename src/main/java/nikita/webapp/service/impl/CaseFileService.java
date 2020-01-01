@@ -370,7 +370,7 @@ public class CaseFileService
 
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(defaultCaseFile);
-        caseFileHateoasHandler.addLinksOnNew(caseFileHateoas,
+        caseFileHateoasHandler.addLinksOnTemplate(caseFileHateoas,
                 new Authorisation());
         return caseFileHateoas;
     }
