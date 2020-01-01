@@ -59,6 +59,7 @@ import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
+import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ACCEPT;
@@ -186,6 +187,23 @@ public class DocumentObjectService
             logger.error(msg);
             throw new StorageException(msg);
         }
+    }
+
+    @Override
+    public DocumentObjectHateoas generateDefaultDocumentObject() {
+        DocumentObject defaultDocumentObject = new DocumentObject();
+        // This is just temporary code as this will have to be replaced if
+        // this ever goes into production
+        defaultDocumentObject.setMimeType(MediaType.APPLICATION_XML.toString());
+        defaultDocumentObject.setVariantFormat(PRODUCTION_VERSION);
+        defaultDocumentObject.setFormat("XML");
+        defaultDocumentObject.setVersionNumber(1);
+
+        DocumentObjectHateoas documentObjectHateoas =
+	    new DocumentObjectHateoas(defaultDocumentObject);
+        documentObjectHateoasHandler.addLinksOnTemplate(documentObjectHateoas,
+                new Authorisation());
+	return documentObjectHateoas;
     }
 
     @Override

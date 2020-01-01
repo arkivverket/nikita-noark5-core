@@ -31,6 +31,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_STATUS_FINALISED;
+import static nikita.common.config.N5ResourceMappings.LETTER;
+import static nikita.common.config.N5ResourceMappings.MAIN_DOCUMENT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -104,6 +107,33 @@ public class DocumentDescriptionService
         return partService.
                 createNewPartUnit(partUnit,
                         getDocumentDescriptionOrThrow(systemID));
+    }
+
+    /**
+     * Generate a Default DocumentDescription object.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @return the DocumentDescription object wrapped as a
+     * DocumentDescriptionHateoas object
+     */
+    @Override
+    public DocumentDescriptionHateoas
+    generateDefaultDocumentDescription() {
+        DocumentDescription defaultDocumentDescription =
+            new DocumentDescription();
+
+        defaultDocumentDescription.setAssociatedWithRecordAs(MAIN_DOCUMENT);
+        defaultDocumentDescription.setDocumentType(LETTER);
+        defaultDocumentDescription.setDocumentStatus(DOCUMENT_STATUS_FINALISED);
+
+        DocumentDescriptionHateoas documentDescriptionHateoas = new
+                DocumentDescriptionHateoas(defaultDocumentDescription);
+        documentDescriptionHateoasHandler.addLinksOnTemplate(
+                documentDescriptionHateoas, new Authorisation());
+        return documentDescriptionHateoas;
     }
 
     @Override

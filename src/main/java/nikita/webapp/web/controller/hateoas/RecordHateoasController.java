@@ -24,6 +24,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -49,17 +50,20 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class RecordHateoasController
         extends NoarkController {
 
+    private IDocumentDescriptionService documentDescriptionService;
     private IRecordService recordService;
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public RecordHateoasController(IRecordService recordService,
+    public RecordHateoasController(IDocumentDescriptionService documentDescriptionService,
+                                   IRecordService recordService,
                                    IDocumentDescriptionHateoasHandler
                                            documentDescriptionHateoasHandler,
                                    IRecordHateoasHandler recordHateoasHandler,
                                    ApplicationEventPublisher
                                            applicationEventPublisher) {
+        this.documentDescriptionService = documentDescriptionService;
         this.recordService = recordService;
         this.documentDescriptionHateoasHandler = documentDescriptionHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
@@ -891,8 +895,7 @@ public class RecordHateoasController
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
-    // Create a DocumentDescription with default values
-    // GET [contextPath][api]/arkivstruktur/resgistrering/{systemId}/ny-dokumentbeskrivelse
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-dokumentbeskrivelse
     @ApiOperation(value = "Create a DocumentDescription with default values", response = DocumentDescriptionHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "DocumentDescription returned", response = DocumentDescriptionHateoas.class),
@@ -903,19 +906,10 @@ public class RecordHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_DESCRIPTION)
     public ResponseEntity<DocumentDescriptionHateoas> createDefaultDocumentDescription(
             HttpServletRequest request) {
-
-        DocumentDescription defaultDocumentDescription = new DocumentDescription();
-
-        defaultDocumentDescription.setAssociatedWithRecordAs(MAIN_DOCUMENT);
-        defaultDocumentDescription.setDocumentType(LETTER);
-        defaultDocumentDescription.setDocumentStatus(DOCUMENT_STATUS_FINALISED);
-
-        DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas(defaultDocumentDescription);
-        documentDescriptionHateoasHandler.addLinksOnTemplate(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentDescriptionHateoas);
+                .body(documentDescriptionService.
+                        generateDefaultDocumentDescription());
     }
 
 
