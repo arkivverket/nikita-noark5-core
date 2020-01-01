@@ -32,6 +32,9 @@ public class ClassHateoasSerializer extends HateoasSerializer implements IHateoa
 
         jgen.writeStartObject();
         CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, klass);
+        if (klass.getClassId() != null) {
+            jgen.writeStringField(CLASS_ID, klass.getClassId());
+        }
         CommonUtils.Hateoas.Serialize.printTitleAndDescription(jgen, klass);
         CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, klass);
         CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, klass);
