@@ -250,7 +250,7 @@ public class ClassificationSystemHateoasController
     }
 
     // Return a Class object with default values
-    //GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-underklasse
+    //GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-klasse
     @ApiOperation(
             value = "Create a Class with default values",
             response = Class.class)

@@ -10,7 +10,7 @@ public final class Constants {
     public static final String NEW = "ny";
     public static final String DASH = "-";
     public static final String SUB = "under";
-    public static final String PARENT = "forelder";
+    public static final String PARENT = "over";
     public static final String DM_OWNED_BY = "ownedBy";
     public static final String SYSTEM = "system";
 
@@ -66,6 +66,7 @@ public final class Constants {
     public static final String FILE_EXPAND_TO_CASE_FILE = "utvid-til-" + CASE_FILE;
     public static final String FILE_EXPAND_TO_MEETING_FILE = "utvid-til-" + MEETING_FILE;
     public static final String NEW_COMMENT = NEW + DASH + COMMENT;
+    public static final String PARENT_FILE = PARENT + FILE;
     public static final String SUB_FILE = SUB + FILE;
     public static final String NEW_CROSS_REFERENCE = NEW + DASH + CROSS_REFERENCE;
     public static final String NEW_REFERENCE_CLASS = NEW + DASH + "klassereferanse";
@@ -375,7 +376,7 @@ public final class Constants {
             REL_FONDS_STRUCTURE + SUB_FONDS + SLASH;
 
     public static final String REL_FONDS_STRUCTURE_PARENT_FONDS =
-            NIKITA_CONFORMANCE_REL + PARENT_FONDS + SLASH;
+            REL_FONDS_STRUCTURE + PARENT_FONDS + SLASH;
 
     public static final String REL_FONDS_STRUCTURE_FONDS_STATUS = REL_METADATA + SLASH + FONDS_STATUS + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_FONDS = REL_FONDS_STRUCTURE + NEW_FONDS + SLASH;
@@ -446,6 +447,9 @@ public final class Constants {
             REL_FONDS_STRUCTURE + COMMENT + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_COMMENT =
             REL_FONDS_STRUCTURE + NEW_COMMENT + SLASH;
+
+    public static final String REL_FONDS_STRUCTURE_PARENT_FILE =
+            REL_FONDS_STRUCTURE + PARENT_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_SUB_FILE =
             REL_FONDS_STRUCTURE + SUB_FILE + SLASH;
 
@@ -455,7 +459,8 @@ public final class Constants {
 
     // Class
     public static final String REL_FONDS_STRUCTURE_CLASS = REL_FONDS_STRUCTURE + CLASS + SLASH;
-    public static final String REL_FONDS_STRUCTURE_PARENT_CLASS = NIKITA_CONFORMANCE_REL + PARENT + CLASS + SLASH;
+    public static final String REL_FONDS_STRUCTURE_PARENT_CLASS =
+	REL_FONDS_STRUCTURE + PARENT_CLASS + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_CLASS = REL_FONDS_STRUCTURE + NEW_CLASS + SLASH;
 
     public static final String REL_FONDS_STRUCTURE_SUB_CLASS = REL_FONDS_STRUCTURE + SUB + CLASS + SLASH;
