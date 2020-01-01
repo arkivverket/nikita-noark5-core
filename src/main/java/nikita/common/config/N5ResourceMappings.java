@@ -86,7 +86,7 @@ public final class N5ResourceMappings {
     public static final String CLASS_ID = "klasseID";
 
     // Note, PARENT_CLASS is not part of the standard
-    public static final String PARENT_CLASS = "overordnetklasse";
+    public static final String PARENT_CLASS = "overklasse";
     public static final String SUB_CLASS = "underklasse";
 
     // File
@@ -738,7 +738,7 @@ public final class N5ResourceMappings {
     public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
     public static final String NAME_ENG_OBJECT = "navn";
     public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisasjonsnummer";
-    public static final String PARENT_CLASS_ENG_OBJECT = "overordnetklasse";
+    public static final String PARENT_CLASS_ENG_OBJECT = "overklasse";
     public static final String POSTAL_ADDRESS_ENG_OBJECT = "postadresse";
     public static final String POSTAL_NUMBER_ENG_OBJECT = "postnummer";
     public static final String POSTAL_TOWN_ENG_OBJECT = "poststed";
