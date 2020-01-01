@@ -35,6 +35,7 @@ public class ClassHateoasHandler
         addNewRegistration(entity, hateoasNoarkObject);
         addFile(entity, hateoasNoarkObject);
         addNewFile(entity, hateoasNoarkObject);
+        addNewCaseFile(entity, hateoasNoarkObject);
         addClassificationSystem(entity, hateoasNoarkObject);
         addParentClass(entity, hateoasNoarkObject);
         addSubClass(entity, hateoasNoarkObject);
@@ -144,6 +145,13 @@ public class ClassHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_FILE + SLASH,
                 REL_FONDS_STRUCTURE_NEW_FILE, false));
+    }
+
+    @Override
+    public void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_CASE_FILE + SLASH,
+                REL_CASE_HANDLING_CASE_FILE, false));
     }
 
     @Override

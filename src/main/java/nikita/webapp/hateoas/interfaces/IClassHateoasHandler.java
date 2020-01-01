@@ -18,6 +18,8 @@ public interface IClassHateoasHandler extends IHateoasHandler {
 
     void addNewFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
+    void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+
     void addClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addParentClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
