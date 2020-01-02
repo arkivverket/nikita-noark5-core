@@ -117,6 +117,23 @@ public class FileService
         return fileRepository.findAll();
     }
 
+    /**
+     * Retrieve a list of children file belonging to the file object
+     * identified by systemId
+     *
+     * @param systemId The systemId of the File object to retrieve its children
+     * @return A FileHateoas object containing the children file's
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public FileHateoas findAllChildren(@NotNull String systemId) {
+        FileHateoas fileHateoas = new
+                FileHateoas((List<INikitaEntity>)
+                (List) getFileOrThrow(systemId).getReferenceChildFile());
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        return fileHateoas;
+    }
+
     @Override
     public PartPersonHateoas generateDefaultPartPerson(String systemID) {
         return partService.generateDefaultPartPerson(systemID);

@@ -521,26 +521,31 @@ public class FileHateoasController
     }
 
 
-    // Retrieve all Records associated with File identified by systemId
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/undermappe
     // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/undermappe/
-    @ApiOperation(value = "Retrieve all (sub) File associated with a File identified by systemId",
-            response = RecordHateoas.class)
+    @ApiOperation(value = "Retrieves all children associated with identified " +
+            "file", response = FileHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Record returned", response = RecordHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200, message = "File children found",
+                         response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                         message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                         message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                         message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_FILE)
-    public ResponseEntity<String> findAllSubFileAssociatedWithFile(
+    public ResponseEntity<FileHateoas> findAllSubFileAssociatedWithFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated (sub)File",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+                      value = "systemID of parent File",
+                      required = true)
+            @PathVariable(SYSTEM_ID) final String systemID) {
+        FileHateoas fileHateoas = fileService.findAllChildren(systemID);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileHateoas);
     }
 
     // Create a Record with default values

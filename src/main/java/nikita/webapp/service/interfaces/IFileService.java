@@ -36,6 +36,8 @@ public interface IFileService {
 
     List<File> findAll();
 
+    FileHateoas findAllChildren(@NotNull String systemId);
+
     File findBySystemId(String systemId);
 
     List<File> findByOwnedBy(String ownedBy);
