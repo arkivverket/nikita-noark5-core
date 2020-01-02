@@ -386,8 +386,7 @@ public final class CommonUtils {
                                     new DateTimeFormatterBuilder().appendPattern(
                                             "yyyy-MM-ddX")
                                             .parseDefaulting(HOUR_OF_DAY, 0)
-                                            .toFormatter()
-                                            .withZone(ZoneId.of("Europe/Oslo"));
+                                            .toFormatter();
                             d = ZonedDateTime.parse(currentNode.textValue(),
                                     dateFormatter).toOffsetDateTime();
                         } else {
@@ -415,30 +414,6 @@ public final class CommonUtils {
                     errors.append(fieldname + " is missing. ");
                 }
                 return d;
-/*
-DateTimeFormatter dateFormatter =
-                                    DateTimeFormatter.ofPattern("yyyy-MM-ddZ").
-                                    withZone(OffsetDateTime.now().getOffset());
-                            d = ZonedDateTime.parse(currentNode.textValue(),
-                                    dateFormatter).toOffsetDateTime();
-                        DateTimeFormatter dateFormatter =
-                                new DateTimeFormatterBuilder().appendPattern(
-                                        "yyyy-MM-dd+HH:mm")
-                                        .parseDefaulting(HOUR_OF_DAY, 0)
-                                        .toFormatter()
-                                        .withZone(ZoneId.of("Europe/Oslo"));
-                        d = ZonedDateTime.parse(currentNode.textValue(),
-                                dateFormatter).toOffsetDateTime();
-
-                        DateTimeFormatter dateFormatter =
-                                new DateTimeFormatterBuilder().appendPattern(
-                                        "yyyy-MM-ddZ")
-                                        .toFormatter()
-                                        .withZone(ZoneId.of("Europe/Oslo"));
-                        d = ZonedDateTime.parse(currentNode.textValue(),
-                                dateFormatter).toOffsetDateTime();
-
- */
             }
 
             public static OffsetDateTime deserializeDate(String fieldname,

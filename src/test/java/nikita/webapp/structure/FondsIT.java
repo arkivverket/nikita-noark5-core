@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /*import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
@@ -154,6 +155,15 @@ public class FondsIT {
 		deserializeDateTime("d", objectNode, errors);
 	    if (null != d) {
 		System.out.println("success: datetime '" + teststr + "' parsed to " + d);
+		String str = formatDateTime(d);
+		if (str.equals(teststr)) {
+		    System.out.println("success: datetime serialized back to '" + str + "'");
+		} else {
+		    // Some datetime are not expected to stay
+		    // unchanged, like 19:30 -> 19:30:00, so only flag
+		    // warning, not error.
+		    System.out.println("warning: serialized datetime changed to '" + str + "'");
+		}
 	    } else {
 		System.out.println("error: unable to parse datetime '" + teststr + "'");
 	    }
@@ -194,6 +204,12 @@ public class FondsIT {
 		deserializeDate("d", objectNode, errors);
 	    if (null != d) {
 		System.out.println("success: date '" + teststr + "' parsed to " + d);
+		String str = formatDate(d);
+		if (str.equals(teststr)) {
+		    System.out.println("success: date serialized back to '" + str + "'");
+		} else {
+		    System.out.println("error: serialized date changed to '" + str + "'");
+		}
 	    } else {
 		System.out.println("error: unable to parse date '" + teststr + "'");
 	    }
