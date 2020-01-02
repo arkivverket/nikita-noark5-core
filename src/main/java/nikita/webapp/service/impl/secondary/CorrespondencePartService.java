@@ -309,14 +309,12 @@ public class CorrespondencePartService
 
     @Override
     public void deleteCorrespondencePartUnit(@NotNull String systemId) {
-        correspondencePartRepository.delete(
-                getCorrespondencePartOrThrow(systemId));
+        deleteEntity(getCorrespondencePartOrThrow(systemId));
     }
 
     @Override
     public void deleteCorrespondencePartPerson(@NotNull String systemId) {
-        correspondencePartRepository.delete(
-                getCorrespondencePartOrThrow(systemId));
+        deleteEntity(getCorrespondencePartOrThrow(systemId));
     }
 
     /**
@@ -329,8 +327,7 @@ public class CorrespondencePartService
      */
     @Override
     public void deleteCorrespondencePartInternal(@NotNull String systemId) {
-        correspondencePartRepository.delete(
-                getCorrespondencePartOrThrow(systemId));
+        deleteEntity(getCorrespondencePartOrThrow(systemId));
     }
 
     /**
@@ -396,8 +393,12 @@ public class CorrespondencePartService
             existingCorrespondencePart.setBusinessAddress(businessAddress);
         }
         // Make sure the addressType field is set
-        existingCorrespondencePart.getBusinessAddress().getSimpleAddress().
-                setAddressType(BUSINESS_ADDRESS);
+        if (existingCorrespondencePart.getBusinessAddress() != null &&
+                existingCorrespondencePart.getBusinessAddress().
+                        getSimpleAddress() != null) {
+            existingCorrespondencePart.getBusinessAddress().getSimpleAddress().
+                    setAddressType(BUSINESS_ADDRESS);
+        }
     }
 
     /**
@@ -427,8 +428,12 @@ public class CorrespondencePartService
                             .getSimpleAddress());
             existingCorrespondencePart.setResidingAddress(residingAddress);
         }
-        existingCorrespondencePart.getResidingAddress().getSimpleAddress().
-                setAddressType(RESIDING_ADDRESS);
+        if (existingCorrespondencePart.getResidingAddress() != null &&
+                existingCorrespondencePart.getResidingAddress().
+                        getSimpleAddress() != null) {
+            existingCorrespondencePart.getResidingAddress().getSimpleAddress().
+                    setAddressType(RESIDING_ADDRESS);
+        }
     }
 
     /**
@@ -460,8 +465,12 @@ public class CorrespondencePartService
             existingPostalAddress.setPostalAddress(postalAddress);
         }
         // Make sure the addressType field is set
-        existingPostalAddress.getPostalAddress().getSimpleAddress().
-                setAddressType(POSTAL_ADDRESS);
+        if (existingPostalAddress.getPostalAddress() != null &&
+                existingPostalAddress.getPostalAddress().
+                        getSimpleAddress() != null) {
+            existingPostalAddress.getPostalAddress().getSimpleAddress().
+                    setAddressType(POSTAL_ADDRESS);
+        }
     }
 
     /**
