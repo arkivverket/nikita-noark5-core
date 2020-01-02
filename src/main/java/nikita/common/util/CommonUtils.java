@@ -386,8 +386,7 @@ public final class CommonUtils {
                                     new DateTimeFormatterBuilder().appendPattern(
                                             "yyyy-MM-ddX")
                                             .parseDefaulting(HOUR_OF_DAY, 0)
-                                            .toFormatter()
-                                            .withZone(ZoneId.of("Europe/Oslo"));
+                                            .toFormatter();
                             d = ZonedDateTime.parse(currentNode.textValue(),
                                     dateFormatter).toOffsetDateTime();
                         } else {
