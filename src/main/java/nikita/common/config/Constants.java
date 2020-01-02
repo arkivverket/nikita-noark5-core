@@ -69,7 +69,6 @@ public final class Constants {
     public static final String PARENT_FILE = PARENT + FILE;
     public static final String SUB_FILE = SUB + FILE;
     public static final String NEW_CROSS_REFERENCE = NEW + DASH + CROSS_REFERENCE;
-    public static final String NEW_REFERENCE_CLASS = NEW + DASH + "klassereferanse";
     public static final String REFERENCE_NEW_SERIES = NEW + DASH + "referanseArkivdel";
     public static final String NEW_CLASSIFIED = NEW + DASH + CLASSIFIED;
     public static final String NEW_SCREENING = NEW + DASH + SCREENING;
@@ -331,8 +330,6 @@ public final class Constants {
 
 
     public static final int UUIDLength = 32;
-
-    public static final String REFERENCE_CLASS = "referanseKlasse";
 
     // Messages used for API description
     public static final String API_MESSAGE_OBJECT_ALREADY_PERSISTED = "object already persisted.";

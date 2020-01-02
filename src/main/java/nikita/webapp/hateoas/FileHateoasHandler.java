@@ -238,7 +238,7 @@ public class FileHateoasHandler
     @Override
     public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_REFERENCE_CLASS + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CLASS + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CLASS, false));
     }
 
