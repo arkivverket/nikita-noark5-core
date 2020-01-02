@@ -17,6 +17,7 @@ import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
+import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
@@ -63,6 +64,7 @@ public class RecordService
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private ICorrespondencePartService correspondencePartService;
     private IPartService partService;
+    private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
     private IPartHateoasHandler partHateoasHandler;
 
     public RecordService(
@@ -79,6 +81,7 @@ public class RecordService
             IDocumentDescriptionRepository documentDescriptionRepository,
             ICorrespondencePartService correspondencePartService,
             IPartService partService,
+            ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
             IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
@@ -93,6 +96,7 @@ public class RecordService
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.correspondencePartService = correspondencePartService;
         this.partService = partService;
+        this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
     }
 
@@ -241,9 +245,13 @@ public class RecordService
     public CorrespondencePartHateoas
     getCorrespondencePartAssociatedWithRecord(
             final String systemID) {
-        return new CorrespondencePartHateoas(
+        CorrespondencePartHateoas correspondencePartHateoas =
+            new CorrespondencePartHateoas(
                 (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
                         getReferenceCorrespondencePart());
+        correspondencePartHateoasHandler.addLinks(
+                correspondencePartHateoas, new Authorisation());
+        return correspondencePartHateoas;
     }
 
     @Override
