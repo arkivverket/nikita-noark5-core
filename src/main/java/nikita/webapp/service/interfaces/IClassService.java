@@ -45,6 +45,12 @@ public interface IClassService {
     ResponseEntity<ClassificationSystemHateoas>
     findClassificationSystemAssociatedWithClass(@NotNull final String systemId);
 
+    ResponseEntity<FileHateoas> findAllFileAssociatedWithClass(
+            @NotNull final String systemID);
+
+    ResponseEntity<RecordHateoas> findAllRecordAssociatedWithClass(
+            @NotNull final String systemID);
+
     // All UPDATE operations
     ClassHateoas handleUpdate(@NotNull final String systemId,
                               @NotNull final Long version,
