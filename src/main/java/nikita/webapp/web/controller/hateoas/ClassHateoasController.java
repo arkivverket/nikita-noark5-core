@@ -55,6 +55,7 @@ public class ClassHateoasController
     // API - All POST Requests (CRUD - CREATE)
 
     // POST [contextPath][api]/arkivstruktur/klasse/{systemID}/ny-klasse
+    // REL: https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-klasse/
     @ApiOperation(value = "Persists a Class object associated with the " +
             "(other) given Class systemId", notes = "Returns the newly " +
             "created class object after it was associated with a class" +
@@ -286,24 +287,26 @@ public class ClassHateoasController
                 .body(classHateoas);
     }
 
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/underklasse
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/underklasse/
     @ApiOperation(value = "Retrieves all children associated with identified " +
             "class", response = ClassHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Class children found",
-                    response = ClassHateoas.class),
+                         response = ClassHateoas.class),
             @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+                         message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+                         message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+                         message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_CLASS)
     public ResponseEntity<ClassHateoas> findAllChildrenClass(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
-                    value = "systemID of the class to delete",
-                    required = true)
+                      value = "systemId of parent Class",
+                      required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         ClassHateoas classHateoas = classService.findAllChildren(systemID);
         return ResponseEntity.status(OK)
