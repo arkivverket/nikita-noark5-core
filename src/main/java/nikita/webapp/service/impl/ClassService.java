@@ -14,6 +14,8 @@ import nikita.common.repository.n5v5.IClassRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassService;
@@ -62,6 +64,8 @@ public class ClassService
     private IClassHateoasHandler classHateoasHandler;
     private IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
+    private IFileHateoasHandler fileHateoasHandler;
+    private IRecordHateoasHandler recordHateoasHandler;
 
     public ClassService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -71,7 +75,9 @@ public class ClassService
                         IRecordService recordService,
                         IClassHateoasHandler classHateoasHandler,
                         IClassificationSystemHateoasHandler
-                                classificationSystemHateoasHandler) {
+                                classificationSystemHateoasHandler,
+                        IFileHateoasHandler fileHateoasHandler,
+                        IRecordHateoasHandler recordHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.classRepository = classRepository;
         this.fileService = fileService;
@@ -80,6 +86,8 @@ public class ClassService
         this.classHateoasHandler = classHateoasHandler;
         this.classificationSystemHateoasHandler =
                 classificationSystemHateoasHandler;
+        this.fileHateoasHandler = fileHateoasHandler;
+        this.recordHateoasHandler = recordHateoasHandler;
     }
 
     // All CREATE operations
@@ -296,6 +304,34 @@ public class ClassService
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(classificationSystemHateoas.getEntityVersion().toString())
                 .body(classificationSystemHateoas);
+    }
+
+    @Override
+    public ResponseEntity<FileHateoas>
+    findAllFileAssociatedWithClass(@NotNull final String systemId) {
+        Class existingClass = getClassOrThrow(systemId);
+        FileHateoas fileHateoas =
+            new FileHateoas(
+                (List<INikitaEntity>)(List)  existingClass.getReferenceFile()
+                              );
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(fileHateoas);
+    }
+
+    @Override
+    public ResponseEntity<RecordHateoas>
+    findAllRecordAssociatedWithClass(@NotNull final String systemId) {
+        Class existingClass = getClassOrThrow(systemId);
+        RecordHateoas recordHateoas =
+            new RecordHateoas(
+                (List<INikitaEntity>)(List) existingClass.getReferenceRecord()
+                              );
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(recordHateoas);
     }
 
     // All UPDATE operations

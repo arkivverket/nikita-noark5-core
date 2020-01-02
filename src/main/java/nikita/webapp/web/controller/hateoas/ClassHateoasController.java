@@ -449,6 +449,54 @@ public class ClassHateoasController
                 .body(recordService.generateDefaultRecord());
     }
 
+    // Retrieve all Records associated with a Class (paginated)
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/registrering/
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/registrering/?top=5&skip=1
+    @ApiOperation(value = "Retrieves a lit of Records associated with a Class", notes = "The field skip" +
+            "tells how many Record rows of the result set to ignore (starting at 0), while  top tells how many rows" +
+            " after skip to return. Note if the value of top is greater than system value " +
+            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+            response = RecordHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Record list found",
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + RECORD)
+    public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithClass(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the class to find associated records",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return classService.findAllRecordAssociatedWithClass(systemID);
+    }
+
+    // Retrieve all Files associated with a Class (paginated)
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/mappe/
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/mappe/?top=5&skip=1
+    @ApiOperation(value = "Retrieves a list of Files associated with a Class",
+            response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "File list found",
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code =
+                    500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE)
+    public ResponseEntity<FileHateoas> findAllFileAssociatedWithClass(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the class to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return classService.findAllFileAssociatedWithClass(systemID);
+    }
+
     // Delete a Class identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/klasse/{systemId}/
     @ApiOperation(value = "Deletes a single Class entity identified by systemID",
