@@ -20,6 +20,9 @@ public interface IAdministrativeUnitService {
     AdministrativeUnit createNewAdministrativeUnitBySystem(
             AdministrativeUnit entity);
 
+    AdministrativeUnit createNewAdministrativeUnitBySystemNoDuplicate(
+            AdministrativeUnit entity);
+
     AdministrativeUnit findBySystemId(UUID administrativeUnitSystemId);
 
     List<AdministrativeUnit> findAll();

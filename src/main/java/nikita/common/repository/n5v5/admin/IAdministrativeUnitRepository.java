@@ -27,11 +27,11 @@ public interface IAdministrativeUnitRepository
     AdministrativeUnit findBySystemId(UUID systemId);
 
     // administrativeUnitName
-    AdministrativeUnit findByAdministrativeUnitName(
+    List<AdministrativeUnit> findByAdministrativeUnitName(
             String administrativeUnitName);
 
     // shortName
-    AdministrativeUnit findByShortName(String shortName);
+    List<AdministrativeUnit> findByShortName(String shortName);
 
     Optional<AdministrativeUnit> findByUsersInAndDefaultAdministrativeUnit(
             Set<User> user, Boolean defaultAdministrativeUnit);

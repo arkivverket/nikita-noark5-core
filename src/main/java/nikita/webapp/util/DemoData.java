@@ -77,8 +77,9 @@ public class DemoData {
         administrativeUnit.setShortName("test");
         administrativeUnit.setDefaultAdministrativeUnit(true);
 
-        administrativeUnitService.createNewAdministrativeUnitBySystem(
-                administrativeUnit);
+        administrativeUnitService.
+                createNewAdministrativeUnitBySystemNoDuplicate(
+                        administrativeUnit);
     }
 
     public void addAuthorities() {

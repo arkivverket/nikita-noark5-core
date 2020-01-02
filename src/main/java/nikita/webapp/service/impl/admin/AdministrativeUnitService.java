@@ -67,6 +67,34 @@ public class AdministrativeUnitService
 
     /**
      * Persists a new administrativeUnit object to the database where
+     * owned_by is set "system". It checks first to make sure that an
+     * administrative unit with the given name does not exist. If it does exist
+     * do nothing. This code should really only be called when creating some
+     * basic data i nikita to make it operational for demo purposes.
+     * <p>
+     * Note administrativeUnit is saved within the transactional boundary of
+     * createSequenceNumberGenerator
+     *
+     * @param administrativeUnit administrativeUnit object with values set
+     * @return the newly persisted administrativeUnit object
+     */
+    @Override
+    public AdministrativeUnit
+    createNewAdministrativeUnitBySystemNoDuplicate(
+            AdministrativeUnit administrativeUnit) {
+        List<AdministrativeUnit> administrativeUnitList =
+                administrativeUnitRepository.findByAdministrativeUnitName(
+                        administrativeUnit.getAdministrativeUnitName());
+        if (administrativeUnitList.size() == 0) {
+            createSequenceNumberGenerator(administrativeUnit);
+            return administrativeUnitRepository.save(administrativeUnit);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Persists a new administrativeUnit object to the database where
      * owned_by is set to username of the person logged in.
      *
      * Note administrativeUnit is saved within the transactional boundary of
