@@ -153,7 +153,7 @@ public class SequenceNumberGeneratorService
                 createSequenceNumberGenerator(administrativeUnit);
 
         if (sequenceNumberGenerator != null) {
-            return getNextCaseFileSequence(sequenceNumberGenerator);
+            return sequenceNumberGenerator.getCaseFileSequenceNumber();
         } else {
             logger.error("Error missing sequencenumber " +
                     "generator for " + administrativeUnit + " and year " +
