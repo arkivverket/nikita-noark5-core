@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_CORRESPONDENCE_PART;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_DESCRIPTION_EA;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -233,7 +234,6 @@ public class CorrespondencePartService
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this,
                         correspondencePart));
-
         return correspondencePartPersonHateoas;
     }
 
@@ -249,7 +249,6 @@ public class CorrespondencePartService
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePart,
             Record record) {
-
         // Set NikitaEntity values for ContactInformation, PostalAddress,
         // BusinessAddress
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
@@ -258,7 +257,6 @@ public class CorrespondencePartService
             correspondencePart.setPostalAddress(postalAddress);
             postalAddress.setCorrespondencePartUnit(correspondencePart);
         }
-
         BusinessAddress businessAddress =
                 correspondencePart.getBusinessAddress();
         if (null != businessAddress) {
@@ -266,14 +264,11 @@ public class CorrespondencePartService
             correspondencePart.setBusinessAddress(businessAddress);
             businessAddress.setCorrespondencePartUnit(correspondencePart);
         }
-
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
         record.addCorrespondencePart(correspondencePart);
         correspondencePart.addRecord(record);
-
         correspondencePartRepository.save(correspondencePart);
-
         CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
                 new CorrespondencePartUnitHateoas(correspondencePart);
         correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas,
@@ -281,9 +276,7 @@ public class CorrespondencePartService
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this,
                         correspondencePart));
-
         return correspondencePartUnitHateoas;
-
     }
 
     @Override
@@ -291,10 +284,8 @@ public class CorrespondencePartService
     createNewCorrespondencePartInternal(
             CorrespondencePartInternal correspondencePart,
             Record record) {
-
         record.addCorrespondencePart(correspondencePart);
         correspondencePartRepository.save(correspondencePart);
-
         CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
                 new CorrespondencePartInternalHateoas(correspondencePart);
         correspondencePartHateoasHandler.addLinks(
@@ -303,18 +294,25 @@ public class CorrespondencePartService
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this,
                         correspondencePart));
-
         return correspondencePartInternalHateoas;
     }
 
     @Override
     public void deleteCorrespondencePartUnit(@NotNull String systemId) {
-        deleteEntity(getCorrespondencePartOrThrow(systemId));
+        CorrespondencePart correspondencePart =
+                getCorrespondencePartOrThrow(systemId);
+        disassociateForeignKeys(correspondencePart,
+                DELETE_FROM_RECORD_CORRESPONDENCE_PART);
+        deleteEntity(correspondencePart);
     }
 
     @Override
     public void deleteCorrespondencePartPerson(@NotNull String systemId) {
-        deleteEntity(getCorrespondencePartOrThrow(systemId));
+        CorrespondencePart correspondencePart =
+                getCorrespondencePartOrThrow(systemId);
+        disassociateForeignKeys(correspondencePart,
+                DELETE_FROM_RECORD_CORRESPONDENCE_PART);
+        deleteEntity(correspondencePart);
     }
 
     /**

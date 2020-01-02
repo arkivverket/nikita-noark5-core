@@ -24,16 +24,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_STATUS_FINALISED;
-import static nikita.common.config.N5ResourceMappings.LETTER;
-import static nikita.common.config.N5ResourceMappings.MAIN_DOCUMENT;
+import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -282,21 +280,13 @@ public class DocumentDescriptionService
 
     // All DELETE operations
     @Override
-    public int deleteEntity(@NotNull String documentDescriptionSystemId) {
-        // See issue for a description of why this code was written this way
-        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
+    public void deleteEntity(@NotNull String documentDescriptionSystemId) {
         DocumentDescription documentDescription =
                 getDocumentDescriptionOrThrow(documentDescriptionSystemId);
-        String query = "DELETE FROM record_document_description WHERE " +
-                "F_PK_DOCUMENT_DESCRIPTION_ID  = :id ;";
-        Query q = entityManager.createNativeQuery(query);
-        q.setParameter("id", documentDescription.getSystemId());
-        q.executeUpdate();
-
-        entityManager.remove(documentDescription);
-        entityManager.flush();
-        entityManager.clear();
-        return 1;
+        // Disassociate any links between DocumentDescription and Record
+        disassociateForeignKeys(documentDescription,
+                DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION);
+        deleteEntity(documentDescription);
     }
 
     /**

@@ -27,6 +27,18 @@ public final class DatabaseConstants {
             DELETE_FROM + TABLE_FONDS_FONDS_CREATOR + WHERE +
                     FOREIGN_KEY_FONDS_PK + EQUALS_ID;
 
+    public static final String DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION =
+            DELETE_FROM + TABLE_RECORD_DOCUMENT_DESCRIPTION + WHERE +
+                    FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK + EQUALS_ID;
+
+    public static final String DELETE_FROM_RECORD_CORRESPONDENCE_PART =
+            DELETE_FROM + TABLE_RECORD_CORRESPONDENCE_PART + WHERE +
+                    FOREIGN_KEY_CORRESPONDENCE_PART_PK + EQUALS_ID;
+
+    public static final String DELETE_FROM_CORRESPONDENCE_PART_RECORD =
+            DELETE_FROM + TABLE_RECORD_CORRESPONDENCE_PART + WHERE +
+                    FOREIGN_KEY_RECORD_PK + EQUALS_ID;
+
     // Used for reflection
     public static final String METADATA_REPOSITORY_PACKAGE =
             "nikita.common.repository.n5v5.metadata";

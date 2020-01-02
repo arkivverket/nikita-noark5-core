@@ -17,7 +17,6 @@ import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -453,15 +452,15 @@ public class DocumentDescriptionHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Count> deleteDocumentDescriptionBySystemId(
+    public ResponseEntity<Void> deleteDocumentDescriptionBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the documentDescription to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
+        documentDescriptionService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(documentDescriptionService.
-                        deleteEntity(systemID)));
+                body(null);
     }
 
     // Delete all DocumentDescription

@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.DatabaseConstants.DELETE_FROM_CORRESPONDENCE_PART_RECORD;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -518,7 +518,10 @@ public class RecordService
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String systemID) {
-        deleteEntity(getRecordOrThrow(systemID));
+        Record record = getRecordOrThrow(systemID);
+        disassociateForeignKeys(record,
+                DELETE_FROM_CORRESPONDENCE_PART_RECORD);
+        deleteEntity(record);
     }
 
     /**

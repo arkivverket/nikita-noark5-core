@@ -56,8 +56,9 @@ public interface IDocumentDescriptionService {
                                      @NotNull final Long version,
                                      @NotNull final DocumentDescription
                                              documentDescription);
+
     // -- All DELETE operations
-    int deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
 }
