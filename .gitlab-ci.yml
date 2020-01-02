@@ -15,7 +15,7 @@ noark5tester:
   variables:
     baseurl: "http://localhost:8092/noark5v5/"
   image: debian:buster
-  allow_failure: true
+  allow_failure: false
   before_script:
   - apt update
   - apt install -y git maven curl python python-mechanize
