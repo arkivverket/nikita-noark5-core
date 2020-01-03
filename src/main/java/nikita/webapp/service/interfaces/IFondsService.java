@@ -33,6 +33,8 @@ public interface IFondsService  {
 
     FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip);
 
+    FondsHateoas findAllChildren(@NotNull String systemId);
+
     SeriesHateoas findSeriesAssociatedWithFonds(String fondsSystemId);
 
     ResponseEntity<FondsCreatorHateoas>
