@@ -162,7 +162,7 @@ public class ClassHateoasHandler
     public void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_CASE_FILE + SLASH,
-                REL_CASE_HANDLING_CASE_FILE, false));
+                REL_CASE_HANDLING_NEW_CASE_FILE, false));
     }
 
     @Override
