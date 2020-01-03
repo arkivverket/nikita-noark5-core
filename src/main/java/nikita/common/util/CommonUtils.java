@@ -1680,7 +1680,7 @@ public final class CommonUtils {
                     }
                     if (recordNote.getReceivedDate() != null) {
                         jgen.writeStringField(REGISTRY_ENTRY_RECEIVED_DATE,
-                                formatDate(recordNote.getReceivedDate()));
+                                formatDateTime(recordNote.getReceivedDate()));
                     }
                     if (recordNote.getSentDate() != null) {
                         jgen.writeStringField(REGISTRY_ENTRY_SENT_DATE,

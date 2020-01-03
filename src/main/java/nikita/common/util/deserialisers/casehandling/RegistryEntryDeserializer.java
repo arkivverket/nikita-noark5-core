@@ -149,7 +149,7 @@ public class RegistryEntryDeserializer
 
         // Deserialize receivedDate
         registryEntry.setReceivedDate(
-                deserializeDate(REGISTRY_ENTRY_RECEIVED_DATE, objectNode,
+                deserializeDateTime(REGISTRY_ENTRY_RECEIVED_DATE, objectNode,
                         errors));
 
         // Deserialize sentDate
