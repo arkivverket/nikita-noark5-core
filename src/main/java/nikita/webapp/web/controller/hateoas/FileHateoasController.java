@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
@@ -759,21 +760,15 @@ public class FileHateoasController
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-bygning/
     @ApiOperation(value = "Associates a Building (national identifier) with a" +
             " File identified by systemID", notes = "Returns the File with " +
-            "the building associated with it", response = FileHateoas.class)
+            "the building associated with it", response = BuildingHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = BUILDING + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201,
-                    message = BUILDING +
-                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
+                    response = BuildingHateoas.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
                     message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
@@ -797,22 +792,16 @@ public class FileHateoasController
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-dnummer/
     @ApiOperation(value = "Associates a DNumber (national identifier) with a" +
             " File identified by systemID", notes = "Returns the File with " +
-            "the dNumber associated with it", response = FileHateoas.class)
+            "the dNumber associated with it", response = DNumberHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = D_NUMBER +
                             API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201,
-                    message = D_NUMBER +
-                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
+                    response = DNumberHateoas.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
                     message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
@@ -837,24 +826,18 @@ public class FileHateoasController
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-foedselsnummer/
     @ApiOperation(value = "Associates a SocialSecurityNumber (national " +
             "identifier) with a File identified by systemID",
-            notes = "Returns the File with  the socialSecurityNumber " +
+            notes = "Returns the File with the socialSecurityNumber " +
                     "associated with it",
-            response = FileHateoas.class)
+            response = SocialSecurityNumberHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = SOCIAL_SECURITY_NUMBER +
                             API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201,
-                    message = SOCIAL_SECURITY_NUMBER +
-                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
+                    response = SocialSecurityNumberHateoas.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
                     message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
@@ -881,22 +864,16 @@ public class FileHateoasController
     @ApiOperation(value = "Associates a CadastralUnit (national identifier) " +
             "with a File identified by systemID",
             notes = "Returns the File with the cadastralUnit associated with" +
-                    " it", response = FileHateoas.class)
+                    " it", response = CadastralUnitHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = CADASTRAL_UNIT +
                             API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201,
-                    message = CADASTRAL_UNIT +
-                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
+                    response = CadastralUnitHateoas.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
                     message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
@@ -923,22 +900,16 @@ public class FileHateoasController
     @ApiOperation(value = "Associates a Position (national identifier) with a" +
             " File identified by systemID",
             notes = "Returns the File with the position associated with it",
-            response = FileHateoas.class)
+            response = PositionHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = POSITION +
                             API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201,
-                    message = POSITION +
-                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
+                    response = PositionHateoas.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
                     message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
@@ -966,22 +937,16 @@ public class FileHateoasController
             "identifier) with a File identified by systemID",
             notes = "Returns the File with  the plan " +
                     "associated with it",
-            response = FileHateoas.class)
+            response = PlanHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = PLAN +
                             API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201,
-                    message = PLAN +
-                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
+                    response = PlanHateoas.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
                     message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
@@ -1008,22 +973,16 @@ public class FileHateoasController
     @ApiOperation(value = "Associates a Unit (national identifier) with a " +
             "File identified by systemID",
             notes = "Returns the File with  the unit associated with it",
-            response = FileHateoas.class)
+            response = UnitHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = NI_UNIT +
                             API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201,
-                    message = NI_UNIT +
-                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
+                    response = UnitHateoas.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
                     message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
