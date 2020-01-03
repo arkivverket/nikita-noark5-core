@@ -198,7 +198,6 @@ public class RestResponseEntityExceptionHandler
         final String devMessage = ExceptionUtils.getRootCauseMessage(ex);
         final String devStackTrace = ex.toString();
 
-        return new ApiError(
-                httpStatus.value(), message, devMessage, devStackTrace);
+        return new ApiError(httpStatus, message, devMessage, devStackTrace);
     }
 }

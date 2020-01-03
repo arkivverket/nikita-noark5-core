@@ -28,7 +28,7 @@ class GlobalETAGExceptionHandler {
         final String devMessage = ExceptionUtils.getRootCauseMessage(ex);
         final String devStackTrace = ex.toString();
 
-        ApiError apiError = new ApiError(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()), message, devMessage, devStackTrace);
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, message, devMessage, devStackTrace);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(apiError.toJSON());
