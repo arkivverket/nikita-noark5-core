@@ -7,6 +7,10 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import nikita.webapp.util.error.ApiError;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -106,4 +110,15 @@ public class NoarkController {
         return CommonUtils.Validation.parseETAG(quotedETAG);
     }
 
+    public ResponseEntity<String>
+    errorResponse(HttpStatus status, String message,
+                  String developerMessage) {
+        return new ResponseEntity<>(new ApiError(status, message,
+                                                 developerMessage, "").toJSON(),
+                                    status);
+    }
+    public ResponseEntity<String>
+    errorResponse(HttpStatus status, String message) {
+        return errorResponse(status, message, "");
+    }
 }

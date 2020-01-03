@@ -137,7 +137,8 @@ public class FileHateoasController
         //        .body(crossReferenceHateoas);
         // Think about how to handle if cross reference is to Record or class. Do we need
         // to specify this in the URL
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-mappe
@@ -221,7 +222,8 @@ public class FileHateoasController
         //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(comment.getVersion().toString())
 //                .body(commentHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a Class to a File
@@ -257,7 +259,8 @@ public class FileHateoasController
         //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(createdClass.getVersion().toString())
 //                .body(classHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a reference to a secondary Series associated with the File
@@ -296,7 +299,8 @@ public class FileHateoasController
         //return ResponseEntity.status(HttpStatus.CREATED)
         //        .eTag(file.getVersion().toString())
         //       .body(fileHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a secondary Class to a File
@@ -332,7 +336,8 @@ public class FileHateoasController
                     required = true)
             @RequestBody Class klass) throws NikitaException {
         // applicationEventPublisher.publishEvent(new AfterNoa  rkEntityCreatedEvent(this, ));
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -650,8 +655,8 @@ public class FileHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(commentService.generateDefaultComment());
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED,
-                                    HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Retrieve all Comments associated with a File
@@ -674,7 +679,8 @@ public class FileHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         //return new ResponseEntity<>(commentHateoas, HttpStatus.OK);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Retrieve all CrossReference associated with a File
@@ -696,7 +702,8 @@ public class FileHateoasController
                     value = "systemID of the File to retrieve CrossReferences for",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Retrieve all Class associated with a File as secondary classification
@@ -721,7 +728,8 @@ public class FileHateoasController
         //return ResponseEntity.status(HttpStatus.CREATED)
         //        .eTag(klass.getVersion().toString())
         //        .body(classHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Retrieve all secondary Series associated with a File
@@ -743,7 +751,8 @@ public class FileHateoasController
                     value = "systemID of the File to retrieve secondary Class for",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -822,7 +831,8 @@ public class FileHateoasController
         return ResponseEntity.status(HttpStatus.CREATED)
                 .eTag(finalisedFile.getVersion().toString())
                 .body(fileHateoas);*/
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Expand a File to a CaseFile
@@ -860,7 +870,8 @@ public class FileHateoasController
                 .eTag(expandedFile.getVersion().toString())
                 .body(caseFileHateoas);
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -1007,7 +1018,8 @@ public class FileHateoasController
                 .eTag(expandedFile.getVersion().toString())
                 .body(meetingFileHateoas);
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Delete a File identified by systemID

@@ -5,17 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
-import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
@@ -26,7 +22,6 @@ import nikita.webapp.web.controller.hateoas.NoarkController;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +33,12 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY,
-                produces = NOARK5_V5_CONTENT_TYPE_JSON)
-public class RegistryEntryHateoasController extends NoarkController {
+        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+public class RegistryEntryHateoasController
+        extends NoarkController {
 
     private final IRegistryEntryService registryEntryService;
     private final IRegistryEntryHateoasHandler registryEntryHateoasHandler;
@@ -100,11 +95,11 @@ public class RegistryEntryHateoasController extends NoarkController {
                                 documentFlow));
         documentFlowHateoasHandler.addLinks(documentFlowHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-           return ResponseEntity.status(HttpStatus.CREATED)
+           return ResponseEntity.status(CREATED)
                 .header(ETAG, .getVersion().toString())
                 .body(documentFlowHateoas);
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Create a new SignOff and associate it with the given journalpost
@@ -147,12 +142,12 @@ public class RegistryEntryHateoasController extends NoarkController {
                 new SignOffHateoas(createdSignOff);
         signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdSignOff));
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
              .header(ETAG, .getVersion().toString())
                 .body(signOffHateoas);
 	*/
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-presedens
@@ -193,12 +188,12 @@ public class RegistryEntryHateoasController extends NoarkController {
                 new PrecedenceHateoas(createdPrecedence);
         precedenceHateoasHandler.addLinks(PrecedenceHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdPrecedence));
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
             .header(ETAG, .getVersion().toString())
                 .body(precedenceHateoas);
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -217,12 +212,12 @@ public class RegistryEntryHateoasController extends NoarkController {
     public ResponseEntity<String> createDefaultDocumentFlow(
             HttpServletRequest request) {
         /*
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentFlowService.
                         generateDefaultDocumentFlow());
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -241,11 +236,11 @@ public class RegistryEntryHateoasController extends NoarkController {
     public ResponseEntity<String> createDefaultSignOff(
             HttpServletRequest request) {
         /*
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(signOffService.generateDefaultSignOff());
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -271,7 +266,7 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(precedenceService.generateDefaultPrecedence());
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/dokumentflyt
@@ -298,11 +293,11 @@ public class RegistryEntryHateoasController extends NoarkController {
         DocumentFlowHateoas documentDescriptionHateoas = new
                 DocumentFlowHateoas((List<INikitaEntity>) (List)record.getReferenceDocumentFlow()));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
                 */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -331,11 +326,12 @@ public class RegistryEntryHateoasController extends NoarkController {
         SignOffHateoas documentDescriptionHateoas = new
                 SignOffHateoas((List<INikitaEntity>) (List)record.getReferenceSignOff()));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
                 */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED,
+                API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Retrieve all Precedence associated with a RegistryEntry identified by systemId
@@ -363,11 +359,11 @@ public class RegistryEntryHateoasController extends NoarkController {
         PrecedenceHateoas documentDescriptionHateoas = new
                 PrecedenceHateoas((List<INikitaEntity>) (List)record.getReferencePrecedence()));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
                 */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Retrieve a single registryEntry identified by systemId

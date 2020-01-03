@@ -1,5 +1,7 @@
 package nikita.webapp.util.error;
 
+import org.springframework.http.HttpStatus;
+
 public class ApiError {
 
     private int status;
@@ -7,10 +9,11 @@ public class ApiError {
     private String developerMessage;
     private String stackTrace;
 
-    public ApiError(final int status, final String message, final String developerMessage, final String stackTrace) {
+    public ApiError(final HttpStatus status, final String message,
+		    final String developerMessage, final String stackTrace) {
         super();
 
-        this.status = status;
+        this.status = status.value();
         this.message = message;
         this.developerMessage = developerMessage;
         this.stackTrace = stackTrace;
