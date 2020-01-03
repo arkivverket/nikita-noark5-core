@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.*;
@@ -29,7 +28,6 @@ import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +40,6 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_RECORD,
@@ -112,7 +109,7 @@ public class RecordHateoasController
                         createDocumentDescriptionAssociatedWithRecord(
                                 systemID, documentDescription);
         final ResponseEntity<DocumentDescriptionHateoas> body =
-                ResponseEntity.status(HttpStatus.CREATED)
+                ResponseEntity.status(CREATED)
                         .allow(
                                 getMethodsForRequestOrThrow(request.getServletPath()))
                         .eTag(documentDescriptionHateoas.getEntityVersion().toString())
@@ -203,12 +200,11 @@ public class RecordHateoasController
                     required = true)
             @RequestBody Series series) throws NikitaException {
         // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-//        return ResponseEntity.status(HttpStatus.CREATED)
+//        return ResponseEntity.status(CREATED)
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
 
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a Classified (gradering) to a Record
@@ -243,11 +239,11 @@ public class RecordHateoasController
                     required = true)
             @RequestBody Classified classified) throws NikitaException {
         //applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-//        return ResponseEntity.status(HttpStatus.CREATED)
+//        return ResponseEntity.status(CREATED)
 //                .eTag(classified.getVersion().toString())
 //                .body(classifiedHateoas);
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED,
+                API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a Disposal to a Record
@@ -282,11 +278,11 @@ public class RecordHateoasController
             @RequestBody Disposal disposal) throws NikitaException {
         // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
         //TODO: What do we return here? Record + comment? comment?
-        //        return ResponseEntity.status(HttpStatus.CREATED)
+        //        return ResponseEntity.status(CREATED)
 //                .eTag(comment.getVersion().toString())
 //                .body(commentHateoas);
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED,
+                API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a screening (skjerming) to a Record
@@ -321,11 +317,11 @@ public class RecordHateoasController
             @RequestBody Screening screening) throws NikitaException {
         // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
 //        TODO: What do we return here? Record + screening? screening?
-//        return ResponseEntity.status(HttpStatus.CREATED)
+//        return ResponseEntity.status(CREATED)
 //                .eTag(screening.getVersion().toString())
 //                .body(screeningHateoas);
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED,
+                API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a disposalUndertaken (utfoertKassasjon) to a Record
@@ -361,11 +357,11 @@ public class RecordHateoasController
             @RequestBody DisposalUndertaken disposalUndertaken) throws NikitaException {
         // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
         //TODO: What do we return here? Record + disposalUndertaken? disposalUndertaken?
-//        return ResponseEntity.status(HttpStatus.CREATED)
+//        return ResponseEntity.status(CREATED)
 //                .eTag(disposalUndertaken.getVersion().toString())
 //                .body(disposalUndertakenHateoas);
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED,
+                API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a Deletion  to a Record
@@ -400,11 +396,11 @@ public class RecordHateoasController
             @RequestBody Deletion deletion) throws NikitaException {
         //TODO: This is more to carry out a deletion of files. You don't just add a deletion to Record
         //applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-//        return ResponseEntity.status(HttpStatus.CREATED)
+//        return ResponseEntity.status(CREATED)
 //                .eTag(deletion.getVersion().toString())
 //                .body(deletionHateoas);
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED,
+                API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -769,7 +765,7 @@ public class RecordHateoasController
         Record record = recordService.findBySystemId(systemID);
         RecordHateoas recordHateoas = new RecordHateoas(record);
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(record.getVersion().toString())
                 .body(recordHateoas);
@@ -875,7 +871,7 @@ public class RecordHateoasController
         RecordHateoas recordHateoas = new RecordHateoas((List<INikitaEntity>) (List)
                 recordService.findByOwnedBy(ownedBy));
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordHateoas);
     }
@@ -898,8 +894,8 @@ public class RecordHateoasController
                     value = "systemID of the Record to retrieve secondary Class for",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED,
+                API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-dokumentbeskrivelse
@@ -913,7 +909,7 @@ public class RecordHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_DESCRIPTION)
     public ResponseEntity<DocumentDescriptionHateoas> createDefaultDocumentDescription(
             HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionService.
                         generateDefaultDocumentDescription());
@@ -944,7 +940,7 @@ public class RecordHateoasController
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas((List<INikitaEntity>) (List) record.getReferenceDocumentDescription());
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
     }
@@ -987,7 +983,7 @@ public class RecordHateoasController
         } */
         recordService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, record));
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body("{\"status\": \"deleted\"}");
     }
@@ -1027,7 +1023,7 @@ public class RecordHateoasController
         RecordHateoas recordHateoas = new RecordHateoas(updatedRecord);
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedRecord));
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedRecord.getVersion().toString())
                 .body(recordHateoas);

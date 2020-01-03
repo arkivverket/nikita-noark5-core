@@ -88,31 +88,31 @@ public class RestResponseEntityExceptionHandler
             final Exception ex,
             final WebRequest request) {
         return new ResponseEntity<Object>("Feil under pålogging",
-                new HttpHeaders(), HttpStatus.FORBIDDEN);
+                new HttpHeaders(), FORBIDDEN);
     }
 
     // 404
     @ExceptionHandler(value = {NoarkEntityNotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(
             final RuntimeException ex, final WebRequest request) {
-        return handleExceptionInternal(ex, message(HttpStatus.NOT_FOUND, ex),
-                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        return handleExceptionInternal(ex, message(NOT_FOUND, ex),
+                new HttpHeaders(), NOT_FOUND, request);
     }
 
     // 406
     @ExceptionHandler(value = { NoarkNotAcceptableException.class })
     protected ResponseEntity<Object> handleNotAcceptable(
             final RuntimeException ex, final WebRequest request) {
-        return handleExceptionInternal(ex, message(HttpStatus.NOT_ACCEPTABLE,
-                ex), new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
+        return handleExceptionInternal(ex, message(NOT_ACCEPTABLE,
+                ex), new HttpHeaders(), NOT_ACCEPTABLE, request);
     }
 
     // 406
     @ExceptionHandler(value = {UsernameExistsException.class})
     protected ResponseEntity<Object> handleUserExists(
             final RuntimeException ex, final WebRequest request) {
-        return handleExceptionInternal(ex, message(HttpStatus.NOT_ACCEPTABLE,
-                ex), new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
+        return handleExceptionInternal(ex, message(NOT_ACCEPTABLE,
+                ex), new HttpHeaders(), NOT_ACCEPTABLE, request);
     }
 
     // 400
@@ -132,7 +132,7 @@ public class RestResponseEntityExceptionHandler
         logger.error("500 Status Code", ex);
         final String bodyOfResponse = "En feil skjedde i nikita-serveren!";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(),
-                HttpStatus.INTERNAL_SERVER_ERROR, request);
+                INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(StorageException.class)

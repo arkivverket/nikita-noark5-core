@@ -3,12 +3,13 @@ package nikita.webapp.util.error;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaETAGMalformedHeaderException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * Created by tsodring on 5/11/17.
@@ -28,8 +29,8 @@ class GlobalETAGExceptionHandler {
         final String devMessage = ExceptionUtils.getRootCauseMessage(ex);
         final String devStackTrace = ex.toString();
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, message, devMessage, devStackTrace);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        ApiError apiError = new ApiError(BAD_REQUEST, message, devMessage, devStackTrace);
+        return ResponseEntity.status(BAD_REQUEST)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(apiError.toJSON());
     }

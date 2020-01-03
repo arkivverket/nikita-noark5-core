@@ -15,15 +15,10 @@ import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
-import nikita.webapp.service.interfaces.ICaseFileService;
-import nikita.webapp.service.interfaces.IClassificationSystemService;
-import nikita.webapp.service.interfaces.IFileService;
-import nikita.webapp.service.interfaces.IRecordService;
-import nikita.webapp.service.interfaces.ISeriesService;
+import nikita.webapp.service.interfaces.*;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +28,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_SERIES,
@@ -116,7 +110,7 @@ public class SeriesHateoasController
         ClassificationSystemHateoas classificationSystemHateoas =
                 seriesService.createClassificationSystem(systemID,
                         classificationSystem);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classificationSystemHateoas.getEntityVersion().toString())
                 .body(classificationSystemHateoas);
@@ -157,7 +151,7 @@ public class SeriesHateoasController
         FileHateoas fileHateoas = new FileHateoas(createdFile);
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdFile));
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdFile.getVersion().toString())
                 .body(fileHateoas);
@@ -198,7 +192,7 @@ public class SeriesHateoasController
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(createdCaseFile);
         caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdCaseFile));
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdCaseFile.getVersion().toString())
                 .body(caseFileHateoas);
@@ -237,11 +231,10 @@ public class SeriesHateoasController
         //RecordHateoas recordHateoas = new RecordHateoas(seriesService.createRecordAssociatedWithSeries(systemID, record));
         //recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-        //  return ResponseEntity.status(HttpStatus.CREATED)
+        //  return ResponseEntity.status(CREATED)
         //.eTag(createdRecord.getVersion().toString())
         //.body(recordHateoas);
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -283,10 +276,10 @@ public class SeriesHateoasController
 //                SeriesHateoas(seriesService.associateSeriesWithSeriesSuccessor(seriesPrecursorSys temId, urlToSeriesSuccessor));
 //        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         //applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdtedEvent(this, ));
-//   return ResponseEntity.status(HttpStatus.CREATED)
+//   return ResponseEntity.status(CREATED)
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, NOT_IMPLEMENTED);
     }
 
     // Associate Series with reference to precursor
@@ -325,10 +318,10 @@ public class SeriesHateoasController
 //                SeriesHateoas(seriesService.associateSeriesWithSeriesSuccessor(systemID, caseFile));
 //        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
 //        applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, ));
-//   return ResponseEntity.status(HttpStatus.CREATED)
+//   return ResponseEntity.status(CREATED)
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, NOT_IMPLEMENTED);
     }
 
 
@@ -366,10 +359,10 @@ public class SeriesHateoasController
 //                ClassificationSystemHateoas(classificationSystemService.associateClassificationSystemWithClassificationSystemSuccessor(classificationSystemSystemId, caseFile));
 //        classificationSystemHateoasHandler.addLinks(classificationSystemHateoas, new Authorisation());
 //        applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, ));
-//   return ResponseEntity.status(HttpStatus.CREATED)
+//   return ResponseEntity.status(CREATED)
 //                .eTag(classificationSystem.getVersion().toString())
 //                .body(classificationSystemHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, NOT_IMPLEMENTED);
     }
 
 
@@ -406,7 +399,7 @@ public class SeriesHateoasController
         SeriesHateoas seriesHateoas = new SeriesHateoas(updatedSeries);
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedSeries));
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedSeries.getVersion().toString())
                 .body(seriesHateoas);
@@ -508,7 +501,7 @@ public class SeriesHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
     public ResponseEntity<RecordHateoas> createDefaultRecord(
             HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.generateDefaultRecord());
     }
@@ -538,10 +531,10 @@ public class SeriesHateoasController
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(series);
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());*/
-//        return ResponseEntity.status(HttpStatus.CREATED)
+//        return ResponseEntity.status(CREATED)
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, NOT_IMPLEMENTED);
     }
 
     // Retrieve the successor to a Series given a systemId
@@ -569,10 +562,10 @@ public class SeriesHateoasController
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(series);
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());*/
-//        return ResponseEntity.status(HttpStatus.CREATED)
+//        return ResponseEntity.status(CREATED)
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, NOT_IMPLEMENTED);
     }
 
     // Retrieve all Series (paginated)
