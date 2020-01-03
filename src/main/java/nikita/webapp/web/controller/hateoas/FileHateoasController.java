@@ -140,41 +140,51 @@ public class FileHateoasController
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
     }
 
-    // Create a (sub) File
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-mappe
-    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-mappe/
-    @ApiOperation(value = "Create a new File and associate it, with the given File identified by systemId, as a " +
-            "(sub)File", notes = "Returns the newly created (sub)File after it was associated with a File and " +
-            "persisted to the database",
-                  response = FileHateoas.class)
+    // REL: https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-mappe/
+    @ApiOperation(value = "Persists a File object associated with the " +
+            "(other) given File systemId", notes = "Returns the newly " +
+            "created file object after it was associated with a file" +
+            "object and persisted to the database",
+            response = FileHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = FILE + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201, message = FILE + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " + FILE),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 200,
+                         message = "File " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                         response = File.class),
+            @ApiResponse(code = 201,
+                         message = "File " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                         response = File.class),
+            @ApiResponse(code = 401,
+                         message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                         message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                         message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                         " of type File"),
+            @ApiResponse(code = 409,
+                         message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                         message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> createSubFileAssociatedWithFile(
+    public ResponseEntity<FileHateoas> createSubFileAssociatedWithFile(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemId of the parent file",
-                    required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "File",
-                    value = "File to be (sub)File",
-                    required = true)
-            @RequestBody File file) throws NikitaException {
-        // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-        //return ResponseEntity.status(HttpStatus.CREATED)
-        //        .eTag(createdFile.getVersion().toString())
-        //        .body(fileHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+            @ApiParam(name = "systemId",
+                      value = "systemId of parent file",
+                      required = true)
+            @PathVariable String systemId,
+            @ApiParam(name = "file",
+                      value = "Incoming file object",
+                      required = true)
+            @RequestBody File file)
+            throws NikitaException {
+        FileHateoas fileHateoas = fileService.
+                createFileAssociatedWithFile(systemId, file);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(fileHateoas.getEntityVersion().toString())
+                .body(fileHateoas);
     }
 
     // Add a Comment to a File

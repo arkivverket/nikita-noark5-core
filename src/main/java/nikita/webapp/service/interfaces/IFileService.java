@@ -16,6 +16,8 @@ public interface IFileService {
     // -- All CREATE operations
     File createFile(File file);
 
+    FileHateoas createFileAssociatedWithFile(String systemId, File file);
+
     PartPersonHateoas createPartPersonAssociatedWithFile(
             String systemID, PartPerson partPerson);
 
