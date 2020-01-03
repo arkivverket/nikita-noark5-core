@@ -183,6 +183,13 @@ public class RegistryEntryDeserializer
             objectNode.remove(CASE_LOANED_TO);
         }
 
+        // Deserialize recordsManagementUnit
+        currentNode = objectNode.get(CASE_RECORDS_MANAGEMENT_UNIT);
+        if (null != currentNode) {
+            registryEntry.setRecordsManagementUnit(currentNode.textValue());
+            objectNode.remove(CASE_RECORDS_MANAGEMENT_UNIT);
+        }
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +

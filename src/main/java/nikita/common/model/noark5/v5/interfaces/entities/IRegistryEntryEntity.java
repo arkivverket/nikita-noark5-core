@@ -33,4 +33,8 @@ public interface IRegistryEntryEntity extends IRecordEntity, IRecordNoteEntity,
 
     void setRecordDate(OffsetDateTime recordDate);
 
+    String getRecordsManagementUnit();
+
+    void setRecordsManagementUnit(String recordsManagementUnit);
+
 }
