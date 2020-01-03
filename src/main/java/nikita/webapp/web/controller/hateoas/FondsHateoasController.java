@@ -407,40 +407,32 @@ public class FondsHateoasController
                 .body(fondsService.findSeriesAssociatedWithFonds(systemID));
     }
 
-    // Get all Sub-fonds associated with a Fonds identified by systemId
     // GET [contextPath][api]/arkivstruktur/arkiv/{systemId}/underarkiv/
-    @ApiOperation(
-            value = "Retrieves the (sub)Fonds associated with a Fonds " +
-                    "identified by a systemId",
-            response = Fonds.class)
-    @ApiResponses(value = {/*
-            @ApiResponse(
-                    code = 200,
-                    message = "Fonds returned", response = Fonds.class),
-            @ApiResponse(
-                    code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(
-                    code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(
-                    code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR),*/
-            @ApiResponse(
-                    code = 501,
-                    message = API_MESSAGE_NOT_IMPLEMENTED)
-    })
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/underarkiv/
+    @ApiOperation(value = "Retrieves the (sub)Fonds associated with a Fonds " +
+		  "identified by a systemId",
+		  response = FondsHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Fonds children found",
+                         response = FondsHateoas.class),
+            @ApiResponse(code = 401,
+                         message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                         message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                         message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = FONDS + SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_FONDS)
-    public ResponseEntity<String> findSubfondsAssociatedWithFonds(
+    public ResponseEntity<FondsHateoas> findAllSubFondsAssociatedWithFonds(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
-                    value = "systemId of parent Fonds.",
-                    required = true)
-            @PathVariable("systemID") final String systemID) {
-
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED,
-                HttpStatus.NOT_IMPLEMENTED);
+                      value = "systemId of parent Fonds",
+                      required = true)
+            @PathVariable(SYSTEM_ID) final String systemID) {
+        FondsHateoas fondsHateoas = fondsService.findAllChildren(systemID);
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fondsHateoas);
     }
 
     // Get all fonds

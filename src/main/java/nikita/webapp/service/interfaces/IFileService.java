@@ -16,6 +16,8 @@ public interface IFileService {
     // -- All CREATE operations
     File createFile(File file);
 
+    FileHateoas createFileAssociatedWithFile(String systemId, File file);
+
     PartPersonHateoas createPartPersonAssociatedWithFile(
             String systemID, PartPerson partPerson);
 
@@ -35,6 +37,8 @@ public interface IFileService {
     PartUnitHateoas generateDefaultPartUnit(String systemID);
 
     List<File> findAll();
+
+    FileHateoas findAllChildren(@NotNull String systemId);
 
     File findBySystemId(String systemId);
 

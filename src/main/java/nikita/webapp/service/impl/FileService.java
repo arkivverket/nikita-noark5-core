@@ -89,6 +89,24 @@ public class FileService
         return fileRepository.save(file);
     }
 
+    /**
+     * Persists a new file object to the database as a sub-file to an
+     * existing file object. Some values are set in the incoming
+     * payload (e.g. title) while some are set by the core.  owner,
+     * createdBy, createdDate are automatically set by the core.
+     *
+     * @param systemId systemId of the parent object to connect this
+     *                 file as a child to
+     * @param file     The file object object with some values set
+     * @return the newly persisted file object wrapped as a fileHateaos object
+     */
+    @Override
+    public FileHateoas createFileAssociatedWithFile(
+            String systemId, File file) {
+        file.setReferenceParentFile(getFileOrThrow(systemId));
+        return save(file);
+    }
+
     @Override
     public ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
             String fileSystemId, Record record) {
@@ -115,6 +133,23 @@ public class FileService
     // All READ operations
     public List<File> findAll() {
         return fileRepository.findAll();
+    }
+
+    /**
+     * Retrieve a list of children file belonging to the file object
+     * identified by systemId
+     *
+     * @param systemId The systemId of the File object to retrieve its children
+     * @return A FileHateoas object containing the children file's
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public FileHateoas findAllChildren(@NotNull String systemId) {
+        FileHateoas fileHateoas = new
+                FileHateoas((List<INikitaEntity>)
+                (List) getFileOrThrow(systemId).getReferenceChildFile());
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        return fileHateoas;
     }
 
     @Override

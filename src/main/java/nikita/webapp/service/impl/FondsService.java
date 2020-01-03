@@ -306,6 +306,23 @@ public class FondsService
     }
 
     /**
+     * Retrieve a list of children fonds belonging to the fonds object
+     * identified by systemId
+     *
+     * @param systemId The systemId of the Fonds object to retrieve its children
+     * @return A FondsHateoas object containing the children fonds's
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public FondsHateoas findAllChildren(@NotNull String systemId) {
+        FondsHateoas fondsHateoas = new
+                FondsHateoas((List<INikitaEntity>)
+                (List) getFondsOrThrow(systemId).getReferenceChildFonds());
+        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
+        return fondsHateoas;
+    }
+
+    /**
      * Retrieve a list of FondsCreator objects associated with a given Fonds
      * from the database. First we try to locate the Fonds object. If the
      * Fonds object does not exist a NoarkEntityNotFoundException exception
