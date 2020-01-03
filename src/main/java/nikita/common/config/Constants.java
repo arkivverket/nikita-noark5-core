@@ -575,11 +575,43 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_PART_PERSON =
             REL_FONDS_STRUCTURE + PART_PERSON + SLASH;
 
-    // Fil
+    // File
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_FILE =
             REL_FONDS_STRUCTURE + DOCUMENT_FILE + SLASH;
     public static final String REL_FONDS_STRUCTURE_CONVERT_FILE =
             NIKITA_CONFORMANCE_REL + CONVERT_FILE + SLASH;
+
+    // national identifiers
+
+    public static final String REL_FONDS_STRUCTURE_BUILDING =
+            REL_FONDS_STRUCTURE + BUILDING + SLASH;
+    public static final String REL_FONDS_STRUCTURE_CADASTRAL_UNIT =
+            REL_FONDS_STRUCTURE + CADASTRAL_UNIT + SLASH;
+    public static final String REL_FONDS_STRUCTURE_D_NUMBER =
+            REL_FONDS_STRUCTURE + D_NUMBER + SLASH;
+    public static final String REL_FONDS_STRUCTURE_PLAN =
+            REL_FONDS_STRUCTURE + PLAN + SLASH;
+    public static final String REL_FONDS_STRUCTURE_POSITION =
+            REL_FONDS_STRUCTURE + POSITION + SLASH;
+    public static final String REL_FONDS_STRUCTURE_SOCIAL_SECURITY_NUMBER =
+            REL_FONDS_STRUCTURE + SOCIAL_SECURITY_NUMBER + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NI_UNIT =
+            REL_FONDS_STRUCTURE + NI_UNIT + SLASH;
+
+    public static final String REL_FONDS_STRUCTURE_NEW_BUILDING =
+            REL_FONDS_STRUCTURE + NEW_BUILDING + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_CADASTRAL_UNIT =
+            REL_FONDS_STRUCTURE + NEW_CADASTRAL_UNIT + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_D_NUMBER =
+            REL_FONDS_STRUCTURE + NEW_D_NUMBER + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_PLAN =
+            REL_FONDS_STRUCTURE + PLAN + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_POSITION =
+            REL_FONDS_STRUCTURE + NEW_POSITION + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_SOCIAL_SECURITY_NUMBER =
+            REL_FONDS_STRUCTURE + NEW_SOCIAL_SECURITY_NUMBER + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_NI_UNIT =
+            REL_FONDS_STRUCTURE + NEW_NI_UNIT + SLASH;
 
     // Metadata RELS
     public static final String REL_METADATA_DOCUMENT_MEDIUM =

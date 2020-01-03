@@ -54,6 +54,21 @@ public class FileHateoasHandler
         addNewReferenceSeries(entity, hateoasNoarkObject);
         addReferenceSecondaryClassification(entity, hateoasNoarkObject);
         addNewReferenceSecondaryClassification(entity, hateoasNoarkObject);
+        // Add national identifiers
+        addNewBuilding(entity, hateoasNoarkObject);
+        addNewCadastralUnit(entity, hateoasNoarkObject);
+        addNewDNumber(entity, hateoasNoarkObject);
+        addNewPlan(entity, hateoasNoarkObject);
+        addNewPosition(entity, hateoasNoarkObject);
+        addNewSocialSecurityNumber(entity, hateoasNoarkObject);
+        addNewUnit(entity, hateoasNoarkObject);
+        addBuilding(entity, hateoasNoarkObject);
+        addCadastralUnit(entity, hateoasNoarkObject);
+        addDNumber(entity, hateoasNoarkObject);
+        addPlan(entity, hateoasNoarkObject);
+        addPosition(entity, hateoasNoarkObject);
+        addSocialSecurityNumber(entity, hateoasNoarkObject);
+        addUnit(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -271,10 +286,124 @@ public class FileHateoasHandler
     }
 
     public void addMetadataFileType(INikitaEntity entity,
-                             IHateoasNoarkObject hateoasNoarkObject) {
+                                    IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + FILE_TYPE,
                 REL_METADATA_FILE_TYPE, false));
+    }
+
+    @Override
+    public void addNewBuilding(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                NEW_BUILDING, REL_FONDS_STRUCTURE_NEW_BUILDING));
+    }
+
+    @Override
+    public void addNewCadastralUnit(INikitaEntity entity,
+                                    IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                NEW_CADASTRAL_UNIT, REL_FONDS_STRUCTURE_NEW_CADASTRAL_UNIT));
+    }
+
+    @Override
+    public void addNewDNumber(INikitaEntity entity,
+                              IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                NEW_D_NUMBER, REL_FONDS_STRUCTURE_NEW_D_NUMBER));
+    }
+
+    @Override
+    public void addNewPlan(INikitaEntity entity,
+                           IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                NEW_PLAN, REL_FONDS_STRUCTURE_NEW_PLAN));
+    }
+
+    @Override
+    public void addNewPosition(INikitaEntity entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                NEW_POSITION, REL_FONDS_STRUCTURE_NEW_POSITION));
+    }
+
+    @Override
+    public void addNewSocialSecurityNumber(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                NEW_SOCIAL_SECURITY_NUMBER,
+                REL_FONDS_STRUCTURE_NEW_SOCIAL_SECURITY_NUMBER));
+    }
+
+    @Override
+    public void addNewUnit(INikitaEntity entity,
+                           IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                NEW_NI_UNIT, REL_FONDS_STRUCTURE_NEW_NI_UNIT));
+    }
+
+    @Override
+    public void addBuilding(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                BUILDING, REL_FONDS_STRUCTURE_BUILDING));
+    }
+
+    @Override
+    public void addCadastralUnit(INikitaEntity entity,
+                                 IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                CADASTRAL_UNIT, REL_FONDS_STRUCTURE_CADASTRAL_UNIT));
+    }
+
+    @Override
+    public void addDNumber(INikitaEntity entity,
+                           IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                D_NUMBER, REL_FONDS_STRUCTURE_D_NUMBER));
+    }
+
+    @Override
+    public void addPlan(INikitaEntity entity,
+                        IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                PLAN, REL_FONDS_STRUCTURE_PLAN));
+    }
+
+    @Override
+    public void addPosition(INikitaEntity entity,
+                            IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                POSITION, REL_FONDS_STRUCTURE_POSITION));
+    }
+
+    @Override
+    public void addSocialSecurityNumber(
+            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                SOCIAL_SECURITY_NUMBER,
+                REL_FONDS_STRUCTURE_SOCIAL_SECURITY_NUMBER));
+    }
+
+    @Override
+    public void addUnit(INikitaEntity entity,
+                        IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
+                NI_UNIT, REL_FONDS_STRUCTURE_NI_UNIT));
     }
 
     /**
