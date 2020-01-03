@@ -207,7 +207,8 @@ public class RecordHateoasController
 //                .eTag(series.getVersion().toString())
 //                .body(seriesHateoas);
 
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a Classified (gradering) to a Record
@@ -245,7 +246,8 @@ public class RecordHateoasController
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(classified.getVersion().toString())
 //                .body(classifiedHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a Disposal to a Record
@@ -283,7 +285,8 @@ public class RecordHateoasController
         //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(comment.getVersion().toString())
 //                .body(commentHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a screening (skjerming) to a Record
@@ -321,7 +324,8 @@ public class RecordHateoasController
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(screening.getVersion().toString())
 //                .body(screeningHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a disposalUndertaken (utfoertKassasjon) to a Record
@@ -360,7 +364,8 @@ public class RecordHateoasController
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(disposalUndertaken.getVersion().toString())
 //                .body(disposalUndertakenHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Add a Deletion  to a Record
@@ -398,7 +403,8 @@ public class RecordHateoasController
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .eTag(deletion.getVersion().toString())
 //                .body(deletionHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -892,7 +898,8 @@ public class RecordHateoasController
                     value = "systemID of the Record to retrieve secondary Class for",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-dokumentbeskrivelse

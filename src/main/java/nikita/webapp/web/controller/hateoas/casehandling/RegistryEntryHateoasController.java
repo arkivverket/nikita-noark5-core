@@ -104,7 +104,8 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .header(ETAG, .getVersion().toString())
                 .body(documentFlowHateoas);
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Create a new SignOff and associate it with the given journalpost
@@ -152,7 +153,8 @@ public class RegistryEntryHateoasController extends NoarkController {
              .header(ETAG, .getVersion().toString())
                 .body(signOffHateoas);
 	*/
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-presedens
@@ -198,7 +200,8 @@ public class RegistryEntryHateoasController extends NoarkController {
             .header(ETAG, .getVersion().toString())
                 .body(precedenceHateoas);
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -222,7 +225,8 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .body(documentFlowService.
                         generateDefaultDocumentFlow());
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -245,7 +249,8 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(signOffService.generateDefaultSignOff());
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -271,7 +276,8 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(precedenceService.generateDefaultPrecedence());
         */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/dokumentflyt
@@ -302,7 +308,8 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
                 */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
 
@@ -335,7 +342,8 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
                 */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Retrieve all Precedence associated with a RegistryEntry identified by systemId
@@ -367,7 +375,8 @@ public class RegistryEntryHateoasController extends NoarkController {
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
                 */
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // Retrieve a single registryEntry identified by systemId

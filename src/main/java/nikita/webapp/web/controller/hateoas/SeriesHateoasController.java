@@ -240,7 +240,8 @@ public class SeriesHateoasController
         //  return ResponseEntity.status(HttpStatus.CREATED)
         //.eTag(createdRecord.getVersion().toString())
         //.body(recordHateoas);
-        return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, HttpStatus.NOT_IMPLEMENTED);
+        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
+                             API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
