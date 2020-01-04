@@ -14,7 +14,6 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_AUTHOR;
 import static nikita.common.config.Constants.TABLE_CONTACT_AUTHOR;
 import static nikita.common.config.N5ResourceMappings.AUTHOR;
 
@@ -54,7 +53,7 @@ public class Author
 
     @Override
     public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_AUTHOR;
+        return AUTHOR; // FIXME, should it have a relation key?
     }
 
     public List<Record> getReferenceRecord() {
