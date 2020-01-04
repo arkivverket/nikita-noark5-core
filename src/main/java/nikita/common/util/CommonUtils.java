@@ -494,6 +494,24 @@ public final class CommonUtils {
                 }
             }
 
+            public static void deserialiseCaseStatus(ICaseFileEntity caseFile,
+                    ObjectNode objectNode, StringBuilder errors) {
+                JsonNode currentNode = objectNode.get(CASE_STATUS);
+                if (null != currentNode) {
+                    JsonNode node = currentNode.get(CODE);
+                    if (null != node) {
+                        caseFile.setCaseStatusCode(node.textValue());
+                    }
+                    node = currentNode.get(CODE_NAME);
+                    if (null != node) {
+                        caseFile.setCaseStatusName(node.textValue());
+                    }
+                    if (null != caseFile.getCaseStatusCode()) {
+                        objectNode.remove(CASE_STATUS);
+                    }
+                }
+            }
+
             public static void deserialiseKeyword(IKeyword keywordEntity, ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize keyword
                 JsonNode currentNode = objectNode.get(KEYWORD);

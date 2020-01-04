@@ -113,22 +113,7 @@ public class CaseFileDeserializer
             objectNode.remove(CASE_RECORDS_MANAGEMENT_UNIT);
         }
 
-        // Deserialize caseStatus
-        currentNode = objectNode.get(CASE_STATUS);
-        if (null != currentNode) {
-
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                caseFile.setCaseStatusCode(node.textValue());
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                caseFile.setCaseStatusName(node.textValue());
-            }
-            if (null != caseFile.getCaseStatusCode()) {
-                objectNode.remove(CASE_STATUS);
-            }
-        }
+        deserialiseCaseStatus(caseFile, objectNode, errors);
 
         // Deserialize loanedDate
         caseFile.setLoanedDate(deserializeDate(
