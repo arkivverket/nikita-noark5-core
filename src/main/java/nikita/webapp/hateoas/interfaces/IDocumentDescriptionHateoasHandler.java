@@ -62,12 +62,6 @@ public interface IDocumentDescriptionHateoasHandler
     void addNewComment(INikitaEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addAuthor(INikitaEntity entity,
-                   IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewAuthor(INikitaEntity entity,
-                      IHateoasNoarkObject hateoasNoarkObject);
-
     void addDocumentType(INikitaEntity entity,
                          IHateoasNoarkObject hateoasNoarkObject);
 

@@ -45,8 +45,6 @@ public class DocumentDescriptionHateoasHandler
         addNewStorageLocation(entity, hateoasNoarkObject);
         addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
-        addAuthor(entity, hateoasNoarkObject);
-        addNewAuthor(entity, hateoasNoarkObject);
         // links for metadata entities
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
@@ -147,20 +145,6 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_SCREENING + SLASH,
                 REL_FONDS_STRUCTURE_NEW_SCREENING, false));
-    }
-
-    @Override
-    public void addAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + AUTHOR + SLASH,
-                REL_FONDS_STRUCTURE_AUTHOR, false));
-    }
-
-    @Override
-    public void addNewAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_AUTHOR + SLASH,
-                REL_FONDS_STRUCTURE_NEW_AUTHOR, false));
     }
 
     @Override

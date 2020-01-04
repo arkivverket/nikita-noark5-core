@@ -116,15 +116,7 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
             objectNode.remove(STORAGE_LOCATION);
         }
 
-        List<JsonNode> authors = objectNode.findValues(AUTHOR);
-        for (JsonNode author : authors) {
-            if (null != author) {
-                Author authorObj = new Author();
-                authorObj.setAuthor(author.textValue());
-                documentDescription.addReferenceAuthor(authorObj);
-                objectNode.remove(AUTHOR);
-            }
-        }
+        deserialiseAuthor(documentDescription, objectNode, errors);
 
         // Deserialize general documentDescription properties
         deserialiseDocumentMedium(documentDescription, objectNode, errors);

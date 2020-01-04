@@ -1667,6 +1667,7 @@ public final class CommonUtils {
                         jgen.writeStringField(DESCRIPTION,
                                 record.getDescription());
                     }
+                    printAuthor(jgen, record);
                 }
             }
 

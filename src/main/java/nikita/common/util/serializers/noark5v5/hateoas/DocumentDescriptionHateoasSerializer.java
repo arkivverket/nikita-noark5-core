@@ -72,6 +72,7 @@ public class DocumentDescriptionHateoasSerializer
                     documentDescription.getAssociatedWithRecordAs());
         }
 
+        printAuthor(jgen, documentDescription);
         printComment(jgen, documentDescription);
         printDisposal(jgen, documentDescription);
         printDisposalUndertaken(jgen, documentDescription);
