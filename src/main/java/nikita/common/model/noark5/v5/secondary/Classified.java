@@ -59,6 +59,7 @@ public class Classified
      * M626 - nedgraderingsdato (xs:dateTime)
      **/
     @Column(name = "classification_downgraded_date")
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime classificationDowngradedDate;
 

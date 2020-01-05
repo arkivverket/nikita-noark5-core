@@ -1531,7 +1531,7 @@ public final class CommonUtils {
                     objectNode.remove(CLASSIFICATION_BY);
                 }
                 // Deserialize classificationDowngradedDate
-                classifiedEntity.setClassificationDowngradedDate(deserializeDate(CLASSIFICATION_DOWNGRADED_DATE,
+                classifiedEntity.setClassificationDowngradedDate(deserializeDateTime(CLASSIFICATION_DOWNGRADED_DATE,
                         objectNode, errors));
 
                 // Deserialize
