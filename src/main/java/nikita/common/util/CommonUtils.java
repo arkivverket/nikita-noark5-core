@@ -1793,6 +1793,10 @@ public final class CommonUtils {
                         jgen.writeStringField(REGISTRY_ENTRY_DATE,
                                 formatDate(registryEntry.getRecordDate()));
                     }
+                    if (registryEntry.getRecordsManagementUnit() != null) {
+                        jgen.writeStringField(CASE_RECORDS_MANAGEMENT_UNIT,
+                                registryEntry.getRecordsManagementUnit());
+                    }
                 }
             }
 
