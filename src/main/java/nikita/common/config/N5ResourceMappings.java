@@ -146,7 +146,7 @@ public final class N5ResourceMappings {
     public static final String SOCIAL_SECURITY_NUMBER = "foedselsnummer";
     public static final String NEW_SOCIAL_SECURITY_NUMBER =
             NEW + DASH + SOCIAL_SECURITY_NUMBER;
-    public static final String D_NUMBER = "dNummer";
+    public static final String D_NUMBER = "dnummer";
     public static final String NEW_D_NUMBER = NEW + DASH + D_NUMBER;
     public static final String CADASTRAL_UNIT = "matrikkel";
     public static final String NEW_CADASTRAL_UNIT = NEW + DASH + CADASTRAL_UNIT;
