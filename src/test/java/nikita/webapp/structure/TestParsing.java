@@ -19,8 +19,10 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.util.deserialisers.ClassDeserializer;
 import nikita.common.util.deserialisers.FondsDeserializer;
 import nikita.common.util.deserialisers.RecordDeserializer;
 
@@ -143,6 +145,70 @@ public class TestParsing {
 		System.out.println("success: unable to parse date '" + teststr + "'");
 	    }
 	}
+    }
+
+    @Test
+    public void parseClassComplete() throws Exception {
+	System.out.println("info: testing class parsing");
+	String json = "{ "
+	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+	    +", \"klasseID\": \"a class id\" "
+	    +", \"tittel\": \"A class title\" "
+	    +", \"beskrivelse\": \"A class description\" "
+	    /*
+	    +", \"noekkelord\": [ \"new\", \"inbox\" ] "
+	    */
+	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+	    +", \"opprettetAv\": \"Some Person\" "
+	    +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+	    +", \"avsluttetAv\": \"Another Person\" "
+	    /*
+	    +", \"kassasjon\": { "
+	    +"    \"kassasjonsvedtak\": {"
+	    +"      \"kode\": \"K\", "
+	    +"      \"kodenavn\": \"Kasseres\""
+	    +"    }, "
+	    +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+	    +"    \"bevaringstid\": 45, "
+	    +"    \"kassasjonsdato\": \"1942-07-25\" "
+	    +"  } "
+	    */
+	    /*
+	    +", \"skjerming\": { "
+	    +"    \"tilgangsrestriksjon\": {"
+	    +"      \"kode\": \"P\","
+	    +"      \"kodenavn\": \"Personalsaker\""
+	    +"    }, "
+	    +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+	    +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+	    +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+	    +"    \"skjermingsvarighet\": 60, "
+	    +"    \"skjermingOpphoererDato\": \"1942-07-25\" "
+	    +"} "
+	    */
+	    /*
+	    +", \"gradering\": { "
+	    +"    \"graderingskode\": { "
+	    +"      \"kode\":\"SH\","
+	    +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+	    +"    }, "
+	    +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+	    +"    \"gradertAv\": \"PST\", "
+	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00\", "
+	    +"    \"nedgradertAv\": \"PST\" "
+	    +"  } "
+	    */
+	    +"}";
+
+	ObjectMapper objectMapper = new ObjectMapper();
+	JsonParser jsonParser =
+	    objectMapper.getJsonFactory().createJsonParser(json);
+	ClassDeserializer classDeserializer = new ClassDeserializer();
+	Class klass =
+	    classDeserializer.deserialize(jsonParser,
+					  null /* DeserializationContext */);
+	assert(null != klass);
+	assert("A class title".equals(klass.getTitle()));
     }
 
     @Test
