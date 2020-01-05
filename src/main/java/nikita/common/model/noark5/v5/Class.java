@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.IClassEntity;
 import nikita.common.model.noark5.v5.interfaces.IClassified;
 import nikita.common.model.noark5.v5.interfaces.ICrossReference;
 import nikita.common.model.noark5.v5.interfaces.IDisposal;
@@ -31,7 +32,7 @@ import static nikita.common.config.N5ResourceMappings.CLASS;
 @HateoasObject(using = ClassHateoas.class)
 public class Class
         extends NoarkGeneralEntity
-        implements IDisposal, IScreening, IClassified, ICrossReference {
+        implements IClassEntity {
 
     /**
      * M002 - klasseID (xs:string)
@@ -94,10 +95,12 @@ public class Class
     @OneToMany(mappedBy = "referenceClass", cascade = ALL)
     private List<CrossReference> referenceCrossReference = new ArrayList<>();
 
+    @Override
     public String getClassId() {
         return classId;
     }
 
+    @Override
     public void setClassId(String classId) {
         this.classId = classId;
     }
@@ -120,43 +123,53 @@ public class Class
         this.referenceKeyword = referenceKeyword;
     }
 
+    @Override
     public ClassificationSystem getReferenceClassificationSystem() {
         return referenceClassificationSystem;
     }
 
+    @Override
     public void setReferenceClassificationSystem(
             ClassificationSystem referenceClassificationSystem) {
         this.referenceClassificationSystem = referenceClassificationSystem;
     }
 
+    @Override
     public Class getReferenceParentClass() {
         return referenceParentClass;
     }
 
+    @Override
     public void setReferenceParentClass(Class referenceParentClass) {
         this.referenceParentClass = referenceParentClass;
     }
 
+    @Override
     public List<Class> getReferenceChildClass() {
         return referenceChildClass;
     }
 
+    @Override
     public void setReferenceChildClass(List<Class> referenceChildClass) {
         this.referenceChildClass = referenceChildClass;
     }
 
+    @Override
     public List<File> getReferenceFile() {
         return referenceFile;
     }
 
+    @Override
     public void setReferenceFile(List<File> referenceFile) {
         this.referenceFile = referenceFile;
     }
 
+    @Override
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
+    @Override
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
     }
