@@ -908,7 +908,7 @@ public final class CommonUtils {
                 }
 
                 // Deserialize deletionDate
-                deletionEntity.setDeletionDate(deserializeDate(DELETION_DATE, objectNode, errors));
+                deletionEntity.setDeletionDateTime(deserializeDate(DELETION_DATE, objectNode, errors));
 
                 objectNode.remove(DELETION);
             }
@@ -2484,7 +2484,7 @@ public final class CommonUtils {
                         }
                         if (deletion.getDeletionDate() != null) {
                             jgen.writeStringField(DELETION_DATE,
-                                    formatDate(deletion.getDeletionDate()));
+                                    formatDateTime(deletion.getDeletionDate()));
                         }
                         jgen.writeEndObject();
                     }
