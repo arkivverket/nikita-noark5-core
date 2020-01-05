@@ -523,7 +523,7 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_NEW_PRECEDENCE =
             REL_CASE_HANDLING + NEW_PRECEDENCE + SLASH;
 
-    // Keyword
+    // SignOff
     public static final String REL_FONDS_STRUCTURE_SIGN_OFF =
             REL_CASE_HANDLING + SIGN_OFF + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_SIGN_OFF =
