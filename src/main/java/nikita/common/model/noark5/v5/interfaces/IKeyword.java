@@ -12,4 +12,6 @@ public interface IKeyword {
     List<Keyword> getReferenceKeyword();
 
     void setReferenceKeyword(List<Keyword> keywords);
+
+    void addReferenceKeyword(Keyword keyword);
 }
