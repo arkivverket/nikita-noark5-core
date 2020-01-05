@@ -67,6 +67,8 @@ public class ClassDeserializer
             objectNode.remove(N5ResourceMappings.CLASS_ID);
         }
 
+        CommonUtils.Hateoas.Deserialize.deserialiseKeyword(klass, objectNode, errors);
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +

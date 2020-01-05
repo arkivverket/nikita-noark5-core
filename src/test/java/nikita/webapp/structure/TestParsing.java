@@ -155,9 +155,7 @@ public class TestParsing {
 	    +", \"klasseID\": \"a class id\" "
 	    +", \"tittel\": \"A class title\" "
 	    +", \"beskrivelse\": \"A class description\" "
-	    /*
 	    +", \"noekkelord\": [ \"new\", \"inbox\" ] "
-	    */
 	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
 	    +", \"opprettetAv\": \"Some Person\" "
 	    +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
@@ -298,9 +296,7 @@ public class TestParsing {
 	    +"\"tittel\": \"A record title\", "
 	    +"\"offentligTittel\": \"A public record title\", "
 	    +"\"beskrivelse\": \"En beskrivelse\", "
-	    /*
 	    +"\"noekkelord\": [ \"ny\", \"inbox\" ], "
-	    */
 	    +"\"forfatter\": [ \"Isaac Asimov\" ], "
 	    +"\"dokumentmedium\": \"Elektronisk arkiv\" "
 	    //+"\"virksomhetsspesifikkeMetadata" type="xs:anyType" minOccurs="0"/>

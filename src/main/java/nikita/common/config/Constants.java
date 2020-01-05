@@ -78,7 +78,6 @@ public final class Constants {
     public static final String NEW_STORAGE_LOCATION = NEW + DASH + STORAGE_LOCATION;
     public static final String NEW_ELECTRONIC_SIGNATURE = NEW + DASH + ELECTRONIC_SIGNATURE;
     public static final String NEW_CONVERSION = NEW + DASH + CONVERSION;
-    public static final String NEW_KEYWORD = NEW + DASH + KEYWORD;
     public static final String NEW_SIGN_OFF = NEW + DASH + SIGN_OFF;
     public static final String NEW_DOCUMENT_FLOW = NEW + DASH + DOCUMENT_FLOW;
     public static final String NEW_CORRESPONDENCE_PART = NEW + DASH + CORRESPONDENCE_PART;
@@ -510,12 +509,6 @@ public final class Constants {
             REL_FONDS_STRUCTURE + DOCUMENT_DESCRIPTION + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_DOCUMENT_DESCRIPTION =
             REL_FONDS_STRUCTURE + NEW_DOCUMENT_DESCRIPTION + SLASH;
-
-    // Keyword
-    public static final String REL_FONDS_STRUCTURE_KEYWORD =
-            NIKITA_CONFORMANCE_REL + KEYWORD + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_KEYWORD =
-            NIKITA_CONFORMANCE_REL + NEW_KEYWORD + SLASH;
 
     // Precedence
     public static final String REL_FONDS_STRUCTURE_PRECEDENCE =
