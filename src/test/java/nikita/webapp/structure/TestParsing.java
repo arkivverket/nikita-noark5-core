@@ -182,4 +182,64 @@ public class TestParsing {
 	assert(null != record);
 	assert("A record title".equals(record.getTitle()));
     }
+
+    @Test
+    public void parseRecordComplete() throws Exception {
+	System.out.println("info: testing record parsing");
+	String json = "{ "
+	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\", "
+	    +"\"opprettetDato\": \"1865-02-13T00:00:00+00:00\", "
+	    +"\"opprettetAv\": \"Some Person\", "
+	    +"\"arkivertDato\": \"1863-10-10T00:00:00+00:00\", "
+	    +"\"arkivertAv\": \"Min Venn\", "
+	    +"\"kassasjon\": { "
+	    +"  \"kassasjonsvedtak\": {"
+	    +"    \"kode\": \"K\", "
+	    +"    \"kodenavn\": \"Kasseres\""
+	    +"  }, "
+	    +"  \"kassasjonshjemmel\": \"enHjemmel\", "
+	    +"  \"bevaringstid\": 45, "
+	    +"  \"kassasjonsdato\": \"1942-07-25\" "
+	    +"}, "
+	    +"\"skjerming\": { "
+	    +"  \"tilgangsrestriksjon\": {"
+	    +"    \"kode\": \"P\","
+	    +"    \"kodenavn\": \"Personalsaker\""
+	    +"  }, "
+	    +"  \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+	    +"  \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+	    +"  \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+	    +"  \"skjermingsvarighet\": 60, "
+	    +"  \"skjermingOpphoererDato\": \"1942-07-25\" "
+	    +"}, "
+	    +"\"gradering\": { "
+	    +"  \"graderingskode\": { "
+	    +"    \"kode\":\"SH\","
+	    +"    \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+	    +"  }, "
+	    +"  \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+	    +"  \"gradertAv\": \"PST\", "
+	    +"  \"nedgraderingsdato\": \"2070-02-13T12:00:00\", "
+	    +"  \"nedgradertAv\": \"PST\" "
+	    +"}, "
+	    +"\"registreringsID\": \"a record id\", "
+	    +"\"tittel\": \"A record title\", "
+	    +"\"offentligTittel\": \"A public record title\", "
+	    +"\"beskrivelse\": \"En beskrivelse\", "
+	    +"\"noekkelord\": [ \"ny\", \"inbox\" ], "
+	    +"\"forfatter\": [ \"Isaac Asimov\" ], "
+	    +"\"dokumentmedium\": \"Elektronisk arkiv\" "
+	    //+"\"virksomhetsspesifikkeMetadata" type="xs:anyType" minOccurs="0"/>
+	    +"}";
+
+	ObjectMapper objectMapper = new ObjectMapper();
+	JsonParser jsonParser =
+	    objectMapper.getJsonFactory().createJsonParser(json);
+	RecordDeserializer recordDeserializer = new RecordDeserializer();
+	Record record =
+	    recordDeserializer.deserialize(jsonParser,
+					   null /* DeserializationContext */);
+	assert(null != record);
+	assert("A record title".equals(record.getTitle()));
+    }
 }
