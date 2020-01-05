@@ -244,10 +244,14 @@ public class TestParsing {
 	    +", \"dokumentmedium\": \"Elektronisk arkiv\" "
 	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
 	    +", \"opprettetAv\": \"Some Person\" "
+	    /*
 	    +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
 	    +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
 	    +", \"avsluttetAv\": \"Another Person\" "
+	    /*
 	    +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+	    */
 	    +", \"arkivperiodeStartDato\": \"1863-10-10+00:00\" "
 	    +", \"arkivperiodeSluttDato\": \"1863-10-10+00:00\" "
 	    +", \"kassasjon\": { "
@@ -264,6 +268,7 @@ public class TestParsing {
 	    +"    \"kassertAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"  } "
+	    /*
 	    +", \"sletting\": { "
 	    +"    \"slettingstype\": {"
 	    +"      \"kode\": \"SP\","
@@ -273,6 +278,7 @@ public class TestParsing {
 	    +"    \"slettetAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"} "
+	    */
 	    +", \"skjerming\": { "
 	    +"    \"tilgangsrestriksjon\": {"
 	    +"      \"kode\": \"P\","
