@@ -59,8 +59,6 @@ public class RecordHateoasHandler
         addNewStorageLocation(entity, hateoasNoarkObject);
         //addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
-        //addAuthor(entity, hateoasNoarkObject);
-        addNewAuthor(entity, hateoasNoarkObject);
         //addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         //addKeyword(entity, hateoasNoarkObject);
@@ -74,20 +72,6 @@ public class RecordHateoasHandler
         addDocumentMedium(entity, hateoasNoarkObject);
     }
 
-
-    @Override
-    public void addAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + AUTHOR + SLASH,
-                REL_FONDS_STRUCTURE_AUTHOR, false));
-    }
-
-    @Override
-    public void addNewAuthor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_AUTHOR + SLASH,
-                REL_FONDS_STRUCTURE_NEW_AUTHOR, false));
-    }
 
     @Override
     public void addComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {

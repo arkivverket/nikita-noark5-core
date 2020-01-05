@@ -72,12 +72,6 @@ public interface IRecordHateoasHandler
     void addNewComment(INikitaEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addAuthor(INikitaEntity entity,
-                   IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewAuthor(INikitaEntity entity,
-                      IHateoasNoarkObject hateoasNoarkObject);
-
     void addCrossReference(INikitaEntity entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
