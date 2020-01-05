@@ -1522,7 +1522,7 @@ public final class CommonUtils {
                     objectNode.remove(CLASSIFICATION);
                 }
                 // Deserialize classificationDate
-                classifiedEntity.setClassificationDate(deserializeDate(CLASSIFICATION_DATE, objectNode, errors));
+                classifiedEntity.setClassificationDate(deserializeDateTime(CLASSIFICATION_DATE, objectNode, errors));
 
                 // Deserialize classificationBy
                 currentNode = objectNode.get(CLASSIFICATION_BY);
