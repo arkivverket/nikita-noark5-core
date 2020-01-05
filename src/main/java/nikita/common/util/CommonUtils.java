@@ -908,7 +908,7 @@ public final class CommonUtils {
                 }
 
                 // Deserialize deletionDate
-                deletionEntity.setDeletionDateTime(deserializeDate(DELETION_DATE, objectNode, errors));
+                deletionEntity.setDeletionDate(deserializeDateTime(DELETION_DATE, objectNode, errors));
 
                 objectNode.remove(DELETION);
             }
