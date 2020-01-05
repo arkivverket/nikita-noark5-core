@@ -369,14 +369,17 @@ public class Record
         this.referenceKeyword.add(keyword);
     }
 
+    @Override
     public List<Author> getReferenceAuthor() {
         return referenceAuthor;
     }
 
+    @Override
     public void setReferenceAuthor(List<Author> referenceAuthor) {
         this.referenceAuthor = referenceAuthor;
     }
 
+    @Override
     public void addReferenceAuthor(Author author) {
         this.referenceAuthor.add(author);
     }
