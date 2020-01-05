@@ -5,15 +5,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -38,7 +39,6 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FILE,
@@ -752,7 +752,255 @@ public class FileHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+                API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a Building to a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-bygning
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-bygning/
+    @ApiOperation(value = "Associates a Building (national identifier) with a" +
+            " File identified by systemID", notes = "Returns the File with " +
+            "the building associated with it", response = BuildingHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = BUILDING + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = BuildingHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> getNIBuildingToFileTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the Building with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Building",
+                    value = "building",
+                    required = true)
+            @RequestBody Building building) throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a DNumber to a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-dnummer
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-dnummer/
+    @ApiOperation(value = "Associates a DNumber (national identifier) with a" +
+            " File identified by systemID", notes = "Returns the File with " +
+            "the dNumber associated with it", response = DNumberHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = D_NUMBER +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = DNumberHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_D_NUMBER, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> getNIDNumberToFileTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the DNumber with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "DNumber",
+                    value = "dNumber",
+                    required = true)
+            @RequestBody DNumber dNumber)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a SocialSecurityNumber to a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-foedselsnummer
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-foedselsnummer/
+    @ApiOperation(value = "Associates a SocialSecurityNumber (national " +
+            "identifier) with a File identified by systemID",
+            notes = "Returns the File with the socialSecurityNumber " +
+                    "associated with it",
+            response = SocialSecurityNumberHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = SOCIAL_SECURITY_NUMBER +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = SocialSecurityNumberHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_SOCIAL_SECURITY_NUMBER, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> getNISocialSecurityNumberToFileTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the " +
+                            "SocialSecurityNumber with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "SocialSecurityNumber",
+                    value = "socialSecurityNumber",
+                    required = true)
+            @RequestBody SocialSecurityNumber socialSecurityNumber)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a CadastralUnit to a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-matrikkel
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-matrikkel/
+    @ApiOperation(value = "Associates a CadastralUnit (national identifier) " +
+            "with a File identified by systemID",
+            notes = "Returns the File with the cadastralUnit associated with" +
+                    " it", response = CadastralUnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = CADASTRAL_UNIT +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = CadastralUnitHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_CADASTRAL_UNIT, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> getNICadastralUnitToFileTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the CadastralUnit " +
+                            "with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "CadastralUnit",
+                    value = "cadastralUnit",
+                    required = true)
+            @RequestBody CadastralUnit cadastralUnit)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a Position to a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-posisjon
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-posisjon/
+    @ApiOperation(value = "Associates a Position (national identifier) with a" +
+            " File identified by systemID",
+            notes = "Returns the File with the position associated with it",
+            response = PositionHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = POSITION +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PositionHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> getNIPositionToFileTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the " +
+                            "Position with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Position",
+                    value = "position",
+                    required = true)
+            @RequestBody Position position)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a Plan to a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-plan
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-plan/
+    @ApiOperation(value = "Associates a Plan (national " +
+            "identifier) with a File identified by systemID",
+            notes = "Returns the File with  the plan " +
+                    "associated with it",
+            response = PlanHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = PLAN +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PlanHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PLAN,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> getNIPlanToFileTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the " +
+                            "Plan with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Plan",
+                    value = "plan",
+                    required = true)
+            @RequestBody Plan position)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a Unit to a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-enhetsidentifikator
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-enhetsidentifikator/
+    @ApiOperation(value = "Associates a Unit (national identifier) with a " +
+            "File identified by systemID",
+            notes = "Returns the File with  the unit associated with it",
+            response = UnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = NI_UNIT +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = UnitHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> getNIUnitToFileTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the " +
+                            "Unit with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Unit",
+                    value = "unit",
+                    required = true)
+            @RequestBody Unit position)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -981,6 +1229,295 @@ public class FileHateoasController
                 .body(partPersonHateoas);
     }
 
+    // Add a Building to a File
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-bygning
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-bygning/
+    @ApiOperation(value = "Associates a Building (national identifier) with a" +
+            " File identified by systemID", notes = "Returns the File with " +
+            "the building associated with it", response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = BUILDING + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 201,
+                    message = BUILDING +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> addNIBuildingToFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the Building with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Building",
+                    value = "building",
+                    required = true)
+            @RequestBody Building building) throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a DNumber to a File
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-dnummer
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-dnummer/
+    @ApiOperation(value = "Associates a DNumber (national identifier) with a" +
+            " File identified by systemID", notes = "Returns the File with " +
+            "the dNumber associated with it", response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = D_NUMBER +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 201,
+                    message = D_NUMBER +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_D_NUMBER, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> addNIDNumberToFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the DNumber with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "DNumber",
+                    value = "dNumber",
+                    required = true)
+            @RequestBody DNumber dNumber)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a SocialSecurityNumber to a File
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-foedselsnummer
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-foedselsnummer/
+    @ApiOperation(value = "Associates a SocialSecurityNumber (national " +
+            "identifier) with a File identified by systemID",
+            notes = "Returns the File with  the socialSecurityNumber " +
+                    "associated with it",
+            response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = SOCIAL_SECURITY_NUMBER +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 201,
+                    message = SOCIAL_SECURITY_NUMBER +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_SOCIAL_SECURITY_NUMBER, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> addNISocialSecurityNumberToFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the " +
+                            "SocialSecurityNumber with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "SocialSecurityNumber",
+                    value = "socialSecurityNumber",
+                    required = true)
+            @RequestBody SocialSecurityNumber socialSecurityNumber)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a CadastralUnit to a File
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-matrikkel
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-matrikkel/
+    @ApiOperation(value = "Associates a CadastralUnit (national identifier) " +
+            "with a File identified by systemID",
+            notes = "Returns the File with the cadastralUnit associated with" +
+                    " it", response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = CADASTRAL_UNIT +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 201,
+                    message = CADASTRAL_UNIT +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_CADASTRAL_UNIT, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> addNICadastralUnitToFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the CadastralUnit " +
+                            "with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "CadastralUnit",
+                    value = "cadastralUnit",
+                    required = true)
+            @RequestBody CadastralUnit cadastralUnit)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a Position to a File
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-posisjon
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-posisjon/
+    @ApiOperation(value = "Associates a Position (national identifier) with a" +
+            " File identified by systemID",
+            notes = "Returns the File with the position associated with it",
+            response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = POSITION +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 201,
+                    message = POSITION +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> addNIPositionToFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the " +
+                            "Position with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Position",
+                    value = "position",
+                    required = true)
+            @RequestBody Position position)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a Plan to a File
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-plan
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-plan/
+    @ApiOperation(value = "Associates a Plan (national " +
+            "identifier) with a File identified by systemID",
+            notes = "Returns the File with  the plan " +
+                    "associated with it",
+            response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = PLAN +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 201,
+                    message = PLAN +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PLAN,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> addNIPlanToFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the " +
+                            "Plan with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Plan",
+                    value = "plan",
+                    required = true)
+            @RequestBody Plan position)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Add a Unit to a File
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-enhetsidentifikator
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-enhetsidentifikator/
+    @ApiOperation(value = "Associates a Unit (national identifier) with a " +
+            "File identified by systemID",
+            notes = "Returns the File with  the unit associated with it",
+            response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = NI_UNIT +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 201,
+                    message = NI_UNIT +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> addNIUnitToFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of File to associate the " +
+                            "Unit with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Unit",
+                    value = "unit",
+                    required = true)
+            @RequestBody Unit position)
+            throws NikitaException {
+        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
 
     // Expand a File to a MeetingFile
     // PUT [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-moetemappe

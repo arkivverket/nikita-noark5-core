@@ -78,4 +78,48 @@ public interface IFileHateoasHandler
 
     void addNewPartUnit(INikitaEntity entity,
                         IHateoasNoarkObject hateoasNoarkObject);
+
+    // Add national identifiers
+
+    void addNewBuilding(INikitaEntity entity,
+                        IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewCadastralUnit(INikitaEntity entity,
+                             IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewDNumber(INikitaEntity entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewPlan(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewPosition(INikitaEntity entity,
+                        IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewSocialSecurityNumber(INikitaEntity entity,
+                                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewUnit(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addBuilding(INikitaEntity entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
+
+    void addCadastralUnit(INikitaEntity entity,
+                          IHateoasNoarkObject hateoasNoarkObject);
+
+    void addDNumber(INikitaEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addPlan(INikitaEntity entity,
+                 IHateoasNoarkObject hateoasNoarkObject);
+
+    void addPosition(INikitaEntity entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
+
+    void addSocialSecurityNumber(INikitaEntity entity,
+                                 IHateoasNoarkObject hateoasNoarkObject);
+
+    void addUnit(INikitaEntity entity,
+                 IHateoasNoarkObject hateoasNoarkObject);
 }
