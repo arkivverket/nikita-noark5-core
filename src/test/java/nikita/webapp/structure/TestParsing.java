@@ -22,9 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.Series;
 import nikita.common.util.deserialisers.ClassDeserializer;
 import nikita.common.util.deserialisers.FondsDeserializer;
 import nikita.common.util.deserialisers.RecordDeserializer;
+import nikita.common.util.deserialisers.SeriesDeserializer;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class)
@@ -229,6 +231,85 @@ public class TestParsing {
 	assertEquals("fonds title matches input",
 		     "En tittel", fonds.getTitle());
 	*/
+    }
+
+    @Test
+    public void parseSeriesComplete() throws Exception {
+	System.out.println("info: testing series parsing");
+	String json = "{ "
+	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+	    +", \"tittel\": \"A series title\" "
+	    +", \"beskrivelse\": \"A series description\" "
+	    +", \"arkivdelstatus\": { \"kode\": \"P\", \"kodenavn\": \"Avsluttet periode\" } "
+	    +", \"dokumentmedium\": \"Elektronisk arkiv\" "
+	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+	    +", \"opprettetAv\": \"Some Person\" "
+	    /*
+	    +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
+	    +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+	    +", \"avsluttetAv\": \"Another Person\" "
+	    /*
+	    +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+	    */
+	    +", \"arkivperiodeStartDato\": \"1863-10-10+00:00\" "
+	    +", \"arkivperiodeSluttDato\": \"1863-10-10+00:00\" "
+	    +", \"kassasjon\": { "
+	    +"    \"kassasjonsvedtak\": {"
+	    +"      \"kode\": \"K\", "
+	    +"      \"kodenavn\": \"Kasseres\""
+	    +"    }, "
+	    +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+	    +"    \"bevaringstid\": 45, "
+	    +"    \"kassasjonsdato\": \"1942-07-25\" "
+	    +"  } "
+	    +", \"utfoertKassasjon\": { "
+	    +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "
+	    +"    \"kassertAv\": \"Ryddig Gutt\", "
+	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+	    +"  } "
+	    /*
+	    +", \"sletting\": { "
+	    +"    \"slettingstype\": {"
+	    +"      \"kode\": \"SP\","
+	    +"      \"kodenavn\": \"Sletting av produksjonsformat\""
+	    +"    }, "
+	    +"    \"slettetDato\": \"1863-10-10T00:00:00+00:00\", "
+	    +"    \"slettetAv\": \"Ryddig Gutt\", "
+	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+	    +"} "
+	    */
+	    +", \"skjerming\": { "
+	    +"    \"tilgangsrestriksjon\": {"
+	    +"      \"kode\": \"P\","
+	    +"      \"kodenavn\": \"Personalsaker\""
+	    +"    }, "
+	    +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+	    +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+	    +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+	    +"    \"skjermingsvarighet\": 60, "
+	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+	    +"} "
+	    +", \"gradering\": { "
+	    +"    \"graderingskode\": { "
+	    +"      \"kode\":\"SH\","
+	    +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+	    +"    }, "
+	    +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+	    +"    \"gradertAv\": \"PST\", "
+	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+	    +"    \"nedgradertAv\": \"PST\" "
+	    +"  } "
+	    +"}";
+	ObjectMapper objectMapper = new ObjectMapper();
+	JsonParser jsonParser =
+	    objectMapper.getJsonFactory().createJsonParser(json);
+	SeriesDeserializer seriesDeserializer = new SeriesDeserializer();
+	Series series =
+	    seriesDeserializer.deserialize(jsonParser,
+					  null /* DeserializationContext */);
+	assert(null != series);
+	assert("A series title".equals(series.getTitle()));
     }
 
     @Test
