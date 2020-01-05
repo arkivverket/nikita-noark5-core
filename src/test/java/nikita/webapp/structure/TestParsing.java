@@ -17,6 +17,12 @@ import org.springframework.web.context.WebApplicationContext;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.util.deserialisers.FondsDeserializer;
+import nikita.common.util.deserialisers.RecordDeserializer;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class)
@@ -137,5 +143,43 @@ public class TestParsing {
 		System.out.println("success: unable to parse date '" + teststr + "'");
 	    }
 	}
+    }
+
+    @Test
+    public void parseFonds() throws Exception {
+	System.out.println("info: testing fonds parsing");
+	String json = "{ \"tittel\": \"A fonds title\" }";
+	ObjectMapper objectMapper = new ObjectMapper();
+	JsonParser jsonParser =
+	    objectMapper.getJsonFactory().createJsonParser(json);
+	FondsDeserializer fondsDeserializer = new FondsDeserializer();
+	Fonds fonds =
+	    fondsDeserializer.deserialize(jsonParser,
+					  null /* DeserializationContext */);
+	assert(null != fonds);
+	assert("A fonds title".equals(fonds.getTitle()));
+	/*
+	assertNotNull("able to create default fonds from json", fonds);
+	assertEquals("fonds title matches input",
+		     "En tittel", fonds.getTitle());
+	*/
+    }
+
+    @Test
+    public void parseRecord() throws Exception {
+	System.out.println("info: testing record parsing");
+	String json = "{ "
+	    +"\"tittel\": \"A record title\", "
+	    + "\"forfatter\": [\"Isac Asimov\"] "+
+	    "}";
+	ObjectMapper objectMapper = new ObjectMapper();
+	JsonParser jsonParser =
+	    objectMapper.getJsonFactory().createJsonParser(json);
+	RecordDeserializer recordDeserializer = new RecordDeserializer();
+	Record record =
+	    recordDeserializer.deserialize(jsonParser,
+					   null /* DeserializationContext */);
+	assert(null != record);
+	assert("A record title".equals(record.getTitle()));
     }
 }
