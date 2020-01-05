@@ -9,7 +9,7 @@ import nikita.common.model.noark5.v5.interfaces.*;
 import java.util.List;
 
 public interface IClassEntity
-        extends INoarkGeneralEntity, IDisposal, IScreening,
+        extends INoarkGeneralEntity, IKeyword, IDisposal, IScreening,
         IClassified, ICrossReference {
 
     String getClassId();

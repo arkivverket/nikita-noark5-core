@@ -115,12 +115,19 @@ public class Class
         return REL_FONDS_STRUCTURE_CLASS;
     }
 
+    @Override
     public List<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }
 
+    @Override
     public void setReferenceKeyword(List<Keyword> referenceKeyword) {
         this.referenceKeyword = referenceKeyword;
+    }
+
+    @Override
+    public void addReferenceKeyword(Keyword keyword) {
+        this.referenceKeyword.add(keyword);
     }
 
     @Override
