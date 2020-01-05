@@ -192,6 +192,7 @@ public class TestParsing {
 	    +"\"opprettetAv\": \"Some Person\", "
 	    +"\"arkivertDato\": \"1863-10-10T00:00:00+00:00\", "
 	    +"\"arkivertAv\": \"Min Venn\", "
+	    /*
 	    +"\"kassasjon\": { "
 	    +"  \"kassasjonsvedtak\": {"
 	    +"    \"kode\": \"K\", "
@@ -201,6 +202,8 @@ public class TestParsing {
 	    +"  \"bevaringstid\": 45, "
 	    +"  \"kassasjonsdato\": \"1942-07-25\" "
 	    +"}, "
+	    */
+	    /*
 	    +"\"skjerming\": { "
 	    +"  \"tilgangsrestriksjon\": {"
 	    +"    \"kode\": \"P\","
@@ -212,6 +215,8 @@ public class TestParsing {
 	    +"  \"skjermingsvarighet\": 60, "
 	    +"  \"skjermingOpphoererDato\": \"1942-07-25\" "
 	    +"}, "
+	    */
+	    /*
 	    +"\"gradering\": { "
 	    +"  \"graderingskode\": { "
 	    +"    \"kode\":\"SH\","
@@ -222,11 +227,14 @@ public class TestParsing {
 	    +"  \"nedgraderingsdato\": \"2070-02-13T12:00:00\", "
 	    +"  \"nedgradertAv\": \"PST\" "
 	    +"}, "
+	    */
 	    +"\"registreringsID\": \"a record id\", "
 	    +"\"tittel\": \"A record title\", "
 	    +"\"offentligTittel\": \"A public record title\", "
 	    +"\"beskrivelse\": \"En beskrivelse\", "
+	    /*
 	    +"\"noekkelord\": [ \"ny\", \"inbox\" ], "
+	    */
 	    +"\"forfatter\": [ \"Isaac Asimov\" ], "
 	    +"\"dokumentmedium\": \"Elektronisk arkiv\" "
 	    //+"\"virksomhetsspesifikkeMetadata" type="xs:anyType" minOccurs="0"/>
