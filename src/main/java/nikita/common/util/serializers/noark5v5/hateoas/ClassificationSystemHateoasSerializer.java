@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
-import nikita.common.util.CommonUtils;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
+
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
@@ -25,15 +26,17 @@ import java.io.IOException;
 public class ClassificationSystemHateoasSerializer extends HateoasSerializer implements IHateoasSerializer {
 
     @Override
-    public void serializeNoarkEntity(INikitaEntity classificationSystem,
+    public void serializeNoarkEntity(INikitaEntity classificationSystemEntity,
                                      HateoasNoarkObject classificationSystemHateoas, JsonGenerator jgen
     ) throws IOException {
+        ClassificationSystem classificationSystem =
+            (ClassificationSystem) classificationSystemEntity;
+
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, classificationSystem);
-        CommonUtils.Hateoas.Serialize.printTitleAndDescription(jgen, (ClassificationSystem) classificationSystem);
-        CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, (ClassificationSystem) classificationSystem);
-        CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, (ClassificationSystem) classificationSystem);
-        CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, classificationSystemHateoas.getLinks(classificationSystem));
+        printClassificationSystemEntity(jgen, classificationSystem);
+
+        printFinaliseEntity(jgen, classificationSystem);
+        printHateoasLinks(jgen, classificationSystemHateoas.getLinks(classificationSystem));
         jgen.writeEndObject();
     }
 }

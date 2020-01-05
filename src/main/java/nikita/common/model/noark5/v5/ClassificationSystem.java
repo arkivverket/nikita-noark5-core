@@ -2,7 +2,8 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
-import nikita.common.util.deserialisers.ClassifiactionSystemDeserializer;
+import nikita.common.model.noark5.v5.interfaces.entities.IClassificationSystemEntity;
+import nikita.common.util.deserialisers.ClassificationSystemDeserializer;
 import nikita.webapp.hateoas.ClassificationSystemHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
@@ -23,20 +24,28 @@ import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
 
 @Entity
 @Table(name = TABLE_CLASSIFICATION_SYSTEM)
-@JsonDeserialize(using = ClassifiactionSystemDeserializer.class)
+@JsonDeserialize(using = ClassificationSystemDeserializer.class)
 @HateoasPacker(using = ClassificationSystemHateoasHandler.class)
 @HateoasObject(using = ClassificationSystemHateoas.class)
 public class ClassificationSystem
-        extends NoarkGeneralEntity {
+        extends NoarkGeneralEntity
+        implements IClassificationSystemEntity {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * M086 - klassifikasjonstype (xs:string)
+     * M??? - klassifikasjonstype code (xs:string)
      */
-    @Column(name = "classification_type")
+    @Column(name = "classification_type_code")
     @Audited
-    private String classificationType;
+    private String classificationTypeCode;
+
+    /**
+     * M086 - klassifikasjonstype name (xs:string)
+     */
+    @Column(name = "classification_type_name")
+    @Audited
+    private String classificationTypeName;
 
     // Links to Series
     @OneToMany(mappedBy = "referenceClassificationSystem")
@@ -46,12 +55,24 @@ public class ClassificationSystem
     @OneToMany(mappedBy = "referenceClassificationSystem")
     private List<Class> referenceClass = new ArrayList<>();
 
-    public String getClassificationType() {
-        return classificationType;
+    @Override
+    public String getClassificationTypeCode() {
+        return classificationTypeCode;
     }
 
-    public void setClassificationType(String classificationType) {
-        this.classificationType = classificationType;
+    @Override
+    public void setClassificationTypeCode(String classificationTypeCode) {
+        this.classificationTypeCode = classificationTypeCode;
+    }
+
+    @Override
+    public String getClassificationTypeName() {
+        return classificationTypeName;
+    }
+
+    @Override
+    public void setClassificationTypeName(String classificationTypeName) {
+        this.classificationTypeName = classificationTypeName;
     }
 
     @Override
@@ -64,18 +85,22 @@ public class ClassificationSystem
         return REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM;
     }
 
+    @Override
     public List<Series> getReferenceSeries() {
         return referenceSeries;
     }
 
+    @Override
     public void setReferenceSeries(List<Series> referenceSeries) {
         this.referenceSeries = referenceSeries;
     }
 
+    @Override
     public List<Class> getReferenceClass() {
         return referenceClass;
     }
 
+    @Override
     public void setReferenceClass(List<Class> referenceClass) {
         this.referenceClass = referenceClass;
     }
@@ -83,7 +108,8 @@ public class ClassificationSystem
     @Override
     public String toString() {
         return "ClassificationSystem{" + super.toString() +
-                "classificationType='" + classificationType + '\'' +
+                "classificationTypeCode='" + classificationTypeCode + '\'' +
+                "classificationTypeName='" + classificationTypeName + '\'' +
                 '}';
     }
 
@@ -101,7 +127,8 @@ public class ClassificationSystem
         ClassificationSystem rhs = (ClassificationSystem) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(classificationType, rhs.classificationType)
+                .append(classificationTypeCode, rhs.classificationTypeCode)
+                .append(classificationTypeName, rhs.classificationTypeName)
                 .isEquals();
     }
 
@@ -109,7 +136,8 @@ public class ClassificationSystem
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(classificationType)
+                .append(classificationTypeCode)
+                .append(classificationTypeName)
                 .toHashCode();
     }
 }

@@ -588,6 +588,25 @@ public final class CommonUtils {
                 }
             }
 
+            public static void deserialiseClassificationSystemType(
+                    IClassificationSystemEntity classificationSystem,
+                    ObjectNode objectNode, StringBuilder errors) {
+                JsonNode currentNode = objectNode.get(CLASSIFICATION_SYSTEM_TYPE);
+                if (null != currentNode) {
+                    JsonNode node = currentNode.get(CODE);
+                    if (null != node) {
+                        classificationSystem.setClassificationTypeCode(node.textValue());
+                    }
+                    node = currentNode.get(CODE_NAME);
+                    if (null != node) {
+                        classificationSystem.setClassificationTypeName(node.textValue());
+                    }
+                    if (null != classificationSystem.getClassificationTypeCode()) {
+                        objectNode.remove(CLASSIFICATION_SYSTEM_TYPE);
+                    }
+                }
+            }
+
             public static void deserialiseAuthor(IAuthor authorEntity,
                                                  ObjectNode objectNode, StringBuilder errors) {
 
@@ -1559,6 +1578,22 @@ public final class CommonUtils {
                     if (createEntity.getCreatedBy() != null) {
                         jgen.writeStringField(CREATED_BY, createEntity.getCreatedBy());
                     }
+                }
+            }
+
+            public static void printClassificationSystemEntity(
+                    JsonGenerator jgen,
+                    IClassificationSystemEntity classificationSystem)
+                    throws IOException {
+                printSystemIdEntity(jgen, classificationSystem);
+                printTitleAndDescription(jgen, classificationSystem);
+                printCreateEntity(jgen, classificationSystem);
+                if (classificationSystem.getClassificationTypeCode() != null) {
+                    jgen.writeObjectFieldStart(CLASSIFICATION_SYSTEM_TYPE);
+                    printCode(jgen,
+                              classificationSystem.getClassificationTypeCode(),
+                              classificationSystem.getClassificationTypeName());
+                    jgen.writeEndObject();
                 }
             }
 

@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseClassificationSystemType;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkEntity;
 
 /**
@@ -26,10 +27,10 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoar
  * - Unknown property values in the JSON will trigger an exception
  * - Missing obligatory property values in the JSON will trigger an exception
  */
-public class ClassifiactionSystemDeserializer extends JsonDeserializer {
+public class ClassificationSystemDeserializer extends JsonDeserializer {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(ClassifiactionSystemDeserializer.class);
+            LoggerFactory.getLogger(ClassificationSystemDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -44,6 +45,9 @@ public class ClassifiactionSystemDeserializer extends JsonDeserializer {
 
         // Deserialise general properties
         deserialiseNoarkEntity(classificationSystem, objectNode, errors);
+
+        deserialiseClassificationSystemType(classificationSystem,
+                                            objectNode, errors);
 
         JsonNode currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
