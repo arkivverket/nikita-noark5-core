@@ -26,6 +26,8 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
+import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
@@ -37,6 +39,8 @@ import nikita.common.util.deserialisers.DocumentObjectDeserializer;
 import nikita.common.util.deserialisers.FileDeserializer;
 import nikita.common.util.deserialisers.FondsCreatorDeserializer;
 import nikita.common.util.deserialisers.FondsDeserializer;
+import nikita.common.util.deserialisers.PartPersonDeserializer;
+import nikita.common.util.deserialisers.PartUnitDeserializer;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.common.util.deserialisers.SeriesDeserializer;
 import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
@@ -769,5 +773,100 @@ public class TestParsing {
                 jsonParser, null /* DeserializationContext */);
         assert(null != documentObject);
         assert("fmt/95".equals(documentObject.getFormat()));
+    }
+
+    @Test
+    public void parsePartPersonComplete() throws Exception {
+        System.out.println("info: testing part person parsing");
+        String systemID = "c093ea52-307a-11ea-bc98-bba88311e612";
+        String name = "Michael Jordan";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"partRolle\": { \"kode\": \"KLI\", \"kodenavn\": \"Klient\" } "
+            +", \"navn\": \"" + name + "\" "
+            //+", \"personidentifikator\": { \"dNummer\": \"01010101011\" } "
+            +", \"postadresse\": { "
+            +"     \"adresselinje1\": \"Blindveien 1\", "
+            +"     \"adresselinje2\": \"c/o Donald Duck\", "
+            +"     \"adresselinje3\": \"Innerst i gangen\", "
+            +"     \"postnr\": { \"kode\": \"0101\", \"kodenavn\": \"Oslo\" }, "
+            +"     \"poststed\": \"Oslo\", "
+            +"     \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +"  } "
+            +", \"bostedsadresse\": { "
+            +"     \"adresselinje1\": \"Blindveien 1\", "
+            +"     \"adresselinje2\": \"c/o Donald Duck\", "
+            +"     \"adresselinje3\": \"Innerst i gangen\", "
+            +"     \"postnr\": { \"kode\": \"0101\", \"kodenavn\": \"Oslo\" }, "
+            +"     \"poststed\": \"Oslo\", "
+            +"     \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +"  } "
+            +", \"kontaktinformasjon\": {"
+            +"     \"epostadresse\": \"admin@example.com\", "
+            +"     \"mobiltelefon\": \"+47 222 22 222\", "
+            +"     \"telefon\":      \"+47 900 00 000\" "
+            +"  } "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        PartPersonDeserializer partPersonDeserializer =
+            new PartPersonDeserializer();
+        PartPerson partPerson =
+            partPersonDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != partPerson);
+        assert(systemID.equals(partPerson.getSystemId()));
+        assert(name.equals(partPerson.getName()));
+    }
+
+    @Test
+    public void parsePartUnitComplete() throws Exception {
+        System.out.println("info: testing part unit parsing");
+        String systemID = "c093ea52-307a-11ea-bc98-bba88311e612";
+        String name = "Shoes and stuff";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"partRolle\": { \"kode\": \"KLI\", \"kodenavn\": \"Klient\" } "
+            +", \"navn\": \"" + name + "\" "
+            //+", \"enhetsidentifikator\": { \"organisasjonsnummer\": \"01010101011\" } "
+            +", \"forretningsadresse\": { "
+            +"     \"adresselinje1\": \"Blindveien 1\", "
+            +"     \"adresselinje2\": \"c/o Donald Duck\", "
+            +"     \"adresselinje3\": \"Innerst i gangen\", "
+            +"     \"postnr\": { \"kode\": \"0101\", \"kodenavn\": \"Oslo\" }, "
+            +"     \"poststed\": \"Oslo\", "
+            +"     \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +"  } "
+            +", \"postadresse\": { "
+            +"     \"adresselinje1\": \"Blindveien 1\", "
+            +"     \"adresselinje2\": \"c/o Donald Duck\", "
+            +"     \"adresselinje3\": \"Innerst i gangen\", "
+            +"     \"postnr\": { \"kode\": \"0101\", \"kodenavn\": \"Oslo\" }, "
+            +"     \"poststed\": \"Oslo\", "
+            +"     \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +"  } "
+            +", \"kontaktinformasjon\": {"
+            +"     \"epostadresse\": \"admin@example.com\", "
+            +"     \"mobiltelefon\": \"+47 222 22 222\", "
+            +"     \"telefon\":      \"+47 900 00 000\" "
+            +"  } "
+            +", \"kontaktperson\": \"Donald Duck\" "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        PartUnitDeserializer partUnitDeserializer =
+            new PartUnitDeserializer();
+        PartUnit partUnit =
+            partUnitDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != partUnit);
+        assert(systemID.equals(partUnit.getSystemId()));
+        assert(name.equals(partUnit.getName()));
     }
 }
