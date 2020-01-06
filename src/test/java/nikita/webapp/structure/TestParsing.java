@@ -973,9 +973,7 @@ public class TestParsing {
             +"    \"verifisertAv\": \"PST\" "
             +"  } "
 	    */
-	    /*
 	    +", \"eksternReferanse\" : \"RT #1234\" "
-	    */
             //+", \"virksomhetsspesifikkeMetadata\": {} "
             +"}";
 

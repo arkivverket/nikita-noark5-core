@@ -24,6 +24,8 @@ import java.util.List;
 import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG;
+
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -128,6 +130,13 @@ public class DocumentDescription
     @Column(name = "storage_location")
     @Audited
     private String storageLocation;
+
+    /**
+     * M??? - eksternReferanse (xs:string)
+     */
+    @Column(name = DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG)
+    @Audited
+    private String externalReference;
 
     // Links to Records
     @ManyToMany(mappedBy = "referenceDocumentDescription")
@@ -303,6 +312,14 @@ public class DocumentDescription
         this.associatedBy = associatedBy;
     }
 
+    public String getExternalReference() {
+        return externalReference;
+    }
+
+    public void setExternalReference(String externalReference) {
+        this.externalReference = externalReference;
+    }
+
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
@@ -453,6 +470,7 @@ public class DocumentDescription
                 ", createdDate=" + createdDate +
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
+                "  externalReference='" + externalReference + '\'' +
                 ", documentStatus='" + documentStatus + '\'' +
                 ", documentType='" + documentType + '\'' +
                 '}';
@@ -483,6 +501,7 @@ public class DocumentDescription
                 .append(createdDate, rhs.createdDate)
                 .append(createdBy, rhs.createdBy)
                 .append(title, rhs.title)
+                .append(externalReference, rhs.externalReference)
                 .isEquals();
     }
 
@@ -501,6 +520,7 @@ public class DocumentDescription
                 .append(createdDate)
                 .append(createdBy)
                 .append(title)
+                .append(externalReference)
                 .toHashCode();
     }
 }
