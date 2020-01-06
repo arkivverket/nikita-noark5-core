@@ -20,6 +20,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.File;
@@ -29,6 +30,7 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.util.deserialisers.ClassDeserializer;
+import nikita.common.util.deserialisers.ClassificationSystemDeserializer;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
 import nikita.common.util.deserialisers.FileDeserializer;
@@ -210,6 +212,39 @@ public class TestParsing {
                                          null /* DeserializationContext */);
         assert(null != user);
         assert(systemID.equals(user.getSystemId()));
+    }
+
+    @Test
+    public void parseClassificationSystemComplete() throws Exception {
+	System.out.println("info: testing classificationSystem parsing");
+        String systemID = "a36ff3f6-3086-11ea-b94d-eb793f1c877e";
+        String title = "A classification System title";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"klassifikasjonstype\": { \"kode\": \"KK\", \"kodenavn\": \"K-koder\" } "
+            +", \"tittel\": \"" + title + "\" "
+            +", \"beskrivelse\": \"A classification system description\" "
+            +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"avsluttetAv\": \"Another Person\" "
+            +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+            +"}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        ClassificationSystemDeserializer classificationSystemDeserializer =
+            new ClassificationSystemDeserializer();
+        ClassificationSystem classificationSystem =
+            classificationSystemDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != classificationSystem);
+        assert(systemID.equals(classificationSystem.getSystemId()));
+        assert(title.equals(classificationSystem.getTitle()));
     }
 
     @Test
