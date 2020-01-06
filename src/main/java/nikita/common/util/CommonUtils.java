@@ -689,6 +689,25 @@ public final class CommonUtils {
                 }
             }
 
+            /*
+             * Deserialize to make sure GET + modify + PUT work.
+             */
+            public static void deserialiseNoarkLastModifiedEntity(
+                        INoarkLastModifiedEntity nikitaEntity,
+                        ObjectNode objectNode, StringBuilder errors) {
+                JsonNode currentNode = objectNode.get(LAST_MODIFIED_DATE);
+                if (null != currentNode) {
+		    nikitaEntity.setLastModifiedDate(deserializeDateTime(
+			LAST_MODIFIED_DATE, objectNode, errors));
+                    objectNode.remove(LAST_MODIFIED_DATE);
+                }
+                currentNode = objectNode.get(LAST_MODIFIED_BY);
+                if (null != currentNode) {
+                    nikitaEntity.setLastModifiedBy(currentNode.textValue());
+                    objectNode.remove(LAST_MODIFIED_BY);
+                }
+            }
+
             public static void deserialiseNoarkFinaliseEntity(INoarkFinaliseEntity finaliseEntity,
                                                               ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize finalisedDate
@@ -723,6 +742,7 @@ public final class CommonUtils {
             public static void deserialiseNikitaEntity(INikitaEntity nikitaEntity, ObjectNode objectNode, StringBuilder errors) {
                 deserialiseNoarkSystemIdEntity(nikitaEntity, objectNode, errors);
                 deserialiseNoarkCreateEntity(nikitaEntity, objectNode, errors);
+                deserialiseNoarkLastModifiedEntity(nikitaEntity, objectNode, errors);
             }
 
             public static void deserialiseNoarkGeneralEntity(INoarkGeneralEntity noarkGeneralEntity, ObjectNode objectNode, StringBuilder errors) {

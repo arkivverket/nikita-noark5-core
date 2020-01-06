@@ -147,8 +147,18 @@ public class NoarkEntity
     }
 
     @Override
+    public void setLastModifiedDate(OffsetDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    @Override
     public String getLastModifiedBy() {
         return lastModifiedBy;
+    }
+
+    @Override
+    public void setLastModifiedBy(String createdBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 
     @Override

@@ -46,7 +46,7 @@ public class DocumentObjectDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general DocumentObject properties
-        deserialiseNoarkSystemIdEntity(documentObject, objectNode, errors);
+        deserialiseNikitaEntity(documentObject, objectNode, errors);
         // Deserialize versionNumber
         JsonNode currentNode = objectNode.get(DOCUMENT_OBJECT_VERSION_NUMBER);
         if (null != currentNode) {
@@ -71,7 +71,6 @@ public class DocumentObjectDeserializer
             documentObject.setFormatDetails(currentNode.textValue());
             objectNode.remove(DOCUMENT_OBJECT_FORMAT_DETAILS);
         }
-        deserialiseNoarkCreateEntity(documentObject, objectNode, errors);
         // Deserialize checksum
         currentNode = objectNode.get(DOCUMENT_OBJECT_CHECKSUM);
         if (null != currentNode) {

@@ -60,8 +60,7 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general record properties
-        deserialiseNoarkSystemIdEntity(documentDescription, objectNode, errors);
-        deserialiseNoarkCreateEntity(documentDescription, objectNode, errors);
+        deserialiseNikitaEntity(documentDescription, objectNode, errors);
         deserialiseNoarkTitleDescriptionEntity(documentDescription,
                 objectNode, errors);
 
