@@ -40,8 +40,6 @@ public class ClassHateoasHandler
         addParentClass(entity, hateoasNoarkObject);
         addSubClass(entity, hateoasNoarkObject);
         // links for secondary entities (non-embeddable)
-        addKeyword(entity, hateoasNoarkObject);
-        addNewKeyword(entity, hateoasNoarkObject);
         addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         // links for secondary entities (embeddable)
@@ -199,20 +197,6 @@ public class ClassHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_SCREENING + SLASH,
                 REL_FONDS_STRUCTURE_NEW_SCREENING, false));
-    }
-
-    @Override
-    public void addKeyword(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + KEYWORD + SLASH,
-                REL_FONDS_STRUCTURE_KEYWORD, false));
-    }
-
-    @Override
-    public void addNewKeyword(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_KEYWORD + SLASH,
-                REL_FONDS_STRUCTURE_NEW_KEYWORD, false));
     }
 
     @Override

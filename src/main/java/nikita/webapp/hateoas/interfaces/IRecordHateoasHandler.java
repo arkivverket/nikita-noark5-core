@@ -78,12 +78,6 @@ public interface IRecordHateoasHandler
     void addNewCrossReference(INikitaEntity entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
-    void addKeyword(INikitaEntity entity,
-                    IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewKeyword(INikitaEntity entity,
-                       IHateoasNoarkObject hateoasNoarkObject);
-
     void addPart(INikitaEntity entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 

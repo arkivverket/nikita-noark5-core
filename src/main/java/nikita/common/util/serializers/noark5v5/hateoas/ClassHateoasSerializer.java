@@ -37,6 +37,7 @@ public class ClassHateoasSerializer extends HateoasSerializer implements IHateoa
             jgen.writeStringField(CLASS_ID, klass.getClassId());
         }
         CommonUtils.Hateoas.Serialize.printTitleAndDescription(jgen, klass);
+        CommonUtils.Hateoas.Serialize.printKeyword(jgen, klass);
         CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, klass);
         CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, klass);
         // TODO: Fix this ! CommonCommonUtils.Hateoas.Serialize.printCrossReference(jgen, klass);
