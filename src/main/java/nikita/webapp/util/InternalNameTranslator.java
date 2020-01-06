@@ -240,9 +240,9 @@ public class InternalNameTranslator {
                         PART_NAME_ENG,
                         PART_NAME_ENG_OBJECT);
         addNorToEnglishNameMap
-                (PART_ROLE,
-                        PART_ROLE_ENG,
-                        PART_ROLE_ENG_OBJECT);
+                (PART_ROLE_FIELD,
+                        PART_ROLE_FIELD_ENG,
+                        PART_ROLE_FIELD_ENG_OBJECT);
         addNorToEnglishNameMap
                 (CASE_RECORDS_MANAGEMENT_UNIT,
                         CASE_RECORDS_MANAGEMENT_UNIT_ENG,

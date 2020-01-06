@@ -572,7 +572,7 @@ public final class CommonUtils {
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize parttype
                 JsonNode currentNode =
-                        objectNode.get(PART_ROLE);
+                        objectNode.get(PART_ROLE_FIELD);
                 if (null != currentNode) {
 
                     JsonNode node = currentNode.get(CODE);
@@ -584,12 +584,12 @@ public final class CommonUtils {
                         part.setPartTypeCodeName(node.textValue());
                     }
                     if (null != part.getPartTypeCode()) {
-                        objectNode.remove(PART_ROLE);
+                        objectNode.remove(PART_ROLE_FIELD);
                     }
                 } else {
                     errors.append("The Part object you tried to");
                     errors.append(" create is missing  ");
-                    errors.append(PART_ROLE);
+                    errors.append(PART_ROLE_FIELD);
                 }
             }
 
@@ -2024,7 +2024,7 @@ public final class CommonUtils {
                 if (part != null) {
                     printSystemIdEntity(jgen, part);
                     if (part.getPartTypeCode() != null) {
-                        jgen.writeObjectFieldStart(PART_ROLE);
+                        jgen.writeObjectFieldStart(PART_ROLE_FIELD);
                         printCode(jgen, part.getPartTypeCode(),
                                 part.getPartTypeCodeName());
                         jgen.writeEndObject();
