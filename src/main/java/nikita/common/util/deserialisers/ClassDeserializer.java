@@ -58,7 +58,7 @@ public class ClassDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general properties
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkEntity(klass, objectNode, errors);
+        CommonUtils.Hateoas.Deserialize.deserialiseNoarkGeneralEntity(klass, objectNode, errors);
 
         // Deserialize classId
         JsonNode currentNode = objectNode.get(N5ResourceMappings.CLASS_ID);

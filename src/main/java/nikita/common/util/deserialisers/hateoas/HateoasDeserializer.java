@@ -25,7 +25,7 @@ public class HateoasDeserializer extends JsonDeserializer {
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general properties
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkEntity(entity, objectNode, errors);
+        CommonUtils.Hateoas.Deserialize.deserialiseNoarkGeneralEntity(entity, objectNode, errors);
 
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception

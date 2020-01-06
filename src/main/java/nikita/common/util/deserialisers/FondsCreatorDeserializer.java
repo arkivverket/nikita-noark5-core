@@ -58,6 +58,7 @@ public class FondsCreatorDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general properties
+        CommonUtils.Hateoas.Deserialize.deserialiseNikitaEntity(fondsCreator, objectNode, errors);
         CommonUtils.Hateoas.Deserialize.deserialiseFondsCreator(fondsCreator, objectNode, errors);
 
         JsonNode currentNode = objectNode.get(LINKS);
