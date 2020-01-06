@@ -25,6 +25,7 @@ import java.util.List;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT_CHECKSUM_ENG;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -97,7 +98,7 @@ public class DocumentObject
     /**
      * M705 - sjekksum (xs:string)
      */
-    @Column(name = "checksum")
+    @Column(name = DOCUMENT_OBJECT_CHECKSUM_ENG)
     @Audited
     private String checksum;
 
