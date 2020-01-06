@@ -48,12 +48,12 @@ public class PlanDeserializer
         }
 
         // Deserialize land
-        currentNode = objectNode.get(COUNTRY);
+        currentNode = objectNode.get(COUNTRY_CODE);
         if (null != currentNode) {
             Country country = new Country();
             country.setCode(currentNode.textValue());
             plan.setCountry(country);
-            objectNode.remove(COUNTRY);
+            objectNode.remove(COUNTRY_CODE);
         }
 
         // Deserialize planidentifikasjon
