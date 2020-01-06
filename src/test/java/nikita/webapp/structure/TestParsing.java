@@ -20,12 +20,14 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.util.deserialisers.ClassDeserializer;
+import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
 import nikita.common.util.deserialisers.FileDeserializer;
 import nikita.common.util.deserialisers.FondsDeserializer;
@@ -466,6 +468,121 @@ public class TestParsing {
 					   null /* DeserializationContext */);
 	assert(null != record);
 	assert("A record title".equals(record.getTitle()));
+    }
+
+    @Test
+    public void parseDocumentDescriptionComplete() throws Exception {
+	System.out.println("info: testing documentdescription parsing");
+        String json = "{ "
+            +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+	    /*
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+	    /*
+            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
+            +", \"dokumenttype\": { \"kode\": \"B\", \"kodenavn\": \"Brev\" } "
+            +", \"dokumentstatus\": { \"kode\": \"F\", \"kodenavn\": \"Dokumentet er ferdigstilt\" } "
+	    +", \"tittel\": \"A document description title\" "
+	    +", \"beskrivelse\": \"A document description description\" "
+	    +", \"forfatter\": [ \"Isaac Asimov\" ] "
+	    +", \"dokumentmedium\": \"Elektronisk arkiv\" "
+	    +", \"oppbevaringssted\": [ \"Over the rainbow\" ] "
+            +", \"tilknyttetRegistreringSom\": { \"kode\": \"H\", \"kodenavn\": \"Hoveddokument\" } "
+	    +", \"dokumentnummer\": 1 "
+            +", \"tilknyttetAv\": \"Some Person\" "
+            +", \"tilknyttetDato\": \"1865-02-13T00:00:00+00:00\" "
+	    /*
+            +", \"referanseTilknyttetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
+	    /*
+	    +", \"kassasjon\": { "
+	    +"    \"kassasjonsvedtak\": {"
+	    +"      \"kode\": \"K\", "
+	    +"      \"kodenavn\": \"Kasseres\""
+	    +"    }, "
+	    +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+	    +"    \"bevaringstid\": 45, "
+	    +"    \"kassasjonsdato\": \"1942-07-25Z\" "
+	    +"  } "
+	    */
+	    /*
+	    +", \"utfoertKassasjon\": { "
+	    +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "
+	    +"    \"kassertAv\": \"Ryddig Gutt\", "
+	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+	    +"  } "
+	    */
+	    /*
+	    +", \"sletting\": { "
+	    +"    \"slettingstype\": {"
+	    +"      \"kode\": \"SP\","
+	    +"      \"kodenavn\": \"Sletting av produksjonsformat\""
+	    +"    }, "
+	    +"    \"slettetDato\": \"1863-10-10T00:00:00+00:00\", "
+	    +"    \"slettetAv\": \"Ryddig Gutt\", "
+	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+	    +"} "
+	    */
+	    /*
+	    +", \"skjerming\": { "
+	    +"    \"tilgangsrestriksjon\": {"
+	    +"      \"kode\": \"P\","
+	    +"      \"kodenavn\": \"Personalsaker\""
+	    +"    }, "
+	    +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+	    +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+	    +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+	    +"    \"skjermingsvarighet\": 60, "
+	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+	    +"} "
+	    */
+	    /*
+	    +", \"gradering\": { "
+	    +"    \"graderingskode\": { "
+	    +"      \"kode\":\"SH\","
+	    +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+	    +"    }, "
+	    +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+	    +"    \"gradertAv\": \"PST\", "
+	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+	    +"    \"nedgradertAv\": \"PST\" "
+	    +"  } "
+	    */
+	    /*
+            +", \"elektroniskSignatur\": { "
+            +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
+            +"      \"kode\":\"PS\","
+            +"      \"kodenavn\":\"Sendt med PKI/\\\"person høy\\\"-sertifikat\""
+            +"    }, "
+            +"    \"elektroniskSignaturVerifisert\": { "
+            +"      \"kode\":\"I\","
+            +"      \"kodenavn\":\"Signatur påført og verifisert\""
+            +"    }, "
+            +"    \"verifisertDato\": \"2070-02-13+01:00\", "
+            +"    \"verifisertAv\": \"PST\" "
+            +"  } "
+	    */
+	    /*
+	    +", \"eksternReferanse\" : \"RT #1234\" "
+	    */
+	    //+virksomhetsspesifikkeMetadata : any [0..1]
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        DocumentDescriptionDeserializer documentDescriptionDeserializer =
+            new DocumentDescriptionDeserializer();
+        DocumentDescription documentDescription =
+            documentDescriptionDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != documentDescription);
+        assert("A document description title".equals(documentDescription.getTitle()));
     }
 
     @Test
