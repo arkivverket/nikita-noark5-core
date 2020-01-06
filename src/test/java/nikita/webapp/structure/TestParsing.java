@@ -198,7 +198,7 @@ public class TestParsing {
             +", \"opprettetAv\": \"Some Person\" "
             +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
             //+", \"virksomhetsspesifikkeMetadata\": {} "
-            +", \"kortnavn\": \"asmiov\" "
+            //+", \"kortnavn\": \"asmiov\" "
             +"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
