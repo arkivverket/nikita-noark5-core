@@ -12,6 +12,8 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.secondary.Author;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -83,6 +85,8 @@ public interface IRecordService {
     Record findBySystemId(String systemId);
 
     List<Record> findByOwnedBy(String ownedBy);
+
+    AuthorHateoas associatedAuthorWithRecord(String systemId, Author author);
 
     // -- All UPDATE operations
     Record handleUpdate(@NotNull String systemId,

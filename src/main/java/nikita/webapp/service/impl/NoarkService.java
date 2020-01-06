@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
@@ -14,10 +15,14 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
 import static nikita.common.config.DatabaseConstants.ID;
 import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestAsListOrThrow;
+import static org.springframework.http.HttpHeaders.ALLOW;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 public class NoarkService {
@@ -85,8 +90,24 @@ public class NoarkService {
     }
 
     /**
+     * Set the outgoing OPTIONS header as well as the ETAG header
+     *
+     * @param noarkObject of type IHateoasNoarkObject
+     */
+    protected void setOutgoingRequestHeader(IHateoasNoarkObject noarkObject) {
+        HttpServletResponse response = ((ServletRequestAttributes)
+                RequestContextHolder.getRequestAttributes()).getResponse();
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                        .getRequest();
+        response.addHeader(ETAG, noarkObject.getEntityVersion().toString());
+        response.addHeader(ALLOW, getMethodsForRequestAsListOrThrow(
+                request.getServletPath()));
+    }
+
+    /**
      * See issue for a description of why this code was written this way
-     *   https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
+     * https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
      *
      * @param entity
      * @param deleteString

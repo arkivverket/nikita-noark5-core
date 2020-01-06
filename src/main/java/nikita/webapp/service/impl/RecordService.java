@@ -12,11 +12,15 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
+import nikita.common.repository.n5v5.secondary.IAuthorRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
+import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
@@ -66,6 +70,8 @@ public class RecordService
     private IPartService partService;
     private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
     private IPartHateoasHandler partHateoasHandler;
+    private IAuthorRepository authorRepository;
+    private IAuthorHateoasHandler authorHateoasHandler;
 
     public RecordService(
             EntityManager entityManager,
@@ -82,7 +88,9 @@ public class RecordService
             ICorrespondencePartService correspondencePartService,
             IPartService partService,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
-            IPartHateoasHandler partHateoasHandler) {
+            IPartHateoasHandler partHateoasHandler,
+            IAuthorRepository authorRepository,
+            IAuthorHateoasHandler authorHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
@@ -98,6 +106,8 @@ public class RecordService
         this.partService = partService;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
+        this.authorRepository = authorRepository;
+        this.authorHateoasHandler = authorHateoasHandler;
     }
 
     // All CREATE operations
@@ -348,8 +358,6 @@ public class RecordService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
      * @return the CorrespondencePartUnit object wrapped as a
      * CorrespondencePartUnitHateoas object
      */
@@ -469,12 +477,30 @@ public class RecordService
                         recordSystemId);
     }
 
+    /**
+     * Persist and associate the incoming author object with the record
+     * identified by systemId
+     *
+     * @param systemId The sytsemId of the record to associate with
+     * @param author   The incoming author object
+     * @return author object wrapped as a AuthorHateaos
+     */
+    @Override
+    public AuthorHateoas associatedAuthorWithRecord(
+            String systemId, Author author) {
+        Record record = getRecordOrThrow(systemId);
+        author.setReferenceRecord(record);
+        authorRepository.save(author);
+        AuthorHateoas authorHateoas = new AuthorHateoas(author);
+        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
+        setOutgoingRequestHeader(authorHateoas);
+        return authorHateoas;
+    }
 
     // All UPDATE operations
     public Record update(Record record) {
         return recordRepository.save(record);
     }
-
 
 
     // All UPDATE operations

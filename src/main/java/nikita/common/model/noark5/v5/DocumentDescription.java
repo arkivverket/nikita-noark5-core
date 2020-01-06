@@ -19,8 +19,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
@@ -149,15 +152,9 @@ public class DocumentDescription
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Authors
-    @ManyToMany
-    @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_AUTHOR,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_AUTHOR_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Author> referenceAuthor = new ArrayList<>();
+    @OneToMany(mappedBy = "referenceDocumentDescription",
+            cascade = ALL, orphanRemoval = true)
+    private Set<Author> referenceAuthor = new HashSet<>();
 
     // Link to Classified
     @ManyToOne(cascade = PERSIST)
@@ -354,12 +351,12 @@ public class DocumentDescription
     }
 
     @Override
-    public List<Author> getReferenceAuthor() {
+    public Set<Author> getReferenceAuthor() {
         return referenceAuthor;
     }
 
     @Override
-    public void setReferenceAuthor(List<Author> referenceAuthor) {
+    public void setReferenceAuthor(Set<Author> referenceAuthor) {
         this.referenceAuthor = referenceAuthor;
     }
 

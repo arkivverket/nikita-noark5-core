@@ -309,6 +309,7 @@ public final class N5ResourceMappings {
 
     // Author
     public static final String AUTHOR = "forfatter";
+    public static final String NEW_AUTHOR = NEW + DASH + AUTHOR;
 
     // National Identifier
     // CadastralUnit (Matrikkel)

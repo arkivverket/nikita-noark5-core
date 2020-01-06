@@ -1,0 +1,2 @@
+insert into as_record (owned_by, system_id, title, created_date, created_by) values ('admin@example.com', '71491ebc-e8ba-4477-844a-1d3086e29447', 'test', '2019-04-08 00:00:00', 'admin');
+insert into as_document_description (owned_by, system_id, created_date, created_by, associated_with_record_as, document_number, association_date, title, document_type) values ('admin@example.com', 'f1677c47-99e1-42a7-bda2-b0bbc64841b7', '2019-04-08 00:00:00', 'admin', 'Hoveddokument', 1, '2019-04-08 00:00:00', 'test', 'brev');

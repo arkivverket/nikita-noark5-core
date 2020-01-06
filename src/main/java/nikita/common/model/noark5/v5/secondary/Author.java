@@ -1,26 +1,34 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.IAuthorEntity;
+import nikita.common.util.deserialisers.secondary.AuthorDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.*;
 
-import static nikita.common.config.Constants.TABLE_CONTACT_AUTHOR;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.AUTHOR;
 
 @Entity
 @Table(name = TABLE_CONTACT_AUTHOR)
+@JsonDeserialize(using = AuthorDeserializer.class)
 public class Author
-        extends NoarkEntity {
+        extends NoarkEntity
+        implements IAuthorEntity {
+
+    @ManyToOne
+    @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
+    private Record referenceRecord;
+
+    @ManyToOne
+    @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK)
+    private DocumentDescription referenceDocumentDescription;
 
     /**
      * M024 - forfatter (xs:string)
@@ -29,14 +37,21 @@ public class Author
     @Audited
     private String author;
 
-    // Links to Records
-    @ManyToMany(mappedBy = "referenceAuthor")
-    private List<Record> referenceRecord = new ArrayList<>();
+    /**
+     * Used to identify if the current author is associated  with a document
+     * description. This can be used to save a potential lookup in the database.
+     */
+    @Column(name = "is_for_document_description")
+    @Audited
+    private Boolean isForDocumentDescription = false;
 
-    // Links to DocumentDescriptions
-    @ManyToMany(mappedBy = "referenceAuthor")
-    private List<DocumentDescription> referenceDocumentDescription =
-            new ArrayList<>();
+    /**
+     * Used to identify if the current author is associated  with a record
+     * This can be used to save a potential lookup in the database.
+     */
+    @Column(name = "is_for_record")
+    @Audited
+    private Boolean isForRecord = false;
 
     public String getAuthor() {
         return author;
@@ -46,6 +61,33 @@ public class Author
         this.author = author;
     }
 
+    public Record getReferenceRecord() {
+        return referenceRecord;
+    }
+
+    public void setReferenceRecord(Record referenceRecord) {
+        this.referenceRecord = referenceRecord;
+        isForRecord = true;
+    }
+
+    public DocumentDescription getReferenceDocumentDescription() {
+        return referenceDocumentDescription;
+    }
+
+    public void setReferenceDocumentDescription(
+            DocumentDescription referenceDocumentDescription) {
+        this.referenceDocumentDescription = referenceDocumentDescription;
+        isForDocumentDescription = true;
+    }
+
+    public Boolean getForDocumentDescription() {
+        return isForDocumentDescription;
+    }
+
+    public Boolean getForRecord() {
+        return isForRecord;
+    }
+
     @Override
     public String getBaseTypeName() {
         return AUTHOR;
@@ -53,24 +95,7 @@ public class Author
 
     @Override
     public String getBaseRel() {
-        return AUTHOR; // FIXME, should it have a relation key?
-    }
-
-    public List<Record> getReferenceRecord() {
-        return referenceRecord;
-    }
-
-    public void setReferenceRecord(List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
-    public List<DocumentDescription> getReferenceDocumentDescription() {
-        return referenceDocumentDescription;
-    }
-
-    public void setReferenceDocumentDescription(
-            List<DocumentDescription> referenceDocumentDescription) {
-        this.referenceDocumentDescription = referenceDocumentDescription;
+        return REL_FONDS_STRUCTURE_AUTHOR;
     }
 
     @Override

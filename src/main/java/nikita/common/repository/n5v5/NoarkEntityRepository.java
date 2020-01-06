@@ -15,7 +15,7 @@ import java.util.UUID;
 @Repository
 @NoRepositoryBean
 public interface NoarkEntityRepository<INikitaEntity, ID extends Serializable> extends
-        PagingAndSortingRepository<INikitaEntity, Long> {
+        PagingAndSortingRepository<INikitaEntity, UUID> {
 
     List<INikitaEntity> findAll();
 

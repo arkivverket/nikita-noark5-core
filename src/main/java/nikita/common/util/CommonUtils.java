@@ -31,7 +31,6 @@ import org.springframework.http.HttpMethod;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -40,6 +39,7 @@ import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.time.OffsetDateTime.parse;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE;
@@ -297,6 +297,28 @@ public final class CommonUtils {
             requestMethodMap.put(servletPath.toLowerCase(), methods);
         }
 
+
+        /**
+         * Provides the ability to throw an Exception if this call fails.
+         * This is just a helper to make the code more readable in other places.
+         *
+         * @param servletPath
+         */
+        public static String getMethodsForRequestAsListOrThrow(
+                @NotNull String servletPath) {
+
+            HttpMethod[] methods = getMethodsForRequest(servletPath);
+            if (null == methods) {
+                logger.error("Error servletPath [" + servletPath +
+                        "] has no known HTTP methods");
+                throw new NikitaException("Error servletPath [" + servletPath
+                        + "] has no known HTTP methods");
+            }
+            return Arrays.asList(methods)
+                    .stream()
+                    .map(a -> String.valueOf(a.toString()))
+                    .collect(Collectors.joining(","));
+        }
 
         /**
          * Provides the ability to throw an Exception if this call fails.
@@ -618,7 +640,7 @@ public final class CommonUtils {
                 // Deserialize author
                 JsonNode currentNode = objectNode.get(AUTHOR);
                 if (null != currentNode) {
-                    ArrayList<Author> authors = new ArrayList<>();
+                    HashSet<Author> authors = new HashSet<>();
                     if (currentNode.isArray()) {
                         currentNode.iterator();
                         for (JsonNode node : currentNode) {
@@ -2276,7 +2298,7 @@ public final class CommonUtils {
 
             public static void printAuthor(JsonGenerator jgen, IAuthor authorEntity)
                     throws IOException {
-                List<Author> author = authorEntity.getReferenceAuthor();
+                Set<Author> author = authorEntity.getReferenceAuthor();
                 if (author != null && author.size() > 0) {
                     jgen.writeArrayFieldStart(AUTHOR);
                     for (Author location : author) {

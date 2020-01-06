@@ -16,6 +16,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
@@ -101,8 +102,6 @@ public class RecordHateoasController
                     required = true)
             @RequestBody DocumentDescription documentDescription)
             throws NikitaException {
-
-
         validateForCreate(documentDescription);
         DocumentDescriptionHateoas documentDescriptionHateoas =
                 recordService.
@@ -244,6 +243,53 @@ public class RecordHateoasController
 //                .body(classifiedHateoas);
         return errorResponse(NOT_IMPLEMENTED,
                 API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Create a new DocumentDescription and associate it with the given Record
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-forfatter
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-forfatter/
+    @ApiOperation(
+            value = "Persists an author object associated with the given " +
+                    "Record systemId",
+            notes = "Returns the newly created author object after it was " +
+                    "associated with a Record object and persisted to the " +
+                    "database",
+            response = AuthorHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Author " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = AuthorHateoas.class),
+            @ApiResponse(code = 201,
+                    message = "Author " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = AuthorHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " +
+                            "Record"),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_AUTHOR,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<AuthorHateoas> addAuthorAssociatedWithRecord(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of the record to associate the author " +
+                            "with.",
+                    required = true)
+            @PathVariable String systemID,
+            @ApiParam(name = "author",
+                    value = "Incoming author object",
+                    required = true)
+            @RequestBody Author author)
+            throws NikitaException {
+        return ResponseEntity.status(CREATED)
+                .body(recordService.associatedAuthorWithRecord(
+                        systemID, author));
     }
 
     // Add a Disposal to a Record
