@@ -496,7 +496,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_FLOW_FLOW_TO_ENG = "flytTil";
     public static final String DOCUMENT_MEDIUM_ENG = "dokumentmedium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG = "sjekksumAlgoritme";
-    public static final String DOCUMENT_OBJECT_CHECKSUM_ENG = "sjekksum";
+    public static final String DOCUMENT_OBJECT_CHECKSUM_ENG = "checksum";
     public static final String DOCUMENT_OBJECT_ENG = "documentObject";
     public static final String DOCUMENT_OBJECT_FILE_NAME_ENG =
             "original_filename";
@@ -710,7 +710,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_FLOW_FLOW_TO_ENG_OBJECT = "flytTil";
     public static final String DOCUMENT_MEDIUM_ENG_OBJECT = "dokumentmedium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG_OBJECT = "sjekksumAlgoritme";
-    public static final String DOCUMENT_OBJECT_CHECKSUM_ENG_OBJECT = "sjekksum";
+    public static final String DOCUMENT_OBJECT_CHECKSUM_ENG_OBJECT = "checksum";
     public static final String DOCUMENT_OBJECT_ENG_OBJECT = "DocumentObject";
     public static final String DOCUMENT_OBJECT_FILE_NAME_ENG_OBJECT = "originalFilename";
     public static final String DOCUMENT_OBJECT_FILE_SIZE_ENG_OBJECT = "filstoerrelse";
