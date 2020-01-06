@@ -25,6 +25,7 @@ import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
@@ -34,6 +35,7 @@ import nikita.common.util.deserialisers.ClassificationSystemDeserializer;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
 import nikita.common.util.deserialisers.FileDeserializer;
+import nikita.common.util.deserialisers.FondsCreatorDeserializer;
 import nikita.common.util.deserialisers.FondsDeserializer;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.common.util.deserialisers.SeriesDeserializer;
@@ -313,6 +315,39 @@ public class TestParsing {
 					  null /* DeserializationContext */);
 	assert(null != klass);
 	assert("A class title".equals(klass.getTitle()));
+    }
+
+    @Test
+    public void parseFondsCreatorComplete() throws Exception {
+        System.out.println("info: testing fondsCreator parsing");
+        String systemID = "f44ad6ca-308f-11ea-bd07-ebb04f04b0cd";
+        String name = "The Fond Creator";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            /*
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
+            +", \"arkivskaperID\": \"The ID of the Fond Creator\" "
+            +", \"arkivskaperNavn\": \"" + name + "\" "
+            +", \"beskrivelse\": \"A fonds creator description\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        FondsCreatorDeserializer fondsCreatorDeserializer =
+            new FondsCreatorDeserializer();
+        FondsCreator fondsCreator =
+            fondsCreatorDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != fondsCreator);
+        assert(systemID.equals(fondsCreator.getSystemId()));
+        assert(name.equals(fondsCreator.getFondsCreatorName()));
     }
 
     @Test
