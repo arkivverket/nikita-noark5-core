@@ -72,12 +72,6 @@ public class DocumentObjectDeserializer
             objectNode.remove(DOCUMENT_OBJECT_FORMAT_DETAILS);
         }
         deserialiseNoarkCreateEntity(documentObject, objectNode, errors);
-        // Deserialize referenceDocumentFile
-        currentNode = objectNode.get(DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE);
-        if (null != currentNode) {
-            documentObject.setReferenceDocumentFile(currentNode.textValue());
-            objectNode.remove(DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE);
-        }
         // Deserialize checksum
         currentNode = objectNode.get(DOCUMENT_OBJECT_CHECKSUM);
         if (null != currentNode) {

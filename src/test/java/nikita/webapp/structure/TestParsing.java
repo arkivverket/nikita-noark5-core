@@ -1010,7 +1010,6 @@ public class TestParsing {
             +", \"variantformat\": { \"kode\": \"A\", \"kodenavn\": \"Arkivformat\" } "
             +", \"format\": \"fmt/95\" "
             +", \"formatDetaljer\": \"Innebygget 3D-modell\" "
-            +", \"referanseDokumentfil\": \"DOKUMENT/fil.pdf\" "
             +", \"filnavn\": \"fil.pdf\" "
             +", \"sjekksum\": \"047571914ac9f62ce503224e8cc7350f8fca11cddf7bf7dbbc3289de0f56c4cf\" "
             +", \"mimeType\": \"application/pdf\" "
