@@ -26,6 +26,8 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.util.deserialisers.ClassDeserializer;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
@@ -33,6 +35,8 @@ import nikita.common.util.deserialisers.FileDeserializer;
 import nikita.common.util.deserialisers.FondsDeserializer;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.common.util.deserialisers.SeriesDeserializer;
+import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
+import nikita.common.util.deserialisers.admin.UserDeserializer;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class)
@@ -153,6 +157,59 @@ public class TestParsing {
 		System.out.println("success: unable to parse date '" + teststr + "'");
 	    }
 	}
+    }
+
+    @Test
+    public void parseAdministrativeUnitComplete() throws Exception {
+        System.out.println("info: testing administrative unit parsing");
+        String systemID = "c093ea52-307a-11ea-bc98-bba88311e612";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"administrativEnhetNavn\": \"Everywhere\" "
+            +", \"kortnavn\": \"everywhere\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"administrativEnhetsstatus\": \"Operativ\" "
+            +", \"referanseOverordnetEnhet\": \"23cf6934-307b-11ea-a93b-dfee364de9fe\" "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        AdministrativeUnitDeserializer administrativeUnitDeserializer = new AdministrativeUnitDeserializer();
+        AdministrativeUnit unit =
+            administrativeUnitDeserializer.deserialize(jsonParser,
+                                         null /* DeserializationContext */);
+        assert(null != unit);
+        assert(systemID.equals(unit.getSystemId()));
+        assert("Everywhere".equals(unit.getAdministrativeUnitName()));
+    }
+
+    @Test
+    public void parseUserComplete() throws Exception {
+        System.out.println("info: testing user parsing");
+        String systemID = "c24d1996-3079-11ea-83a5-f78c4a16ad93";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"brukerNavn\": \"Isaac Asmiov\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +", \"kortnavn\": \"asmiov\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        UserDeserializer userDeserializer = new UserDeserializer();
+        User user =
+            userDeserializer.deserialize(jsonParser,
+                                         null /* DeserializationContext */);
+        assert(null != user);
+        assert(systemID.equals(user.getSystemId()));
     }
 
     @Test
