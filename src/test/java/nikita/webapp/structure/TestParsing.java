@@ -221,18 +221,24 @@ public class TestParsing {
         String title = "A classification System title";
         String json = "{ "
             +"  \"systemID\": \"" + systemID + "\" "
+	    /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+	    /*
             +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
             +", \"klassifikasjonstype\": { \"kode\": \"KK\", \"kodenavn\": \"K-koder\" } "
             +", \"tittel\": \"" + title + "\" "
             +", \"beskrivelse\": \"A classification system description\" "
             +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
             +", \"avsluttetAv\": \"Another Person\" "
+	    /*
             +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+	    */
             +"}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonParser jsonParser =
