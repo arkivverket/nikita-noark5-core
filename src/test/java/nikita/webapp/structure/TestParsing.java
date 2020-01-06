@@ -493,13 +493,16 @@ public class TestParsing {
 	System.out.println("info: testing documentdescription parsing");
         String json = "{ "
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+	    /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+	    /*
             +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-
+	    */
             +", \"dokumenttype\": { \"kode\": \"B\", \"kodenavn\": \"Brev\" } "
             +", \"dokumentstatus\": { \"kode\": \"F\", \"kodenavn\": \"Dokumentet er ferdigstilt\" } "
 	    +", \"tittel\": \"A document description title\" "
@@ -511,7 +514,10 @@ public class TestParsing {
 	    +", \"dokumentnummer\": 1 "
             +", \"tilknyttetAv\": \"Some Person\" "
             +", \"tilknyttetDato\": \"1865-02-13T00:00:00+00:00\" "
+	    /*
             +", \"referanseTilknyttetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+	    */
+	    /*
 	    +", \"kassasjon\": { "
 	    +"    \"kassasjonsvedtak\": {"
 	    +"      \"kode\": \"K\", "
@@ -521,11 +527,15 @@ public class TestParsing {
 	    +"    \"bevaringstid\": 45, "
 	    +"    \"kassasjonsdato\": \"1942-07-25Z\" "
 	    +"  } "
+	    */
+	    /*
 	    +", \"utfoertKassasjon\": { "
 	    +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "
 	    +"    \"kassertAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"  } "
+	    */
+	    /*
 	    +", \"sletting\": { "
 	    +"    \"slettingstype\": {"
 	    +"      \"kode\": \"SP\","
@@ -535,6 +545,8 @@ public class TestParsing {
 	    +"    \"slettetAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"} "
+	    */
+	    /*
 	    +", \"skjerming\": { "
 	    +"    \"tilgangsrestriksjon\": {"
 	    +"      \"kode\": \"P\","
@@ -546,6 +558,8 @@ public class TestParsing {
 	    +"    \"skjermingsvarighet\": 60, "
 	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"} "
+	    */
+	    /*
 	    +", \"gradering\": { "
 	    +"    \"graderingskode\": { "
 	    +"      \"kode\":\"SH\","
@@ -556,6 +570,8 @@ public class TestParsing {
 	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
 	    +"    \"nedgradertAv\": \"PST\" "
 	    +"  } "
+	    */
+	    /*
             +", \"elektroniskSignatur\": { "
             +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
             +"      \"kode\":\"PS\","
@@ -568,7 +584,10 @@ public class TestParsing {
             +"    \"verifisertDato\": \"2070-02-13+01:00\", "
             +"    \"verifisertAv\": \"PST\" "
             +"  } "
+	    */
+	    /*
 	    +", \"eksternReferanse\" : \"RT #1234\" "
+	    */
 	    //+virksomhetsspesifikkeMetadata : any [0..1]
             +"}";
 
