@@ -109,7 +109,7 @@ public final class N5ResourceMappings {
     public static final String PART_UNIT = "partenhet";
     public static final String PART_ID = "partID";
     public static final String PART_NAME = "partNavn";
-    public static final String PART_ROLE = "partrolle";
+    public static final String PART_ROLE = "partRolle";
 
     // Record
     public static final String RECORD_ARCHIVED_BY = "arkivertAv";
