@@ -32,14 +32,13 @@ public class FondsHateoasSerializer extends HateoasSerializer implements IHateoa
         Fonds fonds = (Fonds) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, fonds);
+        CommonUtils.Hateoas.Serialize.printNikitaEntity(jgen, fonds);
         CommonUtils.Hateoas.Serialize.printTitleAndDescription(jgen, fonds);
         if (fonds.getFondsStatus() != null) {
             jgen.writeStringField(FONDS_STATUS, fonds.getFondsStatus());
         }
         CommonUtils.Hateoas.Serialize.printDocumentMedium(jgen, fonds);
         CommonUtils.Hateoas.Serialize.printStorageLocation(jgen, fonds);
-        CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, fonds);
         CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, fonds);
         CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, fondsHateoas.getLinks(fonds));
         jgen.writeEndObject();

@@ -32,13 +32,12 @@ public class ClassHateoasSerializer extends HateoasSerializer implements IHateoa
         Class klass = (Class) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, klass);
+        CommonUtils.Hateoas.Serialize.printNikitaEntity(jgen, klass);
         if (klass.getClassId() != null) {
             jgen.writeStringField(CLASS_ID, klass.getClassId());
         }
         CommonUtils.Hateoas.Serialize.printTitleAndDescription(jgen, klass);
         CommonUtils.Hateoas.Serialize.printKeyword(jgen, klass);
-        CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, klass);
         CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, klass);
         // TODO: Fix this ! CommonCommonUtils.Hateoas.Serialize.printCrossReference(jgen, klass);
         CommonUtils.Hateoas.Serialize.printDisposal(jgen, klass);

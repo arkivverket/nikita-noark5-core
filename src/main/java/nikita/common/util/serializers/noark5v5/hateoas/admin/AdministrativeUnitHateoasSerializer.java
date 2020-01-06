@@ -29,14 +29,13 @@ public class AdministrativeUnitHateoasSerializer extends HateoasSerializer imple
         AdministrativeUnit administrativeUnit = (AdministrativeUnit) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, administrativeUnit);
+        CommonUtils.Hateoas.Serialize.printNikitaEntity(jgen, administrativeUnit);
         if (administrativeUnit.getAdministrativeUnitName() != null) {
             jgen.writeStringField(ADMINISTRATIVE_UNIT_NAME, administrativeUnit.getAdministrativeUnitName());
         }
         if (administrativeUnit.getShortName() != null) {
             jgen.writeStringField(SHORT_NAME, administrativeUnit.getShortName());
         }
-        CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, administrativeUnit);
         CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, administrativeUnit);
         if (administrativeUnit.getAdministrativeUnitStatus() != null) {
             jgen.writeStringField(ADMINISTRATIVE_UNIT_STATUS, administrativeUnit.getAdministrativeUnitStatus());

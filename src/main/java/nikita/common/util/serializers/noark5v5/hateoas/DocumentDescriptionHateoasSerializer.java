@@ -42,7 +42,7 @@ public class DocumentDescriptionHateoasSerializer
         jgen.writeStartObject();
 
         // handle DocumentDescription properties
-        printSystemIdEntity(jgen, documentDescription);
+        printNikitaEntity(jgen, documentDescription);
         if (documentDescription.getDocumentType() != null) {
             jgen.writeStringField(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
                     documentDescription.getDocumentType());
@@ -56,7 +56,6 @@ public class DocumentDescriptionHateoasSerializer
             jgen.writeNumberField(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
                     documentDescription.getDocumentNumber());
         }
-        printCreateEntity(jgen, documentDescription);
         if (documentDescription.getAssociationDate() != null) {
             jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
                     Serialize.formatDateTime(

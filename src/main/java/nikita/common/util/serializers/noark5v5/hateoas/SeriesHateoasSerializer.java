@@ -34,14 +34,13 @@ public class SeriesHateoasSerializer
         Series series = (Series) noarkSystemIdEntity;
         jgen.writeStartObject();
 
-        printSystemIdEntity(jgen, series);
+        printNikitaEntity(jgen, series);
         printTitleAndDescription(jgen, series);
         if (series.getSeriesStatus() != null) {
             jgen.writeStringField(SERIES_STATUS, series.getSeriesStatus());
         }
         printDocumentMedium(jgen, series);
         printStorageLocation(jgen, series);
-        printCreateEntity(jgen, series);
         printFinaliseEntity(jgen, series);
         if (series.getSeriesStartDate() != null) {
             jgen.writeStringField(SERIES_START_DATE,

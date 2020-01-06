@@ -27,9 +27,8 @@ public class NoarkGeneralEntitySerializer extends StdSerializer<NoarkGeneralEnti
                           JsonGenerator jgen, SerializerProvider provider)
             throws IOException {
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, noarkEntity);
+        CommonUtils.Hateoas.Serialize.printNikitaEntity(jgen, noarkEntity);
         CommonUtils.Hateoas.Serialize.printTitleAndDescription(jgen, noarkEntity);
-        CommonUtils.Hateoas.Serialize.printCreateEntity(jgen, noarkEntity);
         CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, noarkEntity);
         jgen.writeEndObject();
     }

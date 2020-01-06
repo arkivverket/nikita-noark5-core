@@ -1606,13 +1606,27 @@ public final class CommonUtils {
                 }
             }
 
+            public static void printNikitaEntity(JsonGenerator jgen,
+                                                 INikitaEntity nikitaEntity)
+                    throws IOException {
+                printSystemIdEntity(jgen, nikitaEntity);
+                printCreateEntity(jgen, nikitaEntity);
+                if (null != nikitaEntity.getLastModifiedDate()) {
+                    jgen.writeStringField(LAST_MODIFIED_DATE,
+                        formatDateTime(nikitaEntity.getLastModifiedDate()));
+                }
+                if (null != nikitaEntity.getLastModifiedBy()) {
+                    jgen.writeStringField(LAST_MODIFIED_BY,
+                        nikitaEntity.getLastModifiedBy());
+                }
+            }
+
             public static void printClassificationSystemEntity(
                     JsonGenerator jgen,
                     IClassificationSystemEntity classificationSystem)
                     throws IOException {
-                printSystemIdEntity(jgen, classificationSystem);
+                printNikitaEntity(jgen, classificationSystem);
                 printTitleAndDescription(jgen, classificationSystem);
-                printCreateEntity(jgen, classificationSystem);
                 if (classificationSystem.getClassificationTypeCode() != null) {
                     jgen.writeObjectFieldStart(CLASSIFICATION_SYSTEM_TYPE);
                     printCode(jgen,
@@ -1625,7 +1639,7 @@ public final class CommonUtils {
             public static void printFileEntity(JsonGenerator jgen,
                                                IFileEntity file)
                     throws IOException {
-                printSystemIdEntity(jgen, file);
+                printNikitaEntity(jgen, file);
                 printStorageLocation(jgen, file);
 
                 if (file.getFileId() != null) {
@@ -1712,8 +1726,7 @@ public final class CommonUtils {
                                                  IRecordEntity record)
                     throws IOException {
                 if (record != null) {
-                    printSystemIdEntity(jgen, record);
-                    printCreateEntity(jgen, record);
+                    printNikitaEntity(jgen, record);
                     if (record.getArchivedDate() != null) {
                         jgen.writeStringField(RECORD_ARCHIVED_DATE,
                                 formatDateTime(record.getArchivedDate()));

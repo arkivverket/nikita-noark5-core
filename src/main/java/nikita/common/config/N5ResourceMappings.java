@@ -53,6 +53,8 @@ public final class N5ResourceMappings {
     public static final String CREATED_BY = "opprettetAv";
     public static final String FINALISED_DATE = "avsluttetDato";
     public static final String FINALISED_BY = "avsluttetAv";
+    public static final String LAST_MODIFIED_BY = "oppdatertAv";
+    public static final String LAST_MODIFIED_DATE = "oppdatertDato";
     public static final String DOCUMENT_MEDIUM = "dokumentmedium";
 
     public static final String SYSTEM_ID_PARAMETER =
@@ -532,6 +534,8 @@ public final class N5ResourceMappings {
     public static final String FOREIGN_ADDRESS_ENG = "utenlandsadresse";
     public static final String FORMAT_ENG = "format";
     public static final String KEYWORD_ENG = "noekkelord";
+    public static final String LAST_MODIFIED_BY_ENG = "last_modified_by";
+    public static final String LAST_MODIFIED_DATE_ENG = "last_modified_date";
     public static final String MEETING_FILE_ENG = "moetemappe";
     public static final String MEETING_FILE_TYPE_ENG = "moetesakstype";
     public static final String MEETING_PARTICIPANT_ENG = "moetedeltager";
@@ -745,6 +749,8 @@ public final class N5ResourceMappings {
     public static final String FOREIGN_ADDRESS_ENG_OBJECT = "utenlandsadresse";
     public static final String FORMAT_ENG_OBJECT = "format";
     public static final String KEYWORD_ENG_OBJECT = "noekkelord";
+    public static final String LAST_MODIFIED_BY_ENG_OBJECT = "lastModifiedBy";
+    public static final String LAST_MODIFIED_DATE_ENG_OBJECT = "lastModifiedDate";
     public static final String MEETING_FILE_ENG_OBJECT = "moetemappe";
     public static final String MEETING_FILE_TYPE_ENG_OBJECT = "moetesakstype";
     public static final String MEETING_PARTICIPANT_ENG_OBJECT = "moetedeltager";

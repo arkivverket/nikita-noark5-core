@@ -53,7 +53,6 @@ public class CaseFileHateoasSerializer
         printStorageLocation(jgen, caseFile);
         printDocumentMedium(jgen, caseFile);
         printKeyword(jgen, caseFile);
-        printCreateEntity(jgen, caseFile);
         printFinaliseEntity(jgen, caseFile);
         printCrossReferences(jgen, caseFile);
         printComment(jgen, caseFile);
