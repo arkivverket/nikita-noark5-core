@@ -214,23 +214,35 @@ public class TestParsing {
     }
 
     @Test
-    public void parseFonds() throws Exception {
-	System.out.println("info: testing fonds parsing");
-	String json = "{ \"tittel\": \"A fonds title\" }";
-	ObjectMapper objectMapper = new ObjectMapper();
-	JsonParser jsonParser =
-	    objectMapper.getJsonFactory().createJsonParser(json);
-	FondsDeserializer fondsDeserializer = new FondsDeserializer();
-	Fonds fonds =
-	    fondsDeserializer.deserialize(jsonParser,
-					  null /* DeserializationContext */);
-	assert(null != fonds);
-	assert("A fonds title".equals(fonds.getTitle()));
-	/*
-	assertNotNull("able to create default fonds from json", fonds);
-	assertEquals("fonds title matches input",
-		     "En tittel", fonds.getTitle());
-	*/
+    public void parseFondsComplete() throws Exception {
+        System.out.println("info: testing fonds parsing");
+        String json = "{ "
+            +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"tittel\": \"A fonds title\" "
+            +", \"beskrivelse\": \"A fonds description\" "
+            +", \"arkivstatus\": { \"kode\": \"A\", \"kodenavn\": \"Avsluttet\" } "
+            +", \"dokumentmedium\": \"Elektronisk arkiv\" "
+            +", \"oppbevaringssted\": [ \"Over the rainbow\" ] "
+            +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"avsluttetAv\": \"Another Person\" "
+            +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        FondsDeserializer fondsDeserializer = new FondsDeserializer();
+        Fonds fonds =
+            fondsDeserializer.deserialize(jsonParser,
+                                          null /* DeserializationContext */);
+        assert(null != fonds);
+        assert("A fonds title".equals(fonds.getTitle()));
     }
 
     @Test
