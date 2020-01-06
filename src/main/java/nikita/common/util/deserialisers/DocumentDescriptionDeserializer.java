@@ -109,7 +109,10 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
             objectNode.remove(DOCUMENT_DESCRIPTION_ASSOCIATED_BY);
         }
 
-        // Deserialize storageLocation
+        // Deserialize storageLocation, not using
+        // deserialiseStorageLocation from CommonUtils, as it is a
+        // single string here, while deserialiseStorageLocation()
+        // expect a list of strings.
         currentNode = objectNode.get(STORAGE_LOCATION);
         if (null != currentNode) {
             documentDescription.setStorageLocation(currentNode.textValue());
