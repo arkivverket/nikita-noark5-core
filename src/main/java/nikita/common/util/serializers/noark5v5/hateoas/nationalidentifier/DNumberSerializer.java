@@ -9,7 +9,7 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 
 import java.io.IOException;
 
-import static nikita.common.config.N5ResourceMappings.D_NUMBER;
+import static nikita.common.config.N5ResourceMappings.D_NUMBER_FIELD;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printSystemIdEntity;
 
@@ -26,7 +26,7 @@ public class DNumberSerializer
         DNumber dNumber = (DNumber) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, dNumber);
-        jgen.writeStringField(D_NUMBER, dNumber.getdNumber());
+        jgen.writeStringField(D_NUMBER_FIELD, dNumber.getdNumber());
         printHateoasLinks(jgen, dNumberHateoas.getLinks(dNumber));
         jgen.writeEndObject();
     }

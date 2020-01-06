@@ -19,38 +19,16 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import nikita.common.model.noark5.v5.Class;
-import nikita.common.model.noark5.v5.ClassificationSystem;
-import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Fonds;
-import nikita.common.model.noark5.v5.FondsCreator;
-import nikita.common.model.noark5.v5.PartPerson;
-import nikita.common.model.noark5.v5.PartUnit;
-import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.Series;
-import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v5.admin.User;
-import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.casehandling.RecordNote;
-import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.util.deserialisers.ClassDeserializer;
-import nikita.common.util.deserialisers.ClassificationSystemDeserializer;
-import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
-import nikita.common.util.deserialisers.DocumentObjectDeserializer;
-import nikita.common.util.deserialisers.FileDeserializer;
-import nikita.common.util.deserialisers.FondsCreatorDeserializer;
-import nikita.common.util.deserialisers.FondsDeserializer;
-import nikita.common.util.deserialisers.PartPersonDeserializer;
-import nikita.common.util.deserialisers.PartUnitDeserializer;
-import nikita.common.util.deserialisers.RecordDeserializer;
-import nikita.common.util.deserialisers.SeriesDeserializer;
-import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
-import nikita.common.util.deserialisers.admin.UserDeserializer;
-import nikita.common.util.deserialisers.casehandling.CaseFileDeserializer;
-import nikita.common.util.deserialisers.casehandling.RecordNoteDeserializer;
-import nikita.common.util.deserialisers.casehandling.RegistryEntryDeserializer;
+import nikita.common.model.noark5.v5.*;
+import nikita.common.model.noark5.v5.admin.*;
+import nikita.common.model.noark5.v5.casehandling.*;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
+import nikita.common.util.deserialisers.*;
+import nikita.common.util.deserialisers.nationalidentifier.*;
+import nikita.common.util.deserialisers.admin.*;
+import nikita.common.util.deserialisers.casehandling.*;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class)
@@ -1136,5 +1114,158 @@ public class TestParsing {
         assert(null != partUnit);
         assert(systemID.equals(partUnit.getSystemId()));
         assert(name.equals(partUnit.getName()));
+    }
+
+    @Test
+    public void parseNIBuildingComplete() throws Exception {
+        System.out.println("info: testing building parsing");
+        String systemID = "dcbea3b2-30d3-11ea-a59b-3f5e61ae0079";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"bygningsnummer\": 1 "
+            +", \"endringsloepenummer\": 2 "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        BuildingDeserializer buildingDeserializer = new BuildingDeserializer();
+        Building building =
+            buildingDeserializer.deserialize(jsonParser,
+                                             null /* DeserializationContext */);
+        assert(null != building);
+        assert(systemID.equals(building.getSystemId()));
+    }
+
+    @Test
+    public void parseNICadastralUnitComplete() throws Exception {
+        System.out.println("info: testing cadastral unit parsing");
+        String systemID = "dcbea3b2-30d3-11ea-a59b-3f5e61ae0079";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"kommunenummer\": \"0101\" "
+            +", \"gaardsnummer\": 1 "
+            +", \"bruksnummer\": 2 "
+            +", \"festenummer\": 3 "
+            +", \"seksjonsnummer\": 4 "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        CadastralUnitDeserializer cadastralUnitDeserializer = new CadastralUnitDeserializer();
+        CadastralUnit cadastralUnit =
+            cadastralUnitDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != cadastralUnit);
+        assert(systemID.equals(cadastralUnit.getSystemId()));
+    }
+
+    @Test
+    public void parseNIDNumberComplete() throws Exception {
+        System.out.println("info: testing dnumber parsing");
+        String systemID = "68b73216-30da-11ea-b010-1feb9fc1f024";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"dNummer\": \"01010101011\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        DNumberDeserializer dNumberDeserializer = new DNumberDeserializer();
+        DNumber dNumber =
+            dNumberDeserializer.deserialize(jsonParser,
+                                            null /* DeserializationContext */);
+        assert(null != dNumber);
+        assert(systemID.equals(dNumber.getSystemId()));
+    }
+
+    @Test
+    public void parseNIPlanComplete() throws Exception {
+        System.out.println("info: testing plan parsing");
+        String systemID = "68b73216-30da-11ea-b010-1feb9fc1f024";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"kommunenummer\": \"0101\" "
+            +", \"fylkesnummer\": \"01\" "
+            +", \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +", \"planidentifikasjon\": \"10\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        PlanDeserializer planDeserializer = new PlanDeserializer();
+        Plan plan =
+            planDeserializer.deserialize(jsonParser,
+                                         null /* DeserializationContext */);
+        assert(null != plan);
+        assert(systemID.equals(plan.getSystemId()));
+    }
+
+    @Test
+    public void parseNIPositionComplete() throws Exception {
+        System.out.println("info: testing position parsing");
+        String systemID = "71439d24-30db-11ea-9ebb-ab3498fff524";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"koordinatsystem\": { \"kode\": \"EPSG:4326\", \"kodenavn\": \"WGS84\" } "
+            +", \"x\": 1.0 "
+            +", \"y\": 2.0 "
+            +", \"z\": 3.0 "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        PositionDeserializer positionDeserializer = new PositionDeserializer();
+        Position position =
+            positionDeserializer.deserialize(jsonParser,
+                                             null /* DeserializationContext */);
+        assert(null != position);
+        assert(systemID.equals(position.getSystemId()));
+    }
+
+    @Test
+    public void parseNISocialSecurityNumberComplete() throws Exception {
+        System.out.println("info: testing social security number parsing");
+        String systemID = "f3944e5e-30db-11ea-a287-cb1109687cd7";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"foedselsnummer\": \"01010101011\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        SocialSecurityNumberDeserializer socialSecurityNumberDeserializer =
+            new SocialSecurityNumberDeserializer();
+        SocialSecurityNumber socialSecurityNumber =
+            socialSecurityNumberDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != socialSecurityNumber);
+        assert(systemID.equals(socialSecurityNumber.getSystemId()));
+    }
+
+    @Test
+    public void parseNIUnitComplete() throws Exception {
+        System.out.println("info: testing unit parsing");
+        String systemID = "19c274d4-30dc-11ea-8edd-03dbe5a725b5";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"organisasjonsnummer\": \"01010101011\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        UnitDeserializer unitDeserializer =
+            new UnitDeserializer();
+        Unit unit =
+            unitDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != unit);
+        assert(systemID.equals(unit.getSystemId()));
     }
 }

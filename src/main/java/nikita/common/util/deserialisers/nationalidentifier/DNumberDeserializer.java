@@ -11,7 +11,7 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
 
-import static nikita.common.config.N5ResourceMappings.D_NUMBER;
+import static nikita.common.config.N5ResourceMappings.D_NUMBER_FIELD;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
 
@@ -33,10 +33,10 @@ public class DNumberDeserializer
         deserialiseNoarkSystemIdEntity(dNumber, objectNode, errors);
 
         // Deserialize dNummer
-        JsonNode currentNode = objectNode.get(D_NUMBER);
+        JsonNode currentNode = objectNode.get(D_NUMBER_FIELD);
         if (null != currentNode) {
             dNumber.setdNumber(currentNode.textValue());
-            objectNode.remove(D_NUMBER);
+            objectNode.remove(D_NUMBER_FIELD);
         }
 
         // Check that there are no additional values left after processing the

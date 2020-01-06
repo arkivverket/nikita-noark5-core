@@ -1317,10 +1317,10 @@ public final class CommonUtils {
                 }
 
                 // Deserialize dnummer
-                currentNode = objectNode.get(D_NUMBER);
+                currentNode = objectNode.get(D_NUMBER_FIELD);
                 if (null != currentNode) {
                     person.setdNumber(currentNode.textValue());
-                    objectNode.remove(D_NUMBER);
+                    objectNode.remove(D_NUMBER_FIELD);
                 }
 
                 // Deserialize navn
@@ -2099,7 +2099,7 @@ public final class CommonUtils {
                                         getSocialSecurityNumber());
                     }
                     if (null != partPerson.getdNumber()) {
-                        jgen.writeStringField(D_NUMBER,
+                        jgen.writeStringField(D_NUMBER_FIELD,
                                 partPerson.getdNumber());
                     }
                     if (null != partPerson.getName()) {

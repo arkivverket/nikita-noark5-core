@@ -445,7 +445,7 @@ public class InternalNameTranslator {
                         DISPOSAL_UNDERTAKEN_ENG,
                         DISPOSAL_UNDERTAKEN_ENG_OBJECT);
         addNorToEnglishNameMap
-                (D_NUMBER, D_NUMBER_ENG, D_NUMBER_ENG_OBJECT);
+                (D_NUMBER_FIELD, D_NUMBER_FIELD_ENG, D_NUMBER_FIELD_ENG_OBJECT);
         addNorToEnglishNameMap
                 (DOCUMENT_DESCRIPTION_ASSOCIATED_BY,
                         DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG,
