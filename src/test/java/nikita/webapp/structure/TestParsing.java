@@ -405,12 +405,16 @@ public class TestParsing {
 	System.out.println("info: testing documentobject parsing");
         String json = "{ "
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+            /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
             +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
             +", \"versjonsnummer\": 1 "
             +", \"variantformat\": { \"kode\": \"A\", \"kodenavn\": \"Arkivformat\" } "
             +", \"format\": \"fmt/95\" "
@@ -421,6 +425,7 @@ public class TestParsing {
             +", \"mimeType\": \"application/pdf\" "
             +", \"sjekksumAlgoritme\": \"SHA-256 Person\" "
             +", \"filstoerrelse\": 36 "
+            /*
             +", \"elektroniskSignatur\": { "
             +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
             +"      \"kode\":\"PS\","
@@ -433,6 +438,7 @@ public class TestParsing {
             +"    \"verifisertDato\": \"2070-02-13+01:00\", "
             +"    \"verifisertAv\": \"PST\" "
             +"  } "
+            */
             +"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
