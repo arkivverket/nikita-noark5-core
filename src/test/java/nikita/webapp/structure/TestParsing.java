@@ -21,11 +21,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.DocumentObject;
+import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.util.deserialisers.ClassDeserializer;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
+import nikita.common.util.deserialisers.FileDeserializer;
 import nikita.common.util.deserialisers.FondsDeserializer;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.common.util.deserialisers.SeriesDeserializer;
@@ -328,6 +330,76 @@ public class TestParsing {
 					  null /* DeserializationContext */);
 	assert(null != series);
 	assert("A series title".equals(series.getTitle()));
+    }
+
+    @Test
+    public void parseFileComplete() throws Exception {
+        System.out.println("info: testing file parsing");
+        String json = "{ "
+            +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+            /*
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
+            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
+            +", \"mappeID\": \"1917/1\" "
+            +", \"tittel\": \"A file title\" "
+            +", \"offentligTittel\": \"A public file title\" "
+            +", \"beskrivelse\": \"En beskrivelse\" "
+            +", \"noekkelord\": [ \"new\", \"inbox\" ] "
+            +", \"dokumentmedium\": \"Elektronisk arkiv\" "
+            +", \"oppbevaringssted\": [ \"Over the rainbow\" ] "
+            +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"avsluttetAv\": \"Another Person\" "
+            /*
+            +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+            */
+            +", \"kassasjon\": { "
+            +"    \"kassasjonsvedtak\": {"
+            +"      \"kode\": \"K\", "
+            +"      \"kodenavn\": \"Kasseres\""
+            +"    }, "
+            +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+            +"    \"bevaringstid\": 45, "
+            +"    \"kassasjonsdato\": \"1942-07-25\" "
+            +"  } "
+            +", \"skjerming\": { "
+            +"    \"tilgangsrestriksjon\": {"
+            +"      \"kode\": \"P\","
+            +"      \"kodenavn\": \"Personalsaker\""
+            +"    }, "
+            +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+            +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+            +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+            +"    \"skjermingsvarighet\": 60, "
+            +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+            +"  } "
+            +", \"gradering\": { "
+            +"    \"graderingskode\": { "
+            +"      \"kode\":\"SH\","
+            +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+            +"    }, "
+            +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+            +"    \"gradertAv\": \"PST\", "
+            +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+            +"    \"nedgradertAv\": \"PST\" "
+            +"  } "
+            //+", \"virksomhetsspesifikkeMetadata" type="xs:anyType" minOccurs="0"/>
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        FileDeserializer fileDeserializer = new FileDeserializer();
+        File file = fileDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != file);
+        assert("A file title".equals(file.getTitle()));
     }
 
     @Test
