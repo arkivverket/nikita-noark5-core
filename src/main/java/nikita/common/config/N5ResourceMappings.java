@@ -148,6 +148,7 @@ public final class N5ResourceMappings {
     public static final String NEW_SOCIAL_SECURITY_NUMBER =
             NEW + DASH + SOCIAL_SECURITY_NUMBER;
     public static final String D_NUMBER = "dnummer";
+    public static final String D_NUMBER_FIELD = "dNummer";
     public static final String NEW_D_NUMBER = NEW + DASH + D_NUMBER;
     public static final String CADASTRAL_UNIT = "matrikkel";
     public static final String NEW_CADASTRAL_UNIT = NEW + DASH + CADASTRAL_UNIT;
@@ -477,7 +478,7 @@ public final class N5ResourceMappings {
     public static final String DISPOSAL_UNDERTAKEN_BY_ENG = "kassertAv";
     public static final String DISPOSAL_UNDERTAKEN_DATE_ENG = "kassertDato";
     public static final String DISPOSAL_UNDERTAKEN_ENG = "utfoertKassasjon";
-    public static final String D_NUMBER_ENG = "dnummer";
+    public static final String D_NUMBER_FIELD_ENG = "dnummer";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG = "tilknyttetAv";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS_ENG = "tilknyttetRegistreringSom";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG = "tilknyttetAv";
@@ -690,7 +691,7 @@ public final class N5ResourceMappings {
     public static final String DISPOSAL_UNDERTAKEN_BY_ENG_OBJECT = "kassertAv";
     public static final String DISPOSAL_UNDERTAKEN_DATE_ENG_OBJECT = "kassertDato";
     public static final String DISPOSAL_UNDERTAKEN_ENG_OBJECT = "utfoertKassasjon";
-    public static final String D_NUMBER_ENG_OBJECT = "dnummer";
+    public static final String D_NUMBER_FIELD_ENG_OBJECT = "dnummer";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG_OBJECT = "tilknyttetAv";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT = "tilknyttetRegistreringSom";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG_OBJECT = "tilknyttetAv";
