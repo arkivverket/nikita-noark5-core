@@ -391,7 +391,7 @@ public class TestParsing {
             +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
             +"    \"nedgradertAv\": \"PST\" "
             +"  } "
-            //+", \"virksomhetsspesifikkeMetadata" type="xs:anyType" minOccurs="0"/>
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
             +"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -456,7 +456,7 @@ public class TestParsing {
 	    +"\"noekkelord\": [ \"ny\", \"inbox\" ], "
 	    +"\"forfatter\": [ \"Isaac Asimov\" ], "
 	    +"\"dokumentmedium\": \"Elektronisk arkiv\" "
-	    //+"\"virksomhetsspesifikkeMetadata" type="xs:anyType" minOccurs="0"/>
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
 	    +"}";
 
 	ObjectMapper objectMapper = new ObjectMapper();
@@ -570,7 +570,7 @@ public class TestParsing {
 	    /*
 	    +", \"eksternReferanse\" : \"RT #1234\" "
 	    */
-	    //+virksomhetsspesifikkeMetadata : any [0..1]
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
             +"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
