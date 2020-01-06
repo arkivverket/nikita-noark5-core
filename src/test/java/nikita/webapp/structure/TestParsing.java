@@ -185,7 +185,7 @@ public class TestParsing {
 	    +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
 	    +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
 	    +"    \"skjermingsvarighet\": 60, "
-	    +"    \"skjermingOpphoererDato\": \"1942-07-25\" "
+	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"} "
 	    */
 	    /*
@@ -196,7 +196,7 @@ public class TestParsing {
 	    +"    }, "
 	    +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
 	    +"    \"gradertAv\": \"PST\", "
-	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00\", "
+	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
 	    +"    \"nedgradertAv\": \"PST\" "
 	    +"  } "
 	    */
@@ -360,7 +360,7 @@ public class TestParsing {
 	    +"  \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
 	    +"  \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
 	    +"  \"skjermingsvarighet\": 60, "
-	    +"  \"skjermingOpphoererDato\": \"1942-07-25\" "
+	    +"  \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"}, "
 	    */
 	    /*
@@ -371,7 +371,7 @@ public class TestParsing {
 	    +"  }, "
 	    +"  \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
 	    +"  \"gradertAv\": \"PST\", "
-	    +"  \"nedgraderingsdato\": \"2070-02-13T12:00:00\", "
+	    +"  \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
 	    +"  \"nedgradertAv\": \"PST\" "
 	    +"}, "
 	    */
