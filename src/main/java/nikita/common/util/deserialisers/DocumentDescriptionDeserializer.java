@@ -124,6 +124,12 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         // Deserialize general documentDescription properties
         deserialiseDocumentMedium(documentDescription, objectNode, errors);
 
+        currentNode = objectNode.get(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE);
+        if (null != currentNode) {
+            documentDescription.setExternalReference(currentNode.textValue());
+            objectNode.remove(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE);
+        }
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +

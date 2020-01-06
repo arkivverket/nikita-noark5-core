@@ -185,6 +185,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS = "tilknyttetRegistreringSom";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER = "dokumentnummer";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY = "tilknyttetAv";
+    public static final String DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE = "eksternReferanse";
 
     // DocumentObject
     public static final String DOCUMENT_OBJECT_VERSION_NUMBER = "versjonsnummer";
@@ -485,6 +486,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG = "dokumenttype";
     public static final String DOCUMENT_DESCRIPTION_ENG = "documentDescrption";
     public static final String DOCUMENT_DESCRIPTION_STATUS_ENG = "dokumentstatus";
+    public static final String DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG = "external_reference";
     public static final String DOCUMENT_FLOW_ENG = "dokumentflyt";
     public static final String DOCUMENT_FLOW_FLOW_COMMENT_ENG = "flytMerknad";
     public static final String DOCUMENT_FLOW_FLOW_FROM_ENG = "flytFra";
@@ -698,6 +700,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION_ENG_OBJECT =
             "DocumentDescription";
     public static final String DOCUMENT_DESCRIPTION_STATUS_ENG_OBJECT = "dokumentstatus";
+    public static final String DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG_OBJECT = "externalReference";
     public static final String DOCUMENT_FLOW_ENG_OBJECT = "dokumentflyt";
     public static final String DOCUMENT_FLOW_FLOW_COMMENT_ENG_OBJECT = "flytMerknad";
     public static final String DOCUMENT_FLOW_FLOW_FROM_ENG_OBJECT = "flytFra";

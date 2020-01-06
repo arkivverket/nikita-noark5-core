@@ -475,6 +475,10 @@ public class InternalNameTranslator {
                         DOCUMENT_DESCRIPTION_STATUS_ENG,
                         DOCUMENT_DESCRIPTION_STATUS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE,
+                        DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG,
+                        DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (DOCUMENT_FLOW_FLOW_COMMENT,
                         DOCUMENT_FLOW_FLOW_COMMENT_ENG,
                         DOCUMENT_FLOW_FLOW_COMMENT_ENG_OBJECT);

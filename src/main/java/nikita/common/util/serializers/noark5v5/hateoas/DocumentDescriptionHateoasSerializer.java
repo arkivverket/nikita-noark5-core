@@ -83,6 +83,10 @@ public class DocumentDescriptionHateoasSerializer
             jgen.writeStringField(STORAGE_LOCATION,
                     documentDescription.getStorageLocation());
         }
+        if (documentDescription.getExternalReference() != null) {
+            jgen.writeStringField(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE,
+                    documentDescription.getExternalReference());
+        }
         printElectronicSignature(jgen, documentDescription);
         printHateoasLinks(jgen,
                 documentDescriptionHateoas.getLinks(documentDescription));
