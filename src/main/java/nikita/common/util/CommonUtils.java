@@ -720,11 +720,16 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNoarkEntity(INoarkGeneralEntity noarkEntity, ObjectNode objectNode, StringBuilder errors) {
-                deserialiseNoarkSystemIdEntity(noarkEntity, objectNode, errors);
-                deserialiseNoarkTitleDescriptionEntity(noarkEntity, objectNode, errors);
-                deserialiseNoarkCreateEntity(noarkEntity, objectNode, errors);
-                deserialiseNoarkFinaliseEntity(noarkEntity, objectNode, errors);
+            public static void deserialiseNikitaEntity(INikitaEntity nikitaEntity, ObjectNode objectNode, StringBuilder errors) {
+                deserialiseNoarkSystemIdEntity(nikitaEntity, objectNode, errors);
+                deserialiseNoarkCreateEntity(nikitaEntity, objectNode, errors);
+            }
+
+            public static void deserialiseNoarkGeneralEntity(INoarkGeneralEntity noarkGeneralEntity, ObjectNode objectNode, StringBuilder errors) {
+                deserialiseNikitaEntity(noarkGeneralEntity, objectNode, errors);
+                deserialiseNoarkFinaliseEntity(noarkGeneralEntity, objectNode, errors);
+                deserialiseNoarkTitleDescriptionEntity(noarkGeneralEntity, objectNode, errors);
+
             }
 
             public static String checkNodeObjectEmpty(JsonNode objectNode) {
@@ -1453,15 +1458,8 @@ public final class CommonUtils {
             }
 
             public static void deserialiseFondsCreator(IFondsCreatorEntity fondsCreatorEntity, ObjectNode objectNode, StringBuilder errors) {
-                // Deserialize systemID
-                JsonNode currentNode = objectNode.get(SYSTEM_ID);
-                if (null != currentNode) {
-                    fondsCreatorEntity.setSystemId(
-                            UUID.fromString(currentNode.textValue()));
-                    objectNode.remove(SYSTEM_ID);
-                }
                 // Deserialize fondsCreatorId
-                currentNode = objectNode.get(FONDS_CREATOR_ID);
+                JsonNode currentNode = objectNode.get(FONDS_CREATOR_ID);
                 if (null != currentNode) {
                     fondsCreatorEntity.setFondsCreatorId(currentNode.textValue());
                     objectNode.remove(FONDS_CREATOR_ID);

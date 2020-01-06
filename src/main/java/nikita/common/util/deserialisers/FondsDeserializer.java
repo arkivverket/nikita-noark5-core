@@ -61,7 +61,8 @@ public class FondsDeserializer
         // TODO : Are we deserialising parent? No, it's not done here or is it????
 
         // Deserialise general properties
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkEntity(fonds, objectNode, errors);
+        CommonUtils.Hateoas.Deserialize.deserialiseNoarkGeneralEntity(fonds, objectNode, errors);
+
         CommonUtils.Hateoas.Deserialize.deserialiseDocumentMedium(fonds, objectNode, errors);
         CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(fonds, objectNode, errors);
 

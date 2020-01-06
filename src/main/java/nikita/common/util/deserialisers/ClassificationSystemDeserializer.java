@@ -16,7 +16,7 @@ import java.io.IOException;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseClassificationSystemType;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkEntity;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkGeneralEntity;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -44,7 +44,7 @@ public class ClassificationSystemDeserializer extends JsonDeserializer {
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general properties
-        deserialiseNoarkEntity(classificationSystem, objectNode, errors);
+        deserialiseNoarkGeneralEntity(classificationSystem, objectNode, errors);
 
         deserialiseClassificationSystemType(classificationSystem,
                                             objectNode, errors);

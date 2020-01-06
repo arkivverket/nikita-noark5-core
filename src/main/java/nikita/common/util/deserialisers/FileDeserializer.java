@@ -59,7 +59,7 @@ public class FileDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general properties
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkEntity(file, objectNode, errors);
+        CommonUtils.Hateoas.Deserialize.deserialiseNoarkGeneralEntity(file, objectNode, errors);
         CommonUtils.Hateoas.Deserialize.deserialiseDocumentMedium(file, objectNode, errors);
         CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(file, objectNode, errors);
         CommonUtils.Hateoas.Deserialize.deserialiseKeyword(file, objectNode, errors);

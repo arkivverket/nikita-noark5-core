@@ -53,7 +53,7 @@ public class CaseFileDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise properties for File
-        deserialiseNoarkEntity(caseFile, objectNode, errors);
+        deserialiseNoarkGeneralEntity(caseFile, objectNode, errors);
         deserialiseDocumentMedium(caseFile, objectNode, errors);
         deserialiseStorageLocation(caseFile, objectNode, errors);
         deserialiseKeyword(caseFile, objectNode, errors);

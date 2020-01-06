@@ -338,8 +338,10 @@ public class TestParsing {
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
             +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             */
             +", \"arkivskaperID\": \"The ID of the Fond Creator\" "
