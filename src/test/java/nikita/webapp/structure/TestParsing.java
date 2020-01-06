@@ -403,24 +403,6 @@ public class TestParsing {
     }
 
     @Test
-    public void parseRecord() throws Exception {
-	System.out.println("info: testing record parsing");
-	String json = "{ "
-	    +"\"tittel\": \"A record title\", "
-	    + "\"forfatter\": [\"Isac Asimov\"] "+
-	    "}";
-	ObjectMapper objectMapper = new ObjectMapper();
-	JsonParser jsonParser =
-	    objectMapper.getJsonFactory().createJsonParser(json);
-	RecordDeserializer recordDeserializer = new RecordDeserializer();
-	Record record =
-	    recordDeserializer.deserialize(jsonParser,
-					   null /* DeserializationContext */);
-	assert(null != record);
-	assert("A record title".equals(record.getTitle()));
-    }
-
-    @Test
     public void parseRecordComplete() throws Exception {
 	System.out.println("info: testing record parsing");
 	String json = "{ "
