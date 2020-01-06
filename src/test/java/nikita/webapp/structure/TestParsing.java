@@ -32,6 +32,9 @@ import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RecordNote;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.util.deserialisers.ClassDeserializer;
 import nikita.common.util.deserialisers.ClassificationSystemDeserializer;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
@@ -45,6 +48,9 @@ import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.common.util.deserialisers.SeriesDeserializer;
 import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
 import nikita.common.util.deserialisers.admin.UserDeserializer;
+import nikita.common.util.deserialisers.casehandling.CaseFileDeserializer;
+import nikita.common.util.deserialisers.casehandling.RecordNoteDeserializer;
+import nikita.common.util.deserialisers.casehandling.RegistryEntryDeserializer;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class)
@@ -542,6 +548,83 @@ public class TestParsing {
     }
 
     @Test
+    public void parseCaseFileComplete() throws Exception {
+        System.out.println("info: testing caseFile parsing");
+        String systemID = "de2b388c-3051-11ea-a4a3-ffcaf5680dd8";
+        String title = "A case file title";
+        String json = "{ "
+            +"  \"systemID\": \""+ systemID + "\" "
+            //+", \"oppdatertAv\": \"Some Person\" "
+            //+", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"mappeID\": \"1917/1\" "
+            +", \"tittel\": \"" + title + "\" "
+            +", \"offentligTittel\": \"A public caseFile title\" "
+            +", \"beskrivelse\": \"A description\" "
+            +", \"noekkelord\": [ \"new\", \"inbox\" ] "
+            +", \"dokumentmedium\": \"Elektronisk arkiv\" "
+            +", \"oppbevaringssted\": [ \"Over the rainbow\" ] "
+            +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"avsluttetAv\": \"Another Person\" "
+            //+", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+            +", \"kassasjon\": { "
+            +"    \"kassasjonsvedtak\": {"
+            +"      \"kode\": \"K\", "
+            +"      \"kodenavn\": \"Kasseres\""
+            +"    }, "
+            +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+            +"    \"bevaringstid\": 45, "
+            +"    \"kassasjonsdato\": \"1942-07-25\" "
+            +"  } "
+            +", \"skjerming\": { "
+            +"    \"tilgangsrestriksjon\": {"
+            +"      \"kode\": \"P\","
+            +"      \"kodenavn\": \"Personalsaker\""
+            +"    }, "
+            +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+            +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+            +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+            +"    \"skjermingsvarighet\": 60, "
+            +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+            +"  } "
+            +", \"gradering\": { "
+            +"    \"graderingskode\": { "
+            +"      \"kode\":\"SH\","
+            +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+            +"    }, "
+            +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+            +"    \"gradertAv\": \"PST\", "
+            +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+            +"    \"nedgradertAv\": \"PST\" "
+            +"  } "
+            +", \"saksaar\": 1942 "
+            +", \"sakssekvensnummer\": 1 "
+            +", \"saksdato\": \"1942-07-25Z\" "
+            //+", \"administrativEnhet\": \"Management\" "
+            +", \"saksansvarlig\": \"Another Person\" "
+            +", \"journalenhet\": \"PR departement\" "
+            +", \"saksstatus\": { \"kode\": \"B\", \"kodenavn\": \"Under behandling\" } "
+            +", \"utlaantDato\": \"1942-07-25Z\" "
+            +", \"utlaantTil\": \"Another Person\" "
+            //+", \"referanseUtlaantTil\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        CaseFileDeserializer caseFileDeserializer = new CaseFileDeserializer();
+        CaseFile caseFile = caseFileDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != caseFile);
+        assert(systemID.equals(caseFile.getSystemId()));
+        assert(title.equals(caseFile.getTitle()));
+    }
+
+    @Test
     public void parseRecordComplete() throws Exception {
 	System.out.println("info: testing record parsing");
 	String json = "{ "
@@ -605,6 +688,192 @@ public class TestParsing {
 					   null /* DeserializationContext */);
 	assert(null != record);
 	assert("A record title".equals(record.getTitle()));
+    }
+
+    @Test
+    public void parseRegistryEntryComplete() throws Exception {
+        System.out.println("info: testing registry entry parsing");
+        String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+        String title = "A registry entry title";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            //+", \"oppdatertAv\": \"Some Person\" "
+            //+", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"arkivertDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"arkivertAv\": \"Min Venn\" "
+            /*
+            +", \"kassasjon\": { "
+            +"    \"kassasjonsvedtak\": {"
+            +"      \"kode\": \"K\", "
+            +"      \"kodenavn\": \"Kasseres\""
+            +"    }, "
+            +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+            +"    \"bevaringstid\": 45, "
+            +"    \"kassasjonsdato\": \"1942-07-25\" "
+            +"  } "
+            */
+            /*
+            +", \"skjerming\": { "
+            +"    \"tilgangsrestriksjon\": {"
+            +"      \"kode\": \"P\","
+            +"      \"kodenavn\": \"Personalsaker\""
+            +"    }, "
+            +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+            +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+            +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+            +"    \"skjermingsvarighet\": 60, "
+            +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+            +"  } "
+            */
+            /*
+            +",  \"gradering\": { "
+            +"    \"graderingskode\": { "
+            +"      \"kode\":\"SH\","
+            +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+            +"    }, "
+            +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+            +"    \"gradertAv\": \"PST\", "
+            +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+            +"    \"nedgradertAv\": \"PST\" "
+            +"  } "
+            */
+            +", \"registreringsID\": \"a registryentry id\" "
+            +", \"tittel\": \"" + title + "\" "
+            +", \"offentligTittel\": \"A public registry entry title\" "
+            +", \"beskrivelse\": \"A description\" "
+            //+", \"noekkelord\": [ \"new\", \"inbox\" ] "
+            //+", \"forfatter\": [ \"Isaac Asimov\" ] "
+            +", \"dokumentmedium\": \"Elektronisk arkiv\" "
+            +", \"journalaar\": 1942 "
+            +", \"journalsekvensnummer\": 1 "
+            +", \"journalpostnummer\": 1 "
+            +", \"journalposttype\": { \"kode\": \"I\", \"kodenavn\": \"Inngående dokument\" } "
+            +", \"journalstatus\": { \"kode\": \"A\", \"kodenavn\": \"Arkivert\" } "
+            +", \"journaldato\": \"1942-07-25Z\" "
+            +", \"dokumentetsDato\": \"1942-07-25Z\" "
+            +", \"mottattDato\": \"2070-02-13T12:00:00+00:00\" "
+            +", \"sendtDato\": \"1942-07-25Z\" "
+            +", \"forfallsdato\": \"1942-07-25Z\" "
+            +", \"offentlighetsvurdertDato\": \"1942-07-25Z\" "
+            +", \"antallVedlegg\": 1 "
+            +", \"utlaantDato\": \"1942-07-25Z\" "
+            +", \"utlaantTil\": \"Another Person\" "
+            //+", \"referanseUtlaantTil\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+            +", \"journalenhet\": \"PR departement\" "
+            /*
+            +", \"elektroniskSignatur\": { "
+            +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
+            +"      \"kode\":\"PS\","
+            +"      \"kodenavn\":\"Sendt med PKI/\\\"person høy\\\"-sertifikat\""
+            +"    }, "
+            +"    \"elektroniskSignaturVerifisert\": { "
+            +"      \"kode\":\"I\","
+            +"      \"kodenavn\":\"Signatur påført og verifisert\""
+            +"    }, "
+            +"    \"verifisertDato\": \"2070-02-13+01:00\", "
+            +"    \"verifisertAv\": \"PST\" "
+            +"  } "
+            */
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        RegistryEntryDeserializer registryEntryDeserializer = new RegistryEntryDeserializer();
+        RegistryEntry registryEntry =
+            registryEntryDeserializer.deserialize(jsonParser,
+                                           null /* DeserializationContext */);
+        assert(null != registryEntry);
+        assert(systemID.equals(registryEntry.getSystemId()));
+        assert(title.equals(registryEntry.getTitle()));
+    }
+
+    @Test
+    public void parseRecordNoteComplete() throws Exception {
+        System.out.println("info: testing record note parsing");
+        String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+        String title = "A record note title";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            //+", \"oppdatertAv\": \"Some Person\" "
+            //+", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"arkivertDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"arkivertAv\": \"Min Venn\" "
+            //+", \"referanseArkivertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            /*
+            +", \"kassasjon\": { "
+            +"    \"kassasjonsvedtak\": {"
+            +"      \"kode\": \"K\", "
+            +"      \"kodenavn\": \"Kasseres\""
+            +"    }, "
+            +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+            +"    \"bevaringstid\": 45, "
+            +"    \"kassasjonsdato\": \"1942-07-25\" "
+            +"  } "
+            */
+            /*
+            +", \"skjerming\": { "
+            +"    \"tilgangsrestriksjon\": {"
+            +"      \"kode\": \"P\","
+            +"      \"kodenavn\": \"Personalsaker\""
+            +"    }, "
+            +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+            +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+            +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+            +"    \"skjermingsvarighet\": 60, "
+            +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+            +"  } "
+            */
+            /*
+            +",  \"gradering\": { "
+            +"    \"graderingskode\": { "
+            +"      \"kode\":\"SH\","
+            +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+            +"    }, "
+            +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+            +"    \"gradertAv\": \"PST\", "
+            +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+            +"    \"nedgradertAv\": \"PST\" "
+            +"  } "
+            */
+            +", \"registreringsID\": \"a recordNote id\" "
+            +", \"tittel\": \"" + title + "\" "
+            +", \"offentligTittel\": \"A public record note title\" "
+            +", \"beskrivelse\": \"A description\" "
+            //+", \"noekkelord\": [ \"new\", \"inbox\" ] "
+            //+", \"forfatter\": [ \"Isaac Asimov\" ] "
+            +", \"dokumentmedium\": \"Elektronisk arkiv\" "
+            +", \"dokumentetsDato\": \"1942-07-25Z\" "
+            +", \"mottattDato\": \"2070-02-13T12:00:00+00:00\" "
+            +", \"sendtDato\": \"1942-07-25Z\" "
+            +", \"forfallsdato\": \"1942-07-25Z\" "
+            +", \"offentlighetsvurdertDato\": \"1942-07-25Z\" "
+            +", \"antallVedlegg\": 1 "
+            +", \"utlaantDato\": \"1942-07-25Z\" "
+            +", \"utlaantTil\": \"Another Person\" "
+            //+", \"referanseUtlaantTil\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        RecordNoteDeserializer recordNoteDeserializer = new RecordNoteDeserializer();
+        RecordNote recordNote =
+            recordNoteDeserializer.deserialize(jsonParser,
+                                           null /* DeserializationContext */);
+        assert(null != recordNote);
+        assert(systemID.equals(recordNote.getSystemId()));
+        assert(title.equals(recordNote.getTitle()));
     }
 
     @Test
