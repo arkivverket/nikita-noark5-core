@@ -406,8 +406,9 @@ public final class CommonUtils {
                         errors.append(". Make sure format is either ");
                         errors.append(NOARK_DATE_FORMAT_PATTERN + " or ");
                         errors.append(NOARK_ZONED_DATE_FORMAT_PATTERN + ". ");
-                        errors.append("Message is ");
+                        errors.append("Message is '");
                         errors.append(e.getMessage());
+                        errors.append("'. ");
                     }
                     objectNode.remove(fieldname);
                 } else if (required) {
@@ -436,7 +437,11 @@ public final class CommonUtils {
                         errors.append("Malformed ");
                         errors.append(fieldname);
                         errors.append(". Make sure format is ");
-                        errors.append(NOARK_DATE_TIME_FORMAT_PATTERN + ". ");
+                        errors.append(NOARK_DATE_TIME_FORMAT_PATTERN + " or ");
+                        errors.append(NOARK_ZONED_DATE_TIME_FORMAT_PATTERN + ". ");
+                        errors.append("Message is '");
+                        errors.append(e.getMessage());
+                        errors.append("'. ");
                     }
                     objectNode.remove(fieldname);
                 } else if (required) {

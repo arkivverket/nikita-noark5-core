@@ -190,7 +190,8 @@ public final class Constants {
     public static final String NOARK_DATE_FORMAT_PATTERN = "yyyy-MM-dd+HH:mm";
     public static final String NOARK_ZONED_DATE_FORMAT_PATTERN = "yyyy-MM-ddZ";
     public static final String NOARK_TIME_FORMAT_PATTERN = "HH:mm:ss";
-    public static final String NOARK_DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String NOARK_DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss+HH:mm";
+    public static final String NOARK_ZONED_DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     public static final String REFERENCE_FILE = "referanseFil";
     public static final String CONVERT_FILE = "konverterFil";
