@@ -384,6 +384,7 @@ public final class N5ResourceMappings {
     public static final String NEW_RIGHT = NEW + DASH + RIGHT;
 
     public static final String ADMINISTRATIVE_UNIT = "administrativenhet";
+    public static final String ADMINISTRATIVE_UNIT_FIELD = "administrativEnhet";
     public static final String NEW_ADMINISTRATIVE_UNIT = NEW + DASH + ADMINISTRATIVE_UNIT;
 
     public static final String ADMINISTRATIVE_UNIT_STATUS = "administrativEnhetsstatus";
@@ -401,7 +402,7 @@ public final class N5ResourceMappings {
     public static final String ADDRESS_LINE_1_ENG = "adresselinje1";
     public static final String ADDRESS_LINE_2_ENG = "adresselinje2";
     public static final String ADDRESS_LINE_3_ENG = "adresselinje3";
-    public static final String ADMINISTRATIVE_UNIT_ENG = "administrativEnhet";
+    public static final String ADMINISTRATIVE_UNIT_FIELD_ENG = "administrative_unit";
     public static final String ADMINISTRATIVE_UNIT_NAME_ENG = "administrativEnhetNavn";
     public static final String ADMINISTRATIVE_UNIT_PARENT_REFERENCE_ENG = "referanseOverordnetEnhet";
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG = "administrativEnhetsstatus";
@@ -614,7 +615,7 @@ public final class N5ResourceMappings {
     public static final String ADDRESS_LINE_1_ENG_OBJECT = "adresselinje1";
     public static final String ADDRESS_LINE_2_ENG_OBJECT = "adresselinje2";
     public static final String ADDRESS_LINE_3_ENG_OBJECT = "adresselinje3";
-    public static final String ADMINISTRATIVE_UNIT_ENG_OBJECT = "administrativEnhet";
+    public static final String ADMINISTRATIVE_UNIT_FIELD_ENG_OBJECT = "administrativeUnit";
     public static final String ADMINISTRATIVE_UNIT_NAME_ENG_OBJECT = "administrativEnhetNavn";
     public static final String ADMINISTRATIVE_UNIT_PARENT_REFERENCE_ENG_OBJECT = "referanseOverordnetEnhet";
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG_OBJECT = "administrativEnhetsstatus";

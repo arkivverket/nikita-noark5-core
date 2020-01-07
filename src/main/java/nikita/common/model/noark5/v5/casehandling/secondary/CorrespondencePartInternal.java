@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_INTERNAL;
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_INTERNAL;
 import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
+import static nikita.common.config.N5ResourceMappings.ADMINISTRATIVE_UNIT_FIELD_ENG;
 
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART_INTERNAL)
@@ -34,7 +35,7 @@ public class CorrespondencePartInternal
     /**
      * M305 - administrativEnhet (xs:string)
      */
-    @Column(name = "administrative_unit")
+    @Column(name = ADMINISTRATIVE_UNIT_FIELD_ENG)
     @Audited
     private String administrativeUnit;
 
