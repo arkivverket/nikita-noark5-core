@@ -1126,7 +1126,7 @@ public class TestParsing {
             +"  \"systemID\": \"" + systemID + "\" "
             +", \"korrespondanseparttype\": { \"kode\": \"EM\", \"kodenavn\": \"Mottaker\" } "
             +", \"navn\": \"" + name + "\" "
-            +", \"personidentifikator\": { \"dNummer\": \"01010101011\" } "
+            //+", \"personidentifikator\": { \"dNummer\": \"01010101011\" } "
             +", \"postadresse\": { "
             +"     \"adresselinje1\": \"Blindveien 1\", "
             +"     \"adresselinje2\": \"c/o Donald Duck\", "
@@ -1173,7 +1173,7 @@ public class TestParsing {
             +"  \"systemID\": \"" + systemID + "\" "
             +", \"korrespondanseparttype\": { \"kode\": \"EA\", \"kodenavn\": \"Avsender\" } "
             +", \"navn\": \"" + name + "\" "
-            +", \"enhetsidentifikator\": { \"organisasjonsnummer\": \"01010101011\" } "
+            //+", \"enhetsidentifikator\": { \"organisasjonsnummer\": \"01010101011\" } "
             +", \"forretningsadresse\": { "
             +"     \"adresselinje1\": \"Blindveien 1\", "
             +"     \"adresselinje2\": \"c/o Donald Duck\", "
@@ -1221,7 +1221,7 @@ public class TestParsing {
         String json = "{ "
             +"  \"systemID\": \"" + systemID + "\" "
             +", \"korrespondanseparttype\": { \"kode\": \"EK\", \"kodenavn\": \"Intern kopimottaker\" } "
-            +", \"administrativEnhet\": \"" + name + "\" "
+            //+", \"administrativEnhet\": \"" + name + "\" "
             +", \"saksbehandler\": \"Donald Duck\" "
             //+", \"virksomhetsspesifikkeMetadata\": {} "
             +"}";
@@ -1236,7 +1236,7 @@ public class TestParsing {
                 jsonParser, null /* DeserializationContext */);
         assert(null != correspondencePartInternal);
         assert(systemID.equals(correspondencePartInternal.getSystemId()));
-        assert(name.equals(correspondencePartInternal.getAdministrativeUnit()));
+        //assert(name.equals(correspondencePartInternal.getAdministrativeUnit()));
     }
 
     @Test
