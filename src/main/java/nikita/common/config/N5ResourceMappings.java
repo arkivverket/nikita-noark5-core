@@ -259,7 +259,7 @@ public final class N5ResourceMappings {
 
     // Classified
     public static final String CLASSIFIED = "gradering"; // root node
-    public static final String CLASSIFICATION = "gradering"; // property node
+    public static final String CLASSIFICATION = "graderingskode"; // property node
     public static final String CLASSIFICATION_DATE = "graderingsdato";
     public static final String CLASSIFICATION_BY = "gradertAv";
     public static final String CLASSIFICATION_DOWNGRADED_DATE = "nedgraderingsdato";
@@ -433,7 +433,7 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_DATE_ENG = "graderingsdato";
     public static final String CLASSIFICATION_DOWNGRADED_BY_ENG = "nedgradertAv";
     public static final String CLASSIFICATION_DOWNGRADED_DATE_ENG = "nedgraderingsdato";
-    public static final String CLASSIFICATION_ENG = "gradering"; // property node
+    public static final String CLASSIFICATION_ENG = "classification_name"; // property node
     public static final String CLASSIFICATION_SYSTEM_ENG = "klassifikasjonssystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG = "klassifikasjonstype";
     public static final String CLASSIFICATION_TYPE_ENG = "klassifikasjonstype";
@@ -648,7 +648,7 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_DATE_ENG_OBJECT = "graderingsdato";
     public static final String CLASSIFICATION_DOWNGRADED_BY_ENG_OBJECT = "nedgradertAv";
     public static final String CLASSIFICATION_DOWNGRADED_DATE_ENG_OBJECT = "nedgraderingsdato";
-    public static final String CLASSIFICATION_ENG_OBJECT = "gradering"; // property node
+    public static final String CLASSIFICATION_ENG_OBJECT = "classificationName"; // property node
     public static final String CLASSIFICATION_SYSTEM_ENG_OBJECT = "klassifikasjonssystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG_OBJECT = "klassifikasjonstype";
     public static final String CLASSIFICATION_TYPE_ENG_OBJECT = "klassifikasjonstype";

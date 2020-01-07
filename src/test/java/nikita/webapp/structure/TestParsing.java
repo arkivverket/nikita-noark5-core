@@ -26,6 +26,7 @@ import nikita.common.model.noark5.v5.admin.*;
 import nikita.common.model.noark5.v5.casehandling.*;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.*;
 import nikita.common.util.deserialisers.admin.*;
 import nikita.common.util.deserialisers.casehandling.*;
@@ -286,7 +287,6 @@ public class TestParsing {
 	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"} "
 	    */
-	    /*
 	    +", \"gradering\": { "
 	    +"    \"graderingskode\": { "
 	    +"      \"kode\":\"SH\","
@@ -297,7 +297,6 @@ public class TestParsing {
 	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
 	    +"    \"nedgradertAv\": \"PST\" "
 	    +"  } "
-	    */
 	    +"}";
 
 	ObjectMapper objectMapper = new ObjectMapper();
@@ -387,14 +386,16 @@ public class TestParsing {
     @Test
     public void parseSeriesComplete() throws Exception {
 	System.out.println("info: testing series parsing");
+	String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+	String title = "A series title";
 	String json = "{ "
-	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+	    +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             /*
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             */
-	    +", \"tittel\": \"A series title\" "
+	    +", \"tittel\": \"" + title + "\" "
 	    +", \"beskrivelse\": \"A series description\" "
 	    +", \"arkivdelstatus\": { \"kode\": \"P\", \"kodenavn\": \"Avsluttet periode\" } "
 	    +", \"dokumentmedium\": \"Elektronisk arkiv\" "
@@ -465,14 +466,21 @@ public class TestParsing {
 	    seriesDeserializer.deserialize(jsonParser,
 					  null /* DeserializationContext */);
 	assert(null != series);
-	assert("A series title".equals(series.getTitle()));
+        assert(systemID.equals(series.getSystemId()));
+        assert(title.equals(series.getTitle()));
+	Classified c = series.getReferenceClassified();
+	assert("SH".equals(c.getClassificationCode()));
+	assert("Strengt hemmelig (sikkerhetsgrad)"
+	       .equals(c.getClassificationName()));
     }
 
     @Test
     public void parseFileComplete() throws Exception {
         System.out.println("info: testing file parsing");
+        String systemID = "de2b388c-3051-11ea-a4a3-ffcaf5680dd8";
+        String title = "A file title";
         String json = "{ "
-            +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+            +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             /*
@@ -484,7 +492,7 @@ public class TestParsing {
             +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             */
             +", \"mappeID\": \"1917/1\" "
-            +", \"tittel\": \"A file title\" "
+            +", \"tittel\": \"" + title + "\" "
             +", \"offentligTittel\": \"A public file title\" "
             +", \"beskrivelse\": \"En beskrivelse\" "
             +", \"noekkelord\": [ \"new\", \"inbox\" ] "
@@ -535,7 +543,12 @@ public class TestParsing {
         File file = fileDeserializer.deserialize(
                 jsonParser, null /* DeserializationContext */);
         assert(null != file);
-        assert("A file title".equals(file.getTitle()));
+        assert(systemID.equals(file.getSystemId()));
+        assert(title.equals(file.getTitle()));
+        Classified c = file.getReferenceClassified();
+        assert("SH".equals(c.getClassificationCode()));
+        assert("Strengt hemmelig (sikkerhetsgrad)"
+               .equals(c.getClassificationName()));
     }
 
     @Test
@@ -613,13 +626,19 @@ public class TestParsing {
         assert(null != caseFile);
         assert(systemID.equals(caseFile.getSystemId()));
         assert(title.equals(caseFile.getTitle()));
+        Classified c = caseFile.getReferenceClassified();
+        assert("SH".equals(c.getClassificationCode()));
+        assert("Strengt hemmelig (sikkerhetsgrad)"
+               .equals(c.getClassificationName()));
     }
 
     @Test
     public void parseRecordComplete() throws Exception {
 	System.out.println("info: testing record parsing");
+	String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+	String title = "A record title";
 	String json = "{ "
-	    +"  \"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+	    +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             /*
@@ -653,7 +672,6 @@ public class TestParsing {
 	    +"  \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"}, "
 	    */
-	    /*
 	    +"\"gradering\": { "
 	    +"  \"graderingskode\": { "
 	    +"    \"kode\":\"SH\","
@@ -664,9 +682,8 @@ public class TestParsing {
 	    +"  \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
 	    +"  \"nedgradertAv\": \"PST\" "
 	    +"}, "
-	    */
 	    +"\"registreringsID\": \"a record id\", "
-	    +"\"tittel\": \"A record title\", "
+	    +"\"tittel\": \"" + title + "\", "
 	    +"\"offentligTittel\": \"A public record title\", "
 	    +"\"beskrivelse\": \"En beskrivelse\", "
 	    +"\"noekkelord\": [ \"ny\", \"inbox\" ], "
@@ -683,7 +700,12 @@ public class TestParsing {
 	    recordDeserializer.deserialize(jsonParser,
 					   null /* DeserializationContext */);
 	assert(null != record);
-	assert("A record title".equals(record.getTitle()));
+        assert(systemID.equals(record.getSystemId()));
+        assert(title.equals(record.getTitle()));
+        Classified c = record.getReferenceClassified();
+        assert("SH".equals(c.getClassificationCode()));
+        assert("Strengt hemmelig (sikkerhetsgrad)"
+               .equals(c.getClassificationName()));
     }
 
     @Test
@@ -725,7 +747,6 @@ public class TestParsing {
             +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
             +"  } "
             */
-            /*
             +",  \"gradering\": { "
             +"    \"graderingskode\": { "
             +"      \"kode\":\"SH\","
@@ -736,7 +757,6 @@ public class TestParsing {
             +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
             +"    \"nedgradertAv\": \"PST\" "
             +"  } "
-            */
             +", \"registreringsID\": \"a registryentry id\" "
             +", \"tittel\": \"" + title + "\" "
             +", \"offentligTittel\": \"A public registry entry title\" "
@@ -787,6 +807,10 @@ public class TestParsing {
         assert(null != registryEntry);
         assert(systemID.equals(registryEntry.getSystemId()));
         assert(title.equals(registryEntry.getTitle()));
+        Classified c = registryEntry.getReferenceClassified();
+        assert("SH".equals(c.getClassificationCode()));
+        assert("Strengt hemmelig (sikkerhetsgrad)"
+               .equals(c.getClassificationName()));
     }
 
     @Test
@@ -829,7 +853,6 @@ public class TestParsing {
             +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
             +"  } "
             */
-            /*
             +",  \"gradering\": { "
             +"    \"graderingskode\": { "
             +"      \"kode\":\"SH\","
@@ -840,7 +863,6 @@ public class TestParsing {
             +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
             +"    \"nedgradertAv\": \"PST\" "
             +"  } "
-            */
             +", \"registreringsID\": \"a recordNote id\" "
             +", \"tittel\": \"" + title + "\" "
             +", \"offentligTittel\": \"A public record note title\" "
@@ -870,6 +892,10 @@ public class TestParsing {
         assert(null != recordNote);
         assert(systemID.equals(recordNote.getSystemId()));
         assert(title.equals(recordNote.getTitle()));
+        Classified c = recordNote.getReferenceClassified();
+        assert("SH".equals(c.getClassificationCode()));
+        assert("Strengt hemmelig (sikkerhetsgrad)"
+               .equals(c.getClassificationName()));
     }
 
     @Test
@@ -943,7 +969,6 @@ public class TestParsing {
 	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"} "
 	    */
-	    /*
 	    +", \"gradering\": { "
 	    +"    \"graderingskode\": { "
 	    +"      \"kode\":\"SH\","
@@ -954,7 +979,6 @@ public class TestParsing {
 	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
 	    +"    \"nedgradertAv\": \"PST\" "
 	    +"  } "
-	    */
 	    /*
             +", \"elektroniskSignatur\": { "
             +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
@@ -983,6 +1007,10 @@ public class TestParsing {
                 jsonParser, null /* DeserializationContext */);
         assert(null != documentDescription);
         assert("A document description title".equals(documentDescription.getTitle()));
+        Classified c = documentDescription.getReferenceClassified();
+        assert("SH".equals(c.getClassificationCode()));
+        assert("Strengt hemmelig (sikkerhetsgrad)"
+               .equals(c.getClassificationName()));
     }
 
     @Test

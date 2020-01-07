@@ -100,6 +100,8 @@ public class RecordDeserializer
         deserialiseDocumentMedium(record, objectNode, errors);
         deserialiseAuthor(record, objectNode, errors);
         deserialiseKeyword(record, objectNode, errors);
+        record.setReferenceClassified(
+		deserialiseClassified(objectNode, errors));
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

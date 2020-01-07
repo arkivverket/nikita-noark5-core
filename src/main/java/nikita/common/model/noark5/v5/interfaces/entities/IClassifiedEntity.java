@@ -7,9 +7,13 @@ import java.time.OffsetDateTime;
  * Created by tsodring on 12/7/16.
  */
 public interface IClassifiedEntity extends Serializable {
-    String getClassification();
+    String getClassificationCode();
 
-    void setClassification(String classification);
+    void setClassificationCode(String classificationCode);
+
+    String getClassificationName();
+
+    void setClassificationName(String classificationName);
 
     OffsetDateTime getClassificationDate();
 

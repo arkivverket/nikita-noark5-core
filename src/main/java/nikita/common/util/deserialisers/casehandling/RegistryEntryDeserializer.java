@@ -189,6 +189,9 @@ public class RegistryEntryDeserializer
             objectNode.remove(CASE_RECORDS_MANAGEMENT_UNIT);
         }
 
+        registryEntry.setReferenceClassified(
+		deserialiseClassified(objectNode, errors));
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +

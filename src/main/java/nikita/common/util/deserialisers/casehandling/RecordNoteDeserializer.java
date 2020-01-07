@@ -124,6 +124,9 @@ public class RecordNoteDeserializer
             objectNode.remove(CASE_LOANED_TO);
         }
 
+        recordNote.setReferenceClassified(
+		deserialiseClassified(objectNode, errors));
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +
