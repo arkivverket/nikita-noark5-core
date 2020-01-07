@@ -36,8 +36,4 @@ public interface IMetadataEntity
      * @return The name of the functional area the entity belongs to
      */
     String getFunctionalTypeName();
-
-    OffsetDateTime getLastModifiedDate();
-
-    String getLastModifiedBy();
 }

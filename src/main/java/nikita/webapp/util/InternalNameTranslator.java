@@ -607,6 +607,14 @@ public class InternalNameTranslator {
                         FORMAT_ENG,
                         FORMAT_ENG_OBJECT);
         addNorToEnglishNameMap
+                (LAST_MODIFIED_BY,
+                        LAST_MODIFIED_BY_ENG,
+                        LAST_MODIFIED_BY_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (LAST_MODIFIED_DATE,
+                        LAST_MODIFIED_DATE_ENG,
+                        LAST_MODIFIED_DATE_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (MEETING_FILE_TYPE,
                         MEETING_FILE_TYPE_ENG,
                         MEETING_FILE_TYPE_ENG_OBJECT);

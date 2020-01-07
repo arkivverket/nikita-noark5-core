@@ -23,6 +23,8 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
+import static nikita.common.config.N5ResourceMappings.LAST_MODIFIED_BY_ENG;
+import static nikita.common.config.N5ResourceMappings.LAST_MODIFIED_DATE_ENG;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
@@ -82,7 +84,7 @@ public class NoarkEntity
      * M??? - oppdatertDato (xs:dateTime)
      */
     @LastModifiedDate
-    @Column(name = "last_modified_date")
+    @Column(name = LAST_MODIFIED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     private OffsetDateTime lastModifiedDate;
 
@@ -90,7 +92,7 @@ public class NoarkEntity
      * M??? - oppdatertAv (xs:string)
      */
     @LastModifiedBy
-    @Column(name = "last_modified_by")
+    @Column(name = LAST_MODIFIED_BY_ENG)
     private String lastModifiedBy;
 
     @Override
@@ -145,8 +147,18 @@ public class NoarkEntity
     }
 
     @Override
+    public void setLastModifiedDate(OffsetDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    @Override
     public String getLastModifiedBy() {
         return lastModifiedBy;
+    }
+
+    @Override
+    public void setLastModifiedBy(String createdBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 
     @Override

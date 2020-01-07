@@ -185,6 +185,7 @@ public class MetadataSuperClass
         return lastModifiedDate;
     }
 
+    @Override
     public void setLastModifiedDate(OffsetDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
@@ -194,6 +195,7 @@ public class MetadataSuperClass
         return lastModifiedBy;
     }
 
+    @Override
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }

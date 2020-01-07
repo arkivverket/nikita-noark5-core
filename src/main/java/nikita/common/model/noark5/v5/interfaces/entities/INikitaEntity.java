@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public interface INikitaEntity
-        extends Serializable, INoarkCreateEntity {
+        extends Serializable, INoarkCreateEntity, INoarkLastModifiedEntity {
 
     String getSystemId();
 
@@ -47,11 +47,6 @@ public interface INikitaEntity
      * @return The name of the functional area the entity belongs to
      */
     String getFunctionalTypeName();
-
-
-    OffsetDateTime getLastModifiedDate();
-
-    String getLastModifiedBy();
 
     void createReference(@NotNull INikitaEntity entity,
                          @NotNull String referenceType);

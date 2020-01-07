@@ -212,9 +212,9 @@ public class TestParsing {
         String title = "A classification System title";
         String json = "{ "
             +"  \"systemID\": \"" + systemID + "\" "
-	    /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
 	    */
             +", \"opprettetAv\": \"Some Person\" "
@@ -249,6 +249,11 @@ public class TestParsing {
 	System.out.println("info: testing class parsing");
 	String json = "{ "
 	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
+            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
 	    +", \"klasseID\": \"a class id\" "
 	    +", \"tittel\": \"A class title\" "
 	    +", \"beskrivelse\": \"A class description\" "
@@ -313,9 +318,9 @@ public class TestParsing {
         String name = "The Fond Creator";
         String json = "{ "
             +"  \"systemID\": \"" + systemID + "\" "
-            /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             */
             +", \"opprettetAv\": \"Some Person\" "
@@ -346,9 +351,9 @@ public class TestParsing {
         System.out.println("info: testing fonds parsing");
         String json = "{ "
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
-            /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             */
             +", \"opprettetAv\": \"Some Person\" "
@@ -384,6 +389,11 @@ public class TestParsing {
 	System.out.println("info: testing series parsing");
 	String json = "{ "
 	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
+            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
 	    +", \"tittel\": \"A series title\" "
 	    +", \"beskrivelse\": \"A series description\" "
 	    +", \"arkivdelstatus\": { \"kode\": \"P\", \"kodenavn\": \"Avsluttet periode\" } "
@@ -463,9 +473,9 @@ public class TestParsing {
         System.out.println("info: testing file parsing");
         String json = "{ "
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
-            /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             */
             +", \"opprettetAv\": \"Some Person\" "
@@ -535,8 +545,8 @@ public class TestParsing {
         String title = "A case file title";
         String json = "{ "
             +"  \"systemID\": \""+ systemID + "\" "
-            //+", \"oppdatertAv\": \"Some Person\" "
-            //+", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
@@ -609,8 +619,13 @@ public class TestParsing {
     public void parseRecordComplete() throws Exception {
 	System.out.println("info: testing record parsing");
 	String json = "{ "
-	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\", "
-	    +"\"opprettetDato\": \"1865-02-13T00:00:00+00:00\", "
+	    +"  \"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
+            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            */
+	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\", "
 	    +"\"opprettetAv\": \"Some Person\", "
 	    +"\"arkivertDato\": \"1863-10-10T00:00:00+00:00\", "
 	    +"\"arkivertAv\": \"Min Venn\", "
@@ -678,8 +693,8 @@ public class TestParsing {
         String title = "A registry entry title";
         String json = "{ "
             +"  \"systemID\": \"" + systemID + "\" "
-            //+", \"oppdatertAv\": \"Some Person\" "
-            //+", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
             +", \"opprettetAv\": \"Some Person\" "
@@ -781,8 +796,8 @@ public class TestParsing {
         String title = "A record note title";
         String json = "{ "
             +"  \"systemID\": \"" + systemID + "\" "
-            //+", \"oppdatertAv\": \"Some Person\" "
-            //+", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"oppdatertAv\": \"Some Person\" "
+            +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
             +", \"opprettetAv\": \"Some Person\" "
@@ -862,9 +877,9 @@ public class TestParsing {
 	System.out.println("info: testing documentdescription parsing");
         String json = "{ "
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
-	    /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
 	    */
             +", \"opprettetAv\": \"Some Person\" "
@@ -975,9 +990,9 @@ public class TestParsing {
 	System.out.println("info: testing documentobject parsing");
         String json = "{ "
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
-            /*
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
+            /*
             +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             */
             +", \"opprettetAv\": \"Some Person\" "

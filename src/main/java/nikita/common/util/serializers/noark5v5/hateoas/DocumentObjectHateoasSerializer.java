@@ -29,7 +29,7 @@ public class DocumentObjectHateoasSerializer
         jgen.writeStartObject();
 
         // handle DocumentObject properties
-        printSystemIdEntity(jgen, documentObject);
+        printNikitaEntity(jgen, documentObject);
 
         if (documentObject.getVersionNumber() != null) {
             jgen.writeNumberField(DOCUMENT_OBJECT_VERSION_NUMBER,
@@ -47,7 +47,6 @@ public class DocumentObjectHateoasSerializer
             jgen.writeStringField(DOCUMENT_OBJECT_FORMAT_DETAILS,
                     documentObject.getFormatDetails());
         }
-        printCreateEntity(jgen, documentObject);
         if (documentObject.getChecksum() != null) {
             jgen.writeStringField(DOCUMENT_OBJECT_CHECKSUM,
                     documentObject.getChecksum());
