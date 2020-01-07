@@ -70,7 +70,6 @@ public final class Constants {
     public static final String SUB_FILE = SUB + FILE;
     public static final String NEW_CROSS_REFERENCE = NEW + DASH + CROSS_REFERENCE;
     public static final String REFERENCE_NEW_SERIES = NEW + DASH + "referanseArkivdel";
-    public static final String NEW_SCREENING = NEW + DASH + SCREENING;
     public static final String NEW_DISPOSAL = NEW + DASH + DISPOSAL;
     public static final String NEW_DISPOSAL_UNDERTAKEN = NEW + DASH + DISPOSAL_UNDERTAKEN;
     public static final String NEW_DELETION = NEW + DASH + "sletting";
@@ -463,10 +462,6 @@ public final class Constants {
     // Series
     public static final String REL_FONDS_STRUCTURE_REFERENCE_SERIES = NIKITA_CONFORMANCE_REL + REFERENCE_SERIES + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_REFERENCE_SERIES = NIKITA_CONFORMANCE_REL + REFERENCE_NEW_SERIES + SLASH;
-
-    // Screening
-    public static final String REL_FONDS_STRUCTURE_SCREENING = NIKITA_CONFORMANCE_REL + SCREENING + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_SCREENING = NIKITA_CONFORMANCE_REL + NEW_SCREENING + SLASH;
 
     // Disposal
     public static final String REL_FONDS_STRUCTURE_DISPOSAL = NIKITA_CONFORMANCE_REL + DISPOSAL + SLASH;

@@ -36,8 +36,6 @@ public interface IClassHateoasHandler extends IHateoasHandler {
 
     void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);

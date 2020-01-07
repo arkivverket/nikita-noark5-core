@@ -323,45 +323,6 @@ public class RecordHateoasController
                 API_MESSAGE_NOT_IMPLEMENTED);
     }
 
-    // Add a screening (skjerming) to a Record
-    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-skjerming
-    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-skjerming/
-    @ApiOperation(value = "Associates a Screening with a Record identified by systemID",
-            notes = "Returns the Record after the Screening is successfully associated with it." +
-                    "Note a Record can only have one Screening. Update via PUT",
-            response = RecordHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = SCREENING + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 201, message = SCREENING + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " + SCREENING),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> addNewScreeningToRecord(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemId of Record to associate the Screening with",
-                    required = true)
-            @PathVariable String systemID,
-            @ApiParam(name = "Screening",
-                    value = "screening",
-                    required = true)
-            @RequestBody Screening screening) throws NikitaException {
-        // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-//        TODO: What do we return here? Record + screening? screening?
-//        return ResponseEntity.status(CREATED)
-//                .eTag(screening.getVersion().toString())
-//                .body(screeningHateoas);
-        return errorResponse(NOT_IMPLEMENTED,
-                API_MESSAGE_NOT_IMPLEMENTED);
-    }
-
     // Add a disposalUndertaken (utfoertKassasjon) to a Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-utfoertKassasjon
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-utfoertKassasjon/

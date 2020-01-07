@@ -46,7 +46,6 @@ public class ClassHateoasHandler
         addNewDisposal(entity, hateoasNoarkObject);
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
-        addNewScreening(entity, hateoasNoarkObject);
         // links for metadata entities
         addAccessRestriction(entity,hateoasNoarkObject);
         addDisposalDecision(entity,hateoasNoarkObject);
@@ -183,13 +182,6 @@ public class ClassHateoasHandler
                 REL_FONDS_STRUCTURE_NEW_DELETION, false));
     }
 
-
-    @Override
-    public void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_SCREENING + SLASH,
-                REL_FONDS_STRUCTURE_NEW_SCREENING, false));
-    }
 
     @Override
     public void addCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {

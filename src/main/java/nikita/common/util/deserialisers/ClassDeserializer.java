@@ -72,6 +72,9 @@ public class ClassDeserializer
 		CommonUtils.Hateoas.Deserialize.deserialiseClassified(
 			objectNode, errors));
 
+        klass.setReferenceScreening(
+                CommonUtils.Hateoas.Deserialize.deserialiseScreening(objectNode, errors));
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +

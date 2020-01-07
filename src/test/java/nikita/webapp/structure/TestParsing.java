@@ -274,7 +274,6 @@ public class TestParsing {
 	    +"    \"kassasjonsdato\": \"1942-07-25\" "
 	    +"  } "
 	    */
-	    /*
 	    +", \"skjerming\": { "
 	    +"    \"tilgangsrestriksjon\": {"
 	    +"      \"kode\": \"P\","
@@ -286,7 +285,6 @@ public class TestParsing {
 	    +"    \"skjermingsvarighet\": 60, "
 	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"} "
-	    */
 	    +", \"gradering\": { "
 	    +"    \"graderingskode\": { "
 	    +"      \"kode\":\"SH\","
@@ -659,7 +657,6 @@ public class TestParsing {
 	    +"  \"kassasjonsdato\": \"1942-07-25\" "
 	    +"}, "
 	    */
-	    /*
 	    +"\"skjerming\": { "
 	    +"  \"tilgangsrestriksjon\": {"
 	    +"    \"kode\": \"P\","
@@ -671,7 +668,6 @@ public class TestParsing {
 	    +"  \"skjermingsvarighet\": 60, "
 	    +"  \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"}, "
-	    */
 	    +"\"gradering\": { "
 	    +"  \"graderingskode\": { "
 	    +"    \"kode\":\"SH\","
@@ -734,7 +730,6 @@ public class TestParsing {
             +"    \"kassasjonsdato\": \"1942-07-25\" "
             +"  } "
             */
-            /*
             +", \"skjerming\": { "
             +"    \"tilgangsrestriksjon\": {"
             +"      \"kode\": \"P\","
@@ -746,7 +741,6 @@ public class TestParsing {
             +"    \"skjermingsvarighet\": 60, "
             +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
             +"  } "
-            */
             +",  \"gradering\": { "
             +"    \"graderingskode\": { "
             +"      \"kode\":\"SH\","
@@ -840,7 +834,6 @@ public class TestParsing {
             +"    \"kassasjonsdato\": \"1942-07-25\" "
             +"  } "
             */
-            /*
             +", \"skjerming\": { "
             +"    \"tilgangsrestriksjon\": {"
             +"      \"kode\": \"P\","
@@ -852,7 +845,6 @@ public class TestParsing {
             +"    \"skjermingsvarighet\": 60, "
             +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
             +"  } "
-            */
             +",  \"gradering\": { "
             +"    \"graderingskode\": { "
             +"      \"kode\":\"SH\","
@@ -956,7 +948,6 @@ public class TestParsing {
 	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"} "
 	    */
-	    /*
 	    +", \"skjerming\": { "
 	    +"    \"tilgangsrestriksjon\": {"
 	    +"      \"kode\": \"P\","
@@ -968,7 +959,6 @@ public class TestParsing {
 	    +"    \"skjermingsvarighet\": 60, "
 	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
 	    +"} "
-	    */
 	    +", \"gradering\": { "
 	    +"    \"graderingskode\": { "
 	    +"      \"kode\":\"SH\","
