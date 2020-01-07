@@ -29,12 +29,6 @@ public interface IRecordHateoasHandler
     void addNewReferenceSeries(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDisposal(INikitaEntity entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewDisposal(INikitaEntity entity,
-                        IHateoasNoarkObject hateoasNoarkObject);
-
     void addDisposalUndertaken(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 

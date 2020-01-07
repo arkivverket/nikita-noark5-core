@@ -51,8 +51,6 @@ public class SeriesHateoasHandler extends HateoasHandler
         addNewSeriesPrecursor(entity, hateoasNoarkObject);
         addFonds(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
-        addDisposal(entity, hateoasNoarkObject);
-        addNewDisposal(entity, hateoasNoarkObject);
         addDisposalUndertaken(entity, hateoasNoarkObject);
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addDeletion(entity, hateoasNoarkObject);
@@ -264,26 +262,6 @@ public class SeriesHateoasHandler extends HateoasHandler
                             series.getReferenceFonds().getSystemId(),
                             REL_FONDS_STRUCTURE_FONDS));
         }
-    }
-
-    @Override
-    /**
-     * Get the Disposal associated with the Series (GET)
-     */
-    public void addDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + DISPOSAL + SLASH,
-                REL_FONDS_STRUCTURE_DISPOSAL, false));
-    }
-
-    @Override
-    /**
-     * Add a new Disposal to a Series (POST)
-     */
-    public void addNewDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_DISPOSAL + SLASH,
-                REL_FONDS_STRUCTURE_NEW_DISPOSAL, false));
     }
 
     @Override
