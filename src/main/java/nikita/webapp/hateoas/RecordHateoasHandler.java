@@ -329,6 +329,42 @@ public class RecordHateoasHandler
     }
 
     /**
+     * Create a REL/HREF pair to get the list of Author objects associated with
+     * the given Record.
+     * <p>
+     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/forfatter"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/forfatter/"
+     *
+     * @param entity             record
+     * @param hateoasNoarkObject hateoasRecord
+     */
+    @Override
+    public void addAuthor(INikitaEntity entity,
+                          IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemId() +
+                SLASH + AUTHOR + SLASH, REL_FONDS_STRUCTURE_AUTHOR, true));
+    }
+
+    /**
+     * Create a REL/HREF pair to create a new Author object associated with
+     * the given Record.
+     * <p>
+     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/ny-forfatter"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-forfatter/"
+     *
+     * @param entity             record
+     * @param hateoasNoarkObject hateoasRecord
+     */
+    @Override
+    public void addNewAuthor(INikitaEntity entity,
+                             IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemId() +
+                SLASH + NEW_AUTHOR + SLASH, REL_FONDS_STRUCTURE_NEW_AUTHOR));
+    }
+
+    /**
      * Cast the INikitaEntity entity to a Record
      *
      * @param entity the Record

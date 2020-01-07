@@ -5,13 +5,17 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
+import nikita.common.repository.n5v5.secondary.IAuthorRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
@@ -51,6 +55,8 @@ public class DocumentDescriptionService
     private IRecordHateoasHandler recordHateoasHandler;
     private IPartService partService;
     private IPartHateoasHandler partHateoasHandler;
+    private IAuthorRepository authorRepository;
+    private IAuthorHateoasHandler authorHateoasHandler;
 
     public DocumentDescriptionService(
             EntityManager entityManager,
@@ -62,7 +68,9 @@ public class DocumentDescriptionService
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
             IPartService partService,
-            IPartHateoasHandler partHateoasHandler) {
+            IPartHateoasHandler partHateoasHandler,
+            IAuthorRepository authorRepository,
+            IAuthorHateoasHandler authorHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
@@ -72,6 +80,8 @@ public class DocumentDescriptionService
         this.recordHateoasHandler = recordHateoasHandler;
         this.partService = partService;
         this.partHateoasHandler = partHateoasHandler;
+        this.authorRepository = authorRepository;
+        this.authorHateoasHandler = authorHateoasHandler;
     }
 
     // All CREATE operations
@@ -105,6 +115,29 @@ public class DocumentDescriptionService
         return partService.
                 createNewPartUnit(partUnit,
                         getDocumentDescriptionOrThrow(systemID));
+    }
+
+
+    /**
+     * Persist and associate the incoming author object with the
+     * documentDescription identified by systemId
+     *
+     * @param systemId The systemId of the documentDescription to associate
+     *                 with
+     * @param author   The incoming author object
+     * @return author object wrapped as a AuthorHateaos
+     */
+    @Override
+    public AuthorHateoas associateAuthorWithDocumentDescription(
+            String systemId, Author author) {
+        DocumentDescription documentDescription =
+                getDocumentDescriptionOrThrow(systemId);
+        author.setReferenceDocumentDescription(documentDescription);
+        authorRepository.save(author);
+        AuthorHateoas authorHateoas = new AuthorHateoas(author);
+        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
+        setOutgoingRequestHeader(authorHateoas);
+        return authorHateoas;
     }
 
     /**
@@ -144,6 +177,15 @@ public class DocumentDescriptionService
         return partService.generateDefaultPartUnit(systemID);
     }
 
+    @Override
+    public AuthorHateoas generateDefaultAuthor(String systemID) {
+        Author suggestedPart = new Author();
+        suggestedPart.setAuthor("Ole Olsen");
+        AuthorHateoas partHateoas = new AuthorHateoas(suggestedPart);
+        authorHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
+        return partHateoas;
+    }
+
     /*
      * Note:
      * <p>
@@ -171,6 +213,20 @@ public class DocumentDescriptionService
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(documentDescriptionHateoas.getEntityVersion().toString())
                 .body(documentDescriptionHateoas);
+    }
+
+    @Override
+    public AuthorHateoas findAllAuthorWithDocumentDescriptionBySystemId(
+            String systemId) {
+        DocumentDescription documentDescription =
+                getDocumentDescriptionOrThrow(systemId);
+        AuthorHateoas authorHateoas =
+                new AuthorHateoas((List<INikitaEntity>)
+                        (List) documentDescription.getReferenceAuthor(),
+                        AUTHOR);
+        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
+        setOutgoingRequestHeader(authorHateoas);
+        return authorHateoas;
     }
 
     @Override

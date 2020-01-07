@@ -76,5 +76,11 @@ public interface IDocumentDescriptionHateoasHandler
 
     void addNewPartUnit(INikitaEntity entity,
                         IHateoasNoarkObject hateoasNoarkObject);
+
+    void addAuthor(INikitaEntity entity,
+                   IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewAuthor(INikitaEntity entity,
+                      IHateoasNoarkObject hateoasNoarkObject);
 }
 

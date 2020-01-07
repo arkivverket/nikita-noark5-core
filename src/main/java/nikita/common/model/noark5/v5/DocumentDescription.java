@@ -19,16 +19,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG;
-
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -163,7 +160,7 @@ public class DocumentDescription
     // Links to Authors
     @OneToMany(mappedBy = "referenceDocumentDescription",
             cascade = ALL, orphanRemoval = true)
-    private Set<Author> referenceAuthor = new HashSet<>();
+    private List<Author> referenceAuthor = new ArrayList<>();
 
     // Link to Classified
     @ManyToOne(cascade = PERSIST)
@@ -368,12 +365,12 @@ public class DocumentDescription
     }
 
     @Override
-    public Set<Author> getReferenceAuthor() {
+    public List<Author> getReferenceAuthor() {
         return referenceAuthor;
     }
 
     @Override
-    public void setReferenceAuthor(Set<Author> referenceAuthor) {
+    public void setReferenceAuthor(List<Author> referenceAuthor) {
         this.referenceAuthor = referenceAuthor;
     }
 
