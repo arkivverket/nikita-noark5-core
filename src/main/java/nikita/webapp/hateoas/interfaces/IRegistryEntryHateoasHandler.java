@@ -10,12 +10,6 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  */
 public interface IRegistryEntryHateoasHandler extends IRecordHateoasHandler {
 
-    void addElectronicSignature(INikitaEntity entity,
-                                IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewElectronicSignature(INikitaEntity entity,
-                                   IHateoasNoarkObject hateoasNoarkObject);
-
     void addPrecedence(INikitaEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 

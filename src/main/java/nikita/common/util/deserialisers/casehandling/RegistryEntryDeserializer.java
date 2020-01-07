@@ -193,6 +193,8 @@ public class RegistryEntryDeserializer
                 deserialiseScreening(objectNode, errors));
         registryEntry.setReferenceClassified(
 		deserialiseClassified(objectNode, errors));
+        registryEntry.setReferenceElectronicSignature(
+		deserialiseElectronicSignature(objectNode, errors));
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

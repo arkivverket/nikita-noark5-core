@@ -27,8 +27,6 @@ public class RegistryEntryHateoasHandler
         super.addEntityLinks(entity, hateoasNoarkObject);
 
 
-        addElectronicSignature(entity, hateoasNoarkObject);
-        addNewElectronicSignature(entity, hateoasNoarkObject);
         addPrecedence(entity, hateoasNoarkObject);
         addNewPrecedence(entity, hateoasNoarkObject);
         addSignOff(entity, hateoasNoarkObject);
@@ -45,20 +43,6 @@ public class RegistryEntryHateoasHandler
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addRegistryEntryStatus(entity, hateoasNoarkObject);
         addRegistryEntryType(entity, hateoasNoarkObject);
-    }
-
-    @Override
-    public void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + ELECTRONIC_SIGNATURE + SLASH,
-                REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE, false));
-    }
-
-    @Override
-    public void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_ELECTRONIC_SIGNATURE + SLASH,
-                REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE, false));
     }
 
     @Override

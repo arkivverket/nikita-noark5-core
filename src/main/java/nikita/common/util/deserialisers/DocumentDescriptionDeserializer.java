@@ -133,6 +133,8 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
                 deserialiseScreening(objectNode, errors));
         documentDescription.setReferenceClassified(
 		deserialiseClassified(objectNode, errors));
+        documentDescription.setReferenceElectronicSignature(
+		deserialiseElectronicSignature(objectNode, errors));
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

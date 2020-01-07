@@ -774,7 +774,6 @@ public class TestParsing {
             +", \"utlaantTil\": \"Another Person\" "
             //+", \"referanseUtlaantTil\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
             +", \"journalenhet\": \"PR departement\" "
-            /*
             +", \"elektroniskSignatur\": { "
             +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
             +"      \"kode\":\"PS\","
@@ -787,7 +786,6 @@ public class TestParsing {
             +"    \"verifisertDato\": \"2070-02-13+01:00\", "
             +"    \"verifisertAv\": \"PST\" "
             +"  } "
-            */
             //+", \"virksomhetsspesifikkeMetadata\": {} "
             +"}";
 
@@ -969,7 +967,6 @@ public class TestParsing {
 	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
 	    +"    \"nedgradertAv\": \"PST\" "
 	    +"  } "
-	    /*
             +", \"elektroniskSignatur\": { "
             +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
             +"      \"kode\":\"PS\","
@@ -982,7 +979,6 @@ public class TestParsing {
             +"    \"verifisertDato\": \"2070-02-13+01:00\", "
             +"    \"verifisertAv\": \"PST\" "
             +"  } "
-	    */
 	    +", \"eksternReferanse\" : \"RT #1234\" "
             //+", \"virksomhetsspesifikkeMetadata\": {} "
             +"}";
@@ -1027,7 +1023,6 @@ public class TestParsing {
             +", \"mimeType\": \"application/pdf\" "
             +", \"sjekksumAlgoritme\": \"SHA-256 Person\" "
             +", \"filstoerrelse\": 36 "
-            /*
             +", \"elektroniskSignatur\": { "
             +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
             +"      \"kode\":\"PS\","
@@ -1040,7 +1035,6 @@ public class TestParsing {
             +"    \"verifisertDato\": \"2070-02-13+01:00\", "
             +"    \"verifisertAv\": \"PST\" "
             +"  } "
-            */
             +"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
