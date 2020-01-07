@@ -17,7 +17,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_DELETION;
 import static nikita.common.config.Constants.TABLE_DELETION;
 import static nikita.common.config.N5ResourceMappings.DELETION;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -92,7 +91,7 @@ public class Deletion
 
     @Override
     public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_DELETION;
+        return DELETION; // FIXME, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {

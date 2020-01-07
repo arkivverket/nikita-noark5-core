@@ -51,8 +51,6 @@ public class SeriesHateoasHandler extends HateoasHandler
         addNewSeriesPrecursor(entity, hateoasNoarkObject);
         addFonds(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
-        addDeletion(entity, hateoasNoarkObject);
-        addNewDeletion(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
         addListStorageLocation(entity, hateoasNoarkObject);
     }
@@ -260,26 +258,6 @@ public class SeriesHateoasHandler extends HateoasHandler
                             series.getReferenceFonds().getSystemId(),
                             REL_FONDS_STRUCTURE_FONDS));
         }
-    }
-
-    @Override
-    /**
-     * Get the Deletion associated with the Series object (GET)
-     */
-    public void addDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + DELETION + SLASH,
-                REL_FONDS_STRUCTURE_DELETION, false));
-    }
-
-    @Override
-    /**
-     * Add a new Deletion to a Series (POST)
-     */
-    public void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_DELETION + SLASH,
-                REL_FONDS_STRUCTURE_NEW_DELETION, false));
     }
 
     @Override

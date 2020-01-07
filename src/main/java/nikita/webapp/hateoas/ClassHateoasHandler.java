@@ -42,8 +42,6 @@ public class ClassHateoasHandler
         // links for secondary entities (non-embeddable)
         addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
-        // links for secondary entities (embeddable)
-        addNewDeletion(entity, hateoasNoarkObject);
         // links for metadata entities
         addAccessRestriction(entity,hateoasNoarkObject);
         addDisposalDecision(entity,hateoasNoarkObject);
@@ -158,14 +156,6 @@ public class ClassHateoasHandler
                 HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_CASE_FILE + SLASH,
                 REL_CASE_HANDLING_NEW_CASE_FILE, false));
     }
-
-    @Override
-    public void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_DELETION + SLASH,
-                REL_FONDS_STRUCTURE_NEW_DELETION, false));
-    }
-
 
     @Override
     public void addCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {

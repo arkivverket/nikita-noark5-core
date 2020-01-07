@@ -38,10 +38,6 @@ public interface ISeriesHateoasHandler extends IHateoasHandler {
 
     void addSeriesStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);

@@ -938,8 +938,9 @@ public final class CommonUtils {
                 JsonNode deletionNode = objectNode.get(DELETION);
                 if (deletionNode != null) {
                     deletion = new Deletion();
-                    deserialiseDeletionEntity(deletion, deletionNode.deepCopy(), errors);
-                    // TODO consider if objectNode.remove(DELETION); is needed due to deepCopy()
+                    deserialiseDeletionEntity(deletion, deletionNode.deepCopy(),
+                                              errors);
+                    objectNode.remove(DELETION);
                 }
                 return deletion;
             }
@@ -961,8 +962,6 @@ public final class CommonUtils {
 
                 // Deserialize deletionDate
                 deletionEntity.setDeletionDate(deserializeDateTime(DELETION_DATE, objectNode, errors));
-
-                objectNode.remove(DELETION);
             }
 
             public static List<Precedence> deserialisePrecedences(ObjectNode objectNode, StringBuilder errors) {

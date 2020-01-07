@@ -29,12 +29,6 @@ public interface IRecordHateoasHandler
     void addNewReferenceSeries(INikitaEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDeletion(INikitaEntity entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewDeletion(INikitaEntity entity,
-                        IHateoasNoarkObject hateoasNoarkObject);
-
     void addStorageLocation(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
