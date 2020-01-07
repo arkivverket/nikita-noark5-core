@@ -20,16 +20,16 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.*;
+import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.admin.*;
 import nikita.common.model.noark5.v5.casehandling.*;
-import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.util.deserialisers.*;
-import nikita.common.util.deserialisers.nationalidentifier.*;
 import nikita.common.util.deserialisers.admin.*;
 import nikita.common.util.deserialisers.casehandling.*;
+import nikita.common.util.deserialisers.nationalidentifier.*;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class)
