@@ -38,9 +38,9 @@ public class InternalNameTranslator {
 
         // Add entity name mappings
         addNorToEnglishNameMap
-                (ADMINISTRATIVE_UNIT,
-                        ADMINISTRATIVE_UNIT_ENG,
-                        ADMINISTRATIVE_UNIT_ENG_OBJECT);
+                (ADMINISTRATIVE_UNIT_FIELD,
+                        ADMINISTRATIVE_UNIT_FIELD_ENG,
+                        ADMINISTRATIVE_UNIT_FIELD_ENG_OBJECT);
         addNorToEnglishNameMap
                 (AUTHOR,
                         AUTHOR_ENG,

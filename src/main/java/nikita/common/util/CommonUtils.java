@@ -1359,10 +1359,10 @@ public final class CommonUtils {
                 deserialiseCorrespondencePartType(correspondencePartInternal, objectNode, errors);
 
                 // Deserialize administrativEnhet
-                JsonNode currentNode = objectNode.get(ADMINISTRATIVE_UNIT);
+                JsonNode currentNode = objectNode.get(ADMINISTRATIVE_UNIT_FIELD);
                 if (null != currentNode) {
                     correspondencePartInternal.setAdministrativeUnit(currentNode.textValue());
-                    objectNode.remove(ADMINISTRATIVE_UNIT);
+                    objectNode.remove(ADMINISTRATIVE_UNIT_FIELD);
                 }
                 // Deserialize saksbehandler
                 currentNode = objectNode.get(CASE_HANDLER);
@@ -2164,7 +2164,7 @@ public final class CommonUtils {
                 if (null != correspondencePartInternal) {
                     printCorrespondencePart(jgen, correspondencePartInternal);
                     if (null != correspondencePartInternal.getAdministrativeUnit()) {
-                        jgen.writeStringField(ADMINISTRATIVE_UNIT, correspondencePartInternal.getAdministrativeUnit());
+                        jgen.writeStringField(ADMINISTRATIVE_UNIT_FIELD, correspondencePartInternal.getAdministrativeUnit());
                     }
 //                    if (null != correspondencePartInternal.getReferenceAdministrativeUnit()) {
 //                        String systemID = correspondencePartInternal.getReferenceAdministrativeUnit().getSystemId();

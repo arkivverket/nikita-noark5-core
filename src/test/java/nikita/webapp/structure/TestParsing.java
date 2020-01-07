@@ -1236,7 +1236,7 @@ public class TestParsing {
         String json = "{ "
             +"  \"systemID\": \"" + systemID + "\" "
             +", \"korrespondanseparttype\": { \"kode\": \"EK\", \"kodenavn\": \"Intern kopimottaker\" } "
-            //+", \"administrativEnhet\": \"" + name + "\" "
+            +", \"administrativEnhet\": \"" + name + "\" "
             +", \"saksbehandler\": \"Donald Duck\" "
             //+", \"virksomhetsspesifikkeMetadata\": {} "
             +"}";
@@ -1251,7 +1251,7 @@ public class TestParsing {
                 jsonParser, null /* DeserializationContext */);
         assert(null != correspondencePartInternal);
         assert(systemID.equals(correspondencePartInternal.getSystemId()));
-        //assert(name.equals(correspondencePartInternal.getAdministrativeUnit()));
+        assert(name.equals(correspondencePartInternal.getAdministrativeUnit()));
     }
 
     @Test
