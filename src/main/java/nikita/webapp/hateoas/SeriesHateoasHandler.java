@@ -57,8 +57,6 @@ public class SeriesHateoasHandler extends HateoasHandler
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addDeletion(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
-        addScreening(entity, hateoasNoarkObject);
-        addNewScreening(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
         addListStorageLocation(entity, hateoasNoarkObject);
     }
@@ -326,26 +324,6 @@ public class SeriesHateoasHandler extends HateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_DELETION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_DELETION, false));
-    }
-
-    @Override
-    /**
-     * Get the Screening associated with the Series (GET)
-     */
-    public void addScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + SCREENING + SLASH,
-                REL_FONDS_STRUCTURE_SCREENING, false));
-    }
-
-    @Override
-    /**
-     * Add a new Screening to a Series (POST)
-     */
-    public void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_SCREENING + SLASH,
-                REL_FONDS_STRUCTURE_NEW_SCREENING, false));
     }
 
     @Override

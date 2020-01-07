@@ -35,7 +35,6 @@ public class DocumentDescriptionHateoasHandler
         addNewDisposal(entity, hateoasNoarkObject);
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
-        addNewScreening(entity, hateoasNoarkObject);
         addPart(entity, hateoasNoarkObject);
         addNewPartPerson(entity, hateoasNoarkObject);
         addNewPartUnit(entity, hateoasNoarkObject);
@@ -118,20 +117,6 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_DELETION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_DELETION, false));
-    }
-
-    @Override
-    public void addScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + SCREENING + SLASH,
-                REL_FONDS_STRUCTURE_SCREENING, false));
-    }
-
-    @Override
-    public void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_SCREENING + SLASH,
-                REL_FONDS_STRUCTURE_NEW_SCREENING, false));
     }
 
     @Override

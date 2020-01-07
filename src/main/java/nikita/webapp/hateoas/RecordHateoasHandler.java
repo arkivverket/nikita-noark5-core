@@ -51,8 +51,6 @@ public class RecordHateoasHandler
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addDeletion(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
-        addScreening(entity, hateoasNoarkObject);
-        addNewScreening(entity, hateoasNoarkObject);
         //addStorageLocation(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
         //addComment(entity, hateoasNoarkObject);
@@ -237,20 +235,6 @@ public class RecordHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_DELETION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_DELETION, false));
-    }
-
-    @Override
-    public void addScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + SCREENING + SLASH,
-                REL_FONDS_STRUCTURE_SCREENING, false));
-    }
-
-    @Override
-    public void addNewScreening(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_SCREENING + SLASH,
-                REL_FONDS_STRUCTURE_NEW_SCREENING, false));
     }
 
     @Override

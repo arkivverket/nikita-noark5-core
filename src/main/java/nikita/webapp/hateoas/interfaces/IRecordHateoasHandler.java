@@ -47,13 +47,6 @@ public interface IRecordHateoasHandler
     void addNewDeletion(INikitaEntity entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addScreening(INikitaEntity entity,
-                      IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewScreening(INikitaEntity entity,
-                         IHateoasNoarkObject hateoasNoarkObject);
-
-
     void addStorageLocation(INikitaEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 

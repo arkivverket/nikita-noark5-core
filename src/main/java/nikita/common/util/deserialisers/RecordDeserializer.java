@@ -103,6 +103,9 @@ public class RecordDeserializer
         record.setReferenceClassified(
 		deserialiseClassified(objectNode, errors));
 
+        record.setReferenceScreening(
+                deserialiseScreening(objectNode, errors));
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +
