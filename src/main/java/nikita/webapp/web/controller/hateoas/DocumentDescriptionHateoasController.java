@@ -11,6 +11,8 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -106,6 +108,54 @@ public class DocumentDescriptionHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(createdDocumentObject.getVersion().toString())
                 .body(documentObjectHateoas);
+    }
+
+    // Create a new Author and associate it with the given DocumentDescription
+    // POST [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-forfatter
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-forfatter/
+    @ApiOperation(
+            value = "Persists an author object associated with the given " +
+                    "DocumentDescription systemId",
+            notes = "Returns the newly created author object after it was " +
+                    "associated with a DocumentDescription object and persisted to the " +
+                    "database",
+            response = AuthorHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Author " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = AuthorHateoas.class),
+            @ApiResponse(code = 201,
+                    message = "Author " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = AuthorHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " +
+                            "DocumentDescription"),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_AUTHOR,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<AuthorHateoas>
+    addAuthorAssociatedWithDocumentDescription(
+            @ApiParam(name = "systemID",
+                    value = "systemId of the documentDescription to associate" +
+                            " the author with.",
+                    required = true)
+            @PathVariable String systemID,
+            @ApiParam(name = "author",
+                    value = "Incoming author object",
+                    required = true)
+            @RequestBody Author author)
+            throws NikitaException {
+        return ResponseEntity.status(CREATED)
+                .body(documentDescriptionService.
+                        associateAuthorWithDocumentDescription(
+                                systemID, author));
     }
 
     // Create a new PartUnit and associate it with the given documentDescription
@@ -276,6 +326,39 @@ public class DocumentDescriptionHateoasController
                         generateDefaultPartUnit(systemID));
     }
 
+    // Create a suggested Author (like a template) object with default values
+    // (nothing persisted)
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-forfatter
+    @ApiOperation(value = "Suggests the contents of a new Author object",
+            notes = "Returns a pre-filled Author object with values relevant " +
+                    "for the logged-in user",
+            response = AuthorHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Author returned",
+                    response = AuthorHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_AUTHOR)
+    public ResponseEntity<AuthorHateoas>
+    getAuthorTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the documentDescription to retrieve " +
+                            "associated Author",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentDescriptionService.
+                        generateDefaultAuthor(systemID));
+    }
+
     // Create a suggested PartPerson (like a template) object
     // with default values (nothing persisted)
     // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-partenhet
@@ -380,6 +463,38 @@ public class DocumentDescriptionHateoasController
         return documentDescriptionService.
                 findAllDocumentObjectWithDocumentDescriptionBySystemId(
                         systemID);
+    }
+
+    // Retrieve all Authors associated with a DocumentDescription identified
+    // by systemId
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/forfatter
+    @ApiOperation(value = "Retrieves a list of Authors associated with a " +
+            "DocumentDescription",
+            response = AuthorHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Author returned",
+                    response = AuthorHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + AUTHOR)
+    public ResponseEntity<AuthorHateoas>
+    findAllAuthorAssociatedWithDocumentDescription(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the DocumentDescription to retrieve " +
+                            "associated Authors",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity
+                .status(OK)
+                .body(documentDescriptionService.
+                        findAllAuthorWithDocumentDescriptionBySystemId(
+                                systemID));
     }
 
     // GET [contextPath][api]/sakarkiv/registrering/{systemId}/part

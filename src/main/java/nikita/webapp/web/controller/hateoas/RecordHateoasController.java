@@ -141,6 +141,37 @@ public class RecordHateoasController
                 .body(recordService.getPartAssociatedWithRecord(systemID));
     }
 
+    // Retrieve all Authors associated with a Record identified by systemId
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/forfatter
+    @ApiOperation(value = "Retrieves a list of Authors associated with a " +
+            "Record",
+            response = AuthorHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Author returned",
+                    response = AuthorHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + AUTHOR)
+    public ResponseEntity<AuthorHateoas>
+    findAllAuthorAssociatedWithRecord(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the Record to retrieve " +
+                            "associated Authors",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity
+                .status(OK)
+                .body(recordService.
+                        findAllAuthorWithRecordBySystemId(
+                                systemID));
+    }
+
     // Retrieve all CorrespondencePart associated with a Record identified by
     // systemId
     // GET [contextPath][api]/sakarkiv/registrering/{systemId}/korrespondansepart
@@ -245,7 +276,7 @@ public class RecordHateoasController
                 API_MESSAGE_NOT_IMPLEMENTED);
     }
 
-    // Create a new DocumentDescription and associate it with the given Record
+    // Create a new Author and associate it with the given Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-forfatter
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-forfatter/
     @ApiOperation(
@@ -557,6 +588,39 @@ public class RecordHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
                         generateDefaultPartPerson(systemID));
+    }
+
+    // Create a suggested Author (like a template) object with default values
+    // (nothing persisted)
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-forfatter
+    @ApiOperation(value = "Suggests the contents of a new Author object",
+            notes = "Returns a pre-filled Author object with values relevant " +
+                    "for the logged-in user",
+            response = AuthorHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Author returned",
+                    response = AuthorHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_AUTHOR)
+    public ResponseEntity<AuthorHateoas>
+    getAuthorTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the record to retrieve " +
+                            "associated Author",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.
+                        generateDefaultAuthor(systemID));
     }
 
     // Create a new CorrespondencePartPerson and associate it with the given journalpost

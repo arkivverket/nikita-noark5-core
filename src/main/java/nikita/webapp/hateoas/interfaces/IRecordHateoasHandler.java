@@ -98,4 +98,10 @@ public interface IRecordHateoasHandler
 
     void addNewCorrespondencePartInternal(INikitaEntity entity,
                                           IHateoasNoarkObject hateoasNoarkObject);
+
+    void addAuthor(INikitaEntity entity,
+                   IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewAuthor(INikitaEntity entity,
+                      IHateoasNoarkObject hateoasNoarkObject);
 }

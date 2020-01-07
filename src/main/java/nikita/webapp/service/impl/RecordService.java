@@ -43,6 +43,7 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_CORRESPONDENCE_PART_RECORD;
+import static nikita.common.config.N5ResourceMappings.AUTHOR;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -174,6 +175,19 @@ public class RecordService
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(recordHateoas);
+    }
+
+    @Override
+    public AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId) {
+        Record record =
+                getRecordOrThrow(systemId);
+        AuthorHateoas authorHateoas =
+                new AuthorHateoas((List<INikitaEntity>)
+                        (List) record.getReferenceAuthor(),
+                        AUTHOR);
+        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
+        setOutgoingRequestHeader(authorHateoas);
+        return authorHateoas;
     }
 
     /**
@@ -475,6 +489,15 @@ public class RecordService
         return correspondencePartService.
                 generateDefaultCorrespondencePartUnit(
                         recordSystemId);
+    }
+
+    @Override
+    public AuthorHateoas generateDefaultAuthor(String systemID) {
+        Author suggestedPart = new Author();
+        suggestedPart.setAuthor("Ole Olsen");
+        AuthorHateoas partHateoas = new AuthorHateoas(suggestedPart);
+        authorHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
+        return partHateoas;
     }
 
     /**

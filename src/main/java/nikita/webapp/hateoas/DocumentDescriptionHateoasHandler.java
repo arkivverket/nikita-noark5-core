@@ -45,6 +45,8 @@ public class DocumentDescriptionHateoasHandler
         addNewStorageLocation(entity, hateoasNoarkObject);
         addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
+        addAuthor(entity, hateoasNoarkObject);
+        addNewAuthor(entity, hateoasNoarkObject);
         // links for metadata entities
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
@@ -237,4 +239,39 @@ public class DocumentDescriptionHateoasHandler
                 REL_FONDS_STRUCTURE_NEW_PART_UNIT));
     }
 
+    /**
+     * Create a REL/HREF pair to get the list of Author objects associated with
+     * the given DocumentDescription.
+     * <p>
+     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/forfatter"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/forfatter/"
+     *
+     * @param entity             documentDescription
+     * @param hateoasNoarkObject hateoasDocumentDescription
+     */
+    @Override
+    public void addAuthor(INikitaEntity entity,
+                          IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() +
+                SLASH + AUTHOR + SLASH, REL_FONDS_STRUCTURE_AUTHOR, true));
+    }
+
+    /**
+     * Create a REL/HREF pair to create a new Author object associated with
+     * the given DocumentDescription.
+     * <p>
+     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/ny-forfatter"
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-forfatter/"
+     *
+     * @param entity             documentDescription
+     * @param hateoasNoarkObject hateoasDocumentDescription
+     */
+    @Override
+    public void addNewAuthor(INikitaEntity entity,
+                             IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() +
+                SLASH + NEW_AUTHOR + SLASH, REL_FONDS_STRUCTURE_NEW_AUTHOR));
+    }
 }

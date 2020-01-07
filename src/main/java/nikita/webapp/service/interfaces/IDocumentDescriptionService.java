@@ -5,6 +5,8 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.secondary.Author;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -26,6 +28,9 @@ public interface IDocumentDescriptionService {
             String systemID, PartUnit partUnit);
 
     // -- All READ operations
+
+    AuthorHateoas associateAuthorWithDocumentDescription(
+            String systemId, Author author);
 
     DocumentDescriptionHateoas generateDefaultDocumentDescription();
 
@@ -61,4 +66,9 @@ public interface IDocumentDescriptionService {
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
+    AuthorHateoas
+    findAllAuthorWithDocumentDescriptionBySystemId(String systemID);
+
+    AuthorHateoas generateDefaultAuthor(String systemID);
 }

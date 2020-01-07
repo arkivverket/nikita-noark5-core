@@ -640,7 +640,7 @@ public final class CommonUtils {
                 // Deserialize author
                 JsonNode currentNode = objectNode.get(AUTHOR);
                 if (null != currentNode) {
-                    HashSet<Author> authors = new HashSet<>();
+                    ArrayList<Author> authors = new ArrayList<>();
                     if (currentNode.isArray()) {
                         currentNode.iterator();
                         for (JsonNode node : currentNode) {
@@ -2329,7 +2329,7 @@ public final class CommonUtils {
 
             public static void printAuthor(JsonGenerator jgen, IAuthor authorEntity)
                     throws IOException {
-                Set<Author> author = authorEntity.getReferenceAuthor();
+                List<Author> author = authorEntity.getReferenceAuthor();
                 if (author != null && author.size() > 0) {
                     jgen.writeArrayFieldStart(AUTHOR);
                     for (Author location : author) {

@@ -97,5 +97,7 @@ public interface IRecordService {
 
     long deleteAllByOwnedBy();
 
+    AuthorHateoas findAllAuthorWithRecordBySystemId(String systemID);
 
+    AuthorHateoas generateDefaultAuthor(String systemID);
 }

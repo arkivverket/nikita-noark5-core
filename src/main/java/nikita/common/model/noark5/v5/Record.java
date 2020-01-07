@@ -20,9 +20,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
@@ -157,7 +155,7 @@ public class Record
     // Links to Authors
     @OneToMany(mappedBy = "referenceRecord",
             cascade = ALL, orphanRemoval = true)
-    private Set<Author> referenceAuthor = new HashSet<>();
+    private List<Author> referenceAuthor = new ArrayList<>();
 
     // Links to Comments
     @ManyToMany
@@ -371,12 +369,12 @@ public class Record
     }
 
     @Override
-    public Set<Author> getReferenceAuthor() {
+    public List<Author> getReferenceAuthor() {
         return referenceAuthor;
     }
 
     @Override
-    public void setReferenceAuthor(Set<Author> referenceAuthor) {
+    public void setReferenceAuthor(List<Author> referenceAuthor) {
         this.referenceAuthor = referenceAuthor;
     }
 
