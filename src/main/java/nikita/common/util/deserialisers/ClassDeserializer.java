@@ -68,6 +68,9 @@ public class ClassDeserializer
         }
 
         CommonUtils.Hateoas.Deserialize.deserialiseKeyword(klass, objectNode, errors);
+	// klasse.gradering is only XSD, not in the version 1.0 API
+	// specification.  See
+	// https://github.com/arkivverket/noark5-tjenestegrensesnitt-standard/pull/241
         klass.setReferenceClassified(
 		CommonUtils.Hateoas.Deserialize.deserialiseClassified(
 			objectNode, errors));
