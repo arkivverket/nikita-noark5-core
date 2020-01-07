@@ -25,6 +25,7 @@ import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.admin.*;
 import nikita.common.model.noark5.v5.casehandling.*;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
+import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.util.deserialisers.*;
 import nikita.common.util.deserialisers.nationalidentifier.*;
 import nikita.common.util.deserialisers.admin.*;
@@ -1114,6 +1115,128 @@ public class TestParsing {
         assert(null != partUnit);
         assert(systemID.equals(partUnit.getSystemId()));
         assert(name.equals(partUnit.getName()));
+    }
+
+    @Test
+    public void parseCorrespondencePartPersonComplete() throws Exception {
+        System.out.println("info: testing correspondencepart person parsing");
+        String systemID = "bfbdb658-3115-11ea-b1cc-7b4a503aeb2b";
+        String name = "Michael Jordan";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"korrespondanseparttype\": { \"kode\": \"EM\", \"kodenavn\": \"Mottaker\" } "
+            +", \"navn\": \"" + name + "\" "
+            //+", \"personidentifikator\": { \"dNummer\": \"01010101011\" } "
+            +", \"postadresse\": { "
+            +"     \"adresselinje1\": \"Blindveien 1\", "
+            +"     \"adresselinje2\": \"c/o Donald Duck\", "
+            +"     \"adresselinje3\": \"Innerst i gangen\", "
+            +"     \"postnr\": { \"kode\": \"0101\", \"kodenavn\": \"Oslo\" }, "
+            +"     \"poststed\": \"Oslo\", "
+            +"     \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +"  } "
+            +", \"bostedsadresse\": { "
+            +"     \"adresselinje1\": \"Blindveien 1\", "
+            +"     \"adresselinje2\": \"c/o Donald Duck\", "
+            +"     \"adresselinje3\": \"Innerst i gangen\", "
+            +"     \"postnr\": { \"kode\": \"0101\", \"kodenavn\": \"Oslo\" }, "
+            +"     \"poststed\": \"Oslo\", "
+            +"     \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +"  } "
+            +", \"kontaktinformasjon\": {"
+            +"     \"epostadresse\": \"admin@example.com\", "
+            +"     \"mobiltelefon\": \"+47 222 22 222\", "
+            +"     \"telefon\":      \"+47 900 00 000\" "
+            +"  } "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        CorrespondencePartPersonDeserializer correspondencePartPersonDeserializer =
+            new CorrespondencePartPersonDeserializer();
+        CorrespondencePartPerson correspondencePartPerson =
+            correspondencePartPersonDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != correspondencePartPerson);
+        assert(systemID.equals(correspondencePartPerson.getSystemId()));
+        assert(name.equals(correspondencePartPerson.getName()));
+    }
+
+    @Test
+    public void parseCorrespondencePartUnitComplete() throws Exception {
+        System.out.println("info: testing correspondencepart unit parsing");
+        String systemID = "ba236562-3115-11ea-9dac-83e02041d50d";
+        String name = "Shoes and stuff";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"korrespondanseparttype\": { \"kode\": \"EA\", \"kodenavn\": \"Avsender\" } "
+            +", \"navn\": \"" + name + "\" "
+            //+", \"enhetsidentifikator\": { \"organisasjonsnummer\": \"01010101011\" } "
+            +", \"forretningsadresse\": { "
+            +"     \"adresselinje1\": \"Blindveien 1\", "
+            +"     \"adresselinje2\": \"c/o Donald Duck\", "
+            +"     \"adresselinje3\": \"Innerst i gangen\", "
+            +"     \"postnr\": { \"kode\": \"0101\", \"kodenavn\": \"Oslo\" }, "
+            +"     \"poststed\": \"Oslo\", "
+            +"     \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +"  } "
+            +", \"postadresse\": { "
+            +"     \"adresselinje1\": \"Blindveien 1\", "
+            +"     \"adresselinje2\": \"c/o Donald Duck\", "
+            +"     \"adresselinje3\": \"Innerst i gangen\", "
+            +"     \"postnr\": { \"kode\": \"0101\", \"kodenavn\": \"Oslo\" }, "
+            +"     \"poststed\": \"Oslo\", "
+            +"     \"landkode\": { \"kode\": \"NO\", \"kodenavn\": \"Norge\" } "
+            +"  } "
+            +", \"kontaktinformasjon\": {"
+            +"     \"epostadresse\": \"admin@example.com\", "
+            +"     \"mobiltelefon\": \"+47 222 22 222\", "
+            +"     \"telefon\":      \"+47 900 00 000\" "
+            +"  } "
+            +", \"kontaktperson\": \"Donald Duck\" "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        CorrespondencePartUnitDeserializer correspondencePartUnitDeserializer =
+            new CorrespondencePartUnitDeserializer();
+        CorrespondencePartUnit correspondencePartUnit =
+            correspondencePartUnitDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != correspondencePartUnit);
+        assert(systemID.equals(correspondencePartUnit.getSystemId()));
+        assert(name.equals(correspondencePartUnit.getName()));
+    }
+
+
+    @Test
+    public void parseCorrespondencePartInternalComplete() throws Exception {
+        System.out.println("info: testing correspondence part internal parsing");
+        String systemID = "807fcddc-3115-11ea-9f57-7324ed60655e";
+        String name = "Management";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"korrespondanseparttype\": { \"kode\": \"EK\", \"kodenavn\": \"Intern kopimottaker\" } "
+            //+", \"administrativEnhet\": \"" + name + "\" "
+            +", \"saksbehandler\": \"Donald Duck\" "
+            //+", \"virksomhetsspesifikkeMetadata\": {} "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        CorrespondencePartInternalDeserializer correspondencePartInternalDeserializer =
+            new CorrespondencePartInternalDeserializer();
+        CorrespondencePartInternal correspondencePartInternal =
+            correspondencePartInternalDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != correspondencePartInternal);
+        assert(systemID.equals(correspondencePartInternal.getSystemId()));
+        //assert(name.equals(correspondencePartInternal.getAdministrativeUnit()));
     }
 
     @Test
