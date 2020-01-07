@@ -45,8 +45,6 @@ public class RecordHateoasHandler
         addNewCorrespondencePartPerson(entity, hateoasNoarkObject);
         addNewCorrespondencePartUnit(entity, hateoasNoarkObject);
         addNewCorrespondencePartInternal(entity, hateoasNoarkObject);
-        addDisposalUndertaken(entity, hateoasNoarkObject);
-        addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addDeletion(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
         //addStorageLocation(entity, hateoasNoarkObject);
@@ -191,20 +189,6 @@ public class RecordHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + REFERENCE_NEW_SERIES + SLASH,
                 REL_FONDS_STRUCTURE_NEW_REFERENCE_SERIES, false));
-    }
-
-    @Override
-    public void addDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + DISPOSAL_UNDERTAKEN + SLASH,
-                REL_FONDS_STRUCTURE_DISPOSAL_UNDERTAKEN, false));
-    }
-
-    @Override
-    public void addNewDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_DISPOSAL_UNDERTAKEN + SLASH,
-                REL_FONDS_STRUCTURE_NEW_DISPOSAL_UNDERTAKEN, false));
     }
 
     @Override

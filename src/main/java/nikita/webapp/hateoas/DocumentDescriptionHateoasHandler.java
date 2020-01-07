@@ -32,7 +32,6 @@ public class DocumentDescriptionHateoasHandler
         addDocumentObject(entity, hateoasNoarkObject);
         addNewDocumentObject(entity, hateoasNoarkObject);
         // links for secondary entities M:1
-        addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
         addPart(entity, hateoasNoarkObject);
         addNewPartPerson(entity, hateoasNoarkObject);
@@ -74,20 +73,6 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH +
                 RECORD, REL_FONDS_STRUCTURE_RECORD, false));
-    }
-
-    @Override
-    public void addDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + DISPOSAL_UNDERTAKEN + SLASH,
-                REL_FONDS_STRUCTURE_DISPOSAL_UNDERTAKEN, false));
-    }
-
-    @Override
-    public void addNewDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_DISPOSAL_UNDERTAKEN + SLASH,
-                REL_FONDS_STRUCTURE_NEW_DISPOSAL_UNDERTAKEN, false));
     }
 
     @Override

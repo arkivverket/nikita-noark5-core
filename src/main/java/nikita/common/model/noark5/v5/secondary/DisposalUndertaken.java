@@ -16,7 +16,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_DISPOSAL_UNDERTAKEN;
 import static nikita.common.config.Constants.TABLE_DISPOSAL_UNDERTAKEN;
 import static nikita.common.config.N5ResourceMappings.DISPOSAL_UNDERTAKEN;
 
@@ -74,7 +73,7 @@ public class DisposalUndertaken
 
     @Override
     public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_DISPOSAL_UNDERTAKEN;
+        return DISPOSAL_UNDERTAKEN; // FIXME, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {

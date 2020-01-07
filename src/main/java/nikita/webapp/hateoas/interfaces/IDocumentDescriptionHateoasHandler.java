@@ -20,12 +20,6 @@ public interface IDocumentDescriptionHateoasHandler
     void addNewDocumentObject(INikitaEntity entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDisposalUndertaken(INikitaEntity entity,
-                               IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewDisposalUndertaken(INikitaEntity entity,
-                                  IHateoasNoarkObject hateoasNoarkObject);
-
     void addDeletion(INikitaEntity entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
