@@ -30,8 +30,6 @@ public interface IClassHateoasHandler extends IHateoasHandler {
 
     void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addNewDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewDisposalUndertaken(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);

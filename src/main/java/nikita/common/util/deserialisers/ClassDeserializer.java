@@ -68,6 +68,9 @@ public class ClassDeserializer
         }
 
         CommonUtils.Hateoas.Deserialize.deserialiseKeyword(klass, objectNode, errors);
+        klass.setReferenceClassified(
+		CommonUtils.Hateoas.Deserialize.deserialiseClassified(
+			objectNode, errors));
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

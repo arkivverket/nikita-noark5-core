@@ -12,13 +12,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CLASSIFIED;
 import static nikita.common.config.Constants.TABLE_CONTACT_CLASSIFIED;
 import static nikita.common.config.N5ResourceMappings.CLASSIFIED;
+import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_ENG;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
@@ -34,11 +35,19 @@ public class Classified
     private static final long serialVersionUID = 1L;
 
     /**
-     * M506 - grad(xs:string)
-     **/
-    @Column(name = "classification")
+     * M??? - grad/graderingskode kode (xs:string)
+     */
+    @NotNull
+    @Column(name = "classification_code", nullable = false)
     @Audited
-    private String classification;
+    private String classificationCode;
+
+    /**
+     * M506 - grad/graderingskode kodenavn (xs:string)
+     */
+    @Column(name = CLASSIFICATION_ENG)
+    @Audited
+    private String classificationName;
 
     /**
      * M624 - graderingsdato (xs:dateTime)
@@ -91,12 +100,20 @@ public class Classified
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
-    public String getClassification() {
-        return classification;
+    public String getClassificationCode() {
+        return classificationCode;
     }
 
-    public void setClassification(String classification) {
-        this.classification = classification;
+    public void setClassificationCode(String classificationCode) {
+        this.classificationCode = classificationCode;
+    }
+
+    public String getClassificationName() {
+        return classificationName;
+    }
+
+    public void setClassificationName(String classificationName) {
+        this.classificationName = classificationName;
     }
 
     public OffsetDateTime getClassificationDate() {
@@ -140,7 +157,7 @@ public class Classified
 
     @Override
     public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_CLASSIFIED;
+        return CLASSIFIED; // FIXME, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {
@@ -187,7 +204,8 @@ public class Classified
     @Override
     public String toString() {
         return "Classified{" + super.toString() +
-                ", classification='" + classification + '\'' +
+                ", classificationCode='" + classificationCode + '\'' +
+                ", classificationName='" + classificationName + '\'' +
                 ", classificationDate=" + classificationDate +
                 ", classificationBy='" + classificationBy + '\'' +
                 ", classificationDowngradedDate=" +
@@ -211,7 +229,8 @@ public class Classified
         Classified rhs = (Classified) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(classification, rhs.classification)
+                .append(classificationCode, rhs.classificationCode)
+                .append(classificationName, rhs.classificationName)
                 .append(classificationDate, rhs.classificationDate)
                 .append(classificationBy, rhs.classificationBy)
                 .append(classificationDowngradedDate,
@@ -225,7 +244,8 @@ public class Classified
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(classification)
+                .append(classificationCode)
+                .append(classificationName)
                 .append(classificationDate)
                 .append(classificationBy)
                 .append(classificationDowngradedDate)

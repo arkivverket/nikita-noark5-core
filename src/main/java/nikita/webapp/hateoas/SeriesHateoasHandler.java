@@ -51,8 +51,6 @@ public class SeriesHateoasHandler extends HateoasHandler
         addNewSeriesPrecursor(entity, hateoasNoarkObject);
         addFonds(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
-        addClassified(entity, hateoasNoarkObject);
-        addNewClassified(entity, hateoasNoarkObject);
         addDisposal(entity, hateoasNoarkObject);
         addNewDisposal(entity, hateoasNoarkObject);
         addDisposalUndertaken(entity, hateoasNoarkObject);
@@ -268,26 +266,6 @@ public class SeriesHateoasHandler extends HateoasHandler
                             series.getReferenceFonds().getSystemId(),
                             REL_FONDS_STRUCTURE_FONDS));
         }
-    }
-
-    @Override
-    /**
-     * Get the Classified associated with the Series (GET)
-     */
-    public void addClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + CLASSIFIED + SLASH,
-                REL_FONDS_STRUCTURE_CLASSIFIED, false));
-    }
-
-    @Override
-    /**
-     * Add a new Classified to a Series (POST)
-     */
-    public void addNewClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_CLASSIFIED + SLASH,
-                REL_FONDS_STRUCTURE_NEW_CLASSIFIED, false));
     }
 
     @Override

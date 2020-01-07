@@ -38,10 +38,6 @@ public interface ISeriesHateoasHandler extends IHateoasHandler {
 
     void addSeriesStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);

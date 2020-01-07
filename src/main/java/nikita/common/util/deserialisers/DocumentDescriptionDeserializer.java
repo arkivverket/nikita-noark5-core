@@ -129,6 +129,9 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
             objectNode.remove(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE);
         }
 
+        documentDescription.setReferenceClassified(
+		deserialiseClassified(objectNode, errors));
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +

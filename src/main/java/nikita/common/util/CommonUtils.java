@@ -1563,8 +1563,21 @@ public final class CommonUtils {
                 // Deserialize classification
                 JsonNode currentNode = objectNode.get(CLASSIFICATION);
                 if (null != currentNode) {
-                    classifiedEntity.setClassification(currentNode.textValue());
-                    objectNode.remove(CLASSIFICATION);
+                    JsonNode node = currentNode.get(CODE);
+                    if (null != node) {
+                        classifiedEntity.setClassificationCode(node.textValue());
+                    } else {
+                        errors.append(CLASSIFICATION+"."+CODE+" is missing. ");
+                    }
+                    node = currentNode.get(CODE_NAME);
+                    if (null != node) {
+                        classifiedEntity.setClassificationName(node.textValue());
+                    }
+                    if (null != classifiedEntity.getClassificationCode()) {
+                        objectNode.remove(CLASSIFICATION);
+                    }
+                } else {
+                    errors.append(CLASSIFICATION + " is missing. ");
                 }
                 // Deserialize classificationDate
                 classifiedEntity.setClassificationDate(deserializeDateTime(CLASSIFICATION_DATE, objectNode, errors));
@@ -2460,8 +2473,11 @@ public final class CommonUtils {
                     Classified classified = classifiedEntity.getReferenceClassified();
                     if (classified != null) {
                         jgen.writeObjectFieldStart(CLASSIFIED);
-                        if (classified.getClassification() != null) {
-                            jgen.writeStringField(CLASSIFICATION, classified.getClassification());
+                        if (classified.getClassificationCode() != null) {
+                            jgen.writeObjectFieldStart(CLASSIFICATION);
+                            printCode(jgen, classified.getClassificationCode(),
+                                      classified.getClassificationName());
+                            jgen.writeEndObject();
                         }
                         if (classified.getClassificationDate() != null) {
                             jgen.writeStringField(CLASSIFICATION_DATE,

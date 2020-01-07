@@ -45,8 +45,6 @@ public class RecordHateoasHandler
         addNewCorrespondencePartPerson(entity, hateoasNoarkObject);
         addNewCorrespondencePartUnit(entity, hateoasNoarkObject);
         addNewCorrespondencePartInternal(entity, hateoasNoarkObject);
-        addClassified(entity, hateoasNoarkObject);
-        addNewClassified(entity, hateoasNoarkObject);
         addDisposal(entity, hateoasNoarkObject);
         addNewDisposal(entity, hateoasNoarkObject);
         addDisposalUndertaken(entity, hateoasNoarkObject);
@@ -197,20 +195,6 @@ public class RecordHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + REFERENCE_NEW_SERIES + SLASH,
                 REL_FONDS_STRUCTURE_NEW_REFERENCE_SERIES, false));
-    }
-
-    @Override
-    public void addClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + CLASSIFIED + SLASH,
-                REL_FONDS_STRUCTURE_CLASSIFIED, false));
-    }
-
-    @Override
-    public void addNewClassified(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CLASSIFIED + SLASH,
-                REL_FONDS_STRUCTURE_NEW_CLASSIFIED, false));
     }
 
     @Override
