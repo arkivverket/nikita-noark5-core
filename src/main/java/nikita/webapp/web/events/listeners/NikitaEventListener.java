@@ -141,7 +141,7 @@ public class NikitaEventListener {
                     body.put(TITLE, noarkEntity.getTitle());
                     body.put(FONDS_STATUS, ((Fonds) entity).getFondsStatus());
                 } else if (entityType.equals(SERIES)) {
-                    body.put(SERIES_STATUS, ((Series) entity).getSeriesStatus());
+                    body.put(SERIES_STATUS, ((Series) entity).getSeriesStatusCodeName());
                 } else if (entityType.equals(CASE_FILE)) {
                     body.put(FILE_ID, ((CaseFile) entity).getFileId());
                     body.put(CASE_STATUS, ((CaseFile) entity).getCaseStatusCode());

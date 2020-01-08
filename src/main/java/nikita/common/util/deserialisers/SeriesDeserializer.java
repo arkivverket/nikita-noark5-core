@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -17,6 +16,13 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
+import static nikita.common.config.N5ResourceMappings.CODE;
+import static nikita.common.config.N5ResourceMappings.CODE_NAME;
+import static nikita.common.config.N5ResourceMappings.SERIES_END_DATE;
+import static nikita.common.config.N5ResourceMappings.SERIES_PRECURSOR;
+import static nikita.common.config.N5ResourceMappings.SERIES_START_DATE;
+import static nikita.common.config.N5ResourceMappings.SERIES_STATUS;
+import static nikita.common.config.N5ResourceMappings.SERIES_SUCCESSOR;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -65,19 +71,31 @@ public class SeriesDeserializer
         CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(series, objectNode, errors);
 
         // Deserialize seriesStatus
-        JsonNode currentNode = objectNode.get(N5ResourceMappings.SERIES_STATUS);
+        JsonNode currentNode = objectNode.get(SERIES_STATUS);
         if (null != currentNode) {
-            series.setSeriesStatus(currentNode.textValue());
-            objectNode.remove(N5ResourceMappings.SERIES_STATUS);
+            JsonNode node = currentNode.get(CODE);
+            if (null != node) {
+                series.setSeriesStatusCode(node.textValue());
+            } else {
+                errors.append(SERIES_STATUS +
+                              "." + CODE + " is missing. ");
+            }
+            node = currentNode.get(CODE_NAME);
+            if (null != node) {
+                series.setSeriesStatusCodeName(node.textValue());
+            }
+            if (null != series.getSeriesStatusCode()) {
+                objectNode.remove(SERIES_STATUS);
+            }
         }
 
         // Deserialize seriesStartDate
-        series.setSeriesStartDate(CommonUtils.Hateoas.Deserialize.deserializeDate(N5ResourceMappings.SERIES_START_DATE, objectNode, errors));
+        series.setSeriesStartDate(CommonUtils.Hateoas.Deserialize.deserializeDate(SERIES_START_DATE, objectNode, errors));
         // Deserialize seriesEndDate
-        series.setSeriesEndDate(CommonUtils.Hateoas.Deserialize.deserializeDate(N5ResourceMappings.SERIES_END_DATE, objectNode, errors));
+        series.setSeriesEndDate(CommonUtils.Hateoas.Deserialize.deserializeDate(SERIES_END_DATE, objectNode, errors));
 
         // Deserialize referencePrecursor
-        currentNode = objectNode.get(N5ResourceMappings.SERIES_PRECURSOR);
+        currentNode = objectNode.get(SERIES_PRECURSOR);
         if (null != currentNode) {
             Series seriesPrecursor = new Series();
             seriesPrecursor.setSystemId(UUID.fromString(currentNode.textValue()));
@@ -85,17 +103,17 @@ public class SeriesDeserializer
             // TODO: Does this imply that the current arkivdel is the successor?
             // I would not set it here, as the service class has to check that
             // the seriesPrecursor object actually exists
-            objectNode.remove(N5ResourceMappings.SERIES_PRECURSOR);
+            objectNode.remove(SERIES_PRECURSOR);
         }
         // Deserialize referenceSuccessor
-        currentNode = objectNode.get(N5ResourceMappings.SERIES_SUCCESSOR);
+        currentNode = objectNode.get(SERIES_SUCCESSOR);
         if (null != currentNode) {
             Series seriesSuccessor = new Series();
             seriesSuccessor.setSystemId(UUID.fromString(currentNode.textValue()));
             series.setReferenceSuccessor(seriesSuccessor);
             // TODO: Does this imply that the current arkivdel is the precursor?
             // I would not set it here, as the service class should do this
-            objectNode.remove(N5ResourceMappings.SERIES_SUCCESSOR);
+            objectNode.remove(SERIES_SUCCESSOR);
         }
         series.setReferenceDisposal(CommonUtils.Hateoas.Deserialize.deserialiseDisposal(objectNode, errors));
         series.setReferenceDisposalUndertaken(CommonUtils.Hateoas.Deserialize.deserialiseDisposalUndertaken(objectNode, errors));

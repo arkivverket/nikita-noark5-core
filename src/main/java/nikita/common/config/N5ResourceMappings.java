@@ -341,6 +341,7 @@ public final class N5ResourceMappings {
 
     // Constant values defined in the Metadata catalogue
 
+    public static final String STATUS_OPEN_CODE = "O";
     public static final String STATUS_OPEN = "Opprettet";
     public static final String STATUS_CLOSED = "Avsluttet";
 

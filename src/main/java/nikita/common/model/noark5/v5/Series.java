@@ -40,12 +40,20 @@ public class Series
     private static final long serialVersionUID = 1L;
 
     /**
-     * M051 - arkivdelstatus (xs:string)
+     * M??? - arkivdelstatus code (xs:string)
      */
     @NotNull
-    @Column(name = "series_status", nullable = false)
+    @Column(name = "series_status_code", nullable = false)
     @Audited
-    private String seriesStatus;
+    private String seriesStatusCode;
+
+    /**
+     * M051 - arkivdelstatus code name (xs:string)
+     */
+    @NotNull
+    @Column(name = "series_status_code_name", nullable = false)
+    @Audited
+    private String seriesStatusCodeName;
 
     /**
      * M107 - arkivperiodeStartDato (xs:date)
@@ -147,12 +155,20 @@ public class Series
     @JsonIgnore
     private Deletion referenceDeletion;
 
-    public String getSeriesStatus() {
-        return seriesStatus;
+    public String getSeriesStatusCode() {
+        return seriesStatusCode;
     }
 
-    public void setSeriesStatus(String seriesStatus) {
-        this.seriesStatus = seriesStatus;
+    public void setSeriesStatusCode(String seriesStatusCode) {
+        this.seriesStatusCode = seriesStatusCode;
+    }
+
+    public String getSeriesStatusCodeName() {
+        return seriesStatusCodeName;
+    }
+
+    public void setSeriesStatusCodeName(String seriesStatusCodeName) {
+        this.seriesStatusCodeName = seriesStatusCodeName;
     }
 
     public String getDocumentMedium() {
@@ -319,7 +335,8 @@ public class Series
                 ", seriesEndDate=" + seriesEndDate +
                 ", seriesStartDate=" + seriesStartDate +
                 ", documentMedium='" + documentMedium + '\'' +
-                ", seriesStatus='" + seriesStatus + '\'' +
+                ", seriesStatusCode='" + seriesStatusCode + '\'' +
+                ", seriesStatusCodeName='" + seriesStatusCodeName + '\'' +
                 '}';
     }
 
@@ -340,7 +357,8 @@ public class Series
                 .append(seriesEndDate, rhs.seriesEndDate)
                 .append(seriesStartDate, rhs.seriesStartDate)
                 .append(documentMedium, rhs.documentMedium)
-                .append(seriesStatus, rhs.seriesStatus)
+                .append(seriesStatusCode, rhs.seriesStatusCode)
+                .append(seriesStatusCodeName, rhs.seriesStatusCodeName)
                 .isEquals();
     }
 
@@ -351,7 +369,8 @@ public class Series
                 .append(seriesEndDate)
                 .append(seriesStartDate)
                 .append(documentMedium)
-                .append(seriesStatus)
+                .append(seriesStatusCode)
+                .append(seriesStatusCodeName)
                 .toHashCode();
     }
 }
