@@ -265,7 +265,14 @@ public class FileService
         File existingFile = getFileOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingFile, existingFile);
-        existingFile.setDocumentMedium(incomingFile.getDocumentMedium());
+        if (null != incomingFile.getDocumentMediumCode()) {
+            existingFile.setDocumentMediumCode(
+                incomingFile.getDocumentMediumCode());
+        }
+        if (null != incomingFile.getDocumentMediumCodeName()) {
+            existingFile.setDocumentMediumCodeName(
+                incomingFile.getDocumentMediumCodeName());
+        }
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingFile.setVersion(version);

@@ -347,6 +347,7 @@ public final class N5ResourceMappings {
     // M300 dokumentmedium
     public static final String DOCUMENT_MEDIUM_PHYSICAL = "Fysisk arkiv";
     public static final String DOCUMENT_MEDIUM_ELECTRONIC = "Elektronisk arkiv";
+    public static final String DOCUMENT_MEDIUM_ELECTRONIC_CODE = "E";
     public static final String DOCUMENT_MEDIUM_MIXED = "Blandet fysisk og elektronisk arkiv";
 
     // M217 tilknyttetRegistreringSom

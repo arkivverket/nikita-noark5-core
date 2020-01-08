@@ -52,9 +52,16 @@ public class File
     private String officialTitle;
 
     /**
-     * M300 - dokumentmedium (xs:string)
+     * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium")
+    @Column(name = "document_medium_code")
+    @Audited
+    private String documentMediumCode;
+
+    /**
+     * M300 - dokumentmedium code name (xs:string)
+     */
+    @Column(name = "document_medium_code_name")
     @Audited
     private String documentMedium;
 
@@ -162,11 +169,19 @@ public class File
         this.officialTitle = officialTitle;
     }
 
-    public String getDocumentMedium() {
+    public String getDocumentMediumCode() {
+        return documentMediumCode;
+    }
+
+    public void setDocumentMediumCode(String documentMediumCode) {
+        this.documentMediumCode = documentMediumCode;
+    }
+
+    public String getDocumentMediumCodeName() {
         return documentMedium;
     }
 
-    public void setDocumentMedium(String documentMedium) {
+    public void setDocumentMediumCodeName(String documentMediumCodeName) {
         this.documentMedium = documentMedium;
     }
 
@@ -363,7 +378,8 @@ public class File
     @Override
     public String toString() {
         return "File{" + super.toString() +
-                ", documentMedium='" + documentMedium + '\'' +
+                ", documentMediumCode='" + documentMediumCode + '\'' +
+                ", documentMediumCodeName='" + documentMedium + '\'' +
                 ", officialTitle='" + officialTitle + '\'' +
                 ", fileId='" + fileId + '\'' +
                 '}';
@@ -383,6 +399,7 @@ public class File
         File rhs = (File) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
+                .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMedium, rhs.documentMedium)
                 .append(officialTitle, rhs.officialTitle)
                 .append(fileId, rhs.fileId)
@@ -393,6 +410,7 @@ public class File
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
+                .append(documentMediumCode)
                 .append(documentMedium)
                 .append(officialTitle)
                 .append(fileId)

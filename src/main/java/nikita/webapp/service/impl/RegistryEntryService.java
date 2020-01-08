@@ -223,9 +223,13 @@ public class RegistryEntryService
         RegistryEntry existingRegistryEntry = getRegistryEntryOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingRegistryEntry, existingRegistryEntry);
-        if (null != incomingRegistryEntry.getDocumentMedium()) {
-            existingRegistryEntry.setDocumentMedium(
-                    incomingRegistryEntry.getDocumentMedium());
+        if (null != incomingRegistryEntry.getDocumentMediumCode()) {
+            existingRegistryEntry.setDocumentMediumCode(
+                    incomingRegistryEntry.getDocumentMediumCode());
+        }
+        if (null != incomingRegistryEntry.getDocumentMediumCodeName()) {
+            existingRegistryEntry.setDocumentMediumCodeName(
+                    incomingRegistryEntry.getDocumentMediumCodeName());
         }
         if (null != incomingRegistryEntry.getDocumentDate()) {
             existingRegistryEntry.setDocumentDate(

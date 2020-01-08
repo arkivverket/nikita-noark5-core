@@ -360,9 +360,13 @@ public class DocumentDescriptionService
     private void updateDocumentDescription(
             @NotNull final DocumentDescription incomingDocumentDescription,
             @NotNull final DocumentDescription existingDocumentDescription) {
-        if (null != incomingDocumentDescription.getDocumentMedium()) {
-            existingDocumentDescription.setDocumentMedium(
-                    incomingDocumentDescription.getDocumentMedium());
+        if (null != incomingDocumentDescription.getDocumentMediumCode()) {
+            existingDocumentDescription.setDocumentMediumCode(
+                    incomingDocumentDescription.getDocumentMediumCode());
+        }
+        if (null != incomingDocumentDescription.getDocumentMediumCodeName()) {
+            existingDocumentDescription.setDocumentMediumCodeName(
+                    incomingDocumentDescription.getDocumentMediumCodeName());
         }
         if (null != incomingDocumentDescription.getAssociatedWithRecordAs()) {
             existingDocumentDescription.setAssociatedWithRecordAs(

@@ -8,6 +8,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 
 public final class NoarkUtils {
 
+    // FIXME look up valid values in codelist, do not hardcode here.
     private final static String[] documentMedium = {
             DOCUMENT_MEDIUM_ELECTRONIC, DOCUMENT_MEDIUM_PHYSICAL,
             DOCUMENT_MEDIUM_MIXED};
@@ -31,11 +32,11 @@ public final class NoarkUtils {
                 boolean invalidValueFound = false;
 
                 if (documentMediumEntity != null &&
-                        documentMediumEntity.getDocumentMedium() != null) {
+                        documentMediumEntity.getDocumentMediumCodeName() != null) {
                     for (String s : documentMedium) {
                         // if a valid value is found, then all is OK
                         if (s.equals(
-                                documentMediumEntity.getDocumentMedium())) {
+                                documentMediumEntity.getDocumentMediumCodeName())) {
                             invalidValueFound = true;
                         }
                     }
