@@ -215,22 +215,16 @@ public class TestParsing {
             +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-	    /*
-            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    */
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"klassifikasjonstype\": { \"kode\": \"KK\", \"kodenavn\": \"K-koder\" } "
             +", \"tittel\": \"" + title + "\" "
             +", \"beskrivelse\": \"A classification system description\" "
             +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
             +", \"avsluttetAv\": \"Another Person\" "
-	    /*
-            +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
-	    */
+            //+", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
             +"}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonParser jsonParser =
@@ -252,9 +246,7 @@ public class TestParsing {
 	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
 	    +", \"klasseID\": \"a class id\" "
 	    +", \"tittel\": \"A class title\" "
 	    +", \"beskrivelse\": \"A class description\" "
@@ -315,14 +307,10 @@ public class TestParsing {
             +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"arkivskaperID\": \"The ID of the Fond Creator\" "
             +", \"arkivskaperNavn\": \"" + name + "\" "
             +", \"beskrivelse\": \"A fonds creator description\" "
@@ -348,14 +336,10 @@ public class TestParsing {
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"tittel\": \"A fonds title\" "
             +", \"beskrivelse\": \"A fonds description\" "
             +", \"arkivstatus\": { \"kode\": \"A\", \"kodenavn\": \"Avsluttet\" } "
@@ -363,9 +347,7 @@ public class TestParsing {
             +", \"oppbevaringssted\": [ \"Over the rainbow\" ] "
             +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
             +", \"avsluttetAv\": \"Another Person\" "
-            /*
-            +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
-            */
+            //+", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
             +"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -388,23 +370,17 @@ public class TestParsing {
 	    +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
 	    +", \"tittel\": \"" + title + "\" "
 	    +", \"beskrivelse\": \"A series description\" "
 	    +", \"arkivdelstatus\": { \"kode\": \"P\", \"kodenavn\": \"Avsluttet periode\" } "
 	    +", \"dokumentmedium\": \"Elektronisk arkiv\" "
 	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
 	    +", \"opprettetAv\": \"Some Person\" "
-	    /*
-	    +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    */
+	    //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
 	    +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
 	    +", \"avsluttetAv\": \"Another Person\" "
-	    /*
-	    +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
-	    */
+	    //+", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
 	    +", \"arkivperiodeStartDato\": \"1863-10-10+00:00\" "
 	    +", \"arkivperiodeSluttDato\": \"1863-10-10+00:00\" "
 	    +", \"kassasjon\": { "
@@ -477,14 +453,10 @@ public class TestParsing {
             +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"mappeID\": \"1917/1\" "
             +", \"tittel\": \"" + title + "\" "
             +", \"offentligTittel\": \"A public file title\" "
@@ -494,9 +466,7 @@ public class TestParsing {
             +", \"oppbevaringssted\": [ \"Over the rainbow\" ] "
             +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
             +", \"avsluttetAv\": \"Another Person\" "
-            /*
-            +", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
-            */
+            //+", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
             +", \"kassasjon\": { "
             +"    \"kassasjonsvedtak\": {"
             +"      \"kode\": \"K\", "
@@ -635,9 +605,7 @@ public class TestParsing {
 	    +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
 	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\", "
 	    +"\"opprettetAv\": \"Some Person\", "
 	    +"\"arkivertDato\": \"1863-10-10T00:00:00+00:00\", "
@@ -885,14 +853,10 @@ public class TestParsing {
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-	    /*
-            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    */
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"dokumenttype\": { \"kode\": \"B\", \"kodenavn\": \"Brev\" } "
             +", \"dokumentstatus\": { \"kode\": \"F\", \"kodenavn\": \"Dokumentet er ferdigstilt\" } "
 	    +", \"tittel\": \"A document description title\" "
@@ -904,9 +868,7 @@ public class TestParsing {
 	    +", \"dokumentnummer\": 1 "
             +", \"tilknyttetAv\": \"Some Person\" "
             +", \"tilknyttetDato\": \"1865-02-13T00:00:00+00:00\" "
-	    /*
-            +", \"referanseTilknyttetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    */
+            //+", \"referanseTilknyttetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
 	    +", \"kassasjon\": { "
 	    +"    \"kassasjonsvedtak\": {"
 	    +"      \"kode\": \"K\", "
@@ -990,14 +952,10 @@ public class TestParsing {
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"opprettetAv\": \"Some Person\" "
             +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-            /*
-            +", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            */
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"versjonsnummer\": 1 "
             +", \"variantformat\": { \"kode\": \"A\", \"kodenavn\": \"Arkivformat\" } "
             +", \"format\": \"fmt/95\" "
