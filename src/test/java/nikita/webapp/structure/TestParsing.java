@@ -421,7 +421,6 @@ public class TestParsing {
 	    +"    \"kassertAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"  } "
-	    /*
 	    +", \"sletting\": { "
 	    +"    \"slettingstype\": {"
 	    +"      \"kode\": \"SP\","
@@ -431,7 +430,6 @@ public class TestParsing {
 	    +"    \"slettetAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"} "
-	    */
 	    +", \"skjerming\": { "
 	    +"    \"tilgangsrestriksjon\": {"
 	    +"      \"kode\": \"P\","
@@ -923,7 +921,6 @@ public class TestParsing {
 	    +"    \"kassertAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"  } "
-	    /*
 	    +", \"sletting\": { "
 	    +"    \"slettingstype\": {"
 	    +"      \"kode\": \"SP\","
@@ -933,7 +930,6 @@ public class TestParsing {
 	    +"    \"slettetAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"} "
-	    */
 	    +", \"skjerming\": { "
 	    +"    \"tilgangsrestriksjon\": {"
 	    +"      \"kode\": \"P\","

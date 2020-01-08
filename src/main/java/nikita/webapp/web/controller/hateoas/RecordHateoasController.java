@@ -284,46 +284,6 @@ public class RecordHateoasController
                         systemID, author));
     }
 
-    // Add a Deletion  to a Record
-    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-sletting
-    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-sletting/
-    @ApiOperation(value = "Associates a Deletion with a Record identified by systemID",
-            notes = "Returns the Record after the Deletion is successfully associated with it." +
-                    "Note a Record can only have one Deletion. Update via PUT",
-            response = RecordHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = DELETION + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 201, message = DELETION + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " + DELETION),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DELETION,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> addNewDeletionToRecord(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemId of Record to associate the Deletion with",
-                    required = true)
-            @PathVariable String systemID,
-            @ApiParam(name = "Deletion",
-                    value = "deletion",
-                    required = true)
-            @RequestBody Deletion deletion) throws NikitaException {
-        //TODO: This is more to carry out a deletion of files. You don't just add a deletion to Record
-        //applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-//        return ResponseEntity.status(CREATED)
-//                .eTag(deletion.getVersion().toString())
-//                .body(deletionHateoas);
-        return errorResponse(NOT_IMPLEMENTED,
-                API_MESSAGE_NOT_IMPLEMENTED);
-    }
-
-
     // Create a suggested CorrespondencePartPerson (like a template) object with default values (nothing persisted)
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartperson
     @ApiOperation(value = "Suggests the contents of a new CorrespondencePart object",

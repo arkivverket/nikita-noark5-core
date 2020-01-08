@@ -133,6 +133,8 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
 
         documentDescription.setReferenceDisposal(
                 deserialiseDisposal(objectNode, errors));
+        documentDescription.setReferenceDeletion(
+                deserialiseDeletion(objectNode, errors));
         documentDescription.setReferenceScreening(
                 deserialiseScreening(objectNode, errors));
         documentDescription.setReferenceClassified(

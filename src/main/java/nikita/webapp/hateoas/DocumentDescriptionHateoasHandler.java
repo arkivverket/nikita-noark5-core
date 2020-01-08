@@ -32,7 +32,6 @@ public class DocumentDescriptionHateoasHandler
         addDocumentObject(entity, hateoasNoarkObject);
         addNewDocumentObject(entity, hateoasNoarkObject);
         // links for secondary entities M:1
-        addNewDeletion(entity, hateoasNoarkObject);
         addPart(entity, hateoasNoarkObject);
         addNewPartPerson(entity, hateoasNoarkObject);
         addNewPartUnit(entity, hateoasNoarkObject);
@@ -73,20 +72,6 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH +
                 RECORD, REL_FONDS_STRUCTURE_RECORD, false));
-    }
-
-    @Override
-    public void addDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + DELETION + SLASH,
-                REL_FONDS_STRUCTURE_DELETION, false));
-    }
-
-    @Override
-    public void addNewDeletion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_DELETION + SLASH,
-                REL_FONDS_STRUCTURE_NEW_DELETION, false));
     }
 
     @Override

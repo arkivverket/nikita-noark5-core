@@ -70,7 +70,6 @@ public final class Constants {
     public static final String SUB_FILE = SUB + FILE;
     public static final String NEW_CROSS_REFERENCE = NEW + DASH + CROSS_REFERENCE;
     public static final String REFERENCE_NEW_SERIES = NEW + DASH + "referanseArkivdel";
-    public static final String NEW_DELETION = NEW + DASH + "sletting";
     public static final String NEW_STORAGE_LOCATION = NEW + DASH + STORAGE_LOCATION;
     public static final String NEW_CONVERSION = NEW + DASH + CONVERSION;
     public static final String NEW_SIGN_OFF = NEW + DASH + SIGN_OFF;
@@ -474,10 +473,6 @@ public final class Constants {
     // DocumentObject
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_OBJECT = REL_FONDS_STRUCTURE + DOCUMENT_OBJECT + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_DOCUMENT_OBJECT = REL_FONDS_STRUCTURE + NEW_DOCUMENT_OBJECT + SLASH;
-
-    // Deletion
-    public static final String REL_FONDS_STRUCTURE_DELETION = NIKITA_CONFORMANCE_REL + DELETION + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_DELETION = NIKITA_CONFORMANCE_REL + NEW_DELETION + SLASH;
 
     // Conversion
     public static final String REL_FONDS_STRUCTURE_CONVERSION =
