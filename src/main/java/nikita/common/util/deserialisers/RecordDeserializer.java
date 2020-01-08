@@ -103,6 +103,7 @@ public class RecordDeserializer
         record.setReferenceClassified(
 		deserialiseClassified(objectNode, errors));
 
+        record.setReferenceDisposal(deserialiseDisposal(objectNode, errors));
         record.setReferenceScreening(
                 deserialiseScreening(objectNode, errors));
 

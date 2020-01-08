@@ -263,7 +263,6 @@ public class TestParsing {
 	    +", \"opprettetAv\": \"Some Person\" "
 	    +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
 	    +", \"avsluttetAv\": \"Another Person\" "
-	    /*
 	    +", \"kassasjon\": { "
 	    +"    \"kassasjonsvedtak\": {"
 	    +"      \"kode\": \"K\", "
@@ -273,7 +272,6 @@ public class TestParsing {
 	    +"    \"bevaringstid\": 45, "
 	    +"    \"kassasjonsdato\": \"1942-07-25\" "
 	    +"  } "
-	    */
 	    +", \"skjerming\": { "
 	    +"    \"tilgangsrestriksjon\": {"
 	    +"      \"kode\": \"P\","
@@ -646,7 +644,6 @@ public class TestParsing {
 	    +"\"opprettetAv\": \"Some Person\", "
 	    +"\"arkivertDato\": \"1863-10-10T00:00:00+00:00\", "
 	    +"\"arkivertAv\": \"Min Venn\", "
-	    /*
 	    +"\"kassasjon\": { "
 	    +"  \"kassasjonsvedtak\": {"
 	    +"    \"kode\": \"K\", "
@@ -656,7 +653,6 @@ public class TestParsing {
 	    +"  \"bevaringstid\": 45, "
 	    +"  \"kassasjonsdato\": \"1942-07-25\" "
 	    +"}, "
-	    */
 	    +"\"skjerming\": { "
 	    +"  \"tilgangsrestriksjon\": {"
 	    +"    \"kode\": \"P\","
@@ -719,7 +715,6 @@ public class TestParsing {
             //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"arkivertDato\": \"1863-10-10T00:00:00+00:00\" "
             +", \"arkivertAv\": \"Min Venn\" "
-            /*
             +", \"kassasjon\": { "
             +"    \"kassasjonsvedtak\": {"
             +"      \"kode\": \"K\", "
@@ -729,7 +724,6 @@ public class TestParsing {
             +"    \"bevaringstid\": 45, "
             +"    \"kassasjonsdato\": \"1942-07-25\" "
             +"  } "
-            */
             +", \"skjerming\": { "
             +"    \"tilgangsrestriksjon\": {"
             +"      \"kode\": \"P\","
@@ -823,7 +817,6 @@ public class TestParsing {
             +", \"arkivertDato\": \"1863-10-10T00:00:00+00:00\" "
             +", \"arkivertAv\": \"Min Venn\" "
             //+", \"referanseArkivertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-            /*
             +", \"kassasjon\": { "
             +"    \"kassasjonsvedtak\": {"
             +"      \"kode\": \"K\", "
@@ -833,7 +826,6 @@ public class TestParsing {
             +"    \"bevaringstid\": 45, "
             +"    \"kassasjonsdato\": \"1942-07-25\" "
             +"  } "
-            */
             +", \"skjerming\": { "
             +"    \"tilgangsrestriksjon\": {"
             +"      \"kode\": \"P\","
@@ -919,7 +911,6 @@ public class TestParsing {
 	    /*
             +", \"referanseTilknyttetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
 	    */
-	    /*
 	    +", \"kassasjon\": { "
 	    +"    \"kassasjonsvedtak\": {"
 	    +"      \"kode\": \"K\", "
@@ -929,7 +920,6 @@ public class TestParsing {
 	    +"    \"bevaringstid\": 45, "
 	    +"    \"kassasjonsdato\": \"1942-07-25Z\" "
 	    +"  } "
-	    */
 	    /*
 	    +", \"utfoertKassasjon\": { "
 	    +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "

@@ -15,7 +15,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_DISPOSAL;
 import static nikita.common.config.Constants.TABLE_DISPOSAL;
 import static nikita.common.config.N5ResourceMappings.DISPOSAL;
 
@@ -118,7 +117,7 @@ public class Disposal
 
     @Override
     public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_DISPOSAL;
+        return DISPOSAL; // FIXME, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {

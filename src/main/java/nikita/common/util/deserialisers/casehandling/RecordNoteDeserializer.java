@@ -124,6 +124,8 @@ public class RecordNoteDeserializer
             objectNode.remove(CASE_LOANED_TO);
         }
 
+        recordNote.setReferenceDisposal(
+                deserialiseDisposal(objectNode, errors));
         recordNote.setReferenceScreening(
                 deserialiseScreening(objectNode, errors));
         recordNote.setReferenceClassified(

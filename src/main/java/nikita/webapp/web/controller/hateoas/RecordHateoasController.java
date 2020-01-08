@@ -284,45 +284,6 @@ public class RecordHateoasController
                         systemID, author));
     }
 
-    // Add a Disposal to a Record
-    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-kassasjon
-    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-kassasjon/
-    @ApiOperation(value = "Associates a Disposal with a Record identified by systemID",
-            notes = "Returns the Record after the Disposal is successfully associated with it." +
-                    "Note a Record can only have one Disposal. Update via PUT",
-            response = RecordHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = DISPOSAL + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 201, message = DISPOSAL + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " + DISPOSAL),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DISPOSAL,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> addNewDisposalToRecord(
-            HttpServletRequest request,
-            @ApiParam(name = "systemID",
-                    value = "systemId of Record to associate the Disposal with",
-                    required = true)
-            @PathVariable String systemID,
-            @ApiParam(name = "Disposal",
-                    value = "disposal",
-                    required = true)
-            @RequestBody Disposal disposal) throws NikitaException {
-        // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-        //TODO: What do we return here? Record + comment? comment?
-        //        return ResponseEntity.status(CREATED)
-//                .eTag(comment.getVersion().toString())
-//                .body(commentHateoas);
-        return errorResponse(NOT_IMPLEMENTED,
-                API_MESSAGE_NOT_IMPLEMENTED);
-    }
-
     // Add a disposalUndertaken (utfoertKassasjon) to a Record
     // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-utfoertKassasjon
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-utfoertKassasjon/

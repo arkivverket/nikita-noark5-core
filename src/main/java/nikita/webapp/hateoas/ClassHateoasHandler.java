@@ -43,7 +43,6 @@ public class ClassHateoasHandler
         addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         // links for secondary entities (embeddable)
-        addNewDisposal(entity, hateoasNoarkObject);
         addNewDisposalUndertaken(entity, hateoasNoarkObject);
         addNewDeletion(entity, hateoasNoarkObject);
         // links for metadata entities
@@ -159,13 +158,6 @@ public class ClassHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_CASE_FILE + SLASH,
                 REL_CASE_HANDLING_NEW_CASE_FILE, false));
-    }
-
-    @Override
-    public void addNewDisposal(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CLASS + SLASH + entity.getSystemId() + SLASH + NEW_DISPOSAL + SLASH,
-                REL_FONDS_STRUCTURE_NEW_DISPOSAL, false));
     }
 
     @Override

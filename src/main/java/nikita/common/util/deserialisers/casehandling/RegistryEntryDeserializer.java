@@ -189,6 +189,8 @@ public class RegistryEntryDeserializer
             objectNode.remove(CASE_RECORDS_MANAGEMENT_UNIT);
         }
 
+        registryEntry.setReferenceDisposal(
+                deserialiseDisposal(objectNode, errors));
         registryEntry.setReferenceScreening(
                 deserialiseScreening(objectNode, errors));
         registryEntry.setReferenceClassified(
