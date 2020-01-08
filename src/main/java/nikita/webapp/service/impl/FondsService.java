@@ -94,7 +94,8 @@ public class FondsService
     @Override
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
         checkDocumentMediumValid(fonds);
-        fonds.setFondsStatus(STATUS_OPEN);
+        fonds.setFondsStatusCode(STATUS_OPEN_CODE);
+        fonds.setFondsStatusCodeName(STATUS_OPEN);
         setFinaliseEntityValues(fonds);
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.save(fonds));
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
@@ -520,8 +521,8 @@ public class FondsService
      * @param fonds The fonds object
      */
     private void checkFondsNotClosed(@NotNull Fonds fonds) {
-        if (fonds.getFondsStatus() != null &&
-                fonds.getFondsStatus().equals(STATUS_CLOSED)) {
+        if (fonds.getFondsStatusCodeName() != null &&
+                fonds.getFondsStatusCodeName().equals(STATUS_CLOSED)) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Fonds with fondsSystemId " + fonds.getSystemId() +
                     " has status " + STATUS_CLOSED;

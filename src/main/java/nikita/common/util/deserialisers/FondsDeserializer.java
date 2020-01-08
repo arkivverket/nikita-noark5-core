@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.config.N5ResourceMappings;
+import static nikita.common.config.N5ResourceMappings.CODE;
+import static nikita.common.config.N5ResourceMappings.CODE_NAME;
+import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -67,11 +69,23 @@ public class FondsDeserializer
         CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(fonds, objectNode, errors);
 
         // Deserialize seriesStatus
-        JsonNode currentNode = objectNode.get(N5ResourceMappings.FONDS_STATUS);
-        if (currentNode != null) {
-            fonds.setFondsStatus(currentNode.textValue());
-            objectNode.remove(N5ResourceMappings.FONDS_STATUS);
-        }
+	JsonNode currentNode = objectNode.get(FONDS_STATUS);
+	if (null != currentNode) {
+	    JsonNode node = currentNode.get(CODE);
+	    if (null != node) {
+		fonds.setFondsStatusCode(node.textValue());
+	    } else {
+		errors.append(FONDS_STATUS +
+			      "." + CODE + " is missing. ");
+	    }
+	    node = currentNode.get(CODE_NAME);
+	    if (null != node) {
+		fonds.setFondsStatusCodeName(node.textValue());
+	    }
+	    if (null != fonds.getFondsStatusCode()) {
+		objectNode.remove(FONDS_STATUS);
+	    }
+	}
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

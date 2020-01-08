@@ -36,11 +36,18 @@ public class Fonds
     private static final long serialVersionUID = 1L;
 
     /**
-     * M050 - arkivstatus (xs:string)
+     * M??? - arkivstatus code (xs:string)
      */
-    @Column(name = "fonds_status")
+    @Column(name = "fonds_status_code")
     @Audited
-    private String fondsStatus;
+    private String fondsStatusCode;
+
+    /**
+     * M050 - arkivstatus code name (xs:string)
+     */
+    @Column(name = "fonds_status_code_name")
+    @Audited
+    private String fondsStatusCodeName;
 
     /**
      * M300 - dokumentmedium (xs:string)
@@ -86,12 +93,20 @@ public class Fonds
     )
     private List<FondsCreator> referenceFondsCreator = new ArrayList<>();
 
-    public String getFondsStatus() {
-        return fondsStatus;
+    public String getFondsStatusCode() {
+        return fondsStatusCode;
     }
 
-    public void setFondsStatus(String fondsStatus) {
-        this.fondsStatus = fondsStatus;
+    public void setFondsStatusCode(String fondsStatusCode) {
+        this.fondsStatusCode = fondsStatusCode;
+    }
+
+    public String getFondsStatusCodeName() {
+        return fondsStatusCodeName;
+    }
+
+    public void setFondsStatusCodeName(String fondsStatusCodeName) {
+        this.fondsStatusCodeName = fondsStatusCodeName;
     }
 
     public String getDocumentMedium() {
@@ -170,7 +185,8 @@ public class Fonds
     @Override
     public String toString() {
         return "Fonds{" + super.toString() +
-                ", fondsStatus='" + fondsStatus + '\'' +
+                ", fondsStatusCode='" + fondsStatusCode + '\'' +
+                ", fondsStatusCodeName='" + fondsStatusCodeName + '\'' +
                 ", documentMedium='" + documentMedium + '\'' +
                 '}';
     }
@@ -189,7 +205,8 @@ public class Fonds
         Fonds rhs = (Fonds) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(fondsStatus, rhs.fondsStatus)
+                .append(fondsStatusCode, rhs.fondsStatusCode)
+                .append(fondsStatusCodeName, rhs.fondsStatusCodeName)
                 .append(documentMedium, rhs.documentMedium)
                 .isEquals();
     }
@@ -198,7 +215,8 @@ public class Fonds
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(fondsStatus)
+                .append(fondsStatusCode)
+                .append(fondsStatusCodeName)
                 .append(documentMedium)
                 .toHashCode();
     }
