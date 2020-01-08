@@ -918,13 +918,11 @@ public class TestParsing {
 	    +"    \"bevaringstid\": 45, "
 	    +"    \"kassasjonsdato\": \"1942-07-25Z\" "
 	    +"  } "
-	    /*
 	    +", \"utfoertKassasjon\": { "
 	    +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "
 	    +"    \"kassertAv\": \"Ryddig Gutt\", "
 	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
 	    +"  } "
-	    */
 	    /*
 	    +", \"sletting\": { "
 	    +"    \"slettingstype\": {"
