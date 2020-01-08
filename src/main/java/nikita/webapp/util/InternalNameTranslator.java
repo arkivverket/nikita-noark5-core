@@ -551,9 +551,9 @@ public class InternalNameTranslator {
                         DOCUMENT_TYPE_ENG,
                         DOCUMENT_TYPE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
-                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_ENG,
-                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_ENG_OBJECT);
+                (ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT);
         addNorToEnglishNameMap
                 (ELECTRONIC_SIGNATURE_VERIFIED_BY,
                         ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG,
@@ -563,9 +563,9 @@ public class InternalNameTranslator {
                         ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG,
                         ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (ELECTRONIC_SIGNATURE_VERIFIED,
-                        ELECTRONIC_SIGNATURE_VERIFIED_ENG,
-                        ELECTRONIC_SIGNATURE_VERIFIED_ENG_OBJECT);
+                (ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG,
+                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT);
         addNorToEnglishNameMap
                 (EMAIL_ADDRESS,
                         EMAIL_ADDRESS_ENG,

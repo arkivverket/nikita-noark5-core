@@ -73,7 +73,6 @@ public final class Constants {
     public static final String NEW_DISPOSAL_UNDERTAKEN = NEW + DASH + DISPOSAL_UNDERTAKEN;
     public static final String NEW_DELETION = NEW + DASH + "sletting";
     public static final String NEW_STORAGE_LOCATION = NEW + DASH + STORAGE_LOCATION;
-    public static final String NEW_ELECTRONIC_SIGNATURE = NEW + DASH + ELECTRONIC_SIGNATURE;
     public static final String NEW_CONVERSION = NEW + DASH + CONVERSION;
     public static final String NEW_SIGN_OFF = NEW + DASH + SIGN_OFF;
     public static final String NEW_DOCUMENT_FLOW = NEW + DASH + DOCUMENT_FLOW;
@@ -490,12 +489,6 @@ public final class Constants {
             REL_FONDS_STRUCTURE + CONVERSION + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_CONVERSION =
             REL_FONDS_STRUCTURE + NEW_CONVERSION + SLASH;
-
-    // ElectronicSignature
-    public static final String REL_FONDS_STRUCTURE_ELECTRONIC_SIGNATURE =
-            NIKITA_CONFORMANCE_REL + ELECTRONIC_SIGNATURE + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_ELECTRONIC_SIGNATURE =
-            NIKITA_CONFORMANCE_REL + NEW_ELECTRONIC_SIGNATURE + SLASH;
 
     // DocumentDescription
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION =

@@ -102,6 +102,9 @@ public class DocumentObjectDeserializer
             objectNode.remove(DOCUMENT_OBJECT_MIME_TYPE);
         }
 
+        documentObject.setReferenceElectronicSignature(
+		deserialiseElectronicSignature(objectNode, errors));
+
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +

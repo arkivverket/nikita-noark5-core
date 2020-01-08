@@ -16,10 +16,6 @@ public interface IDocumentObjectHateoasHandler extends IHateoasHandler {
 
     void addNewConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewElectronicSignature(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
     void addReferenceDocumentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addConvertFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);

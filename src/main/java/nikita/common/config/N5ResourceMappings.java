@@ -270,9 +270,11 @@ public final class N5ResourceMappings {
     public static final String CROSS_REFERENCES = "kryssreferanser";
 
     // ElectronicSignature
-    public static final String ELECTRONIC_SIGNATURE = "elektronisksignatur";
+    public static final String ELECTRONIC_SIGNATURE = "elektroniskSignatur";
     public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL = "elektronisksignatursikkerhetsnivaa";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED = "elektronisksignaturverifisert";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD = "elektroniskSignaturSikkerhetsnivaa";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD = "elektroniskSignaturVerifisert";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE = "verifisertDato";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY = "verifisertAv";
 
@@ -514,10 +516,10 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_STATUS_ENG = "dokumentstatus";
     public static final String DOCUMENT_TYPE_ENG = "dokumenttype";
     public static final String ELECTRONIC_SIGNATURE_ENG = "elektronisksignatur";
-    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_ENG = "elektronisksignatursikkerhetsnivaa";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG = "verifisertAv";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG = "verifisertDato";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_ENG = "elektronisksignaturverifisert";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG = "electronic_signature_security_level_name";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG = "verified_by";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG = "verified_date";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG = "electronic_signature_verified_name";
     public static final String EMAIL_ADDRESS_ENG = "epostadresse";
     public static final String EVENT_TYPE_ENG = "hendelsetype";
     public static final String FILE_ENG = "file";
@@ -729,10 +731,10 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_STATUS_ENG_OBJECT = "dokumentstatus";
     public static final String DOCUMENT_TYPE_ENG_OBJECT = "dokumenttype";
     public static final String ELECTRONIC_SIGNATURE_ENG_OBJECT = "elektronisksignatur";
-    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_ENG_OBJECT = "elektronisksignatursikkerhetsnivaa";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG_OBJECT = "verifisertAv";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT = "verifisertDato";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_ENG_OBJECT = "elektronisksignaturverifisert";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT = "electronicSignatureSecurityLevelName";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG_OBJECT = "verifiedBy";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT = "verifiedDate";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT = "electronicSignatureVerifiedName";
     public static final String EMAIL_ADDRESS_ENG_OBJECT = "epostadresse";
     public static final String EVENT_TYPE_ENG_OBJECT = "hendelsetype";
     public static final String FILE_ENG_OBJECT = "File";

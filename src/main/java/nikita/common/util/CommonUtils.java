@@ -1600,6 +1600,124 @@ public final class CommonUtils {
                 }
                 objectNode.remove(CLASSIFIED); // TODO why is this removed here?
             }
+
+            public static ElectronicSignature deserialiseElectronicSignature(
+                        ObjectNode objectNode, StringBuilder errors) {
+                ElectronicSignature es = null;
+                JsonNode esNode = objectNode.get(ELECTRONIC_SIGNATURE);
+                if (null != esNode) {
+                    es = new ElectronicSignature();
+                    deserialiseElectronicSignatureEntity(es, esNode.deepCopy(),
+                                                         errors);
+                }
+                //TODO: Only remove if the hashset is actually empty, otherwise let it go back up with the extra values
+                objectNode.remove(ELECTRONIC_SIGNATURE);
+                return es;
+            }
+
+            private static void deserialiseSecurityLevel(
+                        ElectronicSignature electronicSignature,
+                        ObjectNode objectNode, StringBuilder errors) {
+                JsonNode currentNode =
+                    objectNode.get(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
+                if (null != currentNode) {
+                    JsonNode node = currentNode.get(CODE);
+                    if (null != node) {
+                        electronicSignature.setElectronicSignatureSecurityLevelCode(
+                                                                                    node.textValue());
+                    } else {
+                        errors.append(ELECTRONIC_SIGNATURE
+                                      + "." + ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD
+                                      + "." + CODE + " is missing. ");
+                    }
+                    node = currentNode.get(CODE_NAME);
+                    if (null != node) {
+                        electronicSignature.setElectronicSignatureSecurityLevelName(
+                                                                                    node.textValue());
+                    }
+                    if (null != electronicSignature.
+                        getElectronicSignatureSecurityLevelCode()) {
+                        objectNode.remove(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
+                    }
+                } else {
+                    errors.append("The ElectronicSignature object you tried to");
+                    errors.append(" create is missing ");
+                    errors.append(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
+                    errors.append(". ");
+                }
+            }
+
+
+            private static void deserialiseVerified(
+                        ElectronicSignature electronicSignature,
+                        ObjectNode objectNode, StringBuilder errors) {
+                JsonNode currentNode =
+                    objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_FIELD);
+                if (null != currentNode) {
+                    JsonNode node = currentNode.get(CODE);
+                    if (null != node) {
+                        electronicSignature.setElectronicSignatureVerifiedCode(
+                                                                               node.textValue());
+                    } else {
+                        errors.append(ELECTRONIC_SIGNATURE
+                                      + "." + ELECTRONIC_SIGNATURE_VERIFIED_FIELD
+                                      + "." + CODE + " is missing. ");
+                    }
+                    node = currentNode.get(CODE_NAME);
+                    if (null != node) {
+                        electronicSignature.setElectronicSignatureVerifiedName(
+                                                                               node.textValue());
+                    }
+                    if (null != electronicSignature.
+                        getElectronicSignatureVerifiedCode()) {
+                        objectNode.remove(ELECTRONIC_SIGNATURE_VERIFIED_FIELD);
+                    }
+                } else {
+                    errors.append("The ElectronicSignature object you tried to");
+                    errors.append(" create is missing ");
+                    errors.append(ELECTRONIC_SIGNATURE_VERIFIED_FIELD);
+                    errors.append(". ");
+                }
+            }
+
+
+            public static ElectronicSignature deserialiseElectronicSignatureEntity(
+                        ElectronicSignature electronicSignature,
+                        ObjectNode objectNode, StringBuilder errors) {
+                // Deserialise elektroniskSignaturSikkerhetsnivaa
+                deserialiseSecurityLevel(electronicSignature,
+                                         objectNode, errors);
+
+                // Deserialise elektroniskSignaturVerifisert
+                deserialiseVerified(electronicSignature, objectNode, errors);
+
+                // Deserialise verifisertDato
+                JsonNode currentNode =
+                    objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
+                if (null != currentNode) {
+                    electronicSignature.setVerifiedDate(
+                        deserializeDate(currentNode.textValue(),
+                                        objectNode, errors));
+                    objectNode.remove(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
+                } else {
+                    errors.append(ELECTRONIC_SIGNATURE
+                                  + "." + ELECTRONIC_SIGNATURE_VERIFIED_DATE
+                                  + " is missing. ");
+                }
+
+                // Deserialise verifisertAv
+                currentNode = objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_BY);
+                if (null != currentNode) {
+                    electronicSignature.setVerifiedBy(currentNode.textValue());
+                    objectNode.remove(ELECTRONIC_SIGNATURE_VERIFIED_BY);
+                } else {
+                    errors.append(ELECTRONIC_SIGNATURE
+                                  + "." + ELECTRONIC_SIGNATURE_VERIFIED_BY
+                                  + " is missing. ");
+                }
+
+                return electronicSignature;
+            }
         }
 
         public static final class Serialize {
@@ -2442,26 +2560,37 @@ public final class CommonUtils {
             }
 
             public static void printElectronicSignature(JsonGenerator jgen,
-                                                        IElectronicSignature electronicSignatureEntity)
+                                                        IElectronicSignature esEntity)
                     throws IOException {
-                ElectronicSignature electronicSignature = electronicSignatureEntity.getReferenceElectronicSignature();
-                if (electronicSignature != null) {
+                ElectronicSignature es =
+		    esEntity.getReferenceElectronicSignature();
+                if (es != null) {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
-                    if (electronicSignature.getElectronicSignatureSecurityLevel() != null) {
-                        jgen.writeStringField(ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
-                                electronicSignature.getElectronicSignatureSecurityLevel());
+                    if (null != es.getElectronicSignatureSecurityLevelCode()) {
+                        jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
+                        printCode(jgen,
+				  es.getElectronicSignatureSecurityLevelCode(),
+				  es.getElectronicSignatureSecurityLevelName());
+                        jgen.writeEndObject();
                     }
-                    if (electronicSignature.getElectronicSignatureVerified() != null) {
-                        jgen.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED,
-                                electronicSignature.getElectronicSignatureVerified());
+                    if (es.getElectronicSignatureSecurityLevelCode() != null) {
+                        jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
+                        printCode(jgen,
+				  es.getElectronicSignatureSecurityLevelCode(),
+				  es.getElectronicSignatureSecurityLevelName());
+                        jgen.writeEndObject();
                     }
-                    if (electronicSignature.getVerifiedDate() != null) {
+                    if (es.getElectronicSignatureVerifiedName() != null) {
+                        jgen.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                                es.getElectronicSignatureVerifiedName());
+                    }
+                    if (es.getVerifiedDate() != null) {
                         jgen.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_DATE,
-                                formatDate(electronicSignature.getVerifiedDate()));
+                                formatDate(es.getVerifiedDate()));
                     }
-                    if (electronicSignature.getVerifiedBy() != null) {
+                    if (es.getVerifiedBy() != null) {
                         jgen.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_BY,
-                                electronicSignature.getVerifiedBy());
+                                es.getVerifiedBy());
                     }
                     jgen.writeEndObject();
                 }
