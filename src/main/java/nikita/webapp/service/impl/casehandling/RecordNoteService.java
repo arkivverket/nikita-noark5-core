@@ -151,9 +151,13 @@ public class RecordNoteService
         RecordNote existingRecordNote = getRecordNoteOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingRecordNote, existingRecordNote);
-        if (null != incomingRecordNote.getDocumentMedium()) {
-            existingRecordNote.setDocumentMedium(
-                    incomingRecordNote.getDocumentMedium());
+        if (null != incomingRecordNote.getDocumentMediumCode()) {
+            existingRecordNote.setDocumentMediumCode(
+                    incomingRecordNote.getDocumentMediumCode());
+        }
+        if (null != incomingRecordNote.getDocumentMediumCodeName()) {
+            existingRecordNote.setDocumentMediumCodeName(
+                    incomingRecordNote.getDocumentMediumCodeName());
         }
         if (null != incomingRecordNote.getDocumentDate()) {
             existingRecordNote.setDocumentDate(

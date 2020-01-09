@@ -43,9 +43,16 @@ public class Fonds
     private String fondsStatus;
 
     /**
-     * M300 - dokumentmedium (xs:string)
+     * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium")
+    @Column(name = "document_medium_code")
+    @Audited
+    private String documentMediumCode;
+
+    /**
+     * M300 - dokumentmedium code name (xs:string)
+     */
+    @Column(name = "document_medium_code_name")
     @Audited
     private String documentMedium;
 
@@ -94,11 +101,19 @@ public class Fonds
         this.fondsStatus = fondsStatus;
     }
 
-    public String getDocumentMedium() {
+    public String getDocumentMediumCode() {
+        return documentMediumCode;
+    }
+
+    public void setDocumentMediumCode(String documentMediumCode) {
+        this.documentMediumCode = documentMediumCode;
+    }
+
+    public String getDocumentMediumCodeName() {
         return documentMedium;
     }
 
-    public void setDocumentMedium(String documentMedium) {
+    public void setDocumentMediumCodeName(String documentMediumCodeName) {
         this.documentMedium = documentMedium;
     }
 

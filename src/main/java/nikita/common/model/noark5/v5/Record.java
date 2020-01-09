@@ -85,9 +85,16 @@ public class Record
     private String description;
 
     /**
-     * M300 - dokumentmedium (xs:string)
+     * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium")
+    @Column(name = "document_medium_code")
+    @Audited
+    private String documentMediumCode;
+
+    /**
+     * M300 - dokumentmedium code name (xs:string)
+     */
+    @Column(name = "document_medium_code_name")
     @Audited
     private String documentMedium;
 
@@ -251,11 +258,19 @@ public class Record
         this.description = description;
     }
 
-    public String getDocumentMedium() {
+    public String getDocumentMediumCode() {
+        return documentMediumCode;
+    }
+
+    public void setDocumentMediumCode(String documentMediumCode) {
+        this.documentMediumCode = documentMediumCode;
+    }
+
+    public String getDocumentMediumCodeName() {
         return documentMedium;
     }
 
-    public void setDocumentMedium(String documentMedium) {
+    public void setDocumentMediumCodeName(String documentMediumCodeName) {
         this.documentMedium = documentMedium;
     }
 
@@ -477,6 +492,7 @@ public class Record
                 .append(title, rhs.title)
                 .append(officialTitle, rhs.officialTitle)
                 .append(description, rhs.description)
+                .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMedium, rhs.documentMedium)
                 .isEquals();
     }
@@ -491,6 +507,7 @@ public class Record
                 .append(title)
                 .append(officialTitle)
                 .append(description)
+                .append(documentMediumCode)
                 .append(documentMedium)
                 .toHashCode();
     }
