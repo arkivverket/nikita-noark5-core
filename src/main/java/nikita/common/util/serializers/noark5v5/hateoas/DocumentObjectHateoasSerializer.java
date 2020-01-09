@@ -41,7 +41,7 @@ public class DocumentObjectHateoasSerializer
         }
 	if (documentObject.getFormatCode() != null) {
             jgen.writeObjectFieldStart(DOCUMENT_OBJECT_FORMAT);
-            CommonUtils.Hateoas.Serialize.printCode(jgen,
+            printCode(jgen,
                     documentObject.getFormatCode(),
                     documentObject.getFormatCodeName());
             jgen.writeEndObject();
