@@ -352,6 +352,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_MEDIUM_MIXED = "Blandet fysisk og elektronisk arkiv";
 
     // M217 tilknyttetRegistreringSom
+    public static final String MAIN_DOCUMENT_CODE = "H";
     public static final String MAIN_DOCUMENT = "Hoveddokument";
     public static final String ATTACHMENT = "Vedlegg";
 

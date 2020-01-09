@@ -118,12 +118,20 @@ public class DocumentDescription
     private String documentMediumCodeName;
 
     /**
-     * M217 - tilknyttetRegistreringSom (xs:string)
+     * M??? - tilknyttetRegistreringSom code (xs:string)
      */
     @NotNull
-    @Column(name = "associated_with_record_as", nullable = false)
+    @Column(name = "associated_with_record_as_code", nullable = false)
     @Audited
-    private String associatedWithRecordAs;
+    private String associatedWithRecordAsCode;
+
+    /**
+     * M217 - tilknyttetRegistreringSom code name (xs:string)
+     */
+    @NotNull
+    @Column(name = "associated_with_record_as_code_name", nullable = false)
+    @Audited
+    private String associatedWithRecordAsCodeName;
 
     /**
      * M007 - dokumentnummer (xs:integer)
@@ -310,12 +318,20 @@ public class DocumentDescription
         this.documentMediumCodeName = documentMediumCodeName;
     }
 
-    public String getAssociatedWithRecordAs() {
-        return associatedWithRecordAs;
+    public String getAssociatedWithRecordAsCode() {
+        return associatedWithRecordAsCode;
     }
 
-    public void setAssociatedWithRecordAs(String associatedWithRecordAs) {
-        this.associatedWithRecordAs = associatedWithRecordAs;
+    public void setAssociatedWithRecordAsCode(String associatedWithRecordAsCode) {
+        this.associatedWithRecordAsCode = associatedWithRecordAsCode;
+    }
+
+    public String getAssociatedWithRecordAsCodeName() {
+        return associatedWithRecordAsCodeName;
+    }
+
+    public void setAssociatedWithRecordAsCodeName(String associatedWithRecordAsCodeName) {
+        this.associatedWithRecordAsCodeName = associatedWithRecordAsCodeName;
     }
 
     @Override
@@ -504,7 +520,8 @@ public class DocumentDescription
                 "associatedBy='" + associatedBy + '\'' +
                 ", associationDate=" + associationDate +
                 ", documentNumber=" + documentNumber +
-                ", associatedWithRecordAs='" + associatedWithRecordAs + '\'' +
+                ", associatedWithRecordAsCode='" + associatedWithRecordAsCode + '\'' +
+                ", associatedWithRecordAsCodeName='" + associatedWithRecordAsCodeName + '\'' +
                 ", documentMediumCode='" + documentMediumCode + '\'' +
                 ", documentMediumCodeName='" + documentMediumCodeName + '\'' +
                 ", createdBy='" + createdBy + '\'' +
@@ -535,7 +552,8 @@ public class DocumentDescription
                 .appendSuper(super.equals(other))
                 .append(associatedBy, rhs.associatedBy)
                 .append(associationDate, rhs.associationDate)
-                .append(associatedWithRecordAs, rhs.associatedWithRecordAs)
+                .append(associatedWithRecordAsCode, rhs.associatedWithRecordAsCode)
+                .append(associatedWithRecordAsCodeName, rhs.associatedWithRecordAsCodeName)
                 .append(documentNumber, rhs.documentNumber)
                 .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMediumCodeName, rhs.documentMediumCodeName)
@@ -557,7 +575,8 @@ public class DocumentDescription
                 .appendSuper(super.hashCode())
                 .append(associatedBy)
                 .append(associationDate)
-                .append(associatedWithRecordAs)
+                .append(associatedWithRecordAsCode)
+                .append(associatedWithRecordAsCodeName)
                 .append(documentNumber)
                 .append(documentMediumCode)
                 .append(documentMediumCodeName)

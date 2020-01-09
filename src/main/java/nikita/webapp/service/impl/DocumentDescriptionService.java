@@ -156,7 +156,8 @@ public class DocumentDescriptionService
         DocumentDescription defaultDocumentDescription =
             new DocumentDescription();
 
-        defaultDocumentDescription.setAssociatedWithRecordAs(MAIN_DOCUMENT);
+        defaultDocumentDescription.setAssociatedWithRecordAsCode(MAIN_DOCUMENT_CODE);
+        defaultDocumentDescription.setAssociatedWithRecordAsCodeName(MAIN_DOCUMENT);
         defaultDocumentDescription.setDocumentTypeCode(LETTER_CODE);
         defaultDocumentDescription.setDocumentTypeCodeName(LETTER);
         defaultDocumentDescription.setDocumentStatusCode(DOCUMENT_STATUS_FINALISED_CODE);
@@ -370,9 +371,13 @@ public class DocumentDescriptionService
             existingDocumentDescription.setDocumentMediumCodeName(
                     incomingDocumentDescription.getDocumentMediumCodeName());
         }
-        if (null != incomingDocumentDescription.getAssociatedWithRecordAs()) {
-            existingDocumentDescription.setAssociatedWithRecordAs(
-                    incomingDocumentDescription.getAssociatedWithRecordAs());
+        if (null != incomingDocumentDescription.getAssociatedWithRecordAsCode()) {
+            existingDocumentDescription.setAssociatedWithRecordAsCode(
+                    incomingDocumentDescription.getAssociatedWithRecordAsCode());
+        }
+        if (null != incomingDocumentDescription.getAssociatedWithRecordAsCodeName()) {
+            existingDocumentDescription.setAssociatedWithRecordAsCodeName(
+                    incomingDocumentDescription.getAssociatedWithRecordAsCodeName());
         }
         existingDocumentDescription.setDocumentNumber(
                 incomingDocumentDescription.getDocumentNumber());
