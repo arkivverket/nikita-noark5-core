@@ -519,7 +519,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_OBJECT_MIME_TYPE_ENG = "mimeType";
     public static final String DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG = "referanseDokumentfil";
     public static final String DOCUMENT_OBJECT_VARIANT_FORMAT_ENG = "variantformat";
-    public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG = "versjonsnummer";
+    public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG = "version_number";
     public static final String DOCUMENT_STATUS_ENG = "dokumentstatus";
     public static final String DOCUMENT_TYPE_ENG = "dokumenttype";
     public static final String ELECTRONIC_SIGNATURE_ENG = "elektronisksignatur";
@@ -734,7 +734,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_OBJECT_MIME_TYPE_ENG_OBJECT = "mimeType";
     public static final String DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG_OBJECT = "referanseDokumentfil";
     public static final String DOCUMENT_OBJECT_VARIANT_FORMAT_ENG_OBJECT = "variantformat";
-    public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG_OBJECT = "versjonsnummer";
+    public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG_OBJECT = "versionNumber";
     public static final String DOCUMENT_STATUS_ENG_OBJECT = "dokumentstatus";
     public static final String DOCUMENT_TYPE_ENG_OBJECT = "dokumenttype";
     public static final String ELECTRONIC_SIGNATURE_ENG_OBJECT = "elektronisksignatur";
