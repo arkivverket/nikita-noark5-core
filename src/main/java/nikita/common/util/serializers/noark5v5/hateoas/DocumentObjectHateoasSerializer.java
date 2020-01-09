@@ -35,9 +35,12 @@ public class DocumentObjectHateoasSerializer
             jgen.writeNumberField(DOCUMENT_OBJECT_VERSION_NUMBER,
                     documentObject.getVersionNumber());
         }
-        if (documentObject.getVariantFormat() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_VARIANT_FORMAT,
-                    documentObject.getVariantFormat());
+        if (documentObject.getVariantFormatCode() != null) {
+            jgen.writeObjectFieldStart(DOCUMENT_OBJECT_VARIANT_FORMAT);
+            printCode(jgen,
+                    documentObject.getVariantFormatCode(),
+                    documentObject.getVariantFormatCodeName());
+            jgen.writeEndObject();
         }
 	if (documentObject.getFormatCode() != null) {
             jgen.writeObjectFieldStart(DOCUMENT_OBJECT_FORMAT);

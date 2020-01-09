@@ -52,12 +52,20 @@ public class DocumentObject
     private Integer versionNumber;
 
     /**
-     * M700 - variantformat (xs:string)
+     * M??? - variantformat code (xs:string)
      */
     @NotNull
-    @Column(name = "variant_format", nullable = false)
+    @Column(name = "variant_format_code", nullable = false)
     @Audited
-    private String variantFormat;
+    private String variantFormatCode;
+
+    /**
+     * M700 - variantformat code name (xs:string)
+     */
+    @NotNull
+    @Column(name = "variant_format_code_name", nullable = false)
+    @Audited
+    private String variantFormatCodeName;
 
     /**
      * M??? - format code (xs:string)
@@ -154,12 +162,20 @@ public class DocumentObject
         this.versionNumber = versionNumber;
     }
 
-    public String getVariantFormat() {
-        return variantFormat;
+    public String getVariantFormatCode() {
+        return variantFormatCode;
     }
 
-    public void setVariantFormat(String variantFormat) {
-        this.variantFormat = variantFormat;
+    public void setVariantFormatCode(String variantFormatCode) {
+        this.variantFormatCode = variantFormatCode;
+    }
+
+    public String getVariantFormatCodeName() {
+        return variantFormatCodeName;
+    }
+
+    public void setVariantFormatCodeName(String variantFormatCodeName) {
+        this.variantFormatCodeName = variantFormatCodeName;
     }
 
     public String getFormatCode() {
@@ -302,7 +318,8 @@ public class DocumentObject
                 ", formatDetails='" + formatDetails + '\'' +
                 ", formatCode='" + formatCode + '\'' +
                 ", formatCodeName='" + formatCodeName + '\'' +
-                ", variantFormat='" + variantFormat + '\'' +
+                ", variantFormatCode='" + variantFormatCode + '\'' +
+                ", variantFormatCodeName='" + variantFormatCodeName + '\'' +
                 ", versionNumber=" + versionNumber +
                 ", mimeType=" + mimeType +
                 ", originalFilename=" + originalFilename +
@@ -332,7 +349,8 @@ public class DocumentObject
                 .append(formatDetails, rhs.formatDetails)
                 .append(formatCode, rhs.formatCode)
                 .append(formatCodeName, rhs.formatCodeName)
-                .append(variantFormat, rhs.variantFormat)
+                .append(variantFormatCode, rhs.variantFormatCode)
+                .append(variantFormatCodeName, rhs.variantFormatCodeName)
                 .append(versionNumber, rhs.versionNumber)
                 .append(mimeType, rhs.mimeType)
                 .append(originalFilename, rhs.originalFilename)
@@ -352,7 +370,8 @@ public class DocumentObject
                 .append(formatDetails)
                 .append(formatCode)
                 .append(formatCodeName)
-                .append(variantFormat)
+                .append(variantFormatCode)
+                .append(variantFormatCodeName)
                 .append(versionNumber)
                 .append(mimeType)
                 .append(originalFilename)
