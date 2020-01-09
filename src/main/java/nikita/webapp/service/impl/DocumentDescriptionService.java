@@ -158,7 +158,8 @@ public class DocumentDescriptionService
 
         defaultDocumentDescription.setAssociatedWithRecordAs(MAIN_DOCUMENT);
         defaultDocumentDescription.setDocumentType(LETTER);
-        defaultDocumentDescription.setDocumentStatus(DOCUMENT_STATUS_FINALISED);
+        defaultDocumentDescription.setDocumentStatusCode(DOCUMENT_STATUS_FINALISED_CODE);
+        defaultDocumentDescription.setDocumentStatusCodeName(DOCUMENT_STATUS_FINALISED);
 
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas(defaultDocumentDescription);

@@ -364,6 +364,7 @@ public final class N5ResourceMappings {
     // M054 dokumentstatus
     public static final String DOCUMENT_STATUS_EDIT = "Dokumentet er under redigering";
     public static final String DOCUMENT_STATUS_FINALISED = "Dokumentet er ferdigstilt";
+    public static final String DOCUMENT_STATUS_FINALISED_CODE = "F";
 
     // M700 variantformat
 
