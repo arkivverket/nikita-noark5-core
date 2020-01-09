@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
@@ -17,7 +19,6 @@ import java.util.UUID;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.CODE_NAME;
 import static nikita.common.config.N5ResourceMappings.SERIES_END_DATE;
 import static nikita.common.config.N5ResourceMappings.SERIES_PRECURSOR;
 import static nikita.common.config.N5ResourceMappings.SERIES_START_DATE;
@@ -71,23 +72,14 @@ public class SeriesDeserializer
         CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(series, objectNode, errors);
 
         // Deserialize seriesStatus
-        JsonNode currentNode = objectNode.get(SERIES_STATUS);
-        if (null != currentNode) {
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                series.setSeriesStatusCode(node.textValue());
-            } else {
-                errors.append(SERIES_STATUS +
-                              "." + CODE + " is missing. ");
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                series.setSeriesStatusCodeName(node.textValue());
-            }
-            if (null != series.getSeriesStatusCode()) {
-                objectNode.remove(SERIES_STATUS);
-            }
-        }
+        IMetadataEntity entity =
+            CommonUtils.Hateoas.Deserialize.deserialiseMetadataValue(
+                objectNode,
+                SERIES_STATUS,
+                new SeriesStatus(),
+                errors, false);
+        series.setSeriesStatusCode(entity.getCode());
+        series.setSeriesStatusCodeName(entity.getCodeName());
 
         // Deserialize seriesStartDate
         series.setSeriesStartDate(CommonUtils.Hateoas.Deserialize.deserializeDate(SERIES_START_DATE, objectNode, errors));
@@ -95,7 +87,7 @@ public class SeriesDeserializer
         series.setSeriesEndDate(CommonUtils.Hateoas.Deserialize.deserializeDate(SERIES_END_DATE, objectNode, errors));
 
         // Deserialize referencePrecursor
-        currentNode = objectNode.get(SERIES_PRECURSOR);
+        JsonNode currentNode = objectNode.get(SERIES_PRECURSOR);
         if (null != currentNode) {
             Series seriesPrecursor = new Series();
             seriesPrecursor.setSystemId(UUID.fromString(currentNode.textValue()));

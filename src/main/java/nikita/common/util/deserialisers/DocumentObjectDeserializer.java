@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.DocumentObject;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.metadata.Format;
+import nikita.common.model.noark5.v5.metadata.VariantFormat;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,41 +57,21 @@ public class DocumentObjectDeserializer
             objectNode.remove(DOCUMENT_OBJECT_VERSION_NUMBER);
         }
         // Deserialize variantFormat
-        currentNode = objectNode.get(DOCUMENT_OBJECT_VARIANT_FORMAT);
-        if (null != currentNode) {
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                documentObject.setVariantFormatCode(node.textValue());
-            } else {
-                errors.append(DOCUMENT_OBJECT_VARIANT_FORMAT +
-                              "." + CODE + " is missing. ");
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                documentObject.setVariantFormatCodeName(node.textValue());
-            }
-            if (null != documentObject.getVariantFormatCode()) {
-                objectNode.remove(DOCUMENT_OBJECT_VARIANT_FORMAT);
-            }
-        }
+        IMetadataEntity entity =
+            deserialiseMetadataValue(objectNode,
+                                     DOCUMENT_OBJECT_VARIANT_FORMAT,
+                                     new VariantFormat(),
+                                     errors, true);
+        documentObject.setVariantFormatCode(entity.getCode());
+        documentObject.setVariantFormatCodeName(entity.getCodeName());
         // Deserialize format
-        currentNode = objectNode.get(DOCUMENT_OBJECT_FORMAT);
-        if (null != currentNode) {
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                documentObject.setFormatCode(node.textValue());
-            } else {
-                errors.append(DOCUMENT_OBJECT_FORMAT +
-                              "." + CODE + " is missing. ");
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                documentObject.setFormatCodeName(node.textValue());
-            }
-            if (null != documentObject.getFormatCode()) {
-                objectNode.remove(DOCUMENT_OBJECT_FORMAT);
-            }
-        }
+        entity =
+            deserialiseMetadataValue(objectNode,
+                                     DOCUMENT_OBJECT_FORMAT,
+                                     new Format(),
+                                     errors, false);
+        documentObject.setFormatCode(entity.getCode());
+        documentObject.setFormatCodeName(entity.getCodeName());
         // Deserialize formatDetails
         currentNode = objectNode.get(DOCUMENT_OBJECT_FORMAT_DETAILS);
         if (null != currentNode) {

@@ -7,6 +7,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
+import nikita.common.model.noark5.v5.metadata.DocumentStatus;
+import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
@@ -65,70 +69,35 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
                 objectNode, errors);
 
         // Deserialize documentType
-        JsonNode currentNode = objectNode.get(
-                DOCUMENT_DESCRIPTION_DOCUMENT_TYPE);
-        if (null != currentNode) {
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                documentDescription.setDocumentTypeCode(node.textValue());
-            } else {
-                errors.append(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE +
-                              "." + CODE + " is missing. ");
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                documentDescription.setDocumentTypeCodeName(node.textValue());
-            }
-            if (null != documentDescription.getDocumentTypeCode()) {
-                objectNode.remove(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE);
-            }
-        } else {
-            errors.append(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE + " is missing. ");
-        }
+        IMetadataEntity entity =
+            deserialiseMetadataValue(objectNode,
+                                     DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
+                                     new DocumentType(),
+                                     errors, true);
+        documentDescription.setDocumentTypeCode(entity.getCode());
+        documentDescription.setDocumentTypeCodeName(entity.getCodeName());
 
         // Deserialize documentStatus
-        currentNode = objectNode.get(DOCUMENT_DESCRIPTION_STATUS);
-        if (null != currentNode) {
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                documentDescription.setDocumentStatusCode(node.textValue());
-            } else {
-                errors.append(DOCUMENT_DESCRIPTION_STATUS +
-                              "." + CODE + " is missing. ");
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                documentDescription.setDocumentStatusCodeName(node.textValue());
-            }
-            if (null != documentDescription.getDocumentStatusCode()) {
-                objectNode.remove(DOCUMENT_DESCRIPTION_STATUS);
-            }
-        } else {
-            errors.append(DOCUMENT_DESCRIPTION_STATUS + " is missing. ");
-        }
+        entity =
+            deserialiseMetadataValue(objectNode,
+                                     DOCUMENT_DESCRIPTION_STATUS,
+                                     new DocumentStatus(),
+                                     errors, true);
+        documentDescription.setDocumentStatusCode(entity.getCode());
+        documentDescription.setDocumentStatusCodeName(entity.getCodeName());
 
         // Deserialize associatedWithRecordAs
-        currentNode = objectNode.get(
-                DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS);
-        if (null != currentNode) {
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                documentDescription.setAssociatedWithRecordAsCode(node.textValue());
-            } else {
-                errors.append(DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS +
-                              "." + CODE + " is missing. ");
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                documentDescription.setAssociatedWithRecordAsCodeName(node.textValue());
-            }
-            if (null != documentDescription.getAssociatedWithRecordAsCodeName()) {
-                objectNode.remove(DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS);
-            }
-        }
+        entity =
+            deserialiseMetadataValue(objectNode,
+                                     DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
+                                     new AssociatedWithRecordAs(),
+                                     errors, false);
+        documentDescription.setAssociatedWithRecordAsCode(entity.getCode());
+        documentDescription.setAssociatedWithRecordAsCodeName(entity.getCodeName());
 
         // Deserialize documentNumber
-        currentNode = objectNode.get(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER);
+        JsonNode currentNode =
+	    objectNode.get(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER);
         if (null != currentNode) {
             documentDescription.setDocumentNumber(
                     currentNode.intValue());
