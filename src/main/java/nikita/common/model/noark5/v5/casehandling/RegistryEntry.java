@@ -68,12 +68,20 @@ public class RegistryEntry
     private String registryEntryType;
 
     /**
-     * M053 - journalstatus (xs:string, nullable = false)
+     * M??? - journalstatus code (xs:string, nullable = false)
      */
     @NotNull
-    @Column(name = "record_status")
+    @Column(name = "record_status_code", nullable = false)
     @Audited
-    private String recordStatus;
+    private String recordStatusCode;
+
+    /**
+     * M053 - journalstatus code name (xs:string, nullable = false)
+     */
+    @NotNull
+    @Column(name = "record_status_code_name", nullable = false)
+    @Audited
+    private String recordStatusCodeName;
 
     /**
      * M101 - journaldato (xs:date)
@@ -218,12 +226,20 @@ public class RegistryEntry
         this.registryEntryType = registryEntryType;
     }
 
-    public String getRecordStatus() {
-        return recordStatus;
+    public String getRecordStatusCode() {
+        return recordStatusCode;
     }
 
-    public void setRecordStatus(String recordStatus) {
-        this.recordStatus = recordStatus;
+    public void setRecordStatusCode(String recordStatusCode) {
+        this.recordStatusCode = recordStatusCode;
+    }
+
+    public String getRecordStatusCodeName() {
+        return recordStatusCodeName;
+    }
+
+    public void setRecordStatusCodeName(String recordStatusCodeName) {
+        this.recordStatusCodeName = recordStatusCodeName;
     }
 
     public OffsetDateTime getRecordDate() {
@@ -371,7 +387,8 @@ public class RegistryEntry
                 ", receivedDate=" + receivedDate +
                 ", documentDate=" + documentDate +
                 ", recordDate=" + recordDate +
-                ", recordStatus='" + recordStatus + '\'' +
+                ", recordStatusCode='" + recordStatusCode + '\'' +
+                ", recordStatusCodeName='" + recordStatusCodeName + '\'' +
                 ", registryEntryType='" + registryEntryType + '\'' +
                 ", registryEntryNumber=" + registryEntryNumber +
                 ", recordSequenceNumber=" + recordSequenceNumber +
@@ -403,6 +420,8 @@ public class RegistryEntry
                 .append(receivedDate, rhs.receivedDate)
                 .append(documentDate, rhs.documentDate)
                 .append(recordDate, rhs.recordDate)
+                .append(recordStatusCode, rhs.recordStatusCode)
+                .append(recordStatusCodeName, rhs.recordStatusCodeName)
                 .append(registryEntryType, rhs.registryEntryType)
                 .append(registryEntryNumber, rhs.registryEntryNumber)
                 .append(recordSequenceNumber, rhs.recordSequenceNumber)
@@ -424,6 +443,8 @@ public class RegistryEntry
                 .append(receivedDate)
                 .append(documentDate)
                 .append(recordDate)
+                .append(recordStatusCode)
+                .append(recordStatusCodeName)
                 .append(registryEntryType)
                 .append(registryEntryNumber)
                 .append(recordSequenceNumber)
