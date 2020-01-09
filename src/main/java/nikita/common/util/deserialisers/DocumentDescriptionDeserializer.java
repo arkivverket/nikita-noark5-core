@@ -111,9 +111,20 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         currentNode = objectNode.get(
                 DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS);
         if (null != currentNode) {
-            documentDescription.setAssociatedWithRecordAs(
-                    currentNode.textValue());
-            objectNode.remove(DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS);
+            JsonNode node = currentNode.get(CODE);
+            if (null != node) {
+                documentDescription.setAssociatedWithRecordAsCode(node.textValue());
+            } else {
+                errors.append(DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS +
+                              "." + CODE + " is missing. ");
+            }
+            node = currentNode.get(CODE_NAME);
+            if (null != node) {
+                documentDescription.setAssociatedWithRecordAsCodeName(node.textValue());
+            }
+            if (null != documentDescription.getAssociatedWithRecordAsCodeName()) {
+                objectNode.remove(DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS);
+            }
         }
 
         // Deserialize documentNumber

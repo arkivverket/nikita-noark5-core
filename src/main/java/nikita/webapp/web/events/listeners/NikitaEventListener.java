@@ -158,7 +158,7 @@ public class NikitaEventListener {
             } else if (entityType.equals(DOCUMENT_DESCRIPTION)) {
                 body.put(ASSOCIATED_WITH_RECORD_AS,
                         ((DocumentDescription) entity).
-                                getAssociatedWithRecordAs());
+                                getAssociatedWithRecordAsCodeName());
                 body.put(DOCUMENT_TYPE,
                         ((DocumentDescription) entity).
                                 getDocumentTypeCodeName());

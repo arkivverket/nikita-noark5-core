@@ -71,10 +71,13 @@ public class DocumentDescriptionHateoasSerializer
             jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATION_BY,
                     documentDescription.getAssociatedBy());
         }
-        if (documentDescription.getAssociatedWithRecordAs() != null) {
-            jgen.writeStringField(
-                    DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
-                    documentDescription.getAssociatedWithRecordAs());
+        if (documentDescription.getAssociatedWithRecordAsCode() != null) {
+            jgen.writeObjectFieldStart(
+                DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS);
+            printCode(jgen,
+                      documentDescription.getAssociatedWithRecordAsCode(),
+                      documentDescription.getAssociatedWithRecordAsCodeName());
+            jgen.writeEndObject();
         }
 
         printAuthor(jgen, documentDescription);
