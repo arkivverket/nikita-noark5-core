@@ -45,8 +45,6 @@ public class CaseFileHateoasHandler
         //addClass(entity, hateoasNoarkObject);
         addNewPrecedence(entity, hateoasNoarkObject);
         //addPrecedence(entity, hateoasNoarkObject);
-        addNewCaseStatus(entity, hateoasNoarkObject);
-        //addCaseStatus(entity, hateoasNoarkObject);
         addNewRegistryEntry(entity, hateoasNoarkObject);
         addRegistryEntry(entity, hateoasNoarkObject);
         addNewRecordNote(entity, hateoasNoarkObject);
@@ -89,20 +87,6 @@ public class CaseFileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + PRECEDENCE + SLASH,
                 REL_CASE_HANDLING_PRECEDENCE, false));
-    }
-
-    @Override
-    public void addCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + CASE_STATUS + SLASH,
-                REL_METADATA_CASE_STATUS, false));
-    }
-
-    @Override
-    public void addNewCaseStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_STATUS + SLASH,
-                REL_METADATA_CASE_STATUS, false));
     }
 
     @Override
