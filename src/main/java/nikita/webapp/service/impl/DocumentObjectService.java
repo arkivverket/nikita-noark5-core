@@ -56,6 +56,7 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
 import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF;
+import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
@@ -246,7 +247,8 @@ public class DocumentObjectService
         // method. Consider the scenario where a file called .htaccess
         // is uploaded, or a file with no file extension
 
-        archiveDocumentObject.setFormat(FILE_EXTENSION_PDF);
+        archiveDocumentObject.setFormatCode(FILE_EXTENSION_PDF_CODE);
+        archiveDocumentObject.setFormatCodeName(FILE_EXTENSION_PDF);
         archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
         archiveDocumentObject.setFormatDetails(FORMAT_PDF_DETAILS);
         archiveDocumentObject.setVariantFormat(ARCHIVE_VERSION);
@@ -358,8 +360,9 @@ public class DocumentObjectService
             conversion.setConvertedBy(username);
             conversion.setConvertedDate(OffsetDateTime.now());
             conversion.setConvertedFromFormat(
-                    originalDocumentObject.getFormat());
-            conversion.setConvertedToFormat(archiveDocumentObject.getFormat());
+                    originalDocumentObject.getFormatCode());
+            conversion.setConvertedToFormat(
+                    archiveDocumentObject.getFormatCode());
             conversion.setReferenceDocumentObject(archiveDocumentObject);
             archiveDocumentObject.addReferenceConversion(conversion);
 
@@ -499,8 +502,10 @@ public class DocumentObjectService
                 getDocumentObjectOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        existingDocumentObject.setFormat(
-                incomingDocumentObject.getFormat());
+        existingDocumentObject.setFormatCode(
+                incomingDocumentObject.getFormatCode());
+        existingDocumentObject.setFormatCodeName(
+                incomingDocumentObject.getFormatCodeName());
         existingDocumentObject.setFormatDetails(
                 incomingDocumentObject.getFormatDetails());
         existingDocumentObject.setOriginalFilename

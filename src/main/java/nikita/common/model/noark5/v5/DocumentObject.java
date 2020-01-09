@@ -60,11 +60,18 @@ public class DocumentObject
     private String variantFormat;
 
     /**
-     * M701 - format (xs:string)
+     * M??? - format code (xs:string)
      */
-    @Column(name = "format")
+    @Column(name = "format_code")
     @Audited
-    private String format;
+    private String formatCode;
+
+    /**
+     * M701 - format code name (xs:string)
+     */
+    @Column(name = "format_code_name")
+    @Audited
+    private String formatCodeName;
 
     /**
      * M702 - formatDetaljer (xs:string)
@@ -155,12 +162,20 @@ public class DocumentObject
         this.variantFormat = variantFormat;
     }
 
-    public String getFormat() {
-        return format;
+    public String getFormatCode() {
+        return formatCode;
     }
 
-    public void setFormat(String format) {
-        this.format = format;
+    public void setFormatCode(String formatCode) {
+        this.formatCode = formatCode;
+    }
+
+    public String getFormatCodeName() {
+        return formatCodeName;
+    }
+
+    public void setFormatCodeName(String formatCodeName) {
+        this.formatCodeName = formatCodeName;
     }
 
     public String getFormatDetails() {
@@ -285,7 +300,8 @@ public class DocumentObject
                 ", createdBy='" + createdBy + '\'' +
                 ", createdDate=" + createdDate +
                 ", formatDetails='" + formatDetails + '\'' +
-                ", format='" + format + '\'' +
+                ", formatCode='" + formatCode + '\'' +
+                ", formatCodeName='" + formatCodeName + '\'' +
                 ", variantFormat='" + variantFormat + '\'' +
                 ", versionNumber=" + versionNumber +
                 ", mimeType=" + mimeType +
@@ -314,7 +330,8 @@ public class DocumentObject
                 .append(createdBy, rhs.createdBy)
                 .append(createdDate, rhs.createdDate)
                 .append(formatDetails, rhs.formatDetails)
-                .append(format, rhs.format)
+                .append(formatCode, rhs.formatCode)
+                .append(formatCodeName, rhs.formatCodeName)
                 .append(variantFormat, rhs.variantFormat)
                 .append(versionNumber, rhs.versionNumber)
                 .append(mimeType, rhs.mimeType)
@@ -333,7 +350,8 @@ public class DocumentObject
                 .append(createdBy)
                 .append(createdDate)
                 .append(formatDetails)
-                .append(format)
+                .append(formatCode)
+                .append(formatCodeName)
                 .append(variantFormat)
                 .append(versionNumber)
                 .append(mimeType)

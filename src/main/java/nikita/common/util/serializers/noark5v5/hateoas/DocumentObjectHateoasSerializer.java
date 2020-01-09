@@ -39,9 +39,12 @@ public class DocumentObjectHateoasSerializer
             jgen.writeStringField(DOCUMENT_OBJECT_VARIANT_FORMAT,
                     documentObject.getVariantFormat());
         }
-        if (documentObject.getFormat() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_FORMAT,
-                    documentObject.getFormat());
+	if (documentObject.getFormatCode() != null) {
+            jgen.writeObjectFieldStart(DOCUMENT_OBJECT_FORMAT);
+            CommonUtils.Hateoas.Serialize.printCode(jgen,
+                    documentObject.getFormatCode(),
+                    documentObject.getFormatCodeName());
+            jgen.writeEndObject();
         }
         if (documentObject.getFormatDetails() != null) {
             jgen.writeStringField(DOCUMENT_OBJECT_FORMAT_DETAILS,
