@@ -62,8 +62,20 @@ public class DocumentObjectDeserializer
         // Deserialize format
         currentNode = objectNode.get(DOCUMENT_OBJECT_FORMAT);
         if (null != currentNode) {
-            documentObject.setFormat(currentNode.textValue());
-            objectNode.remove(DOCUMENT_OBJECT_FORMAT);
+            JsonNode node = currentNode.get(CODE);
+            if (null != node) {
+                documentObject.setFormatCode(node.textValue());
+            } else {
+                errors.append(DOCUMENT_OBJECT_FORMAT +
+                              "." + CODE + " is missing. ");
+            }
+            node = currentNode.get(CODE_NAME);
+            if (null != node) {
+                documentObject.setFormatCodeName(node.textValue());
+            }
+            if (null != documentObject.getFormatCode()) {
+                objectNode.remove(DOCUMENT_OBJECT_FORMAT);
+            }
         }
         // Deserialize formatDetails
         currentNode = objectNode.get(DOCUMENT_OBJECT_FORMAT_DETAILS);

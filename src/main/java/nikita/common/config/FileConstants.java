@@ -3,6 +3,7 @@ package nikita.common.config;
 public final class FileConstants {
 
     public static final String FILE_EXTENSION_PDF = "pdf";
+    public static final String FILE_EXTENSION_PDF_CODE = "fmt/95";
     public static final String FILE_EXTENSION_ODT = "odt";
     public static final String FILE_EXTENSION_ODP = "odp";
     public static final String FILE_EXTENSION_ODS = "ods";

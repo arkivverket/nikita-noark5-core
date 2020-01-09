@@ -958,7 +958,7 @@ public class TestParsing {
             //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"versjonsnummer\": 1 "
             +", \"variantformat\": { \"kode\": \"A\", \"kodenavn\": \"Arkivformat\" } "
-            +", \"format\": \"fmt/95\" "
+            +", \"format\": { \"kode\": \"fmt/95\" } "
             +", \"formatDetaljer\": \"Innebygget 3D-modell\" "
             +", \"filnavn\": \"fil.pdf\" "
             +", \"sjekksum\": \"047571914ac9f62ce503224e8cc7350f8fca11cddf7bf7dbbc3289de0f56c4cf\" "
@@ -988,7 +988,7 @@ public class TestParsing {
             documentObjectDeserializer.deserialize(
                 jsonParser, null /* DeserializationContext */);
         assert(null != documentObject);
-        assert("fmt/95".equals(documentObject.getFormat()));
+        assert("fmt/95".equals(documentObject.getFormatCode()));
     }
 
     @Test
