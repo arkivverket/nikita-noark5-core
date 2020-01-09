@@ -346,12 +346,13 @@ public class Series
 
     @Override
     public String toString() {
-        return "Series{" + super.toString() +
-                ", seriesEndDate=" + seriesEndDate +
+        return "Series{" +
+                "seriesStatusCode='" + seriesStatusCode + '\'' +
+                ", seriesStatusCodeName='" + seriesStatusCodeName + '\'' +
                 ", seriesStartDate=" + seriesStartDate +
+                ", seriesEndDate=" + seriesEndDate +
                 ", documentMediumCode='" + documentMediumCode + '\'' +
-                ", documentMediumCodeName='" + documentMedium + '\'' +
-                ", seriesStatus='" + seriesStatus + '\'' +
+                ", documentMedium='" + documentMedium + '\'' +
                 '}';
     }
 
