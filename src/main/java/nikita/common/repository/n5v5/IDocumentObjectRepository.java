@@ -30,6 +30,6 @@ public interface IDocumentObjectRepository extends
 
     long deleteBySystemId(UUID uuid);
 
-    Long countByReferenceDocumentDescriptionAndVariantFormat(
+    Long countByReferenceDocumentDescriptionAndVariantFormatCode(
             DocumentDescription documentDescription, String variantFormat);
 }

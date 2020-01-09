@@ -368,7 +368,9 @@ public final class N5ResourceMappings {
     // M700 variantformat
 
     public static final String PRODUCTION_VERSION = "Produksjonsformat";
+    public static final String PRODUCTION_VERSION_CODE = "P";
     public static final String ARCHIVE_VERSION = "Arkivformat";
+    public static final String ARCHIVE_VERSION_CODE = "A";
     public static final String SCREENED_VERSION = "Dokument hvor deler av innholdet er skjermet";
 
     public static final String FORMAT = "format";

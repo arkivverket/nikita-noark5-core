@@ -60,7 +60,9 @@ import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
+import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
 import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION;
+import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ACCEPT;
@@ -119,9 +121,9 @@ public class DocumentObjectService
     public DocumentObject save(DocumentObject documentObject) {
         Long version =
                 documentObjectRepository.
-                        countByReferenceDocumentDescriptionAndVariantFormat(
+                        countByReferenceDocumentDescriptionAndVariantFormatCode(
                                 documentObject.getReferenceDocumentDescription(),
-                                documentObject.getVariantFormat());
+                                documentObject.getVariantFormatCode());
         // + 1 because while arrays start at 0, document counts start at 1
         documentObject.setVersionNumber(version.intValue() + 1);
 
@@ -195,7 +197,8 @@ public class DocumentObjectService
         DocumentObject defaultDocumentObject = new DocumentObject();
         // This is just temporary code as this will have to be replaced if
         // this ever goes into production
-        defaultDocumentObject.setVariantFormat(PRODUCTION_VERSION);
+        defaultDocumentObject.setVariantFormatCode(PRODUCTION_VERSION_CODE);
+        defaultDocumentObject.setVariantFormatCodeName(PRODUCTION_VERSION);
         defaultDocumentObject.setVersionNumber(1);
 
         DocumentObjectHateoas documentObjectHateoas =
@@ -251,7 +254,8 @@ public class DocumentObjectService
         archiveDocumentObject.setFormatCodeName(FILE_EXTENSION_PDF);
         archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
         archiveDocumentObject.setFormatDetails(FORMAT_PDF_DETAILS);
-        archiveDocumentObject.setVariantFormat(ARCHIVE_VERSION);
+        archiveDocumentObject.setVariantFormatCode(ARCHIVE_VERSION_CODE);
+        archiveDocumentObject.setVariantFormatCodeName(ARCHIVE_VERSION);
 
         setFilenameAndExtensionForArchiveDocument(
                 productionDocumentObject, archiveDocumentObject);
@@ -510,9 +514,13 @@ public class DocumentObjectService
                 incomingDocumentObject.getFormatDetails());
         existingDocumentObject.setOriginalFilename
                 (incomingDocumentObject.getOriginalFilename());
-        if (null != incomingDocumentObject.getVariantFormat()) {
-            existingDocumentObject.setVariantFormat(
-                    incomingDocumentObject.getVariantFormat());
+        if (null != incomingDocumentObject.getVariantFormatCode()) {
+            existingDocumentObject.setVariantFormatCode(
+                    incomingDocumentObject.getVariantFormatCode());
+        }
+        if (null != incomingDocumentObject.getVariantFormatCodeName()) {
+            existingDocumentObject.setVariantFormatCodeName(
+                    incomingDocumentObject.getVariantFormatCodeName());
         }
         if (null != incomingDocumentObject.getVersionNumber()) {
             existingDocumentObject.setVersionNumber(
