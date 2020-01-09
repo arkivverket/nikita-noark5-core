@@ -36,8 +36,12 @@ public class SeriesHateoasSerializer
 
         printNikitaEntity(jgen, series);
         printTitleAndDescription(jgen, series);
-        if (series.getSeriesStatus() != null) {
-            jgen.writeStringField(SERIES_STATUS, series.getSeriesStatus());
+        if (series.getSeriesStatusCode() != null) {
+            jgen.writeObjectFieldStart(SERIES_STATUS);
+            printCode(jgen,
+                      series.getSeriesStatusCode(),
+                      series.getSeriesStatusCodeName());
+            jgen.writeEndObject();
         }
         printDocumentMedium(jgen, series);
         printStorageLocation(jgen, series);
