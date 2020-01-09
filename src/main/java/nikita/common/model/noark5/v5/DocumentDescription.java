@@ -100,7 +100,7 @@ public class DocumentDescription
      */
     @Column(name = "document_medium_code_name")
     @Audited
-    private String documentMedium;
+    private String documentMediumCodeName;
 
     /**
      * M217 - tilknyttetRegistreringSom (xs:string)
@@ -272,11 +272,11 @@ public class DocumentDescription
     }
 
     public String getDocumentMediumCodeName() {
-        return documentMedium;
+        return documentMediumCodeName;
     }
 
     public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMedium = documentMedium;
+        this.documentMediumCodeName = documentMediumCodeName;
     }
 
     public String getAssociatedWithRecordAs() {
@@ -475,7 +475,7 @@ public class DocumentDescription
                 ", documentNumber=" + documentNumber +
                 ", associatedWithRecordAs='" + associatedWithRecordAs + '\'' +
                 ", documentMediumCode='" + documentMediumCode + '\'' +
-                ", documentMediumCodeName='" + documentMedium + '\'' +
+                ", documentMediumCodeName='" + documentMediumCodeName + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", createdDate=" + createdDate +
                 ", description='" + description + '\'' +
@@ -505,7 +505,7 @@ public class DocumentDescription
                 .append(associatedWithRecordAs, rhs.associatedWithRecordAs)
                 .append(documentNumber, rhs.documentNumber)
                 .append(documentMediumCode, rhs.documentMediumCode)
-                .append(documentMedium, rhs.documentMedium)
+                .append(documentMediumCodeName, rhs.documentMediumCodeName)
                 .append(documentStatus, rhs.documentStatus)
                 .append(documentType, rhs.documentType)
                 .append(description, rhs.description)
@@ -525,7 +525,7 @@ public class DocumentDescription
                 .append(associatedWithRecordAs)
                 .append(documentNumber)
                 .append(documentMediumCode)
-                .append(documentMedium)
+                .append(documentMediumCodeName)
                 .append(documentStatus)
                 .append(documentType)
                 .append(description)

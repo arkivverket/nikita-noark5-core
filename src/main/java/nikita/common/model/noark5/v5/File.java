@@ -63,7 +63,7 @@ public class File
      */
     @Column(name = "document_medium_code_name")
     @Audited
-    private String documentMedium;
+    private String documentMediumCodeName;
 
     // Link to StorageLocation
     @ManyToMany
@@ -178,11 +178,11 @@ public class File
     }
 
     public String getDocumentMediumCodeName() {
-        return documentMedium;
+        return documentMediumCodeName;
     }
 
     public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMedium = documentMedium;
+        this.documentMediumCodeName = documentMediumCodeName;
     }
 
     @Override
@@ -379,7 +379,7 @@ public class File
     public String toString() {
         return "File{" + super.toString() +
                 ", documentMediumCode='" + documentMediumCode + '\'' +
-                ", documentMediumCodeName='" + documentMedium + '\'' +
+                ", documentMediumCodeName='" + documentMediumCodeName + '\'' +
                 ", officialTitle='" + officialTitle + '\'' +
                 ", fileId='" + fileId + '\'' +
                 '}';
@@ -400,7 +400,7 @@ public class File
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(documentMediumCode, rhs.documentMediumCode)
-                .append(documentMedium, rhs.documentMedium)
+                .append(documentMediumCodeName, rhs.documentMediumCodeName)
                 .append(officialTitle, rhs.officialTitle)
                 .append(fileId, rhs.fileId)
                 .isEquals();
@@ -411,7 +411,7 @@ public class File
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(documentMediumCode)
-                .append(documentMedium)
+                .append(documentMediumCodeName)
                 .append(officialTitle)
                 .append(fileId)
                 .toHashCode();

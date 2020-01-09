@@ -83,7 +83,7 @@ public class Series
      */
     @Column(name = "document_medium_code_name")
     @Audited
-    private String documentMedium;
+    private String documentMediumCodeName;
 
     // Links to StorageLocations
     @ManyToMany(cascade = ALL)
@@ -187,11 +187,11 @@ public class Series
     }
 
     public String getDocumentMediumCodeName() {
-        return documentMedium;
+        return documentMediumCodeName;
     }
 
     public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMedium = documentMedium;
+        this.documentMediumCodeName = documentMediumCodeName;
     }
 
     public OffsetDateTime getSeriesStartDate() {
@@ -352,7 +352,7 @@ public class Series
                 ", seriesStartDate=" + seriesStartDate +
                 ", seriesEndDate=" + seriesEndDate +
                 ", documentMediumCode='" + documentMediumCode + '\'' +
-                ", documentMedium='" + documentMedium + '\'' +
+                ", documentMediumCodeName='" + documentMediumCodeName + '\'' +
                 '}';
     }
 
@@ -373,7 +373,7 @@ public class Series
                 .append(seriesEndDate, rhs.seriesEndDate)
                 .append(seriesStartDate, rhs.seriesStartDate)
                 .append(documentMediumCode, rhs.documentMediumCode)
-                .append(documentMedium, rhs.documentMedium)
+                .append(documentMediumCodeName, rhs.documentMediumCodeName)
                 .append(seriesStatusCode, rhs.seriesStatusCode)
                 .append(seriesStatusCodeName, rhs.seriesStatusCodeName)
                 .isEquals();
@@ -386,7 +386,7 @@ public class Series
                 .append(seriesEndDate)
                 .append(seriesStartDate)
                 .append(documentMediumCode)
-                .append(documentMedium)
+                .append(documentMediumCodeName)
                 .append(seriesStatusCode)
                 .append(seriesStatusCodeName)
                 .toHashCode();

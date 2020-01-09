@@ -11,9 +11,9 @@ public interface IClassifiedEntity extends Serializable {
 
     void setClassificationCode(String classificationCode);
 
-    String getClassificationName();
+    String getClassificationCodeName();
 
-    void setClassificationName(String classificationName);
+    void setClassificationCodeName(String classificationCodeName);
 
     OffsetDateTime getClassificationDate();
 

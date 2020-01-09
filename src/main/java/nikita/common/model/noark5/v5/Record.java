@@ -96,7 +96,7 @@ public class Record
      */
     @Column(name = "document_medium_code_name")
     @Audited
-    private String documentMedium;
+    private String documentMediumCodeName;
 
     // Link to File
     @ManyToOne(fetch = LAZY)
@@ -267,11 +267,11 @@ public class Record
     }
 
     public String getDocumentMediumCodeName() {
-        return documentMedium;
+        return documentMediumCodeName;
     }
 
     public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMedium = documentMedium;
+        this.documentMediumCodeName = documentMediumCodeName;
     }
 
     @Override
@@ -493,7 +493,7 @@ public class Record
                 .append(officialTitle, rhs.officialTitle)
                 .append(description, rhs.description)
                 .append(documentMediumCode, rhs.documentMediumCode)
-                .append(documentMedium, rhs.documentMedium)
+                .append(documentMediumCodeName, rhs.documentMediumCodeName)
                 .isEquals();
     }
 
@@ -508,7 +508,7 @@ public class Record
                 .append(officialTitle)
                 .append(description)
                 .append(documentMediumCode)
-                .append(documentMedium)
+                .append(documentMediumCodeName)
                 .toHashCode();
     }
 }

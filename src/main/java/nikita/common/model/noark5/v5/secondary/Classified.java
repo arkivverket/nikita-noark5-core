@@ -35,7 +35,7 @@ public class Classified
     private static final long serialVersionUID = 1L;
 
     /**
-     * M??? - grad/graderingskode kode (xs:string)
+     * M??? - grad/graderingskode code (xs:string)
      */
     @NotNull
     @Column(name = "classification_code", nullable = false)
@@ -43,11 +43,11 @@ public class Classified
     private String classificationCode;
 
     /**
-     * M506 - grad/graderingskode kodenavn (xs:string)
+     * M506 - grad/graderingskode code name (xs:string)
      */
     @Column(name = CLASSIFICATION_ENG)
     @Audited
-    private String classificationName;
+    private String classificationCodeName;
 
     /**
      * M624 - graderingsdato (xs:dateTime)
@@ -108,12 +108,12 @@ public class Classified
         this.classificationCode = classificationCode;
     }
 
-    public String getClassificationName() {
-        return classificationName;
+    public String getClassificationCodeName() {
+        return classificationCodeName;
     }
 
-    public void setClassificationName(String classificationName) {
-        this.classificationName = classificationName;
+    public void setClassificationCodeName(String classificationCodeName) {
+        this.classificationCodeName = classificationCodeName;
     }
 
     public OffsetDateTime getClassificationDate() {
@@ -205,7 +205,7 @@ public class Classified
     public String toString() {
         return "Classified{" + super.toString() +
                 ", classificationCode='" + classificationCode + '\'' +
-                ", classificationName='" + classificationName + '\'' +
+                ", classificationCodeName='" + classificationCodeName + '\'' +
                 ", classificationDate=" + classificationDate +
                 ", classificationBy='" + classificationBy + '\'' +
                 ", classificationDowngradedDate=" +
@@ -230,7 +230,7 @@ public class Classified
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(classificationCode, rhs.classificationCode)
-                .append(classificationName, rhs.classificationName)
+                .append(classificationCodeName, rhs.classificationCodeName)
                 .append(classificationDate, rhs.classificationDate)
                 .append(classificationBy, rhs.classificationBy)
                 .append(classificationDowngradedDate,
@@ -245,7 +245,7 @@ public class Classified
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(classificationCode)
-                .append(classificationName)
+                .append(classificationCodeName)
                 .append(classificationDate)
                 .append(classificationBy)
                 .append(classificationDowngradedDate)

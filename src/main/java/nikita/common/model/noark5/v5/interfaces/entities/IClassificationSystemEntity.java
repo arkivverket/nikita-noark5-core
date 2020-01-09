@@ -17,9 +17,9 @@ public interface IClassificationSystemEntity
 
     void setClassificationTypeCode(String classificationTypeCode);
 
-    String getClassificationTypeName();
+    String getClassificationTypeCodeName();
 
-    void setClassificationTypeName(String classificationTypeName);
+    void setClassificationTypeCodeName(String classificationTypeCodeName);
 
     List<Series> getReferenceSeries();
 

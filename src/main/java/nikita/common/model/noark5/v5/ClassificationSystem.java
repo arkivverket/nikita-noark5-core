@@ -41,11 +41,11 @@ public class ClassificationSystem
     private String classificationTypeCode;
 
     /**
-     * M086 - klassifikasjonstype name (xs:string)
+     * M086 - klassifikasjonstype code name (xs:string)
      */
-    @Column(name = "classification_type_name")
+    @Column(name = "classification_type_code_name")
     @Audited
-    private String classificationTypeName;
+    private String classificationTypeCodeName;
 
     // Links to Series
     @OneToMany(mappedBy = "referenceClassificationSystem")
@@ -66,13 +66,13 @@ public class ClassificationSystem
     }
 
     @Override
-    public String getClassificationTypeName() {
-        return classificationTypeName;
+    public String getClassificationTypeCodeName() {
+        return classificationTypeCodeName;
     }
 
     @Override
-    public void setClassificationTypeName(String classificationTypeName) {
-        this.classificationTypeName = classificationTypeName;
+    public void setClassificationTypeCodeName(String classificationTypeCodeName) {
+        this.classificationTypeCodeName = classificationTypeCodeName;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ClassificationSystem
     public String toString() {
         return "ClassificationSystem{" + super.toString() +
                 "classificationTypeCode='" + classificationTypeCode + '\'' +
-                "classificationTypeName='" + classificationTypeName + '\'' +
+                "classificationTypeCodeName='" + classificationTypeCodeName + '\'' +
                 '}';
     }
 
@@ -128,7 +128,7 @@ public class ClassificationSystem
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(classificationTypeCode, rhs.classificationTypeCode)
-                .append(classificationTypeName, rhs.classificationTypeName)
+                .append(classificationTypeCodeName, rhs.classificationTypeCodeName)
                 .isEquals();
     }
 
@@ -137,7 +137,7 @@ public class ClassificationSystem
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(classificationTypeCode)
-                .append(classificationTypeName)
+                .append(classificationTypeCodeName)
                 .toHashCode();
     }
 }
