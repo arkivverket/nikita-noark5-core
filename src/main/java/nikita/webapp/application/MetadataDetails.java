@@ -88,6 +88,20 @@ public class MetadataDetails extends APIDetails {
                 true
         ));
 
+        // Add support for accessRestriction
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + ACCESS_RESTRICTION,
+                REL_METADATA_ACCESS_RESTRICTION,
+                true
+        ));
+
+        // Add support for disposalDecision
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + DISPOSAL_DECISION,
+                REL_METADATA_DISPOSAL_DECISION,
+                true
+        ));
+
         // Add support for CorrespondencePart
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + CORRESPONDENCE_PART_TYPE,
