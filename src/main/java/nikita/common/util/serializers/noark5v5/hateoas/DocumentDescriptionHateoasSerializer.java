@@ -47,9 +47,12 @@ public class DocumentDescriptionHateoasSerializer
             jgen.writeStringField(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
                     documentDescription.getDocumentType());
         }
-        if (documentDescription.getDocumentStatus() != null) {
-            jgen.writeStringField(DOCUMENT_DESCRIPTION_STATUS,
-                    documentDescription.getDocumentStatus());
+        if (documentDescription.getDocumentStatusCode() != null) {
+            jgen.writeObjectFieldStart(DOCUMENT_DESCRIPTION_STATUS);
+            printCode(jgen,
+                    documentDescription.getDocumentStatusCode(),
+                    documentDescription.getDocumentStatusCodeName());
+            jgen.writeEndObject();
         }
         printTitleAndDescription(jgen, documentDescription);
         if (documentDescription.getDocumentNumber() != null) {

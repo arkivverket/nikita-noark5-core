@@ -75,8 +75,22 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         // Deserialize documentStatus
         currentNode = objectNode.get(DOCUMENT_DESCRIPTION_STATUS);
         if (null != currentNode) {
-            documentDescription.setDocumentStatus(currentNode.textValue());
-            objectNode.remove(DOCUMENT_DESCRIPTION_STATUS);
+            JsonNode node = currentNode.get(CODE);
+            if (null != node) {
+                documentDescription.setDocumentStatusCode(node.textValue());
+            } else {
+                errors.append(DOCUMENT_DESCRIPTION_STATUS +
+                              "." + CODE + " is missing. ");
+            }
+            node = currentNode.get(CODE_NAME);
+            if (null != node) {
+                documentDescription.setDocumentStatusCodeName(node.textValue());
+            }
+            if (null != documentDescription.getDocumentStatusCode()) {
+                objectNode.remove(DOCUMENT_DESCRIPTION_STATUS);
+            }
+        } else {
+            errors.append(DOCUMENT_DESCRIPTION_STATUS + " is missing. ");
         }
 
         // Deserialize associatedWithRecordAs

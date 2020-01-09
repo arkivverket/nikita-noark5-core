@@ -52,11 +52,18 @@ public class DocumentDescription
     private String documentType;
 
     /**
-     * M054 - dokumentstatus (xs:string)
+     * M??? - dokumentstatus code (xs:string)
      */
-    @Column(name = "document_status")
+    @Column(name = "document_status_code")
     @Audited
-    private String documentStatus;
+    private String documentStatusCode;
+
+    /**
+     * M054 - dokumentstatus code name (xs:string)
+     */
+    @Column(name = "document_status_code_name")
+    @Audited
+    private String documentStatusCodeName;
 
     /**
      * M020 - tittel (xs:string)
@@ -223,12 +230,20 @@ public class DocumentDescription
         this.documentType = documentType;
     }
 
-    public String getDocumentStatus() {
-        return documentStatus;
+    public String getDocumentStatusCode() {
+        return documentStatusCode;
     }
 
-    public void setDocumentStatus(String documentStatus) {
-        this.documentStatus = documentStatus;
+    public void setDocumentStatusCode(String documentStatusCode) {
+        this.documentStatusCode = documentStatusCode;
+    }
+
+    public String getDocumentStatusCodeName() {
+        return documentStatusCodeName;
+    }
+
+    public void setDocumentStatusCodeName(String documentStatusCodeName) {
+        this.documentStatusCodeName = documentStatusCodeName;
     }
 
     public String getTitle() {
@@ -481,7 +496,8 @@ public class DocumentDescription
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 "  externalReference='" + externalReference + '\'' +
-                ", documentStatus='" + documentStatus + '\'' +
+                ", documentStatusCode='" + documentStatusCode + '\'' +
+                ", documentStatusCodeName='" + documentStatusCodeName + '\'' +
                 ", documentType='" + documentType + '\'' +
                 '}';
     }
@@ -506,7 +522,8 @@ public class DocumentDescription
                 .append(documentNumber, rhs.documentNumber)
                 .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMediumCodeName, rhs.documentMediumCodeName)
-                .append(documentStatus, rhs.documentStatus)
+                .append(documentStatusCode, rhs.documentStatusCode)
+                .append(documentStatusCodeName, rhs.documentStatusCodeName)
                 .append(documentType, rhs.documentType)
                 .append(description, rhs.description)
                 .append(createdDate, rhs.createdDate)
@@ -526,7 +543,8 @@ public class DocumentDescription
                 .append(documentNumber)
                 .append(documentMediumCode)
                 .append(documentMediumCodeName)
-                .append(documentStatus)
+                .append(documentStatusCode)
+                .append(documentStatusCodeName)
                 .append(documentType)
                 .append(description)
                 .append(createdDate)
