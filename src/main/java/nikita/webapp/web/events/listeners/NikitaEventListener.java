@@ -152,7 +152,7 @@ public class NikitaEventListener {
                 body.put(REGISTRY_ENTRY_TYPE, ((RegistryEntry) entity).
                         getRegistryEntryType());
                 body.put(REGISTRY_ENTRY_STATUS, ((RegistryEntry) entity).
-                        getRecordStatus());
+                        getRecordStatusCodeName());
                 body.put(REGISTRY_ENTRY_DATE, ((RegistryEntry) entity).
                         getDocumentDate());
             } else if (entityType.equals(DOCUMENT_DESCRIPTION)) {

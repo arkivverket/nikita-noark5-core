@@ -114,7 +114,8 @@ public class RegistryEntryService
         OffsetDateTime now = OffsetDateTime.now();
         defaultRegistryEntry.setRecordDate(now);
         defaultRegistryEntry.setDocumentDate(now);
-        defaultRegistryEntry.setRecordStatus(TEST_RECORD_STATUS);
+        defaultRegistryEntry.setRecordStatusCode(TEST_RECORD_STATUS_CODE);
+        defaultRegistryEntry.setRecordStatusCodeName(TEST_RECORD_STATUS);
         defaultRegistryEntry.setRegistryEntryType(TEST_REGISTRY_ENTRY_TYPE);
         defaultRegistryEntry.setRecordYear(now.getYear());
         RegistryEntryHateoas registryEntryHateoas = new

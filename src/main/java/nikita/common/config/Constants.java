@@ -178,7 +178,8 @@ public final class Constants {
     public static final String TEST_TITLE = "example test title";
     public static final String TEST_DESCRIPTION = "example test description";
     public static final String TEST_ADMINISTRATIVE_UNIT = "example test administrative unit";
-    public static final String TEST_RECORD_STATUS = "J";
+    public static final String TEST_RECORD_STATUS = "Journalført";
+    public static final String TEST_RECORD_STATUS_CODE = "J";
     public static final String TEST_REGISTRY_ENTRY_TYPE = "I";
 
     public static final String NOARK_DATE_FORMAT_PATTERN = "yyyy-MM-dd+HH:mm";
