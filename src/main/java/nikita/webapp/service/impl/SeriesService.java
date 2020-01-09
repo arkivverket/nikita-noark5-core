@@ -235,8 +235,13 @@ public class SeriesService
         Series existingSeries = getSeriesOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingSeries, existingSeries);
-        if (null != incomingSeries.getDocumentMedium()) {
-            existingSeries.setDocumentMedium(incomingSeries.getDocumentMedium());
+        if (null != incomingSeries.getDocumentMediumCode()) {
+            existingSeries.setDocumentMediumCode(
+		incomingSeries.getDocumentMediumCode());
+        }
+        if (null != incomingSeries.getDocumentMediumCodeName()) {
+            existingSeries.setDocumentMediumCodeName(
+		incomingSeries.getDocumentMediumCodeName());
         }
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value

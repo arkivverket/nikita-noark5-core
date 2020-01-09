@@ -482,7 +482,19 @@ public final class CommonUtils {
                 // Deserialize documentMedium
                 JsonNode currentNode = objectNode.get(DOCUMENT_MEDIUM);
                 if (null != currentNode) {
-                    documentMediumEntity.setDocumentMedium(currentNode.textValue());
+                    JsonNode node = currentNode.get(CODE);
+                    if (null != node) {
+                        documentMediumEntity.setDocumentMediumCode(
+                                node.textValue());
+                    } else {
+                        errors.append(DOCUMENT_MEDIUM
+                                      + "." + CODE + " is missing. ");
+                    }
+                    node = currentNode.get(CODE_NAME);
+                    if (null != node) {
+                        documentMediumEntity.setDocumentMediumCodeName(
+                                node.textValue());
+                    }
                     objectNode.remove(DOCUMENT_MEDIUM);
                 }
             }
@@ -1991,8 +2003,11 @@ public final class CommonUtils {
             public static void printDocumentMedium(JsonGenerator jgen,
                                                    IDocumentMedium documentMedium)
                     throws IOException {
-                if (documentMedium.getDocumentMedium() != null) {
-                    jgen.writeStringField(DOCUMENT_MEDIUM, documentMedium.getDocumentMedium());
+                if (documentMedium.getDocumentMediumCode() != null) {
+                    jgen.writeObjectFieldStart(DOCUMENT_MEDIUM);
+                    printCode(jgen, documentMedium.getDocumentMediumCode(),
+                              documentMedium.getDocumentMediumCodeName());
+                    jgen.writeEndObject();
                 }
 
             }

@@ -36,16 +36,30 @@ public class Fonds
     private static final long serialVersionUID = 1L;
 
     /**
-     * M050 - arkivstatus (xs:string)
+     * M??? - arkivstatus code (xs:string)
      */
-    @Column(name = "fonds_status")
+    @Column(name = "fonds_status_code")
     @Audited
-    private String fondsStatus;
+    private String fondsStatusCode;
 
     /**
-     * M300 - dokumentmedium (xs:string)
+     * M050 - arkivstatus code name (xs:string)
      */
-    @Column(name = "document_medium")
+    @Column(name = "fonds_status_code_name")
+    @Audited
+    private String fondsStatusCodeName;
+
+    /**
+     * M??? - dokumentmedium code (xs:string)
+     */
+    @Column(name = "document_medium_code")
+    @Audited
+    private String documentMediumCode;
+
+    /**
+     * M300 - dokumentmedium code name (xs:string)
+     */
+    @Column(name = "document_medium_code_name")
     @Audited
     private String documentMedium;
 
@@ -86,19 +100,35 @@ public class Fonds
     )
     private List<FondsCreator> referenceFondsCreator = new ArrayList<>();
 
-    public String getFondsStatus() {
-        return fondsStatus;
+    public String getFondsStatusCode() {
+        return fondsStatusCode;
     }
 
-    public void setFondsStatus(String fondsStatus) {
-        this.fondsStatus = fondsStatus;
+    public void setFondsStatusCode(String fondsStatusCode) {
+        this.fondsStatusCode = fondsStatusCode;
     }
 
-    public String getDocumentMedium() {
+    public String getFondsStatusCodeName() {
+        return fondsStatusCodeName;
+    }
+
+    public void setFondsStatusCodeName(String fondsStatusCodeName) {
+        this.fondsStatusCodeName = fondsStatusCodeName;
+    }
+
+    public String getDocumentMediumCode() {
+        return documentMediumCode;
+    }
+
+    public void setDocumentMediumCode(String documentMediumCode) {
+        this.documentMediumCode = documentMediumCode;
+    }
+
+    public String getDocumentMediumCodeName() {
         return documentMedium;
     }
 
-    public void setDocumentMedium(String documentMedium) {
+    public void setDocumentMediumCodeName(String documentMediumCodeName) {
         this.documentMedium = documentMedium;
     }
 
@@ -170,7 +200,8 @@ public class Fonds
     @Override
     public String toString() {
         return "Fonds{" + super.toString() +
-                ", fondsStatus='" + fondsStatus + '\'' +
+                ", fondsStatusCode='" + fondsStatusCode + '\'' +
+                ", fondsStatusCodeName='" + fondsStatusCodeName + '\'' +
                 ", documentMedium='" + documentMedium + '\'' +
                 '}';
     }
@@ -189,7 +220,8 @@ public class Fonds
         Fonds rhs = (Fonds) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(fondsStatus, rhs.fondsStatus)
+                .append(fondsStatusCode, rhs.fondsStatusCode)
+                .append(fondsStatusCodeName, rhs.fondsStatusCodeName)
                 .append(documentMedium, rhs.documentMedium)
                 .isEquals();
     }
@@ -198,7 +230,8 @@ public class Fonds
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(fondsStatus)
+                .append(fondsStatusCode)
+                .append(fondsStatusCodeName)
                 .append(documentMedium)
                 .toHashCode();
     }

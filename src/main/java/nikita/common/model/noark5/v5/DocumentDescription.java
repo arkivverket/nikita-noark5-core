@@ -89,9 +89,16 @@ public class DocumentDescription
     private String createdBy;
 
     /**
-     * M300 - dokumentmedium (xs:string)
+     * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium")
+    @Column(name = "document_medium_code")
+    @Audited
+    private String documentMediumCode;
+
+    /**
+     * M300 - dokumentmedium code name (xs:string)
+     */
+    @Column(name = "document_medium_code_name")
     @Audited
     private String documentMedium;
 
@@ -256,11 +263,19 @@ public class DocumentDescription
         this.createdBy = createdBy;
     }
 
-    public String getDocumentMedium() {
+    public String getDocumentMediumCode() {
+        return documentMediumCode;
+    }
+
+    public void setDocumentMediumCode(String documentMediumCode) {
+        this.documentMediumCode = documentMediumCode;
+    }
+
+    public String getDocumentMediumCodeName() {
         return documentMedium;
     }
 
-    public void setDocumentMedium(String documentMedium) {
+    public void setDocumentMediumCodeName(String documentMediumCodeName) {
         this.documentMedium = documentMedium;
     }
 
@@ -459,7 +474,8 @@ public class DocumentDescription
                 ", associationDate=" + associationDate +
                 ", documentNumber=" + documentNumber +
                 ", associatedWithRecordAs='" + associatedWithRecordAs + '\'' +
-                ", documentMedium='" + documentMedium + '\'' +
+                ", documentMediumCode='" + documentMediumCode + '\'' +
+                ", documentMediumCodeName='" + documentMedium + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", createdDate=" + createdDate +
                 ", description='" + description + '\'' +
@@ -488,6 +504,7 @@ public class DocumentDescription
                 .append(associationDate, rhs.associationDate)
                 .append(associatedWithRecordAs, rhs.associatedWithRecordAs)
                 .append(documentNumber, rhs.documentNumber)
+                .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMedium, rhs.documentMedium)
                 .append(documentStatus, rhs.documentStatus)
                 .append(documentType, rhs.documentType)
@@ -507,6 +524,7 @@ public class DocumentDescription
                 .append(associationDate)
                 .append(associatedWithRecordAs)
                 .append(documentNumber)
+                .append(documentMediumCode)
                 .append(documentMedium)
                 .append(documentStatus)
                 .append(documentType)

@@ -139,7 +139,7 @@ public class NikitaEventListener {
                 }
                 if (entityType.equals(FONDS)) {
                     body.put(TITLE, noarkEntity.getTitle());
-                    body.put(FONDS_STATUS, ((Fonds) entity).getFondsStatus());
+                    body.put(FONDS_STATUS, ((Fonds) entity).getFondsStatusCodeName());
                 } else if (entityType.equals(SERIES)) {
                     body.put(SERIES_STATUS, ((Series) entity).getSeriesStatusCodeName());
                 } else if (entityType.equals(CASE_FILE)) {

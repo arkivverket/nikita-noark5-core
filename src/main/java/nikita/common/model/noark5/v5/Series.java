@@ -72,9 +72,16 @@ public class Series
     private OffsetDateTime seriesEndDate;
 
     /**
-     * M300 - dokumentmedium (xs:string)
+     * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium")
+    @Column(name = "document_medium_code")
+    @Audited
+    private String documentMediumCode;
+
+    /**
+     * M300 - dokumentmedium code name (xs:string)
+     */
+    @Column(name = "document_medium_code_name")
     @Audited
     private String documentMedium;
 
@@ -171,11 +178,19 @@ public class Series
         this.seriesStatusCodeName = seriesStatusCodeName;
     }
 
-    public String getDocumentMedium() {
+    public String getDocumentMediumCode() {
+        return documentMediumCode;
+    }
+
+    public void setDocumentMediumCode(String documentMediumCode) {
+        this.documentMediumCode = documentMediumCode;
+    }
+
+    public String getDocumentMediumCodeName() {
         return documentMedium;
     }
 
-    public void setDocumentMedium(String documentMedium) {
+    public void setDocumentMediumCodeName(String documentMediumCodeName) {
         this.documentMedium = documentMedium;
     }
 
@@ -334,9 +349,9 @@ public class Series
         return "Series{" + super.toString() +
                 ", seriesEndDate=" + seriesEndDate +
                 ", seriesStartDate=" + seriesStartDate +
-                ", documentMedium='" + documentMedium + '\'' +
-                ", seriesStatusCode='" + seriesStatusCode + '\'' +
-                ", seriesStatusCodeName='" + seriesStatusCodeName + '\'' +
+                ", documentMediumCode='" + documentMediumCode + '\'' +
+                ", documentMediumCodeName='" + documentMedium + '\'' +
+                ", seriesStatus='" + seriesStatus + '\'' +
                 '}';
     }
 
@@ -356,6 +371,7 @@ public class Series
                 .appendSuper(super.equals(other))
                 .append(seriesEndDate, rhs.seriesEndDate)
                 .append(seriesStartDate, rhs.seriesStartDate)
+                .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMedium, rhs.documentMedium)
                 .append(seriesStatusCode, rhs.seriesStatusCode)
                 .append(seriesStatusCodeName, rhs.seriesStatusCodeName)
@@ -368,6 +384,7 @@ public class Series
                 .appendSuper(super.hashCode())
                 .append(seriesEndDate)
                 .append(seriesStartDate)
+                .append(documentMediumCode)
                 .append(documentMedium)
                 .append(seriesStatusCode)
                 .append(seriesStatusCodeName)
