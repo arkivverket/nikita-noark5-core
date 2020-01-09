@@ -180,7 +180,8 @@ public final class Constants {
     public static final String TEST_ADMINISTRATIVE_UNIT = "example test administrative unit";
     public static final String TEST_RECORD_STATUS = "Journalført";
     public static final String TEST_RECORD_STATUS_CODE = "J";
-    public static final String TEST_REGISTRY_ENTRY_TYPE = "I";
+    public static final String TEST_REGISTRY_ENTRY_TYPE_CODE = "I";
+    public static final String TEST_REGISTRY_ENTRY_TYPE = "Inngående dokument";
 
     public static final String NOARK_DATE_FORMAT_PATTERN = "yyyy-MM-dd+HH:mm";
     public static final String NOARK_ZONED_DATE_FORMAT_PATTERN = "yyyy-MM-ddZ";
