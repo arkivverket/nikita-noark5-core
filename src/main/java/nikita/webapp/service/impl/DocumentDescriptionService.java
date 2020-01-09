@@ -157,7 +157,8 @@ public class DocumentDescriptionService
             new DocumentDescription();
 
         defaultDocumentDescription.setAssociatedWithRecordAs(MAIN_DOCUMENT);
-        defaultDocumentDescription.setDocumentType(LETTER);
+        defaultDocumentDescription.setDocumentTypeCode(LETTER_CODE);
+        defaultDocumentDescription.setDocumentTypeCodeName(LETTER);
         defaultDocumentDescription.setDocumentStatusCode(DOCUMENT_STATUS_FINALISED_CODE);
         defaultDocumentDescription.setDocumentStatusCodeName(DOCUMENT_STATUS_FINALISED);
 

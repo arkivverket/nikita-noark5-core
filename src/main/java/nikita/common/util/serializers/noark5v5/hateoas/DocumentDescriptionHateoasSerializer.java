@@ -43,9 +43,12 @@ public class DocumentDescriptionHateoasSerializer
 
         // handle DocumentDescription properties
         printNikitaEntity(jgen, documentDescription);
-        if (documentDescription.getDocumentType() != null) {
-            jgen.writeStringField(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
-                    documentDescription.getDocumentType());
+        if (documentDescription.getDocumentTypeCode() != null) {
+            jgen.writeObjectFieldStart(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE);
+            printCode(jgen,
+                    documentDescription.getDocumentTypeCode(),
+                    documentDescription.getDocumentTypeCodeName());
+            jgen.writeEndObject();
         }
         if (documentDescription.getDocumentStatusCode() != null) {
             jgen.writeObjectFieldStart(DOCUMENT_DESCRIPTION_STATUS);
