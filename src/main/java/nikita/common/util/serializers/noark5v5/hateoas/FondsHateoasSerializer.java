@@ -34,8 +34,12 @@ public class FondsHateoasSerializer extends HateoasSerializer implements IHateoa
         jgen.writeStartObject();
         CommonUtils.Hateoas.Serialize.printNikitaEntity(jgen, fonds);
         CommonUtils.Hateoas.Serialize.printTitleAndDescription(jgen, fonds);
-        if (fonds.getFondsStatus() != null) {
-            jgen.writeStringField(FONDS_STATUS, fonds.getFondsStatus());
+        if (fonds.getFondsStatusCode() != null) {
+            jgen.writeObjectFieldStart(FONDS_STATUS);
+            CommonUtils.Hateoas.Serialize.printCode(jgen,
+                    fonds.getFondsStatusCode(),
+                    fonds.getFondsStatusCodeName());
+            jgen.writeEndObject();
         }
         CommonUtils.Hateoas.Serialize.printDocumentMedium(jgen, fonds);
         CommonUtils.Hateoas.Serialize.printStorageLocation(jgen, fonds);

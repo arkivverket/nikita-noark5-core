@@ -79,7 +79,8 @@ public class FondsTest
         // Make sure that there is an actual Fonds object embedded in the result
         // of a createNewFonds
         assertTrue(noarkEntity instanceof Fonds);
-        assertEquals(((Fonds) noarkEntity).getFondsStatus(), STATUS_OPEN);
+        assertEquals(((Fonds) noarkEntity).getFondsStatusCodeName(),
+		     STATUS_OPEN);
     }
 
     /**
