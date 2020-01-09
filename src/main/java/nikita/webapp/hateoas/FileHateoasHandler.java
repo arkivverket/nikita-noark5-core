@@ -37,7 +37,7 @@ public class FileHateoasHandler
         // Add action links
         addEndFile(entity, hateoasNoarkObject);
         addExpandToCaseFile(entity, hateoasNoarkObject);
-        addExpandToMeetingFile(entity, hateoasNoarkObject);
+        //addExpandToMeetingFile(entity, hateoasNoarkObject);
         // Add the secondary entity links
         addPart(entity, hateoasNoarkObject);
         addNewPartPerson(entity, hateoasNoarkObject);
