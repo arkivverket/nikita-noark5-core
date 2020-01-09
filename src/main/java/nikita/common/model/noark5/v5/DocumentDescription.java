@@ -44,12 +44,20 @@ public class DocumentDescription
     private static final long serialVersionUID = 1L;
 
     /**
-     * M083 - dokumenttype (xs:string)
+     * M??? - dokumenttype code (xs:string)
      */
     @NotNull
-    @Column(name = "document_type", nullable = false)
+    @Column(name = "document_type_code", nullable = false)
     @Audited
-    private String documentType;
+    private String documentTypeCode;
+
+    /**
+     * M083 - dokumenttype code name (xs:string)
+     */
+    @NotNull
+    @Column(name = "document_type_code_name", nullable = false)
+    @Audited
+    private String documentTypeCodeName;
 
     /**
      * M??? - dokumentstatus code (xs:string)
@@ -222,12 +230,20 @@ public class DocumentDescription
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Part> referencePart = new ArrayList<>();
 
-    public String getDocumentType() {
-        return documentType;
+    public String getDocumentTypeCode() {
+        return documentTypeCode;
     }
 
-    public void setDocumentType(String documentType) {
-        this.documentType = documentType;
+    public void setDocumentTypeCode(String documentTypeCode) {
+        this.documentTypeCode = documentTypeCode;
+    }
+
+    public String getDocumentTypeCodeName() {
+        return documentTypeCodeName;
+    }
+
+    public void setDocumentTypeCodeName(String documentTypeCodeName) {
+        this.documentTypeCodeName = documentTypeCodeName;
     }
 
     public String getDocumentStatusCode() {
@@ -498,7 +514,8 @@ public class DocumentDescription
                 "  externalReference='" + externalReference + '\'' +
                 ", documentStatusCode='" + documentStatusCode + '\'' +
                 ", documentStatusCodeName='" + documentStatusCodeName + '\'' +
-                ", documentType='" + documentType + '\'' +
+                ", documentTypeCode='" + documentTypeCode + '\'' +
+                ", documentTypeCodeName='" + documentTypeCodeName + '\'' +
                 '}';
     }
 
@@ -524,7 +541,8 @@ public class DocumentDescription
                 .append(documentMediumCodeName, rhs.documentMediumCodeName)
                 .append(documentStatusCode, rhs.documentStatusCode)
                 .append(documentStatusCodeName, rhs.documentStatusCodeName)
-                .append(documentType, rhs.documentType)
+                .append(documentTypeCode, rhs.documentTypeCode)
+                .append(documentTypeCodeName, rhs.documentTypeCodeName)
                 .append(description, rhs.description)
                 .append(createdDate, rhs.createdDate)
                 .append(createdBy, rhs.createdBy)
@@ -545,7 +563,8 @@ public class DocumentDescription
                 .append(documentMediumCodeName)
                 .append(documentStatusCode)
                 .append(documentStatusCodeName)
-                .append(documentType)
+                .append(documentTypeCode)
+                .append(documentTypeCodeName)
                 .append(description)
                 .append(createdDate)
                 .append(createdBy)

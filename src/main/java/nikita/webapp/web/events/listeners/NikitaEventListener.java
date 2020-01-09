@@ -161,7 +161,7 @@ public class NikitaEventListener {
                                 getAssociatedWithRecordAs());
                 body.put(DOCUMENT_TYPE,
                         ((DocumentDescription) entity).
-                                getDocumentType());
+                                getDocumentTypeCodeName());
                 body.put(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
                         ((DocumentDescription) entity).
                                 getDocumentNumber());

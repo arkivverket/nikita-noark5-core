@@ -357,6 +357,7 @@ public final class N5ResourceMappings {
 
     // M083 dokumenttype
     public static final String LETTER = "Brev";
+    public static final String LETTER_CODE = "B";
     public static final String CIRCULAR = "Rundskriv";
     public static final String INVOICE = "Faktura";
     public static final String CONFIRMATION = "Ordrebekreftelser";
