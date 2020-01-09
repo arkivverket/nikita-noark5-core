@@ -36,7 +36,7 @@ public class Part
     private String partTypeCode;
 
     /**
-     * M??? - partTypeKodenavn name (xs:string)
+     * M??? - partTypeKodenavn code name (xs:string)
      */
     @Column(name = "correspondence_part_type_code_name")
     @Audited

@@ -22,32 +22,32 @@ public class ElectronicSignature
         extends NoarkEntity {
 
     /**
-     * M??? - elektronisksignatursikkerhetsnivaa kode (xs:string)
+     * M??? - elektronisksignatursikkerhetsnivaa code (xs:string)
      */
     @Column(name = "electronic_signature_security_level_code")
     @Audited
     private String electronicSignatureSecurityLevelCode;
 
     /**
-     * M507 - elektronisksignatursikkerhetsnivaa kodenavn (xs:string)
+     * M507 - elektronisksignatursikkerhetsnivaa code name (xs:string)
      */
     @Column(name = ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG)
     @Audited
-    private String electronicSignatureSecurityLevelName;
+    private String electronicSignatureSecurityLevelCodeName;
 
     /**
-     * M??? - elektronisksignaturverifisert kode (xs:string)
+     * M??? - elektronisksignaturverifisert code (xs:string)
      */
     @Column(name = "electronic_signature_verified_code")
     @Audited
     private String electronicSignatureVerifiedCode;
 
     /**
-     * M508 - elektronisksignaturverifisert kodenavn (xs:string)
+     * M508 - elektronisksignaturverifisert code name (xs:string)
      */
     @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG)
     @Audited
-    private String electronicSignatureVerifiedName;
+    private String electronicSignatureVerifiedCodeName;
 
     /**
      * M622 - verifisertDato (xs:date)
@@ -89,14 +89,14 @@ public class ElectronicSignature
                 electronicSignatureSecurityLevelCode;
     }
 
-    public String getElectronicSignatureSecurityLevelName() {
-        return electronicSignatureSecurityLevelName;
+    public String getElectronicSignatureSecurityLevelCodeName() {
+        return electronicSignatureSecurityLevelCodeName;
     }
 
-    public void setElectronicSignatureSecurityLevelName(
-            String electronicSignatureSecurityLevelName) {
-        this.electronicSignatureSecurityLevelName =
-                electronicSignatureSecurityLevelName;
+    public void setElectronicSignatureSecurityLevelCodeName(
+            String electronicSignatureSecurityLevelCodeName) {
+        this.electronicSignatureSecurityLevelCodeName =
+                electronicSignatureSecurityLevelCodeName;
     }
 
     public String getElectronicSignatureVerifiedCode() {
@@ -105,16 +105,18 @@ public class ElectronicSignature
 
     public void setElectronicSignatureVerifiedCode(
             String electronicSignatureVerifiedCode) {
-        this.electronicSignatureVerifiedCode = electronicSignatureVerifiedCode;
+        this.electronicSignatureVerifiedCode =
+            electronicSignatureVerifiedCode;
     }
 
-    public String getElectronicSignatureVerifiedName() {
-        return electronicSignatureVerifiedName;
+    public String getElectronicSignatureVerifiedCodeName() {
+        return electronicSignatureVerifiedCodeName;
     }
 
-    public void setElectronicSignatureVerifiedName(
-            String electronicSignatureVerifiedName) {
-        this.electronicSignatureVerifiedName = electronicSignatureVerifiedName;
+    public void setElectronicSignatureVerifiedCodeName(
+            String electronicSignatureVerifiedCodeName) {
+        this.electronicSignatureVerifiedCodeName =
+            electronicSignatureVerifiedCodeName;
     }
 
     public OffsetDateTime getVerifiedDate() {
@@ -175,12 +177,12 @@ public class ElectronicSignature
         return "ElectronicSignature{" + super.toString() +
                 ", electronicSignatureSecurityLevelCode='" +
                 electronicSignatureSecurityLevelCode + '\'' +
-                ", electronicSignatureSecurityLevelName='" +
-                electronicSignatureSecurityLevelName + '\'' +
+                ", electronicSignatureSecurityLevelCodeName='" +
+                electronicSignatureSecurityLevelCodeName + '\'' +
                 ", electronicSignatureVerifiedCode='" +
                 electronicSignatureVerifiedCode + '\'' +
-                ", electronicSignatureVerifiedName='" +
-                electronicSignatureVerifiedName + '\'' +
+                ", electronicSignatureVerifiedCodeName='" +
+                electronicSignatureVerifiedCodeName + '\'' +
                 '}';
     }
 
@@ -200,12 +202,12 @@ public class ElectronicSignature
                 .appendSuper(super.equals(other))
                 .append(electronicSignatureSecurityLevelCode,
                         rhs.electronicSignatureSecurityLevelCode)
-                .append(electronicSignatureSecurityLevelName,
-                        rhs.electronicSignatureSecurityLevelName)
+                .append(electronicSignatureSecurityLevelCodeName,
+                        rhs.electronicSignatureSecurityLevelCodeName)
                 .append(electronicSignatureVerifiedCode,
                         rhs.electronicSignatureVerifiedCode)
-                .append(electronicSignatureVerifiedName,
-                        rhs.electronicSignatureVerifiedName)
+                .append(electronicSignatureVerifiedCodeName,
+                        rhs.electronicSignatureVerifiedCodeName)
                 .isEquals();
     }
 
@@ -214,9 +216,9 @@ public class ElectronicSignature
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(electronicSignatureSecurityLevelCode)
-                .append(electronicSignatureSecurityLevelName)
+                .append(electronicSignatureSecurityLevelCodeName)
                 .append(electronicSignatureVerifiedCode)
-                .append(electronicSignatureVerifiedName)
+                .append(electronicSignatureVerifiedCodeName)
                 .toHashCode();
     }
 }

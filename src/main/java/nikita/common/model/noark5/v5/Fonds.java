@@ -61,7 +61,7 @@ public class Fonds
      */
     @Column(name = "document_medium_code_name")
     @Audited
-    private String documentMedium;
+    private String documentMediumCodeName;
 
     // Links to Series
     @OneToMany(mappedBy = "referenceFonds")
@@ -125,11 +125,11 @@ public class Fonds
     }
 
     public String getDocumentMediumCodeName() {
-        return documentMedium;
+        return documentMediumCodeName;
     }
 
     public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMedium = documentMedium;
+        this.documentMediumCodeName = documentMediumCodeName;
     }
 
     @Override
@@ -202,7 +202,7 @@ public class Fonds
         return "Fonds{" + super.toString() +
                 ", fondsStatusCode='" + fondsStatusCode + '\'' +
                 ", fondsStatusCodeName='" + fondsStatusCodeName + '\'' +
-                ", documentMedium='" + documentMedium + '\'' +
+                ", documentMediumCodeName='" + documentMediumCodeName + '\'' +
                 '}';
     }
 
@@ -222,7 +222,7 @@ public class Fonds
                 .appendSuper(super.equals(other))
                 .append(fondsStatusCode, rhs.fondsStatusCode)
                 .append(fondsStatusCodeName, rhs.fondsStatusCodeName)
-                .append(documentMedium, rhs.documentMedium)
+                .append(documentMediumCodeName, rhs.documentMediumCodeName)
                 .isEquals();
     }
 
@@ -232,7 +232,7 @@ public class Fonds
                 .appendSuper(super.hashCode())
                 .append(fondsStatusCode)
                 .append(fondsStatusCodeName)
-                .append(documentMedium)
+                .append(documentMediumCodeName)
                 .toHashCode();
     }
 }

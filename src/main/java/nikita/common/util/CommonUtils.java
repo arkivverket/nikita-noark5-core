@@ -638,7 +638,7 @@ public final class CommonUtils {
                     }
                     node = currentNode.get(CODE_NAME);
                     if (null != node) {
-                        classificationSystem.setClassificationTypeName(node.textValue());
+                        classificationSystem.setClassificationTypeCodeName(node.textValue());
                     }
                     if (null != classificationSystem.getClassificationTypeCode()) {
                         objectNode.remove(CLASSIFICATION_SYSTEM_TYPE);
@@ -1582,7 +1582,7 @@ public final class CommonUtils {
                     }
                     node = currentNode.get(CODE_NAME);
                     if (null != node) {
-                        classifiedEntity.setClassificationName(node.textValue());
+                        classifiedEntity.setClassificationCodeName(node.textValue());
                     }
                     if (null != classifiedEntity.getClassificationCode()) {
                         objectNode.remove(CLASSIFICATION);
@@ -1643,8 +1643,9 @@ public final class CommonUtils {
                     }
                     node = currentNode.get(CODE_NAME);
                     if (null != node) {
-                        electronicSignature.setElectronicSignatureSecurityLevelName(
-                                                                                    node.textValue());
+                        electronicSignature
+			    .setElectronicSignatureSecurityLevelCodeName(
+				node.textValue());
                     }
                     if (null != electronicSignature.
                         getElectronicSignatureSecurityLevelCode()) {
@@ -1676,7 +1677,7 @@ public final class CommonUtils {
                     }
                     node = currentNode.get(CODE_NAME);
                     if (null != node) {
-                        electronicSignature.setElectronicSignatureVerifiedName(
+                        electronicSignature.setElectronicSignatureVerifiedCodeName(
                                                                                node.textValue());
                     }
                     if (null != electronicSignature.
@@ -1793,7 +1794,7 @@ public final class CommonUtils {
                     jgen.writeObjectFieldStart(CLASSIFICATION_SYSTEM_TYPE);
                     printCode(jgen,
                               classificationSystem.getClassificationTypeCode(),
-                              classificationSystem.getClassificationTypeName());
+                              classificationSystem.getClassificationTypeCodeName());
                     jgen.writeEndObject();
                 }
             }
@@ -2584,19 +2585,19 @@ public final class CommonUtils {
                         jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
                         printCode(jgen,
 				  es.getElectronicSignatureSecurityLevelCode(),
-				  es.getElectronicSignatureSecurityLevelName());
+				  es.getElectronicSignatureSecurityLevelCodeName());
                         jgen.writeEndObject();
                     }
                     if (es.getElectronicSignatureSecurityLevelCode() != null) {
                         jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
                         printCode(jgen,
 				  es.getElectronicSignatureSecurityLevelCode(),
-				  es.getElectronicSignatureSecurityLevelName());
+				  es.getElectronicSignatureSecurityLevelCodeName());
                         jgen.writeEndObject();
                     }
-                    if (es.getElectronicSignatureVerifiedName() != null) {
+                    if (es.getElectronicSignatureVerifiedCodeName() != null) {
                         jgen.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
-                                es.getElectronicSignatureVerifiedName());
+                                es.getElectronicSignatureVerifiedCodeName());
                     }
                     if (es.getVerifiedDate() != null) {
                         jgen.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_DATE,
@@ -2619,7 +2620,7 @@ public final class CommonUtils {
                         if (classified.getClassificationCode() != null) {
                             jgen.writeObjectFieldStart(CLASSIFICATION);
                             printCode(jgen, classified.getClassificationCode(),
-                                      classified.getClassificationName());
+                                      classified.getClassificationCodeName());
                             jgen.writeEndObject();
                         }
                         if (classified.getClassificationDate() != null) {
