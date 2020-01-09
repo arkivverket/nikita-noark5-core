@@ -150,7 +150,7 @@ public class NikitaEventListener {
                 body.put(REGISTRY_ENTRY_NUMBER, ((RegistryEntry) entity).
                         getRegistryEntryNumber());
                 body.put(REGISTRY_ENTRY_TYPE, ((RegistryEntry) entity).
-                        getRegistryEntryType());
+                        getRegistryEntryTypeCodeName());
                 body.put(REGISTRY_ENTRY_STATUS, ((RegistryEntry) entity).
                         getRecordStatusCodeName());
                 body.put(REGISTRY_ENTRY_DATE, ((RegistryEntry) entity).

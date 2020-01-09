@@ -122,11 +122,23 @@ public class RegistryEntryDeserializer
         // Deserialize registryEntryType
         currentNode = objectNode.get(REGISTRY_ENTRY_TYPE);
         if (null != currentNode) {
-            registryEntry.setRegistryEntryType(currentNode.textValue());
-            objectNode.remove(REGISTRY_ENTRY_TYPE);
+            JsonNode node = currentNode.get(CODE);
+            if (null != node) {
+                registryEntry.setRegistryEntryTypeCode(node.textValue());
+            } else {
+                errors.append(REGISTRY_ENTRY_TYPE +
+                              "." + CODE + " is missing. ");
+            }
+            node = currentNode.get(CODE_NAME);
+            if (null != node) {
+                registryEntry.setRegistryEntryTypeCodeName(node.textValue());
+            }
+            if (null != registryEntry.getRegistryEntryTypeCode()) {
+                objectNode.remove(REGISTRY_ENTRY_TYPE);
+            }
         } else {
             errors.append("The journalpost you tried to create is missing " +
-                    "journalposttype. ");
+			  REGISTRY_ENTRY_TYPE + ". ");
         }
         // Deserialize recordStatus
         currentNode = objectNode.get(REGISTRY_ENTRY_STATUS);

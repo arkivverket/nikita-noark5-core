@@ -60,12 +60,20 @@ public class RegistryEntry
     private Integer registryEntryNumber;
 
     /**
-     * M082 - journalposttype (xs:string)
+     * M?? - journalposttype code (xs:string)
      */
     @NotNull
-    @Column(name = "registry_entry_type", nullable = false)
+    @Column(name = "registry_entry_type_code", nullable = false)
     @Audited
-    private String registryEntryType;
+    private String registryEntryTypeCode;
+
+    /**
+     * M082 - journalposttype code name (xs:string)
+     */
+    @NotNull
+    @Column(name = "registry_entry_type_code_name", nullable = false)
+    @Audited
+    private String registryEntryTypeCodeName;
 
     /**
      * M??? - journalstatus code (xs:string, nullable = false)
@@ -218,12 +226,20 @@ public class RegistryEntry
         this.registryEntryNumber = registryEntryNumber;
     }
 
-    public String getRegistryEntryType() {
-        return registryEntryType;
+    public String getRegistryEntryTypeCode() {
+        return registryEntryTypeCode;
     }
 
-    public void setRegistryEntryType(String registryEntryType) {
-        this.registryEntryType = registryEntryType;
+    public void setRegistryEntryTypeCode(String registryEntryTypeCode) {
+        this.registryEntryTypeCode = registryEntryTypeCode;
+    }
+
+    public String getRegistryEntryTypeCodeName() {
+        return registryEntryTypeCodeName;
+    }
+
+    public void setRegistryEntryTypeCodeName(String registryEntryTypeCodeName) {
+        this.registryEntryTypeCodeName = registryEntryTypeCodeName;
     }
 
     public String getRecordStatusCode() {
@@ -389,7 +405,8 @@ public class RegistryEntry
                 ", recordDate=" + recordDate +
                 ", recordStatusCode='" + recordStatusCode + '\'' +
                 ", recordStatusCodeName='" + recordStatusCodeName + '\'' +
-                ", registryEntryType='" + registryEntryType + '\'' +
+                ", registryEntryTypeCode='" + registryEntryTypeCode + '\'' +
+                ", registryEntryTypeCodeName='" + registryEntryTypeCodeName + '\'' +
                 ", registryEntryNumber=" + registryEntryNumber +
                 ", recordSequenceNumber=" + recordSequenceNumber +
                 ", recordYear=" + recordYear +
@@ -422,7 +439,8 @@ public class RegistryEntry
                 .append(recordDate, rhs.recordDate)
                 .append(recordStatusCode, rhs.recordStatusCode)
                 .append(recordStatusCodeName, rhs.recordStatusCodeName)
-                .append(registryEntryType, rhs.registryEntryType)
+                .append(registryEntryTypeCode, rhs.registryEntryTypeCode)
+                .append(registryEntryTypeCodeName, rhs.registryEntryTypeCodeName)
                 .append(registryEntryNumber, rhs.registryEntryNumber)
                 .append(recordSequenceNumber, rhs.recordSequenceNumber)
                 .append(recordYear, rhs.recordYear)
@@ -445,7 +463,8 @@ public class RegistryEntry
                 .append(recordDate)
                 .append(recordStatusCode)
                 .append(recordStatusCodeName)
-                .append(registryEntryType)
+                .append(registryEntryTypeCode)
+                .append(registryEntryTypeCodeName)
                 .append(registryEntryNumber)
                 .append(recordSequenceNumber)
                 .append(recordYear)

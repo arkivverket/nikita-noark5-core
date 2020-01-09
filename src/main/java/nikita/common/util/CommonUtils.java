@@ -1982,9 +1982,12 @@ public final class CommonUtils {
                         jgen.writeNumberField(REGISTRY_ENTRY_NUMBER,
                                 registryEntry.getRegistryEntryNumber());
                     }
-                    if (registryEntry.getRegistryEntryType() != null) {
-                        jgen.writeStringField(REGISTRY_ENTRY_TYPE,
-                                registryEntry.getRegistryEntryType());
+                    if (registryEntry.getRegistryEntryTypeCode() != null) {
+			jgen.writeObjectFieldStart(REGISTRY_ENTRY_TYPE);
+			printCode(jgen,
+				  registryEntry.getRegistryEntryTypeCode(),
+				  registryEntry.getRegistryEntryTypeCodeName());
+			jgen.writeEndObject();
                     }
                     if (registryEntry.getRecordStatusCode() != null) {
                         jgen.writeObjectFieldStart(REGISTRY_ENTRY_STATUS);

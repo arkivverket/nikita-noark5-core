@@ -21,9 +21,13 @@ public interface IRegistryEntryEntity extends IRecordEntity, IRecordNoteEntity,
 
     void setRegistryEntryNumber(Integer registryEntryNumber);
 
-    String getRegistryEntryType();
+    String getRegistryEntryTypeCode();
 
-    void setRegistryEntryType(String registryEntryType);
+    void setRegistryEntryTypeCode(String registryEntryTypeCode);
+
+    String getRegistryEntryTypeCodeName();
+
+    void setRegistryEntryTypeCodeName(String registryEntryTypeCodeName);
 
     String getRecordStatusCode();
 

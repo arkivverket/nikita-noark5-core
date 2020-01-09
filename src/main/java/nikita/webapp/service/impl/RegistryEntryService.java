@@ -116,7 +116,8 @@ public class RegistryEntryService
         defaultRegistryEntry.setDocumentDate(now);
         defaultRegistryEntry.setRecordStatusCode(TEST_RECORD_STATUS_CODE);
         defaultRegistryEntry.setRecordStatusCodeName(TEST_RECORD_STATUS);
-        defaultRegistryEntry.setRegistryEntryType(TEST_REGISTRY_ENTRY_TYPE);
+        defaultRegistryEntry.setRegistryEntryTypeCode(TEST_REGISTRY_ENTRY_TYPE_CODE);
+        defaultRegistryEntry.setRegistryEntryTypeCodeName(TEST_REGISTRY_ENTRY_TYPE);
         defaultRegistryEntry.setRecordYear(now.getYear());
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas(defaultRegistryEntry);
