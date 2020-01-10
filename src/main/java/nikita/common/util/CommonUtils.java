@@ -1265,12 +1265,18 @@ public final class CommonUtils {
                 }
 
                 // Deserialize organisasjonsnummer
-                currentNode = objectNode.get(ORGANISATION_NUMBER);
+                currentNode = objectNode.get(UNIT_IDENTIFIER);
                 if (null != currentNode) {
-                    partUnit.setOrganisationNumber(currentNode.textValue());
-                    objectNode.remove(ORGANISATION_NUMBER);
-                }
+		    JsonNode node = currentNode.get(ORGANISATION_NUMBER);
+		    if (null != node) {
+			partUnit.setOrganisationNumber(node.textValue());
 
+			// This remove() call is placed inside block
+			// to report error if no organisasjonsnummer
+			// was found.
+			objectNode.remove(UNIT_IDENTIFIER);
+		    }
+		}
                 // Deserialize kontaktperson
                 currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
@@ -1320,18 +1326,27 @@ public final class CommonUtils {
                     IGenericPersonEntity person, ObjectNode objectNode,
                     StringBuilder errors) {
 
-                // Deserialize foedselsnummer
-                JsonNode currentNode = objectNode.get(SOCIAL_SECURITY_NUMBER);
+                JsonNode currentNode = objectNode.get(PERSON_IDENTIFIER);
                 if (null != currentNode) {
-                    person.setSocialSecurityNumber(currentNode.textValue());
-                    objectNode.remove(SOCIAL_SECURITY_NUMBER);
-                }
-
-                // Deserialize dnummer
-                currentNode = objectNode.get(D_NUMBER_FIELD);
-                if (null != currentNode) {
-                    person.setdNumber(currentNode.textValue());
-                    objectNode.remove(D_NUMBER_FIELD);
+                    // Deserialize foedselsnummer
+                    JsonNode node = currentNode.get(SOCIAL_SECURITY_NUMBER);
+                    if (null != node) {
+                        person.setSocialSecurityNumber(node.textValue());
+                    }
+                    // Deserialize dnummer
+                    node= currentNode.get(D_NUMBER_FIELD);
+                    if (null != currentNode) {
+                        person.setdNumber(currentNode.textValue());
+                    }
+                    // Only one of these are allowed, report error otherwise.
+                    if (null != person.getSocialSecurityNumber() &&
+                        null != person.getdNumber()) {
+                        errors.append("Only one of " + SOCIAL_SECURITY_NUMBER
+                                      + " and " + D_NUMBER_FIELD
+                                      + " can be set at the time. ");
+                    } else {
+                        objectNode.remove(PERSON_IDENTIFIER);
+                    }
                 }
 
                 // Deserialize navn
@@ -1406,11 +1421,18 @@ public final class CommonUtils {
                 }
 
                 // Deserialize organisasjonsnummer
-                currentNode = objectNode.get(ORGANISATION_NUMBER);
+                currentNode = objectNode.get(UNIT_IDENTIFIER);
                 if (null != currentNode) {
-                    correspondencePartUnit.setOrganisationNumber(
-                            currentNode.textValue());
-                    objectNode.remove(ORGANISATION_NUMBER);
+                    JsonNode node = currentNode.get(ORGANISATION_NUMBER);
+                    if (null != node) {
+                        correspondencePartUnit.setOrganisationNumber(
+                                node.textValue());
+
+                        // This remove() call is placed inside block
+                        // to report error if no organisasjonsnummer
+                        // was found.
+                        objectNode.remove(UNIT_IDENTIFIER);
+                    }
                 }
 
                 // Deserialize kontaktperson
@@ -2159,8 +2181,10 @@ public final class CommonUtils {
                     throws IOException {
                 if (null != unit) {
                     if (null != unit.getOrganisationNumber()) {
+                        jgen.writeObjectFieldStart(UNIT_IDENTIFIER);
                         jgen.writeStringField(ORGANISATION_NUMBER,
                                 unit.getOrganisationNumber());
+                        jgen.writeEndObject();
                     }
                     if (null != unit.getName()) {
                         jgen.writeStringField(NAME,
@@ -2192,16 +2216,17 @@ public final class CommonUtils {
                     IGenericPersonEntity partPerson)
                     throws IOException {
                 if (null != partPerson) {
-
-                    if (null !=
-                            partPerson.getSocialSecurityNumber()) {
-                        jgen.writeStringField(SOCIAL_SECURITY_NUMBER,
-                                partPerson.
-                                        getSocialSecurityNumber());
-                    }
-                    if (null != partPerson.getdNumber()) {
-                        jgen.writeStringField(D_NUMBER_FIELD,
-                                partPerson.getdNumber());
+                    String ssn = partPerson.getSocialSecurityNumber();
+                    String dnumber = partPerson.getdNumber();
+                    if (null != ssn || null != dnumber) {
+                        jgen.writeObjectFieldStart(PERSON_IDENTIFIER);
+                        if (null != ssn) {
+                            jgen.writeStringField(SOCIAL_SECURITY_NUMBER, ssn);
+                        }
+                        if (null != dnumber) {
+                            jgen.writeStringField(D_NUMBER_FIELD, dnumber);
+                        }
+                        jgen.writeEndObject();
                     }
                     if (null != partPerson.getName()) {
                         jgen.writeStringField(NAME,
