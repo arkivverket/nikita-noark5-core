@@ -171,7 +171,7 @@ public final class N5ResourceMappings {
     public static final String ADDRESS_LINE_3 = "adresselinje3";
     public static final String CONTACT_INFORMATION = "kontaktinformasjon";
     public static final String EMAIL_ADDRESS = "epostadresse";
-    public static final String TELEPHONE_NUMBER = "telefonnummer";
+    public static final String TELEPHONE_NUMBER = "telefon";
     public static final String MOBILE_TELEPHONE_NUMBER = "mobiltelefon";
     public static final String FOREIGN_ADDRESS = "utenlandsadresse";
     public static final String CONTACT_PERSON = "kontaktperson";

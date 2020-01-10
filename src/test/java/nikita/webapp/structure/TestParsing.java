@@ -1036,6 +1036,10 @@ public class TestParsing {
         assert(null != partPerson);
         assert(systemID.equals(partPerson.getSystemId()));
         assert(name.equals(partPerson.getName()));
+        ContactInformation c = partPerson.getContactInformation();
+        assert("+47 900 00 000".equals(c.getTelephoneNumber()));
+        assert("+47 222 22 222".equals(c.getMobileTelephoneNumber()));
+        assert("admin@example.com".equals(c.getEmailAddress()));
     }
 
     @Test
@@ -1084,6 +1088,10 @@ public class TestParsing {
         assert(null != partUnit);
         assert(systemID.equals(partUnit.getSystemId()));
         assert(name.equals(partUnit.getName()));
+        ContactInformation c = partUnit.getContactInformation();
+        assert("+47 900 00 000".equals(c.getTelephoneNumber()));
+        assert("+47 222 22 222".equals(c.getMobileTelephoneNumber()));
+        assert("admin@example.com".equals(c.getEmailAddress()));
     }
 
     @Test
@@ -1131,6 +1139,10 @@ public class TestParsing {
         assert(null != correspondencePartPerson);
         assert(systemID.equals(correspondencePartPerson.getSystemId()));
         assert(name.equals(correspondencePartPerson.getName()));
+        ContactInformation c = correspondencePartPerson.getContactInformation();
+        assert("+47 900 00 000".equals(c.getTelephoneNumber()));
+        assert("+47 222 22 222".equals(c.getMobileTelephoneNumber()));
+        assert("admin@example.com".equals(c.getEmailAddress()));
     }
 
     @Test
@@ -1179,6 +1191,10 @@ public class TestParsing {
         assert(null != correspondencePartUnit);
         assert(systemID.equals(correspondencePartUnit.getSystemId()));
         assert(name.equals(correspondencePartUnit.getName()));
+        ContactInformation c = correspondencePartUnit.getContactInformation();
+        assert("+47 900 00 000".equals(c.getTelephoneNumber()));
+        assert("+47 222 22 222".equals(c.getMobileTelephoneNumber()));
+        assert("admin@example.com".equals(c.getEmailAddress()));
     }
 
 
