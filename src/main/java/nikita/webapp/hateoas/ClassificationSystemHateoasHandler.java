@@ -53,9 +53,8 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
     public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
 
         // links for primary entities
-        addNewClassificationSystem(entity, hateoasNoarkObject);
-        addNewSecondaryClassificationSystem(entity, hateoasNoarkObject);
         addSecondaryClassificationSystem(entity, hateoasNoarkObject);
+        addNewSecondaryClassificationSystem(entity, hateoasNoarkObject);
         addClass(entity, hateoasNoarkObject);
         addNewClass(entity, hateoasNoarkObject);
         addSeries(entity, hateoasNoarkObject);
@@ -93,10 +92,10 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
     }
 
     @Override
-    public void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_CLASSIFICATION_SYSTEM + SLASH,
-                REL_FONDS_STRUCTURE_NEW_CLASSIFICATION_SYSTEM, false));
+                HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
+                REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
@@ -104,13 +103,6 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION + SLASH,
                 REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
-    }
-
-    @Override
-    public void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
-                REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
