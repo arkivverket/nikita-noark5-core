@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -17,6 +18,7 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.IFondsService;
+import nikita.webapp.service.interfaces.metadata.IFondsStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -57,6 +59,7 @@ public class FondsService
 
     private IFondsRepository fondsRepository;
     private SeriesService seriesService;
+    private IFondsStatusService fondsStatusService;
     private IFondsCreatorService fondsCreatorService;
     private IFondsHateoasHandler fondsHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
@@ -66,6 +69,7 @@ public class FondsService
                         ApplicationEventPublisher applicationEventPublisher,
                         IFondsRepository fondsRepository,
                         SeriesService seriesService,
+                        IFondsStatusService fondsStatusService,
                         IFondsCreatorService fondsCreatorService,
                         IFondsHateoasHandler fondsHateoasHandler,
                         ISeriesHateoasHandler seriesHateoasHandler,
@@ -74,6 +78,7 @@ public class FondsService
         super(entityManager, applicationEventPublisher);
         this.fondsRepository = fondsRepository;
         this.seriesService = seriesService;
+        this.fondsStatusService = fondsStatusService;
         this.fondsCreatorService = fondsCreatorService;
         this.entityManager = entityManager;
         this.fondsHateoasHandler = fondsHateoasHandler;
@@ -94,8 +99,10 @@ public class FondsService
     @Override
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
         checkDocumentMediumValid(fonds);
-        fonds.setFondsStatusCode(STATUS_OPEN_CODE);
-        fonds.setFondsStatusCodeName(STATUS_OPEN);
+        if (null == fonds.getFondsStatusCode()) {
+            fonds.setFondsStatusCode(STATUS_OPEN_CODE);
+        }
+        checkFondsStatusUponCreation(fonds);
         setFinaliseEntityValues(fonds);
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.save(fonds));
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
@@ -580,6 +587,35 @@ public class FondsService
                     "associated with it!" + fonds.getSystemId();
             logger.info(info);
             throw new NoarkInvalidStructureException(info, "Fonds", "Series");
+        }
+    }
+
+    /**
+     * Internal helper method. Verify the FondsStatus code provided is
+     * in the metadata catalog, and copy the code name associated with
+     * the code from the metadata catalog into the Fonds.
+     * <p>
+     * If the FondsStatus code is unknown, a
+     * NoarkEntityNotFoundException exception is thrown that the
+     * caller has to deal with.  If the code and code name provided do
+     * not match the entries in the metadata catalog, a
+     * NoarkInvalidStructureException exception is thrown.
+     *
+     * @param fonds The fonds object
+     */
+    private void checkFondsStatusUponCreation(Fonds fonds) {
+        if (fonds.getFondsStatusCodeName() != null) {
+            FondsStatus fondsStatus = fondsStatusService.
+                    findFondsStatusByCode(fonds.getFondsStatusCode());
+	    if (null != fonds.getFondsStatusCodeName() &&
+		! fondsStatus.getCodeName().
+		equals(fonds.getFondsStatusCodeName())) {
+		String info = "FondsStatus code and code name "+
+		    "did not match metadata catalog.";
+		throw new NoarkInvalidStructureException(
+			info, "Fonds", "FondsStatus");
+	    }
+            fonds.setFondsStatusCodeName(fondsStatus.getCodeName());
         }
     }
 }

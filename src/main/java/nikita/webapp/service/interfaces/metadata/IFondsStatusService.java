@@ -14,7 +14,9 @@ public interface IFondsStatusService {
 
     ArrayList<INikitaEntity> findAll();
 
-    FondsStatus update(FondsStatus fondsStatus);
-
     FondsStatus findByCode(String code);
+
+    FondsStatus findFondsStatusByCode(String code);
+
+    FondsStatus update(FondsStatus fondsStatus);
 }
