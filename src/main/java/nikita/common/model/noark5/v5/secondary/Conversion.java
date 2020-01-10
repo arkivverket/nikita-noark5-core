@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -15,7 +16,8 @@ import static nikita.common.config.N5ResourceMappings.CONVERSION;
 @Entity
 @Table(name = TABLE_CONVERSION)
 public class Conversion
-        extends NoarkEntity {
+        extends NoarkEntity
+        implements IConversionEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -67,50 +69,62 @@ public class Conversion
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DocumentObject referenceDocumentObject;
 
+    @Override
     public OffsetDateTime getConvertedDate() {
         return convertedDate;
     }
 
+    @Override
     public void setConvertedDate(OffsetDateTime convertedDate) {
         this.convertedDate = convertedDate;
     }
 
+    @Override
     public String getConvertedBy() {
         return convertedBy;
     }
 
+    @Override
     public void setConvertedBy(String convertedBy) {
         this.convertedBy = convertedBy;
     }
 
+    @Override
     public String getConvertedFromFormat() {
         return convertedFromFormat;
     }
 
+    @Override
     public void setConvertedFromFormat(String convertedFromFormat) {
         this.convertedFromFormat = convertedFromFormat;
     }
 
+    @Override
     public String getConvertedToFormat() {
         return convertedToFormat;
     }
 
+    @Override
     public void setConvertedToFormat(String convertedToFormat) {
         this.convertedToFormat = convertedToFormat;
     }
 
+    @Override
     public String getConversionTool() {
         return conversionTool;
     }
 
+    @Override
     public void setConversionTool(String conversionTool) {
         this.conversionTool = conversionTool;
     }
 
+    @Override
     public String getConversionComment() {
         return conversionComment;
     }
 
+    @Override
     public void setConversionComment(String conversionComment) {
         this.conversionComment = conversionComment;
     }
@@ -125,10 +139,12 @@ public class Conversion
         return REL_FONDS_STRUCTURE_CONVERSION;
     }
 
+    @Override
     public DocumentObject getReferenceDocumentObject() {
         return referenceDocumentObject;
     }
 
+    @Override
     public void setReferenceDocumentObject(
             DocumentObject referenceDocumentObject) {
         this.referenceDocumentObject = referenceDocumentObject;

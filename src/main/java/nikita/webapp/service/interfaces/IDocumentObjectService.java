@@ -4,6 +4,8 @@ package nikita.webapp.service.interfaces;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
+import nikita.common.model.noark5.v5.secondary.Conversion;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
@@ -24,6 +26,9 @@ public interface IDocumentObjectService {
     DocumentObjectHateoas generateDefaultDocumentObject();
 
     List<DocumentObject> findDocumentObjectByOwner();
+
+    ConversionHateoas
+    findAllConversionAssociatedWithDocumentObject(String systemId);
 
     ResponseEntity<DocumentDescriptionHateoas>
     findAssociatedDocumentDescription(@NotNull String systemId);

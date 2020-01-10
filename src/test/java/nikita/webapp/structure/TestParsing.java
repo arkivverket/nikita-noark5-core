@@ -31,6 +31,7 @@ import nikita.common.util.deserialisers.*;
 import nikita.common.util.deserialisers.admin.*;
 import nikita.common.util.deserialisers.casehandling.*;
 import nikita.common.util.deserialisers.nationalidentifier.*;
+import nikita.common.util.deserialisers.secondary.*;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class)
@@ -1375,5 +1376,31 @@ public class TestParsing {
                 jsonParser, null /* DeserializationContext */);
         assert(null != unit);
         assert(systemID.equals(unit.getSystemId()));
+    }
+
+    @Test
+    public void parseConversionComplete() throws Exception {
+        System.out.println("info: testing conversion parsing");
+        String systemID = "60771e06-33b7-11ea-aaca-e359aca50a62";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"konvertertDato\": \"2020-02-13T00:00:00+00:00\" "
+            +", \"konvertertAv\": \"Some One\" "
+            +", \"konvertertFraFormat\": \"Some One\" "
+            +", \"konvertertTilFormat\": \"Some One\" "
+            +", \"konverteringsverktoey\": \"Some One\" "
+            +", \"konverteringskommentar\": \"Some One\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        ConversionDeserializer conversionDeserializer =
+            new ConversionDeserializer();
+        Conversion conversion =
+            conversionDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != conversion);
+        assert(systemID.equals(conversion.getSystemId()));
     }
 }
