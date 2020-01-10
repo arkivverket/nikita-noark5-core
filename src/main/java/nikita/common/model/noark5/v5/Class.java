@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IClassEntity;
@@ -23,7 +24,7 @@ import java.util.List;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CLASS;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CLASS)
@@ -37,8 +38,9 @@ public class Class
     /**
      * M002 - klasseID (xs:string)
      */
-    @Column(name = "class_id")
+    @Column(name = CLASS_ID_ENG)
     @Audited
+    @JsonProperty(CLASS_ID)
     private String classId;
 
     // Links to Keywords

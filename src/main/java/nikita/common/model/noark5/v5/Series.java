@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
@@ -24,7 +25,7 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.SERIES;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
@@ -58,17 +59,19 @@ public class Series
     /**
      * M107 - arkivperiodeStartDato (xs:date)
      */
-    @Column(name = "series_start_date")
+    @Column(name = SERIES_START_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(SERIES_START_DATE)
     private OffsetDateTime seriesStartDate;
 
     /**
      * M108 - arkivperiodeSluttDato (xs:date)
      */
-    @Column(name = "series_end_date")
+    @Column(name = SERIES_END_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(SERIES_END_DATE)
     private OffsetDateTime seriesEndDate;
 
     /**

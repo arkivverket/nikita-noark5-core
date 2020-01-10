@@ -16,6 +16,8 @@ import java.time.OffsetDateTime;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
+import static nikita.common.config.N5ResourceMappings.*;
+
 /**
  * Created by tsodring on 5/8/17.
  */
@@ -29,31 +31,34 @@ public class NoarkGeneralEntity
      * M020 - tittel (xs:string)
      */
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = TITLE_ENG, nullable = false)
     @Audited
-    @JsonProperty("tittel")
+    @JsonProperty(TITLE)
     private String title;
 
     /**
      * M021 - beskrivelse (xs:string)
      */
-    @Column(name = "description")
+    @Column(name = DESCRIPTION_ENG)
     @Audited
+    @JsonProperty(DESCRIPTION)
     private String description;
 
     /**
      * M602 - avsluttetDato (xs:dateTime)
      */
-    @Column(name = "finalised_date")
+    @Column(name = FINALISED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(FINALISED_DATE)
     private OffsetDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
      */
-    @Column(name = "finalised_by")
+    @Column(name = FINALISED_BY_ENG)
     @Audited
+    @JsonProperty(FINALISED_BY)
     private String finalisedBy;
 
     @Override

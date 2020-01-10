@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,6 +13,8 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
+
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Created : 2020/01/06 by tsodring
@@ -42,32 +45,36 @@ public class NikitaEntity {
      * M600 - opprettetDato (xs:dateTime)
      */
     @CreatedDate
-    @Column(name = "created_date")
+    @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
      */
     @CreatedBy
-    @Column(name = "created_by")
+    @Column(name = CREATED_BY_ENG)
     @Audited
+    @JsonProperty(CREATED_BY)
     private String createdBy;
 
     /**
      * M??? - oppdatertDato (xs:dateTime)
      */
     @LastModifiedDate
-    @Column(name = "last_modified_date")
+    @Column(name = LAST_MODIFIED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
+    @JsonProperty(LAST_MODIFIED_DATE)
     private OffsetDateTime lastModifiedDate;
 
     /**
      * M??? - oppdatertAv (xs:string)
      */
     @LastModifiedBy
-    @Column(name = "last_modified_by")
+    @Column(name = LAST_MODIFIED_BY_ENG)
+    @JsonProperty(LAST_MODIFIED_BY)
     private String lastModifiedBy;
 
     public String getOwnedBy() {
