@@ -16,11 +16,9 @@ public interface IClassificationSystemHateoasHandler extends IHateoasHandler {
 
     void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-
-    void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addClassificationType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 }
