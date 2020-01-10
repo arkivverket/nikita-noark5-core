@@ -437,7 +437,7 @@ public final class N5ResourceMappings {
     public static final String CASE_STATUS_ENG = "saksstatus";
     public static final String CASE_YEAR_ENG = "saksaar";
     public static final String CLASS_ENG = "class";
-    public static final String CLASS_ID_ENG = "klasseID";
+    public static final String CLASS_ID_ENG = "class_id";
     public static final String CLASSIFICATION_BY_ENG = "gradertAv";
     public static final String CLASSIFICATION_DATE_ENG = "graderingsdato";
     public static final String CLASSIFICATION_DOWNGRADED_BY_ENG = "nedgradertAv";
@@ -533,8 +533,8 @@ public final class N5ResourceMappings {
     public static final String FILE_ID_ENG = "fileId";
     public static final String FILE_PUBLIC_TITLE_ENG = "officialTitle";
     public static final String FILE_TYPE_ENG = "mappetype";
-    public static final String FINALISED_BY_ENG = "avsluttetAv";
-    public static final String FINALISED_DATE_ENG = "avsluttetDato";
+    public static final String FINALISED_BY_ENG = "finalised_by";
+    public static final String FINALISED_DATE_ENG = "finalised_date";
     public static final String FLOW_STATUS_ENG = "flytstatus";
     public static final String FONDS_CREATOR_ENG = "fondsCreator";
     public static final String FONDS_CREATOR_ID_ENG = "fondsCreatorId";
@@ -598,10 +598,10 @@ public final class N5ResourceMappings {
     public static final String SCREENING_METADATA_ENG = "skjermingMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG = "sekundaerklassifikasjonssystem";
-    public static final String SERIES_END_DATE_ENG = "arkivperiodeSluttDato";
+    public static final String SERIES_END_DATE_ENG = "series_end_date";
     public static final String SERIES_ENG = "series";
     public static final String SERIES_PRECURSOR_ENG = "forloeper";
-    public static final String SERIES_START_DATE_ENG = "arkivperiodeStartDato";
+    public static final String SERIES_START_DATE_ENG = "series_start_date";
     public static final String SERIES_STATUS_ENG = "arkivdelstatus";
     public static final String SERIES_SUCCESSOR_ENG = "arvtager";
     public static final String SHORT_NAME_ENG = "kortnavn";
@@ -652,7 +652,7 @@ public final class N5ResourceMappings {
     public static final String CASE_STATUS_ENG_OBJECT = "saksstatus";
     public static final String CASE_YEAR_ENG_OBJECT = "saksaar";
     public static final String CLASS_ENG_OBJECT = "Class";
-    public static final String CLASS_ID_ENG_OBJECT = "klasseID";
+    public static final String CLASS_ID_ENG_OBJECT = "classId";
     public static final String CLASSIFICATION_BY_ENG_OBJECT = "gradertAv";
     public static final String CLASSIFICATION_DATE_ENG_OBJECT = "graderingsdato";
     public static final String CLASSIFICATION_DOWNGRADED_BY_ENG_OBJECT = "nedgradertAv";
@@ -748,8 +748,8 @@ public final class N5ResourceMappings {
     public static final String FILE_ID_ENG_OBJECT = "fileId";
     public static final String FILE_PUBLIC_TITLE_ENG_OBJECT = "officialTitle";
     public static final String FILE_TYPE_ENG_OBJECT = "mappetype";
-    public static final String FINALISED_BY_ENG_OBJECT = "avsluttetAv";
-    public static final String FINALISED_DATE_ENG_OBJECT = "avsluttetDato";
+    public static final String FINALISED_BY_ENG_OBJECT = "finalisedBy";
+    public static final String FINALISED_DATE_ENG_OBJECT = "finalisedDate";
     public static final String FLOW_STATUS_ENG_OBJECT = "flytstatus";
     public static final String FONDS_CREATOR_ENG_OBJECT = "FondsCreator";
     public static final String FONDS_CREATOR_ID_ENG_OBJECT = "fondsCreatorId";
@@ -814,10 +814,10 @@ public final class N5ResourceMappings {
     public static final String SCREENING_METADATA_ENG_OBJECT = "skjermingMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG_OBJECT = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG_OBJECT = "sekundaerklassifikasjonssystem";
-    public static final String SERIES_END_DATE_ENG_OBJECT = "arkivperiodeSluttDato";
+    public static final String SERIES_END_DATE_ENG_OBJECT = "seriesEndDate";
     public static final String SERIES_ENG_OBJECT = "Series";
     public static final String SERIES_PRECURSOR_ENG_OBJECT = "forloeper";
-    public static final String SERIES_START_DATE_ENG_OBJECT = "arkivperiodeStartDato";
+    public static final String SERIES_START_DATE_ENG_OBJECT = "seriesStartDate";
     public static final String SERIES_STATUS_ENG_OBJECT = "arkivdelstatus";
     public static final String SERIES_SUCCESSOR_ENG_OBJECT = "arvtager";
     public static final String SHORT_NAME_ENG_OBJECT = "kortnavn";
