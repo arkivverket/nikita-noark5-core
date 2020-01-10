@@ -37,16 +37,16 @@ public class RegistryEntryTypeService
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryTypeService.class);
 
-    private IRegistryEntryTypeRepository formatRepository;
+    private IRegistryEntryTypeRepository registryEntryTypeRepository;
     private IMetadataHateoasHandler metadataHateoasHandler;
 
     public RegistryEntryTypeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IRegistryEntryTypeRepository formatRepository,
+            IRegistryEntryTypeRepository registryEntryTypeRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
         super(entityManager, applicationEventPublisher);
-        this.formatRepository = formatRepository;
+        this.registryEntryTypeRepository = registryEntryTypeRepository;
         this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
@@ -63,7 +63,7 @@ public class RegistryEntryTypeService
     public MetadataHateoas createNewRegistryEntryType(
             RegistryEntryType registryEntryType) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                formatRepository.save(registryEntryType));
+                registryEntryTypeRepository.save(registryEntryType));
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -80,7 +80,7 @@ public class RegistryEntryTypeService
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 (List<INikitaEntity>) (List)
-                        formatRepository.findAll(), REGISTRY_ENTRY_TYPE);
+                        registryEntryTypeRepository.findAll(), REGISTRY_ENTRY_TYPE);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
@@ -142,7 +142,7 @@ public class RegistryEntryTypeService
         // exception as it checks the ETAG value
         existingRegistryEntryType.setVersion(version);
 
-        MetadataHateoas formatHateoas = new MetadataHateoas(formatRepository
+        MetadataHateoas formatHateoas = new MetadataHateoas(registryEntryTypeRepository
                 .save(existingRegistryEntryType));
 
         metadataHateoasHandler.addLinks(formatHateoas, new Authorisation());
@@ -165,7 +165,7 @@ public class RegistryEntryTypeService
     private RegistryEntryType
     getRegistryEntryTypeOrThrow(@NotNull String code) {
         RegistryEntryType format =
-                formatRepository.findByCode(code);
+                registryEntryTypeRepository.findByCode(code);
         if (format == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " RegistryEntryType,  " +
                     "using code " + code;
