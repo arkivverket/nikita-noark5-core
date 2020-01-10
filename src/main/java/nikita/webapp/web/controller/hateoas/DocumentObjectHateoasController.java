@@ -32,7 +32,6 @@ import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CONVERSION;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_PARAMETER;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -108,33 +107,6 @@ public class DocumentObjectHateoasController
         return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
-    }
-
-    // Get a file identified by systemID retrievable with referanseFile
-    // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/dokumentbeskrivelse
-    @ApiOperation(value = "Retrieve the parent documentDescription",
-            response = DocumentDescriptionHateoas.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "File download successful",
-                    response = DocumentDescriptionHateoas.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_DESCRIPTION)
-    public ResponseEntity<DocumentDescriptionHateoas>
-    findDocumentDescriptionAssociatedWithDocumentObject(
-            @ApiParam(name = "systemID",
-                    value = "systemID of the documentObject that has a " +
-                            "documentDescription associated with it",
-                    required = true)
-            @PathVariable("systemID") final String documentObjectSystemId) {
-        return documentObjectService.
-                findAssociatedDocumentDescription(documentObjectSystemId);
     }
 
     // Get a file identified by systemID retrievable with referanseFile
