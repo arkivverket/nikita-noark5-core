@@ -105,7 +105,8 @@ public class CaseStatusService
     }
 
     /**
-     * retrieve a CaseStatus identified particular code.
+     * retrieve a CaseStatus identified by particular code.  Raise
+     * exception if the code is unknown.
      *
      * @param code The code of the object you wish to retrieve
      * @return The CaseStatus object wrapped
