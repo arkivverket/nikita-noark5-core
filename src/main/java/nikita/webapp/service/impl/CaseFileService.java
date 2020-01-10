@@ -364,7 +364,7 @@ public class CaseFileService
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
         defaultCaseFile.setCaseStatusCode(defaultCaseFile.
                 getReferenceCaseFileStatus().getCode());
-        defaultCaseFile.setCaseStatusName(defaultCaseFile.
+        defaultCaseFile.setCaseStatusCodeName(defaultCaseFile.
                 getReferenceCaseFileStatus().getCodeName());
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
 
@@ -482,17 +482,17 @@ public class CaseFileService
             existingCaseFile.setCaseStatusCode(
                     incomingCaseFile.getCaseStatusCode());
         }
-        if (null != incomingCaseFile.getCaseStatusName()) {
-            existingCaseFile.setCaseStatusName(
-                    incomingCaseFile.getCaseStatusName());
+        if (null != incomingCaseFile.getCaseStatusCodeName()) {
+            existingCaseFile.setCaseStatusCodeName(
+                    incomingCaseFile.getCaseStatusCodeName());
         }
     }
 
     private void checkCaseStatusUponCreation(CaseFile caseFile) {
-        if (caseFile.getCaseStatusName() != null) {
+        if (caseFile.getCaseStatusCodeName() != null) {
             CaseStatus caseStatus = caseStatusService.
                     findCaseStatusByCode(caseFile.getCaseStatusCode());
-            caseFile.setCaseStatusName(caseStatus.getCodeName());
+            caseFile.setCaseStatusCodeName(caseStatus.getCodeName());
         }
     }
 }

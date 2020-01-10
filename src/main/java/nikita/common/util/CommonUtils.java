@@ -20,6 +20,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.*;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IAdministrativeUnitEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IUserEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
+import nikita.common.model.noark5.v5.metadata.*;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedHeaderException;
@@ -478,25 +479,44 @@ public final class CommonUtils {
                 return deserializeDateTime(fieldname, objectNode, errors, false);
             }
 
-            public static void deserialiseDocumentMedium(IDocumentMedium documentMediumEntity, ObjectNode objectNode, StringBuilder errors) {
-                // Deserialize documentMedium
-                JsonNode currentNode = objectNode.get(DOCUMENT_MEDIUM);
+            public static IMetadataEntity
+            deserialiseMetadataValue(ObjectNode objectNode,
+                                     String parentname,
+                                     IMetadataEntity entity,
+                                     StringBuilder errors,
+                                     Boolean required) {
+                JsonNode currentNode = objectNode.get(parentname);
                 if (null != currentNode) {
                     JsonNode node = currentNode.get(CODE);
                     if (null != node) {
-                        documentMediumEntity.setDocumentMediumCode(
-                                node.textValue());
+                        entity.setCode(node.textValue());
                     } else {
-                        errors.append(DOCUMENT_MEDIUM
-                                      + "." + CODE + " is missing. ");
+                        errors.append(parentname + "." + CODE + " is missing. ");
                     }
                     node = currentNode.get(CODE_NAME);
                     if (null != node) {
-                        documentMediumEntity.setDocumentMediumCodeName(
-                                node.textValue());
+                        entity.setCodeName(node.textValue());
                     }
-                    objectNode.remove(DOCUMENT_MEDIUM);
+                    if (null != entity.getCode()) {
+                        objectNode.remove(parentname);
+                    }
+                } else if (required) {
+                    errors.append(parentname + " is missing. ");
                 }
+                return entity;
+            }
+
+            public static void deserialiseDocumentMedium(IDocumentMedium documentMediumEntity, ObjectNode objectNode, StringBuilder errors) {
+                // Deserialize documentMedium
+                IMetadataEntity entity =
+                    deserialiseMetadataValue(objectNode,
+                                             DOCUMENT_MEDIUM,
+                                             new DocumentMedium(),
+                                             errors, false);
+                documentMediumEntity
+		    .setDocumentMediumCode(entity.getCode());
+                documentMediumEntity
+		    .setDocumentMediumCodeName(entity.getCodeName());
             }
 
             public static void deserialiseNoarkSystemIdEntity(INikitaEntity noarkSystemIdEntity,
@@ -535,20 +555,13 @@ public final class CommonUtils {
 
             public static void deserialiseCaseStatus(ICaseFileEntity caseFile,
                     ObjectNode objectNode, StringBuilder errors) {
-                JsonNode currentNode = objectNode.get(CASE_STATUS);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        caseFile.setCaseStatusCode(node.textValue());
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        caseFile.setCaseStatusName(node.textValue());
-                    }
-                    if (null != caseFile.getCaseStatusCode()) {
-                        objectNode.remove(CASE_STATUS);
-                    }
-                }
+                IMetadataEntity entity =
+                    deserialiseMetadataValue(objectNode,
+                                             CASE_STATUS,
+                                             new CaseStatus(),
+                                             errors, false);
+		caseFile.setCaseStatusCode(entity.getCode());
+                caseFile.setCaseStatusCodeName(entity.getCodeName());
             }
 
             public static void deserialiseKeyword(IKeyword keywordEntity, ObjectNode objectNode, StringBuilder errors) {
@@ -575,75 +588,42 @@ public final class CommonUtils {
                     ICorrespondencePartEntity correspondencePart,
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize korrespondanseparttype
-                JsonNode currentNode =
-                        objectNode.get(CORRESPONDENCE_PART_TYPE);
-                if (null != currentNode) {
-
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        correspondencePart.setCorrespondencePartTypeCode(
-                                node.textValue());
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        correspondencePart.
-                                setCorrespondencePartTypeCodeName(
-                                        node.textValue());
-                    }
-                    if (null != correspondencePart.
-                            getCorrespondencePartTypeCode()) {
-                        objectNode.remove(CORRESPONDENCE_PART_TYPE);
-                    }
-                } else {
-                    errors.append("The CorrespondencePart object you tried to");
-                    errors.append(" create is missing  ");
-                    errors.append(CORRESPONDENCE_PART_TYPE);
-                }
+                IMetadataEntity entity =
+                    deserialiseMetadataValue(objectNode,
+                                             CORRESPONDENCE_PART_TYPE,
+                                             new CorrespondencePartType(),
+                                             errors, true);
+                correspondencePart.
+                    setCorrespondencePartTypeCode(entity.getCode());
+                correspondencePart.
+                    setCorrespondencePartTypeCodeName(entity.getCodeName());
             }
 
             private static void deserialisePartRole(
                     IPartEntity part,
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize parttype
-                JsonNode currentNode =
-                        objectNode.get(PART_ROLE_FIELD);
-                if (null != currentNode) {
-
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        part.setPartTypeCode(node.textValue());
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        part.setPartTypeCodeName(node.textValue());
-                    }
-                    if (null != part.getPartTypeCode()) {
-                        objectNode.remove(PART_ROLE_FIELD);
-                    }
-                } else {
-                    errors.append("The Part object you tried to");
-                    errors.append(" create is missing  ");
-                    errors.append(PART_ROLE_FIELD);
-                }
+                IMetadataEntity entity =
+                    deserialiseMetadataValue(objectNode,
+                                             PART_ROLE_FIELD,
+                                             new PartRole(),
+                                             errors, true);
+                part.setPartTypeCode(entity.getCode());
+                part.setPartTypeCodeName(entity.getCodeName());
             }
 
             public static void deserialiseClassificationSystemType(
                     IClassificationSystemEntity classificationSystem,
                     ObjectNode objectNode, StringBuilder errors) {
-                JsonNode currentNode = objectNode.get(CLASSIFICATION_SYSTEM_TYPE);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        classificationSystem.setClassificationTypeCode(node.textValue());
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        classificationSystem.setClassificationTypeCodeName(node.textValue());
-                    }
-                    if (null != classificationSystem.getClassificationTypeCode()) {
-                        objectNode.remove(CLASSIFICATION_SYSTEM_TYPE);
-                    }
-                }
+                IMetadataEntity entity =
+                    deserialiseMetadataValue(objectNode,
+                                             CLASSIFICATION_SYSTEM_TYPE,
+                                             new ClassificationType(),
+                                             errors, false);
+                classificationSystem.
+                    setClassificationTypeCode(entity.getCode());
+                classificationSystem.
+                    setClassificationTypeCodeName(entity.getCodeName());
             }
 
             public static void deserialiseAuthor(IAuthor authorEntity,
@@ -1572,29 +1552,18 @@ public final class CommonUtils {
             public static void deserialiseClassifiedEntity(IClassifiedEntity classifiedEntity, ObjectNode objectNode, StringBuilder errors) {
 
                 // Deserialize classification
-                JsonNode currentNode = objectNode.get(CLASSIFICATION);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        classifiedEntity.setClassificationCode(node.textValue());
-                    } else {
-                        errors.append(CLASSIFICATION+"."+CODE+" is missing. ");
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        classifiedEntity.setClassificationCodeName(node.textValue());
-                    }
-                    if (null != classifiedEntity.getClassificationCode()) {
-                        objectNode.remove(CLASSIFICATION);
-                    }
-                } else {
-                    errors.append(CLASSIFICATION + " is missing. ");
-                }
+                IMetadataEntity entity =
+                    deserialiseMetadataValue(objectNode,
+                                             CLASSIFICATION,
+                                             new ClassifiedCode(),
+                                             errors, true);
+                classifiedEntity.setClassificationCode(entity.getCode());
+                classifiedEntity.setClassificationCodeName(entity.getCodeName());
                 // Deserialize classificationDate
                 classifiedEntity.setClassificationDate(deserializeDateTime(CLASSIFICATION_DATE, objectNode, errors));
 
                 // Deserialize classificationBy
-                currentNode = objectNode.get(CLASSIFICATION_BY);
+                JsonNode currentNode = objectNode.get(CLASSIFICATION_BY);
                 if (null != currentNode) {
                     classifiedEntity.setClassificationBy(currentNode.textValue());
                     objectNode.remove(CLASSIFICATION_BY);
@@ -1626,82 +1595,30 @@ public final class CommonUtils {
                 return es;
             }
 
-            private static void deserialiseSecurityLevel(
-                        ElectronicSignature electronicSignature,
-                        ObjectNode objectNode, StringBuilder errors) {
-                JsonNode currentNode =
-                    objectNode.get(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        electronicSignature.setElectronicSignatureSecurityLevelCode(
-                                                                                    node.textValue());
-                    } else {
-                        errors.append(ELECTRONIC_SIGNATURE
-                                      + "." + ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD
-                                      + "." + CODE + " is missing. ");
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        electronicSignature
-			    .setElectronicSignatureSecurityLevelCodeName(
-				node.textValue());
-                    }
-                    if (null != electronicSignature.
-                        getElectronicSignatureSecurityLevelCode()) {
-                        objectNode.remove(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
-                    }
-                } else {
-                    errors.append("The ElectronicSignature object you tried to");
-                    errors.append(" create is missing ");
-                    errors.append(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
-                    errors.append(". ");
-                }
-            }
-
-
-            private static void deserialiseVerified(
-                        ElectronicSignature electronicSignature,
-                        ObjectNode objectNode, StringBuilder errors) {
-                JsonNode currentNode =
-                    objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_FIELD);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        electronicSignature.setElectronicSignatureVerifiedCode(
-                                                                               node.textValue());
-                    } else {
-                        errors.append(ELECTRONIC_SIGNATURE
-                                      + "." + ELECTRONIC_SIGNATURE_VERIFIED_FIELD
-                                      + "." + CODE + " is missing. ");
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        electronicSignature.setElectronicSignatureVerifiedCodeName(
-                                                                               node.textValue());
-                    }
-                    if (null != electronicSignature.
-                        getElectronicSignatureVerifiedCode()) {
-                        objectNode.remove(ELECTRONIC_SIGNATURE_VERIFIED_FIELD);
-                    }
-                } else {
-                    errors.append("The ElectronicSignature object you tried to");
-                    errors.append(" create is missing ");
-                    errors.append(ELECTRONIC_SIGNATURE_VERIFIED_FIELD);
-                    errors.append(". ");
-                }
-            }
-
-
             public static ElectronicSignature deserialiseElectronicSignatureEntity(
                         ElectronicSignature electronicSignature,
                         ObjectNode objectNode, StringBuilder errors) {
                 // Deserialise elektroniskSignaturSikkerhetsnivaa
-                deserialiseSecurityLevel(electronicSignature,
-                                         objectNode, errors);
+                IMetadataEntity entity =
+                    deserialiseMetadataValue(objectNode,
+                                             ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                                             new ElectronicSignatureSecurityLevel(),
+                                             errors, true);
+                electronicSignature.setElectronicSignatureSecurityLevelCode(
+                        entity.getCode());
+                electronicSignature.setElectronicSignatureSecurityLevelCodeName(
+                        entity.getCodeName());
 
                 // Deserialise elektroniskSignaturVerifisert
-                deserialiseVerified(electronicSignature, objectNode, errors);
+                entity =
+                    deserialiseMetadataValue(objectNode,
+                                             ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                                             new ElectronicSignatureVerified(),
+                                             errors, true);
+                electronicSignature.setElectronicSignatureVerifiedCode(
+                        entity.getCode());
+                electronicSignature.setElectronicSignatureVerifiedCodeName(
+                        entity.getCodeName());
 
                 // Deserialise verifisertDato
                 JsonNode currentNode =
@@ -1863,7 +1780,7 @@ public final class CommonUtils {
                 if (caseFile.getCaseStatusCode() != null) {
                     jgen.writeObjectFieldStart(CASE_STATUS);
                     printCode(jgen, caseFile.getCaseStatusCode(),
-                            caseFile.getCaseStatusName());
+                            caseFile.getCaseStatusCodeName());
                     jgen.writeEndObject();
                 }
                 if (caseFile.getLoanedDate() != null) {

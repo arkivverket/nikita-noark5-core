@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
+import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,46 +123,21 @@ public class RegistryEntryDeserializer
             objectNode.remove(REGISTRY_ENTRY_NUMBER);
         }
         // Deserialize registryEntryType
-        currentNode = objectNode.get(REGISTRY_ENTRY_TYPE);
-        if (null != currentNode) {
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                registryEntry.setRegistryEntryTypeCode(node.textValue());
-            } else {
-                errors.append(REGISTRY_ENTRY_TYPE +
-                              "." + CODE + " is missing. ");
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                registryEntry.setRegistryEntryTypeCodeName(node.textValue());
-            }
-            if (null != registryEntry.getRegistryEntryTypeCode()) {
-                objectNode.remove(REGISTRY_ENTRY_TYPE);
-            }
-        } else {
-            errors.append("The journalpost you tried to create is missing " +
-			  REGISTRY_ENTRY_TYPE + ". ");
-        }
+        IMetadataEntity entity =
+            deserialiseMetadataValue(objectNode,
+                                     REGISTRY_ENTRY_TYPE,
+                                     new RegistryEntryType(),
+                                     errors, true);
+        registryEntry.setRegistryEntryTypeCode(entity.getCode());
+        registryEntry.setRegistryEntryTypeCodeName(entity.getCodeName());
         // Deserialize recordStatus
-        currentNode = objectNode.get(REGISTRY_ENTRY_STATUS);
-        if (null != currentNode) {
-            JsonNode node = currentNode.get(CODE);
-            if (null != node) {
-                registryEntry.setRecordStatusCode(node.textValue());
-            } else {
-                errors.append(REGISTRY_ENTRY_STATUS+"."+CODE+" is missing. ");
-            }
-            node = currentNode.get(CODE_NAME);
-            if (null != node) {
-                registryEntry.setRecordStatusCodeName(node.textValue());
-            }
-            if (null != registryEntry.getRecordStatusCode()) {
-                objectNode.remove(REGISTRY_ENTRY_STATUS);
-            }
-        } else {
-            errors.append("The journalpost you tried to create is missing " +
-                          REGISTRY_ENTRY_STATUS + ". ");
-        }
+        entity =
+            deserialiseMetadataValue(objectNode,
+                                     REGISTRY_ENTRY_STATUS,
+                                     new RegistryEntryStatus(),
+                                     errors, true);
+        registryEntry.setRecordStatusCode(entity.getCode());
+        registryEntry.setRecordStatusCodeName(entity.getCodeName());
         // Deserialize recordDate
         registryEntry.setRecordDate(
                 deserializeDate(REGISTRY_ENTRY_DATE, objectNode, errors));

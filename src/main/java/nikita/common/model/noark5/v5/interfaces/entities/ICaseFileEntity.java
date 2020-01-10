@@ -33,13 +33,13 @@ public interface ICaseFileEntity
 
     void setRecordsManagementUnit(String recordsManagementUnit);
 
-    String getCaseStatusName();
-
-    void setCaseStatusName(String caseStatusName);
-
     String getCaseStatusCode();
 
     void setCaseStatusCode(String caseStatusCode);
+
+    String getCaseStatusCodeName();
+
+    void setCaseStatusCodeName(String caseStatusCodeName);
 
     OffsetDateTime getLoanedDate();
 

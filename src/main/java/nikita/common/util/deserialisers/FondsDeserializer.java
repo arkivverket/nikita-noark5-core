@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.CODE_NAME;
 import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
 import nikita.common.model.noark5.v5.Fonds;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
@@ -69,25 +69,16 @@ public class FondsDeserializer
         CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(fonds, objectNode, errors);
 
         // Deserialize seriesStatus
-	JsonNode currentNode = objectNode.get(FONDS_STATUS);
-	if (null != currentNode) {
-	    JsonNode node = currentNode.get(CODE);
-	    if (null != node) {
-		fonds.setFondsStatusCode(node.textValue());
-	    } else {
-		errors.append(FONDS_STATUS +
-			      "." + CODE + " is missing. ");
-	    }
-	    node = currentNode.get(CODE_NAME);
-	    if (null != node) {
-		fonds.setFondsStatusCodeName(node.textValue());
-	    }
-	    if (null != fonds.getFondsStatusCode()) {
-		objectNode.remove(FONDS_STATUS);
-	    }
-	}
+        IMetadataEntity entity =
+            CommonUtils.Hateoas.Deserialize.deserialiseMetadataValue(
+                objectNode,
+                FONDS_STATUS,
+                new FondsStatus(),
+                errors, false);
+	fonds.setFondsStatusCode(entity.getCode());
+	fonds.setFondsStatusCodeName(entity.getCodeName());
 
-        currentNode = objectNode.get(LINKS);
+        JsonNode currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + currentNode.textValue() + ". " +
                     "This value is being ignored.");
