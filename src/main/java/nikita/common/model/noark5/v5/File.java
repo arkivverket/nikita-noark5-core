@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
@@ -40,8 +41,9 @@ public class File
     /**
      * M003 - mappeID (xs:string)
      */
-    @Column(name = "file_id")
+    @Column(name = FILE_ID_ENG)
     @Audited
+    @JsonProperty(FILE_ID)
     private String fileId;
 
     /**
@@ -49,6 +51,7 @@ public class File
      */
     @Column(name = "official_title")
     @Audited
+    @JsonProperty(FILE_PUBLIC_TITLE)
     private String officialTitle;
 
     /**

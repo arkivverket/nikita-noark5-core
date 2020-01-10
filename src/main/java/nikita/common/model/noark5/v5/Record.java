@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
@@ -27,7 +28,7 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.RECORD;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -43,45 +44,51 @@ public class Record
     /**
      * M604 - arkivertDato (xs:dateTime)
      */
-    @Column(name = "archived_date")
+    @Column(name = RECORD_ARCHIVED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(FILE_PUBLIC_TITLE)
     private OffsetDateTime archivedDate;
 
     /**
      * M605 - arkivertAv (xs:string)
      */
-    @Column(name = "archived_by")
+    @Column(name = RECORD_ARCHIVED_BY_ENG)
     @Audited
+    @JsonProperty(RECORD_ARCHIVED_BY)
     private String archivedBy;
 
     /**
      * M004 - registreringsID (xs:string)
      */
-    @Column(name = "record_id")
+    @Column(name = RECORD_ID_ENG)
     @Audited
+    @JsonProperty(RECORD_ID)
     private String recordId;
 
     /**
      * M020 - tittel (xs:string)
      */
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = TITLE_ENG, nullable = false)
     @Audited
+    @JsonProperty(TITLE)
     private String title;
 
     /**
      * M025 - offentligTittel (xs:string)
      */
-    @Column(name = "official_title")
+    @Column(name = FILE_PUBLIC_TITLE_ENG)
     @Audited
+    @JsonProperty(FILE_PUBLIC_TITLE)
     private String officialTitle;
 
     /**
      * M021 - beskrivelse (xs:string)
      */
-    @Column(name = "description")
+    @Column(name = DESCRIPTION_ENG)
     @Audited
+    @JsonProperty(DESCRIPTION)
     private String description;
 
     /**

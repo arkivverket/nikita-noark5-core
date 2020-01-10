@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
@@ -24,8 +25,7 @@ import java.util.List;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -77,30 +77,34 @@ public class DocumentDescription
      * M020 - tittel (xs:string)
      */
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = TITLE_ENG, nullable = false)
     @Audited
+    @JsonProperty(TITLE)
     private String title;
 
     /**
      * M021 - beskrivelse (xs:string)
      */
-    @Column(name = "description")
+    @Column(name = DESCRIPTION_ENG)
     @Audited
+    @JsonProperty(DESCRIPTION)
     private String description;
 
     /**
      * M600 - opprettetDato (xs:dateTime)
      */
-    @Column(name = "created_date")
+    @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
      */
-    @Column(name = "created_by")
+    @Column(name = CREATED_BY_ENG)
     @Audited
+    @JsonProperty(CREATED_BY)
     private String createdBy;
 
     /**
@@ -137,28 +141,35 @@ public class DocumentDescription
      * M007 - dokumentnummer (xs:integer)
      */
     @NotNull
-    @Column(name = "document_number")
+    @Column(name = DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG)
     @Audited
+    @JsonProperty(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER)
     private Integer documentNumber;
 
     /**
      * M620 - tilknyttetDato (xs:date)
      */
     @NotNull
-    @Column(name = "association_date", nullable = false)
+    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATION_DATE_ENG, nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATION_DATE)
     private OffsetDateTime associationDate;
 
     /**
      * M621 - tilknyttetAv (xs:string)
      */
-    @Column(name = "associated_by")
+    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG)
     @Audited
+    @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATION_BY)
     private String associatedBy;
 
-    @Column(name = "storage_location")
+    /**
+     * M301 - oppbevaringssted (xs:string)
+     */
+    @Column(name = STORAGE_LOCATION_ENG)
     @Audited
+    @JsonProperty(STORAGE_LOCATION)
     private String storageLocation;
 
     /**
@@ -166,6 +177,7 @@ public class DocumentDescription
      */
     @Column(name = DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG)
     @Audited
+    @JsonProperty(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE)
     private String externalReference;
 
     // Links to Records

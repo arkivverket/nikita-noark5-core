@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.admin;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.USER;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -53,31 +54,35 @@ public class User
     /**
      * M600 - opprettetDato (xs:dateTime)
      */
-    @Column(name = "account_created_date")
+    @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
      */
-    @Column(name = "created_by")
+    @Column(name = CREATED_BY_ENG)
     @Audited
+    @JsonProperty(CREATED_BY)
     private String createdBy;
 
     /**
      * M602 - avsluttetDato (xs:dateTime)
      */
-    @Column(name = "finalised_date")
+    @Column(name = FINALISED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(FINALISED_DATE)
     private OffsetDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
      */
-    @Column(name = "finalised_by")
+    @Column(name = FINALISED_BY_ENG)
     @Audited
+    @JsonProperty(FINALISED_BY)
     private String finalisedBy;
 
     @NotNull
