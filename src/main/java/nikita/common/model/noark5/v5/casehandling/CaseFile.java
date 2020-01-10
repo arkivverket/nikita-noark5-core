@@ -91,7 +91,7 @@ public class CaseFile
      */
     @Column(name = "case_status_code_name")
     @Audited
-    private String caseStatusName;
+    private String caseStatusCodeName;
 
     /**
      * M106 - utlaantDato (xs:date)
@@ -184,13 +184,13 @@ public class CaseFile
     }
 
     @Override
-    public String getCaseStatusName() {
-        return caseStatusName;
+    public String getCaseStatusCodeName() {
+        return caseStatusCodeName;
     }
 
     @Override
-    public void setCaseStatusName(String caseStatusName) {
-        this.caseStatusName = caseStatusName;
+    public void setCaseStatusCodeName(String caseStatusCodeName) {
+        this.caseStatusCodeName = caseStatusCodeName;
     }
 
     public OffsetDateTime getLoanedDate() {
@@ -255,7 +255,7 @@ public class CaseFile
                 "loanedTo='" + loanedTo + '\'' +
                 ", loanedDate=" + loanedDate +
                 ", caseStatusCode='" + caseStatusCode + '\'' +
-                ", caseStatusName='" + caseStatusName + '\'' +
+                ", caseStatusCodeName='" + caseStatusCodeName + '\'' +
                 ", recordsManagementUnit='" + recordsManagementUnit + '\'' +
                 ", caseResponsible='" + caseResponsible + '\'' +
                 ", caseDate=" + caseDate +
@@ -283,7 +283,7 @@ public class CaseFile
                 .append(caseDate, rhs.caseDate)
                 .append(caseResponsible, rhs.caseResponsible)
                 .append(caseStatusCode, rhs.caseStatusCode)
-                .append(caseStatusName, rhs.caseStatusName)
+                .append(caseStatusCodeName, rhs.caseStatusCodeName)
                 .append(recordsManagementUnit, rhs.recordsManagementUnit)
                 .append(loanedDate, rhs.loanedDate)
                 .append(loanedTo, rhs.loanedTo)
@@ -299,7 +299,7 @@ public class CaseFile
                 .append(caseDate)
                 .append(caseResponsible)
                 .append(caseStatusCode)
-                .append(caseStatusName)
+                .append(caseStatusCodeName)
                 .append(recordsManagementUnit)
                 .append(loanedDate)
                 .append(loanedTo)

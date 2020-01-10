@@ -1863,7 +1863,7 @@ public final class CommonUtils {
                 if (caseFile.getCaseStatusCode() != null) {
                     jgen.writeObjectFieldStart(CASE_STATUS);
                     printCode(jgen, caseFile.getCaseStatusCode(),
-                            caseFile.getCaseStatusName());
+                            caseFile.getCaseStatusCodeName());
                     jgen.writeEndObject();
                 }
                 if (caseFile.getLoanedDate() != null) {
