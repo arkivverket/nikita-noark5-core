@@ -472,24 +472,6 @@ public class DocumentObjectService
                 .body(documentObjectHateoas);
     }
 
-    @Override
-    public ResponseEntity<DocumentDescriptionHateoas>
-    findAssociatedDocumentDescription(String systemId) {
-
-        DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas(
-                getDocumentObjectOrThrow(systemId).
-                        getReferenceDocumentDescription());
-
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
-                .body(documentDescriptionHateoas);
-    }
-
-
     // All UPDATE operations
     /**
      * Updates a DocumentDescription object in the database. First we try to
