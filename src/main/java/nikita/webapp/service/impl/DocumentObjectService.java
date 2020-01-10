@@ -4,6 +4,8 @@ import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.repository.n5v5.IDocumentObjectRepository;
 import nikita.common.util.CommonUtils;
@@ -11,6 +13,7 @@ import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -63,6 +66,7 @@ import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
 import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION;
 import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
+import static nikita.common.config.N5ResourceMappings.CONVERSION;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ACCEPT;
@@ -99,6 +103,7 @@ public class DocumentObjectService
     @Value("${nikita.application.checksum-algorithm}")
     private String defaultChecksumAlgorithm = "SHA-256";
 
+    private IConversionHateoasHandler conversionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
@@ -107,10 +112,12 @@ public class DocumentObjectService
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IDocumentObjectRepository documentObjectRepository,
+            IConversionHateoasHandler conversionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectRepository = documentObjectRepository;
+        this.conversionHateoasHandler = conversionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.documentDescriptionHateoasHandler =
                 documentDescriptionHateoasHandler;
@@ -225,6 +232,18 @@ public class DocumentObjectService
         return typedQuery.getResultList();
     }
 
+
+    @Override
+    public ConversionHateoas
+    findAllConversionAssociatedWithDocumentObject(String systemId) {
+        ConversionHateoas conversionHateoas =
+            new ConversionHateoas((List<INikitaEntity>) (List)
+            getDocumentObjectOrThrow(systemId).getReferenceConversion(),
+            CONVERSION);
+        conversionHateoasHandler.addLinks(conversionHateoas,
+                                          new Authorisation());
+        return conversionHateoas;
+    }
 
     private void setGeneratedDocumentFilename(DocumentObject documentObject) {
 

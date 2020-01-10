@@ -9,6 +9,7 @@ import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
@@ -30,6 +31,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CONVERSION;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_PARAMETER;
 import static org.springframework.http.HttpHeaders.ETAG;
@@ -180,6 +182,36 @@ public class DocumentObjectHateoasController
             }
         }
         response.flushBuffer();
+    }
+
+    // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/konvertering
+    @ApiOperation(value = "Return list of conversions related to the" +
+		  "documentObject identified by a systemId",
+		  response = ConversionHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "List of Conversions returned",
+                    response = ConversionHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CONVERSION,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<ConversionHateoas>
+    findAllConversionAssociatedWithDocumentObject(
+            HttpServletRequest request, HttpServletResponse response,
+            @ApiParam(name = "systemID",
+		      value = "systemID of the documentObject",
+		      required = true)
+            @PathVariable("systemID") final String systemID)
+            throws IOException {
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentObjectService.findAllConversionAssociatedWithDocumentObject(systemID));
     }
 
     // API - All POST Requests (CRUD - CREATE)
