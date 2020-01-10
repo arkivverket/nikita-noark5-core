@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.admin;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.NoarkEntity;
@@ -25,7 +26,7 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.ADMINISTRATIVE_UNIT;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -40,23 +41,26 @@ public class AdministrativeUnit
     /**
      * M602 - avsluttetDato (xs:dateTime)
      */
-    @Column(name = "finalised_date")
+    @Column(name = FINALISED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(FINALISED_DATE)
     private OffsetDateTime finalisedDate;
 
     /**
      * M603 - avsluttetAv (xs:string)
      */
-    @Column(name = "finalised_by")
+    @Column(name = FINALISED_BY_ENG)
     @Audited
+    @JsonProperty(FINALISED_BY)
     private String finalisedBy;
 
     /**
      * M583 - kortnavn (xs:string)
      */
-    @Column(name = "short_name")
+    @Column(name = SHORT_NAME_ENG)
     @Audited
+    @JsonProperty(SHORT_NAME)
     private String shortName;
 
     /**
