@@ -24,9 +24,7 @@ import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT_CHECKSUM_ENG;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_OBJECT_VERSION_NUMBER_ENG;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -85,14 +83,14 @@ public class DocumentObject
     /**
      * M702 - formatDetaljer (xs:string)
      */
-    @Column(name = "format_details")
+    @Column(name = DOCUMENT_OBJECT_FORMAT_DETAILS_ENG)
     @Audited
     private String formatDetails;
 
     /**
      * M600 - opprettetDato (xs:dateTime)
      */
-    @Column(name = "created_date")
+    @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime createdDate;
@@ -100,14 +98,14 @@ public class DocumentObject
     /**
      * M601 - opprettetAv (xs:string)
      */
-    @Column(name = "created_by")
+    @Column(name = CREATED_BY_ENG)
     @Audited
     private String createdBy;
 
     /**
      * M218 - referanseDokumentfil (xs:string)
      */
-    @Column(name = "reference_document_file")
+    @Column(name = DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG)
     @Audited
     private String referenceDocumentFile;
 
@@ -121,22 +119,28 @@ public class DocumentObject
     /**
      * M706 - sjekksumAlgoritme (xs:string)
      */
-    @Column(name = "checksum_algorithm")
+    @Column(name = DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG)
     @Audited
     private String checksumAlgorithm;
 
     /**
      * M707 - filstoerrelse (xs:string)
      */
-    @Column(name = "file_size")
+    @Column(name = DOCUMENT_OBJECT_FILE_SIZE_ENG)
     @Audited
     private Long fileSize;
 
-    @Column(name = "original_filename")
+    /**
+     * M??? - filnavn (xs:string)
+     */
+    @Column(name = DOCUMENT_OBJECT_FILE_NAME_ENG)
     @Audited
     private String originalFilename;
 
-    @Column(name = "mime_type")
+    /**
+     * M??? - mimeType (xs:string)
+     */
+    @Column(name = DOCUMENT_OBJECT_MIME_TYPE_ENG)
     @Audited
     private String mimeType;
 
