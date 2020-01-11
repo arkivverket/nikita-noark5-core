@@ -604,7 +604,7 @@ public class FondsService
      * @param fonds The fonds object
      */
     private void checkFondsStatusUponCreation(Fonds fonds) {
-        if (fonds.getFondsStatusCodeName() != null) {
+        if (fonds.getFondsStatusCode() != null) {
             FondsStatus fondsStatus = fondsStatusService.
                     findFondsStatusByCode(fonds.getFondsStatusCode());
 	    if (null != fonds.getFondsStatusCodeName() &&
@@ -612,6 +612,7 @@ public class FondsService
 		equals(fonds.getFondsStatusCodeName())) {
 		String info = "FondsStatus code and code name "+
 		    "did not match metadata catalog.";
+		logger.info(info)
 		throw new NoarkInvalidStructureException(
 			info, "Fonds", "FondsStatus");
 	    }
