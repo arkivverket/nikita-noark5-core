@@ -39,7 +39,7 @@ public class CommentTypeController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new merknadstype
-    // POST [contextPath][api]/metadata/merknadstype/ny-merknadstype
+    // POST [contextPath][api]/metadata/ny-merknadstype
     @ApiOperation(
             value = "Persists a new CommentType object",
             notes = "Returns the newly created CommentType object after it " +
@@ -71,7 +71,7 @@ public class CommentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = COMMENT_TYPE + SLASH + NEW_COMMENT_TYPE)
+    @PostMapping(value = NEW_COMMENT_TYPE)
     public ResponseEntity<MetadataHateoas> createCommentType(
             HttpServletRequest request,
             @RequestBody CommentType commentType)

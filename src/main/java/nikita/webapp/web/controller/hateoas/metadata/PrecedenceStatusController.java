@@ -40,7 +40,7 @@ public class PrecedenceStatusController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new PrecedenceStatus
-    // POST [contextPath][api]/metadata/journalposttype/ny-journalposttype
+    // POST [contextPath][api]/metadata/ny-journalposttype
     @ApiOperation(
             value = "Persists a new PrecedenceStatus object",
             notes = "Returns the newly created PrecedenceStatus object after" +
@@ -72,7 +72,7 @@ public class PrecedenceStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = PRECEDENCE_STATUS + SLASH + NEW_PRECEDENCE_STATUS)
+    @PostMapping(value = NEW_PRECEDENCE_STATUS)
     public ResponseEntity<MetadataHateoas>
     createPrecedenceStatus(
             HttpServletRequest request,

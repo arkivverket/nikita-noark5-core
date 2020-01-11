@@ -39,7 +39,7 @@ public class DocumentTypeController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new dokumenttype
-    // POST [contextPath][api]/metadata/dokumenttype/ny-dokumenttype
+    // POST [contextPath][api]/metadata/ny-dokumenttype
     @ApiOperation(
             value = "Persists a new DocumentType object",
             notes = "Returns the newly created DocumentType object after it " +
@@ -71,7 +71,7 @@ public class DocumentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = DOCUMENT_TYPE + SLASH + NEW_DOCUMENT_TYPE)
+    @PostMapping(value = NEW_DOCUMENT_TYPE)
     public ResponseEntity<MetadataHateoas> createDocumentType(
             HttpServletRequest request,
             @RequestBody DocumentType documentType)

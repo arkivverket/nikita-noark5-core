@@ -39,7 +39,7 @@ public class ScreeningDocumentController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new skjermingdokument
-    // POST [contextPath][api]/metadata/skjermingdokument/ny-skjermingdokument
+    // POST [contextPath][api]/metadata/ny-skjermingdokument
     @ApiOperation(
             value = "Persists a new ScreeningDocument object",
             notes = "Returns the newly created ScreeningDocument object after it " +
@@ -71,7 +71,7 @@ public class ScreeningDocumentController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SCREENING_DOCUMENT + SLASH + NEW_SCREENING_DOCUMENT)
+    @PostMapping(value = NEW_SCREENING_DOCUMENT)
     public ResponseEntity<MetadataHateoas> createScreeningDocument(
             HttpServletRequest request,
             @RequestBody ScreeningDocument postalCode)

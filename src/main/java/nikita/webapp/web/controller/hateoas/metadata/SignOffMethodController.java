@@ -40,7 +40,7 @@ public class SignOffMethodController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new avskrivningsmaate
-    // POST [contextPath][api]/metadata/avskrivningsmaate/ny-avskrivningsmaate
+    // POST [contextPath][api]/metadata/ny-avskrivningsmaate
     @ApiOperation(
             value = "Persists a new SignOffMethod object",
             notes = "Returns the newly created SignOffMethod object  " +
@@ -72,7 +72,7 @@ public class SignOffMethodController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SIGN_OFF_METHOD + SLASH + NEW_SIGN_OFF_METHOD)
+    @PostMapping(value = NEW_SIGN_OFF_METHOD)
     public ResponseEntity<MetadataHateoas> createSignOffMethod(
             HttpServletRequest request,
             @RequestBody SignOffMethod signOffMethod)

@@ -40,7 +40,7 @@ public class RegistryEntryTypeController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new registryEntryType
-    // POST [contextPath][api]/metadata/journalposttype/ny-journalposttype
+    // POST [contextPath][api]/metadata/ny-journalposttype
     @ApiOperation(
             value = "Persists a new RegistryEntryType object",
             notes = "Returns the newly created RegistryEntryType object after" +
@@ -72,7 +72,7 @@ public class RegistryEntryTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = REGISTRY_ENTRY_TYPE + SLASH + NEW_REGISTRY_ENTRY_TYPE)
+    @PostMapping(value = NEW_REGISTRY_ENTRY_TYPE)
     public ResponseEntity<MetadataHateoas>
     createRegistryEntryType(
             HttpServletRequest request,

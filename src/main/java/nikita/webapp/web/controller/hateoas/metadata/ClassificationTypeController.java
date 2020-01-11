@@ -39,8 +39,8 @@ public class ClassificationTypeController {
     }
 
     // API - All POST Requests (CRUD - CREATE)
-    // Creates a new mappetype
-    // POST [contextPath][api]/metadata/mappetype/ny-mappetype
+    // Creates a new klassifikasjonstype
+    // POST [contextPath][api]/metadata/ny-klassifikasjonstype
     @ApiOperation(
             value = "Persists a new ClassificationType object",
             notes = "Returns the newly created ClassificationType object after "
@@ -72,7 +72,7 @@ public class ClassificationTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = CLASSIFICATION_TYPE + SLASH + NEW_CLASSIFICATION_TYPE)
+    @PostMapping(value = NEW_CLASSIFICATION_TYPE)
     public ResponseEntity<MetadataHateoas> createClassificationType(
             HttpServletRequest request,
             @RequestBody ClassificationType classificationType)

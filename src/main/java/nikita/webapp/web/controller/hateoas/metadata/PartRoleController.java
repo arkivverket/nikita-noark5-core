@@ -40,7 +40,7 @@ public class PartRoleController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new partrolle
-    // POST [contextPath][api]/metadata/partrolle/ny-partrolle
+    // POST [contextPath][api]/metadata/ny-partrolle
     @ApiOperation(
             value = "Persists a new PartRole object",
             notes = "Returns the newly created PartRole object after it " +
@@ -67,7 +67,7 @@ public class PartRoleController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = PART_ROLE + SLASH + NEW_PART_ROLE)
+    @PostMapping(value = NEW_PART_ROLE)
     public ResponseEntity<MetadataHateoas> createPartRole(
             HttpServletRequest request,
             @RequestBody PartRole partyRole)

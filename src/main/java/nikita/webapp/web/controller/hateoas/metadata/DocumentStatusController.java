@@ -43,7 +43,7 @@ public class DocumentStatusController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new dokumentstatus
-    // POST [contextPath][api]/metadata/dokumentstatus/ny-dokumentstatus
+    // POST [contextPath][api]/metadata/ny-dokumentstatus
     @ApiOperation(value = "Persists a new DocumentStatus object", notes = "Returns the newly" +
             " created DocumentStatus object after it is persisted to the database", response = DocumentStatus.class)
     @ApiResponses(value = {
@@ -58,7 +58,7 @@ public class DocumentStatusController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-    @PostMapping(value = DOCUMENT_STATUS + SLASH + NEW_DOCUMENT_STATUS)
+    @PostMapping(value = NEW_DOCUMENT_STATUS)
     public ResponseEntity<MetadataHateoas> createDocumentStatus(
             HttpServletRequest request,
             @RequestBody DocumentStatus documentStatus)

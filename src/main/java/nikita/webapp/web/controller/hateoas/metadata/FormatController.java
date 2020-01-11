@@ -43,7 +43,7 @@ public class FormatController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new format
-    // POST [contextPath][api]/metadata/format/ny-format
+    // POST [contextPath][api]/metadata/ny-format
     @ApiOperation(
             value = "Persists a new Format object",
             notes = "Returns the newly created Format object after it is " +
@@ -75,7 +75,7 @@ public class FormatController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = FORMAT + SLASH + NEW_FORMAT)
+    @PostMapping(value = NEW_FORMAT)
     public ResponseEntity<MetadataHateoas>
     createFormat(
             HttpServletRequest request,

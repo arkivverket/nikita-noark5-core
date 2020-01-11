@@ -39,7 +39,7 @@ public class PostalCodeController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new postnummer
-    // POST [contextPath][api]/metadata/postnummer/ny-postnummer
+    // POST [contextPath][api]/metadata/ny-postnummer
     @ApiOperation(
             value = "Persists a new PostalCode object",
             notes = "Returns the newly created PostalCode object after it " +
@@ -71,7 +71,7 @@ public class PostalCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = POST_CODE + SLASH + NEW_POST_CODE)
+    @PostMapping(value = NEW_POST_CODE)
     public ResponseEntity<MetadataHateoas> createPostalCode(
             HttpServletRequest request,
             @RequestBody PostalCode postalCode)

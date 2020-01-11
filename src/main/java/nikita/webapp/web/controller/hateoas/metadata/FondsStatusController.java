@@ -37,7 +37,7 @@ public class FondsStatusController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new arkivstatus
-    // POST [contextPath][api]/metadata/arkivstatus/ny-arkivstatus
+    // POST [contextPath][api]/metadata/ny-arkivstatus
     @ApiOperation(value = "Persists a new FondsStatus object", notes = "Returns the newly" +
             " created FondsStatus object after it is persisted to the database", response = FondsStatus.class)
     @ApiResponses(value = {
@@ -52,7 +52,7 @@ public class FondsStatusController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-    @PostMapping(value = FONDS_STATUS + SLASH + NEW_FONDS_STATUS)
+    @PostMapping(value = NEW_FONDS_STATUS)
     public ResponseEntity<MetadataHateoas> createFondsStatus(
             HttpServletRequest request,
             @RequestBody FondsStatus fondsStatus)
