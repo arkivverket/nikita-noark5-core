@@ -46,6 +46,13 @@ public class MetadataDetails extends APIDetails {
                 true
         ));
 
+        // Add support for new DocumentStatus
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_STATUS,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_STATUS + SLASH,
+                true
+        ));
+
         // Add support for DocumentType
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + DOCUMENT_TYPE,
@@ -53,10 +60,10 @@ public class MetadataDetails extends APIDetails {
                 true
         ));
 
-        // Add support for new DocumentStatus
+        // Add support for new DocumentType
         aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_STATUS + SLASH,
+                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_TYPE,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_TYPE + SLASH,
                 true
         ));
 
