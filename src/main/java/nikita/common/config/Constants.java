@@ -157,6 +157,15 @@ public final class Constants {
     public static final String NEW_DOCUMENT_TYPE = NEW + DASH +
             DOCUMENT_TYPE;
 
+    public static final String NEW_ASSOCIATED_WITH_RECORD_AS =
+            NEW + DASH + ASSOCIATED_WITH_RECORD_AS;
+
+    public static final String NEW_ACCESS_RESTRICTION =
+            NEW + DASH + ACCESS_RESTRICTION;
+
+    public static final String NEW_DISPOSAL_DECISION =
+            NEW + DASH + DISPOSAL_DECISION;
+
     public static final String NEW_CORRESPONDENCE_PART_TYPE = NEW + DASH +
             CORRESPONDENCE_PART_TYPE;
 
