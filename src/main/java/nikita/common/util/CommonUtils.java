@@ -685,7 +685,7 @@ public final class CommonUtils {
              * Deserialize to make sure GET + modify + PUT work.
              */
             public static void deserialiseNoarkLastModifiedEntity(
-                        INoarkLastModifiedEntity nikitaEntity,
+                        ILastModified nikitaEntity,
                         ObjectNode objectNode, StringBuilder errors) {
                 JsonNode currentNode = objectNode.get(LAST_MODIFIED_DATE);
                 if (null != currentNode) {

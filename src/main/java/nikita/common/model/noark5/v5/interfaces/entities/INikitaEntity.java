@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public interface INikitaEntity
-        extends Serializable, ICreate, INoarkLastModifiedEntity {
+        extends Serializable, ICreate, ILastModified {
 
     String getSystemId();
 
