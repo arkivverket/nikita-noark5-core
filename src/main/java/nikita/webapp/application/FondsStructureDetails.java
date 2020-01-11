@@ -26,8 +26,7 @@ public class FondsStructureDetails extends APIDetails {
         // Add new-fonds
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SLASH + NEW_FONDS,
-                REL_FONDS_STRUCTURE + NEW_FONDS + SLASH,
-                false
+                REL_FONDS_STRUCTURE + NEW_FONDS + SLASH
         ));
 
         // Add FondsCreator
@@ -41,8 +40,7 @@ public class FondsStructureDetails extends APIDetails {
         // Add new FondsCreator
         aPIDetails.add(new APIDetail(
                 publicUrlPath + SLASH + HREF_BASE_FONDS_STRUCTURE + SLASH + NEW_FONDS_CREATOR,
-                REL_FONDS_STRUCTURE + NEW_FONDS_CREATOR + SLASH,
-                true
+                REL_FONDS_STRUCTURE + NEW_FONDS_CREATOR + SLASH
         ));
 
         // Add Series

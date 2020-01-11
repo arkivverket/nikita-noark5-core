@@ -21,8 +21,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new DocumentMedium
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_MEDIUM,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_MEDIUM + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_MEDIUM + SLASH
         ));
 
         // Add support for FondsStatus
@@ -35,8 +34,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new FondsStatus
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_FONDS_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FONDS_STATUS + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FONDS_STATUS + SLASH
         ));
 
         // Add support for DocumentStatus
@@ -49,8 +47,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new DocumentStatus
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_STATUS + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_STATUS + SLASH
         ));
 
         // Add support for DocumentType
@@ -63,8 +60,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new DocumentType
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_TYPE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_TYPE + SLASH
         ));
 
         // Add support for SeriesStatus
@@ -90,8 +86,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new RegistryEntryStatus
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_REGISTRY_ENTRY_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_REGISTRY_ENTRY_STATUS + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_REGISTRY_ENTRY_STATUS + SLASH
         ));
 
         // Add support for precedenceStatus
@@ -104,8 +99,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new precedenceStatus
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_PRECEDENCE_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_PRECEDENCE_STATUS + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_PRECEDENCE_STATUS + SLASH
         ));
 
         // Add support for accessRestriction
@@ -132,8 +126,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new CorrespondencePart
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_CORRESPONDENCE_PART_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CORRESPONDENCE_PART_TYPE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CORRESPONDENCE_PART_TYPE + SLASH
         ));
 
         // Add support for SignOffMethod
@@ -146,8 +139,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new SignOffMethod
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_SIGN_OFF_METHOD,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SIGN_OFF_METHOD + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SIGN_OFF_METHOD + SLASH
         ));
 
         // Add support for ElectronicSignatureSecurityLevel
@@ -160,8 +152,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new ElectronicSignatureSecurityLevel
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH
         ));
 
         // Add support for ElectronicSignatureVerified
@@ -174,8 +165,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new ElectronicSignatureVerified
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_ELECTRONIC_SIGNATURE_VERIFIED,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ELECTRONIC_SIGNATURE_VERIFIED + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ELECTRONIC_SIGNATURE_VERIFIED + SLASH
         ));
 
         // Add support for Format
@@ -188,8 +178,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new Format
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_FORMAT,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FORMAT + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FORMAT + SLASH
         ));
 
         // Add support for FlowStatus
@@ -202,8 +191,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new FlowStatus
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_FLOW_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FLOW_STATUS + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FLOW_STATUS + SLASH
         ));
 
         // Add support for RegistryEntryType
@@ -216,8 +204,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new RegistryEntryType
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_REGISTRY_ENTRY_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_REGISTRY_ENTRY_TYPE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_REGISTRY_ENTRY_TYPE + SLASH
         ));
 
         // Add support for PartRole
@@ -230,8 +217,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new PartRole
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_PART_ROLE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_PART_ROLE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_PART_ROLE + SLASH
         ));
 
         // Add support for ClassificationType
@@ -244,8 +230,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new ClassificationType
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_CLASSIFICATION_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CLASSIFICATION_TYPE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CLASSIFICATION_TYPE + SLASH
         ));
 
         // Add support for FileType
@@ -258,8 +243,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new FileType
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_FILE_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FILE_TYPE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FILE_TYPE + SLASH
         ));
 
         // Add support for VariantFormat
@@ -272,8 +256,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new VariantFormat
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_VARIANT_FORMAT,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_VARIANT_FORMAT + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_VARIANT_FORMAT + SLASH
         ));
 
         // Add support for CommentType
@@ -286,8 +269,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new CommentType
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_COMMENT_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_COMMENT_TYPE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_COMMENT_TYPE + SLASH
         ));
 
         // Add support for CaseStatus
@@ -300,8 +282,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new CaseStatus
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_CASE_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CASE_STATUS + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CASE_STATUS + SLASH
         ));
 
         // Add support for Country
@@ -314,8 +295,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new Country
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_COUNTRY,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_COUNTRY + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_COUNTRY + SLASH
         ));
 
         // Add support for PostCode
@@ -328,8 +308,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new PostCode
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_POST_CODE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_POST_CODE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_POST_CODE + SLASH
         ));
 
         // Add support for ScreeningMetadata
@@ -342,8 +321,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new ScreeningMetadata
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_SCREENING_METADATA,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SCREENING_METADATA + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SCREENING_METADATA + SLASH
         ));
 
         // Add support for ScreeningDocument
@@ -356,8 +334,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new ScreeningDocument
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_SCREENING_DOCUMENT,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SCREENING_DOCUMENT + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SCREENING_DOCUMENT + SLASH
         ));
 
         // Add support for ClassifiedCode
@@ -370,8 +347,7 @@ public class MetadataDetails extends APIDetails {
         // Add support for new ClassifiedCode
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_CLASSIFIED_CODE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CLASSIFIED_CODE + SLASH,
-                true
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CLASSIFIED_CODE + SLASH
         ));
     }
 }
