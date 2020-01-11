@@ -63,6 +63,19 @@ public class MetadataDetails extends APIDetails {
                 NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_TYPE + SLASH
         ));
 
+        // Add support for AssociatedWithRecordAs
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + ASSOCIATED_WITH_RECORD_AS,
+                REL_METADATA_ASSOCIATED_WITH_RECORD_AS,
+                true
+        ));
+
+        // Add support for new AssociatedWithRecordAs
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_ASSOCIATED_WITH_RECORD_AS,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ASSOCIATED_WITH_RECORD_AS + SLASH
+        ));
+
         // Add support for SeriesStatus
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + SERIES_STATUS,
@@ -109,11 +122,23 @@ public class MetadataDetails extends APIDetails {
                 true
         ));
 
+        // Add support for new accessRestriction
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_ACCESS_RESTRICTION,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ACCESS_RESTRICTION + SLASH
+        ));
+
         // Add support for disposalDecision
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + DISPOSAL_DECISION,
                 REL_METADATA_DISPOSAL_DECISION,
                 true
+        ));
+
+        // Add support for new disposalDecision
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DISPOSAL_DECISION,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DISPOSAL_DECISION + SLASH
         ));
 
         // Add support for CorrespondencePart
