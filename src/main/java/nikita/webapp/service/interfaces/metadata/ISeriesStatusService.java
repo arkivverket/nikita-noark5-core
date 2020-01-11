@@ -11,7 +11,9 @@ public interface ISeriesStatusService {
 
     Iterable<SeriesStatus> findAll();
 
-    SeriesStatus update(SeriesStatus seriesStatus);
-
     SeriesStatus findByCode(String code);
+
+    SeriesStatus findSeriesStatusByCode(String code);
+
+    SeriesStatus update(SeriesStatus seriesStatus);
 }
