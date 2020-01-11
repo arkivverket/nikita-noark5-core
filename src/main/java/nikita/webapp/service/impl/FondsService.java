@@ -612,7 +612,7 @@ public class FondsService
 		equals(fonds.getFondsStatusCodeName())) {
 		String info = "FondsStatus code and code name "+
 		    "did not match metadata catalog.";
-		logger.info(info)
+		logger.info(info);
 		throw new NoarkInvalidStructureException(
 			info, "Fonds", "FondsStatus");
 	    }
