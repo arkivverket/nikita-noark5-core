@@ -19,6 +19,12 @@ public class APIDetail implements Comparable <APIDetail>{
         this.templated = templated;
     }
 
+    public APIDetail(@NotNull String href, @NotNull String rel) {
+        this.href = href;
+        this.rel = rel;
+        this.templated = false;
+    }
+
     public String getHref() {
         return href;
     }

@@ -60,6 +60,19 @@ public class MetadataDetails extends APIDetails {
                 true
         ));
 
+        // Add support for SeriesStatus
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + SERIES_STATUS,
+                REL_METADATA_SERIES_STATUS,
+                true
+        ));
+
+        // Add support for new SeriesStatus
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_SERIES_STATUS,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SERIES_STATUS + SLASH
+        ));
+
         // Add support for RegistryEntryStatus
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + REGISTRY_ENTRY_STATUS,
