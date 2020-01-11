@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.File;
@@ -24,7 +25,7 @@ import java.util.List;
 
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CASE_FILE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
@@ -42,40 +43,44 @@ public class CaseFile
     /**
      * M011 - saksaar (xs:integer)
      */
-    @Column(name = "case_year")
+    @Column(name = CASE_YEAR_ENG)
     @Audited
+    @JsonProperty(CASE_YEAR)
     private Integer caseYear;
 
     /**
      * M012 - sakssekvensnummer (xs:integer)
      */
-    @Column(name = "case_sequence_number")
+    @Column(name = CASE_SEQUENCE_NUMBER_ENG)
     @Audited
+    @JsonProperty(CASE_SEQUENCE_NUMBER)
     private Integer caseSequenceNumber;
 
     /**
      * M100 - saksdato (xs:date)
      */
     @NotNull
-    @Column(name = "case_date", nullable = false)
+    @Column(name = CASE_DATE_ENG, nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(CASE_DATE)
     private OffsetDateTime caseDate;
 
     /**
      * M306 - saksansvarlig (xs:string)
      */
     @NotNull
-    @Column(name = "case_responsible", nullable = false)
+    @Column(name = CASE_RESPONSIBLE_ENG, nullable = false)
     @Audited
-
+    @JsonProperty(CASE_RESPONSIBLE)
     private String caseResponsible;
 
     /**
      * M308 - journalenhet (xs:string)
      */
-    @Column(name = "records_management_unit")
+    @Column(name = CASE_RECORDS_MANAGEMENT_UNIT_ENG)
     @Audited
+    @JsonProperty(CASE_RECORDS_MANAGEMENT_UNIT)
     private String recordsManagementUnit;
 
     /**
@@ -96,16 +101,18 @@ public class CaseFile
     /**
      * M106 - utlaantDato (xs:date)
      */
-    @Column(name = "loaned_date")
+    @Column(name = CASE_LOANED_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(CASE_LOANED_DATE)
     private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
      */
-    @Column(name = "loaned_to")
+    @Column(name = CASE_LOANED_TO_ENG)
     @Audited
+    @JsonProperty(CASE_LOANED_TO)
     private String loanedTo;
 
     // Links to Precedence

@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.metadata;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
@@ -26,6 +27,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.NOARK_METADATA_PATH;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
@@ -38,25 +40,28 @@ public class MetadataSuperClass
         implements IMetadataEntity {
 
     /**
-     * M -  (xs:string)
+     * M??? - kode (xs:string)
      */
     @Id
-    @Column(name = "code")
+    @Column(name = CODE_ENG)
     @Audited
+    @JsonProperty(CODE)
     protected String code;
 
     /**
-     * M -  (xs:boolean)
+     * M??? - inaktiv (xs:boolean)
      */
     @Column(name = "inactive")
     @Audited
+    @JsonProperty(CODE_INACTIVE)
     protected Boolean inactive = false;
 
     /**
-     * M -  (xs:string)
+     * M??? - kodenavn (xs:string)
      */
-    @Column(name = "code_name")
+    @Column(name = CODE_NAME_ENG)
     @Audited
+    @JsonProperty(CODE_NAME)
     protected String codeName;
 
     @Column(name = "system_id", updatable = false, nullable = false)
@@ -76,32 +81,36 @@ public class MetadataSuperClass
      * M600 - opprettetDato (xs:dateTime)
      */
     @CreatedDate
-    @Column(name = "created_date")
+    @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
      */
     @CreatedBy
-    @Column(name = "created_by")
+    @Column(name = CREATED_BY_ENG)
     @Audited
+    @JsonProperty(CREATED_BY)
     private String createdBy;
 
     /**
      * M??? - oppdatertDato (xs:dateTime)
      */
     @LastModifiedDate
-    @Column(name = "last_modified_date")
+    @Column(name = LAST_MODIFIED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
+    @JsonProperty(LAST_MODIFIED_DATE)
     private OffsetDateTime lastModifiedDate;
 
     /**
      * M??? - oppdatertAv (xs:string)
      */
     @LastModifiedBy
-    @Column(name = "last_modified_by")
+    @Column(name = LAST_MODIFIED_BY_ENG)
+    @JsonProperty(LAST_MODIFIED_BY)
     private String lastModifiedBy;
 
     @Override
