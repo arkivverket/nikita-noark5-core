@@ -751,6 +751,8 @@ public final class Constants {
             "as_file_storage_location";
     public static final String TABLE_SERIES_STORAGE_LOCATION =
             "as_series_storage_location";
+    public static final String TABLE_SERIES_CLASSIFICATION_SYSTEM =
+            "as_series_classification_system";
     public static final String TABLE_FILE_KEYWORD =
             "as_file_keyword";
     public static final String TABLE_FILE_COMMENT =
@@ -915,7 +917,8 @@ public final class Constants {
 
     public static final String FOREIGN_KEY_STORAGE_LOCATION_PK =
             "f_pk_storage_location_id";
-
+    public static final String FOREIGN_KEY_CLASSIFICATION_SYSTEM_PK =
+            "f_pk_classification_system_id";
     public static final String FOREIGN_KEY_CORRESPONDENCE_PART_PERSON_PK =
             "f_pk_correspondence_part_person_id";
 
