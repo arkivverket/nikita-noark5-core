@@ -39,7 +39,7 @@ public class CaseStatusController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new saksstatus
-    // POST [contextPath][api]/metadata/saksstatus/ny-saksstatus
+    // POST [contextPath][api]/metadata/ny-saksstatus
     @ApiOperation(
             value = "Persists a new CaseStatus object",
             notes = "Returns the newly created CaseStatus object after it " +
@@ -71,7 +71,7 @@ public class CaseStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = CASE_STATUS + SLASH + NEW_CASE_STATUS)
+    @PostMapping(value = NEW_CASE_STATUS)
     public ResponseEntity<MetadataHateoas> createCaseStatus(
             HttpServletRequest request,
             @RequestBody CaseStatus caseStatus)

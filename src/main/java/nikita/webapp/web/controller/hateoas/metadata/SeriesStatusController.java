@@ -40,7 +40,7 @@ public class SeriesStatusController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new arkivdelstatus
-    // POST [contextPath][api]/metadata/arkivdelstatus/ny-arkivdelstatus
+    // POST [contextPath][api]/metadata/ny-arkivdelstatus
     @ApiOperation(value = "Persists a new SeriesStatus object",
             notes = "Returns the newly created SeriesStatus object after it " +
                     "is persisted to the database",
@@ -65,7 +65,7 @@ public class SeriesStatusController {
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SERIES_STATUS + SLASH + NEW_SERIES_STATUS)
+    @PostMapping(value = NEW_SERIES_STATUS)
     public ResponseEntity<MetadataHateoas> createSeriesStatus(
             HttpServletRequest request,
             @RequestBody SeriesStatus seriesStatus)

@@ -43,8 +43,7 @@ public class ElectronicSignatureSecurityLevelController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new elektronisksignatursikkerhetsnivaa
-    // POST [contextPath][api]/metadata/elektronisksignatursikkerhetsnivaa/
-    // ny-elektronisksignatursikkerhetsnivaa
+    // POST [contextPath][api]/metadata/ny-elektronisksignatursikkerhetsnivaa
     @ApiOperation(
             value = "Persists a new ElectronicSignatureSecurityLevel object",
             notes = "Returns the newly created " +
@@ -77,7 +76,7 @@ public class ElectronicSignatureSecurityLevelController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH + NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
+    @PostMapping(value = NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
     public ResponseEntity<MetadataHateoas>
     createElectronicSignatureSecurityLevel(
             HttpServletRequest request,

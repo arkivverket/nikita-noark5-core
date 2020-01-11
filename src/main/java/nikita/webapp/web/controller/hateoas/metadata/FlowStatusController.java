@@ -39,7 +39,7 @@ public class FlowStatusController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new flowStatus
-    // POST [contextPath][api]/metadata/flytstatus/ny-flytstatus
+    // POST [contextPath][api]/metadata/ny-flytstatus
     @ApiOperation(
             value = "Persists a new FlowStatus object",
             notes = "Returns the newly created FlowStatus object after it is " +
@@ -71,7 +71,7 @@ public class FlowStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = FLOW_STATUS + SLASH + NEW_FLOW_STATUS)
+    @PostMapping(value = NEW_FLOW_STATUS)
     public ResponseEntity<MetadataHateoas>
     createFlowStatus(
             HttpServletRequest request,

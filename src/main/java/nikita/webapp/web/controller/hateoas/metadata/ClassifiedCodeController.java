@@ -41,7 +41,7 @@ public class ClassifiedCodeController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new graderingskode
-    // POST [contextPath][api]/metadata/graderingskode/ny-graderingskode
+    // POST [contextPath][api]/metadata/ny-graderingskode
     @ApiOperation(
             value = "Persists a new ClassifiedCode object",
             notes = "Returns the newly created ClassifiedCode object after "
@@ -73,7 +73,7 @@ public class ClassifiedCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = CLASSIFIED_CODE + SLASH + NEW_CLASSIFIED_CODE)
+    @PostMapping(value = NEW_CLASSIFIED_CODE)
     public ResponseEntity<MetadataHateoas> createClassifiedCode(
             HttpServletRequest request,
             @RequestBody ClassifiedCode classifiedCode)

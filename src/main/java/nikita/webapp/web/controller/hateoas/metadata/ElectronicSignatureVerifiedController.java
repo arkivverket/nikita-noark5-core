@@ -43,8 +43,7 @@ public class ElectronicSignatureVerifiedController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new elektronisksignaturverifisert
-    // POST [contextPath][api]/metadata/elektronisksignaturverifisert/
-    // ny-elektronisksignaturverifisert
+    // POST [contextPath][api]/metadata/ny-elektronisksignaturverifisert
     @ApiOperation(
             value = "Persists a new ElectronicSignatureVerified object",
             notes = "Returns the newly created " +
@@ -77,7 +76,7 @@ public class ElectronicSignatureVerifiedController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH + NEW_ELECTRONIC_SIGNATURE_VERIFIED)
+    @PostMapping(value = NEW_ELECTRONIC_SIGNATURE_VERIFIED)
     public ResponseEntity<MetadataHateoas>
     createElectronicSignatureVerified(
             HttpServletRequest request,

@@ -38,8 +38,8 @@ public class VariantFormatController {
     }
 
     // API - All POST Requests (CRUD - CREATE)
-    // Creates a new mappetype
-    // POST [contextPath][api]/metadata/mappetype/ny-mappetype
+    // Creates a new VariantFormat
+    // POST [contextPath][api]/metadata/ny-variantformat
     @ApiOperation(
             value = "Persists a new VariantFormat object",
             notes = "Returns the newly created VariantFormat object after it " +
@@ -71,7 +71,7 @@ public class VariantFormatController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = VARIANT_FORMAT + SLASH + NEW_VARIANT_FORMAT)
+    @PostMapping(value = NEW_VARIANT_FORMAT)
     public ResponseEntity<MetadataHateoas> createVariantFormat(
             HttpServletRequest request,
             @RequestBody VariantFormat variantFormat)
@@ -168,7 +168,7 @@ public class VariantFormatController {
 
     // Create a suggested variantFormat(like a template) with default values
     // (nothing persisted)
-    // GET [contextPath][api]/metadata/ny-mappetype
+    // GET [contextPath][api]/metadata/ny-variantformat
     @ApiOperation(
             value = "Creates a suggested VariantFormat",
             response = VariantFormat.class)

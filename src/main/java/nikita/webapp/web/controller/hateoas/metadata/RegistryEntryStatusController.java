@@ -40,7 +40,7 @@ public class RegistryEntryStatusController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new journalpoststatus
-    // POST [contextPath][api]/metadata/journalpoststatus/ny-journalpoststatus
+    // POST [contextPath][api]/metadata/ny-journalpoststatus
     @ApiOperation(
             value = "Persists a new RegistryEntryStatus object",
             notes = "Returns the newly created RegistryEntryStatus object  " +
@@ -72,7 +72,7 @@ public class RegistryEntryStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = REGISTRY_ENTRY_STATUS + SLASH + NEW_REGISTRY_ENTRY_STATUS)
+    @PostMapping(value = NEW_REGISTRY_ENTRY_STATUS)
     public ResponseEntity<MetadataHateoas> createRegistryEntryStatus(
             HttpServletRequest request,
             @RequestBody RegistryEntryStatus registryEntryStatus)

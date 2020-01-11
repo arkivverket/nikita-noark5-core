@@ -39,7 +39,7 @@ public class CountryController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new land
-    // POST [contextPath][api]/metadata/land/ny-land
+    // POST [contextPath][api]/metadata/ny-land
     @ApiOperation(
             value = "Persists a new Country object",
             notes = "Returns the newly created Country object after it " +
@@ -71,7 +71,7 @@ public class CountryController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = COUNTRY + SLASH + NEW_COUNTRY)
+    @PostMapping(value = NEW_COUNTRY)
     public ResponseEntity<MetadataHateoas> createCountry(
             HttpServletRequest request,
             @RequestBody Country country)

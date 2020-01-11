@@ -41,7 +41,7 @@ public class CorrespondencePartTypeController extends NoarkController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new korrespondanseparttype
-    // POST [contextPath][api]/metadata/korrespondanseparttype/ny-korrespondanseparttype
+    // POST [contextPath][api]/metadata/ny-korrespondanseparttype
     @ApiOperation(value = "Persists a new CorrespondencePartType object", notes = "Returns the newly" +
             " created CorrespondencePartType object after it is persisted to the database", response = CorrespondencePartType.class)
     @ApiResponses(value = {
@@ -56,7 +56,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-    @PostMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + NEW_CORRESPONDENCE_PART_TYPE)
+    @PostMapping(value = NEW_CORRESPONDENCE_PART_TYPE)
     public ResponseEntity<MetadataHateoas> createCorrespondencePartType(
             HttpServletRequest request,
             @RequestBody CorrespondencePartType correspondencePartType)

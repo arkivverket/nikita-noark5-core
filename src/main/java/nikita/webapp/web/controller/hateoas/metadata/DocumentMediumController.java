@@ -39,7 +39,7 @@ public class DocumentMediumController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new documentmedium
-    // POST [contextPath][api]/metadata/dokumentmedium/ny-dokumentmedium
+    // POST [contextPath][api]/metadata/ny-dokumentmedium
     @ApiOperation(value = "Persists a new DocumentMedium object", notes = "Returns the newly" +
             " created DocumentMedium object after it is persisted to the database", response = DocumentMedium.class)
     @ApiResponses(value = {
@@ -54,7 +54,7 @@ public class DocumentMediumController {
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
-    @PostMapping(value = DOCUMENT_MEDIUM + SLASH + NEW_DOCUMENT_MEDIUM)
+    @PostMapping(value = NEW_DOCUMENT_MEDIUM)
     public ResponseEntity<MetadataHateoas> createDocumentMedium(
             HttpServletRequest request,
             @RequestBody DocumentMedium documentMedium)

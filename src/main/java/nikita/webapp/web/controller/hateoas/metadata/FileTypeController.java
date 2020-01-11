@@ -39,7 +39,7 @@ public class FileTypeController {
 
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new mappetype
-    // POST [contextPath][api]/metadata/mappetype/ny-mappetype
+    // POST [contextPath][api]/metadata/ny-mappetype
     @ApiOperation(
             value = "Persists a new FileType object",
             notes = "Returns the newly created FileType object after it " +
@@ -71,7 +71,7 @@ public class FileTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = FILE_TYPE + SLASH + NEW_FILE_TYPE)
+    @PostMapping(value = NEW_FILE_TYPE)
     public ResponseEntity<MetadataHateoas> createFileType(
             HttpServletRequest request,
             @RequestBody FileType fileType)
