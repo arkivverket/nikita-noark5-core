@@ -7,15 +7,18 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.repository.n5v5.ISeriesRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.common.util.exceptions.NoarkInvalidStructureException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
+import nikita.webapp.service.interfaces.metadata.ISeriesStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -48,6 +51,7 @@ public class SeriesService
     private IFileService fileService;
     private ICaseFileService caseFileService;
     private IClassificationSystemService classificationSystemService;
+    private ISeriesStatusService seriesStatusService;
     private ISeriesRepository seriesRepository;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
@@ -62,6 +66,7 @@ public class SeriesService
             IClassificationSystemService classificationSystemService,
             IFileService fileService,
             ICaseFileService caseFileService,
+            ISeriesStatusService seriesStatusService,
             ISeriesRepository seriesRepository,
             ISeriesHateoasHandler seriesHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
@@ -72,6 +77,7 @@ public class SeriesService
         super(entityManager, applicationEventPublisher);
         this.fileService = fileService;
         this.caseFileService = caseFileService;
+        this.seriesStatusService = seriesStatusService;
         this.seriesRepository = seriesRepository;
         this.classificationSystemService = classificationSystemService;
         this.seriesHateoasHandler = seriesHateoasHandler;
@@ -104,6 +110,9 @@ public class SeriesService
     @Override
     public Series save(Series series) {
         checkDocumentMediumValid(series);
+	if (null == series.getSeriesStatusCode()) {
+	    checkSeriesStatusUponCreation(series);
+	}
         return seriesRepository.save(series);
     }
 
@@ -278,10 +287,10 @@ public class SeriesService
      * @param series The series object to check if it open
      */
     private void checkOpenOrThrow(@NotNull Series series) {
-        if (series.getSeriesStatusCodeName().equals(STATUS_CLOSED)) {
+        if (series.getSeriesStatusCode().equals(STATUS_CLOSED)) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Series with systemId " + series.getSystemId() +
-                    " has status " + STATUS_CLOSED;
+                    " has status code " + STATUS_CLOSED;
             logger.info(info);
             throw new NoarkEntityEditWhenClosedException(info);
         }
@@ -306,5 +315,35 @@ public class SeriesService
             throw new NoarkEntityNotFoundException(info);
         }
         return series;
+    }
+
+    /**
+     * Internal helper method. Verify the SeriesStatus code provided is
+     * in the metadata catalog, and copy the code name associated with
+     * the code from the metadata catalog into the Series.
+     * <p>
+     * If the SeriesStatus code is unknown, a
+     * NoarkEntityNotFoundException exception is thrown that the
+     * caller has to deal with.  If the code and code name provided do
+     * not match the entries in the metadata catalog, a
+     * NoarkInvalidStructureException exception is thrown.
+     *
+     * @param series The series object
+     */
+    private void checkSeriesStatusUponCreation(Series series) {
+        if (series.getSeriesStatusCode() != null) {
+            SeriesStatus seriesStatus = seriesStatusService.
+                    findSeriesStatusByCode(series.getSeriesStatusCode());
+           if (null != series.getSeriesStatusCodeName() &&
+               ! seriesStatus.getCodeName().
+               equals(series.getSeriesStatusCodeName())) {
+               String info = "SeriesStatus code and code name "+
+                   "did not match metadata catalog.";
+               logger.info(info);
+               throw new NoarkInvalidStructureException(
+                       info, "Series", "SeriesStatus");
+           }
+            series.setSeriesStatusCodeName(seriesStatus.getCodeName());
+        }
     }
 }
