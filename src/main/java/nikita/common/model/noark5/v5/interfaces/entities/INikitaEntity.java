@@ -2,11 +2,10 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public interface INikitaEntity
-        extends Serializable, INoarkCreateEntity, INoarkLastModifiedEntity {
+        extends Serializable, ICreate, INoarkLastModifiedEntity {
 
     String getSystemId();
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkCreateEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
@@ -36,7 +36,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasObject(using = DocumentDescriptionHateoas.class)
 public class DocumentDescription
         extends NoarkEntity
-        implements INoarkTitleDescriptionEntity, INoarkCreateEntity,
+        implements INoarkTitleDescriptionEntity, ICreate,
         IDocumentMedium, ISingleStorageLocation, IDeletion, IScreening,
         IDisposal, IClassified, IDisposalUndertaken, IComment,
         IElectronicSignature, IAuthor {

@@ -668,7 +668,7 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNoarkCreateEntity(INoarkCreateEntity noarkCreateEntity,
+            public static void deserialiseNoarkCreateEntity(ICreate noarkCreateEntity,
                                                             ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize createdDate
                 noarkCreateEntity.setCreatedDate(deserializeDateTime(CREATED_DATE, objectNode, errors));
@@ -700,7 +700,7 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNoarkFinaliseEntity(INoarkFinaliseEntity finaliseEntity,
+            public static void deserialiseNoarkFinaliseEntity(IFinalise finaliseEntity,
                                                               ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize finalisedDate
                 finaliseEntity.setFinalisedDate(deserializeDateTime(FINALISED_DATE, objectNode, errors));
@@ -1695,7 +1695,7 @@ public final class CommonUtils {
             }
 
             public static void printCreateEntity(JsonGenerator jgen,
-                                                 INoarkCreateEntity createEntity)
+                                                 ICreate createEntity)
                     throws IOException {
                 if (createEntity != null) {
                     if (createEntity.getCreatedDate() != null) {
@@ -1958,7 +1958,7 @@ public final class CommonUtils {
             }
 
             public static void printFinaliseEntity(JsonGenerator jgen,
-                                                   INoarkFinaliseEntity finaliseEntity)
+                                                   IFinalise finaliseEntity)
                     throws IOException {
                 if (finaliseEntity.getFinalisedBy() != null) {
                     jgen.writeStringField(FINALISED_BY, finaliseEntity.getFinalisedBy());

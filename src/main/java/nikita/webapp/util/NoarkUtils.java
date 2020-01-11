@@ -1,7 +1,7 @@
 package nikita.webapp.util;
 
 import nikita.common.model.noark5.v5.interfaces.IDocumentMedium;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkFinaliseEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IFinalise;
 import nikita.common.util.exceptions.NikitaException;
 
 import static nikita.common.config.N5ResourceMappings.*;
@@ -21,7 +21,7 @@ public final class NoarkUtils {
 
         public static final class Create {
             public static void setFinaliseEntityValues(
-                    INoarkFinaliseEntity finaliseEntity) {
+                    IFinalise finaliseEntity) {
                 finaliseEntity.setFinalisedDate(null);
                 finaliseEntity.setFinalisedBy(null);
             }

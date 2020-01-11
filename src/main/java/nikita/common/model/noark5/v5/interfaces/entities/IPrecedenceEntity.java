@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 /**
  * Created by tsodring on 1/16/17.
  */
-public interface IPrecedenceEntity extends INoarkCreateEntity, INoarkTitleDescriptionEntity, INoarkFinaliseEntity {
+public interface IPrecedenceEntity extends ICreate, INoarkTitleDescriptionEntity, IFinalise {
     OffsetDateTime getPrecedenceDate();
 
     void setPrecedenceDate(OffsetDateTime precedenceDate);

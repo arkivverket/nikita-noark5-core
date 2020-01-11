@@ -2,7 +2,7 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 import java.time.OffsetDateTime;
 
-public interface INoarkFinaliseEntity {
+public interface IFinalise {
 
     OffsetDateTime getFinalisedDate();
 
