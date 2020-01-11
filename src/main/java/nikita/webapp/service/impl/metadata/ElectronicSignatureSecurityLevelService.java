@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.ElectronicSignatureSecurityLevel;
 import nikita.common.repository.n5v5.metadata.IElectronicSignatureSecurityLevelRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -86,7 +86,7 @@ public class ElectronicSignatureSecurityLevelService
     @Override
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
+                (List<INoarkEntity>) (List)
                         electronicSignatureSecurityLevelRepository.findAll()
                 , ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());

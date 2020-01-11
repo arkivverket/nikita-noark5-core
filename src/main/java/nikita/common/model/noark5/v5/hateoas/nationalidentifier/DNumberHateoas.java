@@ -3,7 +3,7 @@ package nikita.common.model.noark5.v5.hateoas.nationalidentifier;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.DNumberSerializer;
 
 import java.util.List;
@@ -15,11 +15,11 @@ public class DNumberHateoas
         extends HateoasNoarkObject
         implements IHateoasNoarkObject {
 
-    public DNumberHateoas(INikitaEntity entity) {
+    public DNumberHateoas(INoarkEntity entity) {
         super(entity);
     }
 
-    public DNumberHateoas(List<INikitaEntity> entityList) {
+    public DNumberHateoas(List<INoarkEntity> entityList) {
         super(entityList, D_NUMBER);
     }
 }

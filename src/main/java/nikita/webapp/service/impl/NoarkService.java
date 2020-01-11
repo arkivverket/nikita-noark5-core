@@ -3,7 +3,7 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ITitleDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +72,7 @@ public class NoarkService {
                 getRequestAttributes()).getRequest().getHeader(ETAG));
     }
 
-    protected boolean deletePossible(INikitaEntity entity) {
+    protected boolean deletePossible(INoarkEntity entity) {
         // Note, you cannot delete an entity unless you the latest copy. The
         // following call may result in a NoarkConcurrencyException/409
         // Conflict

@@ -3,7 +3,7 @@ package nikita.common.model.noark5.v5.metadata;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.webapp.hateoas.metadata.MetadataHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
@@ -271,7 +271,7 @@ public class MetadataSuperClass
         return NOARK_METADATA_PATH;
     }
 
-    public void createReference(@NotNull INikitaEntity entity,
+    public void createReference(@NotNull INoarkEntity entity,
                                 @NotNull String referenceType) {
         // I really should be overridden. Currently throwing an Exception if I
         // am not overridden as nikita is unable to process this

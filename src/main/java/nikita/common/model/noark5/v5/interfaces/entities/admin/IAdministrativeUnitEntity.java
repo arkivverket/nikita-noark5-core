@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities.admin;
 
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
 import nikita.common.model.noark5.v5.interfaces.entities.IFinalise;
 
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by tsodring on 1/16/17.
  */
-public interface IAdministrativeUnitEntity extends INikitaEntity, ICreate, IFinalise, Serializable {
+public interface IAdministrativeUnitEntity extends INoarkEntity, ICreate, IFinalise, Serializable {
 
     String getShortName();
 

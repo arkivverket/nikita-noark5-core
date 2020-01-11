@@ -2,7 +2,7 @@ package nikita.webapp.hateoas.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.webapp.hateoas.HateoasHandler;
@@ -24,7 +24,7 @@ public class ConversionHateoasHandler
     }
 
     @Override
-    public void addSelfLink(INikitaEntity entity,
+    public void addSelfLink(INoarkEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
 
         String parentEntity = "";
@@ -42,7 +42,7 @@ public class ConversionHateoasHandler
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         Conversion conversion = (Conversion) entity;
         addDocumentObject(conversion, hateoasNoarkObject);

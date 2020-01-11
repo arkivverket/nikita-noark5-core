@@ -9,7 +9,7 @@ import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
 import nikita.common.model.noark5.v5.hateoas.admin.AdministrativeUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IAdministrativeUnitEntity;
 import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
-import nikita.webapp.handlers.hateoas.admin.AdministrativeUnitHateoasHandler;
+import nikita.webapp.hateoas.admin.AdministrativeUnitHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;

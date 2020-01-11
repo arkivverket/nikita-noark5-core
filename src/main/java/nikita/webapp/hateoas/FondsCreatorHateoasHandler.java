@@ -2,7 +2,7 @@ package nikita.webapp.hateoas;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.interfaces.IFondsCreatorHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -19,20 +19,20 @@ import static nikita.common.config.N5ResourceMappings.FONDS_CREATOR;
 public class FondsCreatorHateoasHandler extends HateoasHandler implements IFondsCreatorHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         addFonds(entity, hateoasNoarkObject);
         addNewFonds(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FONDS_STRUCTURE + SLASH + FONDS_CREATOR  + SLASH + entity.getSystemId() + SLASH + FONDS,
                 REL_FONDS_STRUCTURE_FONDS, false));
     }
 
     @Override
-    public void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FONDS_STRUCTURE + SLASH + FONDS_CREATOR + SLASH + entity.getSystemId() + SLASH + NEW_FONDS,
                 REL_FONDS_STRUCTURE_NEW_FONDS, false));

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.admin.UserHateoasSerializer;
 
 import java.util.List;
@@ -15,11 +15,11 @@ import java.util.List;
 @JsonSerialize(using = UserHateoasSerializer.class)
 public class UserHateoas extends HateoasNoarkObject implements IHateoasNoarkObject {
 
-    public UserHateoas(INikitaEntity entity) {
+    public UserHateoas(INoarkEntity entity) {
         super(entity);
     }
 
-    public UserHateoas(List<INikitaEntity> entityList) {
+    public UserHateoas(List<INoarkEntity> entityList) {
         super(entityList, N5ResourceMappings.USER);
     }
 }

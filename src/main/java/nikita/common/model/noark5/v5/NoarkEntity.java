@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5;
 
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkConcurrencyException;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -35,7 +35,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @Table(indexes = @Index(name = "index_owned_by",
         columnList = "owned_by"))
 public class NoarkEntity
-        implements INikitaEntity, Comparable<NoarkEntity> {
+        implements INoarkEntity, Comparable<NoarkEntity> {
 
     private static final long serialVersionUID = 1L;
 
@@ -202,7 +202,7 @@ public class NoarkEntity
 
     @Override
     public void createReference(
-            @NotNull INikitaEntity entity,
+            @NotNull INoarkEntity entity,
             @NotNull String referenceType) {
         // I really should be overridden. Currently throwing an Exception if I
         // am not overriden as nikita is unable to process this

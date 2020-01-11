@@ -24,8 +24,8 @@ import static nikita.common.config.N5ResourceMappings.*;
  * etc.
  * <p>
  * Once this is working we need to refactor the code base. Note NoarkEntity
- * should implement INoarkEntity, not INikitaEntity and INoarkEntity should
- * inherit from INikitaEntity.
+ * should implement INoarkEntity, not INoarkEntity and INoarkEntity should
+ * inherit from INoarkEntity.
  */
 
 @MappedSuperclass

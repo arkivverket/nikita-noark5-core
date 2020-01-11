@@ -17,7 +17,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInte
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -781,7 +781,7 @@ public class RecordHateoasController
 
         String ownedBy = SecurityContextHolder.getContext().getAuthentication()
                 .getName();
-        RecordHateoas recordHateoas = new RecordHateoas((List<INikitaEntity>) (List)
+        RecordHateoas recordHateoas = new RecordHateoas((List<INoarkEntity>) (List)
                 recordService.findByOwnedBy(ownedBy));
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(OK)
@@ -851,7 +851,7 @@ public class RecordHateoasController
             throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
         }
         DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas((List<INikitaEntity>) (List) record.getReferenceDocumentDescription());
+                DocumentDescriptionHateoas((List<INoarkEntity>) (List) record.getReferenceDocumentDescription());
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))

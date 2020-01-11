@@ -1,8 +1,8 @@
-package nikita.webapp.handlers.hateoas.secondary;
+package nikita.webapp.hateoas.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -21,56 +21,56 @@ import static nikita.common.config.Constants.*;
 public class PrecedenceHateoasHandler extends HateoasHandler implements IPrecedenceHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         // Metadata RELS
-         /*addPrecedenceStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-         addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-         addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-         addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-         addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-         addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-         addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);*/
+         /*addPrecedenceStatus(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+         addNewCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+         addCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+         addNewPrecedence(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+         addPrecedence(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+         addNewRegistryEntry(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+         addRegistryEntry(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);*/
     }
 
     @Override
-    public void addPrecedenceStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addPrecedenceStatus(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         //hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
           //      NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName(), REL_METADATA_, false));
     }
 
     @Override
-    public void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + entity.getBaseTypeName(),
                 REL_METADATA_CASE_STATUS, false));
     }
 
     @Override
-    public void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         //hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
           //      NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName(), REL_METADATA_, false));
     }
 
     @Override
-    public void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewPrecedence(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         //hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
           //      NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName(), REL_METADATA_, false));
     }
 
     @Override
-    public void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addPrecedence(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         //hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
           //      NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName(), REL_METADATA_, false));
     }
 
     @Override
-    public void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewRegistryEntry(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         //hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
           //      NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName(), REL_METADATA_, false));
     }
 
     @Override
-    public void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRegistryEntry(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         //hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() + HATEOAS_API_PATH + SLASH +
           //      NOARK_METADATA_PATH + SLASH + entity.getBaseTypeName(), REL_METADATA_, false));
     }

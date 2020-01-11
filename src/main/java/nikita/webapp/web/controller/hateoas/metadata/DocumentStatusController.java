@@ -4,9 +4,8 @@ import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
@@ -87,7 +86,7 @@ public class DocumentStatusController {
     @GetMapping(value = DOCUMENT_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>)
+                (List<INoarkEntity>)
                         (List) documentStatusService.findAll(),
                 DOCUMENT_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());

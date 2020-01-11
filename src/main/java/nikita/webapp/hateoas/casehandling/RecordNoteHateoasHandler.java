@@ -2,7 +2,7 @@ package nikita.webapp.hateoas.casehandling;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.RecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class RecordNoteHateoasHandler
         implements IRecordNoteHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinks(entity, hateoasNoarkObject);
         addDocumentFlow(entity, hateoasNoarkObject);
@@ -39,7 +39,7 @@ public class RecordNoteHateoasHandler
      * @param hateoasNoarkObject hateoasRecordNote
      */
     @Override
-    public void addDocumentFlow(INikitaEntity entity,
+    public void addDocumentFlow(INoarkEntity entity,
                                 IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemId() + SLASH + DOCUMENT_FLOW,
@@ -57,7 +57,7 @@ public class RecordNoteHateoasHandler
      * @param hateoasNoarkObject hateoasRecordNote
      */
     @Override
-    public void addNewDocumentFlow(INikitaEntity entity,
+    public void addNewDocumentFlow(INoarkEntity entity,
                                    IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +

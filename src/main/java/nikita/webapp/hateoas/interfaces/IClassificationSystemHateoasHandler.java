@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -10,15 +10,15 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  */
 public interface IClassificationSystemHateoasHandler extends IHateoasHandler {
 
-    void addSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeries(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addClass(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewClass(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSecondaryClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSecondaryClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClassificationType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addClassificationType(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 }

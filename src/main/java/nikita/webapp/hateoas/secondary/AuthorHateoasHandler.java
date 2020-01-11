@@ -2,7 +2,7 @@ package nikita.webapp.hateoas.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IAuthorEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.webapp.hateoas.HateoasHandler;
@@ -26,7 +26,7 @@ public class AuthorHateoasHandler
     }
 
     @Override
-    public void addSelfLink(INikitaEntity entity,
+    public void addSelfLink(INoarkEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
 
         String parentEntity = "";
@@ -59,7 +59,7 @@ public class AuthorHateoasHandler
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         Author author = (Author) entity;
         if (author.getForDocumentDescription()) {

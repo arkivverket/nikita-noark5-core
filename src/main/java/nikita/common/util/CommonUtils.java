@@ -92,7 +92,7 @@ public final class CommonUtils {
          * @param nikitaEntity incoming nikita object
          * @return true if valid. If not valid an exception is thrown
          */
-        public static boolean validateUpdateNoarkEntity(@NotNull INikitaEntity nikitaEntity) {
+        public static boolean validateUpdateNoarkEntity(@NotNull INoarkEntity nikitaEntity) {
 
             if (nikitaEntity instanceof ITitleDescription) {
                 rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getDescription());
@@ -519,7 +519,7 @@ public final class CommonUtils {
 		    .setDocumentMediumCodeName(entity.getCodeName());
             }
 
-            public static void deserialiseNoarkSystemIdEntity(INikitaEntity noarkSystemIdEntity,
+            public static void deserialiseNoarkSystemIdEntity(INoarkEntity noarkSystemIdEntity,
                                                               ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize systemId
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
@@ -731,7 +731,7 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNikitaEntity(INikitaEntity nikitaEntity, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseNikitaEntity(INoarkEntity nikitaEntity, ObjectNode objectNode, StringBuilder errors) {
                 deserialiseNoarkSystemIdEntity(nikitaEntity, objectNode, errors);
                 deserialiseNoarkCreateEntity(nikitaEntity, objectNode, errors);
                 deserialiseNoarkLastModifiedEntity(nikitaEntity, objectNode, errors);
@@ -1709,7 +1709,7 @@ public final class CommonUtils {
             }
 
             public static void printNikitaEntity(JsonGenerator jgen,
-                                                 INikitaEntity nikitaEntity)
+                                                 INoarkEntity nikitaEntity)
                     throws IOException {
                 printSystemIdEntity(jgen, nikitaEntity);
                 printCreateEntity(jgen, nikitaEntity);
@@ -1970,7 +1970,7 @@ public final class CommonUtils {
             }
 
             public static void printSystemIdEntity(JsonGenerator jgen,
-                                                   INikitaEntity systemIdEntity)
+                                                   INoarkEntity systemIdEntity)
                     throws IOException {
                 if (systemIdEntity != null && systemIdEntity.getSystemId() != null) {
                     jgen.writeStringField(SYSTEM_ID, systemIdEntity.getSystemId());

@@ -2,7 +2,7 @@ package nikita.webapp.hateoas;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +50,7 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
 
         // links for primary entities
         addSecondaryClassificationSystem(entity, hateoasNoarkObject);
@@ -65,48 +65,48 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
     }
 
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity,
+    public void addEntityLinksOnTemplate(INoarkEntity entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         addClassificationType(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addClass(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + CLASS + SLASH,
                 REL_FONDS_STRUCTURE_CLASS, false));
     }
 
     @Override
-    public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewClass(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_CLASS + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CLASS, false));
     }
 
     @Override
-    public void addSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addSeries(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
                 REL_FONDS_STRUCTURE_SERIES, false));
     }
 
     @Override
-    public void addSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addSecondaryClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
                 REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
-    public void addNewSecondaryClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewSecondaryClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION + SLASH,
                 REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
-    public void addClassificationType(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addClassificationType(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + CLASSIFICATION_SYSTEM_TYPE,
                 REL_METADATA_CLASSIFICATION_SYSTEM_TYPE, false));

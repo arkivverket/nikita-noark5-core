@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -10,8 +10,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  */
 public interface IFondsCreatorHateoasHandler extends IHateoasHandler {
 
-    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
 }

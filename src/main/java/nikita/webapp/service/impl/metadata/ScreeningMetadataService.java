@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.ScreeningMetadata;
 import nikita.common.repository.n5v5.metadata.IScreeningMetadataRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -79,7 +79,7 @@ public class ScreeningMetadataService
     @Override
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
+                (List<INoarkEntity>) (List)
                         screeningMetadataRepository.findAll(),
                 SCREENING_METADATA);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());

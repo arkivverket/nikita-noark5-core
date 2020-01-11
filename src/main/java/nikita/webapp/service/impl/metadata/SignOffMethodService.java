@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.SignOffMethod;
 import nikita.common.repository.n5v5.metadata.ISignOffMethodRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -78,7 +78,7 @@ public class SignOffMethodService
     @Override
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
+                (List<INoarkEntity>) (List)
                         signOffMethodRepository.findAll(), SIGN_OFF_METHOD);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;

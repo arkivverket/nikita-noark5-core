@@ -6,7 +6,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartPersonEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartUnitEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
@@ -33,7 +33,7 @@ public class CorrespondencePartHateoasSerializer
 
     @Override
     public void serializeNoarkEntity(
-            INikitaEntity noarkSystemIdEntity,
+            INoarkEntity noarkSystemIdEntity,
             HateoasNoarkObject correspondencePartHateoas, JsonGenerator jgen)
             throws IOException {
 

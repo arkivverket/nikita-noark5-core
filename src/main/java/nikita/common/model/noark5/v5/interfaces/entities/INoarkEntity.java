@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.UUID;
 
-public interface INikitaEntity
+public interface INoarkEntity
         extends Serializable, ICreate, ILastModified {
 
     String getSystemId();
@@ -47,6 +47,6 @@ public interface INikitaEntity
      */
     String getFunctionalTypeName();
 
-    void createReference(@NotNull INikitaEntity entity,
+    void createReference(@NotNull INoarkEntity entity,
                          @NotNull String referenceType);
 }

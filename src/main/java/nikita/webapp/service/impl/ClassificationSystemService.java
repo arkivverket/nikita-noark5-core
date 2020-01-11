@@ -5,7 +5,7 @@ import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IClassificationSystemRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
@@ -195,7 +195,7 @@ public class ClassificationSystemService
     @SuppressWarnings("unchecked")
     public ClassificationSystemHateoas findAllClassificationSystem() {
         ClassificationSystemHateoas classificationSystemHateoas = new
-                ClassificationSystemHateoas((List<INikitaEntity>)
+                ClassificationSystemHateoas((List<INoarkEntity>)
                 (List) classificationSystemRepository.findAll());
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
@@ -209,7 +209,7 @@ public class ClassificationSystemService
         ClassificationSystem classificationSystem =
                 getClassificationSystemOrThrow(classificationSystemSystemId);
         ClassHateoas classHateoas = new
-                ClassHateoas((List<INikitaEntity>)
+                ClassHateoas((List<INoarkEntity>)
                 (List) classificationSystem.getReferenceClass());
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
@@ -220,7 +220,7 @@ public class ClassificationSystemService
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithClassificationSystem(@NotNull final String systemId) {
         SeriesHateoas seriesHateoas = new
-                SeriesHateoas((List<INikitaEntity>)
+                SeriesHateoas((List<INoarkEntity>)
                 (List) getClassificationSystemOrThrow(systemId).
                         getReferenceSeries());
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());

@@ -1,6 +1,6 @@
 package nikita.webapp.web.events;
 
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 import javax.validation.constraints.NotNull;
 
@@ -12,7 +12,7 @@ public class AfterNoarkEntityUpdatedEvent
         extends AfterNoarkEntityEvent {
 
     public AfterNoarkEntityUpdatedEvent(Object source,
-                                        @NotNull INikitaEntity entity) {
+                                        @NotNull INoarkEntity entity) {
         super(source, entity);
     }
 }

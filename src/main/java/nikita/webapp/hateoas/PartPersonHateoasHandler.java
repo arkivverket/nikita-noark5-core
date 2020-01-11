@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +15,7 @@ public class PartPersonHateoasHandler
         extends PartHateoasHandler {
 
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity,
+    public void addEntityLinksOnTemplate(INoarkEntity entity,
                                          IHateoasNoarkObject
                                                  hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);

@@ -2,7 +2,7 @@ package nikita.webapp.hateoas;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 import nikita.webapp.security.IAuthorisation;
 import nikita.webapp.util.AddressComponent;
@@ -49,8 +49,8 @@ public class HateoasHandler
                          IAuthorisation authorisation) {
         this.authorisation = authorisation;
 
-        Iterable<INikitaEntity> entities = hateoasNoarkObject.getList();
-        for (INikitaEntity entity : entities) {
+        Iterable<INoarkEntity> entities = hateoasNoarkObject.getList();
+        for (INoarkEntity entity : entities) {
             addSelfLink(entity, hateoasNoarkObject);
             addEntityLinks(entity, hateoasNoarkObject);
         }
@@ -92,8 +92,8 @@ public class HateoasHandler
                                    IAuthorisation authorisation) {
         this.authorisation = authorisation;
 
-        Iterable<INikitaEntity> entities = hateoasNoarkObject.getList();
-        for (INikitaEntity entity : entities) {
+        Iterable<INoarkEntity> entities = hateoasNoarkObject.getList();
+        for (INoarkEntity entity : entities) {
             addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         }
     }
@@ -108,7 +108,7 @@ public class HateoasHandler
      * @param hateoasNoarkObject The Hateoas Noark Object
      */
     @Override
-    public void addSelfLink(INikitaEntity entity,
+    public void addSelfLink(INoarkEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
@@ -122,7 +122,7 @@ public class HateoasHandler
     }
 
     @Override
-    public void addDocumentMedium(INikitaEntity entity,
+    public void addDocumentMedium(INoarkEntity entity,
                                   IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + DOCUMENT_MEDIUM,
@@ -131,26 +131,26 @@ public class HateoasHandler
 
     // Sub class should handle this, empty links otherwise!
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
-    public void addEntityLinksOnCreate(INikitaEntity entity,
+    public void addEntityLinksOnCreate(INoarkEntity entity,
                                        IHateoasNoarkObject hateoasNoarkObject) {
         addEntityLinks(entity, hateoasNoarkObject);
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity,
+    public void addEntityLinksOnTemplate(INoarkEntity entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
-    public void addEntityLinksOnRead(INikitaEntity entity,
+    public void addEntityLinksOnRead(INoarkEntity entity,
                                      IHateoasNoarkObject hateoasNoarkObject) {
         addEntityLinks(entity, hateoasNoarkObject);
     }

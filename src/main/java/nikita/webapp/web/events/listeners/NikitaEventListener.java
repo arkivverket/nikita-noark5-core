@@ -6,7 +6,7 @@ import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
@@ -125,7 +125,7 @@ public class NikitaEventListener {
 
             body.put("object-location", outAddress);
 
-            INikitaEntity entity = event.getEntity();
+            INoarkEntity entity = event.getEntity();
 
             if (entity instanceof INoarkGeneralEntity) {
 

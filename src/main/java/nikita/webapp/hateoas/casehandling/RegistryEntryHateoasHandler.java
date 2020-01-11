@@ -2,7 +2,7 @@ package nikita.webapp.hateoas.casehandling;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.RecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class RegistryEntryHateoasHandler
         implements IRegistryEntryHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinks(entity, hateoasNoarkObject);
 
@@ -38,7 +38,7 @@ public class RegistryEntryHateoasHandler
     }
 
     public void addEntityLinksOnTemplate(
-            INikitaEntity entity,
+            INoarkEntity entity,
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addRegistryEntryStatus(entity, hateoasNoarkObject);
@@ -46,42 +46,42 @@ public class RegistryEntryHateoasHandler
     }
 
     @Override
-    public void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addPrecedence(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + PRECEDENCE + SLASH,
                 REL_FONDS_STRUCTURE_PRECEDENCE, false));
     }
 
     @Override
-    public void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewPrecedence(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_PRECEDENCE + SLASH,
                 REL_FONDS_STRUCTURE_NEW_PRECEDENCE, false));
     }
 
     @Override
-    public void addSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addSignOff(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + SIGN_OFF + SLASH,
                 REL_FONDS_STRUCTURE_SIGN_OFF, false));
     }
 
     @Override
-    public void addNewSignOff(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewSignOff(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_SIGN_OFF + SLASH,
                 REL_FONDS_STRUCTURE_NEW_SIGN_OFF, false));
     }
 
     @Override
-    public void addDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addDocumentFlow(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + DOCUMENT_FLOW + SLASH,
                 REL_FONDS_STRUCTURE_DOCUMENT_FLOW, false));
     }
 
     @Override
-    public void addNewDocumentFlow(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewDocumentFlow(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW + SLASH,
                 REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW, false));
@@ -100,7 +100,7 @@ public class RegistryEntryHateoasHandler
      * @param hateoasNoarkObject hateoasRegistryEntry
      */
     @Override
-    public void addRegistryEntryStatus(INikitaEntity entity,
+    public void addRegistryEntryStatus(INoarkEntity entity,
                                        IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_METADATA + SLASH +
@@ -119,7 +119,7 @@ public class RegistryEntryHateoasHandler
      * @param hateoasNoarkObject hateoasRegistryEntry
      */
     @Override
-    public void addRegistryEntryType(INikitaEntity entity,
+    public void addRegistryEntryType(INoarkEntity entity,
                                      IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_METADATA + SLASH +

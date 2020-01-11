@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.deserialisers.secondary.AuthorDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.secondary.AuthorHateoasSerializer;
 
@@ -19,11 +19,11 @@ public class AuthorHateoas
     public AuthorHateoas() {
     }
 
-    public AuthorHateoas(INikitaEntity entity) {
+    public AuthorHateoas(INoarkEntity entity) {
         super(entity);
     }
 
-    public AuthorHateoas(List<INikitaEntity> entityList, String entityType) {
+    public AuthorHateoas(List<INoarkEntity> entityList, String entityType) {
         super(entityList, entityType);
     }
 }

@@ -3,7 +3,7 @@ package nikita.webapp.service.impl.odata;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.odata.NikitaODataToHQLWalker;
 import nikita.webapp.odata.NikitaObjectWorker;
@@ -116,7 +116,7 @@ public class ODataService
             handler.setContextPath(address.getContextPath());
         } else {
             noarkObject =
-                    new HateoasNoarkObject(new ArrayList<INikitaEntity>(),
+                    new HateoasNoarkObject(new ArrayList<INoarkEntity>(),
                             "unknown");
             handler = new HateoasHandler();
             handler.setPublicAddress(address.getAddress());

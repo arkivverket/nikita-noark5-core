@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -11,33 +11,33 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 public interface ICaseFileHateoasHandler
         extends IHateoasHandler {
 
-    void addNewClass(INikitaEntity entity,
+    void addNewClass(INoarkEntity entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClass(INikitaEntity entity,
+    void addClass(INoarkEntity entity,
                   IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPrecedence(INikitaEntity entity,
+    void addNewPrecedence(INoarkEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPrecedence(INikitaEntity entity,
+    void addPrecedence(INoarkEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSecondaryClassification(INikitaEntity entity,
+    void addSecondaryClassification(INoarkEntity entity,
                                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSecondaryClassification(INikitaEntity entity,
+    void addNewSecondaryClassification(INoarkEntity entity,
                                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewRegistryEntry(INikitaEntity entity,
+    void addNewRegistryEntry(INoarkEntity entity,
                              IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRegistryEntry(INikitaEntity entity,
+    void addRegistryEntry(INoarkEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewRecordNote(INikitaEntity entity,
+    void addNewRecordNote(INoarkEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRecordNote(INikitaEntity entity,
+    void addRecordNote(INoarkEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 }

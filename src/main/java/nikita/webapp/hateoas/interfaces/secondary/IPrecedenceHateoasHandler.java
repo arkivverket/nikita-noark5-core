@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 
 /**
@@ -11,12 +11,12 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
  */
 public interface IPrecedenceHateoasHandler extends IHateoasHandler {
 
-    void addPrecedenceStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addNewPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addPrecedence(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addNewRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
-    void addRegistryEntry(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addPrecedenceStatus(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewPrecedence(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addPrecedence(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewRegistryEntry(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addRegistryEntry(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
 }

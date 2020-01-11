@@ -2,7 +2,7 @@ package nikita.webapp.hateoas.admin;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -26,32 +26,32 @@ public class UserHateoasHandler
         implements IUserHateoasHandler {
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         addAdministrativeUnit(entity, hateoasNoarkObject);
         addNewAdministrativeUnit(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addEntityLinksOnCreate(INikitaEntity entity,
+    public void addEntityLinksOnCreate(INoarkEntity entity,
                                        IHateoasNoarkObject hateoasNoarkObject) {
         addEntityLinks(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addEntityLinksOnRead(INikitaEntity entity,
+    public void addEntityLinksOnRead(INoarkEntity entity,
                                      IHateoasNoarkObject hateoasNoarkObject) {
         addEntityLinks(entity, hateoasNoarkObject);
     }
 
-    public void addNewAdministrativeUnit(INikitaEntity entity,
+    public void addNewAdministrativeUnit(INoarkEntity entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_ADMIN + SLASH + USER + SLASH + entity.getSystemId() + SLASH + NEW_ADMINISTRATIVE_UNIT + SLASH,
                 REL_ADMIN_NEW_ADMINISTRATIVE_UNIT, false));
     }
 
-    public void addAdministrativeUnit(INikitaEntity entity,
+    public void addAdministrativeUnit(INoarkEntity entity,
                                       IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
 		HREF_BASE_ADMIN + SLASH + USER + SLASH + entity.getSystemId() + SLASH + ADMINISTRATIVE_UNIT + SLASH,

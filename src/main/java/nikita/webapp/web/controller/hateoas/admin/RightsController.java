@@ -69,7 +69,7 @@ public class RightsController extends NoarkController {
     @GetMapping(value = ADMINISTRATIVE_UNIT)
     public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
         UserHateoas adminHateoas = new UserHateoas(
-                (List<INikitaEntity>) (List) administrativeUnitService.findAll());
+                (List<INoarkEntity>) (List) administrativeUnitService.findAll());
         administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
 
         return ResponseEntity.status(HttpStatus.OK)

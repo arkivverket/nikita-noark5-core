@@ -4,7 +4,7 @@ import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.AuthorityName;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -112,7 +112,7 @@ public class UserService
     @SuppressWarnings("unchecked")
     public UserHateoas findAll() {
         UserHateoas userHateoas = new UserHateoas(
-                (List<INikitaEntity>)
+                (List<INoarkEntity>)
                         (List) userRepository.findAll());
         userHateoasHandler.addLinks(userHateoas, new Authorisation());
         return userHateoas;

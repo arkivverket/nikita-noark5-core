@@ -37,7 +37,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 /*import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.util.deserialisers.hateoas.HateoasDeserializer;
 import nikita.webapp.model.Token;
@@ -178,7 +178,7 @@ responseFields(subsectionWithPath("_links").
 
         HateoasNoarkObject result = responseEntity.getBody();
 
-        ArrayList<INikitaEntity> entities = (ArrayList<INikitaEntity>)
+        ArrayList<INoarkEntity> entities = (ArrayList<INoarkEntity>)
                 result.getList();
         assertNotNull(entities);
         assertEquals(entities.size(), 1);

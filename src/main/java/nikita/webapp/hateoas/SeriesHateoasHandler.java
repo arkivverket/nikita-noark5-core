@@ -3,7 +3,7 @@ package nikita.webapp.hateoas;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         addDocumentMedium(entity, hateoasNoarkObject);
         addNewRegistration(entity, hateoasNoarkObject);
@@ -56,7 +56,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     }
 
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity,
+    public void addEntityLinksOnTemplate(INoarkEntity entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         addDocumentMedium(entity, hateoasNoarkObject);
     }
@@ -65,7 +65,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Get a list of Series status values (GET)
      */
-    public void addSeriesStatus(INikitaEntity entity,
+    public void addSeriesStatus(INoarkEntity entity,
                                 IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +
@@ -86,7 +86,7 @@ public class SeriesHateoasHandler extends HateoasHandler
      * @param hateoasNoarkObject hateoasSeries
      */
     @Override
-    public void addSeriesSuccessor(INikitaEntity entity,
+    public void addSeriesSuccessor(INoarkEntity entity,
                                    IHateoasNoarkObject hateoasNoarkObject) {
         Series series = getSeries(entity);
         if (series.getReferenceSuccessor() != null) {
@@ -101,7 +101,7 @@ public class SeriesHateoasHandler extends HateoasHandler
      * Associate an existing Series (A) as the successor of another existing Series (B). (A) becomes the
      * successor to (B). A is identified first, B is identified through a ref link (PUT)
      */
-    public void addNewSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewSeriesSuccessor(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_SERIES_SUCCESSOR + SLASH,
                 REL_FONDS_STRUCTURE_NEW_SUCCESSOR, false));
@@ -120,7 +120,7 @@ public class SeriesHateoasHandler extends HateoasHandler
      * @param hateoasNoarkObject hateoasSeries
      */
     @Override
-    public void addSeriesPrecursor(INikitaEntity entity,
+    public void addSeriesPrecursor(INoarkEntity entity,
                                    IHateoasNoarkObject hateoasNoarkObject) {
         Series series = getSeries(entity);
         if (series.getReferencePrecursor() != null) {
@@ -135,7 +135,7 @@ public class SeriesHateoasHandler extends HateoasHandler
      * Associate an existing Series (A) as the precursor  of another existing Series (B). (A) becomes the
      * precursor to (B). A is identified first, B is identified through a ref link (PUT)
      */
-    public void addNewSeriesPrecursor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewSeriesPrecursor(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_SERIES_PRECURSOR + SLASH,
                 REL_FONDS_STRUCTURE_NEW_PRECURSOR,
@@ -146,7 +146,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Add a new registration to a Series (POST)
      */
-    public void addNewRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewRegistration(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (authorisation.canCreateRegistrationAttachedToSeries()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_RECORD + SLASH,
@@ -159,7 +159,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Add a new File to a Series (POST)
      */
-    public void addNewFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (authorisation.canCreateFileAttachedToSeries()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_FILE + SLASH,
@@ -171,7 +171,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Add a new CaseFile to a Series (POST)
      */
-    public void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (authorisation.canCreateFileAttachedToSeries()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_CASE_FILE + SLASH,
@@ -183,7 +183,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Associate an existing ClassificationSystem as the precursor of an existing Series (PUT)
      */
-    public void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (authorisation.canCreateClassifcationSystemAttachedToSeries()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_CLASSIFICATION_SYSTEM + SLASH,
@@ -195,7 +195,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Get a list of Registration objects associated with a Series (paginated) (GET)
      */
-    public void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRegistration(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + RECORD + SLASH,
                 REL_FONDS_STRUCTURE_RECORD,
@@ -206,7 +206,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Get a list of File objects associated with a Series (paginated) (GET)
      */
-    public void addFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + FILE + SLASH,
                 REL_FONDS_STRUCTURE_FILE,
@@ -217,7 +217,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Get a list of CaseFile objects associated with a Series (paginated) (GET)
      */
-    public void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + CASE_FILE + SLASH,
                 REL_CASE_HANDLING_CASE_FILE,
@@ -228,7 +228,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Get the ClassificationSystem associated with the Series (GET)
      */
-    public void addClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + CLASSIFICATION_SYSTEM + SLASH,
                 REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM, false));
@@ -249,7 +249,7 @@ public class SeriesHateoasHandler extends HateoasHandler
      * @param entity             series
      * @param hateoasNoarkObject hateoasSeries
      */
-    public void addFonds(INikitaEntity entity,
+    public void addFonds(INoarkEntity entity,
                          IHateoasNoarkObject hateoasNoarkObject) {
         Series series = getSeries(entity);
         if (series.getReferenceFonds() != null) {
@@ -264,7 +264,7 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Get a list of StorageLocation associated with the Series  (GET)
      */
-    public void addListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addListStorageLocation(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_STORAGE_LOCATION, false));
@@ -274,19 +274,19 @@ public class SeriesHateoasHandler extends HateoasHandler
     /**
      * Add a new StorageLocation to be associated with the Series (POST)
      */
-    public void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewStorageLocation(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 
     /**
-     * Cast the INikitaEntity entity to a Series
+     * Cast the INoarkEntity entity to a Series
      *
      * @param entity the Series
      * @return a Series object
      */
-    private Series getSeries(@NotNull INikitaEntity entity) {
+    private Series getSeries(@NotNull INoarkEntity entity) {
         return (Series) entity;
     }
 }

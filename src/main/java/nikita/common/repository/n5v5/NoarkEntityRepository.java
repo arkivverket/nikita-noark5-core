@@ -14,10 +14,10 @@ import java.util.UUID;
 
 @Repository
 @NoRepositoryBean
-public interface NoarkEntityRepository<INikitaEntity, ID extends Serializable> extends
-        PagingAndSortingRepository<INikitaEntity, UUID> {
+public interface NoarkEntityRepository<INoarkEntity, ID extends Serializable> extends
+        PagingAndSortingRepository<INoarkEntity, UUID> {
 
-    List<INikitaEntity> findAll();
+    List<INoarkEntity> findAll();
 
-    INikitaEntity findBySystemId(UUID systemId);
+    INoarkEntity findBySystemId(UUID systemId);
 }

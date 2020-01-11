@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -10,21 +10,21 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  */
 public interface IFondsHateoasHandler extends IHateoasHandler {
 
-    void addFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFondsCreator(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeries(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addParentFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addParentFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSubFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewFondsCreator(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewFondsCreator(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSubFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSubFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addFondsStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFondsStatus(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSeries(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 }

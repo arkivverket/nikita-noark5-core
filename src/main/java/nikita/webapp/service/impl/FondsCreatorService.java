@@ -3,7 +3,7 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IFondsCreatorRepository;
 import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -114,7 +114,7 @@ public class FondsCreatorService
             @NotNull final String systemId) {
         FondsHateoas fondsHateoas =
                 new FondsHateoas(
-                        (List<INikitaEntity>) (List)
+                        (List<INoarkEntity>) (List)
                                 getFondsCreatorOrThrow(systemId).
                                         getReferenceFonds());
         fondsHateoasHandler.addLinks(fondsHateoas,

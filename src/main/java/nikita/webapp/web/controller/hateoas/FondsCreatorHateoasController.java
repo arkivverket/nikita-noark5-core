@@ -10,7 +10,7 @@ import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -34,7 +34,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -186,7 +185,7 @@ public class FondsCreatorHateoasController
         String ownedBy = SecurityContextHolder.getContext().getAuthentication()
                 .getName();
         FondsCreatorHateoas fondsCreatorHateoas = new
-                FondsCreatorHateoas((List<INikitaEntity>) (List)
+                FondsCreatorHateoas((List<INoarkEntity>) (List)
                 fondsCreatorService.findByOwnedBy(ownedBy));
         fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
@@ -308,7 +307,7 @@ public class FondsCreatorHateoasController
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, fondsCreator));
 /*        List<Fonds> fonds = new List<>();
         fonds.addAll(fondsCreator.getReferenceFonds());
-        FondsHateoas fondsHateoas = new FondsHateoas((List<INikitaEntity>) (List)fonds);
+        FondsHateoas fondsHateoas = new FondsHateoas((List<INoarkEntity>) (List)fonds);
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
   */
         return ResponseEntity.status(HttpStatus.OK)

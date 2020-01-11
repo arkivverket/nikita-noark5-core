@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
  * Created by tsodring on 12/7/16.
  */
 public interface IRecordEntity
-        extends ICreate, INikitaEntity, IClassified, IScreening,
+        extends ICreate, INoarkEntity, IClassified, IScreening,
         IDisposal, IDocumentMedium, ITitleDescription,
         IStorageLocation, IKeyword, IComment, ICrossReference, IAuthor {
 

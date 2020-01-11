@@ -1,6 +1,6 @@
 package nikita.webapp.service.interfaces;
 
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 4/6/17.
@@ -9,8 +9,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  * Seems to be this class is redundant and can be removed ...
  */
 public interface INoarkService {
-    INikitaEntity updateNoarkEntity(String systemId, Long version, INikitaEntity updatedEntity);
-    INikitaEntity createNewNoarkEntity(INikitaEntity entity);
+    INoarkEntity updateNoarkEntity(String systemId, Long version, INoarkEntity updatedEntity);
+    INoarkEntity createNewNoarkEntity(INoarkEntity entity);
 
-    INikitaEntity findBySystemId(String systemId);
+    INoarkEntity findBySystemId(String systemId);
 }

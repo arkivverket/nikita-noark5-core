@@ -3,7 +3,7 @@ package nikita.webapp.hateoas.metadata;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class MetadataHateoasHandler
         implements IMetadataHateoasHandler {
 
     @Override
-    public void addSelfLink(INikitaEntity entity,
+    public void addSelfLink(INoarkEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         String code = ((IMetadataEntity) entity).getCode();
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
@@ -36,13 +36,13 @@ public class MetadataHateoasHandler
 
     @Override
     public void addEntityLinks(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         addCode(entity, hateoasNoarkObject);
     }
 
     @Override
     public void addCode(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         String code = ((IMetadataEntity) entity).getCode();
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + entity.getBaseTypeName() + SLASH + code + SLASH,
@@ -50,7 +50,7 @@ public class MetadataHateoasHandler
     }
     @Override
     public void addNewCode(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + NEW + DASH + entity.getBaseTypeName(),
                 NIKITA_CONFORMANCE_REL + NEW + DASH + entity.getBaseTypeName() + SLASH));

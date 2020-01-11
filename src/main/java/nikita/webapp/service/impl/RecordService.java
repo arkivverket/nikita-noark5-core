@@ -13,7 +13,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInte
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
@@ -165,7 +165,7 @@ public class RecordService
     public ResponseEntity<RecordHateoas>
     findByReferenceDocumentDescription(@NotNull final String systemId) {
         RecordHateoas recordHateoas = new RecordHateoas(
-                (List<INikitaEntity>) (List)
+                (List<INoarkEntity>) (List)
                         recordRepository.
                                 findAllByReferenceDocumentDescription(
                                         documentDescriptionService.
@@ -182,7 +182,7 @@ public class RecordService
         Record record =
                 getRecordOrThrow(systemId);
         AuthorHateoas authorHateoas =
-                new AuthorHateoas((List<INikitaEntity>)
+                new AuthorHateoas((List<INoarkEntity>)
                         (List) record.getReferenceAuthor(),
                         AUTHOR);
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
@@ -271,7 +271,7 @@ public class RecordService
             final String systemID) {
         CorrespondencePartHateoas correspondencePartHateoas =
             new CorrespondencePartHateoas(
-                (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
+                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
                         getReferenceCorrespondencePart());
         correspondencePartHateoasHandler.addLinks(
                 correspondencePartHateoas, new Authorisation());
@@ -283,7 +283,7 @@ public class RecordService
     getPartAssociatedWithRecord(
             final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
-                (List<INikitaEntity>) (List) getRecordOrThrow(systemID).
+                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
                         getReferencePart());
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;

@@ -9,7 +9,7 @@ import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
 import nikita.common.repository.n5v5.ICaseFileRepository;
 import nikita.common.repository.nikita.IUserRepository;
@@ -256,7 +256,7 @@ public class CaseFileService
     @SuppressWarnings("unchecked")
     public ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(Series series) {
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(
-                (List<INikitaEntity>)
+                (List<INoarkEntity>)
                         (List) caseFileRepository.findByReferenceSeries(series));
         caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         return ResponseEntity.status(OK)

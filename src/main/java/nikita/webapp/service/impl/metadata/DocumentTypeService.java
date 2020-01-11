@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.common.repository.n5v5.metadata.IDocumentTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -76,7 +76,7 @@ public class DocumentTypeService
     @Override
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
+                (List<INoarkEntity>) (List)
                         documentTypeRepository.findAll(), DOCUMENT_TYPE);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;

@@ -5,11 +5,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.admin.AdministrativeUnitHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.admin.IAdministrativeUnitHateoasHandler;
@@ -91,7 +90,7 @@ public class AdministrativeUnitController extends NoarkController {
     @GetMapping(value = ADMINISTRATIVE_UNIT)
     public ResponseEntity<AdministrativeUnitHateoas> findAll(HttpServletRequest request) {
         AdministrativeUnitHateoas adminHateoas = new AdministrativeUnitHateoas(
-                (List<INikitaEntity>) (List) administrativeUnitService.findAll());
+                (List<INoarkEntity>) (List) administrativeUnitService.findAll());
         administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
 
         return ResponseEntity.status(HttpStatus.OK)

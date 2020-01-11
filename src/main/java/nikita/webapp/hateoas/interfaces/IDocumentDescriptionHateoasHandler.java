@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -11,46 +11,46 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 public interface IDocumentDescriptionHateoasHandler
         extends IHateoasHandler {
 
-    void addRecord(INikitaEntity entity,
+    void addRecord(INoarkEntity entity,
                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDocumentObject(INikitaEntity entity,
+    void addDocumentObject(INoarkEntity entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewDocumentObject(INikitaEntity entity,
+    void addNewDocumentObject(INoarkEntity entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
-    void addStorageLocation(INikitaEntity entity,
+    void addStorageLocation(INoarkEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewStorageLocation(INikitaEntity entity,
+    void addNewStorageLocation(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addComment(INikitaEntity entity,
+    void addComment(INoarkEntity entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewComment(INikitaEntity entity,
+    void addNewComment(INoarkEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDocumentType(INikitaEntity entity,
+    void addDocumentType(INoarkEntity entity,
                          IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDocumentStatus(INikitaEntity entity,
+    void addDocumentStatus(INoarkEntity entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPart(INikitaEntity entity,
+    void addPart(INoarkEntity entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPartPerson(INikitaEntity entity,
+    void addNewPartPerson(INoarkEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPartUnit(INikitaEntity entity,
+    void addNewPartUnit(INoarkEntity entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addAuthor(INikitaEntity entity,
+    void addAuthor(INoarkEntity entity,
                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewAuthor(INikitaEntity entity,
+    void addNewAuthor(INoarkEntity entity,
                       IHateoasNoarkObject hateoasNoarkObject);
 }
 

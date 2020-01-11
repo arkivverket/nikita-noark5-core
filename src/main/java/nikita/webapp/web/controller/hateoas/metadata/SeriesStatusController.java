@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
@@ -99,7 +99,7 @@ public class SeriesStatusController {
     @SuppressWarnings("unchecked")
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas =
-                new MetadataHateoas((List<INikitaEntity>)
+                new MetadataHateoas((List<INoarkEntity>)
                         (List) seriesStatusService.findAll(), SERIES_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(OK)

@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -10,36 +10,36 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  */
 public interface ISeriesHateoasHandler extends IHateoasHandler {
 
-    void addNewRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewRegistration(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeriesSuccessor(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSeriesSuccessor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSeriesSuccessor(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSeriesPrecursor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeriesPrecursor(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSeriesPrecursor(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewSeriesPrecursor(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRegistration(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addRegistration(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addCaseFile(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClassificationSystem(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addFonds(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFonds(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSeriesStatus(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addSeriesStatus(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewStorageLocation(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addListStorageLocation(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addListStorageLocation(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
 }

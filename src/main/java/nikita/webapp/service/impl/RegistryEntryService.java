@@ -7,7 +7,7 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
@@ -164,7 +164,7 @@ public class RegistryEntryService
     public ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryByCaseFile(
             CaseFile caseFile) {
         RegistryEntryHateoas registryEntryHateoas = new RegistryEntryHateoas(
-                (List<INikitaEntity>)
+                (List<INoarkEntity>)
                         (List) registryEntryRepository.
                                 findByReferenceFile(caseFile));
         registryEntryHateoasHandler.addLinks(registryEntryHateoas,

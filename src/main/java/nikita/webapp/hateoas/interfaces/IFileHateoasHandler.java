@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -11,115 +11,115 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 public interface IFileHateoasHandler
         extends IHateoasHandler {
 
-    void addSeries(INikitaEntity entity,
+    void addSeries(INoarkEntity entity,
                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addEndFile(INikitaEntity entity,
+    void addEndFile(INoarkEntity entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addExpandToCaseFile(INikitaEntity entity,
+    void addExpandToCaseFile(INoarkEntity entity,
                              IHateoasNoarkObject hateoasNoarkObject);
 
-    void addExpandToMeetingFile(INikitaEntity entity,
+    void addExpandToMeetingFile(INoarkEntity entity,
                                 IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRecord(INikitaEntity entity,
+    void addRecord(INoarkEntity entity,
                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewRecord(INikitaEntity entity,
+    void addNewRecord(INoarkEntity entity,
                       IHateoasNoarkObject hateoasNoarkObject);
 
-    void addComment(INikitaEntity entity,
+    void addComment(INoarkEntity entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewComment(INikitaEntity entity,
+    void addNewComment(INoarkEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addParentFile(INikitaEntity entity,
+    void addParentFile(INoarkEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSubFile(INikitaEntity entity,
+    void addSubFile(INoarkEntity entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSubFile(INikitaEntity entity,
+    void addNewSubFile(INoarkEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCrossReference(INikitaEntity entity,
+    void addCrossReference(INoarkEntity entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCrossReference(INikitaEntity entity,
+    void addNewCrossReference(INoarkEntity entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClass(INikitaEntity entity,
+    void addClass(INoarkEntity entity,
                   IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewClass(INikitaEntity entity,
+    void addNewClass(INoarkEntity entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addReferenceSeries(INikitaEntity entity,
+    void addReferenceSeries(INoarkEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewReferenceSeries(INikitaEntity entity,
+    void addNewReferenceSeries(INoarkEntity entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
     void addReferenceSecondaryClassification(
-            INikitaEntity entity,
+            INoarkEntity entity,
             IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewReferenceSecondaryClassification(
-            INikitaEntity entity,
+            INoarkEntity entity,
             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPart(INikitaEntity entity,
+    void addPart(INoarkEntity entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPartPerson(INikitaEntity entity,
+    void addNewPartPerson(INoarkEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPartUnit(INikitaEntity entity,
+    void addNewPartUnit(INoarkEntity entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
     // Add national identifiers
 
-    void addNewBuilding(INikitaEntity entity,
+    void addNewBuilding(INoarkEntity entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCadastralUnit(INikitaEntity entity,
+    void addNewCadastralUnit(INoarkEntity entity,
                              IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewDNumber(INikitaEntity entity,
+    void addNewDNumber(INoarkEntity entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPlan(INikitaEntity entity,
+    void addNewPlan(INoarkEntity entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPosition(INikitaEntity entity,
+    void addNewPosition(INoarkEntity entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSocialSecurityNumber(INikitaEntity entity,
+    void addNewSocialSecurityNumber(INoarkEntity entity,
                                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewUnit(INikitaEntity entity,
+    void addNewUnit(INoarkEntity entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addBuilding(INikitaEntity entity,
+    void addBuilding(INoarkEntity entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCadastralUnit(INikitaEntity entity,
+    void addCadastralUnit(INoarkEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDNumber(INikitaEntity entity,
+    void addDNumber(INoarkEntity entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPlan(INikitaEntity entity,
+    void addPlan(INoarkEntity entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPosition(INikitaEntity entity,
+    void addPosition(INoarkEntity entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSocialSecurityNumber(INikitaEntity entity,
+    void addSocialSecurityNumber(INoarkEntity entity,
                                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addUnit(INikitaEntity entity,
+    void addUnit(INoarkEntity entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 }
