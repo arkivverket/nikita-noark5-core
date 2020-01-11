@@ -94,13 +94,13 @@ public final class CommonUtils {
          */
         public static boolean validateUpdateNoarkEntity(@NotNull INikitaEntity nikitaEntity) {
 
-            if (nikitaEntity instanceof INoarkTitleDescriptionEntity) {
-                rejectIfEmptyOrWhitespace(((INoarkTitleDescriptionEntity) nikitaEntity).getDescription());
-                rejectIfEmptyOrWhitespace(((INoarkTitleDescriptionEntity) nikitaEntity).getTitle());
+            if (nikitaEntity instanceof ITitleDescription) {
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getDescription());
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getTitle());
             }
-            if (nikitaEntity instanceof INoarkTitleDescriptionEntity) {
-                rejectIfEmptyOrWhitespace(((INoarkTitleDescriptionEntity) nikitaEntity).getDescription());
-                rejectIfEmptyOrWhitespace(((INoarkTitleDescriptionEntity) nikitaEntity).getTitle());
+            if (nikitaEntity instanceof ITitleDescription) {
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getDescription());
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getTitle());
             }
 
 
@@ -713,7 +713,7 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNoarkTitleDescriptionEntity(INoarkTitleDescriptionEntity
+            public static void deserialiseNoarkTitleDescriptionEntity(ITitleDescription
                                                                               titleDescriptionEntity,
                                                                       ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize title
@@ -1681,7 +1681,7 @@ public final class CommonUtils {
             }
 
             public static void printTitleAndDescription(JsonGenerator jgen,
-                                                        INoarkTitleDescriptionEntity titleDescriptionEntity)
+                                                        ITitleDescription titleDescriptionEntity)
                     throws IOException {
 
                 if (titleDescriptionEntity != null) {

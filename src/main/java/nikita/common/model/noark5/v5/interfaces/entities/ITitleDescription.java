@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
 
-public interface INoarkTitleDescriptionEntity {
+public interface ITitleDescription {
 
     String getTitle();
 

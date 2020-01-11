@@ -4,7 +4,7 @@ import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkTitleDescriptionEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ITitleDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -40,8 +40,8 @@ public class NoarkService {
     }
 
     protected void updateTitleAndDescription(
-            @NotNull INoarkTitleDescriptionEntity incomingEntity,
-            @NotNull INoarkTitleDescriptionEntity existingEntity) {
+            @NotNull ITitleDescription incomingEntity,
+            @NotNull ITitleDescription existingEntity) {
         if (null != incomingEntity.getTitle()) {
             existingEntity.setTitle(incomingEntity.getTitle());
         }
