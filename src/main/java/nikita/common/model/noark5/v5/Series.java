@@ -115,10 +115,16 @@ public class Series
     private Series referenceSuccessor;
 
     // Link to ClassificationSystem
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = SERIES_CLASSIFICATION_SYSTEM_ID,
-            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    private ClassificationSystem referenceClassificationSystem;
+    @ManyToMany
+    @JoinTable(name = TABLE_SERIES_CLASSIFICATION_SYSTEM,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_SERIES_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CLASSIFICATION_SYSTEM_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private List<ClassificationSystem> referenceClassificationSystem =
+            new ArrayList<>();
 
     // Links to Files
     @JsonIgnore
@@ -263,13 +269,18 @@ public class Series
         this.referenceSuccessor = referenceSuccessor;
     }
 
-    public ClassificationSystem getReferenceClassificationSystem() {
+    public List<ClassificationSystem> getReferenceClassificationSystem() {
         return referenceClassificationSystem;
     }
 
     public void setReferenceClassificationSystem(
-            ClassificationSystem referenceClassificationSystem) {
+            List <ClassificationSystem> referenceClassificationSystem) {
         this.referenceClassificationSystem = referenceClassificationSystem;
+    }
+
+    public void addClassificationSystem(
+            ClassificationSystem classificationSystem) {
+        this.referenceClassificationSystem.add(classificationSystem);
     }
 
     public List<File> getReferenceFile() {

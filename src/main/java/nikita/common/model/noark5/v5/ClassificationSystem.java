@@ -11,16 +11,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM;
 import static nikita.common.config.Constants.TABLE_CLASSIFICATION_SYSTEM;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
+import static nikita.common.config.N5ResourceMappings.REFERENCE_CLASSIFICATION_SYSTEM;
 
 @Entity
 @Table(name = TABLE_CLASSIFICATION_SYSTEM)
@@ -48,7 +46,7 @@ public class ClassificationSystem
     private String classificationTypeCodeName;
 
     // Links to Series
-    @OneToMany(mappedBy = "referenceClassificationSystem")
+    @ManyToMany(mappedBy = REFERENCE_CLASSIFICATION_SYSTEM)
     private List<Series> referenceSeries = new ArrayList<>();
 
     // Links to child Classes

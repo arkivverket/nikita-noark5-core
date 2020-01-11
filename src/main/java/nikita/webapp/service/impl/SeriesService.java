@@ -110,9 +110,9 @@ public class SeriesService
     @Override
     public Series save(Series series) {
         checkDocumentMediumValid(series);
-	if (null == series.getSeriesStatusCode()) {
-	    checkSeriesStatusUponCreation(series);
-	}
+        if (null == series.getSeriesStatusCode()) {
+            checkSeriesStatusUponCreation(series);
+        }
         return seriesRepository.save(series);
     }
 
@@ -120,7 +120,7 @@ public class SeriesService
     public ClassificationSystemHateoas createClassificationSystem(
             String systemId, ClassificationSystem classificationSystem) {
         Series series = getSeriesOrThrow(systemId);
-        series.setReferenceClassificationSystem(classificationSystem);
+        series.addClassificationSystem(classificationSystem);
         return classificationSystemService.save(classificationSystem);
     }
 
@@ -181,8 +181,9 @@ public class SeriesService
             @NotNull final String systemId) {
         ClassificationSystemHateoas classificationSystemHateoas =
                 new ClassificationSystemHateoas(
-                        getSeriesOrThrow(systemId).
-                                getReferenceClassificationSystem());
+                        (List<INikitaEntity>) (List)
+                                getSeriesOrThrow(systemId).
+                                        getReferenceClassificationSystem());
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         return ResponseEntity.status(OK)
@@ -246,11 +247,11 @@ public class SeriesService
         updateTitleAndDescription(incomingSeries, existingSeries);
         if (null != incomingSeries.getDocumentMediumCode()) {
             existingSeries.setDocumentMediumCode(
-		incomingSeries.getDocumentMediumCode());
+                    incomingSeries.getDocumentMediumCode());
         }
         if (null != incomingSeries.getDocumentMediumCodeName()) {
             existingSeries.setDocumentMediumCodeName(
-		incomingSeries.getDocumentMediumCodeName());
+                    incomingSeries.getDocumentMediumCodeName());
         }
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -334,15 +335,15 @@ public class SeriesService
         if (series.getSeriesStatusCode() != null) {
             SeriesStatus seriesStatus = seriesStatusService.
                     findSeriesStatusByCode(series.getSeriesStatusCode());
-           if (null != series.getSeriesStatusCodeName() &&
-               ! seriesStatus.getCodeName().
-               equals(series.getSeriesStatusCodeName())) {
-               String info = "SeriesStatus code and code name "+
-                   "did not match metadata catalog.";
-               logger.info(info);
-               throw new NoarkInvalidStructureException(
-                       info, "Series", "SeriesStatus");
-           }
+            if (null != series.getSeriesStatusCodeName() &&
+                    !seriesStatus.getCodeName().
+                            equals(series.getSeriesStatusCodeName())) {
+                String info = "SeriesStatus code and code name " +
+                        "did not match metadata catalog.";
+                logger.info(info);
+                throw new NoarkInvalidStructureException(
+                        info, "Series", "SeriesStatus");
+            }
             series.setSeriesStatusCodeName(seriesStatus.getCodeName());
         }
     }

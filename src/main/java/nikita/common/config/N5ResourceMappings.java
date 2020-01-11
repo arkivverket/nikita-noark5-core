@@ -844,6 +844,8 @@ public final class N5ResourceMappings {
     public static final String USER_NAME_ENG_OBJECT = "brukerNavn";
     public static final String VARIANT_FORMAT_ENG_OBJECT = "variantformat";
 
+    public static final String REFERENCE_CLASSIFICATION_SYSTEM
+            = "referenceClassificationSystem";
     private N5ResourceMappings() {
         throw new AssertionError();
     }
