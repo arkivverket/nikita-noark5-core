@@ -333,17 +333,10 @@ public class SeriesService
      */
     private void checkSeriesStatusUponCreation(Series series) {
         if (series.getSeriesStatusCode() != null) {
-            SeriesStatus seriesStatus = seriesStatusService.
-                    findSeriesStatusByCode(series.getSeriesStatusCode());
-            if (null != series.getSeriesStatusCodeName() &&
-                    !seriesStatus.getCodeName().
-                            equals(series.getSeriesStatusCodeName())) {
-                String info = "SeriesStatus code and code name " +
-                        "did not match metadata catalog.";
-                logger.info(info);
-                throw new NoarkInvalidStructureException(
-                        info, "Series", "SeriesStatus");
-            }
+            SeriesStatus seriesStatus = (SeriesStatus) seriesStatusService
+                .findValidMetadataOrThrow(series.getBaseTypeName(),
+                                         series.getSeriesStatusCode(),
+                                         series.getSeriesStatusCodeName());
             series.setSeriesStatusCodeName(seriesStatus.getCodeName());
         }
     }

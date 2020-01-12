@@ -135,13 +135,10 @@ public class SeriesStatusController {
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable("kode") final String code,
             HttpServletRequest request) {
-        SeriesStatus seriesStatus =
-                seriesStatusService.findByCode(code);
-        MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        MetadataHateoas metadataHateoas = seriesStatusService.findByCode(code);
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(seriesStatus.getVersion().toString())
+                .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
 
@@ -165,9 +162,10 @@ public class SeriesStatusController {
     @GetMapping(value = NEW_SERIES_STATUS)
     public ResponseEntity<MetadataHateoas>
     getSeriesStatusTemplate(HttpServletRequest request) {
-        SeriesStatus seriesStatus =
-                seriesStatusService.findByCode(TEMPLATE_SERIES_STATUS_CODE);
-        seriesStatus.setCode(TEMPLATE_SERIES_STATUS_CODE);
+        SeriesStatus seriesStatus = (SeriesStatus) seriesStatusService
+            .findMetadataByCode(TEMPLATE_SERIES_STATUS_CODE);
+        seriesStatus.setCode(seriesStatus.getCode());
+        seriesStatus.setCodeName(seriesStatus.getCodeName());
         MetadataHateoas metadataHateoas = new MetadataHateoas(seriesStatus);
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))

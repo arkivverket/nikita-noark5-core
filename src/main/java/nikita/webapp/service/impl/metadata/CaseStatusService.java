@@ -33,14 +33,13 @@ import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
 @Transactional
 @SuppressWarnings("unchecked")
 public class CaseStatusService
-        extends NoarkService
+        extends MetadataSuperService
         implements ICaseStatusService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CaseStatusService.class);
 
     private ICaseStatusRepository caseStatusRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public CaseStatusService(
             EntityManager entityManager,
@@ -48,10 +47,9 @@ public class CaseStatusService
             ICaseStatusRepository
                     caseStatusRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.caseStatusRepository =
                 caseStatusRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -90,31 +88,9 @@ public class CaseStatusService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve a CaseStatus identified particular code.
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return The CaseStatus object wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                getCaseStatusOrThrow(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
-    }
-
-    /**
-     * retrieve a CaseStatus identified by particular code.  Raise
-     * exception if the code is unknown.
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return The CaseStatus object wrapped
-     */
-    @Override
-    public CaseStatus findCaseStatusByCode(String code) {
-        return getCaseStatusOrThrow(code);
+    public CaseStatus findMetadataByCode(String code) {
+        return caseStatusRepository.findByCode(code);
     }
 
     /**
@@ -151,7 +127,8 @@ public class CaseStatusService
             @NotNull final Long version,
             @NotNull final CaseStatus incomingCaseStatus) {
 
-        CaseStatus existingCaseStatus = getCaseStatusOrThrow(code);
+        CaseStatus existingCaseStatus =
+            (CaseStatus) findMetadataByCodeOrThrow(code);
         // Copy all the values you are allowed to copy ....
         updateCodeAndDescription(incomingCaseStatus, existingCaseStatus);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -163,28 +140,6 @@ public class CaseStatusService
         metadataHateoasHandler.addLinks(caseStatusHateoas,
                 new Authorisation());
         return caseStatusHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid CaseStatus object back. If there
-     * is no CaseStatus object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the CaseStatus object to retrieve
-     * @return the CaseStatus object
-     */
-    private CaseStatus getCaseStatusOrThrow(@NotNull String code) {
-        CaseStatus caseStatus = caseStatusRepository.
-                findByCode(code);
-        if (caseStatus == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " CaseStatus, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return caseStatus;
     }
 
     /**

@@ -605,17 +605,10 @@ public class FondsService
      */
     private void checkFondsStatusUponCreation(Fonds fonds) {
         if (fonds.getFondsStatusCode() != null) {
-            FondsStatus fondsStatus = fondsStatusService.
-                    findFondsStatusByCode(fonds.getFondsStatusCode());
-	    if (null != fonds.getFondsStatusCodeName() &&
-		! fondsStatus.getCodeName().
-		equals(fonds.getFondsStatusCodeName())) {
-		String info = "FondsStatus code and code name "+
-		    "did not match metadata catalog.";
-		logger.info(info);
-		throw new NoarkInvalidStructureException(
-			info, "Fonds", "FondsStatus");
-	    }
+            FondsStatus fondsStatus = (FondsStatus) fondsStatusService
+                .findValidMetadataOrThrow(fonds.getBaseTypeName(),
+                                          fonds.getFondsStatusCode(),
+                                          fonds.getFondsStatusCodeName());
             fonds.setFondsStatusCodeName(fondsStatus.getCodeName());
         }
     }

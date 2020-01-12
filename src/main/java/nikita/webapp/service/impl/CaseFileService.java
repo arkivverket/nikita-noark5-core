@@ -488,8 +488,10 @@ public class CaseFileService
 
     private void checkCaseStatusUponCreation(CaseFile caseFile) {
         if (caseFile.getCaseStatusCodeName() != null) {
-            CaseStatus caseStatus = caseStatusService.
-                    findCaseStatusByCode(caseFile.getCaseStatusCode());
+            CaseStatus caseStatus = (CaseStatus) caseStatusService
+                .findValidMetadataOrThrow(caseFile.getBaseTypeName(),
+                                          caseFile.getCaseStatusCode(),
+                                          caseFile.getCaseStatusCodeName());
             caseFile.setCaseStatusCodeName(caseStatus.getCodeName());
         }
     }
