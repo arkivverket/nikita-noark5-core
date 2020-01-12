@@ -424,33 +424,45 @@ public class DocumentObjectService
         DocumentObject documentObject =
                 getDocumentObjectOrThrow(systemId);
 
-        String acceptType = request.getHeader(ACCEPT);
-        if (acceptType != null &&
-                !acceptType.equalsIgnoreCase(documentObject.getMimeType())) {
-            if (!acceptType.equals("*/*")) {
-                throw new NoarkNotAcceptableException("The request [" +
-                        request.getRequestURI() + "] is not acceptable. "
-                        + "You have issued an Accept: " + acceptType +
-                        ", while the mimeType you are trying to retrieve "
-                        + "is [" + documentObject.getMimeType() + "].");
-            }
-        }
-        response.setContentType(documentObject.getMimeType());
-        response.setContentLength(documentObject.getFileSize().intValue());
-        response.addHeader("Content-disposition",
-                "inline; filename=" + documentObject.getOriginalFilename());
-        response.addHeader("Content-Type", documentObject.getMimeType());
-
+        // First make sure the file exist
         try {
             Path file = getToFile(documentObject);
             Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
+            if (!resource.exists() && !resource.isReadable()) {
                 throw new StorageFileNotFoundException(
                         "Could not read file: " +
                                 documentObject.getReferenceDocumentFile());
             }
+            // When file exist, figure out how to return it.  Note both
+            // file name, file size and mime type can be unset until after
+            // a file is uploaded.
+            String acceptType = request.getHeader(ACCEPT);
+            String mimeType = documentObject.getMimeType();
+            if (acceptType != null && mimeType != null &&
+                !acceptType.equalsIgnoreCase(mimeType)) {
+                if (!acceptType.equals("*/*")) {
+                    throw new NoarkNotAcceptableException(
+                        "The request [" +
+                        request.getRequestURI() + "] is not acceptable. "
+                        + "You have issued an Accept: " + acceptType +
+                        ", while the mimeType you are trying to retrieve "
+                        + "is [" + mimeType + "].");
+                }
+            }
+            if (null == mimeType) {
+                mimeType = "application/octet-stream";
+                logger.warn("Overriding unset mime-type during download for " +
+                            "documentObject [" + documentObject.toString() + "]. " +
+                            "Setting to [" + mimeType + "].");
+            }
+            response.setContentType(mimeType);
+            response.addHeader("Content-Type", mimeType);
+            response.setContentLength(documentObject.getFileSize().intValue());
+            if (null != documentObject.getOriginalFilename()) {
+                response.addHeader("Content-disposition", "inline; "+
+                                   "filename=" + documentObject.getOriginalFilename());
+            }
+            return resource;
         } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException(
                     "Could not read file: " +
