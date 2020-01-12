@@ -532,10 +532,9 @@ public final class CommonUtils {
             }
 
 
-            public static void deserialiseNoarkMetadataEntity(IMetadataEntity metadataEntity,
-                                                              ObjectNode objectNode, StringBuilder errors) {
-                // Deserialize systemId
-                deserialiseNoarkSystemIdEntity(metadataEntity, objectNode, errors);
+            public static void deserialiseNoarkMetadataEntity(
+                    IMetadataEntity metadataEntity, ObjectNode objectNode,
+                    StringBuilder errors) {
 
                 JsonNode currentNode = objectNode.get(CODE);
                 if (null != currentNode) {

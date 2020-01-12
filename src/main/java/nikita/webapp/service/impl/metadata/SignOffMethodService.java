@@ -143,9 +143,6 @@ public class SignOffMethodService
                 signOffMethodRepository.save(existingSignOffMethod));
         metadataHateoasHandler.addLinks(SignOffMethodHateoas,
                 new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        existingSignOffMethod));
         return SignOffMethodHateoas;
     }
 

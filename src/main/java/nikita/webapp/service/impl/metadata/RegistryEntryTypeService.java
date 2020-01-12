@@ -142,13 +142,10 @@ public class RegistryEntryTypeService
         // exception as it checks the ETAG value
         existingRegistryEntryType.setVersion(version);
 
-        MetadataHateoas formatHateoas = new MetadataHateoas(registryEntryTypeRepository
-                .save(existingRegistryEntryType));
+        MetadataHateoas formatHateoas = new MetadataHateoas(
+                registryEntryTypeRepository.save(existingRegistryEntryType));
 
         metadataHateoasHandler.addLinks(formatHateoas, new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this, existingRegistryEntryType));
         return formatHateoas;
     }
 

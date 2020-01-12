@@ -145,10 +145,6 @@ public class CountryService
 
         metadataHateoasHandler.addLinks(countryHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingCountry));
         return countryHateoas;
     }
 

@@ -147,10 +147,6 @@ public class PrecedenceStatusService
                                 save(existingPrecedenceStatus));
 
         metadataHateoasHandler.addLinks(precedenceStatusHateoas, new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingPrecedenceStatus));
         return precedenceStatusHateoas;
     }
 

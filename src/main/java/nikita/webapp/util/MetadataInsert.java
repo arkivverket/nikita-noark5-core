@@ -79,7 +79,6 @@ public class MetadataInsert {
 
                             metadataEntity.setCode(code);
                             metadataEntity.setCodeName(codename);
-                            metadataEntity.setSystemId(randomUUID());
                             metadataEntity.setCreatedBy(SYSTEM);
                             metadataEntity.setCreatedDate(OffsetDateTime.now());
                             metadataEntity.setLastModifiedBy(SYSTEM);

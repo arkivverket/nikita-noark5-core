@@ -146,10 +146,6 @@ public class CommentTypeService
 
         metadataHateoasHandler.addLinks(commentTypeHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingCommentType));
         return commentTypeHateoas;
     }
 

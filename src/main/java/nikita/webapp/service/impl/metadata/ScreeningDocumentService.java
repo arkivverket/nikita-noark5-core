@@ -149,10 +149,6 @@ public class ScreeningDocumentService
 
         metadataHateoasHandler.addLinks(screeningMetadataHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingScreeningDocument));
         return screeningMetadataHateoas;
     }
 

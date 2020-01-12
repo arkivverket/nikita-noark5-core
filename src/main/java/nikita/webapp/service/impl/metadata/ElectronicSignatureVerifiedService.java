@@ -166,10 +166,6 @@ public class ElectronicSignatureVerifiedService
 
         metadataHateoasHandler.addLinks(electronicSignatureVerifiedHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        existingElectronicSignatureVerified));
         return electronicSignatureVerifiedHateoas;
     }
 

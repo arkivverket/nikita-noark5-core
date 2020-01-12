@@ -144,9 +144,6 @@ public class FormatService
                 .save(existingFormat));
 
         metadataHateoasHandler.addLinks(formatHateoas, new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this, existingFormat));
         return formatHateoas;
     }
 

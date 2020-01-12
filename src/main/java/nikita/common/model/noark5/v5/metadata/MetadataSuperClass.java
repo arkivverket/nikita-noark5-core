@@ -143,16 +143,6 @@ public class MetadataSuperClass
         this.inactive = inactive;
     }
 
-    @Override
-    public String getSystemId() {
-        return systemId.toString();
-    }
-
-    @Override
-    public void setSystemId(UUID systemId) {
-        this.systemId = systemId;
-    }
-
     public String getOwnedBy() {
         return ownedBy;
     }

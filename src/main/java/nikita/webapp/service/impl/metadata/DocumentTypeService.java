@@ -142,9 +142,6 @@ public class DocumentTypeService
                 documentTypeRepository.save(existingDocumentType));
         metadataHateoasHandler.addLinks(documentTypeHateoas,
                 new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        existingDocumentType));
         return documentTypeHateoas;
     }
 

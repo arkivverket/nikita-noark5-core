@@ -144,10 +144,6 @@ public class PartRoleService
 
         metadataHateoasHandler.addLinks(partyRoleHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingPartRole));
         return partyRoleHateoas;
     }
 

@@ -150,10 +150,6 @@ public class ClassifiedCodeService
 
         metadataHateoasHandler.addLinks(classifiedCodeHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingClassifiedCode));
         return classifiedCodeHateoas;
     }
 

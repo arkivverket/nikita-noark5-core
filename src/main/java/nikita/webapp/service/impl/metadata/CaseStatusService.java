@@ -161,10 +161,6 @@ public class CaseStatusService
 
         metadataHateoasHandler.addLinks(caseStatusHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingCaseStatus));
         return caseStatusHateoas;
     }
 

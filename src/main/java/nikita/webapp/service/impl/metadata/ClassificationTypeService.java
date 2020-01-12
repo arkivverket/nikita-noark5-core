@@ -154,10 +154,6 @@ public class ClassificationTypeService
 
         metadataHateoasHandler.addLinks(classificationTypeHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingClassificationType));
         return classificationTypeHateoas;
     }
 

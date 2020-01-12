@@ -143,10 +143,6 @@ public class VariantFormatService
 
         metadataHateoasHandler.addLinks(variantFormatHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingVariantFormat));
         return variantFormatHateoas;
     }
 

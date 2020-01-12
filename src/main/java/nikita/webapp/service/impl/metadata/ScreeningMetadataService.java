@@ -147,10 +147,6 @@ public class ScreeningMetadataService
 
         metadataHateoasHandler.addLinks(screeningMetadataHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingScreeningMetadata));
         return screeningMetadataHateoas;
     }
 

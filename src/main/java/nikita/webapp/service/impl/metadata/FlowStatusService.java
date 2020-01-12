@@ -140,9 +140,6 @@ public class FlowStatusService
                 flowStatusRepository.save(existingFlowStatus));
 
         metadataHateoasHandler.addLinks(flowStatusHateoas, new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this, existingFlowStatus));
         return flowStatusHateoas;
     }
 

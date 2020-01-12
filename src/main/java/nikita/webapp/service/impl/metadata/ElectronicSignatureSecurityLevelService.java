@@ -169,10 +169,6 @@ public class ElectronicSignatureSecurityLevelService
 
         metadataHateoasHandler.addLinks(electronicSignatureSecurityLevelHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        existingElectronicSignatureSecurityLevel));
         return electronicSignatureSecurityLevelHateoas;
     }
 

@@ -143,9 +143,6 @@ public class FileTypeService
         metadataHateoasHandler.addLinks(fileTypeHateoas,
                 new Authorisation());
 
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingFileType));
         return fileTypeHateoas;
     }
 

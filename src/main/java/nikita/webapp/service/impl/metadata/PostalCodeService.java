@@ -148,10 +148,6 @@ public class PostalCodeService
 
         metadataHateoasHandler.addLinks(postalCodeHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingPostalCode));
         return postalCodeHateoas;
     }
 

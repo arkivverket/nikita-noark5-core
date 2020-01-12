@@ -148,9 +148,6 @@ public class RegistryEntryStatusService
                 registryEntryStatusRepository.save(existingRegistryEntryStatus));
         metadataHateoasHandler.addLinks(RegistryEntryStatusHateoas,
                 new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        existingRegistryEntryStatus));
         return RegistryEntryStatusHateoas;
     }
 

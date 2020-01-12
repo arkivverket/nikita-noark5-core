@@ -7,8 +7,11 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 /**
  * Created by tsodring on 4/3/17.
  */
-public interface IMetadataHateoasHandler extends IHateoasHandler {
-    void addNewCode(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+public interface IMetadataHateoasHandler
+        extends IHateoasHandler {
+
+    void addNewCode(INoarkEntity entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
 
     void addCode(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 }

@@ -33,6 +33,9 @@ public interface IHateoasHandler {
     void addSelfLink(ISystemId entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
+    void addSelfLink(INoarkEntity entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
+
     void addEntityLinks(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
