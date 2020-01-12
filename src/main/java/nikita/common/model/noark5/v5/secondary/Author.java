@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IAuthorEntity;
 import nikita.common.util.deserialisers.secondary.AuthorDeserializer;
@@ -21,8 +22,8 @@ import static nikita.common.config.N5ResourceMappings.AUTHOR;
 @Table(name = TABLE_CONTACT_AUTHOR)
 @JsonDeserialize(using = AuthorDeserializer.class)
 public class Author
-        extends NoarkEntity
-        implements ISystemId,IAuthorEntity {
+        extends SystemIdEntity
+        implements IAuthorEntity {
 
     @ManyToOne
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)

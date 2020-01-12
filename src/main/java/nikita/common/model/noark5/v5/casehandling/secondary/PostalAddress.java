@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 
 import javax.persistence.Embedded;
@@ -19,7 +20,7 @@ import static nikita.common.config.Constants.TABLE_POSTAL_ADDRESS;
 @Entity
 @Table(name = TABLE_POSTAL_ADDRESS)
 public class PostalAddress
-        extends NoarkEntity
+        extends SystemIdEntity
         implements ISimpleAddress {
 
     @Embedded

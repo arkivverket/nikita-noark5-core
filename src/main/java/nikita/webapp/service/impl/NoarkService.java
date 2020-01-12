@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
@@ -114,7 +115,7 @@ public class NoarkService {
      * @param deleteString
      */
     protected void disassociateForeignKeys(
-            NoarkEntity entity, String deleteString) {
+            SystemIdEntity entity, String deleteString) {
         Query query = entityManager.createNativeQuery(deleteString);
         query.setParameter(ID, entity.getSystemId());
         query.executeUpdate();

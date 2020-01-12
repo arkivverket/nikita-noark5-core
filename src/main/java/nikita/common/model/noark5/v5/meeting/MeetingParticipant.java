@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5.meeting;
 
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -15,7 +16,7 @@ import static nikita.common.config.N5ResourceMappings.MEETING_PARTICIPANT;
 @Entity
 @Table(name = TABLE_MEETING_PARTICIPANT)
 public class MeetingParticipant
-        extends NoarkEntity {
+        extends SystemIdEntity {
 
     /**
      * M372 - moetedeltakerNavn (xs:string)

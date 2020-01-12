@@ -39,8 +39,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasPacker(using = DocumentObjectHateoasHandler.class)
 @HateoasObject(using = DocumentObjectHateoas.class)
 public class DocumentObject
-        extends NoarkEntity
-        implements ICreate, ISystemId, IElectronicSignature, IConversion {
+        extends SystemIdEntity
+        implements ICreate, IElectronicSignature, IConversion {
 
     /**
      * M005 - versjonsnummer (xs:integer)

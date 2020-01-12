@@ -3,24 +3,18 @@ package nikita.common.model.noark5.v5;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkConcurrencyException;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -30,28 +24,10 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  * Created by tsodring on 5/8/17.
  */
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-@Table(indexes = @Index(name = "index_owned_by",
-        columnList = "owned_by"))
 public class NoarkEntity
-        implements INoarkEntity, Comparable<NoarkEntity> {
+        implements INoarkEntity {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * M001 - systemID (xs:string)
-     */
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator",
-            parameters = {@Parameter(
-                    name = "uuid_gen_strategy_class",
-                    value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
-    @Column(name = "system_id", updatable = false, nullable = false)
-    @Type(type="uuid-char")
-    private UUID systemId;
 
     @CreatedBy
     @Column(name = "owned_by")
@@ -94,25 +70,6 @@ public class NoarkEntity
     @Column(name = LAST_MODIFIED_BY_ENG)
     private String lastModifiedBy;
 
-    public String getSystemId() {
-        if (null != systemId)
-            return systemId.toString();
-        else
-            return null;
-    }
-
-    public void setSystemId(UUID systemId) {
-        this.systemId = systemId;
-    }
-
-    public String getId() {
-        return systemId.toString();
-    }
-
-    public void setId(UUID systemId) {
-        this.systemId = systemId;
-    }
-
     @Override
     public String getOwnedBy() {
         return ownedBy;
@@ -132,10 +89,9 @@ public class NoarkEntity
     public void setVersion(Long version) {
         if (!this.version.equals(version)) {
             throw new NoarkConcurrencyException(
-                    "Concurrency Exception. Old version [" + this
-                            .version + "], new version [" + version + "]");
+                    "Concurrency Exception. Old version [" + this.version +
+                            "], new version [" + version + "]");
         }
-        this.version = version;
     }
 
     @Override
@@ -154,7 +110,7 @@ public class NoarkEntity
     }
 
     @Override
-    public void setLastModifiedBy(String createdBy) {
+    public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 
@@ -191,12 +147,12 @@ public class NoarkEntity
 
     @Override
     public String getIdentifier() {
-        return getSystemId();
+        return null;
     }
 
     @Override
     public String getIdentifierType() {
-        return SYSTEM_ID;
+        return null;
     }
 
     // Most entities belong to arkivstruktur. These entities pick the value
@@ -220,20 +176,8 @@ public class NoarkEntity
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(systemId)
                 .append(ownedBy)
                 .toHashCode();
-    }
-
-    @Override
-    public int compareTo(NoarkEntity otherEntity) {
-        if (null == otherEntity) {
-            return -1;
-        }
-        return new CompareToBuilder()
-                .append(this.systemId, otherEntity.systemId)
-                .append(ownedBy, otherEntity.getOwnedBy())
-                .toComparison();
     }
 
     @Override
@@ -250,7 +194,6 @@ public class NoarkEntity
         NoarkEntity rhs = (NoarkEntity) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(systemId, rhs.getSystemId())
                 .append(ownedBy, rhs.getOwnedBy())
                 .isEquals();
     }
@@ -258,7 +201,6 @@ public class NoarkEntity
     @Override
     public String toString() {
         return "NoarkEntity{" +
-                "systemId=" + systemId +
                 ", ownedBy='" + ownedBy + '\'' +
                 ", version=" + version +
                 ", lastModifiedDate=" + lastModifiedDate +

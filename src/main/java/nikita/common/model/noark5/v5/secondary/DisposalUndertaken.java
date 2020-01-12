@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.secondary;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IDisposalUndertakenEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,7 +23,7 @@ import static nikita.common.config.N5ResourceMappings.DISPOSAL_UNDERTAKEN;
 @Entity
 @Table(name = TABLE_DISPOSAL_UNDERTAKEN)
 public class DisposalUndertaken
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IDisposalUndertakenEntity {
 
     private static final long serialVersionUID = 1L;

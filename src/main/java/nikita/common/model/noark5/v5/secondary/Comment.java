@@ -1,9 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.ICommentEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -26,7 +23,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @Entity
 @Table(name = TABLE_COMMENT)
 public class Comment
-        extends NoarkEntity
+        extends SystemIdEntity
         implements ICommentEntity {
 
     private static final long serialVersionUID = 1L;

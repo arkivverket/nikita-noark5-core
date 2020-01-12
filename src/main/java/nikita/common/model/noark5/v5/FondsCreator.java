@@ -29,7 +29,7 @@ import static nikita.common.config.N5ResourceMappings.FONDS_CREATOR;
 @HateoasPacker(using = FondsCreatorHateoasHandler.class)
 @HateoasObject(using = FondsCreatorHateoas.class)
 public class FondsCreator
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IFondsCreatorEntity {
 
     /**

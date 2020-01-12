@@ -20,7 +20,7 @@ import static nikita.common.config.N5ResourceMappings.STORAGE_LOCATION;
 @Table(name = TABLE_STORAGE_LOCATION)
 @JsonSerialize(using = StorageLocationSerializer.class)
 public class StorageLocation
-        extends NoarkEntity {
+        extends SystemIdEntity {
 
     /**
      * M301 - oppbevaringssted (xs:string)

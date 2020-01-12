@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -22,7 +23,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @Entity
 @Table(name = TABLE_SIGN_OFF)
 public class SignOff
-        extends NoarkEntity {
+        extends SystemIdEntity {
 
     /**
      * M617 - avskrivningsdato

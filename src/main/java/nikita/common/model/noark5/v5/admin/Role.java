@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5.admin;
 
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IRoleEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,7 +12,9 @@ import javax.persistence.*;
 
 //@Entity
 //@Table(name = TABLE_nikita_role")
-public class Role extends NoarkEntity implements IRoleEntity {
+public class Role
+        extends SystemIdEntity
+        implements IRoleEntity {
 
     @Id
     @Column(name = "id")

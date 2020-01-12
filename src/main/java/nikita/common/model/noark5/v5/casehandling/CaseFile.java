@@ -133,13 +133,6 @@ public class CaseFile
     @JsonIgnore
     private AdministrativeUnit referenceAdministrativeUnit;
 
-    // Link to CaseFileStatus
-    @ManyToOne
-    @JoinColumn(name = JOIN_CASE_FILE_STATUS,
-            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    @JsonIgnore
-    private CaseStatus referenceCaseFileStatus;
-
     public Integer getCaseYear() {
         return caseYear;
     }
@@ -246,14 +239,6 @@ public class CaseFile
     public void setReferenceAdministrativeUnit(
             AdministrativeUnit referenceAdministrativeUnit) {
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
-    }
-
-    public CaseStatus getReferenceCaseFileStatus() {
-        return referenceCaseFileStatus;
-    }
-
-    public void setReferenceCaseFileStatus(CaseStatus referenceCaseFileStatus) {
-        this.referenceCaseFileStatus = referenceCaseFileStatus;
     }
 
     @Override

@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.secondary;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Series;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IDeletionEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -24,7 +25,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @Entity
 @Table(name = TABLE_DELETION)
 public class Deletion
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IDeletionEntity {
 
     private static final long serialVersionUID = 1L;

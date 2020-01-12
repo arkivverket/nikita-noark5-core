@@ -36,8 +36,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasPacker(using = DocumentDescriptionHateoasHandler.class)
 @HateoasObject(using = DocumentDescriptionHateoas.class)
 public class DocumentDescription
-        extends NoarkEntity
-        implements ICreate, ITitleDescription, ISystemId,
+        extends SystemIdEntity
+        implements ICreate, ITitleDescription,
         IDocumentMedium, ISingleStorageLocation, IDeletion, IScreening,
         IDisposal, IClassified, IDisposalUndertaken, IComment,
         IElectronicSignature, IAuthor {

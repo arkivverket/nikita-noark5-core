@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,7 +17,7 @@ import static nikita.common.config.N5ResourceMappings.CONVERSION;
 @Entity
 @Table(name = TABLE_CONVERSION)
 public class Conversion
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IConversionEntity {
 
     private static final long serialVersionUID = 1L;

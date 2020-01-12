@@ -39,8 +39,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
 public class Record
-        extends NoarkEntity
-        implements ISystemId, IRecordEntity, IPart, ICorrespondencePart {
+        extends SystemIdEntity
+        implements IRecordEntity, IPart, ICorrespondencePart {
 
     /**
      * M604 - arkivertDato (xs:dateTime)

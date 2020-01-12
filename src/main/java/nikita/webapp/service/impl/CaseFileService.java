@@ -354,18 +354,15 @@ public class CaseFileService
 
     public CaseFileHateoas generateDefaultCaseFile() {
         CaseFile defaultCaseFile = new CaseFile();
-        defaultCaseFile.setReferenceCaseFileStatus(
-                caseStatusService.generateDefaultCaseStatus());
         defaultCaseFile.setCaseResponsible(SecurityContextHolder.getContext().
                 getAuthentication().getName());
         defaultCaseFile.setCaseDate(OffsetDateTime.now());
         defaultCaseFile.setTitle(TEST_TITLE);
         defaultCaseFile.setOfficialTitle(TEST_TITLE);
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
-        defaultCaseFile.setCaseStatusCode(defaultCaseFile.
-                getReferenceCaseFileStatus().getCode());
+        defaultCaseFile.setCaseStatusCode(defaultCaseFile.getCaseStatusCode());
         defaultCaseFile.setCaseStatusCodeName(defaultCaseFile.
-                getReferenceCaseFileStatus().getCodeName());
+                        getCaseStatusCodeName());
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
 
         CaseFileHateoas caseFileHateoas = new

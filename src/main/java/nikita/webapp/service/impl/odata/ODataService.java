@@ -2,6 +2,7 @@ package nikita.webapp.service.impl.odata;
 
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.HateoasHandler;

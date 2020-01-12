@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
 import nikita.common.model.noark5.v5.hateoas.admin.AdministrativeUnitHateoas;
@@ -35,7 +36,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasPacker(using = AdministrativeUnitHateoasHandler.class)
 @HateoasObject(using = AdministrativeUnitHateoas.class)
 public class AdministrativeUnit
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IAdministrativeUnitEntity {
 
     /**

@@ -1,11 +1,12 @@
 package nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Country;
 
 public interface IPlanEntity
-        extends INoarkEntity, Comparable<NoarkEntity> {
+        extends INoarkEntity, Comparable<SystemIdEntity> {
     String getMunicipalityNumber();
 
     void setMunicipalityNumber(String municipalityNumber);

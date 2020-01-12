@@ -48,6 +48,4 @@ public interface ICaseFileEntity
     String getLoanedTo();
 
     void setLoanedTo(String loanedTo);
-
-    CaseStatus getReferenceCaseFileStatus();
 }

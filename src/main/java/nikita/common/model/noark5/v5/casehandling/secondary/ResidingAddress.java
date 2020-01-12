@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import static nikita.common.config.Constants.TABLE_RESIDING_ADDRESS;
 @Entity
 @Table(name = TABLE_RESIDING_ADDRESS)
 public class ResidingAddress
-        extends NoarkEntity {
+        extends SystemIdEntity {
 
     @Embedded
     SimpleAddress simpleAddress;

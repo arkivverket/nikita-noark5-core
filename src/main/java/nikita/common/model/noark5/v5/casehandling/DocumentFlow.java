@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5.casehandling;
 
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -16,7 +17,7 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW;
 @Entity
 @Table(name = TABLE_DOCUMENT_FLOW)
 public class DocumentFlow
-        extends NoarkEntity {
+        extends SystemIdEntity {
 
     /**
      * M660 flytTil (xs:string)
