@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -11,66 +11,66 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 public interface IRecordHateoasHandler
         extends IHateoasHandler {
 
-    void addReferenceSeries(INoarkEntity entity,
+    void addReferenceSeries(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addReferenceFile(INoarkEntity entity,
+    void addReferenceFile(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addReferenceClass(INoarkEntity entity,
+    void addReferenceClass(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewDocumentDescription(INoarkEntity entity,
+    void addNewDocumentDescription(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDocumentDescription(INoarkEntity entity,
+    void addDocumentDescription(ISystemId entity,
                                 IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewReferenceSeries(INoarkEntity entity,
+    void addNewReferenceSeries(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addStorageLocation(INoarkEntity entity,
+    void addStorageLocation(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewStorageLocation(INoarkEntity entity,
+    void addNewStorageLocation(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addComment(INoarkEntity entity,
+    void addComment(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewComment(INoarkEntity entity,
+    void addNewComment(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCrossReference(INoarkEntity entity,
+    void addCrossReference(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCrossReference(INoarkEntity entity,
+    void addNewCrossReference(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPart(INoarkEntity entity,
+    void addPart(ISystemId entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPartPerson(INoarkEntity entity,
+    void addNewPartPerson(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPartUnit(INoarkEntity entity,
+    void addNewPartUnit(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCorrespondencePart(INoarkEntity entity,
+    void addCorrespondencePart(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCorrespondencePartPerson(INoarkEntity entity,
+    void addNewCorrespondencePartPerson(ISystemId entity,
                                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCorrespondencePartUnit(INoarkEntity entity,
+    void addNewCorrespondencePartUnit(ISystemId entity,
                                       IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCorrespondencePartInternal(INoarkEntity entity,
+    void addNewCorrespondencePartInternal(ISystemId entity,
                                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addAuthor(INoarkEntity entity,
+    void addAuthor(ISystemId entity,
                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewAuthor(INoarkEntity entity,
+    void addNewAuthor(ISystemId entity,
                       IHateoasNoarkObject hateoasNoarkObject);
 }

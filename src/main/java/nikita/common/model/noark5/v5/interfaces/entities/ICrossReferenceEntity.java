@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by tsodring on 1/16/17.
  */
 public interface ICrossReferenceEntity
-        extends Serializable, INoarkEntity {
+        extends Serializable, ISystemId {
 
     String getFromSystemId();
 

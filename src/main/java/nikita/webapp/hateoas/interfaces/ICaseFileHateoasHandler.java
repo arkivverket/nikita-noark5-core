@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -11,33 +11,33 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 public interface ICaseFileHateoasHandler
         extends IHateoasHandler {
 
-    void addNewClass(INoarkEntity entity,
+    void addNewClass(ISystemId entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClass(INoarkEntity entity,
+    void addClass(ISystemId entity,
                   IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPrecedence(INoarkEntity entity,
+    void addNewPrecedence(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPrecedence(INoarkEntity entity,
+    void addPrecedence(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSecondaryClassification(INoarkEntity entity,
+    void addSecondaryClassification(ISystemId entity,
                                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSecondaryClassification(INoarkEntity entity,
+    void addNewSecondaryClassification(ISystemId entity,
                                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewRegistryEntry(INoarkEntity entity,
+    void addNewRegistryEntry(ISystemId entity,
                              IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRegistryEntry(INoarkEntity entity,
+    void addRegistryEntry(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewRecordNote(INoarkEntity entity,
+    void addNewRecordNote(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRecordNote(INoarkEntity entity,
+    void addRecordNote(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 }

@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.interfaces.IConversion;
 import nikita.common.model.noark5.v5.interfaces.IElectronicSignature;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.model.noark5.v5.secondary.ElectronicSignature;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
@@ -39,8 +40,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasObject(using = DocumentObjectHateoas.class)
 public class DocumentObject
         extends NoarkEntity
-        implements ICreate,
-        IElectronicSignature, IConversion {
+        implements ICreate, ISystemId, IElectronicSignature, IConversion {
 
     /**
      * M005 - versjonsnummer (xs:integer)

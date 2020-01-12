@@ -2,6 +2,7 @@ package nikita.webapp.hateoas.casehandling;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +16,7 @@ public class CorrespondencePartInternalHateoasHandler
         extends CorrespondencePartHateoasHandler {
 
     @Override
-    public void addEntityLinksOnTemplate(INoarkEntity entity,
+    public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject
                                                  hateoasNoarkObject) {
         addCorrespondencePartType(entity, hateoasNoarkObject);

@@ -3,7 +3,8 @@ package nikita.webapp.hateoas;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public class RecordHateoasHandler
     }
 
     @Override
-    public void addEntityLinks(INoarkEntity entity,
+    public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         // Add the child links
         addDocumentDescription(entity, hateoasNoarkObject);
@@ -55,49 +56,49 @@ public class RecordHateoasHandler
 
     @Override
     public void addEntityLinksOnTemplate(
-            INoarkEntity entity,
+            ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject) {
         addDocumentMedium(entity, hateoasNoarkObject);
     }
 
 
     @Override
-    public void addComment(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_COMMENT, false));
     }
 
     @Override
-    public void addNewComment(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_COMMENT, false));
     }
 
     @Override
-    public void addStorageLocation(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_STORAGE_LOCATION, false));
     }
 
     @Override
-    public void addNewStorageLocation(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 
     @Override
-    public void addCrossReference(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addCrossReference(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_CROSS_REFERENCE, false));
     }
 
     @Override
-    public void addNewCrossReference(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewCrossReference(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CROSS_REFERENCE, false));
@@ -115,7 +116,7 @@ public class RecordHateoasHandler
      * @param hateoasNoarkObject hateoasRecord
      */
     @Override
-    public void addReferenceSeries(INoarkEntity entity,
+    public void addReferenceSeries(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject) {
         Record record = getRecord(entity);
         if (record.getReferenceSeries() != null) {
@@ -136,7 +137,7 @@ public class RecordHateoasHandler
      * @param hateoasNoarkObject hateoasRecord
      */
     @Override
-    public void addReferenceFile(INoarkEntity entity,
+    public void addReferenceFile(ISystemId entity,
                                  IHateoasNoarkObject hateoasNoarkObject) {
         Record record = getRecord(entity);
         if (record.getReferenceFile() != null) {
@@ -158,7 +159,7 @@ public class RecordHateoasHandler
      * @param hateoasNoarkObject hateoasRecord
      */
     @Override
-    public void addReferenceClass(INoarkEntity entity,
+    public void addReferenceClass(ISystemId entity,
                                   IHateoasNoarkObject hateoasNoarkObject) {
         Record record = getRecord(entity);
         if (record.getReferenceClass() != null) {
@@ -169,21 +170,21 @@ public class RecordHateoasHandler
     }
 
     @Override
-    public void addNewDocumentDescription(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewDocumentDescription(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_DESCRIPTION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_DOCUMENT_DESCRIPTION, false));
     }
 
     @Override
-    public void addDocumentDescription(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addDocumentDescription(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + DOCUMENT_DESCRIPTION + SLASH,
                 REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION, false));
     }
 
     @Override
-    public void addNewReferenceSeries(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewReferenceSeries(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + REFERENCE_NEW_SERIES + SLASH,
                 REL_FONDS_STRUCTURE_NEW_REFERENCE_SERIES, false));
@@ -191,7 +192,7 @@ public class RecordHateoasHandler
 
     @Override
     public void addNewCorrespondencePartPerson(
-            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_PERSON + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_PERSON));
@@ -199,7 +200,7 @@ public class RecordHateoasHandler
 
     @Override
     public void addCorrespondencePart(
-            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + CORRESPONDENCE_PART + SLASH,
                 REL_FONDS_STRUCTURE_CORRESPONDENCE_PART, true));
@@ -207,7 +208,7 @@ public class RecordHateoasHandler
 
     @Override
     public void addNewCorrespondencePartUnit(
-            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_UNIT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_UNIT));
@@ -215,7 +216,7 @@ public class RecordHateoasHandler
 
     @Override
     public void addPart(
-            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + PART + SLASH,
                 REL_FONDS_STRUCTURE_PART, true));
@@ -223,7 +224,7 @@ public class RecordHateoasHandler
 
     @Override
     public void addNewPartPerson(
-            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_PART_PERSON + SLASH,
                 REL_FONDS_STRUCTURE_NEW_PART_PERSON));
@@ -231,14 +232,14 @@ public class RecordHateoasHandler
 
     @Override
     public void addNewPartUnit(
-            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
 		HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_PART_UNIT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_PART_UNIT));
     }
 
     @Override
-    public void addNewCorrespondencePartInternal(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewCorrespondencePartInternal(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         /*
         Temporary disabled as it causes problems for clients.
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
@@ -259,7 +260,7 @@ public class RecordHateoasHandler
      * @param hateoasNoarkObject hateoasRecord
      */
     @Override
-    public void addAuthor(INoarkEntity entity,
+    public void addAuthor(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() +
@@ -277,7 +278,7 @@ public class RecordHateoasHandler
      * @param hateoasNoarkObject hateoasRecord
      */
     @Override
-    public void addNewAuthor(INoarkEntity entity,
+    public void addNewAuthor(ISystemId entity,
                              IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemId() +
@@ -285,12 +286,12 @@ public class RecordHateoasHandler
     }
 
     /**
-     * Cast the INoarkEntity entity to a Record
+     * Cast the ISystemId entity to a Record
      *
      * @param entity the Record
      * @return a Record object
      */
-    private Record getRecord(@NotNull INoarkEntity entity) {
+    private Record getRecord(@NotNull ISystemId entity) {
         return (Record) entity;
     }
 }

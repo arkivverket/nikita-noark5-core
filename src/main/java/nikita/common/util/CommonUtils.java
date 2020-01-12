@@ -519,8 +519,9 @@ public final class CommonUtils {
 		    .setDocumentMediumCodeName(entity.getCodeName());
             }
 
-            public static void deserialiseNoarkSystemIdEntity(INoarkEntity noarkSystemIdEntity,
-                                                              ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseNoarkSystemIdEntity(
+                    ISystemId noarkSystemIdEntity,
+                    ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize systemId
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
                 if (null != currentNode) {
@@ -731,14 +732,19 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNikitaEntity(INoarkEntity nikitaEntity, ObjectNode objectNode, StringBuilder errors) {
-                deserialiseNoarkSystemIdEntity(nikitaEntity, objectNode, errors);
-                deserialiseNoarkCreateEntity(nikitaEntity, objectNode, errors);
-                deserialiseNoarkLastModifiedEntity(nikitaEntity, objectNode, errors);
+            public static void deserialiseSystemIdEntity(
+                    ISystemId systemIdEntity, ObjectNode objectNode,
+                    StringBuilder errors) {
+                deserialiseNoarkSystemIdEntity(
+                        systemIdEntity, objectNode, errors);
+                deserialiseNoarkCreateEntity(
+                        systemIdEntity, objectNode, errors);
+                deserialiseNoarkLastModifiedEntity(
+                        systemIdEntity, objectNode, errors);
             }
 
             public static void deserialiseNoarkGeneralEntity(INoarkGeneralEntity noarkGeneralEntity, ObjectNode objectNode, StringBuilder errors) {
-                deserialiseNikitaEntity(noarkGeneralEntity, objectNode, errors);
+                deserialiseSystemIdEntity(noarkGeneralEntity, objectNode, errors);
                 deserialiseNoarkFinaliseEntity(noarkGeneralEntity, objectNode, errors);
                 deserialiseNoarkTitleDescriptionEntity(noarkGeneralEntity, objectNode, errors);
 
@@ -1969,11 +1975,13 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printSystemIdEntity(JsonGenerator jgen,
-                                                   INoarkEntity systemIdEntity)
+            public static void printSystemIdEntity(
+                    JsonGenerator jgen, ISystemId systemIdEntity)
                     throws IOException {
-                if (systemIdEntity != null && systemIdEntity.getSystemId() != null) {
-                    jgen.writeStringField(SYSTEM_ID, systemIdEntity.getSystemId());
+                if (systemIdEntity != null &&
+                        systemIdEntity.getSystemId() != null) {
+                    jgen.writeStringField(SYSTEM_ID,
+                            systemIdEntity.getSystemId());
                 }
             }
 

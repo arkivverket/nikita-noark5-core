@@ -3,6 +3,7 @@ package nikita.webapp.hateoas;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 import nikita.webapp.security.IAuthorisation;
 import nikita.webapp.util.AddressComponent;
@@ -108,7 +109,7 @@ public class HateoasHandler
      * @param hateoasNoarkObject The Hateoas Noark Object
      */
     @Override
-    public void addSelfLink(INoarkEntity entity,
+    public void addSelfLink(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
@@ -122,7 +123,7 @@ public class HateoasHandler
     }
 
     @Override
-    public void addDocumentMedium(INoarkEntity entity,
+    public void addDocumentMedium(ISystemId entity,
                                   IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + DOCUMENT_MEDIUM,
@@ -131,26 +132,26 @@ public class HateoasHandler
 
     // Sub class should handle this, empty links otherwise!
     @Override
-    public void addEntityLinks(INoarkEntity entity,
+    public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
-    public void addEntityLinksOnCreate(INoarkEntity entity,
+    public void addEntityLinksOnCreate(ISystemId entity,
                                        IHateoasNoarkObject hateoasNoarkObject) {
         addEntityLinks(entity, hateoasNoarkObject);
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
-    public void addEntityLinksOnTemplate(INoarkEntity entity,
+    public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
     }
 
     // Sub class should handle this, empty links otherwise!
     @Override
-    public void addEntityLinksOnRead(INoarkEntity entity,
+    public void addEntityLinksOnRead(ISystemId entity,
                                      IHateoasNoarkObject hateoasNoarkObject) {
         addEntityLinks(entity, hateoasNoarkObject);
     }

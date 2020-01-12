@@ -2,7 +2,8 @@ package nikita.webapp.hateoas;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -44,13 +45,15 @@ import static nikita.common.config.N5ResourceMappings.*;
  Here ,it must just be a shortcut, but how do you assign the arkivdel to its arkiv? This must be wrong!!
  */
 @Component("classificationSystemHateoasHandler")
-public class ClassificationSystemHateoasHandler extends HateoasHandler implements IClassificationSystemHateoasHandler {
+public class ClassificationSystemHateoasHandler
+        extends HateoasHandler
+        implements IClassificationSystemHateoasHandler {
 
     public ClassificationSystemHateoasHandler() {
     }
 
     @Override
-    public void addEntityLinks(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
 
         // links for primary entities
         addSecondaryClassificationSystem(entity, hateoasNoarkObject);
@@ -65,48 +68,48 @@ public class ClassificationSystemHateoasHandler extends HateoasHandler implement
     }
 
     @Override
-    public void addEntityLinksOnTemplate(INoarkEntity entity,
+    public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         addClassificationType(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addClass(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addClass(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + CLASS + SLASH,
                 REL_FONDS_STRUCTURE_CLASS, false));
     }
 
     @Override
-    public void addNewClass(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewClass(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_CLASS + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CLASS, false));
     }
 
     @Override
-    public void addSeries(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addSeries(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
                 REL_FONDS_STRUCTURE_SERIES, false));
     }
 
     @Override
-    public void addSecondaryClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addSecondaryClassificationSystem(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
                 REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
-    public void addNewSecondaryClassificationSystem(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewSecondaryClassificationSystem(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CLASSIFICATION_SYSTEM + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION + SLASH,
                 REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
-    public void addClassificationType(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addClassificationType(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + CLASSIFICATION_SYSTEM_TYPE,
                 REL_METADATA_CLASSIFICATION_SYSTEM_TYPE, false));

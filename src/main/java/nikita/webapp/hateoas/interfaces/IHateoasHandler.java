@@ -2,6 +2,7 @@ package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.security.IAuthorisation;
 
 /**
@@ -29,22 +30,22 @@ public interface IHateoasHandler {
     void addLinksOnDelete(IHateoasNoarkObject hateoasNoarkObject,
                           IAuthorisation authorisation);
 
-    void addSelfLink(INoarkEntity entity,
+    void addSelfLink(ISystemId entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addEntityLinks(INoarkEntity entity,
+    void addEntityLinks(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addEntityLinksOnCreate(INoarkEntity entity,
+    void addEntityLinksOnCreate(ISystemId entity,
                                 IHateoasNoarkObject hateoasNoarkObject);
 
-    void addEntityLinksOnTemplate(INoarkEntity entity,
+    void addEntityLinksOnTemplate(ISystemId entity,
                                   IHateoasNoarkObject hateoasNoarkObject);
 
-    void addEntityLinksOnRead(INoarkEntity entity,
+    void addEntityLinksOnRead(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDocumentMedium(INoarkEntity entity,
+    void addDocumentMedium(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
 

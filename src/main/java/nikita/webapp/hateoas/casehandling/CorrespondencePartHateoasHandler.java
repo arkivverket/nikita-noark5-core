@@ -3,6 +3,7 @@ package nikita.webapp.hateoas.casehandling;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class CorrespondencePartHateoasHandler
 
     @Override
     public void addEntityLinksOnTemplate(
-            INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         addCorrespondencePartType(entity, hateoasNoarkObject);
     }
 

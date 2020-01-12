@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.interfaces.IPart;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePart;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
@@ -39,7 +40,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasObject(using = RecordHateoas.class)
 public class Record
         extends NoarkEntity
-        implements IRecordEntity, IPart, ICorrespondencePart {
+        implements ISystemId, IRecordEntity, IPart, ICorrespondencePart {
 
     /**
      * M604 - arkivertDato (xs:dateTime)

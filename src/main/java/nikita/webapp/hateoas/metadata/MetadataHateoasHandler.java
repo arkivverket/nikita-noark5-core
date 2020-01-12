@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class MetadataHateoasHandler
         implements IMetadataHateoasHandler {
 
     @Override
-    public void addSelfLink(INoarkEntity entity,
+    public void addSelfLink(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         String code = ((IMetadataEntity) entity).getCode();
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +

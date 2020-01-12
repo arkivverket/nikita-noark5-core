@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -11,115 +11,115 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 public interface IFileHateoasHandler
         extends IHateoasHandler {
 
-    void addSeries(INoarkEntity entity,
+    void addSeries(ISystemId entity,
                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addEndFile(INoarkEntity entity,
+    void addEndFile(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addExpandToCaseFile(INoarkEntity entity,
+    void addExpandToCaseFile(ISystemId entity,
                              IHateoasNoarkObject hateoasNoarkObject);
 
-    void addExpandToMeetingFile(INoarkEntity entity,
+    void addExpandToMeetingFile(ISystemId entity,
                                 IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRecord(INoarkEntity entity,
+    void addRecord(ISystemId entity,
                    IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewRecord(INoarkEntity entity,
+    void addNewRecord(ISystemId entity,
                       IHateoasNoarkObject hateoasNoarkObject);
 
-    void addComment(INoarkEntity entity,
+    void addComment(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewComment(INoarkEntity entity,
+    void addNewComment(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addParentFile(INoarkEntity entity,
+    void addParentFile(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSubFile(INoarkEntity entity,
+    void addSubFile(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSubFile(INoarkEntity entity,
+    void addNewSubFile(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCrossReference(INoarkEntity entity,
+    void addCrossReference(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCrossReference(INoarkEntity entity,
+    void addNewCrossReference(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
-    void addClass(INoarkEntity entity,
+    void addClass(ISystemId entity,
                   IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewClass(INoarkEntity entity,
+    void addNewClass(ISystemId entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addReferenceSeries(INoarkEntity entity,
+    void addReferenceSeries(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewReferenceSeries(INoarkEntity entity,
+    void addNewReferenceSeries(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
     void addReferenceSecondaryClassification(
-            INoarkEntity entity,
+            ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject);
 
     void addNewReferenceSecondaryClassification(
-            INoarkEntity entity,
+            ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPart(INoarkEntity entity,
+    void addPart(ISystemId entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPartPerson(INoarkEntity entity,
+    void addNewPartPerson(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPartUnit(INoarkEntity entity,
+    void addNewPartUnit(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
     // Add national identifiers
 
-    void addNewBuilding(INoarkEntity entity,
+    void addNewBuilding(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewCadastralUnit(INoarkEntity entity,
+    void addNewCadastralUnit(ISystemId entity,
                              IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewDNumber(INoarkEntity entity,
+    void addNewDNumber(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPlan(INoarkEntity entity,
+    void addNewPlan(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPosition(INoarkEntity entity,
+    void addNewPosition(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSocialSecurityNumber(INoarkEntity entity,
+    void addNewSocialSecurityNumber(ISystemId entity,
                                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewUnit(INoarkEntity entity,
+    void addNewUnit(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addBuilding(INoarkEntity entity,
+    void addBuilding(ISystemId entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addCadastralUnit(INoarkEntity entity,
+    void addCadastralUnit(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDNumber(INoarkEntity entity,
+    void addDNumber(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPlan(INoarkEntity entity,
+    void addPlan(ISystemId entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addPosition(INoarkEntity entity,
+    void addPosition(ISystemId entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSocialSecurityNumber(INoarkEntity entity,
+    void addSocialSecurityNumber(ISystemId entity,
                                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addUnit(INoarkEntity entity,
+    void addUnit(ISystemId entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 }

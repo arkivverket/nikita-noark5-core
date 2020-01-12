@@ -7,10 +7,6 @@ import java.util.UUID;
 public interface INoarkEntity
         extends Serializable, ICreate, ILastModified {
 
-    String getSystemId();
-
-    void setSystemId(UUID systemId);
-
     String getOwnedBy();
 
     void setOwnedBy(String ownedBy);

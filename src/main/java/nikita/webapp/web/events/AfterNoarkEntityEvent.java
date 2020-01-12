@@ -1,6 +1,6 @@
 package nikita.webapp.web.events;
 
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import org.springframework.context.ApplicationEvent;
 
 import javax.validation.constraints.NotNull;
@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 public class AfterNoarkEntityEvent
         extends ApplicationEvent {
 
-    INoarkEntity entity;
+    ISystemId entity;
 
     public AfterNoarkEntityEvent(Object source,
-                                 @NotNull INoarkEntity entity) {
+                                 @NotNull ISystemId entity) {
         super(source);
         this.entity = entity;
     }
@@ -24,7 +24,7 @@ public class AfterNoarkEntityEvent
         return entity.toString();
     }
 
-    public INoarkEntity getEntity() {
+    public ISystemId getEntity() {
         return entity;
     }
 }
