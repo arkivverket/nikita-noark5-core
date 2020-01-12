@@ -8,9 +8,9 @@ variables:
 stages:
 - build
 - test
-#- package
+- use
 
-noark5tester:
+noark5tester-runtest:
   stage: test
   variables:
     baseurl: "http://localhost:8092/noark5v5/"
@@ -20,9 +20,6 @@ noark5tester:
   - apt update
   - apt install -y git maven curl python python-mechanize
   - git clone https://github.com/petterreinholdtsen/noark5-tester
-  - locale || true
-  - locale charmap || true
-  - LC_ALL=C.UTF-8 locale charmap || true
   script:
   - atexit() { if [ "$serverpid" ]; then kill $serverpid; sleep 1; fi }
   - trap atexit EXIT
@@ -34,6 +31,37 @@ noark5tester:
   artifacts:
     paths:
     - build-run.log
+
+noark5tester-inoutin:
+  stage: use
+  variables:
+    baseurl: "http://localhost:8092/noark5v5/"
+  image: debian:buster
+  allow_failure: true
+  before_script:
+  - apt update
+  - apt install -y git maven curl python python-mechanize python-tz python-lxml
+  - git clone https://github.com/petterreinholdtsen/noark5-tester
+  script:
+  - nikitastarted=false
+  - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 build-run.log ; fi; fi }
+  - trap atexit EXIT
+  - mvn spring-boot:run > build-run.log 2>&1 &
+  - serverpid=$!
+  - echo "Waiting for nikita to start"
+  - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 11 -eq "$count" ]; then nikitastarted=true; fi
+  - cd noark5-tester
+  - export LC_ALL=C.UTF-8
+  - ./runtest  --baseurl $baseurl --keep
+  - ./export-all --baseurl $baseurl --xml --verbose
+  - find uttrekk-*
+  - depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
+  - echo "Trying to load data from $depotdir"
+  - ./import-uttrekk  --baseurl $baseurl --verbose "$depotdir"
+  artifacts:
+    paths:
+    - build-run.log
+    - noark5-tester/uttrekk-*/*
 
 maven-build:
   before_script:
