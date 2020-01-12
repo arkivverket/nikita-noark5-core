@@ -42,7 +42,7 @@ public class DocumentDescriptionHateoasSerializer
         jgen.writeStartObject();
 
         // handle DocumentDescription properties
-        printNikitaEntity(jgen, documentDescription);
+        printSystemIdEntity(jgen, documentDescription);
         if (documentDescription.getDocumentTypeCode() != null) {
             jgen.writeObjectFieldStart(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE);
             printCode(jgen,
@@ -79,7 +79,7 @@ public class DocumentDescriptionHateoasSerializer
                       documentDescription.getAssociatedWithRecordAsCodeName());
             jgen.writeEndObject();
         }
-
+        printModifiedEntity(jgen, documentDescription);
         printAuthor(jgen, documentDescription);
         printComment(jgen, documentDescription);
         printDisposal(jgen, documentDescription);

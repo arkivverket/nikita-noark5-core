@@ -44,6 +44,7 @@ public class PartHateoasSerializer
         if (part instanceof PartUnit) {
             printPartUnit(jgen, (IPartUnitEntity) part);
         }
+        printModifiedEntity(jgen, part);
         printHateoasLinks(jgen, partHateoas.
                 getLinks(part));
         jgen.writeEndObject();

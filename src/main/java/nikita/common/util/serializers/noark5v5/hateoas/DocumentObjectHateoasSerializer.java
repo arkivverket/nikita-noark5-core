@@ -29,7 +29,7 @@ public class DocumentObjectHateoasSerializer
         jgen.writeStartObject();
 
         // handle DocumentObject properties
-        printNikitaEntity(jgen, documentObject);
+        printSystemIdEntity(jgen, documentObject);
 
         if (documentObject.getVersionNumber() != null) {
             jgen.writeNumberField(DOCUMENT_OBJECT_VERSION_NUMBER,
@@ -42,7 +42,7 @@ public class DocumentObjectHateoasSerializer
                     documentObject.getVariantFormatCodeName());
             jgen.writeEndObject();
         }
-	if (documentObject.getFormatCode() != null) {
+        if (documentObject.getFormatCode() != null) {
             jgen.writeObjectFieldStart(DOCUMENT_OBJECT_FORMAT);
             printCode(jgen,
                     documentObject.getFormatCode(),
@@ -73,6 +73,7 @@ public class DocumentObjectHateoasSerializer
             jgen.writeStringField(DOCUMENT_OBJECT_MIME_TYPE,
                     documentObject.getMimeType());
         }
+        printModifiedEntity(jgen, documentObject);
         printElectronicSignature(jgen, documentObject);
         printConversion(jgen, documentObject);
         printHateoasLinks(jgen, documentObjectHateoas.getLinks(documentObject));

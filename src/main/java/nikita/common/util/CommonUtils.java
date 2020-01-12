@@ -1713,26 +1713,11 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printNikitaEntity(JsonGenerator jgen,
-                                                 INoarkEntity nikitaEntity)
-                    throws IOException {
-                printSystemIdEntity(jgen, nikitaEntity);
-                printCreateEntity(jgen, nikitaEntity);
-                if (null != nikitaEntity.getLastModifiedDate()) {
-                    jgen.writeStringField(LAST_MODIFIED_DATE,
-                        formatDateTime(nikitaEntity.getLastModifiedDate()));
-                }
-                if (null != nikitaEntity.getLastModifiedBy()) {
-                    jgen.writeStringField(LAST_MODIFIED_BY,
-                        nikitaEntity.getLastModifiedBy());
-                }
-            }
-
             public static void printClassificationSystemEntity(
                     JsonGenerator jgen,
                     IClassificationSystemEntity classificationSystem)
                     throws IOException {
-                printNikitaEntity(jgen, classificationSystem);
+                printSystemIdEntity(jgen, classificationSystem);
                 printTitleAndDescription(jgen, classificationSystem);
                 if (classificationSystem.getClassificationTypeCode() != null) {
                     jgen.writeObjectFieldStart(CLASSIFICATION_SYSTEM_TYPE);
@@ -1746,7 +1731,7 @@ public final class CommonUtils {
             public static void printFileEntity(JsonGenerator jgen,
                                                IFileEntity file)
                     throws IOException {
-                printNikitaEntity(jgen, file);
+                printSystemIdEntity(jgen, file);
                 printStorageLocation(jgen, file);
 
                 if (file.getFileId() != null) {
@@ -1833,7 +1818,7 @@ public final class CommonUtils {
                                                  IRecordEntity record)
                     throws IOException {
                 if (record != null) {
-                    printNikitaEntity(jgen, record);
+                    printSystemIdEntity(jgen, record);
                     if (record.getArchivedDate() != null) {
                         jgen.writeStringField(RECORD_ARCHIVED_DATE,
                                 formatDateTime(record.getArchivedDate()));
@@ -1972,6 +1957,20 @@ public final class CommonUtils {
                     jgen.writeStringField(FINALISED_DATE,
                             formatDateTime(finaliseEntity.getFinalisedDate()));
                 }
+            }
+
+            public static void printModifiedEntity(JsonGenerator jgen,
+                                                   ILastModified lastModified)
+                    throws IOException {
+                if (null != lastModified.getLastModifiedDate()) {
+                    jgen.writeStringField(LAST_MODIFIED_DATE,
+                            formatDateTime(lastModified.getLastModifiedDate()));
+                }
+                if (null != lastModified.getLastModifiedBy()) {
+                    jgen.writeStringField(LAST_MODIFIED_BY,
+                            lastModified.getLastModifiedBy());
+                }
+
             }
 
             public static void printSystemIdEntity(

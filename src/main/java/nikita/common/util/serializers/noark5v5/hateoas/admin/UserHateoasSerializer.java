@@ -34,7 +34,7 @@ public class UserHateoasSerializer
         User user = (User) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printNikitaEntity(jgen, user);
+        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, user);
         if (user.getUsername() != null) {
             jgen.writeStringField(USER_NAME, user.getUsername());
         }
