@@ -46,7 +46,7 @@ public class SystemIdHateoasHandler
                          IAuthorisation authorisation) {
         this.authorisation = authorisation;
 
-        Iterable<ISystemId> entities = (List<ISystemId>) (ISystemId)
+        Iterable<ISystemId> entities = (List<ISystemId>) (List)
         hateoasNoarkObject.getList();
         for (ISystemId entity : entities) {
             addSelfLink(entity, hateoasNoarkObject);
@@ -94,7 +94,7 @@ public class SystemIdHateoasHandler
                                    IAuthorisation authorisation) {
         this.authorisation = authorisation;
 
-        Iterable<ISystemId> entities = (List<ISystemId>) (ISystemId)
+        Iterable<ISystemId> entities = (List<ISystemId>) (List)
                 hateoasNoarkObject.getList();
         for (ISystemId entity : entities) {
             addEntityLinksOnTemplate(entity, hateoasNoarkObject);

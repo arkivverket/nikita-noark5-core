@@ -45,7 +45,7 @@ public class MetadataHateoasHandler
         this.authorisation = authorisation;
 
         Iterable<IMetadataEntity> entities = (List <IMetadataEntity>)
-                (IMetadataEntity) hateoasNoarkObject.getList();
+                (List) hateoasNoarkObject.getList();
         for (IMetadataEntity entity : entities) {
             addSelfLink(entity, hateoasNoarkObject);
             addEntityLinks(entity, hateoasNoarkObject);
