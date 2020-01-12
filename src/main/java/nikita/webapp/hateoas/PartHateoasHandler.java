@@ -20,7 +20,7 @@ import static nikita.common.config.N5ResourceMappings.PART_ROLE;
  **/
 @Component("partHateoasHandler")
 public class PartHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IPartHateoasHandler {
 
     @Override

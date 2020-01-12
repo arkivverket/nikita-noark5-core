@@ -255,8 +255,18 @@ public class MetadataSuperClass
     }
 
     @Override
+    public String getIdentifier() {
+        return getCode();
+    }
+
+    @Override
+    public String getIdentifierType() {
+        return CODE;
+    }
+
     // All Metadata entities belong to "metadata".
     // All children pick up the value from here
+    @Override
     public String getFunctionalTypeName() {
         return NOARK_METADATA_PATH;
     }

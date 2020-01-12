@@ -7,6 +7,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IAuthorEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.webapp.hateoas.HateoasHandler;
+import nikita.webapp.hateoas.SystemIdHateoasHandler;
+import nikita.webapp.hateoas.interfaces.ISystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +22,7 @@ import static nikita.common.config.N5ResourceMappings.AUTHOR;
  */
 @Component("authorHateoasHandler")
 public class AuthorHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IAuthorHateoasHandler {
 
     public AuthorHateoasHandler() {

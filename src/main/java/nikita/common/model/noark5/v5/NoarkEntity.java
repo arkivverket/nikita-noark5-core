@@ -23,8 +23,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
-import static nikita.common.config.N5ResourceMappings.LAST_MODIFIED_BY_ENG;
-import static nikita.common.config.N5ResourceMappings.LAST_MODIFIED_DATE_ENG;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
@@ -95,7 +94,6 @@ public class NoarkEntity
     @Column(name = LAST_MODIFIED_BY_ENG)
     private String lastModifiedBy;
 
-    @Override
     public String getSystemId() {
         if (null != systemId)
             return systemId.toString();
@@ -103,7 +101,6 @@ public class NoarkEntity
             return null;
     }
 
-    @Override
     public void setSystemId(UUID systemId) {
         this.systemId = systemId;
     }
@@ -193,9 +190,18 @@ public class NoarkEntity
     }
 
     @Override
+    public String getIdentifier() {
+        return getSystemId();
+    }
+
+    @Override
+    public String getIdentifierType() {
+        return SYSTEM_ID;
+    }
 
     // Most entities belong to arkivstruktur. These entities pick the value
     // up here
+    @Override
     public String getFunctionalTypeName() {
         return NOARK_FONDS_STRUCTURE_PATH;
     }

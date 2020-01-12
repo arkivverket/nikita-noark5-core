@@ -19,7 +19,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 @Component("documentObjectHateoasHandler")
 public class DocumentObjectHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IDocumentObjectHateoasHandler {
 
     public DocumentObjectHateoasHandler() {

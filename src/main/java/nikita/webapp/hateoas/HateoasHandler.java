@@ -48,26 +48,17 @@ public class HateoasHandler
     @Override
     public void addLinks(IHateoasNoarkObject hateoasNoarkObject,
                          IAuthorisation authorisation) {
-        this.authorisation = authorisation;
-
-        Iterable<INoarkEntity> entities = hateoasNoarkObject.getList();
-        for (INoarkEntity entity : entities) {
-            addSelfLink(entity, hateoasNoarkObject);
-            addEntityLinks(entity, hateoasNoarkObject);
-        }
-        // If hateoasNoarkObject is a list add a self link.
-        // { "entity": [], "_links": [] }
-        if (!hateoasNoarkObject.isSingleEntity()) {
-            String url = getRequestPathAndQueryString();
-            Link selfLink = new Link(url, getRelSelfLink(), false);
-            hateoasNoarkObject.addSelfLink(selfLink);
-        }
     }
 
     @Override
     public void addLinksOnCreate(IHateoasNoarkObject hateoasNoarkObject,
                                  IAuthorisation authorisation) {
         addLinks(hateoasNoarkObject, authorisation);
+    }
+
+    @Override
+    public void addLinksOnTemplate(IHateoasNoarkObject hateoasNoarkObject,
+                                   IAuthorisation authorisation) {
     }
 
     @Override
@@ -86,74 +77,6 @@ public class HateoasHandler
     public void addLinksOnDelete(IHateoasNoarkObject hateoasNoarkObject,
                                  IAuthorisation authorisation) {
         addLinks(hateoasNoarkObject, authorisation);
-    }
-
-    @Override
-    public void addLinksOnTemplate(IHateoasNoarkObject hateoasNoarkObject,
-                                   IAuthorisation authorisation) {
-        this.authorisation = authorisation;
-
-        Iterable<INoarkEntity> entities = hateoasNoarkObject.getList();
-        for (INoarkEntity entity : entities) {
-            addEntityLinksOnTemplate(entity, hateoasNoarkObject);
-        }
-    }
-
-    /**
-     * Create a self link and self pointing entity link. Allows a client to be
-     * able to identify the entity type. Described in:
-     * <p>
-     * https://github.com/arkivverket/noark5-tjenestegrensesnitt-standard/blob/master/kapitler/06-konsepter_og_prinsipper.md#identifisere-entitetstype
-     *
-     * @param entity             The Noark entity
-     * @param hateoasNoarkObject The Hateoas Noark Object
-     */
-    @Override
-    public void addSelfLink(ISystemId entity,
-                            IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
-                SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemId()
-                + SLASH, getRelSelfLink()));
-
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
-                SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemId()
-                + SLASH, entity.getBaseRel()));
-    }
-
-    @Override
-    public void addDocumentMedium(ISystemId entity,
-                                  IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + SLASH + DOCUMENT_MEDIUM,
-                REL_METADATA_DOCUMENT_MEDIUM, false));
-    }
-
-    // Sub class should handle this, empty links otherwise!
-    @Override
-    public void addEntityLinks(ISystemId entity,
-                               IHateoasNoarkObject hateoasNoarkObject) {
-    }
-
-    // Sub class should handle this, empty links otherwise!
-    @Override
-    public void addEntityLinksOnCreate(ISystemId entity,
-                                       IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
-    }
-
-    // Sub class should handle this, empty links otherwise!
-    @Override
-    public void addEntityLinksOnTemplate(ISystemId entity,
-                                         IHateoasNoarkObject hateoasNoarkObject) {
-    }
-
-    // Sub class should handle this, empty links otherwise!
-    @Override
-    public void addEntityLinksOnRead(ISystemId entity,
-                                     IHateoasNoarkObject hateoasNoarkObject) {
-        addEntityLinks(entity, hateoasNoarkObject);
     }
 
     protected String getRelSelfLink() {
@@ -231,4 +154,3 @@ public class HateoasHandler
         this.contextPath = contextPath;
     }
 }
-

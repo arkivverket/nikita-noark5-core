@@ -5,6 +5,8 @@ import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.HateoasHandler;
+import nikita.webapp.hateoas.SystemIdHateoasHandler;
+import nikita.webapp.hateoas.interfaces.ISystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,9 @@ import static nikita.common.config.Constants.*;
  * separate calls at the moment.
  */
 @Component("precedenceHateoasHandler")
-public class PrecedenceHateoasHandler extends HateoasHandler implements IPrecedenceHateoasHandler {
+public class PrecedenceHateoasHandler
+        extends SystemIdHateoasHandler
+        implements IPrecedenceHateoasHandler {
 
     @Override
     public void addEntityLinks(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {

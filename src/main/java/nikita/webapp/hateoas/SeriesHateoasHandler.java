@@ -29,7 +29,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 @Component("seriesHateoasHandler")
 public class SeriesHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements ISeriesHateoasHandler {
 
     public SeriesHateoasHandler() {

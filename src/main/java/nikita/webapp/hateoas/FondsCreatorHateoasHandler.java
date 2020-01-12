@@ -18,7 +18,7 @@ import static nikita.common.config.N5ResourceMappings.FONDS_CREATOR;
  */
 @Component("fondsCreatorHateoasHandler")
 public class FondsCreatorHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IFondsCreatorHateoasHandler {
 
     @Override

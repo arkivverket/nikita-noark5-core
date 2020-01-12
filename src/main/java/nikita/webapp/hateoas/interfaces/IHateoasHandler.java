@@ -8,7 +8,7 @@ import nikita.webapp.security.IAuthorisation;
 /**
  * Created by tsodring on 2/6/17.
  * <p>
- * Describe Hateoas links handler
+ * Base class for Hateoas links handler
  */
 public interface IHateoasHandler {
 
@@ -29,28 +29,6 @@ public interface IHateoasHandler {
 
     void addLinksOnDelete(IHateoasNoarkObject hateoasNoarkObject,
                           IAuthorisation authorisation);
-
-    void addSelfLink(ISystemId entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addSelfLink(INoarkEntity entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinks(ISystemId entity,
-                        IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinksOnCreate(ISystemId entity,
-                                IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinksOnTemplate(ISystemId entity,
-                                  IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinksOnRead(ISystemId entity,
-                              IHateoasNoarkObject hateoasNoarkObject);
-
-    void addDocumentMedium(ISystemId entity,
-                           IHateoasNoarkObject hateoasNoarkObject);
-
 
     // The following are required to give @Value during reflection
     void setPublicAddress(String publicAddress);

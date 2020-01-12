@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.HateoasHandler;
+import nikita.webapp.hateoas.SystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ import static nikita.common.config.N5ResourceMappings.NEW_ADMINISTRATIVE_UNIT;
  */
 @Component("userHateoasHandler")
 public class UserHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IUserHateoasHandler {
 
     @Override

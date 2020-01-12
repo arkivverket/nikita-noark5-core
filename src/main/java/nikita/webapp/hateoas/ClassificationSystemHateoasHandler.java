@@ -46,7 +46,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 @Component("classificationSystemHateoasHandler")
 public class ClassificationSystemHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IClassificationSystemHateoasHandler {
 
     public ClassificationSystemHateoasHandler() {

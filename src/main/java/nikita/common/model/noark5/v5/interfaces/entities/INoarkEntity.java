@@ -26,7 +26,8 @@ public interface INoarkEntity
     /**
      * Tell nikita what you are. A Fonds returns
      * <p>
-     * https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/
+     * https://rel.arkivverket.no/noark5/v5/api/
+     * arkivstruktur/arkiv/
      * <p>
      * Required when building endpoint URI in Hateoas links.
      *
@@ -45,4 +46,22 @@ public interface INoarkEntity
 
     void createReference(@NotNull INoarkEntity entity,
                          @NotNull String referenceType);
+
+    /***
+     * Returns the identifier of the entity. For example, if it is a SystemId
+     * entity, then the systemId value is returned or if it is a Metadata
+     * entity the code value is returned.
+     *
+     * @return the identifier of the entity
+     */
+    String getIdentifier();
+
+    /***
+     * Returns the identifier typ of the entity. For example, if it is a
+     * SystemIdentity, then 'systemId' is returned or if it is a
+     * Metadata entity then 'code' is returned.
+     *
+     * @return the identifier type of the entity
+     */
+    String getIdentifierType();
 }

@@ -20,7 +20,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 @Component
 public class FondsHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IFondsHateoasHandler {
 
     public FondsHateoasHandler() {

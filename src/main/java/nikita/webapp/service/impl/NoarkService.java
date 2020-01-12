@@ -82,8 +82,9 @@ public class NoarkService {
             return true;
         } else {
             String message = "User [" + getUser() + "] tried to delete a " +
-                    entity.getBaseTypeName() + " with systemId [" +
-                    entity.getSystemId() + "] but is not the owner";
+                    entity.getBaseTypeName() + " with " +
+                    entity.getIdentifierType() + "[" +
+                    entity.getIdentifier() + "] but is not the owner";
             logger.error(message);
             throw new AccessDeniedException(message);
         }

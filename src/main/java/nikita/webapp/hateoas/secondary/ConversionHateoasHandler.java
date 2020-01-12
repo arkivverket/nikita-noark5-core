@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.webapp.hateoas.HateoasHandler;
+import nikita.webapp.hateoas.SystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ import static nikita.common.config.N5ResourceMappings.CONVERSION;
  */
 @Component("conversionHateoasHandler")
 public class ConversionHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IConversionHateoasHandler {
 
     public ConversionHateoasHandler() {
