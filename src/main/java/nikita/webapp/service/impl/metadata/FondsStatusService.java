@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl.metadata;
 
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.repository.n5v5.metadata.IFondsStatusRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.List;
 
 import static nikita.common.config.Constants.*;
 
@@ -58,10 +60,9 @@ public class FondsStatusService
      * @return
      */
     @Override
-    public ArrayList<INoarkEntity> findAll() {
-        return (ArrayList<INoarkEntity>)
-                (ArrayList) fondsStatusRepository
-                        .findAll();
+    public List<IMetadataEntity> findAll() {
+        return (List<IMetadataEntity>) (List)
+                fondsStatusRepository.findAll();
     }
 
 

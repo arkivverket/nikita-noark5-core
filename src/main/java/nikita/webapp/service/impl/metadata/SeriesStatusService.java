@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
+
 import static nikita.common.config.Constants.*;
 
 @Service
@@ -60,7 +62,7 @@ public class SeriesStatusService
      * @return List of all SeriesStatus objects
      */
     @Override
-    public Iterable<SeriesStatus> findAll() {
+    public List<SeriesStatus> findAll() {
         return seriesStatusRepository.findAll();
     }
 

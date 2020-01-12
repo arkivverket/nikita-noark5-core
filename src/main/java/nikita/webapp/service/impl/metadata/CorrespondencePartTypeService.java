@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl.metadata;
 
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v5.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
@@ -57,8 +60,9 @@ public class CorrespondencePartTypeService
      * @return
      */
     @Override
-    public Iterable<CorrespondencePartType> findAll() {
-        return correspondencePartTypeRepository.findAll();
+    public List<IMetadataEntity> findAll() {
+        return (List<IMetadataEntity>) (List)
+                correspondencePartTypeRepository.findAll();
     }
 
     /**

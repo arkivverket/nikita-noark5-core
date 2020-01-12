@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl.metadata;
 
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.repository.n5v5.metadata.IDocumentStatusRepository;
 import nikita.webapp.service.impl.NoarkService;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 /**
  * Created by tsodring on 31/1/18.
@@ -53,8 +55,9 @@ public class DocumentStatusService
      * @return
      */
     @Override
-    public Iterable<DocumentStatus> findAll() {
-        return documentStatusRepository.findAll();
+    public List<IMetadataEntity> findAll() {
+        return (List<IMetadataEntity>) (List)
+                documentStatusRepository.findAll();
     }
 
     // find by code

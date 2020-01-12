@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Country;
 import nikita.common.repository.n5v5.metadata.ICountryRepository;
@@ -79,15 +80,14 @@ public class CountryService
     @Override
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INoarkEntity>) (List)
-                        countryRepository.findAll(), COUNTRY);
+                (List<IMetadataEntity>) (List)
+                countryRepository.findAll(), COUNTRY);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
     /**
      * retrieve all Country that have a particular code.
-
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of Country objects wrapped as a MetadataHateoas
@@ -121,11 +121,11 @@ public class CountryService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param code The code of the country object you wish to
-     *                 update
-     * @param incomingCountry  The updated country object. Note the values
-     *                         you are allowed to change are copied from this
-     *                         object. This object is not persisted.
+     * @param code            The code of the country object you wish to
+     *                        update
+     * @param incomingCountry The updated country object. Note the values
+     *                        you are allowed to change are copied from this
+     *                        object. This object is not persisted.
      * @return the updated country
      */
     @Override

@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.PostalCode;
 import nikita.common.repository.n5v5.metadata.IPostalCodeRepository;
@@ -82,7 +83,7 @@ public class PostalCodeService
     @SuppressWarnings("unchecked")
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INoarkEntity>) (List)
+                (List<IMetadataEntity>) (List)
                         postalCodeRepository.findAll(), POST_CODE);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;

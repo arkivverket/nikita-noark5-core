@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.FlowStatus;
 import nikita.common.repository.n5v5.metadata.IFlowStatusRepository;
@@ -79,7 +80,7 @@ public class FlowStatusService
     @Override
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INoarkEntity>) (List)
+                (List<IMetadataEntity>) (List)
                         flowStatusRepository.findAll(), FLOW_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;

@@ -86,8 +86,7 @@ public class DocumentStatusController {
     @GetMapping(value = DOCUMENT_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INoarkEntity>)
-                        (List) documentStatusService.findAll(),
+                documentStatusService.findAll(),
                 DOCUMENT_STATUS);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
 

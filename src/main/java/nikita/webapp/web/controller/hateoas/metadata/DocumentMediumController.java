@@ -83,9 +83,7 @@ public class DocumentMediumController {
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         //ArrayList <DocumentMedium> documentMediumList = (ArrayList<DocumentMedium>) documentMediumService.findAll2();
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INoarkEntity>)
-                        (List) documentMediumService.findAll(),
-                DOCUMENT_MEDIUM);
+                documentMediumService.findAll(), DOCUMENT_MEDIUM);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
