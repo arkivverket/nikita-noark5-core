@@ -21,21 +21,6 @@ public class PartRole
 
     private static final long serialVersionUID = 1L;
 
-    @OneToMany(mappedBy = "referencePartRole")
-    private List<Part> referencePart;
-
-    public List<Part> getReferencePart() {
-        return referencePart;
-    }
-
-    public void setReferencePart(List<Part> referencePart) {
-        this.referencePart = referencePart;
-    }
-
-    public void addPart(Part part) {
-        this.referencePart.add(part);
-    }
-
     @Override
     public String getBaseTypeName() {
         return PART_ROLE;
