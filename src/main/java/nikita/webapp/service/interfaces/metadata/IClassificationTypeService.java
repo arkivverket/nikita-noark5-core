@@ -9,14 +9,13 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 11/03/18.
  */
 
-public interface IClassificationTypeService {
+public interface IClassificationTypeService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewClassificationType(
             ClassificationType classificationType);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,
