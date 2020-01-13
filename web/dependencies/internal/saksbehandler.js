@@ -806,7 +806,7 @@ var caseHandlerController = app.controller('CaseHandlerController',
                 }).then(function successCallback(response) {
                     $scope.documentDescription = response.data;
                     $scope.selectedAssociatedWithRecordAs = $scope.documentDescription.tilknyttetRegistreringSom;
-                    $scope.selectedDocumentStatus = $scope.documentDescription.dokumentstatus;
+                    $scope.selectedDocumentStatus = $scope.documentDescription.dokumentstatus.kodenavn;
                     $scope.documentETag = response.headers('eTag');
                     $scope.fetchDocumentObjects();
                     console.log("Retrieved the following document " + JSON.stringify($scope.documentDescription));

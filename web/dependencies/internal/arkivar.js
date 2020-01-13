@@ -43,6 +43,7 @@ app.controller('ArkivarController',
             $scope.showSeriesCard = false;
 
             // Set default values for drop downs
+            $scope.selectedFondsStatusCode = "O";
             $scope.selectedFondsStatus = "Opprettet";
 
             // Create variables to bind with ng-model and modals so we can blank them out
@@ -97,7 +98,10 @@ app.controller('ArkivarController',
                     data: {
                         tittel: $scope.fonds.tittel,
                         beskrivelse: $scope.fonds.beskrivelse,
-                        arkivstatus: $scope.selectedFondsStatus
+                        arkivstatus: {
+			    kode: $scope.selectedFondsStatusCode,
+			    kodenavn: $scope.selectedFondsStatus
+			}
                     }
                 }).then(function successCallback(response) {
                     console.log("PUT on fonds data returned= " + JSON.stringify(response.data));
@@ -132,7 +136,10 @@ app.controller('ArkivarController',
                     data: {
                         tittel: $scope.series.tittel,
                         beskrivelse: $scope.series.beskrivelse,
-                        arkivdelstatus: $scope.selectedSeriesStatus
+                        arkivdelstatus: {
+			    kode: $scope.selectedSeriesStatusCode
+			    kodenavn: $scope.selectedSeriesStatus
+			}
                     }
                 }).then(function successCallback(response) {
                     console.log("PUT on series data returned= " + JSON.stringify(response.data));
@@ -239,7 +246,10 @@ app.controller('ArkivarController',
                     data: {
                         tittel: $scope.newTitleForSeries,
                         beskrivelse: $scope.newDescriptionForSeries,
-                        arkivdelstatus: "Opprettet"
+                        arkivdelstatus: {
+			    kode: "O",
+			    kodenavn: "Opprettet"
+			}
                     },
                 }).then(function successCallback(response) {
                     console.log("POST on series data returned= " +
@@ -277,7 +287,10 @@ app.controller('ArkivarController',
                     data: {
                         tittel: $.trim(document.getElementById("nyTittelArkiv").value),
                         beskrivelse: $.trim(document.getElementById("nyBeskrivelseArkiv").value),
-                        arkivstatus: $.trim($scope.selectedFondsStatus)
+                        arkivstatus: {
+			    'kode': $.trim($scope.selectedFondsStatusCode)
+			    'kodenavn': $.trim($scope.selectedFondsStatus)
+			}
                     }
                 }).then(function successCallback(response) {
                     console.log("POST to create new fonds data returned= " + JSON.stringify(response.data));
@@ -395,7 +408,8 @@ app.controller('ArkivarController',
                     $scope.fondsETag = response.headers('eTag');
                     console.log("Retrieved the following fonds " + JSON.stringify($scope.fonds));
                     console.log("The ETAG header for the fonds is " + $scope.fondsETag);
-                    $scope.selectedFondsStatus = $scope.fonds.arkivstatus;
+                    $scope.selectedFondsStatusCode = $scope.fonds.arkivstatus.kode;
+                    $scope.selectedFondsStatus = $scope.fonds.arkivstatus.kodenavn;
                 });
             };
 
@@ -414,7 +428,8 @@ app.controller('ArkivarController',
                     console.log("Retrieved the following series " + JSON.stringify($scope.series));
                     console.log("The ETAG header for the series is " + $scope.seriesETag);
                     $scope.selectedDocumentMediumSeries = $scope.series.dokumentmedium;
-                    $scope.selectedSeriesStatus = $scope.series.arkivdelstatus;
+                    $scope.selectedSeriesStatusCode = $scope.series.arkivdelstatus.kode;
+                    $scope.selectedSeriesStatus = $scope.series.arkivdelstatus.kodenavn;
                 });
             };
 

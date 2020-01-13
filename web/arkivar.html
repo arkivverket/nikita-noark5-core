@@ -96,7 +96,7 @@
                                     {{fonds.tittel}}
                                 </td>
                                 <td>
-                                    {{fonds.arkivstatus}}
+                                    {{fonds.arkivstatus.kodenavn}}
                                 </td>
                                 <td>
                                     {{fonds.opprettetDato | date:'yyyy-MM-dd'}}
@@ -270,7 +270,7 @@
                                     <select class="form-control form-control-lg rounded-1" data-placement="top"
                                             data-toggle="tooltip"
                                             id="arkivstatus" ng-model="selectedFondsStatus"
-                                            title="En arkiv kan enten være aktiv (status Opprettet) eller avsluttet (status Avsluttet). Merk! Å sette status til Avlsuttet angir at du er ferdig med arkivdanning i dette arkivet">
+                                            title="En arkiv kan enten være aktiv (status Opprettet) eller avsluttet (status Avsluttet). Merk! Å sette status til Avsluttet angir at du er ferdig med arkivdanning i dette arkivet">
                                         <option ng-repeat="fondsStatus in fondsStatusList"
                                                 ng-selected="{{fondsStatus.value == selectedFondsStatus}}"
                                                 value="{{fondsStatus.value}}">{{fondsStatus.value}}
