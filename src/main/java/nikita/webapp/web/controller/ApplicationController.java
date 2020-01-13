@@ -45,8 +45,7 @@ public class ApplicationController {
     }
 
     @Counted
-    @GetMapping(value = HREF_OPENID_CONFIGURATION,
-                produces = CONTENT_TYPE_JSON)
+    @GetMapping(value = HREF_OPENID_CONFIGURATION, produces = CONTENT_TYPE_JSON)
     public ResponseEntity<OIDCConfiguration> getOpenIdConfiguration(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
@@ -64,7 +63,7 @@ public class ApplicationController {
     }
 
     @Counted
-    @GetMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH)
+    @GetMapping(value = HREF_BASE_FONDS_STRUCTURE)
     public ResponseEntity<FondsStructureDetails> getFondsStructure(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
@@ -73,7 +72,7 @@ public class ApplicationController {
     }
 
     @Counted
-    @GetMapping(value = HREF_BASE_METADATA + SLASH)
+    @GetMapping(value = HREF_BASE_METADATA)
     public ResponseEntity<MetadataDetails> getMetadataPath(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
@@ -82,7 +81,7 @@ public class ApplicationController {
     }
 
     @Counted
-    @GetMapping(value = HREF_BASE_ADMIN + SLASH)
+    @GetMapping(value = HREF_BASE_ADMIN)
     public ResponseEntity<AdministrationDetails> getAdminPath(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
@@ -91,7 +90,7 @@ public class ApplicationController {
     }
 
     @Counted
-    @GetMapping(value = HREF_BASE_CASE_HANDLING + SLASH)
+    @GetMapping(value = HREF_BASE_CASE_HANDLING)
     public ResponseEntity<CaseHandlingDetails> getCaseHandling(
             HttpServletRequest request) {
         CaseHandlingDetails c1 = applicationService.getCaseHandlingDetails();
