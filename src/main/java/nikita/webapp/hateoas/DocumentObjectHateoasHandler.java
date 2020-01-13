@@ -3,7 +3,8 @@ package nikita.webapp.hateoas;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +19,15 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 @Component("documentObjectHateoasHandler")
 public class DocumentObjectHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IDocumentObjectHateoasHandler {
 
     public DocumentObjectHateoasHandler() {
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinks(ISystemId entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
 
         // links for primary entities
         addDocumentDescription(entity, hateoasNoarkObject);
@@ -40,20 +42,20 @@ public class DocumentObjectHateoasHandler
     }
 
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity,
+    public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         addVariantFormat(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addConversion(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + CONVERSION + SLASH,
                 REL_FONDS_STRUCTURE_CONVERSION, false));
     }
 
     @Override
-    public void addNewConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewConversion(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + NEW_CONVERSION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CONVERSION, false));
@@ -71,35 +73,35 @@ public class DocumentObjectHateoasHandler
      */
     @Override
     public void addDocumentDescription(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + getDocumentDescriptionSystemId(entity),
                 REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION));
     }
 
     @Override
-    public void addReferenceDocumentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addReferenceDocumentFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + REFERENCE_FILE + SLASH,
                 REL_FONDS_STRUCTURE_DOCUMENT_FILE, false));
     }
 
     @Override
-    public void addConvertFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addConvertFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + CONVERT_FILE,
                 REL_FONDS_STRUCTURE_CONVERT_FILE, false));
     }
 
     @Override
-    public void addVariantFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addVariantFormat(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + VARIANT_FORMAT,
                 REL_METADATA_VARIANT_FORMAT, false));
     }
 
     @Override
-    public void addFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addFormat(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + FORMAT,
                 REL_METADATA_FORMAT, false));
@@ -108,13 +110,13 @@ public class DocumentObjectHateoasHandler
     // Internal helper methods
 
     /**
-     * Cast the INikitaEntity entity to a DocumentObject and retrieve the
+     * Cast the ISystemId entity to a DocumentObject and retrieve the
      * systemId of the associated DocumentDescription
      *
      * @param entity the DocumentObject
      * @return systemId of the associated DocumentDescription
      */
-    private String getDocumentDescriptionSystemId(INikitaEntity entity) {
+    private String getDocumentDescriptionSystemId(ISystemId entity) {
         if (((DocumentObject) entity).getReferenceDocumentDescription()
                 != null) {
             return ((DocumentObject) entity).getReferenceDocumentDescription()

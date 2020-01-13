@@ -1,6 +1,9 @@
 package nikita.webapp.service.interfaces.metadata;
 
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
+
+import java.util.List;
 
 /**
  * Created by tsodring on 3/9/17.
@@ -9,7 +12,7 @@ public interface IDocumentMediumService {
 
     DocumentMedium createNewDocumentMedium(DocumentMedium documentMedium);
 
-    Iterable<DocumentMedium> findAll();
+    List<IMetadataEntity> findAll();
 
     DocumentMedium update(DocumentMedium documentMedium);
 

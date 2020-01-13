@@ -1,15 +1,10 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import static nikita.common.config.Constants.REL_METADATA_CASE_STATUS;
@@ -28,11 +23,6 @@ public class CaseStatus
     @Column(name = "case_status")
     @Audited
     private Boolean caseStatus;
-
-    // Links to CaseFile
-    @OneToMany(mappedBy = "referenceCaseFileStatus")
-    @JsonIgnore
-    private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
     @Override
     public String getBaseTypeName() {

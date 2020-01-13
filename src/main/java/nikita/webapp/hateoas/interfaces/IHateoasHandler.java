@@ -1,13 +1,14 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.security.IAuthorisation;
 
 /**
  * Created by tsodring on 2/6/17.
  * <p>
- * Describe Hateoas links handler
+ * Base class for Hateoas links handler
  */
 public interface IHateoasHandler {
 
@@ -28,25 +29,6 @@ public interface IHateoasHandler {
 
     void addLinksOnDelete(IHateoasNoarkObject hateoasNoarkObject,
                           IAuthorisation authorisation);
-
-    void addSelfLink(INikitaEntity entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinks(INikitaEntity entity,
-                        IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinksOnCreate(INikitaEntity entity,
-                                IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinksOnTemplate(INikitaEntity entity,
-                                  IHateoasNoarkObject hateoasNoarkObject);
-
-    void addEntityLinksOnRead(INikitaEntity entity,
-                              IHateoasNoarkObject hateoasNoarkObject);
-
-    void addDocumentMedium(INikitaEntity entity,
-                           IHateoasNoarkObject hateoasNoarkObject);
-
 
     // The following are required to give @Value during reflection
     void setPublicAddress(String publicAddress);

@@ -2,7 +2,8 @@ package nikita.webapp.hateoas;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -19,18 +20,18 @@ import static nikita.common.config.N5ResourceMappings.PART_ROLE;
  **/
 @Component("partHateoasHandler")
 public class PartHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IPartHateoasHandler {
 
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity,
+    public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject
                                                  hateoasNoarkObject) {
         addPartRole(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addPartRole(INikitaEntity entity,
+    public void addPartRole(INoarkEntity entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + PART_ROLE, REL_METADATA_PART_ROLE,

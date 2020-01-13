@@ -1,11 +1,11 @@
 package nikita.common.model.noark5.v5.interfaces.entities.admin;
 
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 5/23/17.
  */
-public interface IRoleEntity extends INikitaEntity {
+public interface IRoleEntity extends INoarkEntity {
     String getRole();
 
     void setRole(String role);

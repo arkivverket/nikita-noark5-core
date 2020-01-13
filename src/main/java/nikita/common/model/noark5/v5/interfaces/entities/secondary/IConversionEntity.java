@@ -3,11 +3,12 @@ package nikita.common.model.noark5.v5.interfaces.entities.secondary;
 import java.time.OffsetDateTime;
 
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 // FIXME check if this inheritence is ok.
 public interface IConversionEntity
-        extends INikitaEntity {
+        extends ISystemId {
 
     OffsetDateTime getConvertedDate();
 

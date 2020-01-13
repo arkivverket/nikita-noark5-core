@@ -3,7 +3,8 @@ package nikita.webapp.hateoas;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +20,14 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 @Component("fileHateoasHandler")
 public class FileHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IFileHateoasHandler {
 
     public FileHateoasHandler() {
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
 
         // Add the child links
@@ -73,7 +74,7 @@ public class FileHateoasHandler
 
     @Override
     public void addEntityLinksOnTemplate(
-            INikitaEntity entity,
+            ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
@@ -93,7 +94,7 @@ public class FileHateoasHandler
      * @param hateoasNoarkObject hateoasFile
      */
     @Override
-    public void addSeries(INikitaEntity entity,
+    public void addSeries(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
         File file = getFile(entity);
         if (file.getReferenceSeries() != null) {
@@ -115,7 +116,7 @@ public class FileHateoasHandler
      * @param hateoasNoarkObject hateoasFile
      */
     @Override
-    public void addClass(INikitaEntity entity,
+    public void addClass(ISystemId entity,
                          IHateoasNoarkObject hateoasNoarkObject) {
         File file = getFile(entity);
         if (file.getReferenceClass() != null) {
@@ -126,7 +127,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addEndFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEndFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_END + SLASH,
                 REL_FONDS_STRUCTURE_END_FILE,
@@ -134,49 +135,49 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addExpandToCaseFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addExpandToCaseFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_CASE_FILE + SLASH,
                 REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE, false));
     }
 
     @Override
-    public void addExpandToMeetingFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addExpandToMeetingFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_MEETING_FILE + SLASH,
                 REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE, false));
     }
 
     @Override
-    public void addRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRecord(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + RECORD + SLASH,
                 REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override
-    public void addNewRecord(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewRecord(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_RECORD + SLASH,
                 REL_FONDS_STRUCTURE_NEW_RECORD, false));
     }
 
     @Override
-    public void addComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_COMMENT, false));
     }
 
     @Override
-    public void addNewComment(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_COMMENT, false));
     }
 
     @Override
-    public void addParentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addParentFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         File file = getFile(entity).getReferenceParentFile();
         if (file != null) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
@@ -186,14 +187,14 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addSubFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addSubFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SUB_FILE + SLASH,
                 REL_FONDS_STRUCTURE_SUB_FILE, false));
     }
 
     @Override
-    public void addNewSubFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewSubFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_FILE,
                 REL_FONDS_STRUCTURE_NEW_FILE, false));
@@ -211,7 +212,7 @@ public class FileHateoasHandler
      */
     @Override
     public void addPart(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
                         entity.getSystemId() + SLASH + PART + SLASH,
@@ -220,7 +221,7 @@ public class FileHateoasHandler
 
     @Override
     public void addNewPartPerson(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
                         entity.getSystemId() + SLASH + NEW_PART_PERSON + SLASH,
@@ -229,7 +230,7 @@ public class FileHateoasHandler
 
     @Override
     public void addNewPartUnit(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
                         entity.getSystemId() + SLASH + NEW_PART_UNIT + SLASH,
@@ -237,55 +238,55 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addCrossReference(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_CROSS_REFERENCE, false));
     }
 
     @Override
-    public void addNewCrossReference(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewCrossReference(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CROSS_REFERENCE, false));
     }
 
     @Override
-    public void addNewClass(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewClass(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CLASS + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CLASS, false));
     }
 
     @Override
-    public void addReferenceSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addReferenceSeries(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
                 REL_FONDS_STRUCTURE_REFERENCE_SERIES, false));
     }
 
     @Override
-    public void addNewReferenceSeries(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewReferenceSeries(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SERIES + SLASH,
                 REL_FONDS_STRUCTURE_NEW_REFERENCE_SERIES, false));
     }
 
     @Override
-    public void addReferenceSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addReferenceSecondaryClassification(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + SECONDARY_CLASSIFICATION + SLASH,
                 REL_CASE_HANDLING_SECONDARY_CLASSIFICATION, false));
     }
 
     @Override
-    public void addNewReferenceSecondaryClassification(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addNewReferenceSecondaryClassification(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION_SYSTEM + SLASH,
                 REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
     }
 
-    public void addMetadataFileType(INikitaEntity entity,
+    public void addMetadataFileType(ISystemId entity,
                                     IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + FILE_TYPE,
@@ -293,7 +294,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addNewBuilding(INikitaEntity entity,
+    public void addNewBuilding(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -301,7 +302,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addNewCadastralUnit(INikitaEntity entity,
+    public void addNewCadastralUnit(ISystemId entity,
                                     IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -309,7 +310,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addNewDNumber(INikitaEntity entity,
+    public void addNewDNumber(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -317,7 +318,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addNewPlan(INikitaEntity entity,
+    public void addNewPlan(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -325,7 +326,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addNewPosition(INikitaEntity entity,
+    public void addNewPosition(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -334,7 +335,7 @@ public class FileHateoasHandler
 
     @Override
     public void addNewSocialSecurityNumber(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 NEW_SOCIAL_SECURITY_NUMBER,
@@ -342,7 +343,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addNewUnit(INikitaEntity entity,
+    public void addNewUnit(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -350,7 +351,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addBuilding(INikitaEntity entity,
+    public void addBuilding(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -358,7 +359,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addCadastralUnit(INikitaEntity entity,
+    public void addCadastralUnit(ISystemId entity,
                                  IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -366,7 +367,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addDNumber(INikitaEntity entity,
+    public void addDNumber(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -374,7 +375,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addPlan(INikitaEntity entity,
+    public void addPlan(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -382,7 +383,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addPosition(INikitaEntity entity,
+    public void addPosition(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -391,7 +392,7 @@ public class FileHateoasHandler
 
     @Override
     public void addSocialSecurityNumber(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 SOCIAL_SECURITY_NUMBER,
@@ -399,7 +400,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addUnit(INikitaEntity entity,
+    public void addUnit(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
@@ -407,12 +408,12 @@ public class FileHateoasHandler
     }
 
     /**
-     * Cast the INikitaEntity entity to a File
+     * Cast the ISystemId entity to a File
      *
      * @param entity the File
      * @return a File object
      */
-    private File getFile(@NotNull INikitaEntity entity) {
+    private File getFile(@NotNull ISystemId entity) {
         return (File) entity;
     }
 }

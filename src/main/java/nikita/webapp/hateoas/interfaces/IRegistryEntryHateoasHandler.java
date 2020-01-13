@@ -1,37 +1,38 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 /**
  * Created by tsodring on 2/6/17.
  * <p>
  * Describe Hateoas links handler
  */
-public interface IRegistryEntryHateoasHandler extends IRecordHateoasHandler {
+public interface IRegistryEntryHateoasHandler
+        extends IRecordHateoasHandler {
 
-    void addPrecedence(INikitaEntity entity,
+    void addPrecedence(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewPrecedence(INikitaEntity entity,
+    void addNewPrecedence(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSignOff(INikitaEntity entity,
+    void addSignOff(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSignOff(INikitaEntity entity,
+    void addNewSignOff(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
-    void addDocumentFlow(INikitaEntity entity,
+    void addDocumentFlow(ISystemId entity,
                          IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewDocumentFlow(INikitaEntity entity,
+    void addNewDocumentFlow(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
     // Metadata entries
-    void addRegistryEntryStatus(INikitaEntity entity,
+    void addRegistryEntryStatus(ISystemId entity,
                                 IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRegistryEntryType(INikitaEntity entity,
+    void addRegistryEntryType(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 }

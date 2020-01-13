@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartEntity;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartUnitDeserializer;
@@ -23,7 +24,7 @@ import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART;
 @JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
 @Audited
 public class CorrespondencePart
-        extends NoarkEntity
+        extends SystemIdEntity
         implements ICorrespondencePartEntity {
 
     /**

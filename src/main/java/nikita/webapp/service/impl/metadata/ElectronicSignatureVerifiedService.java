@@ -1,7 +1,8 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.ElectronicSignatureVerified;
 import nikita.common.repository.n5v5.metadata.IElectronicSignatureVerifiedRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -85,7 +86,7 @@ public class ElectronicSignatureVerifiedService
     @Override
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
+                (List<IMetadataEntity>) (List)
                         electronicSignatureVerifiedRepository.findAll()
                 , ELECTRONIC_SIGNATURE_VERIFIED);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
@@ -166,10 +167,6 @@ public class ElectronicSignatureVerifiedService
 
         metadataHateoasHandler.addLinks(electronicSignatureVerifiedHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        existingElectronicSignatureVerified));
         return electronicSignatureVerifiedHateoas;
     }
 

@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -11,6 +11,6 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 public interface IPartHateoasHandler
         extends IHateoasHandler {
 
-    void addPartRole(INikitaEntity entity,
+    void addPartRole(INoarkEntity entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 }

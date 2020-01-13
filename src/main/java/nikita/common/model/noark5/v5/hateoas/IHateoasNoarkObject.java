@@ -1,15 +1,15 @@
 package nikita.common.model.noark5.v5.hateoas;
 
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 import java.util.List;
 
 public interface IHateoasNoarkObject {
-    List<Link> getLinks(INikitaEntity entity);
+    List<Link> getLinks(INoarkEntity entity);
 
-    List<INikitaEntity> getList();
+    List<INoarkEntity> getList();
 
-    void addLink(INikitaEntity entity, Link link);
+    void addLink(INoarkEntity entity, Link link);
 
     void addSelfLink(Link selfLink);
 

@@ -3,7 +3,7 @@ package nikita.common.util.serializers.noark5v5.hateoas.secondary;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
@@ -26,7 +26,7 @@ import java.io.IOException;
 public class PrecedenceHateoasSerializer extends HateoasSerializer implements IHateoasSerializer {
 
     @Override
-    public void serializeNoarkEntity(INikitaEntity noarkSystemIdEntity,
+    public void serializeNoarkEntity(INoarkEntity noarkSystemIdEntity,
                                      HateoasNoarkObject precedenceHateoas, JsonGenerator jgen) throws IOException {
         Precedence precedence = (Precedence) noarkSystemIdEntity;
 

@@ -1,8 +1,9 @@
 package nikita.webapp.hateoas.nationalidentifier;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.HateoasHandler;
+import nikita.webapp.hateoas.SystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.IPlanHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PlanHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IPlanHateoasHandler {
 
     public PlanHateoasHandler() {
@@ -19,6 +20,6 @@ public class PlanHateoasHandler
 
     @Override
     public void addEntityLinks(
-            INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+            ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
     }
 }

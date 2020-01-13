@@ -3,7 +3,7 @@ package nikita.common.util.serializers.noark5v5.hateoas.admin;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 
@@ -24,12 +24,12 @@ import static nikita.common.config.N5ResourceMappings.*;
 public class AdministrativeUnitHateoasSerializer extends HateoasSerializer implements nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer {
 
     @Override
-    public void serializeNoarkEntity(INikitaEntity noarkSystemIdEntity,
+    public void serializeNoarkEntity(INoarkEntity noarkSystemIdEntity,
                                      HateoasNoarkObject administrativeUnitHateoas, JsonGenerator jgen) throws IOException {
         AdministrativeUnit administrativeUnit = (AdministrativeUnit) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printNikitaEntity(jgen, administrativeUnit);
+        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, administrativeUnit);
         if (administrativeUnit.getAdministrativeUnitName() != null) {
             jgen.writeStringField(ADMINISTRATIVE_UNIT_NAME, administrativeUnit.getAdministrativeUnitName());
         }

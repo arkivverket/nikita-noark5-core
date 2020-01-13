@@ -13,7 +13,7 @@ import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.util.exceptions.NikitaException;
@@ -368,7 +368,7 @@ public class FileHateoasController
                     "Could not find File object with systemID " + systemID);
         }
         RecordHateoas recordHateoas = new
-                RecordHateoas((List<INikitaEntity>)
+                RecordHateoas((List<INoarkEntity>)
                 (List) file.getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
@@ -629,7 +629,7 @@ public class FileHateoasController
         String ownedBy = SecurityContextHolder.getContext().
                 getAuthentication().getName();
         FileHateoas fileHateoas = new
-                    FileHateoas((List<INikitaEntity>) (List)
+                    FileHateoas((List<INoarkEntity>) (List)
                     fileService.findByOwnedBy(ownedBy));
 
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());

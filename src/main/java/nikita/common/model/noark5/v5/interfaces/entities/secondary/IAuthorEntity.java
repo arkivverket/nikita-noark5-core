@@ -2,10 +2,10 @@ package nikita.common.model.noark5.v5.interfaces.entities.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 public interface IAuthorEntity
-        extends INikitaEntity {
+        extends INoarkEntity {
 
     String getAuthor();
 

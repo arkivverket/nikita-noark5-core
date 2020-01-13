@@ -23,7 +23,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @Entity
 @Table(name = TABLE_SCREENING)
 public class Screening
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IScreeningEntity {
 
     /**

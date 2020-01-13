@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -10,18 +10,18 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
  */
 public interface IDocumentObjectHateoasHandler extends IHateoasHandler {
 
-    void addDocumentDescription(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addDocumentDescription(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addConversion(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewConversion(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addNewConversion(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addReferenceDocumentFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addReferenceDocumentFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addConvertFile(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addConvertFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addVariantFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addVariantFormat(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 
-    void addFormat(INikitaEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addFormat(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 }
 

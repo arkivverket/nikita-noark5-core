@@ -2,7 +2,7 @@ package nikita.webapp.web.controller.hateoas;
 
 
 import nikita.common.model.noark5.v5.FondsCreator;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
@@ -82,7 +82,7 @@ public class NoarkController {
      * @param noarkEntity
      * @return true if the object is value
      */
-    protected boolean validateForCreate(INikitaEntity noarkEntity) {
+    protected boolean validateForCreate(INoarkEntity noarkEntity) {
         if (noarkEntity instanceof FondsCreator) {
             if (((FondsCreator)noarkEntity).getFondsCreatorId() == null) {
                 throw new NikitaMalformedInputDataException("The arkivskaper you tried to create is malformed. The "
@@ -97,7 +97,7 @@ public class NoarkController {
         return true;
     }
 
-    protected boolean validateForUpdate(INikitaEntity noarkEntity) {
+    protected boolean validateForUpdate(INoarkEntity noarkEntity) {
         //rejectIfEmptyOrWhitespace(ONLY_WHITESPACE);
         return true;
     }

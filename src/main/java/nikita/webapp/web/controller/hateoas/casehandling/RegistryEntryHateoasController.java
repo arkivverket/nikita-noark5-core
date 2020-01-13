@@ -11,7 +11,7 @@ import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
@@ -291,7 +291,7 @@ public class RegistryEntryHateoasController
             throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
         }
         DocumentFlowHateoas documentDescriptionHateoas = new
-                DocumentFlowHateoas((List<INikitaEntity>) (List)record.getReferenceDocumentFlow()));
+                DocumentFlowHateoas((List<INoarkEntity>) (List)record.getReferenceDocumentFlow()));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -324,7 +324,7 @@ public class RegistryEntryHateoasController
             throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
         }
         SignOffHateoas documentDescriptionHateoas = new
-                SignOffHateoas((List<INikitaEntity>) (List)record.getReferenceSignOff()));
+                SignOffHateoas((List<INoarkEntity>) (List)record.getReferenceSignOff()));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -357,7 +357,7 @@ public class RegistryEntryHateoasController
             throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
         }
         PrecedenceHateoas documentDescriptionHateoas = new
-                PrecedenceHateoas((List<INikitaEntity>) (List)record.getReferencePrecedence()));
+                PrecedenceHateoas((List<INoarkEntity>) (List)record.getReferencePrecedence()));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
@@ -414,7 +414,7 @@ public class RegistryEntryHateoasController
             @RequestParam(name = "top", required = false) Integer top,
             @RequestParam(name = "skip", required = false) Integer skip) {
         RegistryEntryHateoas registryEntryHateoas = new
-                RegistryEntryHateoas((List<INikitaEntity>) (List)
+                RegistryEntryHateoas((List<INoarkEntity>) (List)
                 registryEntryService.findRegistryEntryByOwnerPaginated(top, skip));
         registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
         return ResponseEntity.status(OK)

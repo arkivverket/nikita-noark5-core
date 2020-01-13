@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -24,7 +25,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @MappedSuperclass
 @HateoasPacker
 public class NoarkGeneralEntity
-        extends NoarkEntity
+        extends SystemIdEntity
         implements INoarkGeneralEntity {
 
     /**
@@ -102,7 +103,7 @@ public class NoarkGeneralEntity
     }
 
     @Override
-    public int compareTo(NoarkEntity otherEntity) {
+    public int compareTo(SystemIdEntity otherEntity) {
         if (null == otherEntity) {
             return -1;
         }

@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl.metadata;
 
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.repository.n5v5.metadata.IDocumentMediumRepository;
 import nikita.webapp.service.impl.NoarkService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 
 @Service
@@ -52,8 +54,9 @@ public class DocumentMediumService
      * @return
      */
     @Override
-    public Iterable<DocumentMedium> findAll() {
-        return documentMediumRepository.findAll();
+    public List<IMetadataEntity> findAll() {
+        return (List<IMetadataEntity>) (List)
+                documentMediumRepository.findAll();
     }
 
     /**

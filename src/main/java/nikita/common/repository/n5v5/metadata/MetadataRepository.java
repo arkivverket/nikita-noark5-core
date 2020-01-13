@@ -1,5 +1,6 @@
 package nikita.common.repository.n5v5.metadata;
 
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.stereotype.Repository;
@@ -14,10 +15,10 @@ import java.util.List;
 @Repository
 @NoRepositoryBean
 public interface MetadataRepository
-        <INikitaEntity, ID extends Serializable> extends
-        CrudRepository<INikitaEntity, String> {
+        <IMetadataEntity, ID extends Serializable> extends
+        CrudRepository<IMetadataEntity, String> {
 
-    List<INikitaEntity> findAll();
+    List<IMetadataEntity> findAll();
 
-    INikitaEntity findByCode(String code);
+    IMetadataEntity findByCode(String code);
 }

@@ -29,7 +29,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @Entity
 @Table(name = TABLE_CONTACT_CLASSIFIED)
 public class Classified
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IClassifiedEntity {
 
     private static final long serialVersionUID = 1L;

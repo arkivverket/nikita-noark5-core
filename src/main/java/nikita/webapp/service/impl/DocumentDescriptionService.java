@@ -6,7 +6,7 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.secondary.IAuthorRepository;
@@ -224,7 +224,7 @@ public class DocumentDescriptionService
         DocumentDescription documentDescription =
                 getDocumentDescriptionOrThrow(systemId);
         AuthorHateoas authorHateoas =
-                new AuthorHateoas((List<INikitaEntity>)
+                new AuthorHateoas((List<INoarkEntity>)
                         (List) documentDescription.getReferenceAuthor(),
                         AUTHOR);
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
@@ -242,7 +242,7 @@ public class DocumentDescriptionService
     @SuppressWarnings("unchecked")
     public ResponseEntity<DocumentDescriptionHateoas> findAll() {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas((List<INikitaEntity>)
+                DocumentDescriptionHateoas((List<INoarkEntity>)
                 (List) documentDescriptionRepository.findByOwnedBy(getUser()));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
                 new Authorisation());
@@ -258,7 +258,7 @@ public class DocumentDescriptionService
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId) {
         DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas((List<INikitaEntity>)
+                DocumentObjectHateoas((List<INoarkEntity>)
                 (List) getDocumentDescriptionOrThrow(systemId)
                         .getReferenceDocumentObject());
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
@@ -273,7 +273,7 @@ public class DocumentDescriptionService
     public ResponseEntity<RecordHateoas>
     findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId) {
         RecordHateoas recordHateoas = new
-                RecordHateoas((List<INikitaEntity>)
+                RecordHateoas((List<INoarkEntity>)
                 (List) getDocumentDescriptionOrThrow(systemId)
                         .getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas,
@@ -288,7 +288,7 @@ public class DocumentDescriptionService
     public PartHateoas getPartAssociatedWithDocumentDescription(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
-                (List<INikitaEntity>) (List)
+                (List<INoarkEntity>) (List)
                         getDocumentDescriptionOrThrow(systemID).
                                 getReferencePart());
         partHateoasHandler.addLinks(partHateoas, new Authorisation());

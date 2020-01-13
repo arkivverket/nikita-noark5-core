@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 /**
  * Created by tsodring on 29/05/19.
@@ -11,9 +11,9 @@ import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
 public interface IRecordNoteHateoasHandler
         extends IRecordHateoasHandler {
 
-    void addDocumentFlow(INikitaEntity entity,
+    void addDocumentFlow(ISystemId entity,
                          IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewDocumentFlow(INikitaEntity entity,
+    void addNewDocumentFlow(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 }

@@ -6,7 +6,7 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.repository.n5v5.ISeriesRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
@@ -128,7 +128,7 @@ public class SeriesService
     @Override
     public ResponseEntity<SeriesHateoas> findAll() {
         SeriesHateoas seriesHateoas = new
-                SeriesHateoas((List<INikitaEntity>) (List)
+                SeriesHateoas((List<INoarkEntity>) (List)
                 seriesRepository.findByOwnedBy(getUser()));
         seriesHateoasHandler.addLinksOnRead(seriesHateoas, new Authorisation());
         return ResponseEntity.status(OK)
@@ -147,7 +147,7 @@ public class SeriesService
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
             String systemId) {
         RecordHateoas recordHateoas = new RecordHateoas(
-                (List<INikitaEntity>) (List)
+                (List<INoarkEntity>) (List)
                         getSeriesOrThrow(systemId).getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(OK)
@@ -159,7 +159,7 @@ public class SeriesService
     public ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
             String systemId) {
         FileHateoas fileHateoas = new FileHateoas(
-                (List<INikitaEntity>) (List)
+                (List<INoarkEntity>) (List)
                         getSeriesOrThrow(systemId).getReferenceFile());
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         return ResponseEntity.status(OK)
@@ -181,7 +181,7 @@ public class SeriesService
             @NotNull final String systemId) {
         ClassificationSystemHateoas classificationSystemHateoas =
                 new ClassificationSystemHateoas(
-                        (List<INikitaEntity>) (List)
+                        (List<INoarkEntity>) (List)
                                 getSeriesOrThrow(systemId).
                                         getReferenceClassificationSystem());
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,

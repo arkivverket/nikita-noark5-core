@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.secondary;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,7 +20,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @Entity
 @Table(name = TABLE_ELECTRONIC_SIGNATURE)
 public class ElectronicSignature
-        extends NoarkEntity {
+        extends SystemIdEntity {
 
     /**
      * M??? - elektronisksignatursikkerhetsnivaa code (xs:string)

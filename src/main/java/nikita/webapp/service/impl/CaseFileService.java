@@ -9,7 +9,7 @@ import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
 import nikita.common.repository.n5v5.ICaseFileRepository;
 import nikita.common.repository.nikita.IUserRepository;
@@ -256,7 +256,7 @@ public class CaseFileService
     @SuppressWarnings("unchecked")
     public ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(Series series) {
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(
-                (List<INikitaEntity>)
+                (List<INoarkEntity>)
                         (List) caseFileRepository.findByReferenceSeries(series));
         caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         return ResponseEntity.status(OK)
@@ -354,19 +354,18 @@ public class CaseFileService
 
     public CaseFileHateoas generateDefaultCaseFile() {
         CaseFile defaultCaseFile = new CaseFile();
-        defaultCaseFile.setReferenceCaseFileStatus(
-                caseStatusService.generateDefaultCaseStatus());
         defaultCaseFile.setCaseResponsible(SecurityContextHolder.getContext().
                 getAuthentication().getName());
         defaultCaseFile.setCaseDate(OffsetDateTime.now());
         defaultCaseFile.setTitle(TEST_TITLE);
         defaultCaseFile.setOfficialTitle(TEST_TITLE);
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
-        defaultCaseFile.setCaseStatusCode(defaultCaseFile.
-                getReferenceCaseFileStatus().getCode());
+        defaultCaseFile.setCaseStatusCode(defaultCaseFile.getCaseStatusCode());
         defaultCaseFile.setCaseStatusCodeName(defaultCaseFile.
-                getReferenceCaseFileStatus().getCodeName());
+                        getCaseStatusCodeName());
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
+        defaultCaseFile.setCaseStatusCode(DEFAULT_CASE_STATUS_CODE);
+        defaultCaseFile.setCaseStatusCodeName(DEFAULT_CASE_STATUS_CODE_NAME);
 
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(defaultCaseFile);

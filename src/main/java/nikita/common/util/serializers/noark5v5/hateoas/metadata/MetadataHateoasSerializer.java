@@ -3,7 +3,7 @@ package nikita.common.util.serializers.noark5v5.hateoas.metadata;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
@@ -31,7 +31,7 @@ public class MetadataHateoasSerializer
             LoggerFactory.getLogger(MetadataHateoasSerializer.class);
 
     @Override
-    public void serializeNoarkEntity(INikitaEntity noarkSystemIdEntity,
+    public void serializeNoarkEntity(INoarkEntity noarkSystemIdEntity,
                                      HateoasNoarkObject metadataHateoas,
                                      JsonGenerator jgen)
             throws IOException {

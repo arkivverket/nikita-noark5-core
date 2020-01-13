@@ -11,13 +11,11 @@ import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
-import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -64,7 +62,7 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general record properties
-        deserialiseNikitaEntity(documentDescription, objectNode, errors);
+        deserialiseSystemIdEntity(documentDescription, objectNode, errors);
         deserialiseNoarkTitleDescriptionEntity(documentDescription,
                 objectNode, errors);
 

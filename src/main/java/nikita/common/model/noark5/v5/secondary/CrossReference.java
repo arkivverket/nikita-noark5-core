@@ -1,10 +1,9 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.Class;
-import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -29,8 +28,8 @@ import static nikita.common.config.N5ResourceMappings.CROSS_REFERENCE;
 @Entity
 @Table(name = TABLE_CROSS_REFERENCE)
 public class CrossReference
-        extends NoarkEntity
-        implements ICrossReferenceEntity {
+        extends SystemIdEntity
+        implements ISystemId, ICrossReferenceEntity {
 
     private static final long serialVersionUID = 1L;
 

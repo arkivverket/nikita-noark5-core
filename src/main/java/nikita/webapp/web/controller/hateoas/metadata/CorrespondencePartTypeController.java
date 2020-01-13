@@ -5,9 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
@@ -84,8 +84,8 @@ public class CorrespondencePartTypeController extends NoarkController {
     @GetMapping(value = CORRESPONDENCE_PART_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>)
-                        (List) correspondencePartTypeService.findAll(),
+                (List <IMetadataEntity>) (List)
+                correspondencePartTypeService.findAll(),
                 CORRESPONDENCE_PART_TYPE);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)

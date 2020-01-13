@@ -1,7 +1,7 @@
 package nikita.webapp.hateoas.interfaces.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 
 /**
@@ -12,6 +12,6 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 public interface ICorrespondencePartHateoasHandler
         extends IHateoasHandler {
 
-    void addCorrespondencePartType(INikitaEntity entity,
+    void addCorrespondencePartType(INoarkEntity entity,
                                    IHateoasNoarkObject hateoasNoarkObject);
 }

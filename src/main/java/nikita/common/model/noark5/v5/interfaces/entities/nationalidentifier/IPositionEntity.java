@@ -1,10 +1,11 @@
 package nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 public interface IPositionEntity
-        extends INikitaEntity, Comparable<NoarkEntity> {
+        extends INoarkEntity, Comparable<SystemIdEntity> {
     String getCoordinateSystem();
 
     void setCoordinateSystem(String coordinateSystem);

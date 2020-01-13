@@ -1,9 +1,7 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.Class;
-import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.Record;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -21,7 +19,7 @@ import static nikita.common.config.N5ResourceMappings.KEYWORD;
 @Entity
 @Table(name = TABLE_KEYWORD)
 public class Keyword
-        extends NoarkEntity {
+        extends SystemIdEntity {
 
     /**
      * M022 - noekkelord (xs:string)

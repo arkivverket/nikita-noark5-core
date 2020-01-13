@@ -9,7 +9,7 @@ import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IClassRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
@@ -223,7 +223,7 @@ public class ClassService
     @SuppressWarnings("unchecked")
     public ClassHateoas findAll(@NotNull String ownedBy) {
         ClassHateoas classHateoas = new
-                ClassHateoas((List<INikitaEntity>)
+                ClassHateoas((List<INoarkEntity>)
                 (List) classRepository.findByOwnedBy(ownedBy));
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
@@ -257,7 +257,7 @@ public class ClassService
     @SuppressWarnings("unchecked")
     public ClassHateoas findAllChildren(@NotNull String classSystemId) {
         ClassHateoas classHateoas = new
-                ClassHateoas((List<INikitaEntity>)
+                ClassHateoas((List<INoarkEntity>)
                 (List) getClassOrThrow(classSystemId).getReferenceChildClass());
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
@@ -312,7 +312,7 @@ public class ClassService
         Class existingClass = getClassOrThrow(systemId);
         FileHateoas fileHateoas =
             new FileHateoas(
-                (List<INikitaEntity>)(List)  existingClass.getReferenceFile()
+                (List<INoarkEntity>)(List)  existingClass.getReferenceFile()
                               );
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         return ResponseEntity.status(OK)
@@ -326,7 +326,7 @@ public class ClassService
         Class existingClass = getClassOrThrow(systemId);
         RecordHateoas recordHateoas =
             new RecordHateoas(
-                (List<INikitaEntity>)(List) existingClass.getReferenceRecord()
+                (List<INoarkEntity>)(List) existingClass.getReferenceRecord()
                               );
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(OK)

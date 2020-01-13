@@ -6,7 +6,7 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
@@ -231,7 +231,7 @@ public class FondsService
 
         Fonds fonds = getFondsOrThrow(fondsSystemId);
         SeriesHateoas seriesHateoas = new
-                SeriesHateoas((List<INikitaEntity>)
+                SeriesHateoas((List<INoarkEntity>)
                 (List) fonds.getReferenceSeries());
 
         seriesHateoasHandler.addLinks(seriesHateoas,
@@ -263,7 +263,7 @@ public class FondsService
         Fonds fonds = getFondsOrThrow(fondsSystemId);
 
         StorageLocationHateoas stroageLocationHateoas = new
-                StorageLocationHateoas((List<INikitaEntity>)
+                StorageLocationHateoas((List<INoarkEntity>)
                 (List) fonds.getReferenceStorageLocation());
         fondsCreatorHateoasHandler.addLinks(stroageLocationHateoas,
                 new Authorisation());
@@ -307,7 +307,7 @@ public class FondsService
         TypedQuery<Fonds> typedQuery = entityManager.createQuery(select);
 
         FondsHateoas fondsHateoas = new
-                FondsHateoas((List<INikitaEntity>)
+                FondsHateoas((List<INoarkEntity>)
                 (List) typedQuery.getResultList());
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         return fondsHateoas;
@@ -324,7 +324,7 @@ public class FondsService
     @SuppressWarnings("unchecked")
     public FondsHateoas findAllChildren(@NotNull String systemId) {
         FondsHateoas fondsHateoas = new
-                FondsHateoas((List<INikitaEntity>)
+                FondsHateoas((List<INoarkEntity>)
                 (List) getFondsOrThrow(systemId).getReferenceChildFonds());
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         return fondsHateoas;
@@ -348,7 +348,7 @@ public class FondsService
     findFondsCreatorAssociatedWithFonds(@NotNull final String systemId) {
         FondsCreatorHateoas fondsCreatorHateoas =
                 new FondsCreatorHateoas(
-                        (List<INikitaEntity>) (List)
+                        (List<INoarkEntity>) (List)
                                 getFondsOrThrow(systemId).
                                         getReferenceFondsCreator());
         fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas,

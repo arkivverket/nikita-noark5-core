@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IContactInformationEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,7 +23,7 @@ import static nikita.common.config.Constants.TABLE_CONTACT_INFORMATION;
 @Entity
 @Table(name = TABLE_CONTACT_INFORMATION)
 public class ContactInformation
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IContactInformationEntity {
 
     /**

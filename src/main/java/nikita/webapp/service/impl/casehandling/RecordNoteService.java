@@ -4,7 +4,7 @@ import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.casehandling.IRecordNoteRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
@@ -83,7 +83,7 @@ public class RecordNoteService
     public ResponseEntity<RecordNoteHateoas> findAllRecordNoteByCaseFile(
             CaseFile caseFile) {
         RecordNoteHateoas recordNoteHateoas = new RecordNoteHateoas(
-                (List<INikitaEntity>)
+                (List<INoarkEntity>)
                         (List) recordNoteRepository.
                                 findByReferenceFile(caseFile));
         recordNoteHateoasHandler.addLinks(recordNoteHateoas,
@@ -98,7 +98,7 @@ public class RecordNoteService
     @SuppressWarnings("unchecked")
     public ResponseEntity<RecordNoteHateoas> findAllByOwner() {
         RecordNoteHateoas recordNoteHateoas = new
-                RecordNoteHateoas((List<INikitaEntity>) (List)
+                RecordNoteHateoas((List<INoarkEntity>) (List)
                 recordNoteRepository.findByOwnedBy(getUser()));
         recordNoteHateoasHandler.addLinks(recordNoteHateoas,
                 new Authorisation());

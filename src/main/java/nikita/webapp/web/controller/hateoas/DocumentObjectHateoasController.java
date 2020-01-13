@@ -7,10 +7,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -101,7 +100,7 @@ public class DocumentObjectHateoasController
     public ResponseEntity<DocumentObjectHateoas> findAllDocumentObject(
             HttpServletRequest request) {
         DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas((List<INikitaEntity>) (List)
+                DocumentObjectHateoas((List<INoarkEntity>) (List)
                 documentObjectService.findDocumentObjectByOwner());
         documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
         return ResponseEntity.status(OK)

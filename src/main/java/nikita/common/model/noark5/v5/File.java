@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.interfaces.ICrossReference;
 import nikita.common.model.noark5.v5.interfaces.entities.IFileEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.FileDeserializer;
@@ -341,8 +342,7 @@ public class File
         this.referenceCrossReference.add(crossReference);
     }
 
-    @Override
-    public void createReference(@NotNull INikitaEntity entity,
+    public void createReference(@NotNull ISystemId entity,
                                 @NotNull String referenceType) {
 
         if (referenceType.equalsIgnoreCase(NEW_CROSS_REFERENCE)) {

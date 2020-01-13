@@ -92,15 +92,15 @@ public final class CommonUtils {
          * @param nikitaEntity incoming nikita object
          * @return true if valid. If not valid an exception is thrown
          */
-        public static boolean validateUpdateNoarkEntity(@NotNull INikitaEntity nikitaEntity) {
+        public static boolean validateUpdateNoarkEntity(@NotNull INoarkEntity nikitaEntity) {
 
-            if (nikitaEntity instanceof INoarkTitleDescriptionEntity) {
-                rejectIfEmptyOrWhitespace(((INoarkTitleDescriptionEntity) nikitaEntity).getDescription());
-                rejectIfEmptyOrWhitespace(((INoarkTitleDescriptionEntity) nikitaEntity).getTitle());
+            if (nikitaEntity instanceof ITitleDescription) {
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getDescription());
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getTitle());
             }
-            if (nikitaEntity instanceof INoarkTitleDescriptionEntity) {
-                rejectIfEmptyOrWhitespace(((INoarkTitleDescriptionEntity) nikitaEntity).getDescription());
-                rejectIfEmptyOrWhitespace(((INoarkTitleDescriptionEntity) nikitaEntity).getTitle());
+            if (nikitaEntity instanceof ITitleDescription) {
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getDescription());
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getTitle());
             }
 
 
@@ -519,8 +519,9 @@ public final class CommonUtils {
 		    .setDocumentMediumCodeName(entity.getCodeName());
             }
 
-            public static void deserialiseNoarkSystemIdEntity(INikitaEntity noarkSystemIdEntity,
-                                                              ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseNoarkSystemIdEntity(
+                    ISystemId noarkSystemIdEntity,
+                    ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize systemId
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
                 if (null != currentNode) {
@@ -531,10 +532,9 @@ public final class CommonUtils {
             }
 
 
-            public static void deserialiseNoarkMetadataEntity(IMetadataEntity metadataEntity,
-                                                              ObjectNode objectNode, StringBuilder errors) {
-                // Deserialize systemId
-                deserialiseNoarkSystemIdEntity(metadataEntity, objectNode, errors);
+            public static void deserialiseNoarkMetadataEntity(
+                    IMetadataEntity metadataEntity, ObjectNode objectNode,
+                    StringBuilder errors) {
 
                 JsonNode currentNode = objectNode.get(CODE);
                 if (null != currentNode) {
@@ -668,7 +668,7 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNoarkCreateEntity(INoarkCreateEntity noarkCreateEntity,
+            public static void deserialiseNoarkCreateEntity(ICreate noarkCreateEntity,
                                                             ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize createdDate
                 noarkCreateEntity.setCreatedDate(deserializeDateTime(CREATED_DATE, objectNode, errors));
@@ -685,7 +685,7 @@ public final class CommonUtils {
              * Deserialize to make sure GET + modify + PUT work.
              */
             public static void deserialiseNoarkLastModifiedEntity(
-                        INoarkLastModifiedEntity nikitaEntity,
+                        ILastModified nikitaEntity,
                         ObjectNode objectNode, StringBuilder errors) {
                 JsonNode currentNode = objectNode.get(LAST_MODIFIED_DATE);
                 if (null != currentNode) {
@@ -700,7 +700,7 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNoarkFinaliseEntity(INoarkFinaliseEntity finaliseEntity,
+            public static void deserialiseNoarkFinaliseEntity(IFinalise finaliseEntity,
                                                               ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize finalisedDate
                 finaliseEntity.setFinalisedDate(deserializeDateTime(FINALISED_DATE, objectNode, errors));
@@ -713,7 +713,7 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNoarkTitleDescriptionEntity(INoarkTitleDescriptionEntity
+            public static void deserialiseNoarkTitleDescriptionEntity(ITitleDescription
                                                                               titleDescriptionEntity,
                                                                       ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize title
@@ -731,14 +731,19 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseNikitaEntity(INikitaEntity nikitaEntity, ObjectNode objectNode, StringBuilder errors) {
-                deserialiseNoarkSystemIdEntity(nikitaEntity, objectNode, errors);
-                deserialiseNoarkCreateEntity(nikitaEntity, objectNode, errors);
-                deserialiseNoarkLastModifiedEntity(nikitaEntity, objectNode, errors);
+            public static void deserialiseSystemIdEntity(
+                    ISystemId systemIdEntity, ObjectNode objectNode,
+                    StringBuilder errors) {
+                deserialiseNoarkSystemIdEntity(
+                        systemIdEntity, objectNode, errors);
+                deserialiseNoarkCreateEntity(
+                        systemIdEntity, objectNode, errors);
+                deserialiseNoarkLastModifiedEntity(
+                        systemIdEntity, objectNode, errors);
             }
 
             public static void deserialiseNoarkGeneralEntity(INoarkGeneralEntity noarkGeneralEntity, ObjectNode objectNode, StringBuilder errors) {
-                deserialiseNikitaEntity(noarkGeneralEntity, objectNode, errors);
+                deserialiseSystemIdEntity(noarkGeneralEntity, objectNode, errors);
                 deserialiseNoarkFinaliseEntity(noarkGeneralEntity, objectNode, errors);
                 deserialiseNoarkTitleDescriptionEntity(noarkGeneralEntity, objectNode, errors);
 
@@ -1681,7 +1686,7 @@ public final class CommonUtils {
             }
 
             public static void printTitleAndDescription(JsonGenerator jgen,
-                                                        INoarkTitleDescriptionEntity titleDescriptionEntity)
+                                                        ITitleDescription titleDescriptionEntity)
                     throws IOException {
 
                 if (titleDescriptionEntity != null) {
@@ -1695,7 +1700,7 @@ public final class CommonUtils {
             }
 
             public static void printCreateEntity(JsonGenerator jgen,
-                                                 INoarkCreateEntity createEntity)
+                                                 ICreate createEntity)
                     throws IOException {
                 if (createEntity != null) {
                     if (createEntity.getCreatedDate() != null) {
@@ -1708,26 +1713,11 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printNikitaEntity(JsonGenerator jgen,
-                                                 INikitaEntity nikitaEntity)
-                    throws IOException {
-                printSystemIdEntity(jgen, nikitaEntity);
-                printCreateEntity(jgen, nikitaEntity);
-                if (null != nikitaEntity.getLastModifiedDate()) {
-                    jgen.writeStringField(LAST_MODIFIED_DATE,
-                        formatDateTime(nikitaEntity.getLastModifiedDate()));
-                }
-                if (null != nikitaEntity.getLastModifiedBy()) {
-                    jgen.writeStringField(LAST_MODIFIED_BY,
-                        nikitaEntity.getLastModifiedBy());
-                }
-            }
-
             public static void printClassificationSystemEntity(
                     JsonGenerator jgen,
                     IClassificationSystemEntity classificationSystem)
                     throws IOException {
-                printNikitaEntity(jgen, classificationSystem);
+                printSystemIdEntity(jgen, classificationSystem);
                 printTitleAndDescription(jgen, classificationSystem);
                 if (classificationSystem.getClassificationTypeCode() != null) {
                     jgen.writeObjectFieldStart(CLASSIFICATION_SYSTEM_TYPE);
@@ -1741,7 +1731,7 @@ public final class CommonUtils {
             public static void printFileEntity(JsonGenerator jgen,
                                                IFileEntity file)
                     throws IOException {
-                printNikitaEntity(jgen, file);
+                printSystemIdEntity(jgen, file);
                 printStorageLocation(jgen, file);
 
                 if (file.getFileId() != null) {
@@ -1828,7 +1818,7 @@ public final class CommonUtils {
                                                  IRecordEntity record)
                     throws IOException {
                 if (record != null) {
-                    printNikitaEntity(jgen, record);
+                    printSystemIdEntity(jgen, record);
                     if (record.getArchivedDate() != null) {
                         jgen.writeStringField(RECORD_ARCHIVED_DATE,
                                 formatDateTime(record.getArchivedDate()));
@@ -1958,7 +1948,7 @@ public final class CommonUtils {
             }
 
             public static void printFinaliseEntity(JsonGenerator jgen,
-                                                   INoarkFinaliseEntity finaliseEntity)
+                                                   IFinalise finaliseEntity)
                     throws IOException {
                 if (finaliseEntity.getFinalisedBy() != null) {
                     jgen.writeStringField(FINALISED_BY, finaliseEntity.getFinalisedBy());
@@ -1969,11 +1959,27 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printSystemIdEntity(JsonGenerator jgen,
-                                                   INikitaEntity systemIdEntity)
+            public static void printModifiedEntity(JsonGenerator jgen,
+                                                   ILastModified lastModified)
                     throws IOException {
-                if (systemIdEntity != null && systemIdEntity.getSystemId() != null) {
-                    jgen.writeStringField(SYSTEM_ID, systemIdEntity.getSystemId());
+                if (null != lastModified.getLastModifiedDate()) {
+                    jgen.writeStringField(LAST_MODIFIED_DATE,
+                            formatDateTime(lastModified.getLastModifiedDate()));
+                }
+                if (null != lastModified.getLastModifiedBy()) {
+                    jgen.writeStringField(LAST_MODIFIED_BY,
+                            lastModified.getLastModifiedBy());
+                }
+
+            }
+
+            public static void printSystemIdEntity(
+                    JsonGenerator jgen, ISystemId systemIdEntity)
+                    throws IOException {
+                if (systemIdEntity != null &&
+                        systemIdEntity.getSystemId() != null) {
+                    jgen.writeStringField(SYSTEM_ID,
+                            systemIdEntity.getSystemId());
                 }
             }
 

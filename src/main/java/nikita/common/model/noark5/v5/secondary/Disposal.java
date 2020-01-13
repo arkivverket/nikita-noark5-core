@@ -24,7 +24,7 @@ import static nikita.common.config.N5ResourceMappings.DISPOSAL;
 @Entity
 @Table(name = TABLE_DISPOSAL)
 public class Disposal
-        extends NoarkEntity
+        extends SystemIdEntity
         implements IDisposalEntity {
 
     private static final long serialVersionUID = 1L;

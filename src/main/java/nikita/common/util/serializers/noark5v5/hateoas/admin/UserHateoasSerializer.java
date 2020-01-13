@@ -3,7 +3,7 @@ package nikita.common.util.serializers.noark5v5.hateoas.admin;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
@@ -28,13 +28,13 @@ public class UserHateoasSerializer
         implements IHateoasSerializer {
 
     @Override
-    public void serializeNoarkEntity(INikitaEntity noarkSystemIdEntity,
+    public void serializeNoarkEntity(INoarkEntity noarkSystemIdEntity,
                                      HateoasNoarkObject userHateoas,
                                      JsonGenerator jgen) throws IOException {
         User user = (User) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printNikitaEntity(jgen, user);
+        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, user);
         if (user.getUsername() != null) {
             jgen.writeStringField(USER_NAME, user.getUsername());
         }

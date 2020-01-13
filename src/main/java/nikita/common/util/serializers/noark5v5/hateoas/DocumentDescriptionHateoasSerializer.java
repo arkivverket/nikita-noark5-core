@@ -3,7 +3,7 @@ package nikita.common.util.serializers.noark5v5.hateoas;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class DocumentDescriptionHateoasSerializer
 
     @Override
     public void serializeNoarkEntity(
-            INikitaEntity noarkEntity,
+            INoarkEntity noarkEntity,
             HateoasNoarkObject documentDescriptionHateoas,
             JsonGenerator jgen
     ) throws IOException {
@@ -42,7 +42,7 @@ public class DocumentDescriptionHateoasSerializer
         jgen.writeStartObject();
 
         // handle DocumentDescription properties
-        printNikitaEntity(jgen, documentDescription);
+        printSystemIdEntity(jgen, documentDescription);
         if (documentDescription.getDocumentTypeCode() != null) {
             jgen.writeObjectFieldStart(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE);
             printCode(jgen,
@@ -79,7 +79,7 @@ public class DocumentDescriptionHateoasSerializer
                       documentDescription.getAssociatedWithRecordAsCodeName());
             jgen.writeEndObject();
         }
-
+        printModifiedEntity(jgen, documentDescription);
         printAuthor(jgen, documentDescription);
         printComment(jgen, documentDescription);
         printDisposal(jgen, documentDescription);

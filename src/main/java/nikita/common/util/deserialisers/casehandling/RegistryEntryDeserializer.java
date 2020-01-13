@@ -62,7 +62,7 @@ public class RegistryEntryDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general registryEntry properties
-        deserialiseNikitaEntity(registryEntry, objectNode, errors);
+        deserialiseSystemIdEntity(registryEntry, objectNode, errors);
 
         // Deserialize archivedBy
         JsonNode currentNode = objectNode.get(RECORD_ARCHIVED_BY);

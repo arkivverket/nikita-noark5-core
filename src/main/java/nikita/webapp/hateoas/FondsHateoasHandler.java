@@ -3,7 +3,8 @@ package nikita.webapp.hateoas;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 @Component
 public class FondsHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IFondsHateoasHandler {
 
     public FondsHateoasHandler() {
@@ -27,7 +28,7 @@ public class FondsHateoasHandler
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         // link for object identity
         addFonds(entity, hateoasNoarkObject);
@@ -47,19 +48,19 @@ public class FondsHateoasHandler
     }
 
     @Override
-    public void addEntityLinksOnCreate(INikitaEntity entity,
+    public void addEntityLinksOnCreate(ISystemId entity,
                                        IHateoasNoarkObject hateoasNoarkObject) {
         addEntityLinks(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addEntityLinksOnRead(INikitaEntity entity,
+    public void addEntityLinksOnRead(ISystemId entity,
                                      IHateoasNoarkObject hateoasNoarkObject) {
         addEntityLinks(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addEntityLinksOnTemplate(INikitaEntity entity,
+    public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         addDocumentMedium(entity, hateoasNoarkObject);
         addFondsStatus(entity, hateoasNoarkObject);
@@ -77,7 +78,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addFondsCreator(INikitaEntity entity,
+    public void addFondsCreator(ISystemId entity,
                                 IHateoasNoarkObject hateoasNoarkObject) {
         if (getFonds(entity).getReferenceFondsCreator().size() > 0) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
@@ -97,7 +98,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addSeries(INikitaEntity entity,
+    public void addSeries(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
         if (getFonds(entity).getReferenceSeries() != null) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
@@ -117,7 +118,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addFonds(INikitaEntity entity,
+    public void addFonds(ISystemId entity,
                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FONDS + SLASH + entity.getSystemId(),
@@ -136,7 +137,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addSubFonds(INikitaEntity entity,
+    public void addSubFonds(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH + SUB_FONDS,
@@ -155,7 +156,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addNewSeries(INikitaEntity entity,
+    public void addNewSeries(ISystemId entity,
                              IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH + NEW_SERIES,
@@ -174,7 +175,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addNewFondsCreator(INikitaEntity entity,
+    public void addNewFondsCreator(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH +
@@ -193,7 +194,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addNewSubFonds(INikitaEntity entity,
+    public void addNewSubFonds(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH + NEW_FONDS,
@@ -211,7 +212,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addParentFonds(INikitaEntity entity,
+    public void addParentFonds(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         Fonds fonds = getFonds(entity).getReferenceParentFonds();
         if (fonds != null) {
@@ -233,7 +234,7 @@ public class FondsHateoasHandler
      * @param hateoasNoarkObject hateoasFonds
      */
     @Override
-    public void addFondsStatus(INikitaEntity entity,
+    public void addFondsStatus(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + FONDS_STATUS,
@@ -243,12 +244,12 @@ public class FondsHateoasHandler
     // Internal helper methods
 
     /**
-     * Cast the INikitaEntity entity to a Fonds
+     * Cast the ISystemId entity to a Fonds
      *
      * @param entity the Fonds
      * @return a Fonds object
      */
-    private Fonds getFonds(@NotNull INikitaEntity entity) {
+    private Fonds getFonds(@NotNull ISystemId entity) {
         return (Fonds) entity;
     }
 }

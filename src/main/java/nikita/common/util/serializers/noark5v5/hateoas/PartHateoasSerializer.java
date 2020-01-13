@@ -5,7 +5,7 @@ import nikita.common.model.noark5.v5.Part;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartPersonEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartUnitEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
@@ -31,7 +31,7 @@ public class PartHateoasSerializer
 
     @Override
     public void serializeNoarkEntity(
-            INikitaEntity noarkSystemIdEntity,
+            INoarkEntity noarkSystemIdEntity,
             HateoasNoarkObject partHateoas, JsonGenerator jgen)
             throws IOException {
 
@@ -44,6 +44,7 @@ public class PartHateoasSerializer
         if (part instanceof PartUnit) {
             printPartUnit(jgen, (IPartUnitEntity) part);
         }
+        printModifiedEntity(jgen, part);
         printHateoasLinks(jgen, partHateoas.
                 getLinks(part));
         jgen.writeEndObject();

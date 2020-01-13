@@ -44,7 +44,7 @@ public class RecordNoteDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general recordNote properties
-        deserialiseNikitaEntity(recordNote, objectNode, errors);
+        deserialiseSystemIdEntity(recordNote, objectNode, errors);
 
         // Deserialize archivedBy
         JsonNode currentNode = objectNode.get(RECORD_ARCHIVED_BY);

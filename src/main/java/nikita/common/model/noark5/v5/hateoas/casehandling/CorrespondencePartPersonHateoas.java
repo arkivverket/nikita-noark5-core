@@ -3,7 +3,7 @@ package nikita.common.model.noark5.v5.hateoas.casehandling;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.casehandling.CorrespondencePartPersonHateoasSerializer;
 
 import java.util.List;
@@ -19,11 +19,11 @@ public class CorrespondencePartPersonHateoas
         extends HateoasNoarkObject
         implements IHateoasNoarkObject {
 
-    public CorrespondencePartPersonHateoas(INikitaEntity entity) {
+    public CorrespondencePartPersonHateoas(INoarkEntity entity) {
         super(entity);
     }
 
-    public CorrespondencePartPersonHateoas(List<INikitaEntity> entityList) {
+    public CorrespondencePartPersonHateoas(List<INoarkEntity> entityList) {
         super(entityList, CORRESPONDENCE_PART_PERSON);
     }
 }

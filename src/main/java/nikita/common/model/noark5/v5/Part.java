@@ -26,7 +26,6 @@ public class Part
         extends NoarkGeneralEntity
         implements IPartEntity {
 
-
     /**
      * M??? - partTypeKode kode (xs:string)
      */

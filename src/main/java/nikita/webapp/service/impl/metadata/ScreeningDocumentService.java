@@ -1,7 +1,8 @@
 package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.ScreeningDocument;
 import nikita.common.repository.n5v5.metadata.IScreeningDocumentRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -79,16 +80,14 @@ public class ScreeningDocumentService
     @Override
     public MetadataHateoas findAll() {
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>) (List)
-                        screeningDocumentRepository.findAll(),
-                SCREENING_DOCUMENT);
+                (List<IMetadataEntity>) (List)
+                screeningDocumentRepository.findAll(), SCREENING_DOCUMENT);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
 
     /**
      * retrieve all ScreeningDocument that have a particular code.
-
      *
      * @param code The code of the object you wish to retrieve
      * @return A list of ScreeningDocument objects wrapped as a MetadataHateoas
@@ -122,8 +121,8 @@ public class ScreeningDocumentService
      * <p>
      * Copy the values you are allowed to change, code and description
      *
-     * @param code          The code of the screeningDocument object you wish
-     *                          to update
+     * @param code                      The code of the screeningDocument object you wish
+     *                                  to update
      * @param incomingScreeningDocument The updated screeningDocument object.
      *                                  Note the values you are allowed to
      *                                  change are copied from this object.
@@ -149,10 +148,6 @@ public class ScreeningDocumentService
 
         metadataHateoasHandler.addLinks(screeningMetadataHateoas,
                 new Authorisation());
-
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityUpdatedEvent(this,
-                existingScreeningDocument));
         return screeningMetadataHateoas;
     }
 

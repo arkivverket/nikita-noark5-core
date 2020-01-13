@@ -3,7 +3,7 @@ package nikita.common.util.serializers.noark5v5.hateoas;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
@@ -28,13 +28,13 @@ public class SeriesHateoasSerializer
         implements IHateoasSerializer {
 
     @Override
-    public void serializeNoarkEntity(INikitaEntity noarkSystemIdEntity,
+    public void serializeNoarkEntity(INoarkEntity noarkSystemIdEntity,
                                      HateoasNoarkObject seriesHateoas,
                                      JsonGenerator jgen) throws IOException {
         Series series = (Series) noarkSystemIdEntity;
         jgen.writeStartObject();
 
-        printNikitaEntity(jgen, series);
+        printSystemIdEntity(jgen, series);
         printTitleAndDescription(jgen, series);
         if (series.getSeriesStatusCode() != null) {
             jgen.writeObjectFieldStart(SERIES_STATUS);
@@ -46,6 +46,7 @@ public class SeriesHateoasSerializer
         printDocumentMedium(jgen, series);
         printStorageLocation(jgen, series);
         printFinaliseEntity(jgen, series);
+        printModifiedEntity(jgen, series);
         if (series.getSeriesStartDate() != null) {
             jgen.writeStringField(SERIES_START_DATE,
                     Serialize.formatDate(series.getSeriesStartDate()));

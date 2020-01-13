@@ -49,7 +49,7 @@ public class DocumentObjectDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general DocumentObject properties
-        deserialiseNikitaEntity(documentObject, objectNode, errors);
+        deserialiseSystemIdEntity(documentObject, objectNode, errors);
         // Deserialize versionNumber
         JsonNode currentNode = objectNode.get(DOCUMENT_OBJECT_VERSION_NUMBER);
         if (null != currentNode) {

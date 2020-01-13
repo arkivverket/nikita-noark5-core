@@ -2,10 +2,12 @@ package nikita.webapp.hateoas.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.webapp.hateoas.HateoasHandler;
+import nikita.webapp.hateoas.SystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +19,14 @@ import static nikita.common.config.N5ResourceMappings.CONVERSION;
  */
 @Component("conversionHateoasHandler")
 public class ConversionHateoasHandler
-        extends HateoasHandler
+        extends SystemIdHateoasHandler
         implements IConversionHateoasHandler {
 
     public ConversionHateoasHandler() {
     }
 
     @Override
-    public void addSelfLink(INikitaEntity entity,
+    public void addSelfLink(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
 
         String parentEntity = "";
@@ -42,7 +44,7 @@ public class ConversionHateoasHandler
     }
 
     @Override
-    public void addEntityLinks(INikitaEntity entity,
+    public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         Conversion conversion = (Conversion) entity;
         addDocumentObject(conversion, hateoasNoarkObject);

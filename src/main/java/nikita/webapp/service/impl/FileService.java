@@ -5,7 +5,7 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
@@ -146,7 +146,7 @@ public class FileService
     @SuppressWarnings("unchecked")
     public FileHateoas findAllChildren(@NotNull String systemId) {
         FileHateoas fileHateoas = new
-                FileHateoas((List<INikitaEntity>)
+                FileHateoas((List<INoarkEntity>)
                 (List) getFileOrThrow(systemId).getReferenceChildFile());
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         return fileHateoas;
@@ -174,7 +174,7 @@ public class FileService
     public PartHateoas getPartAssociatedWithFile(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
-                (List<INikitaEntity>) (List) getFileOrThrow(systemID).
+                (List<INoarkEntity>) (List) getFileOrThrow(systemID).
                         getReferencePart());
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;

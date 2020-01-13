@@ -2,10 +2,9 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.repository.n5v5.IDocumentObjectRepository;
 import nikita.common.util.CommonUtils;
@@ -237,7 +236,7 @@ public class DocumentObjectService
     public ConversionHateoas
     findAllConversionAssociatedWithDocumentObject(String systemId) {
         ConversionHateoas conversionHateoas =
-            new ConversionHateoas((List<INikitaEntity>) (List)
+            new ConversionHateoas((List<INoarkEntity>) (List)
             getDocumentObjectOrThrow(systemId).getReferenceConversion(),
             CONVERSION);
         conversionHateoasHandler.addLinks(conversionHateoas,

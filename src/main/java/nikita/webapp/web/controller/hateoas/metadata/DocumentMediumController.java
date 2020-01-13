@@ -4,9 +4,8 @@ import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INikitaEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
@@ -84,9 +83,7 @@ public class DocumentMediumController {
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         //ArrayList <DocumentMedium> documentMediumList = (ArrayList<DocumentMedium>) documentMediumService.findAll2();
         MetadataHateoas metadataHateoas = new MetadataHateoas(
-                (List<INikitaEntity>)
-                        (List) documentMediumService.findAll(),
-                DOCUMENT_MEDIUM);
+                documentMediumService.findAll(), DOCUMENT_MEDIUM);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))

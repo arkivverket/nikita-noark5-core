@@ -2,15 +2,10 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public interface INikitaEntity
-        extends Serializable, INoarkCreateEntity, INoarkLastModifiedEntity {
-
-    String getSystemId();
-
-    void setSystemId(UUID systemId);
+public interface INoarkEntity
+        extends Serializable, ICreate, ILastModified {
 
     String getOwnedBy();
 
@@ -31,7 +26,8 @@ public interface INikitaEntity
     /**
      * Tell nikita what you are. A Fonds returns
      * <p>
-     * https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/
+     * https://rel.arkivverket.no/noark5/v5/api/
+     * arkivstruktur/arkiv/
      * <p>
      * Required when building endpoint URI in Hateoas links.
      *
@@ -48,6 +44,24 @@ public interface INikitaEntity
      */
     String getFunctionalTypeName();
 
-    void createReference(@NotNull INikitaEntity entity,
+    void createReference(@NotNull INoarkEntity entity,
                          @NotNull String referenceType);
+
+    /***
+     * Returns the identifier of the entity. For example, if it is a SystemId
+     * entity, then the systemId value is returned or if it is a Metadata
+     * entity the code value is returned.
+     *
+     * @return the identifier of the entity
+     */
+    String getIdentifier();
+
+    /***
+     * Returns the identifier typ of the entity. For example, if it is a
+     * SystemIdentity, then 'systemId' is returned or if it is a
+     * Metadata entity then 'code' is returned.
+     *
+     * @return the identifier type of the entity
+     */
+    String getIdentifierType();
 }
