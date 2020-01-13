@@ -176,6 +176,9 @@ public final class Constants {
     public static final String DEFAULT_TITLE = "Default title for ";
     public static final String DEFAULT_DESCRIPTION = "This object, if " +
             "persisted, will be associated with ";
+    public static final String DEFAULT_CASE_STATUS_CODE = "R";
+    public static final String DEFAULT_CASE_STATUS_CODE_NAME =
+            "Opprettet av saksbehandler";
 
     // Some user identifiers used for testing
     public static final String TEST_USER_CASE_HANDLER_1 = "example test user case handler 1";

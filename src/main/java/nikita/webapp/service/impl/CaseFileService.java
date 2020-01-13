@@ -364,6 +364,8 @@ public class CaseFileService
         defaultCaseFile.setCaseStatusCodeName(defaultCaseFile.
                         getCaseStatusCodeName());
         defaultCaseFile.setDescription(TEST_DESCRIPTION);
+        defaultCaseFile.setCaseStatusCode(DEFAULT_CASE_STATUS_CODE);
+        defaultCaseFile.setCaseStatusCodeName(DEFAULT_CASE_STATUS_CODE_NAME);
 
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(defaultCaseFile);
