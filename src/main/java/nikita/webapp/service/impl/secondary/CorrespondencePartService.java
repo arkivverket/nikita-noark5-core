@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInte
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
+import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v5.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.repository.n5v5.secondary.ICorrespondencePartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -204,6 +205,7 @@ public class CorrespondencePartService
             CorrespondencePartPerson correspondencePart,
             Record record) {
 
+        validateCorrespondencePartType(correspondencePart);
         ContactInformation contactInformation
                 = correspondencePart.getContactInformation();
         correspondencePart.setContactInformation(contactInformation);
@@ -249,6 +251,7 @@ public class CorrespondencePartService
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePart,
             Record record) {
+        validateCorrespondencePartType(correspondencePart);
         // Set NikitaEntity values for ContactInformation, PostalAddress,
         // BusinessAddress
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
@@ -284,6 +287,7 @@ public class CorrespondencePartService
     createNewCorrespondencePartInternal(
             CorrespondencePartInternal correspondencePart,
             Record record) {
+        validateCorrespondencePartType(correspondencePart);
         record.addCorrespondencePart(correspondencePart);
         correspondencePartRepository.save(correspondencePart);
         CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
@@ -625,5 +629,17 @@ public class CorrespondencePartService
         existingAddress.setPostalNumber(incomingAddress.getPostalNumber());
         existingAddress.setPostalTown(incomingAddress.getPostalTown());
         existingAddress.setCountryCode(incomingAddress.getCountryCode());
+    }
+
+    private void validateCorrespondencePartType(
+                CorrespondencePart correspondencePart) {
+        // Assume value already set, as the deserialiser will enforce it.
+        CorrespondencePartType correspondencePartType =
+            (CorrespondencePartType) correspondencePartTypeService
+            .findValidMetadataOrThrow(correspondencePart.getBaseTypeName(),
+                                      correspondencePart.getCorrespondencePartTypeCode(),
+                                      correspondencePart.getCorrespondencePartTypeCodeName());
+        correspondencePart.setCorrespondencePartTypeCodeName(
+            correspondencePartType.getCodeName());
     }
 }

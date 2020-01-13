@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v5.metadata.ICorrespondencePartTypeRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 @Service
 @Transactional
 public class CorrespondencePartTypeService
-        extends NoarkService
+        extends MetadataSuperService
         implements ICorrespondencePartTypeService {
 
     private static final Logger logger =
@@ -33,8 +34,10 @@ public class CorrespondencePartTypeService
     public CorrespondencePartTypeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            ICorrespondencePartTypeRepository correspondencePartTypeRepository) {
-        super(entityManager, applicationEventPublisher);
+            ICorrespondencePartTypeRepository correspondencePartTypeRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.correspondencePartTypeRepository = correspondencePartTypeRepository;
     }
 
@@ -73,8 +76,8 @@ public class CorrespondencePartTypeService
      * @return
      */
     @Override
-    public CorrespondencePartType findByCode(String code) {
-        return getCorrespondencePartTypeOrThrow(code);
+    public CorrespondencePartType findMetadataByCode(String code) {
+        return correspondencePartTypeRepository.findByCode(code);
     }
 
     /**
@@ -94,28 +97,6 @@ public class CorrespondencePartTypeService
     @Override
     public void deleteEntity(@NotNull String code) {
         correspondencePartTypeRepository.delete(
-                getCorrespondencePartTypeOrThrow(code));
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid CorrespondencePartType back. If
-     * there is no valid CorrespondencePartType, an exception is thrown
-     *
-     * @param code
-     * @return
-     */
-    protected CorrespondencePartType
-    getCorrespondencePartTypeOrThrow(@NotNull String code) {
-        CorrespondencePartType correspondencePartType =
-                correspondencePartTypeRepository.findByCode(code);
-        if (correspondencePartType == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " correspondencePartType, using kode " + code;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return correspondencePartType;
+            (CorrespondencePartType) findMetadataByCodeOrThrow(code));
     }
 }
