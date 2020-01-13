@@ -93,7 +93,6 @@ public class CaseFileService
     public CaseFile save(CaseFile caseFile) {
         checkDocumentMediumValid(caseFile);
 
-        // If caseStatus is not set, set it to "Opprettet"
         checkCaseStatusUponCreation(caseFile);
 
         // If the caseResponsible isn't set, set it to the owner of
