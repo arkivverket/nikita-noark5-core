@@ -3,6 +3,7 @@ package nikita.webapp.service.impl.metadata;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.repository.n5v5.metadata.IDocumentStatusRepository;
+import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,7 +21,7 @@ import java.util.List;
 @Service
 @Transactional
 public class DocumentStatusService
-        extends NoarkService
+        extends MetadataSuperService
         implements IDocumentStatusService {
 
     private IDocumentStatusRepository documentStatusRepository;
@@ -28,8 +29,9 @@ public class DocumentStatusService
     public DocumentStatusService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IDocumentStatusRepository documentStatusRepository) {
-        super(entityManager, applicationEventPublisher);
+            IDocumentStatusRepository documentStatusRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.documentStatusRepository = documentStatusRepository;
     }
 
@@ -60,18 +62,9 @@ public class DocumentStatusService
                 documentStatusRepository.findAll();
     }
 
-    // find by code
-
-    /**
-     * retrieve a single documentStatus identified by code
-     *
-     * @param code
-     * @return
-     */
     @Override
-    public DocumentStatus findByCode(String code) {
-        return documentStatusRepository.
-                findByCode(code);
+    public DocumentStatus findMetadataByCode(String code) {
+        return documentStatusRepository.findByCode(code);
     }
 
     /**
