@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
@@ -17,6 +18,7 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
+import nikita.webapp.service.interfaces.metadata.IRegistryEntryStatusService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -56,6 +58,7 @@ public class RegistryEntryService
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryService.class);
     private IPrecedenceService precedenceService;
+    private IRegistryEntryStatusService registryEntryStatusService;
     private IRegistryEntryRepository registryEntryRepository;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
     private ISequenceNumberGeneratorService numberGeneratorService;
@@ -66,6 +69,7 @@ public class RegistryEntryService
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IPrecedenceService precedenceService,
+            IRegistryEntryStatusService registryEntryStatusService,
             IRegistryEntryRepository registryEntryRepository,
             IRegistryEntryHateoasHandler registryEntryHateoasHandler,
             ISequenceNumberGeneratorService numberGeneratorService,
@@ -73,6 +77,7 @@ public class RegistryEntryService
             IAdministrativeUnitService administrativeUnitService) {
         super(entityManager, applicationEventPublisher);
         this.precedenceService = precedenceService;
+        this.registryEntryStatusService = registryEntryStatusService;
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
         this.numberGeneratorService = numberGeneratorService;
@@ -83,6 +88,7 @@ public class RegistryEntryService
     @Override
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
         checkDocumentMediumValid(registryEntry);
+        validateRegistryEntryStatus(registryEntry);
         registryEntry.setRecordDate(OffsetDateTime.now());
         File file = registryEntry.getReferenceFile();
         if (null != file) {
@@ -443,5 +449,17 @@ public class RegistryEntryService
             throw new NoarkEntityNotFoundException(info);
         }
         return registryEntry;
+    }
+
+    private void validateRegistryEntryStatus(RegistryEntry registryEntry) {
+        // Assume value already set, as the deserialiser will enforce it.
+        // FIXME note, RegistryEntry.*RecordStatus* is really
+        // operating on RegistryEntryStatus.
+        RegistryEntryStatus registryEntryStatus =
+            (RegistryEntryStatus) registryEntryStatusService
+            .findValidMetadataOrThrow(registryEntry.getBaseTypeName(),
+                                      registryEntry.getRecordStatusCode(),
+                                      registryEntry.getRecordStatusCodeName());
+        registryEntry.setRecordStatusCodeName(registryEntryStatus.getCodeName());
     }
 }
