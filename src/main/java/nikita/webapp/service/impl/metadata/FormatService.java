@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.FORMAT;
 @Transactional
 @SuppressWarnings("unchecked")
 public class FormatService
-        extends NoarkService
+        extends MetadataSuperService
         implements IFormatService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(FormatService.class);
 
     private IFormatRepository formatRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public FormatService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IFormatRepository formatRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.formatRepository = formatRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -86,19 +84,9 @@ public class FormatService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all Format that have a particular code.
-
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of Format objects wrapped as a MetadataHateoas object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas =
-                new MetadataHateoas(getFormatOrThrow(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public Format findMetadataByCode(String code) {
+        return formatRepository.findByCode(code);
     }
 
     /**
@@ -134,7 +122,7 @@ public class FormatService
             @NotNull final Long version,
             @NotNull final Format incomingFormat) {
 
-        Format existingFormat = getFormatOrThrow(code);
+        Format existingFormat = (Format) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingFormat, existingFormat);
 
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -146,27 +134,5 @@ public class FormatService
 
         metadataHateoasHandler.addLinks(formatHateoas, new Authorisation());
         return formatHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid Format object back. If there is no
-     * Format object, a NoarkEntityNotFoundException exception is thrown
-     *
-     * @param code The code of the Format object to retrieve
-     * @return the Format object
-     */
-    private Format
-    getFormatOrThrow(@NotNull String code) {
-        Format format =
-                formatRepository.findByCode(code);
-        if (format == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Format, using code " +
-                    code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return format;
     }
 }
