@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.VariantFormat;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.repository.n5v5.IDocumentObjectRepository;
 import nikita.common.util.CommonUtils;
@@ -14,6 +15,7 @@ import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.metadata.IVariantFormatService;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -102,6 +104,7 @@ public class DocumentObjectService
     @Value("${nikita.application.checksum-algorithm}")
     private String defaultChecksumAlgorithm = "SHA-256";
 
+    private IVariantFormatService variantFormatService;
     private IConversionHateoasHandler conversionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IDocumentDescriptionHateoasHandler
@@ -111,11 +114,13 @@ public class DocumentObjectService
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IDocumentObjectRepository documentObjectRepository,
+            IVariantFormatService variantFormatService,
             IConversionHateoasHandler conversionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectRepository = documentObjectRepository;
+        this.variantFormatService = variantFormatService;
         this.conversionHateoasHandler = conversionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.documentDescriptionHateoasHandler =
@@ -133,6 +138,7 @@ public class DocumentObjectService
         // + 1 because while arrays start at 0, document counts start at 1
         documentObject.setVersionNumber(version.intValue() + 1);
 
+        validateVariantFormat(documentObject);
         checkChecksumAlgorithmSetIfNull(documentObject);
         return documentObjectRepository.save(documentObject);
     }
@@ -926,5 +932,14 @@ public class DocumentObjectService
     private boolean supportForDocumentConversion(
             @NotNull DocumentObject documentObject) {
         return mimeTypeIsConvertible(documentObject.getMimeType());
+    }
+
+    private void validateVariantFormat(DocumentObject documentObject) {
+        VariantFormat variantFormat =
+            (VariantFormat) variantFormatService
+            .findValidMetadataOrThrow(documentObject.getBaseTypeName(),
+                                      documentObject.getVariantFormatCode(),
+                                      documentObject.getVariantFormatCodeName());
+        documentObject.setVariantFormatCodeName(variantFormat.getCodeName());
     }
 }
