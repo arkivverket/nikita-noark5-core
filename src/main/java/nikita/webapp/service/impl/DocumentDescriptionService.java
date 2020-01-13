@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.secondary.IAuthorRepository;
@@ -18,6 +19,7 @@ import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
+import nikita.webapp.service.interfaces.metadata.IDocumentTypeService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +55,7 @@ public class DocumentDescriptionService
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
+    private IDocumentTypeService documentTypeService;
     private IPartService partService;
     private IPartHateoasHandler partHateoasHandler;
     private IAuthorRepository authorRepository;
@@ -67,6 +70,7 @@ public class DocumentDescriptionService
                     documentDescriptionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
+            IDocumentTypeService documentTypeService,
             IPartService partService,
             IPartHateoasHandler partHateoasHandler,
             IAuthorRepository authorRepository,
@@ -78,6 +82,7 @@ public class DocumentDescriptionService
                 documentDescriptionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
+        this.documentTypeService = documentTypeService;
         this.partService = partService;
         this.partHateoasHandler = partHateoasHandler;
         this.authorRepository = authorRepository;
@@ -197,6 +202,7 @@ public class DocumentDescriptionService
      */
     @Override
     public DocumentDescription save(DocumentDescription documentDescription) {
+        validateDocumentType(documentDescription);
         String username = SecurityContextHolder.getContext().
                 getAuthentication().getName();
         documentDescription.setAssociationDate(OffsetDateTime.now());
@@ -405,5 +411,14 @@ public class DocumentDescriptionService
             throw new NoarkEntityNotFoundException(info);
         }
         return documentDescription;
+    }
+    private void validateDocumentType(DocumentDescription documentDescription) {
+        // Assume value already set, as the deserialiser will enforce it.
+        DocumentType documentType =
+            (DocumentType) documentTypeService
+            .findValidMetadataOrThrow(documentDescription.getBaseTypeName(),
+                                      documentDescription.getDocumentTypeCode(),
+                                      documentDescription.getDocumentTypeCodeName());
+        documentDescription.setDocumentTypeCodeName(documentType.getCodeName());
     }
 }

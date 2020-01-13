@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_TYPE;
 @Service
 @Transactional
 public class DocumentTypeService
-        extends NoarkService
+        extends MetadataSuperService
         implements IDocumentTypeService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(DocumentTypeService.class);
 
     private IDocumentTypeRepository documentTypeRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public DocumentTypeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IDocumentTypeRepository documentTypeRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.documentTypeRepository = documentTypeRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
     // All CREATE operations
 
@@ -83,20 +81,9 @@ public class DocumentTypeService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all documentType that have a particular code.
-
-     *
-     * @param code
-     * @return A list of documentType objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                documentTypeRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public DocumentType findMetadataByCode(String code) {
+        return documentTypeRepository.findByCode(code);
     }
 
     /**
@@ -106,7 +93,6 @@ public class DocumentTypeService
      */
     @Override
     public DocumentType generateDefaultDocumentType() {
-
         DocumentType documentType = new DocumentType();
         documentType.setCode(TEMPLATE_DOCUMENT_TYPE_CODE);
         documentType.setCodeName(TEMPLATE_DOCUMENT_TYPE_NAME);
@@ -133,7 +119,8 @@ public class DocumentTypeService
             @NotNull final Long version,
             @NotNull final DocumentType incomingDocumentType) {
 
-        DocumentType existingDocumentType = getDocumentTypeOrThrow(code);
+        DocumentType existingDocumentType =
+	    (DocumentType) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingDocumentType, existingDocumentType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -145,28 +132,4 @@ public class DocumentTypeService
                 new Authorisation());
         return documentTypeHateoas;
     }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid DocumentType object back. If there
-     * is no DocumentType object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the DocumentType object to retrieve
-     * @return the DocumentType object
-     */
-    private DocumentType getDocumentTypeOrThrow(@NotNull String code) {
-        DocumentType documentType =
-                documentTypeRepository.
-                        findByCode(code);
-        if (documentType == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " DocumentType, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return documentType;
-    }
-
 }
