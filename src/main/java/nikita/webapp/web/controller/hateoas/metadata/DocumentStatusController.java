@@ -118,13 +118,12 @@ public class DocumentStatusController {
     @GetMapping(value = DOCUMENT_STATUS + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
-        DocumentStatus documentStatus =
-                documentStatusService.findByCode(code);
-        MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        MetadataHateoas metadataHateoas =
+            documentStatusService.findByCode(code);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(documentStatus.getVersion().toString())
+                .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
 

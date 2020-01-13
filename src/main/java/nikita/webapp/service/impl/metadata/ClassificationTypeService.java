@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class ClassificationTypeService
-        extends NoarkService
+        extends MetadataSuperService
         implements IClassificationTypeService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ClassificationTypeService.class);
 
     private IClassificationTypeRepository classificationTypeRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public ClassificationTypeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IClassificationTypeRepository classificationTypeRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.classificationTypeRepository = classificationTypeRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -88,21 +86,9 @@ public class ClassificationTypeService
         return metadataHateoas;
     }
 
-
-    /**
-     * retrieve ClassificationType that has a particular code.
-
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of ClassificationType objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                classificationTypeRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public ClassificationType findMetadataByCode(String code) {
+        return classificationTypeRepository.findByCode(code);
     }
 
     /**
@@ -143,7 +129,7 @@ public class ClassificationTypeService
             @NotNull final ClassificationType incomingClassificationType) {
 
         ClassificationType existingClassificationType =
-                getClassificationTypeOrThrow(code);
+	    (ClassificationType) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingClassificationType,
                 existingClassificationType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -156,29 +142,5 @@ public class ClassificationTypeService
         metadataHateoasHandler.addLinks(classificationTypeHateoas,
                 new Authorisation());
         return classificationTypeHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid ClassificationType object back. If
-     * there is no ClassificationType object, a NoarkEntityNotFoundException
-     * exception is thrown
-     *
-     * @param code The code of the ClassificationType object to retrieve
-     * @return the ClassificationType object
-     */
-    private ClassificationType getClassificationTypeOrThrow(
-            @NotNull String code) {
-        ClassificationType classificationType =
-                classificationTypeRepository.
-                        findByCode(code);
-        if (classificationType == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " ClassificationType, using " + "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return classificationType;
     }
 }

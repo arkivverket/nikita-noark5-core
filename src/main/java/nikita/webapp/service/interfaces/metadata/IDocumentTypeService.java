@@ -5,13 +5,12 @@ import nikita.common.model.noark5.v5.metadata.DocumentType;
 
 import javax.validation.constraints.NotNull;
 
-public interface IDocumentTypeService {
+public interface IDocumentTypeService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewDocumentType(DocumentType documentType);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

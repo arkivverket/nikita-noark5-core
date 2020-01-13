@@ -93,7 +93,7 @@ public class CaseFileService
     public CaseFile save(CaseFile caseFile) {
         checkDocumentMediumValid(caseFile);
 
-        checkCaseStatusUponCreation(caseFile);
+        validateCaseStatus(caseFile);
 
         // If the caseResponsible isn't set, set it to the owner of
         // this object
@@ -486,10 +486,12 @@ public class CaseFileService
         }
     }
 
-    private void checkCaseStatusUponCreation(CaseFile caseFile) {
-        if (caseFile.getCaseStatusCodeName() != null) {
-            CaseStatus caseStatus = caseStatusService.
-                    findCaseStatusByCode(caseFile.getCaseStatusCode());
+    private void validateCaseStatus(CaseFile caseFile) {
+        if (null != caseFile.getCaseStatusCode()) {
+            CaseStatus caseStatus = (CaseStatus) caseStatusService
+                .findValidMetadataOrThrow(caseFile.getBaseTypeName(),
+                                          caseFile.getCaseStatusCode(),
+                                          caseFile.getCaseStatusCodeName());
             caseFile.setCaseStatusCodeName(caseStatus.getCodeName());
         }
     }

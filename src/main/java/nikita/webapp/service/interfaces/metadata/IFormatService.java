@@ -9,13 +9,12 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 15/02/18.
  */
 
-public interface IFormatService {
+public interface IFormatService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewFormat(Format format);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

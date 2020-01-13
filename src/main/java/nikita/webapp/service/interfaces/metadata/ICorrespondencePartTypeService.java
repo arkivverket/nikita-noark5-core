@@ -9,7 +9,8 @@ import java.util.List;
 /**
  * Created by tsodring on 3/9/17.
  */
-public interface ICorrespondencePartTypeService {
+public interface ICorrespondencePartTypeService
+    extends IMetadataSuperService {
 
     CorrespondencePartType createNewCorrespondencePartType(
             CorrespondencePartType correspondencePartType);
@@ -17,8 +18,6 @@ public interface ICorrespondencePartTypeService {
     List<IMetadataEntity> findAll();
 
     CorrespondencePartType update(CorrespondencePartType correspondencePartType);
-
-    CorrespondencePartType findByCode(String code);
 
     void deleteEntity(@NotNull String correspondencePartTypeCode);
 }

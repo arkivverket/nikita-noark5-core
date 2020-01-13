@@ -9,12 +9,11 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 12/02/18.
  */
 
-public interface IRegistryEntryStatusService {
+public interface IRegistryEntryStatusService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewRegistryEntryStatus(
             RegistryEntryStatus RegistryEntryStatus);
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas findAll();
 

@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.VARIANT_FORMAT;
 @Transactional
 @SuppressWarnings("unchecked")
 public class VariantFormatService
-        extends NoarkService
+        extends MetadataSuperService
         implements IVariantFormatService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(VariantFormatService.class);
 
     private IVariantFormatRepository variantFormatRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public VariantFormatService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IVariantFormatRepository variantFormatRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.variantFormatRepository = variantFormatRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -86,20 +84,9 @@ public class VariantFormatService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all VariantFormat that have a particular code.
-
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of VariantFormat objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                variantFormatRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public VariantFormat findMetadataByCode(String code) {
+        return variantFormatRepository.findByCode(code);
     }
 
     /**
@@ -133,7 +120,8 @@ public class VariantFormatService
             @NotNull final String code,
             @NotNull final Long version,
             @NotNull final VariantFormat incomingVariantFormat) {
-        VariantFormat existingVariantFormat = getVariantFormatOrThrow(code);
+        VariantFormat existingVariantFormat =
+            (VariantFormat) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingVariantFormat, existingVariantFormat);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -145,26 +133,5 @@ public class VariantFormatService
         metadataHateoasHandler.addLinks(variantFormatHateoas,
                 new Authorisation());
         return variantFormatHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid VariantFormat object back. If there
-     * is no VariantFormat object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the VariantFormat object to retrieve
-     * @return the VariantFormat object
-     */
-    private VariantFormat getVariantFormatOrThrow(@NotNull String code) {
-        VariantFormat variantFormat = variantFormatRepository.findByCode(code);
-        if (variantFormat == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " VariantFormat, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return variantFormat;
     }
 }

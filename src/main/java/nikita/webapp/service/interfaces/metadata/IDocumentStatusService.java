@@ -8,13 +8,12 @@ import java.util.List;
 /**
  * Created by tsodring on 31/1/18.
  */
-public interface IDocumentStatusService {
+public interface IDocumentStatusService
+    extends IMetadataSuperService {
 
     DocumentStatus createNewDocumentStatus(DocumentStatus documentStatus);
 
     List<IMetadataEntity> findAll();
 
     DocumentStatus update(DocumentStatus documentStatus);
-
-    DocumentStatus findByCode(String code);
 }

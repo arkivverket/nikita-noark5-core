@@ -113,12 +113,11 @@ public class CorrespondencePartTypeController extends NoarkController {
     @GetMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
-        CorrespondencePartType correspondencePartType = correspondencePartTypeService.findByCode(code);
-        MetadataHateoas metadataHateoas = new MetadataHateoas(correspondencePartType);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        MetadataHateoas metadataHateoas =
+            correspondencePartTypeService.findByCode(code);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(correspondencePartType.getVersion().toString())
+                .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
 

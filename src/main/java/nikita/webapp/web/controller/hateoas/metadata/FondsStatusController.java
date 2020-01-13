@@ -110,12 +110,10 @@ public class FondsStatusController {
     @GetMapping(value = FONDS_STATUS + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                       HttpServletRequest request) {
-        FondsStatus fondsStatus = fondsStatusService.findByCode(code);
-        MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        MetadataHateoas metadataHateoas = fondsStatusService.findByCode(code);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(fondsStatus.getVersion().toString())
+                .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
 

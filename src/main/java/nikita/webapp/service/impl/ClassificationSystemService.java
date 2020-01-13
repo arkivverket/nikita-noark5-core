@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.ClassificationType;
 import nikita.common.repository.n5v5.IClassificationSystemRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
@@ -14,6 +15,7 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
+import nikita.webapp.service.interfaces.metadata.IClassificationTypeService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -53,6 +55,7 @@ public class ClassificationSystemService
     private static final Logger logger = LoggerFactory.getLogger(
             ClassificationSystemService.class);
 
+    private IClassificationTypeService classificationTypeService;
     private IClassService classService;
     private IClassificationSystemRepository classificationSystemRepository;
     private IClassificationSystemHateoasHandler
@@ -63,6 +66,7 @@ public class ClassificationSystemService
     public ClassificationSystemService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IClassificationTypeService classificationTypeService,
             IClassService classService,
             IClassificationSystemRepository classificationSystemRepository,
             IClassificationSystemHateoasHandler
@@ -70,6 +74,7 @@ public class ClassificationSystemService
             IClassHateoasHandler classHateoasHandler,
             ISeriesHateoasHandler seriesHateoasHandler) {
         super(entityManager, applicationEventPublisher);
+	this.classificationTypeService = classificationTypeService;
         this.classService = classService;
         this.classificationSystemRepository = classificationSystemRepository;
         this.classificationSystemHateoasHandler =
@@ -94,6 +99,7 @@ public class ClassificationSystemService
     @Override
     public ClassificationSystemHateoas save(
             ClassificationSystem classificationSystem) {
+        validateClassificationType(classificationSystem);
         setFinaliseEntityValues(classificationSystem);
         ClassificationSystemHateoas classificationSystemHateoas = new
                 ClassificationSystemHateoas(
@@ -348,5 +354,19 @@ public class ClassificationSystemService
             throw new NoarkEntityNotFoundException(info);
         }
         return classificationSystem;
+    }
+
+    private void validateClassificationType(
+                ClassificationSystem classificationSystem) {
+        if (null != classificationSystem.getClassificationTypeCode()) {
+            ClassificationType classificationType =
+                (ClassificationType) classificationTypeService
+                .findValidMetadataOrThrow(
+                classificationSystem.getBaseTypeName(),
+                classificationSystem.getClassificationTypeCode(),
+                classificationSystem.getClassificationTypeCodeName());
+            classificationSystem.setClassificationTypeCodeName(
+                classificationType.getCodeName());
+	}
     }
 }

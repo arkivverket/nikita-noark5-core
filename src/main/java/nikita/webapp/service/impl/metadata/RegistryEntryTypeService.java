@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_TYPE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class RegistryEntryTypeService
-        extends NoarkService
+        extends MetadataSuperService
         implements IRegistryEntryTypeService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryTypeService.class);
 
     private IRegistryEntryTypeRepository registryEntryTypeRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public RegistryEntryTypeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IRegistryEntryTypeRepository registryEntryTypeRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.registryEntryTypeRepository = registryEntryTypeRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -86,20 +84,9 @@ public class RegistryEntryTypeService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all RegistryEntryType that have a particular code.
-
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of RegistryEntryType objects wrapped as a
-     * MetadataHateoas object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                getRegistryEntryTypeOrThrow(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public RegistryEntryType findMetadataByCode(String code) {
+        return registryEntryTypeRepository.findByCode(code);
     }
 
     /**
@@ -136,7 +123,7 @@ public class RegistryEntryTypeService
             @NotNull final RegistryEntryType incomingRegistryEntryType) {
 
         RegistryEntryType existingRegistryEntryType =
-                getRegistryEntryTypeOrThrow(code);
+            (RegistryEntryType) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingRegistryEntryType,
                 existingRegistryEntryType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -148,28 +135,5 @@ public class RegistryEntryTypeService
 
         metadataHateoasHandler.addLinks(formatHateoas, new Authorisation());
         return formatHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid RegistryEntryType object back. If
-     * there is no RegistryEntryType object, a NoarkEntityNotFoundException
-     * exception is thrown
-     *
-     * @param code The code of the RegistryEntryType object to retrieve
-     * @return the RegistryEntryType object
-     */
-    private RegistryEntryType
-    getRegistryEntryTypeOrThrow(@NotNull String code) {
-        RegistryEntryType format =
-                registryEntryTypeRepository.findByCode(code);
-        if (format == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " RegistryEntryType,  " +
-                    "using code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return format;
     }
 }
