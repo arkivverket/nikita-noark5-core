@@ -137,7 +137,7 @@ app.controller('ArkivarController',
                         tittel: $scope.series.tittel,
                         beskrivelse: $scope.series.beskrivelse,
                         arkivdelstatus: {
-			    kode: $scope.selectedSeriesStatusCode
+			    kode: $scope.selectedSeriesStatusCode,
 			    kodenavn: $scope.selectedSeriesStatus
 			}
                     }
