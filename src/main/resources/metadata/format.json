@@ -39,6 +39,30 @@
     {
       "code": "fmt/134",
       "codename": "MP3"
+    },
+    {
+      "code": "fmt/4",
+      "codename": "GIF"
+    },
+    {
+      "code": "fmt/13",
+      "codename": "PNG 1.2"
+    },
+    {
+      "code": "fmt/96",
+      "codename": "HTML"
+    },
+    {
+      "code": "fmt/278",
+      "codename": "Email RFC 822 message"
+    },
+    {
+      "code": "fmt/703",
+      "codename": "WAV"
+    },
+    {
+      "code": "x-fmt/18",
+      "codename": "CSV"
     }
   ]
 }
