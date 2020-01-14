@@ -60,6 +60,7 @@ public class SeriesHateoasHandler
     @Override
     public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
+        addSeriesStatus(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
     }
 
