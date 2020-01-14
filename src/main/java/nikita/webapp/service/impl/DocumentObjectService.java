@@ -942,12 +942,12 @@ public class DocumentObjectService
 
     private void validateFormat(DocumentObject documentObject) {
         if (null != documentObject.getFormatCode()) {
-            Format variantFormat =
-                (Format) variantFormatService
+            Format format =
+                (Format) formatService
                 .findValidMetadataOrThrow(documentObject.getBaseTypeName(),
                                           documentObject.getFormatCode(),
                                           documentObject.getFormatCodeName());
-            documentObject.setFormatCodeName(variantFormat.getCodeName());
+            documentObject.setFormatCodeName(format.getCodeName());
         }
     }
 

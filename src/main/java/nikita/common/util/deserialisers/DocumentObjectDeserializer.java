@@ -65,11 +65,8 @@ public class DocumentObjectDeserializer
         documentObject.setVariantFormatCode(entity.getCode());
         documentObject.setVariantFormatCodeName(entity.getCodeName());
         // Deserialize format
-        entity =
-            deserialiseMetadataValue(objectNode,
-                                     DOCUMENT_OBJECT_FORMAT,
-                                     new Format(),
-                                     errors, false);
+        entity = deserialiseMetadataValue(objectNode, DOCUMENT_OBJECT_FORMAT,
+                                     new Format(), errors, false);
         documentObject.setFormatCode(entity.getCode());
         documentObject.setFormatCodeName(entity.getCodeName());
         // Deserialize formatDetails
