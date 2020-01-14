@@ -24,8 +24,8 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_CREATOR_FONDS;
-import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
-import static nikita.common.config.N5ResourceMappings.STATUS_OPEN_CODE;
+import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN;
+import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN_CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
@@ -76,8 +76,8 @@ public class FondsCreatorService
         FondsCreator fondsCreator =
                 getFondsCreatorOrThrow(fondsCreatorSystemId);
         checkDocumentMediumValid(fonds);
-        fonds.setFondsStatusCode(STATUS_OPEN_CODE);
-        fonds.setFondsStatusCodeName(STATUS_OPEN);
+        fonds.setFondsStatusCode(FONDS_STATUS_OPEN_CODE);
+        fonds.setFondsStatusCodeName(FONDS_STATUS_OPEN);
         setFinaliseEntityValues(fonds);
         fonds.getReferenceFondsCreator().add(fondsCreator);
         fondsCreator.getReferenceFonds().add(fonds);

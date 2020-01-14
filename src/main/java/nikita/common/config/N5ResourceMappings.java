@@ -343,11 +343,16 @@ public final class N5ResourceMappings {
 
     public static final String SECONDARY_CLASSIFICATION = "sekundaerklassifikasjon";
 
-    // Constant values defined in the Metadata catalogue
+    // Constant values defined in the FondsStatus Metadata catalogue
 
-    public static final String STATUS_OPEN_CODE = "O";
-    public static final String STATUS_OPEN = "Opprettet";
-    public static final String STATUS_CLOSED = "Avsluttet";
+    public static final String FONDS_STATUS_OPEN_CODE = "O";
+    public static final String FONDS_STATUS_OPEN = "Opprettet";
+    public static final String FONDS_STATUS_CLOSED = "Avsluttet";
+
+    // Constant values defined in the SeriesStatus Metadata catalogue
+    public static final String SERIES_STATUS_ACTIVE_CODE = "A";
+    public static final String SERIES_STATUS_ACTIVE = "Aktiv periode";
+    public static final String SERIES_STATUS_CLOSED_CODE = "P";
 
     // M300 dokumentmedium
     public static final String DOCUMENT_MEDIUM_PHYSICAL = "Fysisk arkiv";
