@@ -141,10 +141,10 @@ public final class CommonUtils {
         }
 
         public static void setDefaultMimeTypesAsConvertible() {
-            // TODO: Add this back in after teaching. At the moment there seems
-            // to be a problem with unoconv and I don't have time to debug this
-            // to find out why ...
-            /*
+            // FIXME At the moment there seems to be a problem with
+            // unoconv and I don't have time to debug this to find out
+            // why ...
+
             // doc, ppt, xls
             addMimeTypeAsConvertible(MediaType.MICROSOFT_EXCEL);
             addMimeTypeAsConvertible(MediaType.MICROSOFT_POWERPOINT);
@@ -157,7 +157,6 @@ public final class CommonUtils {
             addMimeTypeAsConvertible(MediaType.OPENDOCUMENT_PRESENTATION);
             addMimeTypeAsConvertible(MediaType.OPENDOCUMENT_SPREADSHEET);
             addMimeTypeAsConvertible(MediaType.OPENDOCUMENT_TEXT);
-            */
         }
 
         public static void addMimeTypeAsConvertible(@NotNull MediaType mimeType) {
