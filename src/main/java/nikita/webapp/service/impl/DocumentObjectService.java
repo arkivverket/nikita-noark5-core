@@ -192,6 +192,15 @@ public class DocumentObjectService
             }
             documentObject.setMimeType(mimeType);
 
+            // FIXME find way to detect PRONOM code for a uploaded file.
+            String format = documentObject.getFormatCode();
+            if (null == format) {
+                logger.warn("Setting format for documentObject [" +
+                            documentObject.toString() +
+                            "] to UNKNOWN after upload.");
+                documentObject.setFormatCode("UNKNOWN");
+            }
+
             documentObject.setFileSize(Files.size(incoming));
             moveIncomingToStorage(incoming, documentObject);
 
@@ -444,9 +453,9 @@ public class DocumentObjectService
                         "Could not read file: " +
                                 documentObject.getReferenceDocumentFile());
             }
-            // When file exist, figure out how to return it.  Note both
-            // file name, file size and mime type can be unset until after
-            // a file is uploaded.
+            // When file exist, figure out how to return it.  Note
+            // both format, file name, file size and mime type can be
+            // unset until after a file is uploaded.
             String acceptType = request.getHeader(ACCEPT);
             String mimeType = documentObject.getMimeType();
             if (acceptType != null && mimeType != null &&
