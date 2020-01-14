@@ -288,7 +288,7 @@ app.controller('ArkivarController',
                         tittel: $.trim(document.getElementById("nyTittelArkiv").value),
                         beskrivelse: $.trim(document.getElementById("nyBeskrivelseArkiv").value),
                         arkivstatus: {
-			    'kode': $.trim($scope.selectedFondsStatusCode)
+			    'kode': $.trim($scope.selectedFondsStatusCode),
 			    'kodenavn': $.trim($scope.selectedFondsStatus)
 			}
                     }
