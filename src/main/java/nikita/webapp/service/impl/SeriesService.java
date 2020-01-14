@@ -33,7 +33,7 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.N5ResourceMappings.STATUS_CLOSED;
+import static nikita.common.config.N5ResourceMappings.SERIES_STATUS_CLOSED_CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static org.springframework.http.HttpStatus.OK;
@@ -288,10 +288,10 @@ public class SeriesService
      * @param series The series object to check if it open
      */
     private void checkOpenOrThrow(@NotNull Series series) {
-        if (series.getSeriesStatusCode().equals(STATUS_CLOSED)) {
+        if (series.getSeriesStatusCode().equals(SERIES_STATUS_CLOSED_CODE)) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Series with systemId " + series.getSystemId() +
-                    " has status code " + STATUS_CLOSED;
+                    " has status code " + SERIES_STATUS_CLOSED_CODE;
             logger.info(info);
             throw new NoarkEntityEditWhenClosedException(info);
         }
@@ -331,7 +331,7 @@ public class SeriesService
      *
      * @param series The series object
      */
-    private void checkSeriesStatusUponCreation(Series series) {
+    public void checkSeriesStatusUponCreation(Series series) {
         if (series.getSeriesStatusCode() != null) {
             SeriesStatus seriesStatus = (SeriesStatus) seriesStatusService
                 .findValidMetadataOrThrow(series.getBaseTypeName(),

@@ -18,7 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.STATUS_OPEN;
+import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -80,7 +80,7 @@ public class FondsTest
         // of a createNewFonds
         assertTrue(noarkEntity instanceof Fonds);
         assertEquals(((Fonds) noarkEntity).getFondsStatusCodeName(),
-		     STATUS_OPEN);
+		     FONDS_STATUS_OPEN);
     }
 
     /**

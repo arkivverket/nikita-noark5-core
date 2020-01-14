@@ -26,6 +26,8 @@ public interface ISeriesService {
             String systemId,
             ClassificationSystem classificationSystem);
 
+    void checkSeriesStatusUponCreation(Series series);
+
     // -- All READ operations
     ResponseEntity<SeriesHateoas> findAll();
 
