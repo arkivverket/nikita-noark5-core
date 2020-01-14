@@ -188,7 +188,7 @@ public class DocumentObjectService
                 logger.warn("Overriding mime-type for documentObject [" +
                         documentObject.toString() + "]. Original was [" +
                         documentObject.getMimeType() + "]. Setting to [" +
-                        mimeType);
+                        mimeType + "].");
             }
             documentObject.setMimeType(mimeType);
 
