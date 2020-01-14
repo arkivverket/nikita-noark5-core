@@ -127,10 +127,8 @@ public class FormatController {
                 .body(formatService.findAll());
     }
 
-    // Retrieves a given Format identified by a
-    // code
-    // GET [contextPath][api]/metadata/format/
-    // {code}/
+    // Retrieves a given Format identified by a code
+    // GET [contextPath][api]/metadata/format/{code}
     @ApiOperation(
             value = "Gets Format identified by its code",
             notes = "Returns the requested Format object",
@@ -163,14 +161,16 @@ public class FormatController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @GetMapping(value = FORMAT + SLASH + CODE_PARAMETER + SLASH + LEFT_PARENTHESIS + "value" + RIGHT_PARENTHESIS)
+    @GetMapping(value = {FORMAT + SLASH + CODE_PARAMETER,
+                         FORMAT + SLASH + CODE_PARAMETER + SLASH + LEFT_PARENTHESIS + "value" + RIGHT_PARENTHESIS})
     public ResponseEntity<MetadataHateoas> findByCode(
-            @PathVariable("kode") final String code,
-            @PathVariable("value") final String value,
+            @PathVariable(value=CODE) String code,
+            @PathVariable(value="value", required = false) final String value,
             HttpServletRequest request) {
-
-        MetadataHateoas metadataHateoas =
-                formatService.findByCode(code + SLASH + value);
+        if (value != null) {
+            code = code + SLASH + value;
+        }
+        MetadataHateoas metadataHateoas = formatService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
