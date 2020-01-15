@@ -18,6 +18,7 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.IFondsService;
+import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.IFondsStatusService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -43,8 +44,8 @@ import static nikita.common.config.DatabaseConstants.DELETE_FONDS_STORAGE_LOCATI
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_FONDS_CREATOR;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -59,6 +60,7 @@ public class FondsService
 
     private IFondsRepository fondsRepository;
     private SeriesService seriesService;
+    private IDocumentMediumService documentMediumService;
     private IFondsStatusService fondsStatusService;
     private IFondsCreatorService fondsCreatorService;
     private IFondsHateoasHandler fondsHateoasHandler;
@@ -69,6 +71,7 @@ public class FondsService
                         ApplicationEventPublisher applicationEventPublisher,
                         IFondsRepository fondsRepository,
                         SeriesService seriesService,
+                        IDocumentMediumService documentMediumService,
                         IFondsStatusService fondsStatusService,
                         IFondsCreatorService fondsCreatorService,
                         IFondsHateoasHandler fondsHateoasHandler,
@@ -78,6 +81,7 @@ public class FondsService
         super(entityManager, applicationEventPublisher);
         this.fondsRepository = fondsRepository;
         this.seriesService = seriesService;
+        this.documentMediumService = documentMediumService;
         this.fondsStatusService = fondsStatusService;
         this.fondsCreatorService = fondsCreatorService;
         this.entityManager = entityManager;
@@ -98,7 +102,7 @@ public class FondsService
      */
     @Override
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
-        checkDocumentMediumValid(fonds);
+        validateDocumentMedium(documentMediumService, fonds);
         if (null == fonds.getFondsStatusCode()) {
             fonds.setFondsStatusCode(FONDS_STATUS_OPEN_CODE);
         }

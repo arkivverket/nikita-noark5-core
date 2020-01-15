@@ -19,6 +19,7 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
+import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryStatusService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryTypeService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
@@ -47,7 +48,7 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -60,6 +61,7 @@ public class RegistryEntryService
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryService.class);
     private IPrecedenceService precedenceService;
+    private IDocumentMediumService documentMediumService;
     private IRegistryEntryStatusService registryEntryStatusService;
     private IRegistryEntryTypeService registryEntryTypeService;
     private IRegistryEntryRepository registryEntryRepository;
@@ -72,6 +74,7 @@ public class RegistryEntryService
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IPrecedenceService precedenceService,
+            IDocumentMediumService documentMediumService,
             IRegistryEntryStatusService registryEntryStatusService,
             IRegistryEntryTypeService registryEntryTypeService,
             IRegistryEntryRepository registryEntryRepository,
@@ -81,6 +84,7 @@ public class RegistryEntryService
             IAdministrativeUnitService administrativeUnitService) {
         super(entityManager, applicationEventPublisher);
         this.precedenceService = precedenceService;
+        this.documentMediumService = documentMediumService;
         this.registryEntryStatusService = registryEntryStatusService;
         this.registryEntryTypeService = registryEntryTypeService;
         this.registryEntryRepository = registryEntryRepository;
@@ -92,7 +96,7 @@ public class RegistryEntryService
 
     @Override
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
-        checkDocumentMediumValid(registryEntry);
+        validateDocumentMedium(documentMediumService, registryEntry);
         validateRegistryEntryStatus(registryEntry);
         validateRegistryEntryType(registryEntry);
         registryEntry.setRecordDate(OffsetDateTime.now());

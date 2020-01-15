@@ -18,6 +18,7 @@ import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
+import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.ISeriesStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_O
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.SERIES_STATUS_CLOSED_CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -48,6 +49,7 @@ public class SeriesService
     private static final Logger logger =
             LoggerFactory.getLogger(SeriesService.class);
 
+    private IDocumentMediumService documentMediumService;
     private IFileService fileService;
     private ICaseFileService caseFileService;
     private IClassificationSystemService classificationSystemService;
@@ -64,6 +66,7 @@ public class SeriesService
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IClassificationSystemService classificationSystemService,
+            IDocumentMediumService documentMediumService,
             IFileService fileService,
             ICaseFileService caseFileService,
             ISeriesStatusService seriesStatusService,
@@ -75,6 +78,7 @@ public class SeriesService
             IClassificationSystemHateoasHandler
                     classificationSystemHateoasHandler) {
         super(entityManager, applicationEventPublisher);
+        this.documentMediumService = documentMediumService;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
         this.seriesStatusService = seriesStatusService;
@@ -109,7 +113,7 @@ public class SeriesService
 
     @Override
     public Series save(Series series) {
-        checkDocumentMediumValid(series);
+        validateDocumentMedium(documentMediumService, series);
         if (null == series.getSeriesStatusCode()) {
             checkSeriesStatusUponCreation(series);
         }
