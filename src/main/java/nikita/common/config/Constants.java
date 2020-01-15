@@ -169,6 +169,18 @@ public final class Constants {
     public static final String NEW_CORRESPONDENCE_PART_TYPE = NEW + DASH +
             CORRESPONDENCE_PART_TYPE;
 
+    public static final String NEW_ACCESS_CATEGORY =
+	NEW + DASH + ACCESS_CATEGORY;
+
+    public static final String NEW_DELETION_TYPE =
+	NEW + DASH + DELETION_TYPE;
+
+    public static final String NEW_EVENT_TYPE =
+	NEW + DASH + EVENT_TYPE;
+
+    public static final String NEW_COORDINATE_SYSTEM =
+	NEW + DASH + COORDINATE_SYSTEM;
+
     public static final String SERIES_ASSOCIATE_AS_SUCCESSOR = "referanseArvtager";
     public static final String SERIES_ASSOCIATE_AS_PRECURSOR = "referanseForloeper";
 
@@ -691,6 +703,9 @@ public final class Constants {
 
     public static final String REL_METADATA_SCREENING_METADATA =
             REL_METADATA + SCREENING_METADATA + SLASH;
+
+    public static final String REL_METADATA_COORDINATE_SYSTEM =
+            REL_METADATA + COORDINATE_SYSTEM + SLASH;
 
     public static final String REL_LOGIN_OIDC = REL_LOGIN + "oidc/";
     public static final String REL_LOGIN_OAUTH2 = REL_LOGIN + "rfc6749/";

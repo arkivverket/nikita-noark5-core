@@ -9,370 +9,212 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonSerialize(using = APIDetailsSerializer.class)
 public class MetadataDetails extends APIDetails {
 
+    private void
+        metadataRel(String publicUrlPath,
+                    String listpath, String newpath,
+                    String officialrelation) {
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + listpath,
+                officialrelation, true));
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_METADATA + SLASH + newpath,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + newpath + SLASH,
+                false));
+    }
+
     public MetadataDetails(String publicUrlPath) {
         super();
         // Add support for DocumentMedium
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + DOCUMENT_MEDIUM,
-                REL_METADATA_DOCUMENT_MEDIUM,
-                true
-        ));
-
-        // Add support for new DocumentMedium
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_MEDIUM,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_MEDIUM + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    DOCUMENT_MEDIUM,
+                    NEW_DOCUMENT_MEDIUM,
+                    REL_METADATA_DOCUMENT_MEDIUM);
 
         // Add support for FondsStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + FONDS_STATUS,
-                REL_METADATA_FONDS_STATUS,
-                true
-        ));
+        metadataRel(publicUrlPath,
+                    FONDS_STATUS,
+                    NEW_FONDS_STATUS,
+                    REL_METADATA_FONDS_STATUS);
 
-        // Add support for new FondsStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_FONDS_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FONDS_STATUS + SLASH
-        ));
 
         // Add support for DocumentStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + DOCUMENT_STATUS,
-                REL_METADATA_DOCUMENT_STATUS,
-                true
-        ));
-
-        // Add support for new DocumentStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_STATUS + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    DOCUMENT_STATUS,
+                    NEW_DOCUMENT_STATUS,
+                    REL_METADATA_DOCUMENT_STATUS);
 
         // Add support for DocumentType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + DOCUMENT_TYPE,
-                REL_METADATA_DOCUMENT_TYPE,
-                true
-        ));
-
-        // Add support for new DocumentType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DOCUMENT_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DOCUMENT_TYPE + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    DOCUMENT_TYPE,
+                    NEW_DOCUMENT_TYPE,
+                    REL_METADATA_DOCUMENT_TYPE);
 
         // Add support for AssociatedWithRecordAs
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + ASSOCIATED_WITH_RECORD_AS,
-                REL_METADATA_ASSOCIATED_WITH_RECORD_AS,
-                true
-        ));
-
-        // Add support for new AssociatedWithRecordAs
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_ASSOCIATED_WITH_RECORD_AS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ASSOCIATED_WITH_RECORD_AS + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    ASSOCIATED_WITH_RECORD_AS,
+                    NEW_ASSOCIATED_WITH_RECORD_AS,
+                    REL_METADATA_ASSOCIATED_WITH_RECORD_AS);
 
         // Add support for SeriesStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + SERIES_STATUS,
-                REL_METADATA_SERIES_STATUS,
-                true
-        ));
-
-        // Add support for new SeriesStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_SERIES_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SERIES_STATUS + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    SERIES_STATUS,
+                    NEW_SERIES_STATUS,
+                    REL_METADATA_SERIES_STATUS);
 
         // Add support for RegistryEntryStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + REGISTRY_ENTRY_STATUS,
-                REL_METADATA_REGISTRY_ENTRY_STATUS,
-                true
-        ));
-
-        // Add support for new RegistryEntryStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_REGISTRY_ENTRY_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_REGISTRY_ENTRY_STATUS + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    REGISTRY_ENTRY_STATUS,
+                    NEW_REGISTRY_ENTRY_STATUS,
+                    REL_METADATA_REGISTRY_ENTRY_STATUS);
 
         // Add support for precedenceStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + PRECEDENCE_STATUS,
-                REL_METADATA_PRECEDENCE_STATUS,
-                true
-        ));
-
-        // Add support for new precedenceStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_PRECEDENCE_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_PRECEDENCE_STATUS + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    PRECEDENCE_STATUS,
+                    NEW_PRECEDENCE_STATUS,
+                    REL_METADATA_PRECEDENCE_STATUS);
 
         // Add support for accessRestriction
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + ACCESS_RESTRICTION,
-                REL_METADATA_ACCESS_RESTRICTION,
-                true
-        ));
-
-        // Add support for new accessRestriction
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_ACCESS_RESTRICTION,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ACCESS_RESTRICTION + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    ACCESS_RESTRICTION,
+                    NEW_ACCESS_RESTRICTION,
+                    REL_METADATA_ACCESS_RESTRICTION);
 
         // Add support for disposalDecision
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + DISPOSAL_DECISION,
-                REL_METADATA_DISPOSAL_DECISION,
-                true
-        ));
+        metadataRel(publicUrlPath,
+                    DISPOSAL_DECISION,
+                    NEW_DISPOSAL_DECISION,
+                    REL_METADATA_DISPOSAL_DECISION);
 
-        // Add support for new disposalDecision
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_DISPOSAL_DECISION,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_DISPOSAL_DECISION + SLASH
-        ));
-
-        // Add support for CorrespondencePart
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + CORRESPONDENCE_PART_TYPE,
-                REL_METADATA_CORRESPONDENCE_PART_TYPE,
-                true
-        ));
-
-        // Add support for new CorrespondencePart
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_CORRESPONDENCE_PART_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CORRESPONDENCE_PART_TYPE + SLASH
-        ));
+        // Add support for CorrespondencePartType
+        metadataRel(publicUrlPath,
+                    CORRESPONDENCE_PART_TYPE,
+                    NEW_CORRESPONDENCE_PART_TYPE,
+                    REL_METADATA_CORRESPONDENCE_PART_TYPE);
 
         // Add support for SignOffMethod
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + SIGN_OFF_METHOD,
-                REL_METADATA_SIGN_OFF_METHOD,
-                true
-        ));
-
-        // Add support for new SignOffMethod
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_SIGN_OFF_METHOD,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SIGN_OFF_METHOD + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    SIGN_OFF_METHOD,
+                    NEW_SIGN_OFF_METHOD,
+                    REL_METADATA_SIGN_OFF_METHOD);
 
         // Add support for ElectronicSignatureSecurityLevel
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
-                REL_METADATA_ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
-                true
-        ));
-
-        // Add support for new ElectronicSignatureSecurityLevel
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
+                    NEW_ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
+                    REL_METADATA_ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
 
         // Add support for ElectronicSignatureVerified
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + ELECTRONIC_SIGNATURE_VERIFIED,
-                REL_METADATA_ELECTRONIC_SIGNATURE_VERIFIED,
-                true
-        ));
-
-        // Add support for new ElectronicSignatureVerified
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_ELECTRONIC_SIGNATURE_VERIFIED,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_ELECTRONIC_SIGNATURE_VERIFIED + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    ELECTRONIC_SIGNATURE_VERIFIED,
+                    NEW_ELECTRONIC_SIGNATURE_VERIFIED,
+                    REL_METADATA_ELECTRONIC_SIGNATURE_VERIFIED);
 
         // Add support for Format
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + FORMAT,
-                REL_METADATA_FORMAT,
-                true
-        ));
-
-        // Add support for new Format
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_FORMAT,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FORMAT + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    FORMAT,
+                    NEW_FORMAT,
+                    REL_METADATA_FORMAT);
 
         // Add support for FlowStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + FLOW_STATUS,
-                REL_METADATA_FLOW_STATUS,
-                true
-        ));
-
-        // Add support for new FlowStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_FLOW_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FLOW_STATUS + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    FLOW_STATUS,
+                    NEW_FLOW_STATUS,
+                    REL_METADATA_FLOW_STATUS);
 
         // Add support for RegistryEntryType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + REGISTRY_ENTRY_TYPE,
-                REL_METADATA_REGISTRY_ENTRY_TYPE,
-                true
-        ));
-
-        // Add support for new RegistryEntryType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_REGISTRY_ENTRY_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_REGISTRY_ENTRY_TYPE + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    REGISTRY_ENTRY_TYPE,
+                    NEW_REGISTRY_ENTRY_TYPE,
+                    REL_METADATA_REGISTRY_ENTRY_TYPE);
 
         // Add support for PartRole
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + PART_ROLE,
-                REL_METADATA_PART_ROLE,
-                true
-        ));
-
-        // Add support for new PartRole
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_PART_ROLE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_PART_ROLE + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    PART_ROLE,
+                    NEW_PART_ROLE,
+                    REL_METADATA_PART_ROLE);
 
         // Add support for ClassificationType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + CLASSIFICATION_TYPE,
-                REL_METADATA_CLASSIFICATION_TYPE,
-                true
-        ));
-
-        // Add support for new ClassificationType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_CLASSIFICATION_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CLASSIFICATION_TYPE + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    CLASSIFICATION_TYPE,
+                    NEW_CLASSIFICATION_TYPE,
+                    REL_METADATA_CLASSIFICATION_TYPE);
 
         // Add support for FileType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + FILE_TYPE,
-                REL_METADATA_FILE_TYPE,
-                true
-        ));
-
-        // Add support for new FileType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_FILE_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_FILE_TYPE + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    FILE_TYPE,
+                    NEW_FILE_TYPE,
+                    REL_METADATA_FILE_TYPE);
 
         // Add support for VariantFormat
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + VARIANT_FORMAT,
-                REL_METADATA_VARIANT_FORMAT,
-                true
-        ));
-
-        // Add support for new VariantFormat
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_VARIANT_FORMAT,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_VARIANT_FORMAT + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    VARIANT_FORMAT,
+                    NEW_VARIANT_FORMAT,
+                    REL_METADATA_VARIANT_FORMAT);
 
         // Add support for CommentType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + COMMENT_TYPE,
-                REL_METADATA_COMMENT_TYPE,
-                true
-        ));
-
-        // Add support for new CommentType
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_COMMENT_TYPE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_COMMENT_TYPE + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    COMMENT_TYPE,
+                    NEW_COMMENT_TYPE,
+                    REL_METADATA_COMMENT_TYPE);
 
         // Add support for CaseStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + CASE_STATUS,
-                REL_METADATA_CASE_STATUS,
-                true
-        ));
-
-        // Add support for new CaseStatus
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_CASE_STATUS,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CASE_STATUS + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    CASE_STATUS,
+                    NEW_CASE_STATUS,
+                    REL_METADATA_CASE_STATUS);
 
         // Add support for Country
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + COUNTRY,
-                REL_METADATA_COUNTRY,
-                true
-        ));
-
-        // Add support for new Country
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_COUNTRY,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_COUNTRY + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    COUNTRY,
+                    NEW_COUNTRY,
+                    REL_METADATA_COUNTRY);
 
         // Add support for PostCode
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + POST_CODE,
-                REL_METADATA_POST_CODE,
-                true
-        ));
-
-        // Add support for new PostCode
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_POST_CODE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_POST_CODE + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    POST_CODE,
+                    NEW_POST_CODE,
+                    REL_METADATA_POST_CODE);
 
         // Add support for ScreeningMetadata
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + SCREENING_METADATA,
-                REL_METADATA_SCREENING_METADATA,
-                true
-        ));
-
-        // Add support for new ScreeningMetadata
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_SCREENING_METADATA,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SCREENING_METADATA + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    SCREENING_METADATA,
+                    NEW_SCREENING_METADATA,
+                    REL_METADATA_SCREENING_METADATA);
 
         // Add support for ScreeningDocument
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + SCREENING_DOCUMENT,
-                REL_METADATA_SCREENING_DOCUMENT,
-                true
-        ));
-
-        // Add support for new ScreeningDocument
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_SCREENING_DOCUMENT,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_SCREENING_DOCUMENT + SLASH
-        ));
+        metadataRel(publicUrlPath,
+                    SCREENING_DOCUMENT,
+                    NEW_SCREENING_DOCUMENT,
+                    REL_METADATA_SCREENING_DOCUMENT);
 
         // Add support for ClassifiedCode
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
-                REL_METADATA_CLASSIFIED_CODE,
-                true
-        ));
+        metadataRel(publicUrlPath,
+                    CLASSIFIED_CODE,
+                    NEW_CLASSIFIED_CODE,
+                    REL_METADATA_CLASSIFIED_CODE);
 
-        // Add support for new ClassifiedCode
-        aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + NEW_CLASSIFIED_CODE,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + NEW_CLASSIFIED_CODE + SLASH
-        ));
+        // Add support for AccessCateogory
+        metadataRel(publicUrlPath,
+                    ACCESS_CATEGORY,
+                    NEW_ACCESS_CATEGORY,
+                    REL_METADATA_ACCESS_CATEGORY);
+
+        // Add support for DeletionType
+        metadataRel(publicUrlPath,
+                    DELETION_TYPE,
+                    NEW_DELETION_TYPE,
+                    REL_METADATA_DELETION_TYPE);
+
+        // Add support for EventType
+        metadataRel(publicUrlPath,
+                    EVENT_TYPE,
+                    NEW_EVENT_TYPE,
+                    REL_METADATA_EVENT_TYPE);
+
+        // Add support for CoordinateSystem
+        metadataRel(publicUrlPath,
+                    COORDINATE_SYSTEM,
+                    NEW_COORDINATE_SYSTEM,
+                    REL_METADATA_COORDINATE_SYSTEM);
     }
 }
