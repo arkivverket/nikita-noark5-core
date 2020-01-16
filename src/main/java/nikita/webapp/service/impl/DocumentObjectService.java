@@ -38,6 +38,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MimeType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -199,6 +200,8 @@ public class DocumentObjectService
                             documentObject.toString() +
                             "] to UNKNOWN after upload.");
                 documentObject.setFormatCode("UNKNOWN");
+                documentObject.setFormatCodeName(null);
+                validateFormat(documentObject);
             }
 
             documentObject.setFileSize(Files.size(incoming));
@@ -290,7 +293,8 @@ public class DocumentObjectService
         // is uploaded, or a file with no file extension
 
         archiveDocumentObject.setFormatCode(FILE_EXTENSION_PDF_CODE);
-        archiveDocumentObject.setFormatCodeName(FILE_EXTENSION_PDF);
+        archiveDocumentObject.setFormatCodeName(null);
+        validateFormat(archiveDocumentObject);
         archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
         archiveDocumentObject.setFormatDetails(FORMAT_PDF_DETAILS);
         archiveDocumentObject.setVariantFormatCode(ARCHIVE_VERSION_CODE);
@@ -437,6 +441,24 @@ public class DocumentObjectService
         return archiveDocumentObject;
     }
 
+    /**
+     * For a given HTTP Content-Type mime type value, check with the
+     * type is compatible with the given HTTP Accept value.
+     */
+    private Boolean mimeTypeAccepted(String mimeType, String accept) {
+        org.springframework.util.MimeType mime =
+            org.springframework.http.MediaType.parseMediaType(mimeType);
+        List<org.springframework.http.MediaType> acceptTypes =
+            org.springframework.http.MediaType.parseMediaTypes(accept);
+        Boolean match = false;
+        for (org.springframework.http.MediaType acceptType : acceptTypes) {
+            if (acceptType.isCompatibleWith(mime)) {
+                match = true;
+            }
+        }
+        return match;
+    }
+
 
     @Override
     public Resource loadAsResource(String systemId, HttpServletRequest request,
@@ -458,16 +480,14 @@ public class DocumentObjectService
             // unset until after a file is uploaded.
             String acceptType = request.getHeader(ACCEPT);
             String mimeType = documentObject.getMimeType();
-            if (acceptType != null && mimeType != null &&
-                !acceptType.equalsIgnoreCase(mimeType)) {
-                if (!acceptType.equals("*/*")) {
-                    throw new NoarkNotAcceptableException(
+            if (acceptType != null && mimeType != null
+                && ! mimeTypeAccepted(mimeType, acceptType)) {
+                throw new NoarkNotAcceptableException(
                         "The request [" +
                         request.getRequestURI() + "] is not acceptable. "
                         + "You have issued an Accept: " + acceptType +
                         ", while the mimeType you are trying to retrieve "
                         + "is [" + mimeType + "].");
-                }
             }
             if (null == mimeType) {
                 mimeType = "application/octet-stream";
@@ -482,6 +502,8 @@ public class DocumentObjectService
                 response.addHeader("Content-disposition", "inline; "+
                                    "filename=" + documentObject.getOriginalFilename());
             }
+            // Once file is uploaded, POST and PUT are no longer allowed
+            response.addHeader("Allow", "GET");
             return resource;
         } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException(
