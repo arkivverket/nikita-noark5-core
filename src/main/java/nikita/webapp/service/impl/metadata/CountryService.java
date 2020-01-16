@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.COUNTRY;
 @Transactional
 @SuppressWarnings("unchecked")
 public class CountryService
-        extends NoarkService
+        extends MetadataSuperService
         implements ICountryService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CountryService.class);
 
     private ICountryRepository countryRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public CountryService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             ICountryRepository countryRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.countryRepository = countryRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -94,11 +92,8 @@ public class CountryService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                getCountryOrThrow(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public Country findMetadataByCode(String code) {
+        return countryRepository.findByCode(code);
     }
 
     /**
@@ -134,7 +129,7 @@ public class CountryService
             @NotNull final Long version,
             @NotNull final Country incomingCountry) {
 
-        Country existingCountry = getCountryOrThrow(code);
+        Country existingCountry = (Country) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingCountry, existingCountry);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -146,27 +141,5 @@ public class CountryService
         metadataHateoasHandler.addLinks(countryHateoas,
                 new Authorisation());
         return countryHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid Country object back. If there
-     * is no Country object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the Country object to retrieve
-     * @return the Country object
-     */
-    private Country getCountryOrThrow(@NotNull String code) {
-        Country country = countryRepository.
-                findByCode(code);
-        if (country == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Country, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return country;
     }
 }

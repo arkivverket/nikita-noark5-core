@@ -32,7 +32,7 @@ import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_VERIF
 @Transactional
 @SuppressWarnings("unchecked")
 public class ElectronicSignatureVerifiedService
-        extends NoarkService
+        extends MetadataSuperService
         implements IElectronicSignatureVerifiedService {
 
     private static final Logger logger =
@@ -41,7 +41,6 @@ public class ElectronicSignatureVerifiedService
 
     private IElectronicSignatureVerifiedRepository
             electronicSignatureVerifiedRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public ElectronicSignatureVerifiedService(
             EntityManager entityManager,
@@ -49,10 +48,9 @@ public class ElectronicSignatureVerifiedService
             IElectronicSignatureVerifiedRepository
                     electronicSignatureVerifiedRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.electronicSignatureVerifiedRepository =
                 electronicSignatureVerifiedRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -93,20 +91,9 @@ public class ElectronicSignatureVerifiedService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all ElectronicSignatureVerified that have a particular code.
-
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of ElectronicSignatureVerified objects wrapped as a
-     * MetadataHateoas object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                electronicSignatureVerifiedRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public ElectronicSignatureVerified findMetadataByCode(String code) {
+        return electronicSignatureVerifiedRepository.findByCode(code);
     }
 
     /**
@@ -153,8 +140,8 @@ public class ElectronicSignatureVerifiedService
                     incomingElectronicSignatureVerified) {
 
         ElectronicSignatureVerified
-                existingElectronicSignatureVerified =
-                getElectronicSignatureVerifiedOrThrow(code);
+            existingElectronicSignatureVerified =
+            (ElectronicSignatureVerified) findMetadataByCodeOrThrow(code);
 
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -168,31 +155,5 @@ public class ElectronicSignatureVerifiedService
         metadataHateoasHandler.addLinks(electronicSignatureVerifiedHateoas,
                 new Authorisation());
         return electronicSignatureVerifiedHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid ElectronicSignatureVerified
-     * object back. If there is no ElectronicSignatureVerified object,
-     * a NoarkEntityNotFoundException exception is thrown
-     *
-     * @param code The code of the ElectronicSignatureVerified
-     *                 object to retrieve
-     * @return the ElectronicSignatureVerified object
-     */
-    private ElectronicSignatureVerified
-    getElectronicSignatureVerifiedOrThrow(@NotNull String code) {
-        ElectronicSignatureVerified electronicSignatureVerified =
-                electronicSignatureVerifiedRepository.
-                        findByCode(code);
-        if (electronicSignatureVerified == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " ElectronicSignatureVerified, using code " +
-                    code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return electronicSignatureVerified;
     }
 }

@@ -9,14 +9,13 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 16/03/18.
  */
 
-public interface IScreeningMetadataService {
+public interface IScreeningMetadataService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewScreeningMetadata(
             ScreeningMetadata screeningMetadata);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

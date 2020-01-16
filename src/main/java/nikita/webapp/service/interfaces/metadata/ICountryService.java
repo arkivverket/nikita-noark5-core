@@ -9,13 +9,12 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 14/03/18.
  */
 
-public interface ICountryService {
+public interface ICountryService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewCountry(Country country);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

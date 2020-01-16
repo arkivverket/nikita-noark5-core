@@ -9,13 +9,12 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 17/02/18.
  */
 
-public interface IFlowStatusService {
+public interface IFlowStatusService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewFlowStatus(FlowStatus flowStatus);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

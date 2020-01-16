@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
 @Service
 @Transactional
 public class SignOffMethodService
-        extends NoarkService
+        extends MetadataSuperService
         implements ISignOffMethodService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(SignOffMethodService.class);
 
     private ISignOffMethodRepository signOffMethodRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public SignOffMethodService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             ISignOffMethodRepository signOffMethodRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.signOffMethodRepository = signOffMethodRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -85,21 +83,9 @@ public class SignOffMethodService
         return metadataHateoas;
     }
 
-    // find by code
-    /**
-     * retrieve a single SignOffMethod with the given code.
-
-     *
-     * @param code
-     * @return A list of SignOffMethod objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                signOffMethodRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public SignOffMethod findMetadataByCode(String code) {
+        return signOffMethodRepository.findByCode(code);
     }
 
     /**
@@ -134,7 +120,8 @@ public class SignOffMethodService
             @NotNull final Long version,
             @NotNull final SignOffMethod incomingSignOffMethod) {
 
-        SignOffMethod existingSignOffMethod = getSignOffMethodOrThrow(code);
+        SignOffMethod existingSignOffMethod =
+            (SignOffMethod) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingSignOffMethod, existingSignOffMethod);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -146,28 +133,4 @@ public class SignOffMethodService
                 new Authorisation());
         return SignOffMethodHateoas;
     }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid SignOffMethod object back. If there
-     * is no SignOffMethod object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the SignOffMethod object to retrieve
-     * @return the SignOffMethod object
-     */
-    private SignOffMethod getSignOffMethodOrThrow(@NotNull String code) {
-        SignOffMethod SignOffMethod =
-                signOffMethodRepository.
-                        findByCode(code);
-        if (SignOffMethod == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " SignOffMethod, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return SignOffMethod;
-    }
-
 }

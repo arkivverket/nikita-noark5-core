@@ -9,13 +9,12 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 03/03/18.
  */
 
-public interface IFileTypeService {
+public interface IFileTypeService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewFileType(FileType fileType);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

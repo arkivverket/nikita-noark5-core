@@ -9,13 +9,12 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 04/03/18.
  */
 
-public interface ICommentTypeService {
+public interface ICommentTypeService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewCommentType(CommentType commentType);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

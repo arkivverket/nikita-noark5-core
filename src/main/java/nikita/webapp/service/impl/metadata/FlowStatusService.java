@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.FLOW_STATUS;
 @Transactional
 @SuppressWarnings("unchecked")
 public class FlowStatusService
-        extends NoarkService
+        extends MetadataSuperService
         implements IFlowStatusService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(FlowStatusService.class);
 
     private IFlowStatusRepository flowStatusRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public FlowStatusService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IFlowStatusRepository flowStatusRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.flowStatusRepository = flowStatusRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -86,19 +84,9 @@ public class FlowStatusService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all FlowStatus that have a particular code.
-
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of FlowStatus objects wrapped as a MetadataHateoas object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                getFlowStatusOrThrow(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public FlowStatus findMetadataByCode(String code) {
+        return flowStatusRepository.findByCode(code);
     }
 
     /**
@@ -131,7 +119,8 @@ public class FlowStatusService
             @NotNull final Long version,
             @NotNull final FlowStatus incomingFlowStatus) {
 
-        FlowStatus existingFlowStatus = getFlowStatusOrThrow(code);
+        FlowStatus existingFlowStatus =
+            (FlowStatus) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingFlowStatus, existingFlowStatus);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -142,27 +131,5 @@ public class FlowStatusService
 
         metadataHateoasHandler.addLinks(flowStatusHateoas, new Authorisation());
         return flowStatusHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid FlowStatus object back. If there is
-     * no FlowStatus object, a NoarkEntityNotFoundException exception is thrown
-     *
-     * @param code The code of the FlowStatus object to retrieve
-     * @return the FlowStatus object
-     */
-    private FlowStatus
-    getFlowStatusOrThrow(@NotNull String code) {
-        FlowStatus flowStatus =
-                flowStatusRepository.findByCode(code);
-        if (flowStatus == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " FlowStatus, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return flowStatus;
     }
 }
