@@ -9,13 +9,12 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 21/02/18.
  */
 
-public interface IPartRoleService {
+public interface IPartRoleService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewPartRole(PartRole partyRole);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

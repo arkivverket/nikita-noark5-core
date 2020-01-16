@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.CLASSIFIED_CODE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class ClassifiedCodeService
-        extends NoarkService
+        extends MetadataSuperService
         implements IClassifiedCodeService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ClassifiedCodeService.class);
 
     private IClassifiedCodeRepository classifiedCodeRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public ClassifiedCodeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IClassifiedCodeRepository classifiedCodeRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.classifiedCodeRepository = classifiedCodeRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -95,11 +93,8 @@ public class ClassifiedCodeService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                classifiedCodeRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public ClassifiedCode findMetadataByCode(String code) {
+        return classifiedCodeRepository.findByCode(code);
     }
 
     /**
@@ -139,7 +134,7 @@ public class ClassifiedCodeService
             @NotNull final ClassifiedCode incomingClassifiedCode) {
 
         ClassifiedCode existingClassifiedCode =
-                getClassifiedCodeOrThrow(code);
+            (ClassifiedCode) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingClassifiedCode, existingClassifiedCode);
 
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -152,28 +147,5 @@ public class ClassifiedCodeService
         metadataHateoasHandler.addLinks(classifiedCodeHateoas,
                 new Authorisation());
         return classifiedCodeHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid ClassifiedCode object back. If
-     * there is no ClassifiedCode object, a NoarkEntityNotFoundException
-     * exception is thrown
-     *
-     * @param code The code of the ClassifiedCode object to retrieve
-     * @return the ClassifiedCode object
-     */
-    private ClassifiedCode getClassifiedCodeOrThrow(
-            @NotNull String code) {
-        ClassifiedCode classifiedCode =
-                classifiedCodeRepository.findByCode(code);
-        if (classifiedCode == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " ClassifiedCode, using " + "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return classifiedCode;
     }
 }

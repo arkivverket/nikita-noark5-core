@@ -32,7 +32,7 @@ import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_SECUR
 @Transactional
 @SuppressWarnings("unchecked")
 public class ElectronicSignatureSecurityLevelService
-        extends NoarkService
+        extends MetadataSuperService
         implements IElectronicSignatureSecurityLevelService {
 
     private static final Logger logger =
@@ -41,7 +41,6 @@ public class ElectronicSignatureSecurityLevelService
 
     private IElectronicSignatureSecurityLevelRepository
             electronicSignatureSecurityLevelRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public ElectronicSignatureSecurityLevelService(
             EntityManager entityManager,
@@ -49,10 +48,9 @@ public class ElectronicSignatureSecurityLevelService
             IElectronicSignatureSecurityLevelRepository
                     electronicSignatureSecurityLevelRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.electronicSignatureSecurityLevelRepository =
                 electronicSignatureSecurityLevelRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -103,12 +101,9 @@ public class ElectronicSignatureSecurityLevelService
      * MetadataHateoas object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                electronicSignatureSecurityLevelRepository.
-                        findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public ElectronicSignatureSecurityLevel findMetadataByCode(String code) {
+        return electronicSignatureSecurityLevelRepository.
+            findByCode(code);
     }
 
     /**
@@ -155,8 +150,8 @@ public class ElectronicSignatureSecurityLevelService
                     electronicSignatureSecurityLevel) {
 
         ElectronicSignatureSecurityLevel
-                existingElectronicSignatureSecurityLevel =
-                getElectronicSignatureSecurityLevelOrThrow(code);
+            existingElectronicSignatureSecurityLevel =
+            (ElectronicSignatureSecurityLevel) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(electronicSignatureSecurityLevel,
                 existingElectronicSignatureSecurityLevel);
         // Note setVersion can potentially result in a
@@ -171,31 +166,5 @@ public class ElectronicSignatureSecurityLevelService
         metadataHateoasHandler.addLinks(electronicSignatureSecurityLevelHateoas,
                 new Authorisation());
         return electronicSignatureSecurityLevelHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid ElectronicSignatureSecurityLevel
-     * object back. If there is no ElectronicSignatureSecurityLevel object,
-     * a NoarkEntityNotFoundException exception is thrown
-     *
-     * @param code The code of the ElectronicSignatureSecurityLevel
-     *                 object to retrieve
-     * @return the ElectronicSignatureSecurityLevel object
-     */
-    private ElectronicSignatureSecurityLevel
-    getElectronicSignatureSecurityLevelOrThrow(@NotNull String code) {
-        ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel =
-                electronicSignatureSecurityLevelRepository.
-                        findByCode(code);
-        if (electronicSignatureSecurityLevel == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " ElectronicSignatureSecurityLevel, using code " +
-                    code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return electronicSignatureSecurityLevel;
     }
 }

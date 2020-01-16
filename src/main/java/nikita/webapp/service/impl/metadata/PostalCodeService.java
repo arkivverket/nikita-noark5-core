@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.POST_CODE;
 @Service
 @Transactional
 public class PostalCodeService
-        extends NoarkService
+        extends MetadataSuperService
         implements IPostalCodeService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(PostalCodeService.class);
 
     private IPostalCodeRepository postalCodeRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public PostalCodeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IPostalCodeRepository postalCodeRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.postalCodeRepository = postalCodeRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
     // All CREATE operations
 
@@ -89,20 +87,9 @@ public class PostalCodeService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all PostalCode that have a particular code.
-
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of PostalCode objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                postalCodeRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public PostalCode findMetadataByCode(String code) {
+        return postalCodeRepository.findByCode(code);
     }
 
     /**
@@ -138,7 +125,8 @@ public class PostalCodeService
             @NotNull final Long version,
             @NotNull final PostalCode incomingPostalCode) {
 
-        PostalCode existingPostalCode = getPostalCodeOrThrow(code);
+        PostalCode existingPostalCode =
+            (PostalCode) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingPostalCode, existingPostalCode);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -150,27 +138,5 @@ public class PostalCodeService
         metadataHateoasHandler.addLinks(postalCodeHateoas,
                 new Authorisation());
         return postalCodeHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid PostalCode object back. If there
-     * is no PostalCode object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the PostalCode object to retrieve
-     * @return the PostalCode object
-     */
-    private PostalCode getPostalCodeOrThrow(@NotNull String code) {
-        PostalCode postalCode = postalCodeRepository.
-                findByCode(code);
-        if (postalCode == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " PostalCode, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return postalCode;
     }
 }

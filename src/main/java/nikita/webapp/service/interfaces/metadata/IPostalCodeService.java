@@ -9,13 +9,12 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 16/03/18.
  */
 
-public interface IPostalCodeService {
+public interface IPostalCodeService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewPostalCode(PostalCode postalCode);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

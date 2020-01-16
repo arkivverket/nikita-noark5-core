@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class CommentTypeService
-        extends NoarkService
+        extends MetadataSuperService
         implements ICommentTypeService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CommentTypeService.class);
 
     private ICommentTypeRepository commentTypeRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public CommentTypeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             ICommentTypeRepository commentTypeRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.commentTypeRepository = commentTypeRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -95,11 +93,8 @@ public class CommentTypeService
      * object
      */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                commentTypeRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public CommentType findMetadataByCode(String code) {
+        return commentTypeRepository.findByCode(code);
     }
 
     /**
@@ -136,7 +131,8 @@ public class CommentTypeService
             @NotNull final Long version,
             @NotNull final CommentType incomingCommentType) {
 
-        CommentType existingCommentType = getCommentTypeOrThrow(code);
+        CommentType existingCommentType =
+            (CommentType) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingCommentType, existingCommentType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -148,27 +144,5 @@ public class CommentTypeService
         metadataHateoasHandler.addLinks(commentTypeHateoas,
                 new Authorisation());
         return commentTypeHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid CommentType object back. If there
-     * is no CommentType object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the CommentType object to retrieve
-     * @return the CommentType object
-     */
-    private CommentType getCommentTypeOrThrow(@NotNull String code) {
-        CommentType commentType =
-                commentTypeRepository.findByCode(code);
-        if (commentType == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " CommentType, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return commentType;
     }
 }

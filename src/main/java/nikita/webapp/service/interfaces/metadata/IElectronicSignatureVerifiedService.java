@@ -9,14 +9,13 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 19/02/18.
  */
 
-public interface IElectronicSignatureVerifiedService {
+public interface IElectronicSignatureVerifiedService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewElectronicSignatureVerified(
             ElectronicSignatureVerified electronicSignatureVerified);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

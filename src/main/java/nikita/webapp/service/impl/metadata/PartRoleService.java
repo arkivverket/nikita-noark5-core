@@ -31,24 +31,22 @@ import static nikita.common.config.N5ResourceMappings.PART_ROLE;
 @Service
 @Transactional
 public class PartRoleService
-        extends NoarkService
+        extends MetadataSuperService
         implements IPartRoleService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(PartRoleService.class);
 
     private IPartRoleRepository partyRoleRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public PartRoleService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IPartRoleRepository partyRoleRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.partyRoleRepository =
                 partyRoleRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -87,19 +85,9 @@ public class PartRoleService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all PartRole that have a particular code.
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of PartRole objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                partyRoleRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public PartRole findMetadataByCode(String code) {
+        return partyRoleRepository.findByCode(code);
     }
 
     /**
@@ -134,7 +122,7 @@ public class PartRoleService
             @NotNull final Long version,
             @NotNull final PartRole incomingPartRole) {
 
-        PartRole existingPartRole = getPartRoleOrThrow(code);
+        PartRole existingPartRole = (PartRole) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingPartRole, existingPartRole);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -146,28 +134,5 @@ public class PartRoleService
         metadataHateoasHandler.addLinks(partyRoleHateoas,
                 new Authorisation());
         return partyRoleHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid PartRole object back. If there
-     * is no PartRole object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the PartRole object to retrieve
-     * @return the PartRole object
-     */
-    private PartRole
-    getPartRoleOrThrow(@NotNull String code) {
-        PartRole partyRole =
-                partyRoleRepository.findByCode(code);
-        if (partyRole == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " PartRole, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return partyRole;
     }
 }

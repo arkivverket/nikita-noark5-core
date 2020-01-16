@@ -9,14 +9,13 @@ import javax.validation.constraints.NotNull;
  * Created by tsodring on 19/02/18.
  */
 
-public interface IPrecedenceStatusService {
+public interface IPrecedenceStatusService
+    extends IMetadataSuperService {
 
     MetadataHateoas createNewPrecedenceStatus(PrecedenceStatus
                                                       precedenceStatus);
 
     MetadataHateoas findAll();
-
-    MetadataHateoas findByCode(String code);
 
     MetadataHateoas handleUpdate(
             @NotNull final String systemId,

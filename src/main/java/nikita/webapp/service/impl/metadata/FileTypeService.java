@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.FILE_TYPE;
 @Transactional
 @SuppressWarnings("unchecked")
 public class FileTypeService
-        extends NoarkService
+        extends MetadataSuperService
         implements IFileTypeService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(FileTypeService.class);
 
     private IFileTypeRepository fileTypeRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public FileTypeService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IFileTypeRepository fileTypeRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.fileTypeRepository = fileTypeRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -85,20 +83,10 @@ public class FileTypeService
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return metadataHateoas;
     }
-    /**
-     * retrieve all FileType that have a particular code.
 
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of FileType objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                getFileTypeOrThrow(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public FileType findMetadataByCode(String code) {
+        return fileTypeRepository.findByCode(code);
     }
 
     /**
@@ -132,7 +120,7 @@ public class FileTypeService
             @NotNull final Long version,
             @NotNull final FileType incomingFileType) {
 
-        FileType existingFileType = getFileTypeOrThrow(code);
+        FileType existingFileType = (FileType) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingFileType, existingFileType);
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -145,27 +133,5 @@ public class FileTypeService
                 new Authorisation());
 
         return fileTypeHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid FileType object back. If there
-     * is no FileType object, a NoarkEntityNotFoundException exception
-     * is thrown
-     *
-     * @param code The code of the FileType object to retrieve
-     * @return the FileType object
-     */
-    private FileType getFileTypeOrThrow(@NotNull String code) {
-        FileType fileType =
-                fileTypeRepository.findByCode(code);
-        if (fileType == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " FileType, using " +
-                    "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return fileType;
     }
 }

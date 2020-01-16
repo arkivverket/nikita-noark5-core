@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.PRECEDENCE_STATUS;
 @Transactional
 @SuppressWarnings("unchecked")
 public class PrecedenceStatusService
-        extends NoarkService
+        extends MetadataSuperService
         implements IPrecedenceStatusService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(PrecedenceStatusService.class);
 
     private IPrecedenceStatusRepository precedenceStatusRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public PrecedenceStatusService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IPrecedenceStatusRepository precedenceStatusRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.precedenceStatusRepository = precedenceStatusRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -86,20 +84,9 @@ public class PrecedenceStatusService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all PrecedenceStatus that have a particular code.
-
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of PrecedenceStatus objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas = new MetadataHateoas(
-                getPrecedenceStatusOrThrow(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public PrecedenceStatus findMetadataByCode(String code) {
+        return precedenceStatusRepository.findByCode(code);
     }
 
     /**
@@ -135,7 +122,7 @@ public class PrecedenceStatusService
             @NotNull final PrecedenceStatus incomingPrecedenceStatus) {
 
         PrecedenceStatus existingPrecedenceStatus =
-                getPrecedenceStatusOrThrow(code);
+            (PrecedenceStatus) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingPrecedenceStatus,
                 existingPrecedenceStatus);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -149,28 +136,5 @@ public class PrecedenceStatusService
 
         metadataHateoasHandler.addLinks(precedenceStatusHateoas, new Authorisation());
         return precedenceStatusHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid PrecedenceStatus object back. If
-     * there is no PrecedenceStatus object, a NoarkEntityNotFoundException
-     * exception is thrown
-     *
-     * @param code The code of the PrecedenceStatus object to retrieve
-     * @return the PrecedenceStatus object
-     */
-    private PrecedenceStatus
-    getPrecedenceStatusOrThrow(@NotNull String code) {
-        PrecedenceStatus precedenceStatus =
-                precedenceStatusRepository.findByCode(code);
-        if (precedenceStatus == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " PrecedenceStatus,  " +
-                    "using code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return precedenceStatus;
     }
 }

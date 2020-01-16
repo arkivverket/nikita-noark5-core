@@ -32,23 +32,21 @@ import static nikita.common.config.N5ResourceMappings.SCREENING_DOCUMENT;
 @Transactional
 @SuppressWarnings("unchecked")
 public class ScreeningDocumentService
-        extends NoarkService
+        extends MetadataSuperService
         implements IScreeningDocumentService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ScreeningDocumentService.class);
 
     private IScreeningDocumentRepository screeningDocumentRepository;
-    private IMetadataHateoasHandler metadataHateoasHandler;
 
     public ScreeningDocumentService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IScreeningDocumentRepository screeningDocumentRepository,
             IMetadataHateoasHandler metadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.screeningDocumentRepository = screeningDocumentRepository;
-        this.metadataHateoasHandler = metadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -86,20 +84,9 @@ public class ScreeningDocumentService
         return metadataHateoas;
     }
 
-    /**
-     * retrieve all ScreeningDocument that have a particular code.
-     *
-     * @param code The code of the object you wish to retrieve
-     * @return A list of ScreeningDocument objects wrapped as a MetadataHateoas
-     * object
-     */
     @Override
-    public MetadataHateoas findByCode(String code) {
-        MetadataHateoas metadataHateoas =
-                new MetadataHateoas(
-                        screeningDocumentRepository.findByCode(code));
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        return metadataHateoas;
+    public ScreeningDocument findMetadataByCode(String code) {
+        return screeningDocumentRepository.findByCode(code);
     }
 
     /**
@@ -136,7 +123,7 @@ public class ScreeningDocumentService
             @NotNull final ScreeningDocument incomingScreeningDocument) {
 
         ScreeningDocument existingScreeningDocument =
-                getScreeningDocumentOrThrow(code);
+            (ScreeningDocument) findMetadataByCodeOrThrow(code);
         updateCodeAndDescription(incomingScreeningDocument,
                 existingScreeningDocument);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -149,28 +136,5 @@ public class ScreeningDocumentService
         metadataHateoasHandler.addLinks(screeningMetadataHateoas,
                 new Authorisation());
         return screeningMetadataHateoas;
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid ScreeningDocument object back. If
-     * there is no ScreeningDocument object, a NoarkEntityNotFoundException
-     * exception is thrown
-     *
-     * @param code The code of the ScreeningDocument object to retrieve
-     * @return the ScreeningDocument object
-     */
-    private ScreeningDocument getScreeningDocumentOrThrow(
-            @NotNull String code) {
-        ScreeningDocument screeningDocument =
-                screeningDocumentRepository.findByCode(code);
-        if (screeningDocument == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " ScreeningDocument, using "
-                    + "code " + code;
-            logger.error(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return screeningDocument;
     }
 }
