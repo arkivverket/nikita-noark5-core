@@ -11,15 +11,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_PERSON;
-import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_PERSON;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_PERSON;
 
 @Entity
@@ -54,16 +50,19 @@ public class CorrespondencePartPerson
     @Column(name = "name")
     private String name;
 
-    @OneToOne(mappedBy = "correspondencePartPerson",
-            fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = "correspondencePartPerson", cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private PostalAddress postalAddress;
 
-    @OneToOne(mappedBy = "correspondencePartPerson",
-            fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = "correspondencePartPerson", cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ResidingAddress residingAddress;
 
-    @OneToOne(mappedBy = "correspondencePartPerson",
-            fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = "correspondencePartPerson", cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
     @Override

@@ -254,41 +254,42 @@ public class PartService
 
     // Internal helper methods
 
-    private void createPerson(IGenericPersonEntity part) {
+    private void createPerson(PartPerson part) {
+        ContactInformation contactInformation
+                = part.getContactInformation();
+
+        if (contactInformation != null) {
+            contactInformation.setPartPerson(part);
+        }
+        PostalAddress postalAddress = part.getPostalAddress();
+        if (null != postalAddress) {
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            postalAddress.setPartPerson(part);
+        }
+        ResidingAddress residingAddress = part.getResidingAddress();
+        if (null != residingAddress) {
+            residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
+            residingAddress.setPartPerson(part);
+        }
+    }
+
+    private void createUnit(PartUnit part) {
         ContactInformation contactInformation
                 = part.getContactInformation();
         part.setContactInformation(contactInformation);
 
-        PostalAddress postalAddress = part.getPostalAddress();
-        if (null != postalAddress) {
-            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
-        }
-        part.setPostalAddress(postalAddress);
-
-        ResidingAddress residingAddress =
-                part.getResidingAddress();
-        if (null != residingAddress) {
-            residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
-        }
-        part.setResidingAddress(residingAddress);
-
-    }
-
-    private void createUnit(IGenericUnitEntity part) {
         // Set NikitaEntity values for ContactInformation, PostalAddress,
         // BusinessAddress
         PostalAddress postalAddress = part.getPostalAddress();
         if (null != postalAddress) {
             postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            postalAddress.setPartUnit(part);
         }
-        part.setPostalAddress(postalAddress);
-
-        BusinessAddress businessAddress =
-                part.getBusinessAddress();
+        BusinessAddress businessAddress = part.getBusinessAddress();
         if (null != businessAddress) {
             businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
+            businessAddress.setPartUnit(part);
         }
-        part.setBusinessAddress(businessAddress);
     }
 
     /**

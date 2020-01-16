@@ -20,8 +20,8 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_PART;
-import static nikita.common.config.Constants.TABLE_PART_UNIT;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
 import static nikita.common.config.N5ResourceMappings.PART_UNIT;
 
 @Entity
@@ -54,16 +54,19 @@ public class PartUnit
     @Audited
     private String contactPerson;
 
-    @OneToOne(mappedBy = "partUnit",
-            fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = "partUnit", cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private PostalAddress postalAddress;
 
-    @OneToOne(mappedBy = "partUnit",
-            fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = "partUnit", cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private BusinessAddress businessAddress;
 
-    @OneToOne(mappedBy = "partUnit",
-            fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = "partUnit", cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
     // Links to Record
