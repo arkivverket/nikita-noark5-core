@@ -225,7 +225,6 @@ public class NikitaEventListener {
 
             HttpServletRequest request =
                     ((ServletRequestAttributes) requestAttributes).getRequest();
-            String servletPath = request.getServletPath();
             if (request != null) {
                 String address = request.getHeader("X-Forwarded-Host");
                 String protocol = request.getHeader("X-Forwarded-Proto");
