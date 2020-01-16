@@ -23,6 +23,7 @@ import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
+import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -65,6 +66,7 @@ public class CaseFileService
     private IAdministrativeUnitService administrativeUnitService;
     private IUserRepository userRepository;
     private ICaseStatusService caseStatusService;
+    private IDocumentMediumService documentMediumService;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
 
     public CaseFileService(
@@ -77,6 +79,7 @@ public class CaseFileService
             IAdministrativeUnitService administrativeUnitService,
             IUserRepository userRepository,
             ICaseStatusService caseStatusService,
+            IDocumentMediumService documentMediumService,
             ICaseFileHateoasHandler caseFileHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.registryEntryService = registryEntryService;
@@ -86,12 +89,13 @@ public class CaseFileService
         this.administrativeUnitService = administrativeUnitService;
         this.userRepository = userRepository;
         this.caseStatusService = caseStatusService;
+        this.documentMediumService = documentMediumService;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
     }
 
     @Override
     public CaseFile save(CaseFile caseFile) {
-        checkDocumentMediumValid(caseFile);
+        validateDocumentMedium(documentMediumService, caseFile);
 
         validateCaseStatus(caseFile);
 

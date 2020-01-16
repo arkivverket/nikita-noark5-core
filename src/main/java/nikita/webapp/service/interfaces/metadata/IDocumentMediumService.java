@@ -8,13 +8,12 @@ import java.util.List;
 /**
  * Created by tsodring on 3/9/17.
  */
-public interface IDocumentMediumService {
+public interface IDocumentMediumService
+    extends IMetadataSuperService {
 
     DocumentMedium createNewDocumentMedium(DocumentMedium documentMedium);
 
     List<IMetadataEntity> findAll();
 
     DocumentMedium update(DocumentMedium documentMedium);
-
-    DocumentMedium findByCode(String code);
 }

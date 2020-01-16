@@ -20,6 +20,7 @@ import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
+import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;
 import nikita.webapp.service.interfaces.metadata.IDocumentTypeService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
@@ -41,6 +42,7 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -57,6 +59,7 @@ public class DocumentDescriptionService
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
+    private IDocumentMediumService documentMediumService;
     private IDocumentStatusService documentStatusService;
     private IDocumentTypeService documentTypeService;
     private IPartService partService;
@@ -73,6 +76,7 @@ public class DocumentDescriptionService
                     documentDescriptionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
+            IDocumentMediumService documentMediumService,
             IDocumentStatusService documentStatusService,
             IDocumentTypeService documentTypeService,
             IPartService partService,
@@ -86,6 +90,7 @@ public class DocumentDescriptionService
                 documentDescriptionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
+        this.documentMediumService = documentMediumService;
         this.documentStatusService = documentStatusService;
         this.documentTypeService = documentTypeService;
         this.partService = partService;
@@ -207,6 +212,7 @@ public class DocumentDescriptionService
      */
     @Override
     public DocumentDescription save(DocumentDescription documentDescription) {
+        validateDocumentMedium(documentMediumService, documentDescription);
         validateDocumentStatus(documentDescription);
         validateDocumentType(documentDescription);
         String username = SecurityContextHolder.getContext().

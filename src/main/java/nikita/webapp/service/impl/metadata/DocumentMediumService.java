@@ -3,6 +3,7 @@ package nikita.webapp.service.impl.metadata;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.repository.n5v5.metadata.IDocumentMediumRepository;
+import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import java.util.List;
 @Service
 @Transactional
 public class DocumentMediumService
-        extends NoarkService
+        extends MetadataSuperService
         implements IDocumentMediumService {
 
     private static final Logger logger =
@@ -29,8 +30,9 @@ public class DocumentMediumService
     public DocumentMediumService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IDocumentMediumRepository documentMediumRepository) {
-        super(entityManager, applicationEventPublisher);
+            IDocumentMediumRepository documentMediumRepository,
+            IMetadataHateoasHandler metadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher, metadataHateoasHandler);
         this.documentMediumRepository = documentMediumRepository;
     }
 
@@ -59,15 +61,8 @@ public class DocumentMediumService
                 documentMediumRepository.findAll();
     }
 
-    /**
-     * retrieve all documentMedium that have a particular code. <br>
-     * This will be replaced by OData search.
-
-     * @param code
-     * @return
-     */
     @Override
-    public DocumentMedium findByCode(String code) {
+    public DocumentMedium findMetadataByCode(String code) {
         return documentMediumRepository.findByCode(code);
     }
 

@@ -15,6 +15,7 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
@@ -32,8 +33,8 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -50,6 +51,7 @@ public class FileService
     private IFileHateoasHandler fileHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
+    private IDocumentMediumService documentMediumService;
     private IPartService partService;
     private IPartHateoasHandler partHateoasHandler;
 
@@ -60,6 +62,7 @@ public class FileService
                        IFileHateoasHandler fileHateoasHandler,
                        ISeriesHateoasHandler seriesHateoasHandler,
                        IClassHateoasHandler classHateoasHandler,
+                       IDocumentMediumService documentMediumService,
                        IPartService partService,
                        IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
@@ -68,12 +71,13 @@ public class FileService
         this.fileHateoasHandler = fileHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
+        this.documentMediumService = documentMediumService;
         this.partService = partService;
         this.partHateoasHandler = partHateoasHandler;
     }
 
     public FileHateoas save(File file) {
-        checkDocumentMediumValid(file);
+        validateDocumentMedium(documentMediumService, file);
         setFinaliseEntityValues(file);
         FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
@@ -84,7 +88,7 @@ public class FileService
 
     @Override
     public File createFile(File file) {
-        checkDocumentMediumValid(file);
+        validateDocumentMedium(documentMediumService, file);
         setFinaliseEntityValues(file);
         return fileRepository.save(file);
     }

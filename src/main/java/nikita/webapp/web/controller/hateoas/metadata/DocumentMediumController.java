@@ -110,12 +110,11 @@ public class DocumentMediumController {
     @GetMapping(value = DOCUMENT_MEDIUM + SLASH + CODE_PARAMETER + SLASH)
     public ResponseEntity<MetadataHateoas> findByCode(@PathVariable("kode") final String code,
                                                           HttpServletRequest request) {
-        DocumentMedium documentMedium = documentMediumService.findByCode(code);
-        MetadataHateoas metadataHateoas = new MetadataHateoas(documentMedium);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+        MetadataHateoas metadataHateoas =
+            documentMediumService.findByCode(code);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(documentMedium.getVersion().toString())
+                .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
 

@@ -24,6 +24,7 @@ import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -45,6 +46,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_CORRESPONDENCE_PART_RECORD;
 import static nikita.common.config.N5ResourceMappings.AUTHOR;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -68,6 +70,7 @@ public class RecordService
             documentDescriptionHateoasHandler;
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private ICorrespondencePartService correspondencePartService;
+    private IDocumentMediumService documentMediumService;
     private IPartService partService;
     private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
     private IPartHateoasHandler partHateoasHandler;
@@ -87,6 +90,7 @@ public class RecordService
                     documentDescriptionHateoasHandler,
             IDocumentDescriptionRepository documentDescriptionRepository,
             ICorrespondencePartService correspondencePartService,
+            IDocumentMediumService documentMediumService,
             IPartService partService,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
             IPartHateoasHandler partHateoasHandler,
@@ -104,6 +108,7 @@ public class RecordService
                 documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.correspondencePartService = correspondencePartService;
+        this.documentMediumService = documentMediumService;
         this.partService = partService;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
@@ -114,6 +119,7 @@ public class RecordService
     // All CREATE operations
     @Override
     public ResponseEntity<RecordHateoas> save(Record record) {
+        validateDocumentMedium(documentMediumService, record);
         RecordHateoas recordHateoas =
                 new RecordHateoas(recordRepository.save(record));
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
@@ -129,6 +135,7 @@ public class RecordService
 
         Record record = getRecordOrThrow(systemID);
 
+        validateDocumentMedium(documentMediumService, documentDescription);
         // Adding 1 as documentNumber starts at 1, not 0
         long documentNumber =
                 documentDescriptionRepository.

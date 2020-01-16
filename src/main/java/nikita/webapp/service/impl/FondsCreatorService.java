@@ -10,6 +10,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
+import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -27,8 +28,8 @@ import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_CREATOR_F
 import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN;
 import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN_CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.checkDocumentMediumValid;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -41,6 +42,7 @@ public class FondsCreatorService
             getLogger(FondsCreatorService.class);
     private IFondsCreatorRepository fondsCreatorRepository;
     private IFondsRepository fondsRepository;
+    private IDocumentMediumService documentMediumService;
     private IFondsHateoasHandler fondsHateoasHandler;
 
     public FondsCreatorService(
@@ -48,10 +50,12 @@ public class FondsCreatorService
             ApplicationEventPublisher applicationEventPublisher,
             IFondsCreatorRepository fondsCreatorRepository,
             IFondsRepository fondsRepository,
+            IDocumentMediumService documentMediumService,
             IFondsHateoasHandler fondsHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.fondsCreatorRepository = fondsCreatorRepository;
         this.fondsRepository = fondsRepository;
+        this.documentMediumService = documentMediumService;
         this.fondsHateoasHandler = fondsHateoasHandler;
     }
 
@@ -75,7 +79,7 @@ public class FondsCreatorService
             String fondsCreatorSystemId, Fonds fonds) {
         FondsCreator fondsCreator =
                 getFondsCreatorOrThrow(fondsCreatorSystemId);
-        checkDocumentMediumValid(fonds);
+        validateDocumentMedium(documentMediumService, fonds);
         fonds.setFondsStatusCode(FONDS_STATUS_OPEN_CODE);
         fonds.setFondsStatusCodeName(FONDS_STATUS_OPEN);
         setFinaliseEntityValues(fonds);
