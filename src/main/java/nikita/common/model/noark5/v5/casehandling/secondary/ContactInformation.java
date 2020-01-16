@@ -47,16 +47,16 @@ public class ContactInformation
     @Audited
     private String telephoneNumber;
 
-    @OneToOne(fetch = LAZY)
+    @OneToOne
     private CorrespondencePartPerson correspondencePartPerson;
 
-    @OneToOne(fetch = LAZY)
+    @OneToOne
     private CorrespondencePartUnit correspondencePartUnit;
 
-    @OneToOne(fetch = LAZY)
+    @OneToOne
     private PartPerson partPerson;
 
-    @OneToOne(fetch = LAZY)
+    @OneToOne
     private PartUnit partUnit;
 
     public String getEmailAddress() {

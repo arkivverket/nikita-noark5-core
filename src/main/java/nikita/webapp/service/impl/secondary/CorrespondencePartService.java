@@ -208,20 +208,20 @@ public class CorrespondencePartService
         validateCorrespondencePartType(correspondencePart);
         ContactInformation contactInformation
                 = correspondencePart.getContactInformation();
-        correspondencePart.setContactInformation(contactInformation);
-
+        if (contactInformation != null) {
+            contactInformation.setCorrespondencePartPerson(correspondencePart);
+        }
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {
             postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            postalAddress.setCorrespondencePartPerson(correspondencePart);
         }
-        correspondencePart.setPostalAddress(postalAddress);
-
         ResidingAddress residingAddress =
                 correspondencePart.getResidingAddress();
         if (null != residingAddress) {
             residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
+            residingAddress.setCorrespondencePartPerson(correspondencePart);
         }
-        correspondencePart.setResidingAddress(residingAddress);
 
         record.addCorrespondencePart(correspondencePart);
         correspondencePart.addRecord(record);

@@ -21,10 +21,10 @@ public class BusinessAddress
     @Embedded
     private SimpleAddress simpleAddress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private CorrespondencePartUnit correspondencePartUnit;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private PartUnit partUnit;
 
     public SimpleAddress getSimpleAddress() {
