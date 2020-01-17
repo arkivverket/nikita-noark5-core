@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -90,8 +91,7 @@ public class ElectronicSignatureSecurityLevelController {
                                 electronicSignatureSecurityLevel);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -123,15 +123,14 @@ public class ElectronicSignatureSecurityLevelController {
     @GetMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(electronicSignatureSecurityLevelService.findAll());
     }
 
     // Retrieves a given ElectronicSignatureSecurityLevel identified by a
     // code
     // GET [contextPath][api]/metadata/elektronisksignatursikkerhetsnivaa/
-    // {code}/
+    // {kode}/
     @ApiOperation(
             value = "Gets ElectronicSignatureSecurityLevel identified by its " +
                     "code",
@@ -175,8 +174,7 @@ public class ElectronicSignatureSecurityLevelController {
                 electronicSignatureSecurityLevelService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -214,14 +212,13 @@ public class ElectronicSignatureSecurityLevelController {
                         .generateDefaultElectronicSignatureSecurityLevel());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a elektronisksignatursikkerhetsnivaa
-    // PUT [contextPath][api]/metatdata/elektronisksignatursikkerhetsnivaa/
+    // PUT [contextPath][api]/metadata/elektronisksignatursikkerhetsnivaa/{kode}
     @ApiOperation(
             value = "Updates a ElectronicSignatureSecurityLevel object",
             notes = "Returns the newly updated " +
@@ -250,28 +247,24 @@ public class ElectronicSignatureSecurityLevelController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH + ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
+    @PutMapping(value = ELECTRONIC_SIGNATURE_SECURITY_LEVEL + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas>
     updateElectronicSignatureSecurityLevel(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
+            @ApiParam(name = CODE,
+                    value = "code of electronicSignatureSecurity to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody ElectronicSignatureSecurityLevel
                     electronicSignatureSecurityLevel,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                electronicSignatureSecurityLevelService
-                        .handleUpdate
-                                (systemID,
-                                        CommonUtils.Validation.
-                                                parseETAG(request.getHeader(ETAG)),
-                                        electronicSignatureSecurityLevel);
+                electronicSignatureSecurityLevelService.handleUpdate(code,
+                        CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                        electronicSignatureSecurityLevel);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -81,8 +83,7 @@ public class DocumentTypeController {
                 documentTypeService.createNewDocumentType(documentType);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -114,13 +115,12 @@ public class DocumentTypeController {
     @GetMapping(value = DOCUMENT_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentTypeService.findAll());
     }
 
     // Retrieves a given documentType identified by a code
-    // GET [contextPath][api]/metadata/dokumenttype/{code}/
+    // GET [contextPath][api]/metadata/dokumenttype/{kode}/
     @ApiOperation(
             value = "Gets documentType identified by its code",
             notes = "Returns the requested documentType object",
@@ -160,8 +160,7 @@ public class DocumentTypeController {
         MetadataHateoas metadataHateoas = documentTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -198,14 +197,13 @@ public class DocumentTypeController {
                 (documentTypeService.generateDefaultDocumentType());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a dokumenttype
-    // PUT [contextPath][api]/metatdata/dokumenttype/
+    // PUT [contextPath][api]/metadata/dokumenttype/{kode}
     @ApiOperation(
             value = "Updates a DocumentType object",
             notes = "Returns the newly updated DocumentType object after it " +
@@ -233,23 +231,22 @@ public class DocumentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = DOCUMENT_TYPE + SLASH + DOCUMENT_TYPE)
+    @PutMapping(value = DOCUMENT_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateDocumentType(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
+            @ApiParam(name = CODE,
+                      value = "code of documentType to update.",
+                      required = true)
+            @PathVariable(CODE) String code,
             @RequestBody DocumentType documentType,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = documentTypeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
-                        documentType);
+        MetadataHateoas metadataHateoas =
+            documentTypeService.handleUpdate(code,
+                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                documentType);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

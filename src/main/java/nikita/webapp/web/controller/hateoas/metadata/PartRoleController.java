@@ -114,7 +114,7 @@ public class PartRoleController {
     }
 
     // Retrieves a given PartRole identified by a code
-    // GET [contextPath][api]/metadata/partrolle/{code}/
+    // GET [contextPath][api]/metadata/partrolle/{kode}/
     @ApiOperation(
             value = "Gets PartRole identified by its code",
             notes = "Returns the requested PartRole object",
@@ -193,7 +193,7 @@ public class PartRoleController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a partrolle
-    // PUT [contextPath][api]/metatdata/partrolle/
+    // PUT [contextPath][api]/metadata/partrolle/{kode}
     @ApiOperation(
             value = "Updates a PartRole object",
             notes = "Returns the newly updated PartRole object after it " +
@@ -221,17 +221,17 @@ public class PartRoleController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = PART_ROLE + SLASH + PART_ROLE)
+    @PutMapping(value = PART_ROLE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updatePartRole(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = CODE,
                     value = "code of partyRole to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody PartRole partyRole,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = partyRoleService.handleUpdate
-                (systemID, parseETAG(request.getHeader(ETAG)), partyRole);
+                (code, parseETAG(request.getHeader(ETAG)), partyRole);
 
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))

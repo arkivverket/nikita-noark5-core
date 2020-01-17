@@ -1,9 +1,11 @@
 package nikita.webapp.service.impl.metadata;
 
+import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.repository.n5v5.metadata.IDocumentStatusRepository;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -74,7 +77,26 @@ public class DocumentStatusService
      * @return the updated documentStatus
      */
     @Override
-    public DocumentStatus update(DocumentStatus documentStatus) {
-        return documentStatusRepository.save(documentStatus);
+    public MetadataHateoas handleUpdate(
+            @NotNull final String code,
+            @NotNull final Long version,
+            @NotNull final DocumentStatus incomingDocumentStatus) {
+
+        DocumentStatus existingDocumentStatus =
+            (DocumentStatus) findMetadataByCodeOrThrow(code);
+        updateCodeAndDescription(incomingDocumentStatus,
+                                 existingDocumentStatus);
+
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
+        existingDocumentStatus.setVersion(version);
+
+        MetadataHateoas documentStatusHateoas =
+            new MetadataHateoas(documentStatusRepository
+                                .save(existingDocumentStatus));
+
+        metadataHateoasHandler.addLinks(documentStatusHateoas,
+                                        new Authorisation());
+        return documentStatusHateoas;
     }
 }

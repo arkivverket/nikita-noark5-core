@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -86,8 +88,7 @@ public class RegistryEntryTypeController {
                                 registryEntryType);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -119,8 +120,7 @@ public class RegistryEntryTypeController {
     @GetMapping(value = REGISTRY_ENTRY_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryTypeService.findAll());
     }
 
@@ -168,8 +168,7 @@ public class RegistryEntryTypeController {
                 registryEntryTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -207,8 +206,7 @@ public class RegistryEntryTypeController {
                         .generateDefaultRegistryEntryType());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
@@ -242,26 +240,21 @@ public class RegistryEntryTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = REGISTRY_ENTRY_TYPE + SLASH + REGISTRY_ENTRY_TYPE)
+    @PutMapping(value = REGISTRY_ENTRY_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas>
     updateRegistryEntryType(
-            @ApiParam(name = "kode",
+            @ApiParam(name = CODE,
                     value = "kode of registryEntryType to update.",
                     required = true)
-            @PathVariable("kode") String code,
+            @PathVariable(CODE) String code,
             @RequestBody RegistryEntryType registryEntryType,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas =
-                registryEntryTypeService
-                        .handleUpdate
-                                (code, CommonUtils.Validation.
-                                        parseETAG(request.getHeader
-                                                (ETAG)), registryEntryType);
+        MetadataHateoas metadataHateoas = registryEntryTypeService.handleUpdate
+            (code, parseETAG(request.getHeader(ETAG)), registryEntryType);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

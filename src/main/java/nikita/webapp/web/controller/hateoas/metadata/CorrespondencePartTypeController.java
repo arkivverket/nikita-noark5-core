@@ -94,7 +94,7 @@ public class CorrespondencePartTypeController extends NoarkController {
     }
 
     // Retrieves a given correspondencePartType identified by a code
-    // GET [contextPath][api]/metadata/korrespondanseparttype/{code}
+    // GET [contextPath][api]/metadata/korrespondanseparttype/{kode}
     @ApiOperation(value = "Gets correspondencePartType identified by its code", notes = "Returns the requested " +
             " correspondencePartType object", response = CorrespondencePartType.class)
     @ApiResponses(value = {
@@ -145,9 +145,12 @@ public class CorrespondencePartTypeController extends NoarkController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a korrespondanseparttype
-    // PUT [contextPath][api]/metatdata/korrespondanseparttype/
-    @ApiOperation(value = "Updates a CorrespondencePartType object", notes = "Returns the newly" +
-            " updated CorrespondencePartType object after it is persisted to the database", response = CorrespondencePartType.class)
+    // PUT [contextPath][api]/metadata/korrespondanseparttype/{kode}
+    @ApiOperation(value = "Updates a CorrespondencePartType object",
+                  notes = "Returns the newly" +
+                  " updated CorrespondencePartType object after it is " +
+                  "persisted to the database",
+                  response = CorrespondencePartType.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CorrespondencePartType " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
                     response = CorrespondencePartType.class),
@@ -157,7 +160,7 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = CORRESPONDENCE_PART_TYPE + UNIT + SLASH + CODE_PARAMETER)
+    @PutMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateCorrespondencePartTypeUnit(
             @RequestBody CorrespondencePartType correspondencePartType,
             HttpServletRequest request)

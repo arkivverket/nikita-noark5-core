@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -81,8 +83,7 @@ public class CountryController {
                 countryService.createNewCountry(country);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -114,13 +115,12 @@ public class CountryController {
     @GetMapping(value = COUNTRY)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(countryService.findAll());
     }
 
     // Retrieves a given country identified by a code
-    // GET [contextPath][api]/metadata/land/{code}/
+    // GET [contextPath][api]/metadata/land/{kode}/
     @ApiOperation(
             value = "Gets country identified by its code",
             notes = "Returns the requested country object",
@@ -160,8 +160,7 @@ public class CountryController {
         MetadataHateoas metadataHateoas = countryService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -198,14 +197,13 @@ public class CountryController {
                 (countryService.generateDefaultCountry());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a land
-    // PUT [contextPath][api]/metatdata/land/
+    // PUT [contextPath][api]/metadata/land/{kode}
     @ApiOperation(
             value = "Updates a Country object",
             notes = "Returns the newly updated Country object after it " +
@@ -233,24 +231,20 @@ public class CountryController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = COUNTRY + SLASH + COUNTRY)
+    @PutMapping(value = COUNTRY + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateCountry(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
+            @ApiParam(name = CODE,
+                    value = "code of country to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody Country country,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = countryService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        country);
+                (code, parseETAG(request.getHeader(ETAG)), country);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

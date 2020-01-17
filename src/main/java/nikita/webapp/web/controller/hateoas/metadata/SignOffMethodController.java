@@ -122,7 +122,7 @@ public class SignOffMethodController {
     }
 
     // Retrieves a given SignOffMethod identified by a code
-    // GET [contextPath][api]/metadata/avskrivningsmaate/{code}/
+    // GET [contextPath][api]/metadata/avskrivningsmaate/{kode}/
     @ApiOperation(
             value = "Gets SignOffMethod identified by its code",
             notes = "Returns the requested SignOffMethod object",
@@ -208,7 +208,7 @@ public class SignOffMethodController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a avskrivningsmaate
-    // PUT [contextPath][api]/metatdata/avskrivningsmaate/
+    // PUT [contextPath][api]/metadata/avskrivningsmaate/{kode}
     @ApiOperation(
             value = "Updates a SignOffMethod object",
             notes = "Returns the newly updated SignOffMethod object after it " +
@@ -236,24 +236,23 @@ public class SignOffMethodController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = SIGN_OFF_METHOD + SLASH + SIGN_OFF_METHOD)
+    @PutMapping(value = SIGN_OFF_METHOD + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateSignOffMethod(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
+            @ApiParam(name = CODE,
+                      value = "code of signOffMethod to update.",
+                      required = true)
+            @PathVariable(CODE) String code,
             @RequestBody SignOffMethod SignOffMethod,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = signOffMethodService
-                .handleUpdate
-                        (systemID,
-                                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
-                                SignOffMethod);
+        MetadataHateoas metadataHateoas =
+            signOffMethodService.handleUpdate(code,
+                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                SignOffMethod);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                       getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

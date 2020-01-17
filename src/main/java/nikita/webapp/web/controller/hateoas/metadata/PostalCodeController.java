@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -81,8 +83,7 @@ public class PostalCodeController {
                 postalCodeService.createNewPostalCode(postalCode);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -114,8 +115,7 @@ public class PostalCodeController {
     @GetMapping(value = POST_CODE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(postalCodeService.findAll());
     }
 
@@ -160,8 +160,7 @@ public class PostalCodeController {
         MetadataHateoas metadataHateoas = postalCodeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -198,14 +197,13 @@ public class PostalCodeController {
                 (postalCodeService.generateDefaultPostalCode());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a postnummer
-    // PUT [contextPath][api]/metatdata/postnummer/
+    // PUT [contextPath][api]/metadata/postnummer/{kode}
     @ApiOperation(
             value = "Updates a PostalCode object",
             notes = "Returns the newly updated PostalCode object after it " +
@@ -233,24 +231,20 @@ public class PostalCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = POST_CODE + SLASH + POST_CODE)
+    @PutMapping(value = POST_CODE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updatePostalCode(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
+            @ApiParam(name = CODE,
+                    value = "code of postalCode to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody PostalCode postalCode,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = postalCodeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        postalCode);
+                (code,parseETAG(request.getHeader(ETAG)), postalCode);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

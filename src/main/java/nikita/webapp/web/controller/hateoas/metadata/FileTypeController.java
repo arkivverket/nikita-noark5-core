@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -81,8 +82,7 @@ public class FileTypeController {
                 fileTypeService.createNewFileType(fileType);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -114,13 +114,12 @@ public class FileTypeController {
     @GetMapping(value = FILE_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileTypeService.findAll());
     }
 
     // Retrieves a given fileType identified by a code
-    // GET [contextPath][api]/metadata/mappetype/{code}/
+    // GET [contextPath][api]/metadata/mappetype/{kode}/
     @ApiOperation(
             value = "Gets fileType identified by its code",
             notes = "Returns the requested fileType object",
@@ -160,8 +159,7 @@ public class FileTypeController {
         MetadataHateoas metadataHateoas = fileTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -198,14 +196,13 @@ public class FileTypeController {
                 (fileTypeService.generateDefaultFileType());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a mappetype
-    // PUT [contextPath][api]/metatdata/mappetype/
+    // PUT [contextPath][api]/metadata/mappetype/{kode}
     @ApiOperation(
             value = "Updates a FileType object",
             notes = "Returns the newly updated FileType object after it " +
@@ -233,24 +230,22 @@ public class FileTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = FILE_TYPE + SLASH + FILE_TYPE)
+    @PutMapping(value = FILE_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateFileType(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
+            @ApiParam(name = CODE,
+                    value = "code of fileType to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody FileType fileType,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = fileTypeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        fileType);
+        MetadataHateoas metadataHateoas =
+            fileTypeService.handleUpdate(code,
+                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                fileType);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

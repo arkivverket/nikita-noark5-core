@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -85,8 +87,7 @@ public class FlowStatusController {
                                 flowStatus);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -118,15 +119,14 @@ public class FlowStatusController {
     @GetMapping(value = FLOW_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(flowStatusService.findAll());
     }
 
     // Retrieves a given FlowStatus identified by a
     // code
     // GET [contextPath][api]/metadata/flytstatus/
-    // {code}/
+    // {kode}/
     @ApiOperation(
             value = "Gets FlowStatus identified by its code",
             notes = "Returns the requested FlowStatus object",
@@ -167,8 +167,7 @@ public class FlowStatusController {
                 flowStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -206,14 +205,13 @@ public class FlowStatusController {
                         .generateDefaultFlowStatus());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a flowStatus
-    // PUT [contextPath][api]/metadata/flytstatus/
+    // PUT [contextPath][api]/metadata/flytstatus/{kode}
     @ApiOperation(
             value = "Updates a FlowStatus object",
             notes = "Returns the newly updated FlowStatus object after it is " +
@@ -241,26 +239,21 @@ public class FlowStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = FLOW_STATUS + SLASH + FLOW_STATUS)
+    @PutMapping(value = FLOW_STATUS + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas>
     updateFlowStatus(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
+            @ApiParam(name = CODE,
+                    value = "code of flowStatus to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody FlowStatus flowStatus,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas =
-                flowStatusService
-                        .handleUpdate
-                                (systemID, CommonUtils.Validation.
-                                        parseETAG(request.getHeader
-                                                (ETAG)), flowStatus);
+        MetadataHateoas metadataHateoas = flowStatusService.handleUpdate
+            (code, parseETAG(request.getHeader(ETAG)), flowStatus);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

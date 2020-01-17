@@ -1,9 +1,11 @@
 package nikita.webapp.service.impl.metadata;
 
+import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.repository.n5v5.metadata.IDocumentMediumRepository;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -73,7 +76,26 @@ public class DocumentMediumService
      * @return the updated documentMedium
      */
     @Override
-    public DocumentMedium update(DocumentMedium documentMedium) {
-        return documentMediumRepository.save(documentMedium);
+    public MetadataHateoas handleUpdate(
+            @NotNull final String code,
+            @NotNull final Long version,
+            @NotNull final DocumentMedium incomingDocumentMedium) {
+
+        DocumentMedium existingDocumentMedium =
+            (DocumentMedium) findMetadataByCodeOrThrow(code);
+        updateCodeAndDescription(incomingDocumentMedium,
+                                 existingDocumentMedium);
+
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
+        existingDocumentMedium.setVersion(version);
+
+        MetadataHateoas documentMediumHateoas =
+            new MetadataHateoas(documentMediumRepository
+                                .save(existingDocumentMedium));
+
+        metadataHateoasHandler.addLinks(documentMediumHateoas,
+                                        new Authorisation());
+        return documentMediumHateoas;
     }
 }

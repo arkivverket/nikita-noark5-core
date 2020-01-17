@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -89,8 +91,7 @@ public class FormatController {
                                 format);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -122,13 +123,12 @@ public class FormatController {
     @GetMapping(value = FORMAT)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(formatService.findAll());
     }
 
     // Retrieves a given Format identified by a code
-    // GET [contextPath][api]/metadata/format/{code}
+    // GET [contextPath][api]/metadata/format/{kode}
     @ApiOperation(
             value = "Gets Format identified by its code",
             notes = "Returns the requested Format object",
@@ -173,8 +173,7 @@ public class FormatController {
         MetadataHateoas metadataHateoas = formatService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -212,14 +211,13 @@ public class FormatController {
                         .generateDefaultFormat());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a format
-    // PUT [contextPath][api]/metadata/format/
+    // PUT [contextPath][api]/metadata/format/{kode}
     @ApiOperation(
             value = "Updates a Format object",
             notes = "Returns the newly updated Format object after it is " +
@@ -247,28 +245,21 @@ public class FormatController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = FORMAT + SLASH + FORMAT)
+    @PutMapping(value = FORMAT + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas>
     updateFormat(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
-            @RequestBody Format
-                    format,
+            @ApiParam(name = CODE,
+                      value = "code of format to update.",
+                      required = true)
+            @PathVariable(CODE) String code,
+            @RequestBody Format format,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas =
-                formatService
-                        .handleUpdate
-                                (systemID, CommonUtils.Validation.
-                                                parseETAG(request.getHeader
-                                                        (ETAG)),
-                                        format);
+        MetadataHateoas metadataHateoas = formatService.handleUpdate
+            (code, parseETAG(request.getHeader(ETAG)), format);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

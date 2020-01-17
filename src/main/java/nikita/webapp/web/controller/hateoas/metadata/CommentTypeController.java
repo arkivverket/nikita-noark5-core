@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -81,8 +82,7 @@ public class CommentTypeController {
                 commentTypeService.createNewCommentType(commentType);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -114,13 +114,12 @@ public class CommentTypeController {
     @GetMapping(value = COMMENT_TYPE)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(commentTypeService.findAll());
     }
 
     // Retrieves a given commentType identified by a code
-    // GET [contextPath][api]/metadata/merknadstype/{code}/
+    // GET [contextPath][api]/metadata/merknadstype/{kode}/
     @ApiOperation(
             value = "Gets commentType identified by its code",
             notes = "Returns the requested commentType object",
@@ -160,8 +159,7 @@ public class CommentTypeController {
         MetadataHateoas metadataHateoas = commentTypeService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -198,14 +196,13 @@ public class CommentTypeController {
                 (commentTypeService.generateDefaultCommentType());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a merknadstype
-    // PUT [contextPath][api]/metatdata/merknadstype/
+    // PUT [contextPath][api]/metadata/merknadstype/{kode}
     @ApiOperation(
             value = "Updates a CommentType object",
             notes = "Returns the newly updated CommentType object after it " +
@@ -233,24 +230,22 @@ public class CommentTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = COMMENT_TYPE + SLASH + COMMENT_TYPE)
+    @PutMapping(value = COMMENT_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateCommentType(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
+            @ApiParam(name = CODE,
+                      value = "code of commentType to update.",
+                      required = true)
+            @PathVariable(CODE) String code,
             @RequestBody CommentType commentType,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = commentTypeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        commentType);
+        MetadataHateoas metadataHateoas =
+            commentTypeService.handleUpdate(code,
+                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                commentType);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

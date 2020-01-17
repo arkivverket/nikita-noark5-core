@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -81,8 +83,7 @@ public class VariantFormatController {
                 variantFormatService.createNewVariantFormat(variantFormat);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -114,13 +115,12 @@ public class VariantFormatController {
     @GetMapping(value = VARIANT_FORMAT)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(variantFormatService.findAll());
     }
 
     // Retrieves a given variantFormat identified by a code
-    // GET [contextPath][api]/metadata/mappetype/{code}/
+    // GET [contextPath][api]/metadata/mappetype/{kode}/
     @ApiOperation(
             value = "Gets variantFormat identified by its code",
             notes = "Returns the requested variantFormat object",
@@ -160,8 +160,7 @@ public class VariantFormatController {
         MetadataHateoas metadataHateoas = variantFormatService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -198,14 +197,13 @@ public class VariantFormatController {
                 (variantFormatService.generateDefaultVariantFormat());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a mappetype
-    // PUT [contextPath][api]/metatdata/mappetype/
+    // PUT [contextPath][api]/metadata/mappetype/{kode}
     @ApiOperation(
             value = "Updates a VariantFormat object",
             notes = "Returns the newly updated VariantFormat object after it " +
@@ -233,24 +231,20 @@ public class VariantFormatController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = VARIANT_FORMAT + SLASH + VARIANT_FORMAT)
+    @PutMapping(value = VARIANT_FORMAT + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateVariantFormat(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
+            @ApiParam(name = CODE,
+                    value = "code of variant format to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody VariantFormat variantFormat,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = variantFormatService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        variantFormat);
+                (code, parseETAG(request.getHeader(ETAG)), variantFormat);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }
