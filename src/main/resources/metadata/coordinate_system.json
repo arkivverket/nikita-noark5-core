@@ -1,0 +1,12 @@
+{
+  "CoordinateSystem": [
+    {
+      "code": "EPSG:4326",
+      "codename": "WGS84"
+    },
+    {
+      "code": "EPSG:32632",
+      "codename": "UTM32N"
+    }
+  ]
+}
