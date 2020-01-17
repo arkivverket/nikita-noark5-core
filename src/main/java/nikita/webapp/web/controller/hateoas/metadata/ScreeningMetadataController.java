@@ -120,7 +120,7 @@ public class ScreeningMetadataController {
     }
 
     // Retrieves a given postalCode identified by a kode
-    // GET [contextPath][api]/metadata/skjermingdokument/{code}/
+    // GET [contextPath][api]/metadata/skjermingdokument/{kode}/
     @ApiOperation(
             value = "Gets postalCode identified by its kode",
             notes = "Returns the requested postalCode object",
@@ -203,7 +203,7 @@ public class ScreeningMetadataController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a skjermingdokument
-    // PUT [contextPath][api]/metadata/skjermingdokument/{code}
+    // PUT [contextPath][api]/metadata/skjermingdokument/{kode}
     @ApiOperation(
             value = "Updates a ScreeningMetadata object",
             notes = "Returns the newly updated ScreeningMetadata object after it " +

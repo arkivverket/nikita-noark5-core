@@ -122,7 +122,7 @@ public class RegistryEntryStatusController {
     }
 
     // Retrieves a given RegistryEntryStatus identified by a code
-    // GET [contextPath][api]/metadata/journalpoststatus/{code}/
+    // GET [contextPath][api]/metadata/journalpoststatus/{kode}/
     @ApiOperation(
             value = "Gets RegistryEntryStatus identified by its code",
             notes = "Returns the requested RegistryEntryStatus object",
@@ -206,7 +206,7 @@ public class RegistryEntryStatusController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a journalpoststatus
-    // PUT [contextPath][api]/metadata/journalpoststatus/{code}
+    // PUT [contextPath][api]/metadata/journalpoststatus/{kode}
     @ApiOperation(
             value = "Updates a RegistryEntryStatus object",
             notes = "Returns the newly updated RegistryEntryStatus object after it " +

@@ -120,7 +120,7 @@ public class CountryController {
     }
 
     // Retrieves a given country identified by a code
-    // GET [contextPath][api]/metadata/land/{code}/
+    // GET [contextPath][api]/metadata/land/{kode}/
     @ApiOperation(
             value = "Gets country identified by its code",
             notes = "Returns the requested country object",
@@ -203,7 +203,7 @@ public class CountryController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a land
-    // PUT [contextPath][api]/metadata/land/{code}
+    // PUT [contextPath][api]/metadata/land/{kode}
     @ApiOperation(
             value = "Updates a Country object",
             notes = "Returns the newly updated Country object after it " +

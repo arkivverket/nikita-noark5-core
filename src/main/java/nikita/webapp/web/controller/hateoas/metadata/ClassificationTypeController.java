@@ -122,7 +122,7 @@ public class ClassificationTypeController {
     }
 
     // Retrieves a given classificationType identified by a code
-    // GET [contextPath][api]/metadata/mappetype/{code}/
+    // GET [contextPath][api]/metadata/mappetype/{kode}/
     @ApiOperation(
             value = "Gets classificationType identified by its code",
             notes = "Returns the requested classificationType object",
@@ -208,7 +208,7 @@ public class ClassificationTypeController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a klassifikasjonstype
-    // PUT [contextPath][api]/metadata/klassifikasjonstype/{code}
+    // PUT [contextPath][api]/metadata/klassifikasjonstype/{kode}
     @ApiOperation(
             value = "Updates a ClassificationType object",
             notes = "Returns the newly updated ClassificationType object after"

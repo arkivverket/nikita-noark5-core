@@ -114,7 +114,7 @@ public class PartRoleController {
     }
 
     // Retrieves a given PartRole identified by a code
-    // GET [contextPath][api]/metadata/partrolle/{code}/
+    // GET [contextPath][api]/metadata/partrolle/{kode}/
     @ApiOperation(
             value = "Gets PartRole identified by its code",
             notes = "Returns the requested PartRole object",
@@ -193,7 +193,7 @@ public class PartRoleController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a partrolle
-    // PUT [contextPath][api]/metadata/partrolle/{code}
+    // PUT [contextPath][api]/metadata/partrolle/{kode}
     @ApiOperation(
             value = "Updates a PartRole object",
             notes = "Returns the newly updated PartRole object after it " +

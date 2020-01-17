@@ -203,7 +203,7 @@ public class PostalCodeController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a postnummer
-    // PUT [contextPath][api]/metadata/postnummer/{code}
+    // PUT [contextPath][api]/metadata/postnummer/{kode}
     @ApiOperation(
             value = "Updates a PostalCode object",
             notes = "Returns the newly updated PostalCode object after it " +

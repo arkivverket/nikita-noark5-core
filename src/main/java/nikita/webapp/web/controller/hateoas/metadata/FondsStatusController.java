@@ -95,7 +95,7 @@ public class FondsStatusController {
     }
 
     // Retrieves a given fondsStatus identified by a code
-    // GET [contextPath][api]/metadata/arkivstatus/{code}/
+    // GET [contextPath][api]/metadata/arkivstatus/{kode}/
     @ApiOperation(value = "Gets fondsStatus identified by its code", notes = "Returns the requested " +
             " fondsStatus object", response = FondsStatus.class)
     @ApiResponses(value = {
@@ -145,7 +145,7 @@ public class FondsStatusController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a arkivstatus
-    // PUT [contextPath][api]/metadata/arkivstatus/{code}
+    // PUT [contextPath][api]/metadata/arkivstatus/{kode}
     @ApiOperation(value = "Updates a FondsStatus object", notes = "Returns the newly" +
             " updated FondsStatus object after it is persisted to the database", response = FondsStatus.class)
     @ApiResponses(value = {

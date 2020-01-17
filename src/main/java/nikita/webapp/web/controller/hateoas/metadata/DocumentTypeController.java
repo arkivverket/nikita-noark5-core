@@ -120,7 +120,7 @@ public class DocumentTypeController {
     }
 
     // Retrieves a given documentType identified by a code
-    // GET [contextPath][api]/metadata/dokumenttype/{code}/
+    // GET [contextPath][api]/metadata/dokumenttype/{kode}/
     @ApiOperation(
             value = "Gets documentType identified by its code",
             notes = "Returns the requested documentType object",
@@ -203,7 +203,7 @@ public class DocumentTypeController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a dokumenttype
-    // PUT [contextPath][api]/metadata/dokumenttype/{code}
+    // PUT [contextPath][api]/metadata/dokumenttype/{kode}
     @ApiOperation(
             value = "Updates a DocumentType object",
             notes = "Returns the newly updated DocumentType object after it " +

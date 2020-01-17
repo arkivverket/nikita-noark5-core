@@ -127,7 +127,7 @@ public class PrecedenceStatusController {
     // Retrieves a given PrecedenceStatus identified by a
     // code
     // GET [contextPath][api]/metadata/journalposttype/
-    // {code}/
+    // {kode}/
     @ApiOperation(
             value = "Gets PrecedenceStatus identified by its code",
             notes = "Returns the requested PrecedenceStatus object",
@@ -212,7 +212,7 @@ public class PrecedenceStatusController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a PrecedenceStatus
-    // PUT [contextPath][api]/metadata/presedensstatus/{code}
+    // PUT [contextPath][api]/metadata/presedensstatus/{kode}
     @ApiOperation(
             value = "Updates a PrecedenceStatus object",
             notes = "Returns the newly updated PrecedenceStatus object after" +

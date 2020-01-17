@@ -119,7 +119,7 @@ public class FileTypeController {
     }
 
     // Retrieves a given fileType identified by a code
-    // GET [contextPath][api]/metadata/mappetype/{code}/
+    // GET [contextPath][api]/metadata/mappetype/{kode}/
     @ApiOperation(
             value = "Gets fileType identified by its code",
             notes = "Returns the requested fileType object",
@@ -202,7 +202,7 @@ public class FileTypeController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a mappetype
-    // PUT [contextPath][api]/metadata/mappetype/{code}
+    // PUT [contextPath][api]/metadata/mappetype/{kode}
     @ApiOperation(
             value = "Updates a FileType object",
             notes = "Returns the newly updated FileType object after it " +

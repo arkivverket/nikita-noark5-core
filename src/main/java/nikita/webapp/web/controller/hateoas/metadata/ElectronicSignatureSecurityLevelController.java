@@ -130,7 +130,7 @@ public class ElectronicSignatureSecurityLevelController {
     // Retrieves a given ElectronicSignatureSecurityLevel identified by a
     // code
     // GET [contextPath][api]/metadata/elektronisksignatursikkerhetsnivaa/
-    // {code}/
+    // {kode}/
     @ApiOperation(
             value = "Gets ElectronicSignatureSecurityLevel identified by its " +
                     "code",
@@ -218,7 +218,7 @@ public class ElectronicSignatureSecurityLevelController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a elektronisksignatursikkerhetsnivaa
-    // PUT [contextPath][api]/metadata/elektronisksignatursikkerhetsnivaa/{code}
+    // PUT [contextPath][api]/metadata/elektronisksignatursikkerhetsnivaa/{kode}
     @ApiOperation(
             value = "Updates a ElectronicSignatureSecurityLevel object",
             notes = "Returns the newly updated " +

@@ -128,7 +128,7 @@ public class FormatController {
     }
 
     // Retrieves a given Format identified by a code
-    // GET [contextPath][api]/metadata/format/{code}
+    // GET [contextPath][api]/metadata/format/{kode}
     @ApiOperation(
             value = "Gets Format identified by its code",
             notes = "Returns the requested Format object",
@@ -217,7 +217,7 @@ public class FormatController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a format
-    // PUT [contextPath][api]/metadata/format/{code}
+    // PUT [contextPath][api]/metadata/format/{kode}
     @ApiOperation(
             value = "Updates a Format object",
             notes = "Returns the newly updated Format object after it is " +

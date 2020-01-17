@@ -122,7 +122,7 @@ public class SignOffMethodController {
     }
 
     // Retrieves a given SignOffMethod identified by a code
-    // GET [contextPath][api]/metadata/avskrivningsmaate/{code}/
+    // GET [contextPath][api]/metadata/avskrivningsmaate/{kode}/
     @ApiOperation(
             value = "Gets SignOffMethod identified by its code",
             notes = "Returns the requested SignOffMethod object",
@@ -208,7 +208,7 @@ public class SignOffMethodController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a avskrivningsmaate
-    // PUT [contextPath][api]/metadata/avskrivningsmaate/{code}
+    // PUT [contextPath][api]/metadata/avskrivningsmaate/{kode}
     @ApiOperation(
             value = "Updates a SignOffMethod object",
             notes = "Returns the newly updated SignOffMethod object after it " +

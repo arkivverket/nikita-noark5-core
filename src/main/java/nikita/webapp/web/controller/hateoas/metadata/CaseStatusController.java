@@ -120,7 +120,7 @@ public class CaseStatusController {
     }
 
     // Retrieves a given caseStatus identified by a code
-    // GET [contextPath][api]/metadata/saksstatus/{code}/
+    // GET [contextPath][api]/metadata/saksstatus/{kode}/
     @ApiOperation(
             value = "Gets caseStatus identified by its code",
             notes = "Returns the requested caseStatus object",
@@ -203,7 +203,7 @@ public class CaseStatusController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a saksstatus
-    // PUT [contextPath][api]/metadata/saksstatus/{code}
+    // PUT [contextPath][api]/metadata/saksstatus/{kode}
     @ApiOperation(
             value = "Updates a CaseStatus object",
             notes = "Returns the newly updated CaseStatus object after it " +

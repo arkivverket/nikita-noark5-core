@@ -126,7 +126,7 @@ public class FlowStatusController {
     // Retrieves a given FlowStatus identified by a
     // code
     // GET [contextPath][api]/metadata/flytstatus/
-    // {code}/
+    // {kode}/
     @ApiOperation(
             value = "Gets FlowStatus identified by its code",
             notes = "Returns the requested FlowStatus object",
@@ -211,7 +211,7 @@ public class FlowStatusController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a flowStatus
-    // PUT [contextPath][api]/metadata/flytstatus/{code}
+    // PUT [contextPath][api]/metadata/flytstatus/{kode}
     @ApiOperation(
             value = "Updates a FlowStatus object",
             notes = "Returns the newly updated FlowStatus object after it is " +

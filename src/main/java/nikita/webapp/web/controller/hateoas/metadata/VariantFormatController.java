@@ -120,7 +120,7 @@ public class VariantFormatController {
     }
 
     // Retrieves a given variantFormat identified by a code
-    // GET [contextPath][api]/metadata/mappetype/{code}/
+    // GET [contextPath][api]/metadata/mappetype/{kode}/
     @ApiOperation(
             value = "Gets variantFormat identified by its code",
             notes = "Returns the requested variantFormat object",
@@ -203,7 +203,7 @@ public class VariantFormatController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a mappetype
-    // PUT [contextPath][api]/metadata/mappetype/{code}
+    // PUT [contextPath][api]/metadata/mappetype/{kode}
     @ApiOperation(
             value = "Updates a VariantFormat object",
             notes = "Returns the newly updated VariantFormat object after it " +

@@ -122,7 +122,7 @@ public class ClassifiedCodeController {
     }
 
     // Retrieves a given classifiedCode identified by a code
-    // GET [contextPath][api]/metadata/graderingskode/{code}/
+    // GET [contextPath][api]/metadata/graderingskode/{kode}/
     @ApiOperation(
             value = "Gets classifiedCode identified by its code",
             notes = "Returns the requested classifiedCode object",
@@ -208,7 +208,7 @@ public class ClassifiedCodeController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a graderingskode
-    // PUT [contextPath][api]/metadata/graderingskode/{code}
+    // PUT [contextPath][api]/metadata/graderingskode/{kode}
     @ApiOperation(
             value = "Updates a ClassifiedCode object",
             notes = "Returns the newly updated ClassifiedCode object after"

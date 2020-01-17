@@ -94,7 +94,7 @@ public class CorrespondencePartTypeController extends NoarkController {
     }
 
     // Retrieves a given correspondencePartType identified by a code
-    // GET [contextPath][api]/metadata/korrespondanseparttype/{code}
+    // GET [contextPath][api]/metadata/korrespondanseparttype/{kode}
     @ApiOperation(value = "Gets correspondencePartType identified by its code", notes = "Returns the requested " +
             " correspondencePartType object", response = CorrespondencePartType.class)
     @ApiResponses(value = {
@@ -145,7 +145,7 @@ public class CorrespondencePartTypeController extends NoarkController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a korrespondanseparttype
-    // PUT [contextPath][api]/metadata/korrespondanseparttype/{code}
+    // PUT [contextPath][api]/metadata/korrespondanseparttype/{kode}
     @ApiOperation(value = "Updates a CorrespondencePartType object",
                   notes = "Returns the newly" +
                   " updated CorrespondencePartType object after it is " +

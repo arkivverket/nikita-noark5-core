@@ -130,7 +130,7 @@ public class ElectronicSignatureVerifiedController {
     // Retrieves a given ElectronicSignatureVerified identified by a
     // code
     // GET [contextPath][api]/metadata/elektronisksignaturverifisert/
-    // {code}/
+    // {kode}/
     @ApiOperation(
             value = "Gets ElectronicSignatureVerified identified by its " +
                     "code",
@@ -218,7 +218,7 @@ public class ElectronicSignatureVerifiedController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a elektronisksignaturverifisert
-    // PUT [contextPath][api]/metadata/elektronisksignaturverifisert/{code}
+    // PUT [contextPath][api]/metadata/elektronisksignaturverifisert/{kode}
     @ApiOperation(
             value = "Updates a ElectronicSignatureVerified object",
             notes = "Returns the newly updated " +

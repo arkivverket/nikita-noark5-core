@@ -100,7 +100,7 @@ public class DocumentStatusController {
     }
 
     // Retrieves a given documentStatus identified by a code
-    // GET [contextPath][api]/metadata/dokumentstatus/{code}/
+    // GET [contextPath][api]/metadata/dokumentstatus/{kode}/
     @ApiOperation(value = "Gets documentStatus identified by its code",
             notes = "Returns the requested " +
             " documentStatus object", response = DocumentStatus.class)

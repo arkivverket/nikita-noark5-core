@@ -119,7 +119,7 @@ public class CommentTypeController {
     }
 
     // Retrieves a given commentType identified by a code
-    // GET [contextPath][api]/metadata/merknadstype/{code}/
+    // GET [contextPath][api]/metadata/merknadstype/{kode}/
     @ApiOperation(
             value = "Gets commentType identified by its code",
             notes = "Returns the requested commentType object",
@@ -202,7 +202,7 @@ public class CommentTypeController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a merknadstype
-    // PUT [contextPath][api]/metadata/merknadstype/{code}
+    // PUT [contextPath][api]/metadata/merknadstype/{kode}
     @ApiOperation(
             value = "Updates a CommentType object",
             notes = "Returns the newly updated CommentType object after it " +
