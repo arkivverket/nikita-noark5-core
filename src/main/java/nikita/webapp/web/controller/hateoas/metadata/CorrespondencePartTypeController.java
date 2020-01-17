@@ -180,13 +180,12 @@ public class CorrespondencePartTypeController extends NoarkController {
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
-    @DeleteMapping(value = SLASH + CODE_PARAMETER)
+    @DeleteMapping(value = CORRESPONDENCE_PART_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<String> deletecorrespondencePartTypeByCode(
-            @ApiParam(name = "kode",
-                    value = "kode of the correspondencePartType to delete",
+            @ApiParam(name = CODE,
+                    value = "code of the correspondencePartType to delete",
                     required = true)
-            @PathVariable("kode") final String kode) {
+            @PathVariable(CODE) final String kode) {
         correspondencePartTypeService.deleteEntity(kode);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("{\"status\" : \"Success\"}");
