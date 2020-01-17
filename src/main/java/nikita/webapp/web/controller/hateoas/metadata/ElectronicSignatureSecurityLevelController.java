@@ -251,7 +251,7 @@ public class ElectronicSignatureSecurityLevelController {
     public ResponseEntity<MetadataHateoas>
     updateElectronicSignatureSecurityLevel(
             @ApiParam(name = CODE,
-                    value = "code of fonds to update.",
+                    value = "code of electronicSignatureSecurity to update.",
                     required = true)
             @PathVariable(CODE) String code,
             @RequestBody ElectronicSignatureSecurityLevel

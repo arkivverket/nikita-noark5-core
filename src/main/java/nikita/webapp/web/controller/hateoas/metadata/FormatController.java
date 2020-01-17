@@ -249,7 +249,7 @@ public class FormatController {
     public ResponseEntity<MetadataHateoas>
     updateFormat(
             @ApiParam(name = CODE,
-                      value = "code of fonds to update.",
+                      value = "code of format to update.",
                       required = true)
             @PathVariable(CODE) String code,
             @RequestBody Format format,

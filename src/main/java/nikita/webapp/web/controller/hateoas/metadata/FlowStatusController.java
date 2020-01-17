@@ -243,7 +243,7 @@ public class FlowStatusController {
     public ResponseEntity<MetadataHateoas>
     updateFlowStatus(
             @ApiParam(name = CODE,
-                    value = "code of fonds to update.",
+                    value = "code of flowStatus to update.",
                     required = true)
             @PathVariable(CODE) String code,
             @RequestBody FlowStatus flowStatus,

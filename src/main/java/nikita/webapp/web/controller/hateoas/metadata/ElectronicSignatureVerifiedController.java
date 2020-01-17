@@ -251,7 +251,7 @@ public class ElectronicSignatureVerifiedController {
     public ResponseEntity<MetadataHateoas>
     updateElectronicSignatureVerified(
             @ApiParam(name = CODE,
-                    value = "code of fonds to update.",
+                    value = "code of electronicSignatureVerified to update.",
                     required = true)
             @PathVariable(CODE) String code,
             @RequestBody ElectronicSignatureVerified

@@ -234,7 +234,7 @@ public class DocumentTypeController {
     @PutMapping(value = DOCUMENT_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateDocumentType(
             @ApiParam(name = CODE,
-                      value = "code of fonds to update.",
+                      value = "code of documentType to update.",
                       required = true)
             @PathVariable(CODE) String code,
             @RequestBody DocumentType documentType,

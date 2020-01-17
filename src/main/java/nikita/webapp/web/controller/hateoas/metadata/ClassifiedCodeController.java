@@ -239,7 +239,7 @@ public class ClassifiedCodeController {
     @PutMapping(value = CLASSIFIED_CODE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateClassifiedCode(
             @ApiParam(name = CODE,
-                      value = "code of fonds to update.",
+                      value = "code of cassifiedCode to update.",
                       required = true)
             @PathVariable(CODE) String code,
             @RequestBody ClassifiedCode classifiedCode,

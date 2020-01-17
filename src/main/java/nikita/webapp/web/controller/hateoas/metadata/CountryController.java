@@ -234,7 +234,7 @@ public class CountryController {
     @PutMapping(value = COUNTRY + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateCountry(
             @ApiParam(name = CODE,
-                    value = "code of fonds to update.",
+                    value = "code of country to update.",
                     required = true)
             @PathVariable(CODE) String code,
             @RequestBody Country country,

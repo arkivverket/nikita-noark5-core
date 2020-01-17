@@ -233,7 +233,7 @@ public class CommentTypeController {
     @PutMapping(value = COMMENT_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateCommentType(
             @ApiParam(name = CODE,
-                      value = "code of fonds to update.",
+                      value = "code of commentType to update.",
                       required = true)
             @PathVariable(CODE) String code,
             @RequestBody CommentType commentType,

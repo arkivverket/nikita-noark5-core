@@ -239,7 +239,7 @@ public class ClassificationTypeController {
     @PutMapping(value = CLASSIFICATION_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateClassificationType(
             @ApiParam(name = CODE,
-                      value = "code of fonds to update.",
+                      value = "code of classificationType to update.",
                       required = true)
             @PathVariable(CODE) String code,
             @RequestBody ClassificationType classificationType,

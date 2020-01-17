@@ -234,7 +234,7 @@ public class PostalCodeController {
     @PutMapping(value = POST_CODE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updatePostalCode(
             @ApiParam(name = CODE,
-                    value = "code of fonds to update.",
+                    value = "code of postalCode to update.",
                     required = true)
             @PathVariable(CODE) String code,
             @RequestBody PostalCode postalCode,

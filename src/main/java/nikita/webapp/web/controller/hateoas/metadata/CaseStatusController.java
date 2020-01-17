@@ -234,7 +234,7 @@ public class CaseStatusController {
     @PutMapping(value = CASE_STATUS + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateCaseStatus(
             @ApiParam(name = CODE,
-                      value = "code of fonds to update.",
+                      value = "code of caseStatus to update.",
                       required = true)
             @PathVariable(CODE) String code,
             @RequestBody CaseStatus caseStatus,
