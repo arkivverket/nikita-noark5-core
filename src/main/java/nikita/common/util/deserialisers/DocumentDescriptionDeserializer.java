@@ -89,7 +89,7 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
             deserialiseMetadataValue(objectNode,
                                      DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
                                      new AssociatedWithRecordAs(),
-                                     errors, false);
+                                     errors, true);
         documentDescription.setAssociatedWithRecordAsCode(entity.getCode());
         documentDescription.setAssociatedWithRecordAsCodeName(entity.getCodeName());
 
