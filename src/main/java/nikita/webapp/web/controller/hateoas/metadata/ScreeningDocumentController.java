@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -205,7 +207,7 @@ public class ScreeningDocumentController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a skjermingdokument
-    // PUT [contextPath][api]/metatdata/skjermingdokument/
+    // PUT [contextPath][api]/metadata/skjermingdokument/{code}
     @ApiOperation(
             value = "Updates a ScreeningDocument object",
             notes = "Returns the newly updated ScreeningDocument object after it " +
@@ -233,24 +235,20 @@ public class ScreeningDocumentController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = SCREENING_DOCUMENT + SLASH + SCREENING_DOCUMENT)
+    @PutMapping(value = SCREENING_DOCUMENT + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateScreeningDocument(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = CODE,
                     value = "code of ScreeningDocument to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody ScreeningDocument postalCode,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = postalCodeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        postalCode);
+                (code, parseETAG(request.getHeader(ETAG)), postalCode);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

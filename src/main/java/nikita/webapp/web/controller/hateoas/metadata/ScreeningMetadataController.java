@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -81,8 +83,7 @@ public class ScreeningMetadataController {
                 postalCodeService.createNewScreeningMetadata(postalCode);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -114,13 +115,12 @@ public class ScreeningMetadataController {
     @GetMapping(value = SCREENING_METADATA)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(postalCodeService.findAll());
     }
 
     // Retrieves a given postalCode identified by a kode
-    // GET [contextPath][api]/metadata/skjermingdokument/{kode}/
+    // GET [contextPath][api]/metadata/skjermingdokument/{code}/
     @ApiOperation(
             value = "Gets postalCode identified by its kode",
             notes = "Returns the requested postalCode object",
@@ -160,8 +160,7 @@ public class ScreeningMetadataController {
         MetadataHateoas metadataHateoas = postalCodeService.findByCode(kode);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -198,14 +197,13 @@ public class ScreeningMetadataController {
                 (postalCodeService.generateDefaultScreeningMetadata());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a skjermingdokument
-    // PUT [contextPath][api]/metatdata/skjermingdokument/
+    // PUT [contextPath][api]/metadata/skjermingdokument/{code}
     @ApiOperation(
             value = "Updates a ScreeningMetadata object",
             notes = "Returns the newly updated ScreeningMetadata object after it " +
@@ -233,24 +231,20 @@ public class ScreeningMetadataController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = SCREENING_METADATA + SLASH + SCREENING_METADATA)
+    @PutMapping(value = SCREENING_METADATA + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateScreeningMetadata(
-            @ApiParam(name = "kode",
+            @ApiParam(name = CODE,
                     value = "kode of ScreeningMetadata to update.",
                     required = true)
-            @PathVariable("kode") String kode,
+            @PathVariable(CODE) String code,
             @RequestBody ScreeningMetadata postalCode,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = postalCodeService.handleUpdate
-                (kode,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        postalCode);
+                (code, parseETAG(request.getHeader(ETAG)), postalCode);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

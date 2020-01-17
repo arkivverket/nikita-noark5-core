@@ -2,6 +2,7 @@ package nikita.webapp.web.controller.hateoas.metadata;
 
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
@@ -21,6 +22,9 @@ import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
  * Created by tsodring on 31/1/18.
@@ -66,7 +70,7 @@ public class DocumentStatusController {
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(documentStatus.getVersion().toString())
                 .body(metadataHateoas);
     }
@@ -91,7 +95,7 @@ public class DocumentStatusController {
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
@@ -122,7 +126,7 @@ public class DocumentStatusController {
             documentStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -145,13 +149,13 @@ public class DocumentStatusController {
         documentStatus.setCodeName(TEMPLATE_DOCUMENT_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a dokumentstatus
-    // PUT [contextPath][api]/metatdata/dokumentstatus/
+    // PUT [contextPath][api]/metadata/dokumentstatus/
     @ApiOperation(value = "Updates a DocumentStatus object", notes = "Returns the newly" +
             " updated DocumentStatus object after it is persisted to the database", response = DocumentStatus.class)
     @ApiResponses(value = {
@@ -163,15 +167,19 @@ public class DocumentStatusController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = DOCUMENT_STATUS + SLASH + DOCUMENT_STATUS)
-    public ResponseEntity<MetadataHateoas> updateDocumentStatus(@RequestBody DocumentStatus documentStatus,
-                                                                HttpServletRequest request)
-            throws NikitaException {
-        documentStatusService.update(documentStatus);
-        MetadataHateoas metadataHateoas = new MetadataHateoas(documentStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+    @PutMapping(value = DOCUMENT_STATUS + SLASH + CODE_PARAMETER)
+    public ResponseEntity<MetadataHateoas> updateDocumentStatus(
+            @ApiParam(name = CODE,
+                      value = "code of document status to update.",
+                      required = true)
+            @PathVariable(CODE) String code,
+            @RequestBody DocumentStatus documentStatus,
+            HttpServletRequest request) {
+        MetadataHateoas metadataHateoas = documentStatusService.handleUpdate
+                (code, parseETAG(request.getHeader(ETAG)), documentStatus);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

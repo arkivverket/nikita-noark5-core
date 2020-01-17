@@ -1,8 +1,10 @@
 package nikita.webapp.service.interfaces.metadata;
 
+import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -15,5 +17,9 @@ public interface IDocumentMediumService
 
     List<IMetadataEntity> findAll();
 
-    DocumentMedium update(DocumentMedium documentMedium);
+    MetadataHateoas handleUpdate(
+            @NotNull final String systemId,
+            @NotNull final Long version,
+            @NotNull final DocumentMedium incomingDocumentMedium);
+
 }

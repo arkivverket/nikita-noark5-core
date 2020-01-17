@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -81,8 +83,7 @@ public class CaseStatusController {
                 caseStatusService.createNewCaseStatus(caseStatus);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -114,8 +115,7 @@ public class CaseStatusController {
     @GetMapping(value = CASE_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(caseStatusService.findAll());
     }
 
@@ -160,8 +160,7 @@ public class CaseStatusController {
         MetadataHateoas metadataHateoas = caseStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -198,14 +197,13 @@ public class CaseStatusController {
                 (caseStatusService.generateDefaultCaseStatus());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a saksstatus
-    // PUT [contextPath][api]/metatdata/saksstatus/
+    // PUT [contextPath][api]/metadata/saksstatus/{code}
     @ApiOperation(
             value = "Updates a CaseStatus object",
             notes = "Returns the newly updated CaseStatus object after it " +
@@ -233,24 +231,20 @@ public class CaseStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = CASE_STATUS + SLASH + CASE_STATUS)
+    @PutMapping(value = CASE_STATUS + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateCaseStatus(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
+            @ApiParam(name = CODE,
+                      value = "code of fonds to update.",
+                      required = true)
+            @PathVariable(CODE) String code,
             @RequestBody CaseStatus caseStatus,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas = caseStatusService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        caseStatus);
+            (code, parseETAG(request.getHeader(ETAG)), caseStatus);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

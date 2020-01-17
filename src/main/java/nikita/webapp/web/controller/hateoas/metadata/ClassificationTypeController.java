@@ -207,8 +207,8 @@ public class ClassificationTypeController {
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
-    // Update a mappetype
-    // PUT [contextPath][api]/metatdata/mappetype/
+    // Update a klassifikasjonstype
+    // PUT [contextPath][api]/metadata/klassifikasjonstype/{code}
     @ApiOperation(
             value = "Updates a ClassificationType object",
             notes = "Returns the newly updated ClassificationType object after"
@@ -236,24 +236,23 @@ public class ClassificationTypeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = CLASSIFICATION_TYPE + SLASH + CLASSIFICATION_TYPE)
+    @PutMapping(value = CLASSIFICATION_TYPE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateClassificationType(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
+            @ApiParam(name = CODE,
+                      value = "code of fonds to update.",
+                      required = true)
+            @PathVariable(CODE) String code,
             @RequestBody ClassificationType classificationType,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = classificationTypeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        classificationType);
+        MetadataHateoas metadataHateoas =
+            classificationTypeService.handleUpdate(code,
+                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                classificationType);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                       getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

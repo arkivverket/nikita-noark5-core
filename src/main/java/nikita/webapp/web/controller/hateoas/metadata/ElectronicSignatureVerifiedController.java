@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -90,8 +91,7 @@ public class ElectronicSignatureVerifiedController {
                                 electronicSignatureVerified);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -123,8 +123,7 @@ public class ElectronicSignatureVerifiedController {
     @GetMapping(value = ELECTRONIC_SIGNATURE_VERIFIED)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(electronicSignatureVerifiedService.findAll());
     }
 
@@ -175,8 +174,7 @@ public class ElectronicSignatureVerifiedController {
                 electronicSignatureVerifiedService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -214,14 +212,13 @@ public class ElectronicSignatureVerifiedController {
                         .generateDefaultElectronicSignatureVerified());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a elektronisksignaturverifisert
-    // PUT [contextPath][api]/metatdata/elektronisksignaturverifisert/
+    // PUT [contextPath][api]/metadata/elektronisksignaturverifisert/{code}
     @ApiOperation(
             value = "Updates a ElectronicSignatureVerified object",
             notes = "Returns the newly updated " +
@@ -250,28 +247,24 @@ public class ElectronicSignatureVerifiedController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH + ELECTRONIC_SIGNATURE_VERIFIED)
+    @PutMapping(value = ELECTRONIC_SIGNATURE_VERIFIED + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas>
     updateElectronicSignatureVerified(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = CODE,
                     value = "code of fonds to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody ElectronicSignatureVerified
                     electronicSignatureVerified,
             HttpServletRequest request) {
 
         MetadataHateoas metadataHateoas =
-                electronicSignatureVerifiedService
-                        .handleUpdate
-                                (systemID,
-                                        CommonUtils.Validation.parseETAG(
-                                                request.getHeader(ETAG)),
-                                        electronicSignatureVerified);
+            electronicSignatureVerifiedService.handleUpdate(code,
+                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                electronicSignatureVerified);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

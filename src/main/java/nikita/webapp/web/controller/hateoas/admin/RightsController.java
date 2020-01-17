@@ -131,7 +131,7 @@ public class RightsController extends NoarkController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a administrativtenhet
-    // PUT [contextPath][api]/metatdata/administrativtenhet/{systemID}
+    // PUT [contextPath][api]/metadata/administrativtenhet/{systemID}
     @ApiOperation(value = "Updates a User object", notes = "Returns the newly" +
             " updated User object after it is persisted to the database",
             response = User.class)

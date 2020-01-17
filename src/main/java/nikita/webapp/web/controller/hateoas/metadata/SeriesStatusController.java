@@ -174,7 +174,7 @@ public class SeriesStatusController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a arkivdelstatus
-    // PUT [contextPath][api]/metatdata/arkivdelstatus/
+    // PUT [contextPath][api]/metadata/arkivdelstatus/{code}
     @ApiOperation(value = "Updates a SeriesStatus object",
             notes = "Returns the newly updated SeriesStatus object after it " +
                     "is persisted to the database",

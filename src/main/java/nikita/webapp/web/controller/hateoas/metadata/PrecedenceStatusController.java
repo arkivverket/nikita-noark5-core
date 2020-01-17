@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -86,8 +88,7 @@ public class PrecedenceStatusController {
                                 PrecedenceStatus);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -119,8 +120,7 @@ public class PrecedenceStatusController {
     @GetMapping(value = PRECEDENCE_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(PrecedenceStatusService.findAll());
     }
 
@@ -168,8 +168,7 @@ public class PrecedenceStatusController {
                 PrecedenceStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -207,14 +206,13 @@ public class PrecedenceStatusController {
                         .generateDefaultPrecedenceStatus());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a PrecedenceStatus
-    // PUT [contextPath][api]/metadata/journalposttype/
+    // PUT [contextPath][api]/metadata/presedensstatus/{code}
     @ApiOperation(
             value = "Updates a PrecedenceStatus object",
             notes = "Returns the newly updated PrecedenceStatus object after" +
@@ -242,26 +240,21 @@ public class PrecedenceStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = PRECEDENCE_STATUS + SLASH + PRECEDENCE_STATUS)
+    @PutMapping(value = PRECEDENCE_STATUS + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas>
     updatePrecedenceStatus(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = CODE,
                     value = "code of PrecedenceStatus to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody PrecedenceStatus PrecedenceStatus,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas =
-                PrecedenceStatusService
-                        .handleUpdate
-                                (systemID, CommonUtils.Validation.
-                                        parseETAG(request.getHeader
-                                                (ETAG)), PrecedenceStatus);
+        MetadataHateoas metadataHateoas = PrecedenceStatusService.handleUpdate
+            (code, parseETAG(request.getHeader(ETAG)), PrecedenceStatus);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

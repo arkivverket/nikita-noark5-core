@@ -1,11 +1,13 @@
 package nikita.webapp.service.impl.metadata;
 
+import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.repository.n5v5.metadata.IFondsStatusRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IFondsStatusService;
 import org.slf4j.Logger;
@@ -87,7 +89,22 @@ public class FondsStatusService
      * @return the updated fondsStatus
      */
     @Override
-    public FondsStatus update(FondsStatus fondsStatus) {
-        return fondsStatusRepository.save(fondsStatus);
+    public MetadataHateoas handleUpdate(
+            @NotNull final String code,
+            @NotNull final Long version,
+            @NotNull final FondsStatus incomingFondsStatus) {
+        FondsStatus existingFondsStatus =
+            (FondsStatus) findMetadataByCodeOrThrow(code);
+        updateCodeAndDescription(incomingFondsStatus, existingFondsStatus);
+        // Note setVersion can potentially result in a
+        // NoarkConcurrencyException exception as it checks the ETAG
+        // value
+        existingFondsStatus.setVersion(version);
+
+        MetadataHateoas fondsStatusHateoas = new MetadataHateoas
+            (fondsStatusRepository.save(existingFondsStatus));
+
+        metadataHateoasHandler.addLinks(fondsStatusHateoas, new Authorisation());
+        return fondsStatusHateoas;
     }
 }

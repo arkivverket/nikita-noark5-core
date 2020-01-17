@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 
 /**
@@ -83,8 +85,7 @@ public class RegistryEntryStatusController {
                         registryEntryStatus);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -116,8 +117,7 @@ public class RegistryEntryStatusController {
     @GetMapping(value = REGISTRY_ENTRY_STATUS)
     public ResponseEntity<MetadataHateoas> findAll(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryStatusService.findAll());
     }
 
@@ -162,8 +162,7 @@ public class RegistryEntryStatusController {
         MetadataHateoas metadataHateoas = registryEntryStatusService.findByCode(code);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -201,14 +200,13 @@ public class RegistryEntryStatusController {
                         .generateDefaultRegistryEntryStatus());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a journalpoststatus
-    // PUT [contextPath][api]/metatdata/journalpoststatus/
+    // PUT [contextPath][api]/metadata/journalpoststatus/{code}
     @ApiOperation(
             value = "Updates a RegistryEntryStatus object",
             notes = "Returns the newly updated RegistryEntryStatus object after it " +
@@ -236,24 +234,21 @@ public class RegistryEntryStatusController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = REGISTRY_ENTRY_STATUS + SLASH + REGISTRY_ENTRY_STATUS)
+    @PutMapping(value = REGISTRY_ENTRY_STATUS + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateRegistryEntryStatus(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
+            @ApiParam(name = CODE,
+                    value = "code of registry entry status to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(CODE) String code,
             @RequestBody RegistryEntryStatus RegistryEntryStatus,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = registryEntryStatusService
-                .handleUpdate
-                        (systemID,
-                                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
-                                RegistryEntryStatus);
+        MetadataHateoas metadataHateoas =
+            registryEntryStatusService.handleUpdate
+                (code, parseETAG(request.getHeader(ETAG)), RegistryEntryStatus);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

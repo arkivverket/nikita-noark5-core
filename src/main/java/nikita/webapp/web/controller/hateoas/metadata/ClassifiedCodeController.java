@@ -208,7 +208,7 @@ public class ClassifiedCodeController {
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a graderingskode
-    // PUT [contextPath][api]/metatdata/graderingskode/
+    // PUT [contextPath][api]/metadata/graderingskode/{code}
     @ApiOperation(
             value = "Updates a ClassifiedCode object",
             notes = "Returns the newly updated ClassifiedCode object after"
@@ -236,24 +236,22 @@ public class ClassifiedCodeController {
                     code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = CLASSIFIED_CODE + SLASH + CLASSIFIED_CODE)
+    @PutMapping(value = CLASSIFIED_CODE + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> updateClassifiedCode(
-            @ApiParam(name = "systemID",
-                    value = "code of fonds to update.",
-                    required = true)
-            @PathVariable("systemID") String systemID,
+            @ApiParam(name = CODE,
+                      value = "code of fonds to update.",
+                      required = true)
+            @PathVariable(CODE) String code,
             @RequestBody ClassifiedCode classifiedCode,
             HttpServletRequest request) {
 
-        MetadataHateoas metadataHateoas = classifiedCodeService.handleUpdate
-                (systemID,
-                        CommonUtils.Validation.parseETAG(
-                                request.getHeader(ETAG)),
-                        classifiedCode);
+        MetadataHateoas metadataHateoas =
+            classifiedCodeService.handleUpdate(code,
+                CommonUtils.Validation.parseETAG(request.getHeader(ETAG)),
+                classifiedCode);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }

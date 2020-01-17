@@ -2,6 +2,7 @@ package nikita.webapp.web.controller.hateoas.metadata;
 
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.config.Constants;
@@ -20,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Validation.parseETAG;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpHeaders.ETAG;
 
 @RestController
 @RequestMapping(value = HREF_BASE_METADATA + SLASH,
@@ -61,7 +65,7 @@ public class FondsStatusController {
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fondsStatus.getVersion().toString())
                 .body(metadataHateoas);
     }
@@ -86,7 +90,7 @@ public class FondsStatusController {
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
@@ -112,7 +116,7 @@ public class FondsStatusController {
                                                       HttpServletRequest request) {
         MetadataHateoas metadataHateoas = fondsStatusService.findByCode(code);
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(metadataHateoas.getEntityVersion().toString())
                 .body(metadataHateoas);
     }
@@ -135,13 +139,13 @@ public class FondsStatusController {
         fondsStatus.setCodeName(TEMPLATE_FONDS_STATUS_NAME);
         MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a arkivstatus
-    // PUT [contextPath][api]/metatdata/arkivstatus/
+    // PUT [contextPath][api]/metadata/arkivstatus/{code}
     @ApiOperation(value = "Updates a FondsStatus object", notes = "Returns the newly" +
             " updated FondsStatus object after it is persisted to the database", response = FondsStatus.class)
     @ApiResponses(value = {
@@ -153,15 +157,19 @@ public class FondsStatusController {
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PutMapping(value = FONDS_STATUS + SLASH + FONDS_STATUS)
-    public ResponseEntity<MetadataHateoas> updateFondsStatus(@RequestBody FondsStatus fondsStatus,
-                                                             HttpServletRequest request)
-            throws NikitaException {
-        fondsStatusService.update(fondsStatus);
-        MetadataHateoas metadataHateoas = new MetadataHateoas(fondsStatus);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
+    @PutMapping(value = FONDS_STATUS + SLASH + CODE_PARAMETER)
+    public ResponseEntity<MetadataHateoas> updateFondsStatus(
+            @ApiParam(name = CODE,
+                    value = "code of fonds status to update.",
+                    required = true)
+            @PathVariable(CODE) String code,
+            @RequestBody FondsStatus fondsStatus,
+            HttpServletRequest request) {
+        MetadataHateoas metadataHateoas = fondsStatusService.handleUpdate
+                (code, parseETAG(request.getHeader(ETAG)), fondsStatus);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(metadataHateoas);
     }
 }
