@@ -573,6 +573,8 @@ public final class Constants {
 
     // national identifiers
 
+    public static final String REL_FONDS_STRUCTURE_NATIONAL_IDENTIFIER =
+            REL_FONDS_STRUCTURE + NATIONAL_IDENTIFIER + SLASH;
     public static final String REL_FONDS_STRUCTURE_BUILDING =
             REL_FONDS_STRUCTURE + BUILDING + SLASH;
     public static final String REL_FONDS_STRUCTURE_CADASTRAL_UNIT =

@@ -105,6 +105,9 @@ public interface IFileHateoasHandler
     void addBuilding(ISystemId entity,
                      IHateoasNoarkObject hateoasNoarkObject);
 
+    void addNationalIdentifier(ISystemId entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
+
     void addCadastralUnit(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject);
 
