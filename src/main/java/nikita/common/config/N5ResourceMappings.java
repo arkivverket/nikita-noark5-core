@@ -145,6 +145,7 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_UNIT = "korrespondansepartenhet";
     public static final String CORRESPONDENCE_PART_TYPE = "korrespondanseparttype";
     public static final String CORRESPONDENCE_PART_NAME = "navn";
+    public static final String NATIONAL_IDENTIFIER = "nasjonalidentifikator";
     public static final String PERSON_IDENTIFIER = "personidentifikator";
     public static final String UNIT_IDENTIFIER = "enhetsidentifikator";
     public static final String POST_CODE = "postnummer";

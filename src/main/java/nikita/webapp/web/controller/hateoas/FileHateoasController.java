@@ -805,8 +805,8 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
-            NEW_D_NUMBER, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_D_NUMBER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> getNIDNumberToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -841,8 +841,8 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
-            NEW_SOCIAL_SECURITY_NUMBER, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SOCIAL_SECURITY_NUMBER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> getNISocialSecurityNumberToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -877,8 +877,8 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
-            NEW_CADASTRAL_UNIT, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CADASTRAL_UNIT,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> getNICadastralUnitToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -1253,7 +1253,7 @@ public class FileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNIBuildingToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -1291,8 +1291,8 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
-            NEW_D_NUMBER, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_D_NUMBER,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNIDNumberToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -1333,8 +1333,8 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
-            NEW_SOCIAL_SECURITY_NUMBER, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SOCIAL_SECURITY_NUMBER,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNISocialSecurityNumberToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -1375,8 +1375,8 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
-            NEW_CADASTRAL_UNIT, consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CADASTRAL_UNIT,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNICadastralUnitToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -1418,7 +1418,7 @@ public class FileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNIPositionToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -1461,7 +1461,7 @@ public class FileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PLAN,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNIPlanToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -1503,7 +1503,7 @@ public class FileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> addNIUnitToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",

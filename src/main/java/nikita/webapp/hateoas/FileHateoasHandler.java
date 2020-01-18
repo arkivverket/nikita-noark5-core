@@ -63,6 +63,7 @@ public class FileHateoasHandler
         addNewPosition(entity, hateoasNoarkObject);
         addNewSocialSecurityNumber(entity, hateoasNoarkObject);
         addNewUnit(entity, hateoasNoarkObject);
+        addNationalIdentifier(entity, hateoasNoarkObject);
         addBuilding(entity, hateoasNoarkObject);
         addCadastralUnit(entity, hateoasNoarkObject);
         addDNumber(entity, hateoasNoarkObject);
@@ -348,6 +349,14 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH +
                 NEW_NI_UNIT, REL_FONDS_STRUCTURE_NEW_NI_UNIT));
+    }
+
+    @Override
+    public void addNationalIdentifier(ISystemId entity,
+                            IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NATIONAL_IDENTIFIER,
+                REL_FONDS_STRUCTURE_NATIONAL_IDENTIFIER));
     }
 
     @Override

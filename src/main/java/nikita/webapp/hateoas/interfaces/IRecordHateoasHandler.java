@@ -73,4 +73,51 @@ public interface IRecordHateoasHandler
 
     void addNewAuthor(ISystemId entity,
                       IHateoasNoarkObject hateoasNoarkObject);
+
+    // Add national identifiers
+
+    void addNewBuilding(ISystemId entity,
+                        IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewCadastralUnit(ISystemId entity,
+                             IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewDNumber(ISystemId entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewPlan(ISystemId entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewPosition(ISystemId entity,
+                        IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewSocialSecurityNumber(ISystemId entity,
+                                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewUnit(ISystemId entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addBuilding(ISystemId entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNationalIdentifier(ISystemId entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
+
+    void addCadastralUnit(ISystemId entity,
+                          IHateoasNoarkObject hateoasNoarkObject);
+
+    void addDNumber(ISystemId entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addPlan(ISystemId entity,
+                 IHateoasNoarkObject hateoasNoarkObject);
+
+    void addPosition(ISystemId entity,
+                     IHateoasNoarkObject hateoasNoarkObject);
+
+    void addSocialSecurityNumber(ISystemId entity,
+                                 IHateoasNoarkObject hateoasNoarkObject);
+
+    void addUnit(ISystemId entity,
+                 IHateoasNoarkObject hateoasNoarkObject);
 }
