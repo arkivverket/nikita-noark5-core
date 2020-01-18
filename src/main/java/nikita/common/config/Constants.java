@@ -872,6 +872,7 @@ public final class Constants {
     public static final String TABLE_CORRESPONDENCE_PART_TYPE =
             "md_correspondence_part_type";
     public static final String TABLE_PART_TYPE = "md_part_type";
+    public static final String TABLE_COORDINATE_SYSTEM = "md_coordinate_system";
     public static final String TABLE_COUNTRY = "md_country";
     public static final String TABLE_DELETION_TYPE = "md_deletion_type";
     public static final String TABLE_DISPOSAL_DECISION = "md_disposal_decision";
