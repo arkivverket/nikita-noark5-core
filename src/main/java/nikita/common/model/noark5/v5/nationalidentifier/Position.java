@@ -19,7 +19,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
 import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_POSITION;
 import static nikita.common.config.Constants.TABLE_POSITION;
+import static nikita.common.config.N5ResourceMappings.POSITION;
 
 @Entity
 @Table(name = TABLE_POSITION)
@@ -118,6 +120,16 @@ public class Position
     @Override
     public void setZ(Double z) {
         this.z = z;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return POSITION;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_POSITION;
     }
 
     @Override

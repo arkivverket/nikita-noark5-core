@@ -8,15 +8,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.SOCIAL_SECURITY_NUMBER;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
 
 public class SocialSecurityNumberDeserializer
         extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(SocialSecurityNumberDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -38,6 +44,13 @@ public class SocialSecurityNumberDeserializer
             socialSecurityNumber.setSocialSecurityNumber(
                     currentNode.textValue());
             objectNode.remove(SOCIAL_SECURITY_NUMBER);
+        }
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
+            objectNode.remove(LINKS);
         }
 
         // Check that there are no additional values left after processing the

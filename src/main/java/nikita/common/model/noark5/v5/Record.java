@@ -6,8 +6,8 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.interfaces.IPart;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePart;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.webapp.hateoas.RecordHateoasHandler;
@@ -217,6 +217,11 @@ public class Record
     @JoinColumn(name = "record_screening_id",
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
+
+    // Links to NationalIdentifiers
+    @OneToMany(mappedBy = "referenceFile")
+    private List<NationalIdentifier> referenceNationalIdentifier =
+            new ArrayList<>();
 
     public OffsetDateTime getArchivedDate() {
         return archivedDate;
@@ -466,8 +471,20 @@ public class Record
         this.referenceCorrespondencePart.add(part);
     }
 
-    
-    
+    public List<NationalIdentifier> getReferenceNationalIdentifier() {
+        return referenceNationalIdentifier;
+    }
+
+    public void setReferenceNationalIdentifier(
+            List<NationalIdentifier> referenceNationalIdentifier) {
+        this.referenceNationalIdentifier = referenceNationalIdentifier;
+    }
+
+    public void addNationalIdentifier(
+            NationalIdentifier referenceNationalIdentifier) {
+        this.referenceNationalIdentifier.add(referenceNationalIdentifier);
+    }
+
     @Override
     public String toString() {
         return "Record{" + super.toString() +

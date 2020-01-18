@@ -19,7 +19,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
 import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_NI_UNIT;
 import static nikita.common.config.Constants.TABLE_UNIT;
+import static nikita.common.config.N5ResourceMappings.NI_UNIT;
 
 @Entity
 @Table(name = TABLE_UNIT)
@@ -47,6 +49,16 @@ public class Unit
     @Override
     public void setOrganisationNumber(String organisationNumber) {
         this.organisationNumber = organisationNumber;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return NI_UNIT;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_NI_UNIT;
     }
 
     @Override

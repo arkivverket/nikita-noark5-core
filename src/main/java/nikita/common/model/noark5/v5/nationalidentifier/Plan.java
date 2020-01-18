@@ -20,7 +20,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
 import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_PLAN;
 import static nikita.common.config.Constants.TABLE_PLAN;
+import static nikita.common.config.N5ResourceMappings.PLAN;
 
 /**
  * Note this should be implemented shuch that only one of
@@ -103,6 +105,16 @@ public class Plan
     @Override
     public void setPlanIdentification(String planIdentification) {
         this.planIdentification = planIdentification;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return PLAN;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_PLAN;
     }
 
     @Override

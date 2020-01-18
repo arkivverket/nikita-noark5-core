@@ -19,7 +19,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
 import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_SOCIAL_SECURITY_NUMBER;
 import static nikita.common.config.Constants.TABLE_SOCIAL_SECURITY_NUMBER;
+import static nikita.common.config.N5ResourceMappings.SOCIAL_SECURITY_NUMBER;
 
 @Entity
 @Table(name = TABLE_SOCIAL_SECURITY_NUMBER)
@@ -46,6 +48,16 @@ public class SocialSecurityNumber
     @Override
     public void setSocialSecurityNumber(String socialSecurityNumber) {
         this.socialSecurityNumber = socialSecurityNumber;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return SOCIAL_SECURITY_NUMBER;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_SOCIAL_SECURITY_NUMBER;
     }
 
     @Override

@@ -1,10 +1,8 @@
 package nikita.webapp.hateoas.nationalidentifier;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.webapp.hateoas.HateoasHandler;
-import nikita.webapp.hateoas.SystemIdHateoasHandler;
+import nikita.webapp.hateoas.nationalidentifier.NationalIdentifierHateoasHandler;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.IBuildingHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class BuildingHateoasHandler
-        extends SystemIdHateoasHandler
+        extends NationalIdentifierHateoasHandler
         implements IBuildingHateoasHandler {
 
     public BuildingHateoasHandler() {

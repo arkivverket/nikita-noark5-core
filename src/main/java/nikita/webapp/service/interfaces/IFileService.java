@@ -6,6 +6,11 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.Position;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -36,6 +41,14 @@ public interface IFileService {
 
     PartUnitHateoas generateDefaultPartUnit(String systemID);
 
+    BuildingHateoas
+    createBuildingAssociatedWithFile(
+            @NotNull String systemID, @NotNull Building building);
+
+    PositionHateoas
+    createPositionAssociatedWithFile(
+            @NotNull String systemID, @NotNull Position position);
+
     List<File> findAll();
 
     FileHateoas findAllChildren(@NotNull String systemId);
@@ -51,6 +64,13 @@ public interface IFileService {
     findSeriesAssociatedWithFile(@NotNull final String systemId);
 
     PartHateoas getPartAssociatedWithFile(@NotNull final String systemID);
+
+    NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile
+	(@NotNull final String systemID);
+
+    BuildingHateoas generateDefaultBuilding();
+
+    PositionHateoas generateDefaultPosition();
 
     // -- All UPDATE operations
     File handleUpdate(@NotNull String systemId,

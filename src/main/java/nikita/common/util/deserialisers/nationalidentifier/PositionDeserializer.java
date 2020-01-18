@@ -10,14 +10,20 @@ import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.CoordinateSystem;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class PositionDeserializer
         extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(PositionDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -62,6 +68,13 @@ public class PositionDeserializer
         if (null != currentNode) {
             position.setZ(currentNode.doubleValue());
             objectNode.remove(Z);
+        }
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
+            objectNode.remove(LINKS);
         }
 
         // Check that there are no additional values left after processing the

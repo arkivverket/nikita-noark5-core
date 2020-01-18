@@ -4,7 +4,12 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.Position;
 import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -12,9 +17,11 @@ import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
+import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -52,7 +59,9 @@ public class FileService
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
     private IDocumentMediumService documentMediumService;
+    private INationalIdentifierService nationalIdentifierService;
     private IPartService partService;
+    private INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
     private IPartHateoasHandler partHateoasHandler;
 
     public FileService(EntityManager entityManager,
@@ -63,7 +72,9 @@ public class FileService
                        ISeriesHateoasHandler seriesHateoasHandler,
                        IClassHateoasHandler classHateoasHandler,
                        IDocumentMediumService documentMediumService,
+                       INationalIdentifierService nationalIdentifierService,
                        IPartService partService,
+                       INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
                        IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.recordService = recordService;
@@ -72,7 +83,9 @@ public class FileService
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
         this.documentMediumService = documentMediumService;
+        this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
+        this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
     }
 
@@ -134,6 +147,22 @@ public class FileService
                 createNewPartUnit(partUnit, getFileOrThrow(systemID));
     }
 
+    @Override
+    public BuildingHateoas
+    createBuildingAssociatedWithFile(
+            @NotNull String systemID, @NotNull Building building) {
+        return nationalIdentifierService.
+                createNewBuilding(building, getFileOrThrow(systemID));
+    }
+
+    @Override
+    public PositionHateoas
+    createPositionAssociatedWithFile(
+            @NotNull String systemID, @NotNull Position position) {
+        return nationalIdentifierService.
+                createNewPosition(position, getFileOrThrow(systemID));
+    }
+
     // All READ operations
     public List<File> findAll() {
         return fileRepository.findAll();
@@ -182,6 +211,18 @@ public class FileService
                         getReferencePart());
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile(
+            @NotNull final String systemID) {
+        NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
+                (List<INoarkEntity>) (List) getFileOrThrow(systemID).
+                        getReferenceNationalIdentifier());
+        nationalIdentifierHateoasHandler
+	    .addLinks(niHateoas, new Authorisation());
+        return niHateoas;
     }
 
     // All UPDATE operations
@@ -317,6 +358,16 @@ public class FileService
         FileHateoas fileHateoas = new FileHateoas(defaultFile);
         fileHateoasHandler.addLinksOnTemplate(fileHateoas, new Authorisation());
         return fileHateoas;
+    }
+
+    @Override
+    public BuildingHateoas generateDefaultBuilding() {
+        return nationalIdentifierService.generateDefaultBuilding();
+    }
+
+    @Override
+    public PositionHateoas generateDefaultPosition() {
+        return nationalIdentifierService.generateDefaultPosition();
     }
 
     // All HELPER operations

@@ -19,7 +19,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
 import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_D_NUMBER;
 import static nikita.common.config.Constants.TABLE_D_NUMBER;
+import static nikita.common.config.N5ResourceMappings.D_NUMBER;
 
 @Entity
 @Table(name = TABLE_D_NUMBER)
@@ -47,6 +49,16 @@ public class DNumber
     @Override
     public void setdNumber(String dNumber) {
         this.dNumber = dNumber;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return D_NUMBER;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_D_NUMBER;
     }
 
     @Override

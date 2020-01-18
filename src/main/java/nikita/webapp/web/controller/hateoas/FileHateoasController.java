@@ -563,6 +563,34 @@ public class FileHateoasController
                 .body(fileHateoas);
     }
 
+    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/nasjonalidentifikator
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/nasjonalidentifikator/
+    @ApiOperation(value = "Retrieves a list of NationalIdentifier associated with a File",
+                  response = NationalIdentifierHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "NationalIdentifier returned",
+                    response = NationalIdentifierHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NATIONAL_IDENTIFIER)
+    public ResponseEntity<NationalIdentifierHateoas>
+    findAllNIAssociatedWithFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated File",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.getNationalIdentifierAssociatedWithFile(systemID));
+    }
+
     // Create a Record with default values
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-registrering
     @ApiOperation(value = "Create a Record with default values", response = Record.class)
@@ -772,19 +800,17 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> getNIBuildingToFileTemplate(
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING)
+    public ResponseEntity<BuildingHateoas> getNIBuildingToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the Building with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "Building",
-                    value = "building",
-                    required = true)
-            @RequestBody Building building) throws NikitaException {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+            @PathVariable("systemID") final String systemID)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.generateDefaultBuilding());
     }
 
     // Add a DNumber to a File
@@ -805,18 +831,13 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_D_NUMBER,
-                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_D_NUMBER)
     public ResponseEntity<String> getNIDNumberToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the DNumber with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "DNumber",
-                    value = "dNumber",
-                    required = true)
-            @RequestBody DNumber dNumber)
+            @PathVariable("systemID") final String systemID)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
@@ -841,19 +862,14 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SOCIAL_SECURITY_NUMBER,
-                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SOCIAL_SECURITY_NUMBER)
     public ResponseEntity<String> getNISocialSecurityNumberToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the " +
                             "SocialSecurityNumber with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "SocialSecurityNumber",
-                    value = "socialSecurityNumber",
-                    required = true)
-            @RequestBody SocialSecurityNumber socialSecurityNumber)
+            @PathVariable("systemID") final String systemID)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
@@ -877,19 +893,14 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CADASTRAL_UNIT,
-                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CADASTRAL_UNIT)
     public ResponseEntity<String> getNICadastralUnitToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the CadastralUnit " +
                             "with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "CadastralUnit",
-                    value = "cadastralUnit",
-                    required = true)
-            @RequestBody CadastralUnit cadastralUnit)
+            @PathVariable("systemID") final String systemID)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
@@ -913,21 +924,18 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> getNIPositionToFileTemplate(
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION)
+    public ResponseEntity<PositionHateoas> getNIPositionToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the " +
                             "Position with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "Position",
-                    value = "position",
-                    required = true)
-            @RequestBody Position position)
+            @PathVariable("systemID") final String systemID)
             throws NikitaException {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.generateDefaultPosition());
     }
 
     // Add a Plan to a File
@@ -950,19 +958,14 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PLAN,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PLAN)
     public ResponseEntity<String> getNIPlanToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the " +
                             "Plan with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "Plan",
-                    value = "plan",
-                    required = true)
-            @RequestBody Plan plan)
+            @PathVariable("systemID") final String systemID)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
@@ -986,19 +989,14 @@ public class FileHateoasController
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT)
     public ResponseEntity<String> getNIUnitToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the " +
                             "Unit with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
-            @ApiParam(name = "Unit",
-                    value = "unit",
-                    required = true)
-            @RequestBody Unit unit)
+            @PathVariable("systemID") final String systemID)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
@@ -1253,8 +1251,8 @@ public class FileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> addNIBuildingToFile(
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<BuildingHateoas> addNIBuildingToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the Building with",
@@ -1264,7 +1262,13 @@ public class FileHateoasController
                     value = "building",
                     required = true)
             @RequestBody Building building) throws NikitaException {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        BuildingHateoas buildingHateoas =
+                fileService.createBuildingAssociatedWithFile(
+                        systemID, building);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(buildingHateoas.getEntityVersion().toString())
+                .body(buildingHateoas);
     }
 
     // Add a DNumber to a File
@@ -1418,8 +1422,8 @@ public class FileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> addNIPositionToFile(
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<PositionHateoas> addNIPositionToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the " +
@@ -1431,7 +1435,13 @@ public class FileHateoasController
                     required = true)
             @RequestBody Position position)
             throws NikitaException {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        PositionHateoas positionHateoas =
+                fileService.createPositionAssociatedWithFile(
+                        systemID, position);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(positionHateoas.getEntityVersion().toString())
+                .body(positionHateoas);
     }
 
     // Add a Plan to a File
