@@ -1,5 +1,8 @@
 {
   "tittel": "Title of the test fonds",
   "beskrivelse": "Description of the test fonds ... blah blah blah blah",
-  "dokumentmedium": "Elektronisk arkiv"
+  "dokumentmedium": {
+    "kode": "E",
+    "kodenavn": "Elektronisk arkiv"
+  }
 }
