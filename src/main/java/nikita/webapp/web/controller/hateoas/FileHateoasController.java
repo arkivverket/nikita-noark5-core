@@ -395,7 +395,7 @@ public class FileHateoasController
 
     // Create a suggested PartUnit (like a template) object 
     // with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/mappe/{systemId}/ny-korrespondansepartenhet
+    // GET [contextPath][api]/casehandling/mappe/{systemId}/ny-partenhet
     @ApiOperation(value = "Suggests the contents of a new Part " +
             "object", notes = "Returns a pre-filled Part object" +
             " with values relevant for the logged-in user",
@@ -428,7 +428,7 @@ public class FileHateoasController
 
     // Create a suggested PartPerson (like a template) object 
     // with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/mappe/{systemId}/ny-korrespondansepartenhet
+    // GET [contextPath][api]/casehandling/mappe/{systemId}/ny-partenhet
     @ApiOperation(value = "Suggests the contents of a new Part " +
             "object", notes = "Returns a pre-filled Part object" +
             " with values relevant for the logged-in user",
