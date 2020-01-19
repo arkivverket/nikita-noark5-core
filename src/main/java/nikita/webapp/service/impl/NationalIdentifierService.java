@@ -10,6 +10,7 @@ import nikita.common.model.noark5.v5.nationalidentifier.Position;
 import nikita.common.repository.n5v5.INationalIdentifierRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
+import nikita.webapp.hateoas.interfaces.nationalidentifier.IPositionHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import org.slf4j.Logger;
@@ -36,16 +37,19 @@ public class NationalIdentifierService
     private final INationalIdentifierRepository nationalIdentifierRepository;
     private final INationalIdentifierHateoasHandler
             nationalIdentifierHateoasHandler;
+    private final IPositionHateoasHandler positionHateoasHandler;
 
     public NationalIdentifierService
             (EntityManager entityManager,
              ApplicationEventPublisher applicationEventPublisher,
              INationalIdentifierRepository nationalIdentifierRepository,
-             INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler) {
+             INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
+             IPositionHateoasHandler positionHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.nationalIdentifierRepository = nationalIdentifierRepository;
         this.nationalIdentifierHateoasHandler =
                 nationalIdentifierHateoasHandler;
+        this.positionHateoasHandler = positionHateoasHandler;
     }
 
     @Override
@@ -87,8 +91,7 @@ public class NationalIdentifierService
         position.setReferenceRecord(record);
         nationalIdentifierRepository.save(position);
         PositionHateoas positionHateoas = new PositionHateoas(position);
-        nationalIdentifierHateoasHandler
-	    .addLinks(positionHateoas, new Authorisation());
+        positionHateoasHandler.addLinks(positionHateoas, new Authorisation());
         return positionHateoas;
     }
 
@@ -101,8 +104,7 @@ public class NationalIdentifierService
         position.setReferenceFile(file);
         nationalIdentifierRepository.save(position);
         PositionHateoas positionHateoas = new PositionHateoas(position);
-        nationalIdentifierHateoasHandler
-	    .addLinks(positionHateoas, new Authorisation());
+        positionHateoasHandler.addLinks(positionHateoas, new Authorisation());
         return positionHateoas;
     }
 
@@ -137,12 +139,13 @@ public class NationalIdentifierService
 
         // Copy all the values you are allowed to copy ....
         // First the values
-	existingPosition.setX(incomingPosition.getX());
-	existingPosition.setY(incomingPosition.getY());
-	existingPosition.setZ(incomingPosition.getZ());
-	// FIXME convert to metadata codelist value
-	existingPosition.setCoordinateSystem
-	    (incomingPosition.getCoordinateSystem());
+        existingPosition.setX(incomingPosition.getX());
+        existingPosition.setY(incomingPosition.getY());
+        existingPosition.setZ(incomingPosition.getZ());
+        existingPosition.setCoordinateSystemCode
+            (incomingPosition.getCoordinateSystemCode());
+        existingPosition.setCoordinateSystemCodeName
+            (incomingPosition.getCoordinateSystemCodeName());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
@@ -211,14 +214,16 @@ public class NationalIdentifierService
     @Override
     public PositionHateoas generateDefaultPosition() {
         Position position = new Position();
-	// FIXME find way to return empty template with only _links
+        // FIXME find way to return empty template with only _links
+        position.setCoordinateSystemCode("EPSG:4326");
+        position.setCoordinateSystemCodeName("WGS84");
         position.setX(1.0);
         position.setY(1.0);
         position.setZ(1.0);
         PositionHateoas positionHateoas =
                 new PositionHateoas(position);
-        nationalIdentifierHateoasHandler
-                .addLinksOnTemplate(positionHateoas, new Authorisation());
+        positionHateoasHandler
+            .addLinksOnTemplate(positionHateoas, new Authorisation());
         return positionHateoas;
     }
 }

@@ -563,8 +563,8 @@ public class FileHateoasController
                 .body(fileHateoas);
     }
 
-    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/nasjonalidentifikator
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/nasjonalidentifikator/
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/nasjonalidentifikator
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/nasjonalidentifikator/
     @ApiOperation(value = "Retrieves a list of NationalIdentifier associated with a File",
                   response = NationalIdentifierHateoas.class)
     @ApiResponses(value = {

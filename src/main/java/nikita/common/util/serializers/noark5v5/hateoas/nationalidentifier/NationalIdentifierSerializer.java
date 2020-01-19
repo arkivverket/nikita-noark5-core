@@ -52,8 +52,13 @@ public class NationalIdentifierSerializer
         throws IOException {
         jgen.writeStartObject();
         printSystemIdEntity(jgen, position);
-        jgen.writeStringField(COORDINATE_SYSTEM,
-                position.getCoordinateSystem());
+
+        jgen.writeObjectFieldStart(COORDINATE_SYSTEM);
+        printCode(jgen,
+                  position.getCoordinateSystemCode(),
+                  position.getCoordinateSystemCodeName());
+        jgen.writeEndObject();
+
         jgen.writeNumberField(X, position.getX());
         jgen.writeNumberField(Y, position.getY());
         if (null != position.getZ()) {

@@ -16,8 +16,10 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -197,6 +199,34 @@ public class RecordHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.getCorrespondencePartAssociatedWithRecord(
                                 systemID));
+    }
+
+    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/nasjonalidentifikator
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/nasjonalidentifikator/
+    @ApiOperation(value = "Retrieves a list of NationalIdentifier associated with a File",
+                  response = NationalIdentifierHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "NationalIdentifier returned",
+                    response = NationalIdentifierHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NATIONAL_IDENTIFIER)
+    public ResponseEntity<NationalIdentifierHateoas>
+    findAllNIAssociatedWithFile(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the file to retrieve associated File",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.getNationalIdentifierAssociatedWithRecord(systemID));
     }
 
     // Add a reference to a secondary Series associated with the Record
@@ -635,7 +665,96 @@ public class RecordHateoasController
                 .body(correspondencePartUnitHateoas);
     }
 
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-bygning
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-bygning/
+    @ApiOperation(value = "Associates a Building (national identifier) with a" +
+            " Record identified by systemID", notes = "Returns the Record with " +
+            "the building associated with it", response = RecordHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = BUILDING + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 201,
+                    message = BUILDING +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<BuildingHateoas> addNIBuildingToRecord(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of Record to associate the Building with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Building",
+                    value = "building",
+                    required = true)
+            @RequestBody Building building) throws NikitaException {
+        BuildingHateoas buildingHateoas =
+                recordService.createBuildingAssociatedWithRecord(
+                        systemID, building);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(buildingHateoas.getEntityVersion().toString())
+                .body(buildingHateoas);
+    }
 
+
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-posisjon
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-posisjon/
+    @ApiOperation(value = "Associates a Position (national identifier) with a" +
+            " Record identified by systemID",
+            notes = "Returns the Record with the position associated with it",
+            response = RecordHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = POSITION +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 201,
+                    message = POSITION +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<PositionHateoas> addNIPositionToRecord(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of Record to associate the " +
+                            "Position with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Position",
+                    value = "position",
+                    required = true)
+            @RequestBody Position position)
+            throws NikitaException {
+        PositionHateoas positionHateoas =
+                recordService.createPositionAssociatedWithRecord(
+                        systemID, position);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(positionHateoas.getEntityVersion().toString())
+                .body(positionHateoas);
+    }
 
     // Delete all Record
     // DELETE [contextPath][api]/arkivstruktur/registrering/
@@ -856,6 +975,67 @@ public class RecordHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionHateoas);
+    }
+
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-bygning
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-bygning/
+    @ApiOperation(value = "Associates a Building (national identifier) with a" +
+            " Record identified by systemID", notes = "Returns the Record with " +
+            "the building associated with it", response = BuildingHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = BUILDING + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = BuildingHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING)
+    public ResponseEntity<BuildingHateoas> getNIBuildingToRecordTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of Record to associate the Building with",
+                    required = true)
+            @PathVariable("systemID") final String systemID)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.generateDefaultBuilding());
+    }
+
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-posisjon
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-posisjon/
+    @ApiOperation(value = "Associates a Position (national identifier) with a" +
+            " Record identified by systemID",
+            notes = "Returns the Record with the position associated with it",
+            response = PositionHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = POSITION +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PositionHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION)
+    public ResponseEntity<PositionHateoas> getNIPositionToRecordTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of Record to associate the " +
+                            "Position with",
+                    required = true)
+            @PathVariable("systemID") final String systemID)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.generateDefaultPosition());
     }
 
     // Delete a Record identified by systemID

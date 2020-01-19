@@ -12,7 +12,12 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.Position;
 import nikita.common.model.noark5.v5.secondary.Author;
 import org.springframework.http.ResponseEntity;
 
@@ -43,6 +48,9 @@ public interface IRecordService {
 
     PartHateoas getPartAssociatedWithRecord(final String systemID);
 
+    NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord
+	(@NotNull final String systemID);
+
     PartPersonHateoas generateDefaultPartPerson(
             String recordSystemId);
 
@@ -66,6 +74,12 @@ public interface IRecordService {
 
     PartUnitHateoas createPartUnitAssociatedWithRecord(
             String systemID, PartUnit partUnit);
+
+    BuildingHateoas createBuildingAssociatedWithRecord
+	(@NotNull String systemID, @NotNull Building building);
+
+    PositionHateoas createPositionAssociatedWithRecord
+	(@NotNull String systemID, @NotNull Position position);
 
     // -- All READ operations
     List<Record> findAll();
@@ -100,4 +114,9 @@ public interface IRecordService {
     AuthorHateoas findAllAuthorWithRecordBySystemId(String systemID);
 
     AuthorHateoas generateDefaultAuthor(String systemID);
+
+    BuildingHateoas generateDefaultBuilding();
+
+    PositionHateoas generateDefaultPosition();
+
 }
