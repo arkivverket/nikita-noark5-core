@@ -962,7 +962,7 @@ public class FileHateoasController
             @ApiParam(name = "Plan",
                     value = "plan",
                     required = true)
-            @RequestBody Plan position)
+            @RequestBody Plan plan)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
@@ -998,7 +998,7 @@ public class FileHateoasController
             @ApiParam(name = "Unit",
                     value = "unit",
                     required = true)
-            @RequestBody Unit position)
+            @RequestBody Unit unit)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
@@ -1472,7 +1472,7 @@ public class FileHateoasController
             @ApiParam(name = "Plan",
                     value = "plan",
                     required = true)
-            @RequestBody Plan position)
+            @RequestBody Plan plan)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
@@ -1514,7 +1514,7 @@ public class FileHateoasController
             @ApiParam(name = "Unit",
                     value = "unit",
                     required = true)
-            @RequestBody Unit position)
+            @RequestBody Unit unit)
             throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
