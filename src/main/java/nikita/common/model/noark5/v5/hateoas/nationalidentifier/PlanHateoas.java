@@ -8,7 +8,7 @@ import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.DNumbe
 
 import java.util.List;
 
-import static nikita.common.config.N5ResourceMappings.D_NUMBER;
+import static nikita.common.config.N5ResourceMappings.PLAN;
 
 @JsonSerialize(using = DNumberSerializer.class)
 public class PlanHateoas
@@ -20,6 +20,6 @@ public class PlanHateoas
     }
 
     public PlanHateoas(List<INoarkEntity> entityList) {
-        super(entityList, D_NUMBER);
+        super(entityList, PLAN);
     }
 }

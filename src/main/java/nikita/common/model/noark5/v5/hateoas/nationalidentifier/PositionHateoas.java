@@ -8,7 +8,7 @@ import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.Positi
 
 import java.util.List;
 
-import static nikita.common.config.N5ResourceMappings.COORDINATE_SYSTEM;
+import static nikita.common.config.N5ResourceMappings.POSITION;
 
 @JsonSerialize(using = PositionSerializer.class)
 public class PositionHateoas
@@ -20,6 +20,6 @@ public class PositionHateoas
     }
 
     public PositionHateoas(List<INoarkEntity> entityList) {
-        super(entityList, COORDINATE_SYSTEM);
+        super(entityList, POSITION);
     }
 }
