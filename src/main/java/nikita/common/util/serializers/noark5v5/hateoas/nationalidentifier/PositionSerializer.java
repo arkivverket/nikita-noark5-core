@@ -10,8 +10,7 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 import java.io.IOException;
 
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.printSystemIdEntity;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 public class PositionSerializer
         extends HateoasSerializer
@@ -26,8 +25,13 @@ public class PositionSerializer
         Position position = (Position) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, position);
-        jgen.writeStringField(COORDINATE_SYSTEM,
-                position.getCoordinateSystem());
+
+        jgen.writeObjectFieldStart(COORDINATE_SYSTEM);
+        printCode(jgen,
+                  position.getCoordinateSystemCode(),
+                  position.getCoordinateSystemCodeName());
+        jgen.writeEndObject();
+
         jgen.writeNumberField(X, position.getX());
         jgen.writeNumberField(Y, position.getY());
         if (null != position.getZ()) {

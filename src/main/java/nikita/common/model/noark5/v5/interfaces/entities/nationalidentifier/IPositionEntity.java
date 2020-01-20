@@ -6,9 +6,13 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 public interface IPositionEntity
         extends INoarkEntity, Comparable<SystemIdEntity> {
-    String getCoordinateSystem();
+    String getCoordinateSystemCode();
 
-    void setCoordinateSystem(String coordinateSystem);
+    void setCoordinateSystemCode(String coordinateSystemCode);
+
+    String getCoordinateSystemCodeName();
+
+    void setCoordinateSystemCodeName(String coordinateSystemCodeName);
 
     Double getX();
 
