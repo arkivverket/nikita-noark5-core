@@ -4,9 +4,11 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.repository.n5v5.INationalIdentifierRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
@@ -109,6 +111,34 @@ public class NationalIdentifierService
     }
 
     @Override
+    public UnitHateoas createNewUnit
+            (@NotNull Unit unit, @NotNull Record record) {
+        // bidirectional relationship @ManyToMany, set both sides of
+        // relationship
+        record.addNationalIdentifier(unit);
+        unit.setReferenceRecord(record);
+        nationalIdentifierRepository.save(unit);
+        UnitHateoas unitHateoas = new UnitHateoas(unit);
+        nationalIdentifierHateoasHandler
+	    .addLinks(unitHateoas, new Authorisation());
+        return unitHateoas;
+    }
+
+    @Override
+    public UnitHateoas createNewUnit
+            (@NotNull Unit unit, @NotNull File file) {
+        // bidirectional relationship @ManyToMany, set both sides of
+        // relationship
+        file.addNationalIdentifier(unit);
+        unit.setReferenceFile(file);
+        nationalIdentifierRepository.save(unit);
+        UnitHateoas unitHateoas = new UnitHateoas(unit);
+        nationalIdentifierHateoasHandler
+	    .addLinks(unitHateoas, new Authorisation());
+        return unitHateoas;
+    }
+
+    @Override
     public Building updateBuilding(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Building incomingBuilding) {
@@ -156,12 +186,37 @@ public class NationalIdentifierService
     }
 
     @Override
+    public Unit updateUnit(
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull Unit incomingUnit) {
+	Unit existingUnit =
+	    (Unit) getNationalIdentifierOrThrow(systemId);
+
+        // Copy all the values you are allowed to copy ....
+        // First the values
+	existingUnit
+	    .setOrganisationNumber(incomingUnit.getOrganisationNumber());
+
+        // Note setVersion can potentially result in a
+        // NoarkConcurrencyException exception as it checks the ETAG
+        // value
+        existingUnit.setVersion(version);
+        nationalIdentifierRepository.save(existingUnit);
+        return existingUnit;
+    }
+
+    @Override
     public void deleteBuilding(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
     public void deletePosition(@NotNull String systemId) {
+        deleteEntity(getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public void deleteUnit(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
@@ -225,5 +280,21 @@ public class NationalIdentifierService
         positionHateoasHandler
             .addLinksOnTemplate(positionHateoas, new Authorisation());
         return positionHateoas;
+    }
+
+    /**
+     * Generate a Default Unit object.
+     *
+     * @return the Unit object wrapped as a UnitHateoas object
+     */
+    @Override
+    public UnitHateoas generateDefaultUnit() {
+        Unit unit = new Unit();
+	// FIXME find way to return empty template with only _links
+        unit.setOrganisationNumber("010101010");
+        UnitHateoas unitHateoas = new UnitHateoas(unit);
+        nationalIdentifierHateoasHandler
+                .addLinksOnTemplate(unitHateoas, new Authorisation());
+        return unitHateoas;
     }
 }

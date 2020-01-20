@@ -756,6 +756,53 @@ public class RecordHateoasController
                 .body(positionHateoas);
     }
 
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-enhetsidentifikator
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-enhetsidentifikator/
+    @ApiOperation(value = "Associates a Unit (national identifier) with a " +
+            "Record identified by systemID",
+            notes = "Returns the Record with the unit associated with it",
+            response = RecordHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = NI_UNIT +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 201,
+                    message = NI_UNIT +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = RecordHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<UnitHateoas> addNIUnitToRecord(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of Record to associate the " +
+                            "Unit with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Unit",
+                    value = "unit",
+                    required = true)
+            @RequestBody Unit unit)
+            throws NikitaException {
+        UnitHateoas unitHateoas =
+                recordService.createUnitAssociatedWithRecord(
+                        systemID, unit);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(unitHateoas.getEntityVersion().toString())
+                .body(unitHateoas);
+    }
+
     // Delete all Record
     // DELETE [contextPath][api]/arkivstruktur/registrering/
     @ApiOperation(value = "Deletes all Record", response = Count.class)
@@ -1036,6 +1083,40 @@ public class RecordHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.generateDefaultPosition());
+    }
+
+    // Add a Unit to a Record
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-enhetsidentifikator
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-enhetsidentifikator/
+    @ApiOperation(value = "Associates a Unit (national identifier) with a " +
+            "Record identified by systemID",
+            notes = "Returns the Record with the unit associated with it",
+            response = UnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = NI_UNIT +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = UnitHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<UnitHateoas> getNIUnitToRecordTemplate(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of Record to associate the " +
+                            "Unit with",
+                    required = true)
+            @PathVariable("systemID") final String systemID)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.generateDefaultUnit());
     }
 
     // Delete a Record identified by systemID

@@ -15,9 +15,11 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnit
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.secondary.Author;
 import org.springframework.http.ResponseEntity;
 
@@ -81,6 +83,9 @@ public interface IRecordService {
     PositionHateoas createPositionAssociatedWithRecord
 	(@NotNull String systemID, @NotNull Position position);
 
+    UnitHateoas createUnitAssociatedWithRecord
+	(@NotNull String systemID, @NotNull Unit unit);
+
     // -- All READ operations
     List<Record> findAll();
 
@@ -119,4 +124,5 @@ public interface IRecordService {
 
     PositionHateoas generateDefaultPosition();
 
+    UnitHateoas generateDefaultUnit();
 }

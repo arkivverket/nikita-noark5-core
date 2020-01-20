@@ -5,9 +5,11 @@ import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IBuildingEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPositionEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IUnitEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
@@ -68,6 +70,18 @@ public class NationalIdentifierSerializer
         jgen.writeEndObject();
     }
 
+    // FIXME figure out how to avoid duplicating code with UnitSerializer
+    private void printUnit(IUnitEntity unit,
+                               HateoasNoarkObject unitHateoas,
+                               JsonGenerator jgen)
+        throws IOException {
+        jgen.writeStartObject();
+        printSystemIdEntity(jgen, unit);
+        print(jgen, ORGANISATION_NUMBER, unit.getOrganisationNumber());
+        printHateoasLinks(jgen, unitHateoas.getLinks(unit));
+        jgen.writeEndObject();
+    }
+
     @Override
     public void serializeNoarkEntity(
             INoarkEntity noarkSystemIdEntity,
@@ -82,6 +96,9 @@ public class NationalIdentifierSerializer
         }
         if (id instanceof Position) {
             printPosition((IPositionEntity)id, nationalIdentifierHateoas, jgen);
+        }
+        if (id instanceof Unit) {
+            printUnit((IUnitEntity)id, nationalIdentifierHateoas, jgen);
         }
         // FIXME add the remaining identifiers
     }

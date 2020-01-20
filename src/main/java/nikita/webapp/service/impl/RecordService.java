@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
@@ -17,6 +18,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnit
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
@@ -412,6 +414,14 @@ public class RecordService
                 createNewPosition(position, getRecordOrThrow(systemID));
     }
 
+    @Override
+    public UnitHateoas
+    createUnitAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Unit unit) {
+        return nationalIdentifierService.
+                createNewUnit(unit, getRecordOrThrow(systemID));
+    }
+
     /**
      * Generate a Default CorrespondencePartUnit object that can be
      * associated with the identified Record.
@@ -651,6 +661,11 @@ public class RecordService
     @Override
     public PositionHateoas generateDefaultPosition() {
         return nationalIdentifierService.generateDefaultPosition();
+    }
+
+    @Override
+    public UnitHateoas generateDefaultUnit() {
+        return nationalIdentifierService.generateDefaultUnit();
     }
 
     // All HELPER operations

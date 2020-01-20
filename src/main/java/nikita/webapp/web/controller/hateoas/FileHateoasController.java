@@ -975,7 +975,7 @@ public class FileHateoasController
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-enhetsidentifikator/
     @ApiOperation(value = "Associates a Unit (national identifier) with a " +
             "File identified by systemID",
-            notes = "Returns the File with  the unit associated with it",
+            notes = "Returns the File with the unit associated with it",
             response = UnitHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
@@ -990,7 +990,7 @@ public class FileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT)
-    public ResponseEntity<String> getNIUnitToFileTemplate(
+    public ResponseEntity<UnitHateoas> getNIUnitToFileTemplate(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the " +
@@ -998,7 +998,9 @@ public class FileHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID)
             throws NikitaException {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.generateDefaultUnit());
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -1492,7 +1494,7 @@ public class FileHateoasController
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-enhetsidentifikator/
     @ApiOperation(value = "Associates a Unit (national identifier) with a " +
             "File identified by systemID",
-            notes = "Returns the File with  the unit associated with it",
+            notes = "Returns the File with the unit associated with it",
             response = FileHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
@@ -1514,7 +1516,7 @@ public class FileHateoasController
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> addNIUnitToFile(
+    public ResponseEntity<UnitHateoas> addNIUnitToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the " +
@@ -1526,7 +1528,13 @@ public class FileHateoasController
                     required = true)
             @RequestBody Unit unit)
             throws NikitaException {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        UnitHateoas unitHateoas =
+                fileService.createUnitAssociatedWithFile(
+                        systemID, unit);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(unitHateoas.getEntityVersion().toString())
+                .body(unitHateoas);
     }
 
     // Expand a File to a MeetingFile

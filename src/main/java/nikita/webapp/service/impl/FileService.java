@@ -6,9 +6,11 @@ import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IFileRepository;
@@ -161,6 +163,14 @@ public class FileService
             @NotNull String systemID, @NotNull Position position) {
         return nationalIdentifierService.
                 createNewPosition(position, getFileOrThrow(systemID));
+    }
+
+    @Override
+    public UnitHateoas
+    createUnitAssociatedWithFile(
+            @NotNull String systemID, @NotNull Unit unit) {
+        return nationalIdentifierService.
+                createNewUnit(unit, getFileOrThrow(systemID));
     }
 
     // All READ operations
@@ -368,6 +378,11 @@ public class FileService
     @Override
     public PositionHateoas generateDefaultPosition() {
         return nationalIdentifierService.generateDefaultPosition();
+    }
+
+    @Override
+    public UnitHateoas generateDefaultUnit() {
+        return nationalIdentifierService.generateDefaultUnit();
     }
 
     // All HELPER operations

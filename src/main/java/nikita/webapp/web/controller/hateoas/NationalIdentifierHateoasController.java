@@ -7,8 +7,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -94,11 +96,39 @@ public class NationalIdentifierHateoasController
                 (Position) nationalIdentifierService.findBySystemId(systemId);
         PositionHateoas positionHateoas = new PositionHateoas(position);
         nationalIdentifierHateoasHandler
-	    .addLinks(positionHateoas, new Authorisation());
+            .addLinks(positionHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(position.getVersion().toString())
                 .body(positionHateoas);
+    }
+
+    // GET [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemId}
+    @ApiOperation(value = "Retrieves a single Unit entity given a systemId",
+            response = Unit.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Unit returned",
+                    response = Unit.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = NI_UNIT + SLASH + SYSTEM_ID_PARAMETER)
+    public ResponseEntity<UnitHateoas> findOneUnitBySystemId(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the unit to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemId) {
+        Unit unit =
+                (Unit) nationalIdentifierService.findBySystemId(systemId);
+        UnitHateoas unitHateoas = new UnitHateoas(unit);
+        nationalIdentifierHateoasHandler
+            .addLinks(unitHateoas, new Authorisation());
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(unit.getVersion().toString())
+                .body(unitHateoas);
     }
 
     // PUT [contextPath][api]/casehandling/building/{systemId}
@@ -132,10 +162,10 @@ public class NationalIdentifierHateoasController
 
         Building updatedBuilding =
             nationalIdentifierService.updateBuilding
-	    (systemID, parseETAG(request.getHeader(ETAG)), building);
+            (systemID, parseETAG(request.getHeader(ETAG)), building);
         BuildingHateoas buildingHateoas = new BuildingHateoas(updatedBuilding);
         nationalIdentifierHateoasHandler
-	    .addLinks(buildingHateoas, new Authorisation());
+            .addLinks(buildingHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedBuilding.getVersion().toString())
@@ -172,14 +202,54 @@ public class NationalIdentifierHateoasController
         validateForUpdate(position); // FIXME no-op
 
         Position updatedPosition = nationalIdentifierService.updatePosition
-	    (systemID, parseETAG(request.getHeader(ETAG)), position);
+            (systemID, parseETAG(request.getHeader(ETAG)), position);
         PositionHateoas positionHateoas = new PositionHateoas(updatedPosition);
         nationalIdentifierHateoasHandler
-	    .addLinks(positionHateoas, new Authorisation());
+            .addLinks(positionHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedPosition.getVersion().toString())
                 .body(positionHateoas);
+    }
+
+    // PUT [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemId}
+    @ApiOperation(value = "Updates a Unit identified by a given systemId",
+            notes = "Returns the newly updated unit",
+            response = UnitHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Unit " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = UnitHateoas.class),
+            @ApiResponse(code = 201, message = "Unit " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = UnitHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type Unit"),
+            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PutMapping(value = NI_UNIT + SLASH + SYSTEM_ID_PARAMETER,
+                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<UnitHateoas> updateUnit(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of unit to update",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Unit",
+                    value = "Incoming unit object",
+                    required = true)
+            @RequestBody Unit unit) throws NikitaException {
+        validateForUpdate(unit); // FIXME no-op
+
+        Unit updatedUnit = nationalIdentifierService.updateUnit
+            (systemID, parseETAG(request.getHeader(ETAG)), unit);
+        UnitHateoas unitHateoas = new UnitHateoas(updatedUnit);
+        nationalIdentifierHateoasHandler
+            .addLinks(unitHateoas, new Authorisation());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(updatedUnit.getVersion().toString())
+                .body(unitHateoas);
     }
 
     // Delete a building identified by systemID
@@ -222,4 +292,23 @@ public class NationalIdentifierHateoasController
                 .body("{\"status\" : \"Success\"}");
     }
 
+    // Delete a unit identified by systemid
+    // DELETE [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemID}/
+    @ApiOperation(value = "Deletes a single Unit entity identified by systemID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Unit deleted"),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping(value = NI_UNIT + SLASH + SYSTEM_ID_PARAMETER)
+    public ResponseEntity<String> deleteUnit(
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemID of the unit to delete",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final String systemID) {
+        nationalIdentifierService.deleteUnit(systemID);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("{\"status\" : \"Success\"}");
+    }
 }

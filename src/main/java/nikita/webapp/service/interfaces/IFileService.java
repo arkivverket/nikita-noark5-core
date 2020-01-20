@@ -9,8 +9,10 @@ import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -49,6 +51,10 @@ public interface IFileService {
     createPositionAssociatedWithFile(
             @NotNull String systemID, @NotNull Position position);
 
+    UnitHateoas
+    createUnitAssociatedWithFile(
+            @NotNull String systemID, @NotNull Unit unit);
+
     List<File> findAll();
 
     FileHateoas findAllChildren(@NotNull String systemId);
@@ -71,6 +77,8 @@ public interface IFileService {
     BuildingHateoas generateDefaultBuilding();
 
     PositionHateoas generateDefaultPosition();
+
+    UnitHateoas generateDefaultUnit();
 
     // -- All UPDATE operations
     File handleUpdate(@NotNull String systemId,
