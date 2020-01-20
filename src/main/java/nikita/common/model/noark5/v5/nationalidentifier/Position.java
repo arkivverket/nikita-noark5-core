@@ -33,11 +33,18 @@ public class Position
         implements IPositionEntity {
 
     /**
-     * M??? - koordinatsystem (xs:string)
+     * M??? - koordinatsystem code (xs:string)
      */
-    @Column(name = "coordinate_system", nullable = false)
+    @Column(name = "coordinate_system_code", nullable = false)
     @Audited
-    private String coordinateSystem;
+    private String coordinateSystemCode;
+
+    /**
+     * M??? - koordinatsystem code name (xs:string)
+     */
+    @Column(name = "coordinate_system_code_name", nullable = false)
+    @Audited
+    private String coordinateSystemCodeName;
 
     /**
      * M??? - x (xs:decimal)
@@ -64,13 +71,23 @@ public class Position
     private Double z;
 
     @Override
-    public String getCoordinateSystem() {
-        return coordinateSystem;
+    public String getCoordinateSystemCode() {
+        return coordinateSystemCode;
     }
 
     @Override
-    public void setCoordinateSystem(String coordinateSystem) {
-        this.coordinateSystem = coordinateSystem;
+    public void setCoordinateSystemCode(String coordinateSystemCode) {
+        this.coordinateSystemCode = coordinateSystemCode;
+    }
+
+    @Override
+    public String getCoordinateSystemCodeName() {
+        return coordinateSystemCodeName;
+    }
+
+    @Override
+    public void setCoordinateSystemCodeName(String coordinateSystemCodeName) {
+        this.coordinateSystemCodeName = coordinateSystemCodeName;
     }
 
     @Override
@@ -106,7 +123,8 @@ public class Position
     @Override
     public String toString() {
         return "Position{" +
-                "coordinateSystem='" + coordinateSystem + '\'' +
+                "coordinateSystemCode='" + coordinateSystemCode + '\'' +
+                "coordinateSystemCodeName='" + coordinateSystemCodeName + '\'' +
                 ", x=" + x +
                 ", y=" + y +
                 ", z=" + z +
@@ -127,7 +145,8 @@ public class Position
         Position rhs = (Position) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(coordinateSystem, rhs.coordinateSystem)
+                .append(coordinateSystemCode, rhs.coordinateSystemCode)
+                .append(coordinateSystemCodeName, rhs.coordinateSystemCodeName)
                 .append(x, rhs.x)
                 .append(y, rhs.y)
                 .append(z, rhs.z)
@@ -138,7 +157,8 @@ public class Position
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(coordinateSystem)
+                .append(coordinateSystemCode)
+                .append(coordinateSystemCodeName)
                 .append(x)
                 .append(y)
                 .append(z)

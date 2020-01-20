@@ -6,14 +6,15 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.metadata.CoordinateSystem;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
 
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class PositionDeserializer
         extends JsonDeserializer {
@@ -33,14 +34,17 @@ public class PositionDeserializer
         deserialiseNoarkSystemIdEntity(position, objectNode, errors);
 
         // Deserialize koordinatsystem
-        JsonNode currentNode = objectNode.get(COORDINATE_SYSTEM);
-        if (null != currentNode) {
-            position.setCoordinateSystem(currentNode.textValue());
-            objectNode.remove(COORDINATE_SYSTEM);
-        }
+        IMetadataEntity entity =
+            deserialiseMetadataValue(
+                objectNode,
+                COORDINATE_SYSTEM,
+                new CoordinateSystem(),
+                errors, true);
+        position.setCoordinateSystemCode(entity.getCode());
+        position.setCoordinateSystemCodeName(entity.getCodeName());
 
         // Deserialize
-        currentNode = objectNode.get(X);
+        JsonNode currentNode = objectNode.get(X);
         if (null != currentNode) {
             position.setX(currentNode.doubleValue());
             objectNode.remove(X);
