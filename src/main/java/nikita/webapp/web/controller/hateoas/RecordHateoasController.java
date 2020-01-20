@@ -116,8 +116,8 @@ public class RecordHateoasController
         return body;
     }
 
-    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/part
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/part/
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/part
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/part/
     @ApiOperation(value = "Retrieves a list of Part associated with a Record",
             response = PartHateoas.class)
     @ApiResponses(value = {
@@ -174,8 +174,8 @@ public class RecordHateoasController
 
     // Retrieve all CorrespondencePart associated with a Record identified by
     // systemId
-    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/korrespondansepart
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/korrespondansepart/
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/korrespondansepart
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/korrespondansepart/
     @ApiOperation(value = "Retrieves a list of CorrespondencePartHateoas associated with a Record",
             response = CorrespondencePartHateoas.class)
     @ApiResponses(value = {
@@ -285,7 +285,7 @@ public class RecordHateoasController
     }
 
     // Create a suggested CorrespondencePartPerson (like a template) object with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartperson
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-korrespondansepartperson
     @ApiOperation(value = "Suggests the contents of a new CorrespondencePart object",
             notes = "Returns a pre-filled CorrespondencePart object" +
                     " with values relevant for the logged-in user", response = CorrespondencePartPersonHateoas.class)
@@ -311,7 +311,7 @@ public class RecordHateoasController
     }
 
     // Create a suggested CorrespondencePartUnit (like a template) object with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartenhet
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-korrespondansepartenhet
     @ApiOperation(value = "Suggests the contents of a new CorrespondencePart object",
             notes = "Returns a pre-filled CorrespondencePart object" +
                     " with values relevant for the logged-in user", response = CorrespondencePartUnitHateoas.class)
@@ -338,7 +338,7 @@ public class RecordHateoasController
 
     // Create a suggested PartUnit (like a template) object with default values
     // (nothing persisted)
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/ny-partenhet
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-partenhet
     @ApiOperation(value = "Suggests the contents of a new Part object",
             notes = "Returns a pre-filled Part object" +
                     " with values relevant for the logged-in user",
@@ -368,7 +368,7 @@ public class RecordHateoasController
     }
 
     // Create a suggested PartUnit (like a template) object with default values (nothing persisted)
-    // GET [contextPath][api]/arkivstruktur/journalpost/{systemId}/ny-partperson
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-partperson
     @ApiOperation(value = "Suggests the contents of a new Part object",
             notes = "Returns a pre-filled Part object" +
                     " with values relevant for the logged-in user", response = PartPersonHateoas.class)
@@ -427,8 +427,8 @@ public class RecordHateoasController
     }
 
     // Create a new CorrespondencePartPerson and associate it with the given journalpost
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartperson
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-korrespondansepartperson/
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-korrespondansepartperson
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-korrespondansepartperson/
     @ApiOperation(value = "Persists a CorrespondencePartPerson object associated with the given Record systemId",
             notes = "Returns the newly created CorrespondencePartPerson object after it was associated with a " +
                     "Record object and persisted to the database", response = CorrespondencePartPersonHateoas.class)
@@ -469,8 +469,8 @@ public class RecordHateoasController
     }
 
     // Create a new Part and associate it with the given journalpost
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-partperson
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-partperson/
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-partperson
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-partperson/
     @ApiOperation(value = "Persists a Part object associated with the given " +
             "Record systemId",
             notes = "Returns the newly created Part object after it was associated with a " +
@@ -511,8 +511,8 @@ public class RecordHateoasController
     }
 
     // Create a new Part and associate it with the given journalpost
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-partenhet
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-partenhet/
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-partenhet
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-partenhet/
     @ApiOperation(value = "Persists a Part object associated with the given " +
             "Record systemId",
             notes = "Returns the newly created Part object after it was associated with a " +
@@ -553,8 +553,8 @@ public class RecordHateoasController
     }
 
     // Create a new CorrespondencePartInternal and associate it with the given journalpost
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartintern
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-korrespondansepartintern/
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-korrespondansepartintern
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-korrespondansepartintern/
     @ApiOperation(value = "Persists a CorrespondencePartInternal object associated with the given Record systemId",
             notes = "Returns the newly created CorrespondencePartInternal object after it was associated with a " +
                     "Record object and persisted to the database", response = CorrespondencePartInternalHateoas.class)
@@ -595,8 +595,8 @@ public class RecordHateoasController
     }
 
     // Create a new CorrespondencePartUnit and associate it with the given journalpost
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-korrespondansepartenhet
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-korrespondansepartenhet/
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-korrespondansepartenhet
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-korrespondansepartenhet/
     @ApiOperation(value = "Persists a CorrespondencePartUnit object associated with the given Record systemId",
             notes = "Returns the newly created CorrespondencePartUnit object after it was associated with a " +
                     "Record object and persisted to the database", response = CorrespondencePartUnitHateoas.class)

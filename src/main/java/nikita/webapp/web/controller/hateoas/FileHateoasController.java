@@ -395,7 +395,7 @@ public class FileHateoasController
 
     // Create a suggested PartUnit (like a template) object 
     // with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/mappe/{systemId}/ny-partenhet
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-partenhet
     @ApiOperation(value = "Suggests the contents of a new Part " +
             "object", notes = "Returns a pre-filled Part object" +
             " with values relevant for the logged-in user",
@@ -428,7 +428,7 @@ public class FileHateoasController
 
     // Create a suggested PartPerson (like a template) object 
     // with default values (nothing persisted)
-    // GET [contextPath][api]/casehandling/mappe/{systemId}/ny-partenhet
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-partenhet
     @ApiOperation(value = "Suggests the contents of a new Part " +
             "object", notes = "Returns a pre-filled Part object" +
             " with values relevant for the logged-in user",
@@ -459,8 +459,8 @@ public class FileHateoasController
                         generateDefaultPartPerson(systemID));
     }
 
-    // GET [contextPath][api]/sakarkiv/registrering/{systemId}/part
-    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/part/
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/part
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/part/
     @ApiOperation(value = "Retrieves a list of Part associated with a File",
             response = PartHateoas.class)
     @ApiResponses(value = {
@@ -512,7 +512,7 @@ public class FileHateoasController
     }
 
     // Retrieve all Class associated with File identified by a systemId
-    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/mappe
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/klasse
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/
     @ApiOperation(value = "Retrieves a single Class entity given a systemId",
             response = ClassHateoas.class)
