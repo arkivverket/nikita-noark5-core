@@ -4,14 +4,24 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IBuildingEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ICadastralUnitEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IDNumberEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPlanEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPositionEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ISocialSecurityNumberEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IUnitEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
+import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
+import nikita.common.model.noark5.v5.nationalidentifier.Plan;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
 import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -33,6 +43,9 @@ public class NationalIdentifierSerializer
         extends HateoasSerializer
         implements IHateoasSerializer {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(NationalIdentifierSerializer.class);
+
     // FIXME figure out how to avoid duplicating code with BuildingSerializer
     public void printBuilding(IBuildingEntity building,
                               HateoasNoarkObject buildingHateoas,
@@ -44,6 +57,72 @@ public class NationalIdentifierSerializer
         printNullable(jgen, BUILDING_CHANGE_NUMBER,
                 building.getContinuousNumberingOfBuildingChange());
         printHateoasLinks(jgen, buildingHateoas.getLinks(building));
+        jgen.writeEndObject();
+    }
+
+    // FIXME figure out how to avoid duplicating code with CadastralUnitSerializer
+    public void printCadastralUnit(ICadastralUnitEntity cadastralUnit,
+                              HateoasNoarkObject cadastralUnitHateoas,
+                              JsonGenerator jgen)
+        throws IOException {
+        jgen.writeStartObject();
+        printSystemIdEntity(jgen, cadastralUnit);
+
+        jgen.writeStringField(MUNICIPALITY_NUMBER,
+                cadastralUnit.getMunicipalityNumber());
+
+        jgen.writeNumberField(HOLDING_NUMBER,
+                cadastralUnit.getHoldingNumber());
+
+        jgen.writeNumberField(SUB_HOLDING_NUMBER,
+                cadastralUnit.getSubHoldingNumber());
+
+        if (null != cadastralUnit.getLeaseNumber()) {
+            jgen.writeNumberField(LEASE_NUMBER,
+                    cadastralUnit.getLeaseNumber());
+        }
+
+        if (null != cadastralUnit.getSectionNumber()) {
+            jgen.writeNumberField(SECTION_NUMBER,
+                    cadastralUnit.getSectionNumber());
+        }
+
+        printHateoasLinks(jgen, cadastralUnitHateoas.getLinks(cadastralUnit));
+        jgen.writeEndObject();
+    }
+
+    // FIXME figure out how to avoid duplicating code with DNumberSerializer
+    public void printDNumber(IDNumberEntity dNumber,
+                             HateoasNoarkObject dNumberHateoas,
+                             JsonGenerator jgen)
+        throws IOException {
+        jgen.writeStartObject();
+        printSystemIdEntity(jgen, dNumber);
+        jgen.writeStringField(D_NUMBER_FIELD, dNumber.getdNumber());
+        printHateoasLinks(jgen, dNumberHateoas.getLinks(dNumber));
+        jgen.writeEndObject();
+    }
+
+    // FIXME figure out how to avoid duplicating code with PlanSerializer
+    public void printPlan(IPlanEntity plan,
+                          HateoasNoarkObject planHateoas,
+                          JsonGenerator jgen)
+        throws IOException {
+        jgen.writeStartObject();
+        printSystemIdEntity(jgen, plan);
+        if (null != plan.getMunicipalityNumber()) {
+            jgen.writeStringField(MUNICIPALITY_NUMBER,
+                    plan.getMunicipalityNumber());
+        }
+        if (null != plan.getCountyNumber()) {
+            jgen.writeStringField(COUNTY_NUMBER, plan.getCountyNumber());
+        }
+        if (null != plan.getCountry()) {
+            jgen.writeStringField(COUNTRY, plan.getCountry().getCode());
+        }
+        jgen.writeStringField(PLAN_IDENTIFICATION,
+                plan.getPlanIdentification());
+        printHateoasLinks(jgen, planHateoas.getLinks(plan));
         jgen.writeEndObject();
     }
 
@@ -70,6 +149,21 @@ public class NationalIdentifierSerializer
         jgen.writeEndObject();
     }
 
+    // FIXME figure out how to avoid duplicating code with SocialSecurityNumberSerializer
+    public void printSocialSecurityNumber
+        (ISocialSecurityNumberEntity socialSecurityNumber,
+         HateoasNoarkObject socialSecurityNumberHateoas,
+         JsonGenerator jgen)
+        throws IOException {
+        jgen.writeStartObject();
+        printSystemIdEntity(jgen, socialSecurityNumber);
+        jgen.writeStringField(SOCIAL_SECURITY_NUMBER,
+                socialSecurityNumber.getSocialSecurityNumber());
+        printHateoasLinks(jgen, socialSecurityNumberHateoas.
+                getLinks(socialSecurityNumber));
+        jgen.writeEndObject();
+    }
+
     // FIXME figure out how to avoid duplicating code with UnitSerializer
     private void printUnit(IUnitEntity unit,
                                HateoasNoarkObject unitHateoas,
@@ -93,13 +187,23 @@ public class NationalIdentifierSerializer
 
         if (id instanceof Building) {
             printBuilding((IBuildingEntity)id, nationalIdentifierHateoas, jgen);
-        }
-        if (id instanceof Position) {
+        } else if (id instanceof CadastralUnit) {
+            printCadastralUnit((ICadastralUnitEntity)id, nationalIdentifierHateoas, jgen);
+        } else if (id instanceof DNumber) {
+            printDNumber((IDNumberEntity)id, nationalIdentifierHateoas, jgen);
+        } else if (id instanceof Plan) {
+            printPlan((IPlanEntity)id, nationalIdentifierHateoas, jgen);
+        } else if (id instanceof Position) {
             printPosition((IPositionEntity)id, nationalIdentifierHateoas, jgen);
-        }
-        if (id instanceof Unit) {
+        } else if (id instanceof SocialSecurityNumber) {
+            printSocialSecurityNumber
+                ((ISocialSecurityNumberEntity)id, nationalIdentifierHateoas, jgen);
+        } else if (id instanceof Unit) {
             printUnit((IUnitEntity)id, nationalIdentifierHateoas, jgen);
+        } else {
+            logger.warn("Unhandled national identifier "
+                        + noarkSystemIdEntity.getBaseTypeName()
+                        + " not serialized");
         }
-        // FIXME add the remaining identifiers
     }
 }

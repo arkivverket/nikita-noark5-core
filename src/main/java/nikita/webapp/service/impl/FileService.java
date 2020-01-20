@@ -5,11 +5,19 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
+import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
+import nikita.common.model.noark5.v5.nationalidentifier.Plan;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
 import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
@@ -158,11 +166,45 @@ public class FileService
     }
 
     @Override
+    public CadastralUnitHateoas
+    createCadastralUnitAssociatedWithFile(
+            @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
+        return nationalIdentifierService.
+                createNewCadastralUnit(cadastralUnit, getFileOrThrow(systemID));
+    }
+
+    @Override
+    public DNumberHateoas
+    createDNumberAssociatedWithFile(
+            @NotNull String systemID, @NotNull DNumber dNumber) {
+        return nationalIdentifierService.
+                createNewDNumber(dNumber, getFileOrThrow(systemID));
+    }
+
+    @Override
+    public PlanHateoas
+    createPlanAssociatedWithFile(
+            @NotNull String systemID, @NotNull Plan plan) {
+        return nationalIdentifierService.
+                createNewPlan(plan, getFileOrThrow(systemID));
+    }
+
+    @Override
     public PositionHateoas
     createPositionAssociatedWithFile(
             @NotNull String systemID, @NotNull Position position) {
         return nationalIdentifierService.
                 createNewPosition(position, getFileOrThrow(systemID));
+    }
+
+    @Override
+    public SocialSecurityNumberHateoas
+    createSocialSecurityNumberAssociatedWithFile
+        (@NotNull String systemID,
+         @NotNull SocialSecurityNumber socialSecurityNumber) {
+        return nationalIdentifierService.
+                createNewSocialSecurityNumber(socialSecurityNumber,
+                                              getFileOrThrow(systemID));
     }
 
     @Override
@@ -376,8 +418,28 @@ public class FileService
     }
 
     @Override
+    public CadastralUnitHateoas generateDefaultCadastralUnit() {
+        return nationalIdentifierService.generateDefaultCadastralUnit();
+    }
+
+    @Override
+    public DNumberHateoas generateDefaultDNumber() {
+        return nationalIdentifierService.generateDefaultDNumber();
+    }
+
+    @Override
+    public PlanHateoas generateDefaultPlan() {
+        return nationalIdentifierService.generateDefaultPlan();
+    }
+
+    @Override
     public PositionHateoas generateDefaultPosition() {
         return nationalIdentifierService.generateDefaultPosition();
+    }
+
+    @Override
+    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
+        return nationalIdentifierService.generateDefaultSocialSecurityNumber();
     }
 
     @Override

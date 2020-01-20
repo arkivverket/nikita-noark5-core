@@ -3,11 +3,19 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
+import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
+import nikita.common.model.noark5.v5.nationalidentifier.Plan;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
 import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.repository.n5v5.INationalIdentifierRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -67,7 +75,7 @@ public class NationalIdentifierService
         nationalIdentifierRepository.save(building);
         BuildingHateoas buildingHateoas = new BuildingHateoas(building);
         nationalIdentifierHateoasHandler
-	    .addLinks(buildingHateoas, new Authorisation());
+            .addLinks(buildingHateoas, new Authorisation());
         return buildingHateoas;
     }
 
@@ -82,6 +90,80 @@ public class NationalIdentifierService
         nationalIdentifierHateoasHandler.addLinks(
                 buildingHateoas, new Authorisation());
         return buildingHateoas;
+    }
+
+    @Override
+    public CadastralUnitHateoas createNewCadastralUnit
+            (@NotNull CadastralUnit cadastralUnit, @NotNull Record record) {
+        record.addNationalIdentifier(cadastralUnit);
+        cadastralUnit.setReferenceRecord(record);
+        nationalIdentifierRepository.save(cadastralUnit);
+        CadastralUnitHateoas cadastralUnitHateoas =
+            new CadastralUnitHateoas(cadastralUnit);
+        nationalIdentifierHateoasHandler
+            .addLinks(cadastralUnitHateoas, new Authorisation());
+        return cadastralUnitHateoas;
+    }
+
+    @Override
+    public CadastralUnitHateoas createNewCadastralUnit
+            (@NotNull CadastralUnit cadastralUnit, @NotNull File file) {
+        file.addNationalIdentifier(cadastralUnit);
+        cadastralUnit.setReferenceFile(file);
+        nationalIdentifierRepository.save(cadastralUnit);
+        CadastralUnitHateoas cadastralUnitHateoas =
+            new CadastralUnitHateoas(cadastralUnit);
+        nationalIdentifierHateoasHandler
+            .addLinks(cadastralUnitHateoas, new Authorisation());
+        return cadastralUnitHateoas;
+    }
+
+    @Override
+    public DNumberHateoas createNewDNumber
+            (@NotNull DNumber dNumber, @NotNull Record record) {
+        record.addNationalIdentifier(dNumber);
+        dNumber.setReferenceRecord(record);
+        nationalIdentifierRepository.save(dNumber);
+        DNumberHateoas dNumberHateoas = new DNumberHateoas(dNumber);
+        nationalIdentifierHateoasHandler
+            .addLinks(dNumberHateoas, new Authorisation());
+        return dNumberHateoas;
+    }
+
+    @Override
+    public DNumberHateoas createNewDNumber
+            (@NotNull DNumber dNumber, @NotNull File file) {
+        file.addNationalIdentifier(dNumber);
+        dNumber.setReferenceFile(file);
+        nationalIdentifierRepository.save(dNumber);
+        DNumberHateoas dNumberHateoas = new DNumberHateoas(dNumber);
+        nationalIdentifierHateoasHandler
+            .addLinks(dNumberHateoas, new Authorisation());
+        return dNumberHateoas;
+    }
+
+    @Override
+    public PlanHateoas createNewPlan
+            (@NotNull Plan plan, @NotNull Record record) {
+        record.addNationalIdentifier(plan);
+        plan.setReferenceRecord(record);
+        nationalIdentifierRepository.save(plan);
+        PlanHateoas planHateoas = new PlanHateoas(plan);
+        nationalIdentifierHateoasHandler
+            .addLinks(planHateoas, new Authorisation());
+        return planHateoas;
+    }
+
+    @Override
+    public PlanHateoas createNewPlan
+            (@NotNull Plan plan, @NotNull File file) {
+        file.addNationalIdentifier(plan);
+        plan.setReferenceFile(file);
+        nationalIdentifierRepository.save(plan);
+        PlanHateoas planHateoas = new PlanHateoas(plan);
+        nationalIdentifierHateoasHandler
+            .addLinks(planHateoas, new Authorisation());
+        return planHateoas;
     }
 
     @Override
@@ -111,6 +193,32 @@ public class NationalIdentifierService
     }
 
     @Override
+    public SocialSecurityNumberHateoas createNewSocialSecurityNumber
+            (@NotNull SocialSecurityNumber socialSecurityNumber, @NotNull Record record) {
+        record.addNationalIdentifier(socialSecurityNumber);
+        socialSecurityNumber.setReferenceRecord(record);
+        nationalIdentifierRepository.save(socialSecurityNumber);
+        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
+            new SocialSecurityNumberHateoas(socialSecurityNumber);
+        nationalIdentifierHateoasHandler
+            .addLinks(socialSecurityNumberHateoas, new Authorisation());
+        return socialSecurityNumberHateoas;
+    }
+
+    @Override
+    public SocialSecurityNumberHateoas createNewSocialSecurityNumber
+            (@NotNull SocialSecurityNumber socialSecurityNumber, @NotNull File file) {
+        file.addNationalIdentifier(socialSecurityNumber);
+        socialSecurityNumber.setReferenceFile(file);
+        nationalIdentifierRepository.save(socialSecurityNumber);
+        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
+            new SocialSecurityNumberHateoas(socialSecurityNumber);
+        nationalIdentifierHateoasHandler.addLinks(
+                socialSecurityNumberHateoas, new Authorisation());
+        return socialSecurityNumberHateoas;
+    }
+
+    @Override
     public UnitHateoas createNewUnit
             (@NotNull Unit unit, @NotNull Record record) {
         // bidirectional relationship @ManyToMany, set both sides of
@@ -120,7 +228,7 @@ public class NationalIdentifierService
         nationalIdentifierRepository.save(unit);
         UnitHateoas unitHateoas = new UnitHateoas(unit);
         nationalIdentifierHateoasHandler
-	    .addLinks(unitHateoas, new Authorisation());
+            .addLinks(unitHateoas, new Authorisation());
         return unitHateoas;
     }
 
@@ -134,7 +242,7 @@ public class NationalIdentifierService
         nationalIdentifierRepository.save(unit);
         UnitHateoas unitHateoas = new UnitHateoas(unit);
         nationalIdentifierHateoasHandler
-	    .addLinks(unitHateoas, new Authorisation());
+            .addLinks(unitHateoas, new Authorisation());
         return unitHateoas;
     }
 
@@ -142,15 +250,15 @@ public class NationalIdentifierService
     public Building updateBuilding(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Building incomingBuilding) {
-	Building existingBuilding =
-	    (Building) getNationalIdentifierOrThrow(systemId);
+        Building existingBuilding =
+            (Building) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
-	existingBuilding.setBuildingNumber
-	    (incomingBuilding.getBuildingNumber());
-	existingBuilding.setContinuousNumberingOfBuildingChange
-	    (incomingBuilding.getContinuousNumberingOfBuildingChange());
+        existingBuilding.setBuildingNumber
+            (incomingBuilding.getBuildingNumber());
+        existingBuilding.setContinuousNumberingOfBuildingChange
+            (incomingBuilding.getContinuousNumberingOfBuildingChange());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
@@ -161,11 +269,85 @@ public class NationalIdentifierService
     }
 
     @Override
+    public CadastralUnit updateCadastralUnit(
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull CadastralUnit incomingCadastralUnit) {
+        CadastralUnit existingCadastralUnit =
+            (CadastralUnit) getNationalIdentifierOrThrow(systemId);
+
+        // Copy all the values you are allowed to copy ....
+        // First the values
+        existingCadastralUnit.setMunicipalityNumber
+            (incomingCadastralUnit.getMunicipalityNumber());
+        existingCadastralUnit.setHoldingNumber
+            (incomingCadastralUnit.getHoldingNumber());
+        existingCadastralUnit.setSubHoldingNumber
+            (incomingCadastralUnit.getSubHoldingNumber());
+        existingCadastralUnit.setLeaseNumber
+            (incomingCadastralUnit.getLeaseNumber());
+        existingCadastralUnit.setSectionNumber
+            (incomingCadastralUnit.getSectionNumber());
+
+        // Note setVersion can potentially result in a
+        // NoarkConcurrencyException exception as it checks the ETAG
+        // value
+        existingCadastralUnit.setVersion(version);
+        nationalIdentifierRepository.save(existingCadastralUnit);
+        return existingCadastralUnit;
+    }
+
+    @Override
+    public DNumber updateDNumber(
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull DNumber incomingDNumber) {
+        DNumber existingDNumber =
+            (DNumber) getNationalIdentifierOrThrow(systemId);
+
+        // Copy all the values you are allowed to copy ....
+        // First the values
+        existingDNumber.setdNumber
+            (incomingDNumber.getdNumber());
+
+        // Note setVersion can potentially result in a
+        // NoarkConcurrencyException exception as it checks the ETAG
+        // value
+        existingDNumber.setVersion(version);
+        nationalIdentifierRepository.save(existingDNumber);
+        return existingDNumber;
+    }
+
+    @Override
+    public Plan updatePlan(
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull Plan incomingPlan) {
+        Plan existingPlan =
+            (Plan) getNationalIdentifierOrThrow(systemId);
+
+        // Copy all the values you are allowed to copy ....
+        // First the values
+        existingPlan.setMunicipalityNumber
+            (incomingPlan.getMunicipalityNumber());
+        existingPlan.setCountyNumber
+            (incomingPlan.getCountyNumber());
+        existingPlan.setCountry
+            (incomingPlan.getCountry());
+        existingPlan.setPlanIdentification
+            (incomingPlan.getPlanIdentification());
+
+        // Note setVersion can potentially result in a
+        // NoarkConcurrencyException exception as it checks the ETAG
+        // value
+        existingPlan.setVersion(version);
+        nationalIdentifierRepository.save(existingPlan);
+        return existingPlan;
+    }
+
+    @Override
     public Position updatePosition(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Position incomingPosition) {
-	Position existingPosition =
-	    (Position) getNationalIdentifierOrThrow(systemId);
+        Position existingPosition =
+            (Position) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
@@ -186,16 +368,36 @@ public class NationalIdentifierService
     }
 
     @Override
-    public Unit updateUnit(
+    public SocialSecurityNumber updateSocialSecurityNumber(
             @NotNull String systemId, @NotNull Long version,
-            @NotNull Unit incomingUnit) {
-	Unit existingUnit =
-	    (Unit) getNationalIdentifierOrThrow(systemId);
+            @NotNull SocialSecurityNumber incomingSocialSecurityNumber) {
+        SocialSecurityNumber existingSocialSecurityNumber =
+            (SocialSecurityNumber) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
-	existingUnit
-	    .setOrganisationNumber(incomingUnit.getOrganisationNumber());
+        existingSocialSecurityNumber.setSocialSecurityNumber
+            (incomingSocialSecurityNumber.getSocialSecurityNumber());
+
+        // Note setVersion can potentially result in a
+        // NoarkConcurrencyException exception as it checks the ETAG
+        // value
+        existingSocialSecurityNumber.setVersion(version);
+        nationalIdentifierRepository.save(existingSocialSecurityNumber);
+        return existingSocialSecurityNumber;
+    }
+
+    @Override
+    public Unit updateUnit(
+            @NotNull String systemId, @NotNull Long version,
+            @NotNull Unit incomingUnit) {
+        Unit existingUnit =
+            (Unit) getNationalIdentifierOrThrow(systemId);
+
+        // Copy all the values you are allowed to copy ....
+        // First the values
+        existingUnit
+            .setOrganisationNumber(incomingUnit.getOrganisationNumber());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
@@ -211,7 +413,27 @@ public class NationalIdentifierService
     }
 
     @Override
+    public void deleteCadastralUnit(@NotNull String systemId) {
+        deleteEntity(getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public void deleteDNumber(@NotNull String systemId) {
+        deleteEntity(getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public void deletePlan(@NotNull String systemId) {
+        deleteEntity(getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
     public void deletePosition(@NotNull String systemId) {
+        deleteEntity(getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public void deleteSocialSecurityNumber(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
@@ -251,7 +473,7 @@ public class NationalIdentifierService
     @Override
     public BuildingHateoas generateDefaultBuilding() {
         Building building = new Building();
-	// FIXME find way to return empty template
+        // FIXME find way to return empty template
         building.setBuildingNumber(100);
         building.setContinuousNumberingOfBuildingChange(100);
         BuildingHateoas buildingHateoas =
@@ -259,6 +481,59 @@ public class NationalIdentifierService
         nationalIdentifierHateoasHandler
                 .addLinksOnTemplate(buildingHateoas, new Authorisation());
         return buildingHateoas;
+    }
+
+    /**
+     * Generate a Default CadastralUnit object.
+     *
+     * @return the CadastralUnit object wrapped as a CadastralUnitHateoas object
+     */
+    @Override
+    public CadastralUnitHateoas generateDefaultCadastralUnit() {
+        CadastralUnit cadastralUnit = new CadastralUnit();
+        // FIXME find way to return empty template
+        cadastralUnit.setMunicipalityNumber("0101");
+        cadastralUnit.setHoldingNumber(100);
+        cadastralUnit.setSubHoldingNumber(100);
+        CadastralUnitHateoas cadastralUnitHateoas =
+                new CadastralUnitHateoas(cadastralUnit);
+        nationalIdentifierHateoasHandler
+                .addLinksOnTemplate(cadastralUnitHateoas, new Authorisation());
+        return cadastralUnitHateoas;
+    }
+
+    /**
+     * Generate a Default DNumber object.
+     *
+     * @return the DNumber object wrapped as a DNumberHateoas object
+     */
+    @Override
+    public DNumberHateoas generateDefaultDNumber() {
+        DNumber dNumber = new DNumber();
+        // FIXME find way to return empty template
+        dNumber.setdNumber("01010101011");
+        DNumberHateoas dNumberHateoas =
+                new DNumberHateoas(dNumber);
+        nationalIdentifierHateoasHandler
+                .addLinksOnTemplate(dNumberHateoas, new Authorisation());
+        return dNumberHateoas;
+    }
+
+    /**
+     * Generate a Default Plan object.
+     *
+     * @return the Plan object wrapped as a PlanHateoas object
+     */
+    @Override
+    public PlanHateoas generateDefaultPlan() {
+        Plan plan = new Plan();
+        // FIXME find way to return empty template
+        plan.setPlanIdentification("0101");
+        PlanHateoas planHateoas =
+                new PlanHateoas(plan);
+        nationalIdentifierHateoasHandler
+                .addLinksOnTemplate(planHateoas, new Authorisation());
+        return planHateoas;
     }
 
     /**
@@ -283,6 +558,23 @@ public class NationalIdentifierService
     }
 
     /**
+     * Generate a Default SocialSecurityNumber object.
+     *
+     * @return the SocialSecurityNumber object wrapped as a SocialSecurityNumberHateoas object
+     */
+    @Override
+    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
+        SocialSecurityNumber socialSecurityNumber = new SocialSecurityNumber();
+        // FIXME find way to return empty template
+        socialSecurityNumber.setSocialSecurityNumber("01010101011");
+        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
+                new SocialSecurityNumberHateoas(socialSecurityNumber);
+        nationalIdentifierHateoasHandler
+                .addLinksOnTemplate(socialSecurityNumberHateoas, new Authorisation());
+        return socialSecurityNumberHateoas;
+    }
+
+    /**
      * Generate a Default Unit object.
      *
      * @return the Unit object wrapped as a UnitHateoas object
@@ -290,7 +582,7 @@ public class NationalIdentifierService
     @Override
     public UnitHateoas generateDefaultUnit() {
         Unit unit = new Unit();
-	// FIXME find way to return empty template with only _links
+        // FIXME find way to return empty template with only _links
         unit.setOrganisationNumber("010101010");
         UnitHateoas unitHateoas = new UnitHateoas(unit);
         nationalIdentifierHateoasHandler

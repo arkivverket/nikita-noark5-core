@@ -5,7 +5,11 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
+import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
+import nikita.common.model.noark5.v5.nationalidentifier.Plan;
 import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
 import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
@@ -16,8 +20,12 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInte
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
@@ -407,11 +415,45 @@ public class RecordService
     }
 
     @Override
+    public CadastralUnitHateoas
+    createCadastralUnitAssociatedWithRecord(
+            @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
+        return nationalIdentifierService.
+                createNewCadastralUnit(cadastralUnit, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public DNumberHateoas
+    createDNumberAssociatedWithRecord(
+            @NotNull String systemID, @NotNull DNumber dNumber) {
+        return nationalIdentifierService.
+                createNewDNumber(dNumber, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public PlanHateoas
+    createPlanAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Plan plan) {
+        return nationalIdentifierService.
+                createNewPlan(plan, getRecordOrThrow(systemID));
+    }
+
+    @Override
     public PositionHateoas
     createPositionAssociatedWithRecord(
             @NotNull String systemID, @NotNull Position position) {
         return nationalIdentifierService.
                 createNewPosition(position, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public SocialSecurityNumberHateoas
+    createSocialSecurityNumberAssociatedWithRecord(
+            @NotNull String systemID,
+            @NotNull SocialSecurityNumber socialSecurityNumber) {
+        return nationalIdentifierService
+            .createNewSocialSecurityNumber(socialSecurityNumber,
+                                           getRecordOrThrow(systemID));
     }
 
     @Override
@@ -659,8 +701,28 @@ public class RecordService
     }
 
     @Override
+    public CadastralUnitHateoas generateDefaultCadastralUnit() {
+        return nationalIdentifierService.generateDefaultCadastralUnit();
+    }
+
+    @Override
+    public DNumberHateoas generateDefaultDNumber() {
+        return nationalIdentifierService.generateDefaultDNumber();
+    }
+
+    @Override
+    public PlanHateoas generateDefaultPlan() {
+        return nationalIdentifierService.generateDefaultPlan();
+    }
+
+    @Override
     public PositionHateoas generateDefaultPosition() {
         return nationalIdentifierService.generateDefaultPosition();
+    }
+
+    @Override
+    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
+        return nationalIdentifierService.generateDefaultSocialSecurityNumber();
     }
 
     @Override
