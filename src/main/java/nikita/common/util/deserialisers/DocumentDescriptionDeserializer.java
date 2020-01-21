@@ -150,7 +150,7 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
-            logger.info("Payload contains " + currentNode.textValue() + ". " +
+            logger.info("Payload contains " + LINKS + ". " +
                     "This value is being ignored.");
             objectNode.remove(LINKS);
         }
