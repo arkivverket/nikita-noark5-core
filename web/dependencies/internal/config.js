@@ -117,8 +117,10 @@ var caseFileStatusList = [
 ];
 
 var seriesStatusList = [
-    {id: 'O', value: 'Opprettet'},
-    {id: 'A', value: 'Avsluttet'}];
+    {id: 'P', value: 'Avsluttet periode'},
+    {id: 'U', value: 'Uaktuelle mapper'},
+    {id: 'O', value: 'Overlappingsperiode'},
+    {id: 'A', value: 'Aktiv periode'}];
 
 var associatedWithRecordAsList = [
     {id: 'H', value: 'Hoveddokument'},

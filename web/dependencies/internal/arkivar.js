@@ -247,8 +247,8 @@ app.controller('ArkivarController',
                         tittel: $scope.newTitleForSeries,
                         beskrivelse: $scope.newDescriptionForSeries,
                         arkivdelstatus: {
-			    kode: "O",
-			    kodenavn: "Opprettet"
+			    kode: "A",
+			    kodenavn: "Aktiv periode"
 			}
                     },
                 }).then(function successCallback(response) {
