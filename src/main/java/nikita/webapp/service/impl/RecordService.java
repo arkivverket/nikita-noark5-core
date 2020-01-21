@@ -4,6 +4,13 @@ import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
+import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
+import nikita.common.model.noark5.v5.nationalidentifier.Plan;
+import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
@@ -12,6 +19,14 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
@@ -23,6 +38,8 @@ import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
+import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
@@ -71,8 +88,10 @@ public class RecordService
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private ICorrespondencePartService correspondencePartService;
     private IDocumentMediumService documentMediumService;
+    private INationalIdentifierService nationalIdentifierService;
     private IPartService partService;
     private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
+    private INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
     private IPartHateoasHandler partHateoasHandler;
     private IAuthorRepository authorRepository;
     private IAuthorHateoasHandler authorHateoasHandler;
@@ -91,8 +110,10 @@ public class RecordService
             IDocumentDescriptionRepository documentDescriptionRepository,
             ICorrespondencePartService correspondencePartService,
             IDocumentMediumService documentMediumService,
+            INationalIdentifierService nationalIdentifierService,
             IPartService partService,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
+            INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
             IPartHateoasHandler partHateoasHandler,
             IAuthorRepository authorRepository,
             IAuthorHateoasHandler authorHateoasHandler) {
@@ -109,8 +130,10 @@ public class RecordService
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.correspondencePartService = correspondencePartService;
         this.documentMediumService = documentMediumService;
+        this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
+        this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
         this.authorRepository = authorRepository;
         this.authorHateoasHandler = authorHateoasHandler;
@@ -296,6 +319,18 @@ public class RecordService
         return partHateoas;
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord(
+            @NotNull final String systemID) {
+        NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
+                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
+                        getReferenceNationalIdentifier());
+        nationalIdentifierHateoasHandler
+            .addLinks(niHateoas, new Authorisation());
+        return niHateoas;
+    }
+
     /**
      * Create a CorrespondencePartPerson object and associate it with the
      * identified record
@@ -369,6 +404,64 @@ public class RecordService
         return correspondencePartService.
                 createNewCorrespondencePartUnit(correspondencePart,
                         getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public BuildingHateoas
+    createBuildingAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Building building) {
+        return nationalIdentifierService.
+                createNewBuilding(building, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public CadastralUnitHateoas
+    createCadastralUnitAssociatedWithRecord(
+            @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
+        return nationalIdentifierService.
+                createNewCadastralUnit(cadastralUnit, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public DNumberHateoas
+    createDNumberAssociatedWithRecord(
+            @NotNull String systemID, @NotNull DNumber dNumber) {
+        return nationalIdentifierService.
+                createNewDNumber(dNumber, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public PlanHateoas
+    createPlanAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Plan plan) {
+        return nationalIdentifierService.
+                createNewPlan(plan, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public PositionHateoas
+    createPositionAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Position position) {
+        return nationalIdentifierService.
+                createNewPosition(position, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public SocialSecurityNumberHateoas
+    createSocialSecurityNumberAssociatedWithRecord(
+            @NotNull String systemID,
+            @NotNull SocialSecurityNumber socialSecurityNumber) {
+        return nationalIdentifierService
+            .createNewSocialSecurityNumber(socialSecurityNumber,
+                                           getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public UnitHateoas
+    createUnitAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Unit unit) {
+        return nationalIdentifierService.
+                createNewUnit(unit, getRecordOrThrow(systemID));
     }
 
     /**
@@ -601,6 +694,42 @@ public class RecordService
     public long deleteAllByOwnedBy() {
         return recordRepository.deleteByOwnedBy(getUser());
     }
+
+    @Override
+    public BuildingHateoas generateDefaultBuilding() {
+        return nationalIdentifierService.generateDefaultBuilding();
+    }
+
+    @Override
+    public CadastralUnitHateoas generateDefaultCadastralUnit() {
+        return nationalIdentifierService.generateDefaultCadastralUnit();
+    }
+
+    @Override
+    public DNumberHateoas generateDefaultDNumber() {
+        return nationalIdentifierService.generateDefaultDNumber();
+    }
+
+    @Override
+    public PlanHateoas generateDefaultPlan() {
+        return nationalIdentifierService.generateDefaultPlan();
+    }
+
+    @Override
+    public PositionHateoas generateDefaultPosition() {
+        return nationalIdentifierService.generateDefaultPosition();
+    }
+
+    @Override
+    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
+        return nationalIdentifierService.generateDefaultSocialSecurityNumber();
+    }
+
+    @Override
+    public UnitHateoas generateDefaultUnit() {
+        return nationalIdentifierService.generateDefaultUnit();
+    }
+
     // All HELPER operations
 
     /**

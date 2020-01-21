@@ -12,7 +12,22 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.nationalidentifier.Building;
+import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
+import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
+import nikita.common.model.noark5.v5.nationalidentifier.Plan;
+import nikita.common.model.noark5.v5.nationalidentifier.Position;
+import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
+import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.secondary.Author;
 import org.springframework.http.ResponseEntity;
 
@@ -43,6 +58,9 @@ public interface IRecordService {
 
     PartHateoas getPartAssociatedWithRecord(final String systemID);
 
+    NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord
+	(@NotNull final String systemID);
+
     PartPersonHateoas generateDefaultPartPerson(
             String recordSystemId);
 
@@ -66,6 +84,28 @@ public interface IRecordService {
 
     PartUnitHateoas createPartUnitAssociatedWithRecord(
             String systemID, PartUnit partUnit);
+
+    BuildingHateoas createBuildingAssociatedWithRecord
+	(@NotNull String systemID, @NotNull Building building);
+
+    CadastralUnitHateoas createCadastralUnitAssociatedWithRecord
+	(@NotNull String systemID, @NotNull CadastralUnit cadastralUnit);
+
+    DNumberHateoas createDNumberAssociatedWithRecord
+	(@NotNull String systemID, @NotNull DNumber dNumber);
+
+    PlanHateoas createPlanAssociatedWithRecord
+	(@NotNull String systemID, @NotNull Plan plan);
+
+    PositionHateoas createPositionAssociatedWithRecord
+	(@NotNull String systemID, @NotNull Position position);
+
+    SocialSecurityNumberHateoas createSocialSecurityNumberAssociatedWithRecord
+        (@NotNull String systemID,
+         @NotNull SocialSecurityNumber socialSecurityNumber);
+
+    UnitHateoas createUnitAssociatedWithRecord
+	(@NotNull String systemID, @NotNull Unit unit);
 
     // -- All READ operations
     List<Record> findAll();
@@ -100,4 +140,18 @@ public interface IRecordService {
     AuthorHateoas findAllAuthorWithRecordBySystemId(String systemID);
 
     AuthorHateoas generateDefaultAuthor(String systemID);
+
+    BuildingHateoas generateDefaultBuilding();
+
+    CadastralUnitHateoas generateDefaultCadastralUnit();
+
+    DNumberHateoas generateDefaultDNumber();
+
+    PlanHateoas generateDefaultPlan();
+
+    PositionHateoas generateDefaultPosition();
+
+    SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber();
+
+    UnitHateoas generateDefaultUnit();
 }

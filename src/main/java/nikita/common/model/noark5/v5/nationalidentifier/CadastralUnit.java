@@ -19,7 +19,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
 import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CADASTRAL_UNIT;
 import static nikita.common.config.Constants.TABLE_CADASTRAL;
+import static nikita.common.config.N5ResourceMappings.CADASTRAL_UNIT;
 
 @Entity
 @Table(name = TABLE_CADASTRAL)
@@ -115,6 +117,16 @@ public class CadastralUnit
     @Override
     public void setSectionNumber(Integer sectionNumber) {
         this.sectionNumber = sectionNumber;
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return CADASTRAL_UNIT;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_CADASTRAL_UNIT;
     }
 
     @Override

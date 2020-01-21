@@ -102,27 +102,6 @@ public interface IFileHateoasHandler
     void addNewUnit(ISystemId entity,
                     IHateoasNoarkObject hateoasNoarkObject);
 
-    void addBuilding(ISystemId entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
     void addNationalIdentifier(ISystemId entity,
                      IHateoasNoarkObject hateoasNoarkObject);
-
-    void addCadastralUnit(ISystemId entity,
-                          IHateoasNoarkObject hateoasNoarkObject);
-
-    void addDNumber(ISystemId entity,
-                    IHateoasNoarkObject hateoasNoarkObject);
-
-    void addPlan(ISystemId entity,
-                 IHateoasNoarkObject hateoasNoarkObject);
-
-    void addPosition(ISystemId entity,
-                     IHateoasNoarkObject hateoasNoarkObject);
-
-    void addSocialSecurityNumber(ISystemId entity,
-                                 IHateoasNoarkObject hateoasNoarkObject);
-
-    void addUnit(ISystemId entity,
-                 IHateoasNoarkObject hateoasNoarkObject);
 }

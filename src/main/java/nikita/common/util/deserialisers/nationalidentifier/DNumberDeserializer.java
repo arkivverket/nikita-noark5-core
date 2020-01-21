@@ -8,15 +8,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.D_NUMBER_FIELD;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
 
 public class DNumberDeserializer
         extends JsonDeserializer {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(DNumberDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -37,6 +43,13 @@ public class DNumberDeserializer
         if (null != currentNode) {
             dNumber.setdNumber(currentNode.textValue());
             objectNode.remove(D_NUMBER_FIELD);
+        }
+
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.info("Payload contains " + currentNode.textValue() + ". " +
+                    "This value is being ignored.");
+            objectNode.remove(LINKS);
         }
 
         // Check that there are no additional values left after processing the
