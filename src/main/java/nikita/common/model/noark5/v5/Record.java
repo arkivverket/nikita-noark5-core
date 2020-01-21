@@ -7,7 +7,7 @@ import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.interfaces.IPart;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePart;
-import nikita.common.model.noark5.v5.nationalidentifier.*;
+import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
 import nikita.webapp.hateoas.RecordHateoasHandler;
@@ -219,7 +219,7 @@ public class Record
     private Screening referenceScreening;
 
     // Links to NationalIdentifiers
-    @OneToMany(mappedBy = "referenceFile")
+    @OneToMany(mappedBy = "referenceRecord")
     private List<NationalIdentifier> referenceNationalIdentifier =
             new ArrayList<>();
 
