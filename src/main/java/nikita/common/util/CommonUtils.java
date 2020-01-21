@@ -1089,6 +1089,7 @@ public final class CommonUtils {
             }
 
             public static void deserialiseSimpleAddressEntity(
+                    String addressType,
                     ISimpleAddressEntity simpleAddress, ObjectNode objectNode,
                     StringBuilder errors) {
                 if (simpleAddress != null) {
@@ -1122,7 +1123,11 @@ public final class CommonUtils {
                     if (null != currentNode) {
                         simpleAddress.setPostalTown(currentNode.textValue());
                         objectNode.remove(POSTAL_TOWN);
-                    }
+                    } else {
+			errors.append(addressType
+				      + "." + POSTAL_TOWN
+				      + " is missing. ");
+		    }
                     // Deserialize landkode
                     currentNode = objectNode.get(COUNTRY_CODE);
                     if (null != currentNode) {
@@ -1145,9 +1150,8 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     PostalAddress postalAddress = new PostalAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    deserialiseSimpleAddressEntity(
-                            simpleAddress,
-                            currentNode.deepCopy(), errors);
+                    deserialiseSimpleAddressEntity(POSTAL_ADDRESS,
+                            simpleAddress, currentNode.deepCopy(), errors);
                     postalAddress.setSimpleAddress(simpleAddress);
                     postalAddress.
                             setCorrespondencePartPerson(
@@ -1162,9 +1166,8 @@ public final class CommonUtils {
                     ResidingAddress residingAddress =
                             new ResidingAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    deserialiseSimpleAddressEntity(
-                            simpleAddress,
-                            currentNode.deepCopy(), errors);
+                    deserialiseSimpleAddressEntity(RESIDING_ADDRESS,
+                            simpleAddress, currentNode.deepCopy(), errors);
                     residingAddress.setSimpleAddress(simpleAddress);
                     residingAddress.
                             setCorrespondencePartPerson(
@@ -1206,9 +1209,8 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     PostalAddress postalAddress = new PostalAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    deserialiseSimpleAddressEntity(
-                            simpleAddress,
-                            currentNode.deepCopy(), errors);
+                    deserialiseSimpleAddressEntity(POSTAL_ADDRESS,
+                            simpleAddress, currentNode.deepCopy(), errors);
                     postalAddress.setSimpleAddress(simpleAddress);
                     postalAddress.setPartPerson((PartPerson) partPersonEntity);
                     partPersonEntity.setPostalAddress(postalAddress);
@@ -1221,9 +1223,8 @@ public final class CommonUtils {
                     ResidingAddress residingAddress =
                             new ResidingAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    deserialiseSimpleAddressEntity(
-                            simpleAddress,
-                            currentNode.deepCopy(), errors);
+                    deserialiseSimpleAddressEntity(RESIDING_ADDRESS,
+                            simpleAddress, currentNode.deepCopy(), errors);
                     residingAddress.setSimpleAddress(simpleAddress);
                     residingAddress.setPartPerson((PartPerson) partPersonEntity);
                     partPersonEntity.setResidingAddress(residingAddress);
@@ -1293,8 +1294,8 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     PostalAddress postalAddressEntity = new PostalAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    deserialiseSimpleAddressEntity(simpleAddress,
-                            currentNode.deepCopy(), errors);
+                    deserialiseSimpleAddressEntity(POSTAL_ADDRESS,
+                            simpleAddress, currentNode.deepCopy(), errors);
                     postalAddressEntity.setSimpleAddress(simpleAddress);
                     partUnit.setPostalAddress(postalAddressEntity);
                     objectNode.remove(POSTAL_ADDRESS);
@@ -1306,8 +1307,8 @@ public final class CommonUtils {
                     BusinessAddress businessAddressEntity =
                             new BusinessAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    deserialiseSimpleAddressEntity(simpleAddress,
-                            currentNode.deepCopy(), errors);
+                    deserialiseSimpleAddressEntity(BUSINESS_ADDRESS,
+                            simpleAddress, currentNode.deepCopy(), errors);
                     businessAddressEntity.setSimpleAddress(simpleAddress);
                     partUnit.setBusinessAddress(
                             businessAddressEntity);
@@ -1452,8 +1453,8 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     PostalAddress postalAddressEntity = new PostalAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    deserialiseSimpleAddressEntity(simpleAddress,
-                            currentNode.deepCopy(), errors);
+                    deserialiseSimpleAddressEntity(POSTAL_ADDRESS,
+                            simpleAddress, currentNode.deepCopy(), errors);
                     postalAddressEntity.setSimpleAddress(simpleAddress);
                     correspondencePartUnit.
                             setPostalAddress(postalAddressEntity);
@@ -1466,8 +1467,8 @@ public final class CommonUtils {
                     BusinessAddress businessAddressEntity =
                             new BusinessAddress();
                     SimpleAddress simpleAddress = new SimpleAddress();
-                    deserialiseSimpleAddressEntity(simpleAddress,
-                            currentNode.deepCopy(), errors);
+                    deserialiseSimpleAddressEntity(BUSINESS_ADDRESS,
+                            simpleAddress, currentNode.deepCopy(), errors);
                     businessAddressEntity.setSimpleAddress(simpleAddress);
                     correspondencePartUnit.setBusinessAddress(
                             businessAddressEntity);
