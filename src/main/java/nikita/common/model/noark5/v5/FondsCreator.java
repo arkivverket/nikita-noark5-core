@@ -19,8 +19,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_FONDS_CREATOR;
-import static nikita.common.config.Constants.TABLE_FONDS_CREATOR;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.FONDS_CREATOR;
 
 @Entity
@@ -51,8 +50,9 @@ public class FondsCreator
     /**
      * M021 - beskrivelse (xs:string)
      */
-    @Column(name = "description")
+    @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
     @Audited
+    @JsonProperty(DESCRIPTION)
     private String description;
 
     // Links to Fonds

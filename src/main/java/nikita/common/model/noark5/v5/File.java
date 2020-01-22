@@ -50,7 +50,7 @@ public class File
     /**
      * M025 - offentligTittel (xs:string)
      */
-    @Column(name = FILE_PUBLIC_TITLE_ENG)
+    @Column(name = FILE_PUBLIC_TITLE_ENG, length = TITLE_LENGTH)
     @Audited
     @JsonProperty(FILE_PUBLIC_TITLE)
     private String officialTitle;
