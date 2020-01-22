@@ -61,6 +61,10 @@
       "codename": "WAV"
     },
     {
+      "code": "fmt/950",
+      "codename": "Email RFC 2045 MIME message"
+    },
+    {
       "code": "x-fmt/18",
       "codename": "CSV"
     }
