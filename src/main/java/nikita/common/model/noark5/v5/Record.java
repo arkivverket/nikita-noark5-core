@@ -48,7 +48,7 @@ public class Record
     @Column(name = RECORD_ARCHIVED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
-    @JsonProperty(FILE_PUBLIC_TITLE)
+    @JsonProperty(RECORD_ARCHIVED_DATE)
     private OffsetDateTime archivedDate;
 
     /**
