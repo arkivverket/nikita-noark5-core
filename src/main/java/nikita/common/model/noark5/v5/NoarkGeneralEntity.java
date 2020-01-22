@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,9 +14,8 @@ import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
-
 import static nikita.common.config.N5ResourceMappings.*;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
  * Created by tsodring on 5/8/17.
@@ -32,7 +30,7 @@ public class NoarkGeneralEntity
      * M020 - tittel (xs:string)
      */
     @NotNull
-    @Column(name = TITLE_ENG, nullable = false)
+    @Column(name = TITLE_ENG, nullable = false, length = 65000)
     @Audited
     @JsonProperty(TITLE)
     private String title;
@@ -40,7 +38,7 @@ public class NoarkGeneralEntity
     /**
      * M021 - beskrivelse (xs:string)
      */
-    @Column(name = DESCRIPTION_ENG)
+    @Column(name = DESCRIPTION_ENG, length = 65000)
     @Audited
     @JsonProperty(DESCRIPTION)
     private String description;

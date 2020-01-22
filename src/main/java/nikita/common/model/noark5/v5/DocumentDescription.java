@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.ITitleDescription;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
@@ -78,7 +77,7 @@ public class DocumentDescription
      * M020 - tittel (xs:string)
      */
     @NotNull
-    @Column(name = TITLE_ENG, nullable = false)
+    @Column(name = TITLE_ENG, nullable = false, length = 65000)
     @Audited
     @JsonProperty(TITLE)
     private String title;
@@ -86,7 +85,7 @@ public class DocumentDescription
     /**
      * M021 - beskrivelse (xs:string)
      */
-    @Column(name = DESCRIPTION_ENG)
+    @Column(name = DESCRIPTION_ENG, length = 65000)
     @Audited
     @JsonProperty(DESCRIPTION)
     private String description;
