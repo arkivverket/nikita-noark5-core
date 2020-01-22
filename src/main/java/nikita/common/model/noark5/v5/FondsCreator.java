@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IFondsCreatorEntity;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.FONDS_CREATOR;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_FONDS_CREATOR)

@@ -7,8 +7,8 @@ import static nikita.common.config.N5ResourceMappings.*;
  */
 public final class Constants {
 
-    public static final Integer TITLE_LENGTH = 65000;
-    public static final Integer DESCIPTION_LENGTH = 65000;
+    public static final int TITLE_LENGTH = 65000;
+    public static final int DESCRIPTION_LENGTH = 65000;
 
     public static final String NEW = "ny";
     public static final String DASH = "-";
