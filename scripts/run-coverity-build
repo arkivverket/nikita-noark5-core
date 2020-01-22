@@ -12,7 +12,7 @@ build() {
     fi
 
     echo "info: building source"
-    PATH=$PATH:/var/opt/apache-maven-3.0.5/bin \
+    PATH=$PATH:/usr/local/apache-maven/bin \
         ../cov-analysis-linux64-2019.03/bin/cov-build \
 	--dir $tmpdir/cov-int make build
 }
