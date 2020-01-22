@@ -14,6 +14,7 @@ import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -30,7 +31,7 @@ public class NoarkGeneralEntity
      * M020 - tittel (xs:string)
      */
     @NotNull
-    @Column(name = TITLE_ENG, nullable = false, length = 65000)
+    @Column(name = TITLE_ENG, nullable = false, length = TITLE_LENGTH)
     @Audited
     @JsonProperty(TITLE)
     private String title;
@@ -38,7 +39,7 @@ public class NoarkGeneralEntity
     /**
      * M021 - beskrivelse (xs:string)
      */
-    @Column(name = DESCRIPTION_ENG, length = 65000)
+    @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
     @Audited
     @JsonProperty(DESCRIPTION)
     private String description;
