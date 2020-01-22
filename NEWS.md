@@ -24,7 +24,7 @@ Release 0.5 2019-0X-XX (commit X)
     - Use new JSON content-type "application/vnd.noark5+json".
     - Updated prepopulated format list to use PRONOM codes.
     - Implemented endpoint for system information.
-    - Started on implementation of national identifiers.
+    - Implemented national identifiers for both file and record.
  * Improved/implemented OData search and paging support for more entities.
  * No longer exposes attribute Dokumentobjekt.referanseDokumentfil,
    one should use the relation in \_links instead.

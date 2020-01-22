@@ -29,7 +29,7 @@
       "codename": "JPEG"
     },
     {
-      "code": "av/1",
+      "code": "fmt/1246",
       "codename": "SOSI"
     },
     {
@@ -59,6 +59,10 @@
     {
       "code": "fmt/703",
       "codename": "WAV"
+    },
+    {
+      "code": "fmt/950",
+      "codename": "Email RFC 2045 MIME message"
     },
     {
       "code": "x-fmt/18",
