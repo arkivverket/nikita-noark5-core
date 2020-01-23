@@ -466,8 +466,8 @@ var caseHandlerController = app.controller('CaseHandlerController',
                             kodenavn: journalpostTypeCodeName
                         },
                         journalstatus: {
-                            kode: journalpostTypeCode,
-                            kodenavn: journalpostTypeCodeName
+                            kode: journalpostStatusCode,
+                            kodenavn: journalpostStatusCodeName
                         }
                     },
                 }).then(function successCallback(response) {
