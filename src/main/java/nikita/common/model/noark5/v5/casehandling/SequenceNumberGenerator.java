@@ -1,6 +1,8 @@
 package nikita.common.model.noark5.v5.casehandling;
 
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -105,28 +107,37 @@ public class SequenceNumberGenerator
     }
 
     @Override
-    public boolean equals (Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SequenceNumberGenerator)) return false;
-        SequenceNumberGenerator that = (SequenceNumberGenerator) o;
-        return Objects.equals(year, that.year) &&
-                Objects.equals(referenceAdministrativeUnit,
-                        that.referenceAdministrativeUnit) &&
-                Objects.equals(sequenceNumber, that.sequenceNumber) &&
-                Objects.equals(administrativeUnitName,
-                        that.administrativeUnitName);
+    public String toString() {
+        return "SequenceNumberGenerator{" +
+                ", sequenceNumber=" + sequenceNumber +
+                ", administrativeUnitName=" + administrativeUnitName +
+                '}';
+    }
+
+    @Override
+    public boolean equals (Object other) {
+        if (other == null) return false;
+        if (this == other) return true;
+        if (!(other instanceof SequenceNumberGenerator)) return false;
+        SequenceNumberGenerator rhs = (SequenceNumberGenerator) other;
+        return new EqualsBuilder()
+	    .appendSuper(super.equals(other))
+	    .append(year, rhs.year)
+	    .append(referenceAdministrativeUnit,
+		    rhs.referenceAdministrativeUnit)
+	    .append(sequenceNumber, rhs.sequenceNumber)
+	    .append(administrativeUnitName, rhs.administrativeUnitName)
+	    .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(year, referenceAdministrativeUnit,
-                sequenceNumber, administrativeUnitName);
-    }
-
-    @Override
-    public String toString() {
-        return "SequenceNumberGenerator{" +
-                ", sequenceNumber=" + sequenceNumber +
-                '}';
+        return new HashCodeBuilder()
+	    .appendSuper(super.hashCode())
+	    .append(year)
+	    .append(referenceAdministrativeUnit)
+	    .append(sequenceNumber)
+	    .append(administrativeUnitName)
+	    .toHashCode();
     }
 }
