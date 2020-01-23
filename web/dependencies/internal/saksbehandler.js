@@ -209,7 +209,10 @@ var caseHandlerController = app.controller('CaseHandlerController',
                     data: {
                         tittel: $scope.registryEntry.tittel,
                         beskrivelse: $scope.registryEntry.beskrivelse,
-                        dokumentmedium: $scope.selectedDocumentMediumRegistryEntry,
+                        dokumentmedium: {
+                            kode: 'E',
+                            kodenavn: 'Elektronisk arkiv'
+                        },
                         journalstatus: $scope.selectedRegistryEntryStatus
                     },
                 }).then(function successCallback(response) {
@@ -434,7 +437,10 @@ var caseHandlerController = app.controller('CaseHandlerController',
                         beskrivelse: $scope.newDescriptionForRegistryEntry,
                         journalstatus: $scope.newRegistryEntryStatus,
                         journalposttype: $scope.newRegistryEntryType,
-                        dokumentmedium: $scope.selectedDocumentMediumNewRegistryEntry,
+                        dokumentmedium: {
+                            kode: 'E',
+                            kodenavn: 'Elektronisk arkiv'
+                        }
                     },
                 }).then(function successCallback(response) {
                         console.log("POST on registryEntry data returned= " + JSON.stringify(response.data));
@@ -480,7 +486,10 @@ var caseHandlerController = app.controller('CaseHandlerController',
                         tittel: $.trim($scope.newTitleForCaseFile),
                         offentligTittel: $.trim($scope.newPublicTitleForCaseFile),
                         beskrivelse: $.trim($scope.newDescriptionForCaseFile),
-                        dokumentmedium: $scope.selectedDocumentMediumNewCaseFile,
+                        dokumentmedium: {
+                            kode: 'E',
+                            kodenavn: 'Elektronisk arkiv'
+                        },
                         // Temporary removed. Will add in administrativeunit functionality and this will have values
                         // Same with keyword. Waiting to check implementation
                         // noekkelord: $.trim($scope.newKeywordForCaseFile),
