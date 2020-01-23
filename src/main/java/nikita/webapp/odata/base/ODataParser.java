@@ -489,7 +489,6 @@ public class ODataParser extends Parser {
                                 case 1: {
                                     _localctx = new PredicateContext(_parentctx, _parentState);
                                     _localctx.left = _prevctx;
-                                    _localctx.left = _prevctx;
                                     pushNewRecursionContext(_localctx, _startState, RULE_predicate);
                                     setState(131);
                                     if (!(precpred(_ctx, 2)))
