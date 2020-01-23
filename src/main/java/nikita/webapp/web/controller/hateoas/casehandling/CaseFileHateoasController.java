@@ -20,7 +20,6 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
-import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
@@ -50,20 +49,17 @@ public class CaseFileHateoasController
     private ICaseFileHateoasHandler caseFileHateoasHandler;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
-    private ISeriesHateoasHandler seriesHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
 
     public CaseFileHateoasController(ICaseFileService caseFileService,
                                      ICaseFileHateoasHandler caseFileHateoasHandler,
                                      IRegistryEntryHateoasHandler registryEntryHateoasHandler,
                                      ApplicationEventPublisher applicationEventPublisher,
-                                     ISeriesHateoasHandler seriesHateoasHandler,
                                      IClassHateoasHandler classHateoasHandler) {
         this.caseFileService = caseFileService;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
-        this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
     }
 
