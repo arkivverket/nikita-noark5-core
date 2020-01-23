@@ -151,16 +151,19 @@ public class PartPerson
     }
 
     @Override
+    public String toString() {
+        return "PartPerson{" + super.toString() +
+                ", socialSecurityNumber='" + socialSecurityNumber + '\'' +
+                ", dNumber='" + dNumber + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        }
-        if (other == this) {
-            return true;
-        }
-        if (other.getClass() != getClass()) {
-            return false;
-        }
+        if (other == null) return false;
+        if (other == this) return true;
+        if (other.getClass() != getClass()) return false;
         PartPerson rhs = (PartPerson) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))

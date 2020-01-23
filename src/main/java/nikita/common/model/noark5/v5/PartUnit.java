@@ -133,7 +133,7 @@ public class PartUnit
 
     @Override
     public String toString() {
-        return super.toString() +
+        return "PartUnit{" + super.toString() +
                 ", organisationNumber='" + organisationNumber + '\'' +
                 ", name='" + name + '\'' +
                 ", contactPerson='" + contactPerson + '\'' +

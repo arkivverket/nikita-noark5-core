@@ -601,14 +601,14 @@ public final class CommonUtils {
             private static void deserialisePartRole(
                     IPartEntity part,
                     ObjectNode objectNode, StringBuilder errors) {
-                // Deserialize parttype
+                // Deserialize partrole
                 IMetadataEntity entity =
                     deserialiseMetadataValue(objectNode,
                                              PART_ROLE_FIELD,
                                              new PartRole(),
                                              errors, true);
-                part.setPartTypeCode(entity.getCode());
-                part.setPartTypeCodeName(entity.getCodeName());
+                part.setPartRoleCode(entity.getCode());
+                part.setPartRoleCodeName(entity.getCodeName());
             }
 
             public static void deserialiseClassificationSystemType(
@@ -2172,10 +2172,10 @@ public final class CommonUtils {
                     throws IOException {
                 if (part != null) {
                     printSystemIdEntity(jgen, part);
-                    if (part.getPartTypeCode() != null) {
+                    if (part.getPartRoleCode() != null) {
                         jgen.writeObjectFieldStart(PART_ROLE_FIELD);
-                        printCode(jgen, part.getPartTypeCode(),
-                                part.getPartTypeCodeName());
+                        printCode(jgen, part.getPartRoleCode(),
+                                part.getPartRoleCodeName());
                         jgen.writeEndObject();
                     }
                 }

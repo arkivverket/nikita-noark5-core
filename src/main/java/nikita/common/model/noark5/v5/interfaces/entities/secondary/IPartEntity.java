@@ -10,15 +10,11 @@ import nikita.common.model.noark5.v5.metadata.PartRole;
 public interface IPartEntity
         extends ISystemId {
 
-    String getPartTypeCode();
+    String getPartRoleCode();
 
-    void setPartTypeCode(String partTypeCode);
+    void setPartRoleCode(String partRoleCode);
 
-    String getPartTypeCodeName();
+    String getPartRoleCodeName();
 
-    void setPartTypeCodeName(String partTypeCodeName);
-
-    PartRole getPartRole();
-
-    void setPartRole(PartRole partRole);
+    void setPartRoleCodeName(String partRoleCodeName);
 }

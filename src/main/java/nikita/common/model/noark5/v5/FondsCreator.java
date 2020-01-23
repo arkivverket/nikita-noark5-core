@@ -36,16 +36,18 @@ public class FondsCreator
      * M006 - arkivskaperID (xs:string)
      */
     @NotNull
-    @Column(name = "fonds_creator_id", nullable = false)
+    @Column(name = FONDS_CREATOR_ID_ENG, nullable = false)
     @Audited
+    @JsonProperty(FONDS_CREATOR_ID)
     private String fondsCreatorId;
 
     /**
      * M023 - arkivskaperNavn (xs:string)
      */
     @NotNull
-    @Column(name = "fonds_creator_name", nullable = false)
+    @Column(name = FONDS_CREATOR_NAME_ENG, nullable = false)
     @Audited
+    @JsonProperty(FONDS_CREATOR_NAME)
     private String fondsCreatorName;
 
     /**

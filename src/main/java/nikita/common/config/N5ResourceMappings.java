@@ -549,8 +549,8 @@ public final class N5ResourceMappings {
     public static final String FINALISED_DATE_ENG = "finalised_date";
     public static final String FLOW_STATUS_ENG = "flytstatus";
     public static final String FONDS_CREATOR_ENG = "fondsCreator";
-    public static final String FONDS_CREATOR_ID_ENG = "fondsCreatorId";
-    public static final String FONDS_CREATOR_NAME_ENG = "fondsCreatorName";
+    public static final String FONDS_CREATOR_ID_ENG = "fonds_creator_id";
+    public static final String FONDS_CREATOR_NAME_ENG = "fonds_creator_name";
     public static final String FONDS_ENG = "fonds";
     public static final String FONDS_STATUS_ENG = "arkivstatus";
     public static final String FOREIGN_ADDRESS_ENG = "utenlandsadresse";
