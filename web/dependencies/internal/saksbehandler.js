@@ -281,6 +281,29 @@ var caseHandlerController = app.controller('CaseHandlerController',
             $scope.createDocumentDescription = function () {
 
                 let url = $scope.registryEntry._links[REL_NEW_DOCUMENT_DESCRIPTION].href;
+
+                let associatedWithRecordAsCode = "H";
+                let associatedWithRecordAsCodeName = "Hoveddokument";
+                for (i = 0; i < associatedWithRecordAsList.length; i++) {
+                    if (associatedWithRecordAsList[i].value === $scope.selectedAssociatedWithRecordAs) {
+                        associatedWithRecordAsCode = associatedWithRecordAsList[i].id;
+                        associatedWithRecordAsCodeName = associatedWithRecordAsList[i].value;
+                    }
+                }
+                console.log("Setting associatedWithRecordAsCode " + associatedWithRecordAsCode);
+                console.log("Setting associatedWithRecordAsCodeName " + associatedWithRecordAsCodeName);
+
+                let documentStatusCode = "B";
+                let documentStatusCodeName = "Dokumentet er under redigering";
+                for (i = 0; i < documentStatusList.length; i++) {
+                    if (documentStatusList[i].value === $scope.selectedDocumentStatus) {
+                        documentStatusCode = documentStatusList[i].id;
+                        documentStatusCodeName = documentStatusList[i].value;
+                    }
+                }
+                console.log("Setting documentStatusCode " + documentStatusCode);
+                console.log("Setting documentStatusCodeName " + documentStatusCodeName);
+
                 console.log("Calling create documentDescription with " + url);
                 $http({
                     url: url,
@@ -292,8 +315,18 @@ var caseHandlerController = app.controller('CaseHandlerController',
                     data: {
                         'tittel': $scope.newTitleForDocument,
                         'beskrivelse': $scope.newDescriptionForDocument,
-                        'tilknyttetRegistreringSom': $scope.selectedAssociatedWithRecordAs,
-                        'dokumenttype': $scope.selectedDocumentType
+                        'tilknyttetRegistreringSom': {
+                            kode: associatedWithRecordAsCode,
+                            kodenavn: associatedWithRecordAsCodeName
+                        },
+                        'dokumentstatus': {
+                            kode: documentStatusCode,
+                            kodenavn: documentStatusCodeName
+                        },
+                        'dokumenttype': {
+                            kode: 'B',
+                            kodenavn: 'Brev'
+                        }
                     },
                 }).then(function successCallback(response) {
                     console.log("POST on document data returned= " + JSON.stringify(response.data));
@@ -321,6 +354,29 @@ var caseHandlerController = app.controller('CaseHandlerController',
                 }
                 console.log("Setting mimetype to " + $scope.selectedMimeType);
 
+
+                let variantFormatCode = "P";
+                let variantFormatCodeName = "Produksjonsformat";
+                for (i = 0; i < variantFormatList.length; i++) {
+                    if (variantFormatList[i].value === $scope.selectedVariantFormat) {
+                        variantFormatCode = variantFormatList[i].id;
+                        variantFormatCodeName = variantFormatList[i].value;
+                    }
+                }
+                console.log("Setting variantFormatCode " + variantFormatCode);
+                console.log("Setting variantFormatCodeName " + variantFormatCodeName);
+
+                let formatCode = "fmt/136";
+                let formatCodeName = "OpenDocument Text (odt)";
+                for (i = 0; i < formatList.length; i++) {
+                    if (formatList[i].value === $scope.selectedFormat) {
+                        formatCode = formatList[i].id;
+                        formatCodeName = formatList[i].value;
+                    }
+                }
+                console.log("Setting formatCode " + formatCode);
+                console.log("Setting formatCodeName " + formatCodeName);
+
                 let url = $scope.documentDescription._links[REL_NEW_DOCUMENT_OBJECT].href;
                 console.log("Calling create documentDescription with " + url);
 
@@ -334,7 +390,14 @@ var caseHandlerController = app.controller('CaseHandlerController',
                     data: {
                         'format': $scope.selectedFormat,
                         'mimeType': $scope.selectedMimeType,
-                        'variantformat': $scope.selectedVariantFormat
+                        'variantformat': {
+                            kode: variantFormatCode,
+                            kodenavn: variantFormatCodeName
+                        },
+                        'format': {
+                            kode: formatCode,
+                            kodenavn: formatCodeName
+                        }
                     }
                 }).then(function successCallback(response) {
                     console.log("POST on document data returned= " + JSON.stringify(response.data));

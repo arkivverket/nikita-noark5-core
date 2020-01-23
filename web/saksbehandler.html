@@ -1587,16 +1587,32 @@
             <div class="col-1"></div>
           </div>
           <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
-              <label class="control-label" for="newDocumentType">Dokumenttype:</label>
-              <input id="newDocumentType" class="form-control form-control-lg rounded-1" type="text"
-                     data-toggle="tooltip" data-placement="top"
-                     ng-model="selectedDocumentType"
-                     title="Ingen obligatoriske verdi, men aktuelle verdier kan f.eks. være: Brev, Rundskriv, Faktura, Ordrebekreftelser"/>
-            </div>
-            <div class="col-1"></div>
+              <div class="col-1"></div>
+              <div class="col-10">
+                  <label class="control-label" for="newDocumentType">Dokumenttype:</label>
+                  <input id="newDocumentType" class="form-control form-control-lg rounded-1" type="text"
+                         data-toggle="tooltip" data-placement="top"
+                         ng-model="selectedDocumentType"
+                         title="Ingen obligatoriske verdi, men aktuelle verdier kan f.eks. være: Brev, Rundskriv, Faktura, Ordrebekreftelser"/>
+              </div>
+              <div class="col-1"></div>
           </div>
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <label class="control-label" for="newDocumentStatus">TilknyttetRegistreringSom:</label>
+                    <select class="form-control form-control-lg rounded-1" data-placement="top"
+                            data-toggle="tooltip"
+                            id="newDocumentStatus" ng-model="selectedDocumentStatus"
+                            title="Dokumentet kan enten være ferdigstilt eller åpen for redigering">
+                        <option ng-repeat="documentStatus in documentStatusList"
+                                ng-selected="{{documentStatus.value == selectedDocumentStatus}}"
+                                value="{{documentStatus.value}}">{{documentStatus.value}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-1"></div>
+            </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -1649,10 +1665,10 @@
                       ng-model="selectedFormat"
                       data-toggle="tooltip" data-placement="top"
                       title="Filformatet feks odt, docx, png osv">
-                <option ng-selected="{{format.id == selectedFormat}}"
-                        ng-repeat="format in formatList"
-                        value="{{format.id}}">{{format.id}}
-                </option>
+                  <option ng-selected="{{format.value == selectedFormat}}"
+                          ng-repeat="format in formatList"
+                          value="{{format.value}}">{{format.value}}
+                  </option>
               </select>
             </div>
             <div class="col-1"></div>

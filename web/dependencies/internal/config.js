@@ -106,6 +106,10 @@ var fondsStatusList = [
     {id: 'O', value: 'Opprettet'},
     {id: 'A', value: 'Avsluttet'}];
 
+var associatedWithRecordAsList = [
+    {id: 'H', value: 'Opprettet'},
+    {id: 'V', value: 'Avsluttet'}];
+
 var caseFileStatusList = [
     {"id": "B", "value": "Under behandling"},
     {"id": "A", "value": "Avsluttet"},
@@ -141,19 +145,27 @@ var documentStatusList = [
     {id: 'F', value: 'Dokumentet er ferdigstilt'}];
 
 var formatList = [
-  {id: 'odt', value: 'application/vnd.oasis.opendocument.text'},
-  {id: 'docx', value: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'},
-  {id: 'doc', value: 'application/msword'},
-  {id: 'ods', value: 'application/vnd.oasis.opendocument.spreadsheet'},
-  {id: 'xlsx', value: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'},
-  {id: 'xls', value: 'application/vnd.ms-excel'},
-  {id: 'odp', value: 'application/vnd.oasis.opendocument.presentation'},
-  {id: 'ppt', value: 'application/vnd.ms-powerpoint'},
-  {id: 'pptx', value: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'},
-  {id: 'png', value: 'image/png'},
-  {id: 'gif', value: 'image/gif'},
-  {id: 'txt', value: 'text/plain'},
-  {id: 'pdf', value: 'application/pdf'}];
+    {"id": "UNKNOWN", "value": "Ukjent filformat"},
+    {"id": "x-fmt/111", "value": "Ren tekst"},
+    {"id": "fmt/353", "value": "TIFF versjon 6"},
+    {"id": "fmt/95", "value": "PDF/A 1a - ISO 19005-1:2005"},
+    {"id": "fmt/354", "value": "PDF/A 1b - ISO 19005-1:2005"},
+    {"id": "fmt/101", "value": "XML"},
+    {"id": "fmt/42", "value": "JPEG"},
+    {"id": "fmt/1246", "value": "SOSI"},
+    {"id": "x-fmt/386", "value": "MPEG-2"},
+    {"id": "fmt/134", "value": "MP3"},
+    {"id": "fmt/4", "value": "GIF"},
+    {"id": "fmt/13", "value": "PNG 1.2"},
+    {"id": "fmt/96", "value": "HTML"},
+    {"id": "fmt/278", "value": "Email RFC 822 message"},
+    {"id": "fmt/703", "value": "WAV"},
+    {"id": "fmt/950", "value": "Email RFC 2045 MIME message"},
+    {"id": "x-fmt/18", "value": "CSV"},
+    {"id": "fmt/136", "value": "OpenDocument Text (odt)"},
+    {"id": "fmt/137", "value": "OpenDocument Spreadsheet (ods)"},
+    {"id": "x-fmt/138", "value": "OpenDocument Presentation (odp)"}
+];
 
 var emptyList = [{id: '', value: ''},
     {id: '', value: ''},

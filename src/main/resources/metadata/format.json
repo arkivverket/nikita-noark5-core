@@ -67,6 +67,18 @@
     {
       "code": "x-fmt/18",
       "codename": "CSV"
+    },
+    {
+      "code": "fmt/136",
+      "codename": "OpenDocument Text (odt)"
+    },
+    {
+      "code": "fmt/137",
+      "codename": "OpenDocument Spreadsheet (ods)"
+    },
+    {
+      "code": "fmt/138",
+      "codename": "OpenDocument Presentation (odp)"
     }
   ]
 }
