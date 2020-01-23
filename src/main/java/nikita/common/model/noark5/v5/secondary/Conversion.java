@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CONVERSION;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CONVERSION)
@@ -25,43 +26,49 @@ public class Conversion
     /**
      * M615 - konvertertDato (xs:dateTime)
      */
-    @Column(name = "converted_date")
+    @Column(name = CONVERTED_DATE_ENG)
     @Audited
+    @JsonProperty(CONVERTED_DATE)
     private OffsetDateTime convertedDate;
 
     /**
      * M616 - konvertertAv (xs:string)
      */
-    @Column(name = "converted_by")
+    @Column(name = CONVERTED_BY_ENG)
     @Audited
+    @JsonProperty(CONVERTED_BY)
     private String convertedBy;
 
     /**
      * M712 - konvertertFraFormat (xs:string)
      */
-    @Column(name = "converted_from_format")
+    @Column(name = CONVERTED_FROM_FORMAT_ENG)
     @Audited
+    @JsonProperty(CONVERTED_FROM_FORMAT)
     private String convertedFromFormat;
 
     /**
      * M713 - konvertertTilFormat (xs:string)
      */
-    @Column(name = "converted_to_format")
+    @Column(name = CONVERTED_TO_FORMAT_ENG)
     @Audited
+    @JsonProperty(CONVERTED_TO_FORMAT)
     private String convertedToFormat;
 
     /**
      * M714 - konverteringsverktoey (xs:string)
      */
-    @Column(name = "conversion_tool")
+    @Column(name = CONVERSION_TOOL_ENG)
     @Audited
+    @JsonProperty(CONVERTED_TO_FORMAT)
     private String conversionTool;
 
     /**
      * M715 - konverteringskommentar (xs:string)
      */
-    @Column(name = "conversion_comment")
+    @Column(name = CONVERSION_COMMENT_ENG)
     @Audited
+    @JsonProperty(CONVERSION_COMMENT)
     private String conversionComment;
 
     // Link to DocumentObject
