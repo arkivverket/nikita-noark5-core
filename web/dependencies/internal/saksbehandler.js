@@ -433,6 +433,8 @@ var caseHandlerController = app.controller('CaseHandlerController',
                         journalpostStatusCodeName = registryEntryStatusList[i].value;
                     }
                 }
+                console.log("Setting journalpostStatusCode " + journalpostStatusCode);
+                console.log("Setting journalpostStatusCodeName " + journalpostStatusCodeName);
 
                 let journalpostTypeCode = "J";
                 let journalpostTypeCodeName = "Journalført";
@@ -442,6 +444,8 @@ var caseHandlerController = app.controller('CaseHandlerController',
                         journalpostTypeCodeName = registryEntryTypeList[i].value;
                     }
                 }
+                console.log("Setting journalpostTypeCode " + journalpostTypeCode);
+                console.log("Setting journalpostTypeCodeName " + journalpostTypeCodeName);
 
                 $http({
                     url: url,
