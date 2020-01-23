@@ -106,6 +106,20 @@ public class DemoData {
             admin.addAdministrativeUnit(administrativeUnit);
             userService.createNewUser(admin);
         }
+
+        User picture = new User();
+
+        if (!userService.userExists("bilde@example.com")) {
+            picture.setPassword("password");
+            picture.setFirstname("Fat");
+            picture.setLastname("Tony");
+            picture.setUsername("bilde@example.com");
+            picture.addAuthority(authorityRepository.
+                    findByAuthorityName(RECORDS_MANAGER));
+            administrativeUnit.addUser(picture);
+            picture.addAdministrativeUnit(administrativeUnit);
+            userService.createNewUser(picture);
+        }
     }
 
     public void addUserRecordKeeper() {
