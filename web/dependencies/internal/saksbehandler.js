@@ -425,6 +425,24 @@ var caseHandlerController = app.controller('CaseHandlerController',
                 let url = $scope.caseFile._links[REL_NEW_REGISTRY_ENTRY].href;
                 console.log("Calling create RegistryEntry with " + url);
 
+                let journalpostStatusCode = "J";
+                let journalpostStatusCodeName = "Journalført";
+                for (i = 0; i < registryEntryStatusList.length; i++) {
+                    if (registryEntryStatusList[i].value === $scope.newRegistryEntryStatus) {
+                        journalpostStatusCode = registryEntryStatusList[i].id;
+                        journalpostStatusCodeName = registryEntryStatusList[i].value;
+                    }
+                }
+
+                let journalpostTypeCode = "J";
+                let journalpostTypeCodeName = "Journalført";
+                for (i = 0; i < registryEntryTypeList.length; i++) {
+                    if (registryEntryTypeList[i].value === $scope.newRegistryEntryType) {
+                        journalpostTypeCode = registryEntryTypeList[i].id;
+                        journalpostTypeCodeName = registryEntryTypeList[i].value;
+                    }
+                }
+
                 $http({
                     url: url,
                     method: "POST",
@@ -440,6 +458,14 @@ var caseHandlerController = app.controller('CaseHandlerController',
                         dokumentmedium: {
                             kode: 'E',
                             kodenavn: 'Elektronisk arkiv'
+                        },
+                        journalposttype: {
+                            kode: journalpostTypeCode,
+                            kodenavn: journalpostTypeCodeName
+                        },
+                        journalstatus: {
+                            kode: journalposttypeCode,
+                            kodenavn: journalposttypeCodeName
                         }
                     },
                 }).then(function successCallback(response) {
