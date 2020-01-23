@@ -7,7 +7,7 @@ import static nikita.common.config.Constants.REL_METADATA_ASSOCIATED_WITH_RECORD
 import static nikita.common.config.Constants.TABLE_ASSOCIATED_WITH_RECORD_AS;
 import static nikita.common.config.N5ResourceMappings.ASSOCIATED_WITH_RECORD_AS;
 
-// Noark 5v5 Tilknyttet registrering som
+// Noark 5v5 TilknyttetRegistreringSom
 @Entity
 @Table(name = TABLE_ASSOCIATED_WITH_RECORD_AS)
 public class AssociatedWithRecordAs
