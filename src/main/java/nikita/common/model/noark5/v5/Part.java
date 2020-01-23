@@ -1,7 +1,8 @@
 package nikita.common.model.noark5.v5;
 
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartEntity;
-import nikita.common.model.noark5.v5.metadata.PartRole;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -27,21 +28,19 @@ public class Part
         implements IPartEntity {
 
     /**
-     * M??? - partTypeKode kode (xs:string)
+     * M??? - partRolle code (xs:string)
      */
     @NotNull
-    @Column(name = "part_type_code", nullable = false)
+    @Column(name = "part_role_code", nullable = false)
     @Audited
-    private String partTypeCode;
+    private String partRoleCode;
 
     /**
-     * M??? - partTypeKodenavn code name (xs:string)
+     * M303 - partRolle code name (xs:string)
      */
-    @Column(name = "correspondence_part_type_code_name")
+    @Column(name = "part_role_code_name")
     @Audited
-    private String partTypeCodeName;
-
-    private PartRole referencePartRole;
+    private String partRoleCodeName;
 
     // Links to Files
     @ManyToMany(mappedBy = "referencePart")
@@ -64,30 +63,20 @@ public class Part
         this.referenceFile = referenceFile;
     }
 
-    public String getPartTypeCode() {
-        return partTypeCode;
+    public String getPartRoleCode() {
+        return partRoleCode;
     }
 
-    public void setPartTypeCode(String partTypeCode) {
-        this.partTypeCode = partTypeCode;
+    public void setPartRoleCode(String partRoleCode) {
+        this.partRoleCode = partRoleCode;
     }
 
-    public String getPartTypeCodeName() {
-        return partTypeCodeName;
+    public String getPartRoleCodeName() {
+        return partRoleCodeName;
     }
 
-    public void setPartTypeCodeName(String partTypeCodeName) {
-        this.partTypeCodeName = partTypeCodeName;
-    }
-
-    @Override
-    public PartRole getPartRole() {
-        return referencePartRole;
-    }
-
-    @Override
-    public void setPartRole(PartRole partRole) {
-        this.referencePartRole = partRole;
+    public void setPartRoleCodeName(String partRoleCodeName) {
+        this.partRoleCodeName = partRoleCodeName;
     }
 
     public void addReferenceFile(File file) {
@@ -120,14 +109,6 @@ public class Part
         this.referenceDocumentDescription.add(documentDescription);
     }
 
-    public PartRole getReferencePartRole() {
-        return referencePartRole;
-    }
-
-    public void setReferencePartRole(PartRole referencePartRole) {
-        this.referencePartRole = referencePartRole;
-    }
-
     @Override
     public String getBaseTypeName() {
         return PART;
@@ -138,4 +119,33 @@ public class Part
         return NOARK_FONDS_STRUCTURE_PATH;
     }
 
+    @Override
+    public String toString() {
+        return "Part{" + super.toString() +
+                ", partRoleCode='" + partRoleCode + '\'' +
+                ", partRoleCodeName='" + partRoleCodeName + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Part)) return false;
+        Part rhs = (Part) other;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(other))
+                .append(partRoleCode, rhs.partRoleCode)
+                .append(partRoleCodeName, rhs.partRoleCodeName)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .appendSuper(super.hashCode())
+                .append(partRoleCode)
+                .append(partRoleCodeName)
+                .toHashCode();
+    }
 }

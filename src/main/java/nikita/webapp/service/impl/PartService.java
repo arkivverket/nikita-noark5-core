@@ -5,11 +5,13 @@ import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.PartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
+import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.repository.n5v5.IPartRepository;
 import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.metadata.IPartRoleService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
@@ -36,16 +38,19 @@ public class PartService
 
     private final IPartRoleRepository partRoleRepository;
     private final IPartRepository partRepository;
+    private IPartRoleService partRoleService;
     private final IPartHateoasHandler partHateoasHandler;
 
     public PartService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
                        IPartRoleRepository partRoleRepository,
                        IPartRepository partRepository,
+                       IPartRoleService partRoleService,
                        IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.partRoleRepository = partRoleRepository;
         this.partRepository = partRepository;
+        this.partRoleService = partRoleService;
         this.partHateoasHandler = partHateoasHandler;
     }
 
@@ -103,11 +108,11 @@ public class PartService
 
     private void copyCodeValues(@NotNull Part incomingPart,
                                 @NotNull Part existingPart) {
-        if (null != incomingPart.getPartTypeCode()) {
-            existingPart.setPartTypeCode(incomingPart.getPartTypeCode());
-            if (null != incomingPart.getPartTypeCodeName()) {
-                existingPart.setPartTypeCodeName(
-                        incomingPart.getPartTypeCodeName());
+        if (null != incomingPart.getPartRoleCode()) {
+            existingPart.setPartRoleCode(incomingPart.getPartRoleCode());
+            if (null != incomingPart.getPartRoleCodeName()) {
+                existingPart.setPartRoleCodeName(
+                        incomingPart.getPartRoleCodeName());
             }
         }
     }
@@ -151,6 +156,7 @@ public class PartService
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson part, @NotNull Record record) {
 
+        validatePartRole(part);
         createPerson(part);
         record.addPart(part);
         part.addRecord(record);
@@ -166,6 +172,7 @@ public class PartService
     @Override
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson part, @NotNull File file) {
+        validatePartRole(part);
         createPerson(part);
         file.addPart(part);
         part.addReferenceFile(file);
@@ -179,6 +186,7 @@ public class PartService
 
     @Override
     public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
+        validatePartRole(part);
         createUnit(part);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
@@ -197,6 +205,7 @@ public class PartService
     @Override
     public PartUnitHateoas createNewPartUnit(
             @NotNull PartUnit part, @NotNull File file) {
+        validatePartRole(part);
         createUnit(part);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
@@ -214,6 +223,7 @@ public class PartService
     public PartUnitHateoas createNewPartUnit(
             @NotNull PartUnit partUnit,
             @NotNull DocumentDescription documentDescription) {
+        validatePartRole(partUnit);
         createUnit(partUnit);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
@@ -231,6 +241,7 @@ public class PartService
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson partPerson,
             @NotNull DocumentDescription documentDescription) {
+        validatePartRole(partPerson);
         createPerson(partPerson);
         documentDescription.addPart(partPerson);
         partPerson.addReferenceDocumentDescription(documentDescription);
@@ -531,7 +542,16 @@ public class PartService
     }
 
     private void setDefaultPartRole(@NotNull Part part) {
-        part.setPartTypeCode(TEMPLATE_PART_ROLE_CODE);
-        part.setPartTypeCodeName(TEMPLATE_PART_ROLE_NAME);
+        part.setPartRoleCode(TEMPLATE_PART_ROLE_CODE);
+        part.setPartRoleCodeName(TEMPLATE_PART_ROLE_NAME);
+    }
+
+    private void validatePartRole(Part part) {
+        // Assume value already set, as the deserialiser will enforce it.
+        PartRole partRole = (PartRole) partRoleService
+            .findValidMetadataOrThrow(part.getBaseTypeName(),
+                                      part.getPartRoleCode(),
+                                      part.getPartRoleCodeName());
+        part.setPartRoleCodeName(partRole.getCodeName());
     }
 }
