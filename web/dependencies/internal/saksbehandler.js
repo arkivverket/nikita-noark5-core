@@ -453,8 +453,6 @@ var caseHandlerController = app.controller('CaseHandlerController',
                     data: {
                         tittel: $scope.newTitleForRegistryEntry,
                         beskrivelse: $scope.newDescriptionForRegistryEntry,
-                        journalstatus: $scope.newRegistryEntryStatus,
-                        journalposttype: $scope.newRegistryEntryType,
                         dokumentmedium: {
                             kode: 'E',
                             kodenavn: 'Elektronisk arkiv'
