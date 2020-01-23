@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkConcurrencyException;
@@ -42,17 +43,19 @@ public class NoarkEntity
      * M600 - opprettetDato (xs:dateTime)
      */
     @CreatedDate
-    @Column(name = "created_date")
+    @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
      */
     @CreatedBy
-    @Column(name = "created_by")
+    @Column(name = CREATED_BY_ENG)
     @Audited
+    @JsonProperty(CREATED_BY)
     private String createdBy;
 
     /**
