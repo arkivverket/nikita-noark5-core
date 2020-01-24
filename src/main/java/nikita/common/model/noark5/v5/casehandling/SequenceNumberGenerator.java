@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 import static nikita.common.config.Constants.FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK;
 import static nikita.common.config.Constants.TABLE_CASE_FILE_SEQUENCE;
@@ -121,11 +120,10 @@ public class SequenceNumberGenerator
         if (!(other instanceof SequenceNumberGenerator)) return false;
         SequenceNumberGenerator rhs = (SequenceNumberGenerator) other;
         return new EqualsBuilder()
-	    .appendSuper(super.equals(other))
-	    .append(year, rhs.year)
-	    .append(referenceAdministrativeUnit,
-		    rhs.referenceAdministrativeUnit)
-	    .append(sequenceNumber, rhs.sequenceNumber)
+                .appendSuper(super.equals(other))
+                .append(year, rhs.year)
+                .append(sequenceNumber, rhs.sequenceNumber)
+                .append(recordSequenceNumber, rhs.recordSequenceNumber)
 	    .append(administrativeUnitName, rhs.administrativeUnitName)
 	    .isEquals();
     }
@@ -133,10 +131,10 @@ public class SequenceNumberGenerator
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-	    .appendSuper(super.hashCode())
-	    .append(year)
-	    .append(referenceAdministrativeUnit)
-	    .append(sequenceNumber)
+                .appendSuper(super.hashCode())
+                .append(year)
+                .append(sequenceNumber)
+                .append(recordSequenceNumber)
 	    .append(administrativeUnitName)
 	    .toHashCode();
     }
