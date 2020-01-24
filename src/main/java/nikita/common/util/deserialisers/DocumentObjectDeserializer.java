@@ -51,11 +51,9 @@ public class DocumentObjectDeserializer
         // Deserialise general DocumentObject properties
         deserialiseSystemIdEntity(documentObject, objectNode, errors);
         // Deserialize versionNumber
-        JsonNode currentNode = objectNode.get(DOCUMENT_OBJECT_VERSION_NUMBER);
-        if (null != currentNode) {
-            documentObject.setVersionNumber(currentNode.intValue());
-            objectNode.remove(DOCUMENT_OBJECT_VERSION_NUMBER);
-        }
+        documentObject.setVersionNumber
+            (deserializeInteger(DOCUMENT_OBJECT_VERSION_NUMBER, objectNode,
+                                errors, false));
         // Deserialize variantFormat
         IMetadataEntity entity =
             deserialiseMetadataValue(objectNode,
@@ -70,7 +68,7 @@ public class DocumentObjectDeserializer
         documentObject.setFormatCode(entity.getCode());
         documentObject.setFormatCodeName(entity.getCodeName());
         // Deserialize formatDetails
-        currentNode = objectNode.get(DOCUMENT_OBJECT_FORMAT_DETAILS);
+        JsonNode currentNode = objectNode.get(DOCUMENT_OBJECT_FORMAT_DETAILS);
         if (null != currentNode) {
             documentObject.setFormatDetails(currentNode.textValue());
             objectNode.remove(DOCUMENT_OBJECT_FORMAT_DETAILS);

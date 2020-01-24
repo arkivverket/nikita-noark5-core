@@ -16,8 +16,7 @@ import java.io.IOException;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.BUILDING_CHANGE_NUMBER;
 import static nikita.common.config.N5ResourceMappings.BUILDING_NUMBER;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 
 public class BuildingDeserializer
@@ -41,21 +40,16 @@ public class BuildingDeserializer
         deserialiseNoarkSystemIdEntity(building, objectNode, errors);
 
         // Deserialize bygningsnummer
-        JsonNode currentNode = objectNode.get(BUILDING_NUMBER);
-        if (null != currentNode) {
-            building.setBuildingNumber(currentNode.intValue());
-            objectNode.remove(BUILDING_NUMBER);
-        }
+        building.setBuildingNumber
+            (deserializeInteger(BUILDING_NUMBER,
+                                objectNode, errors, true));
 
         // Deserialize endringsloepenummer
-        currentNode = objectNode.get(BUILDING_CHANGE_NUMBER);
-        if (null != currentNode) {
-            building.setContinuousNumberingOfBuildingChange(
-                    currentNode.intValue());
-            objectNode.remove(BUILDING_CHANGE_NUMBER);
-        }
+        building.setContinuousNumberingOfBuildingChange
+            (deserializeInteger(BUILDING_CHANGE_NUMBER,
+                                objectNode, errors, false));
 
-        currentNode = objectNode.get(LINKS);
+        JsonNode currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.info("Payload contains " + LINKS + ". " +
                     "This value is being ignored.");
