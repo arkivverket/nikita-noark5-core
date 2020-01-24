@@ -473,9 +473,6 @@ public class NationalIdentifierService
     @Override
     public BuildingHateoas generateDefaultBuilding() {
         Building building = new Building();
-        // TODO find way to return empty template
-        building.setBuildingNumber(100);
-        building.setContinuousNumberingOfBuildingChange(100);
         BuildingHateoas buildingHateoas =
                 new BuildingHateoas(building);
         nationalIdentifierHateoasHandler
@@ -491,10 +488,6 @@ public class NationalIdentifierService
     @Override
     public CadastralUnitHateoas generateDefaultCadastralUnit() {
         CadastralUnit cadastralUnit = new CadastralUnit();
-        // TODO find way to return empty template
-        cadastralUnit.setMunicipalityNumber("0101");
-        cadastralUnit.setHoldingNumber(100);
-        cadastralUnit.setSubHoldingNumber(100);
         CadastralUnitHateoas cadastralUnitHateoas =
                 new CadastralUnitHateoas(cadastralUnit);
         nationalIdentifierHateoasHandler
@@ -510,8 +503,6 @@ public class NationalIdentifierService
     @Override
     public DNumberHateoas generateDefaultDNumber() {
         DNumber dNumber = new DNumber();
-        // TODO find way to return empty template
-        dNumber.setdNumber("01010101011");
         DNumberHateoas dNumberHateoas =
                 new DNumberHateoas(dNumber);
         nationalIdentifierHateoasHandler
@@ -527,8 +518,6 @@ public class NationalIdentifierService
     @Override
     public PlanHateoas generateDefaultPlan() {
         Plan plan = new Plan();
-        // TODO find way to return empty template
-        plan.setPlanIdentification("0101");
         PlanHateoas planHateoas =
                 new PlanHateoas(plan);
         nationalIdentifierHateoasHandler
@@ -544,12 +533,8 @@ public class NationalIdentifierService
     @Override
     public PositionHateoas generateDefaultPosition() {
         Position position = new Position();
-        // TODO find way to return empty template with only _links
         position.setCoordinateSystemCode("EPSG:4326");
         position.setCoordinateSystemCodeName("WGS84");
-        position.setX(1.0);
-        position.setY(1.0);
-        position.setZ(1.0);
         PositionHateoas positionHateoas =
                 new PositionHateoas(position);
         positionHateoasHandler
@@ -565,8 +550,6 @@ public class NationalIdentifierService
     @Override
     public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
         SocialSecurityNumber socialSecurityNumber = new SocialSecurityNumber();
-        // TODO find way to return empty template
-        socialSecurityNumber.setSocialSecurityNumber("01010101011");
         SocialSecurityNumberHateoas socialSecurityNumberHateoas =
                 new SocialSecurityNumberHateoas(socialSecurityNumber);
         nationalIdentifierHateoasHandler
@@ -582,8 +565,6 @@ public class NationalIdentifierService
     @Override
     public UnitHateoas generateDefaultUnit() {
         Unit unit = new Unit();
-        // TODO find way to return empty template with only _links
-        unit.setOrganisationNumber("010101010");
         UnitHateoas unitHateoas = new UnitHateoas(unit);
         nationalIdentifierHateoasHandler
                 .addLinksOnTemplate(unitHateoas, new Authorisation());

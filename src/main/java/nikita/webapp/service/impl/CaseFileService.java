@@ -360,13 +360,9 @@ public class CaseFileService
         defaultCaseFile.setCaseResponsible(SecurityContextHolder.getContext().
                 getAuthentication().getName());
         defaultCaseFile.setCaseDate(OffsetDateTime.now());
-        defaultCaseFile.setTitle(TEST_TITLE);
-        defaultCaseFile.setOfficialTitle(TEST_TITLE);
-        defaultCaseFile.setDescription(TEST_DESCRIPTION);
         defaultCaseFile.setCaseStatusCode(defaultCaseFile.getCaseStatusCode());
         defaultCaseFile.setCaseStatusCodeName(defaultCaseFile.
                         getCaseStatusCodeName());
-        defaultCaseFile.setDescription(TEST_DESCRIPTION);
         defaultCaseFile.setCaseStatusCode(DEFAULT_CASE_STATUS_CODE);
         defaultCaseFile.setCaseStatusCodeName(DEFAULT_CASE_STATUS_CODE_NAME);
 

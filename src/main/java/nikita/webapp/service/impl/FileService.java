@@ -405,8 +405,6 @@ public class FileService
     @Override
     public FileHateoas generateDefaultFile() {
         File defaultFile = new File();
-        defaultFile.setTitle(TEST_TITLE);
-        defaultFile.setDescription(TEST_DESCRIPTION);
         FileHateoas fileHateoas = new FileHateoas(defaultFile);
         fileHateoasHandler.addLinksOnTemplate(fileHateoas, new Authorisation());
         return fileHateoas;
