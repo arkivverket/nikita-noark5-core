@@ -93,6 +93,17 @@ let app = angular.module('nikita', ['ngFileUpload'])
             return await response.json();
         };
 
+        this.getSeries = async function (url, token) {
+            let response = await fetch(url, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+            let data = await response.json();
+            return data;
+        };
+
+
         /**
          * Using the baseUrl (manually set in config.js), get the root of arkivstruktur.
          * First you use the url corresponding to the root of the application, then

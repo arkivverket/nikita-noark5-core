@@ -122,8 +122,8 @@ var caseHandlerController = app.controller('CaseHandlerController',
                     let seriesList = await nikitaService.getSeriesList($scope.token);
                     $scope.seriesList = seriesList.results;
                     $scope.$apply($scope.seriesList);
-                    $scope.series = $scope.seriesList[0];
-                    $scope.caseFileList = await nikitaService.getCaseFileList($scope.token, $scope.series);
+                    $scope.selectedSeries = $scope.seriesList[0];
+                    $scope.caseFileList = await nikitaService.getCaseFileList($scope.token, $scope.selectedSeries);
                     if ($scope.caseFileList === undefined) {
                         $scope.caseFileList = [];
                     }
@@ -997,6 +997,29 @@ var caseHandlerController = app.controller('CaseHandlerController',
                         console.log("Problem logging out " + error.message)
                     }
                 })();
+            };
+
+            $scope.seriesSelectedUpdate = function () {
+
+                let url = $scope.selectedSeries._links[REL_SELF].href;
+                let token = $scope.token;
+
+                console.log("Getting url  " + url);
+                console.log("Getting url  " + token);
+
+                (async () => {
+                    try {
+                        $scope.caseFileList = await nikitaService.getCaseFileList($scope.token,
+                            $scope.selectedSeries);
+                        if ($scope.caseFileList === undefined) {
+                            $scope.caseFileList = [];
+                        }
+                        $scope.$apply($scope.caseFileList);
+                    } catch (error) {
+                        console.log(error.message);
+                    }
+                })();
+
             };
 
             /**
