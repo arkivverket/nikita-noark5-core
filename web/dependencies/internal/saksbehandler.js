@@ -564,7 +564,7 @@ var caseHandlerController = app.controller('CaseHandlerController',
              * updated so the newly returned caseFile is shown.
              */
             $scope.createCaseFile = function () {
-                let url = $scope.series._links[REL_NEW_CASE_FILE].href;
+                let url = $scope.selectedSeries._links[REL_NEW_CASE_FILE].href;
                 console.log("Calling createCaseFile with " + url);
                 $http({
                     url: url,
