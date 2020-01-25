@@ -281,7 +281,7 @@ public class NationalIdentifierHateoasController
                     value = "Incoming nationalIdentifierPerson object",
                     required = true)
             @RequestBody Building building) throws NikitaException {
-        validateForUpdate(building); // FIXME no-op
+        validateForUpdate(building); // TODO no-op
 
         Building updatedBuilding =
             nationalIdentifierService.updateBuilding
@@ -322,7 +322,7 @@ public class NationalIdentifierHateoasController
                     value = "Incoming nationalIdentifierPerson object",
                     required = true)
             @RequestBody CadastralUnit cadastralUnit) throws NikitaException {
-        validateForUpdate(cadastralUnit); // FIXME no-op
+        validateForUpdate(cadastralUnit); // TODO no-op
 
         CadastralUnit updatedCadastralUnit =
             nationalIdentifierService.updateCadastralUnit
@@ -363,7 +363,7 @@ public class NationalIdentifierHateoasController
                     value = "Incoming nationalIdentifierPerson object",
                     required = true)
             @RequestBody DNumber dNumber) throws NikitaException {
-        validateForUpdate(dNumber); // FIXME no-op
+        validateForUpdate(dNumber); // TODO no-op
 
         DNumber updatedDNumber =
             nationalIdentifierService.updateDNumber
@@ -404,7 +404,7 @@ public class NationalIdentifierHateoasController
                     value = "Incoming nationalIdentifierPerson object",
                     required = true)
             @RequestBody Plan plan) throws NikitaException {
-        validateForUpdate(plan); // FIXME no-op
+        validateForUpdate(plan); // TODO no-op
 
         Plan updatedPlan =
             nationalIdentifierService.updatePlan
@@ -445,7 +445,7 @@ public class NationalIdentifierHateoasController
                     value = "Incoming position object",
                     required = true)
             @RequestBody Position position) throws NikitaException {
-        validateForUpdate(position); // FIXME no-op
+        validateForUpdate(position); // TODO no-op
 
         Position updatedPosition = nationalIdentifierService.updatePosition
             (systemID, parseETAG(request.getHeader(ETAG)), position);
@@ -485,7 +485,7 @@ public class NationalIdentifierHateoasController
                     value = "Incoming socialSecurityNumber object",
                     required = true)
             @RequestBody SocialSecurityNumber socialSecurityNumber) throws NikitaException {
-        validateForUpdate(socialSecurityNumber); // FIXME no-op
+        validateForUpdate(socialSecurityNumber); // TODO no-op
 
         SocialSecurityNumber updatedSocialSecurityNumber = nationalIdentifierService.updateSocialSecurityNumber
             (systemID, parseETAG(request.getHeader(ETAG)), socialSecurityNumber);
@@ -525,7 +525,7 @@ public class NationalIdentifierHateoasController
                     value = "Incoming unit object",
                     required = true)
             @RequestBody Unit unit) throws NikitaException {
-        validateForUpdate(unit); // FIXME no-op
+        validateForUpdate(unit); // TODO no-op
 
         Unit updatedUnit = nationalIdentifierService.updateUnit
             (systemID, parseETAG(request.getHeader(ETAG)), unit);

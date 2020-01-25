@@ -92,7 +92,7 @@ public class Deletion
 
     @Override
     public String getBaseRel() {
-        return DELETION; // FIXME, should it have a relation key?
+        return DELETION; // TODO, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {

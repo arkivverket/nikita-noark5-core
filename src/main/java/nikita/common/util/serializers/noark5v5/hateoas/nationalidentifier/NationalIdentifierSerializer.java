@@ -46,7 +46,7 @@ public class NationalIdentifierSerializer
     private static final Logger logger =
             LoggerFactory.getLogger(NationalIdentifierSerializer.class);
 
-    // FIXME figure out how to avoid duplicating code with BuildingSerializer
+    // TODO figure out how to avoid duplicating code with BuildingSerializer
     public void printBuilding(IBuildingEntity building,
                               HateoasNoarkObject buildingHateoas,
                               JsonGenerator jgen)
@@ -60,7 +60,7 @@ public class NationalIdentifierSerializer
         jgen.writeEndObject();
     }
 
-    // FIXME figure out how to avoid duplicating code with CadastralUnitSerializer
+    // TODO figure out how to avoid duplicating code with CadastralUnitSerializer
     public void printCadastralUnit(ICadastralUnitEntity cadastralUnit,
                               HateoasNoarkObject cadastralUnitHateoas,
                               JsonGenerator jgen)
@@ -91,7 +91,7 @@ public class NationalIdentifierSerializer
         jgen.writeEndObject();
     }
 
-    // FIXME figure out how to avoid duplicating code with DNumberSerializer
+    // TODO figure out how to avoid duplicating code with DNumberSerializer
     public void printDNumber(IDNumberEntity dNumber,
                              HateoasNoarkObject dNumberHateoas,
                              JsonGenerator jgen)
@@ -103,7 +103,7 @@ public class NationalIdentifierSerializer
         jgen.writeEndObject();
     }
 
-    // FIXME figure out how to avoid duplicating code with PlanSerializer
+    // TODO figure out how to avoid duplicating code with PlanSerializer
     public void printPlan(IPlanEntity plan,
                           HateoasNoarkObject planHateoas,
                           JsonGenerator jgen)
@@ -126,7 +126,7 @@ public class NationalIdentifierSerializer
         jgen.writeEndObject();
     }
 
-    // FIXME figure out how to avoid duplicating code with PositionSerializer
+    // TODO figure out how to avoid duplicating code with PositionSerializer
     private void printPosition(IPositionEntity position,
                                HateoasNoarkObject positionHateoas,
                                JsonGenerator jgen)
@@ -149,7 +149,7 @@ public class NationalIdentifierSerializer
         jgen.writeEndObject();
     }
 
-    // FIXME figure out how to avoid duplicating code with SocialSecurityNumberSerializer
+    // TODO figure out how to avoid duplicating code with SocialSecurityNumberSerializer
     public void printSocialSecurityNumber
         (ISocialSecurityNumberEntity socialSecurityNumber,
          HateoasNoarkObject socialSecurityNumberHateoas,
@@ -164,7 +164,7 @@ public class NationalIdentifierSerializer
         jgen.writeEndObject();
     }
 
-    // FIXME figure out how to avoid duplicating code with UnitSerializer
+    // TODO figure out how to avoid duplicating code with UnitSerializer
     private void printUnit(IUnitEntity unit,
                                HateoasNoarkObject unitHateoas,
                                JsonGenerator jgen)

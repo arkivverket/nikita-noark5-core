@@ -55,7 +55,7 @@ public class Keyword
 
     @Override
     public String getBaseRel() {
-        return KEYWORD; // FIXME, should it have a relation key?
+        return KEYWORD; // TODO, should it have a relation key?
     }
 
     public List<Class> getReferenceClass() {

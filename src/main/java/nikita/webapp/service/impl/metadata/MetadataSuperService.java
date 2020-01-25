@@ -36,7 +36,7 @@ public abstract class MetadataSuperService
     public MetadataSuperClass findValidMetadataOrThrow(
                 String parent, String code, String codename) {
         if (null == code) {
-            String entityname = "FIXME unknown entity name";
+            String entityname = "TODO unknown entity name";
             String info = entityname + " malformed, missing code.";
                 logger.info(info);
                 throw new NoarkInvalidStructureException(

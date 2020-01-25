@@ -141,7 +141,7 @@ public final class CommonUtils {
         }
 
         public static void setDefaultMimeTypesAsConvertible() {
-            // FIXME At the moment there seems to be a problem with
+            // TODO At the moment there seems to be a problem with
             // unoconv and I don't have time to debug this to find out
             // why ...
 
@@ -1199,7 +1199,7 @@ public final class CommonUtils {
                 deserialiseGenericPersonEntity(partPersonEntity,
                         objectNode, errors);
 
-                // FIXME : Ugly hack as code evolved where metadataentity
+                // TODO : Ugly hack as code evolved where metadataentity
                 // and nikitaentity suddenly no longer are the same
                 // just to keep things moving ...
                 ((INoarkGeneralEntity) partPersonEntity).setTitle("TEMP: REMOVE ME!");
@@ -1250,7 +1250,7 @@ public final class CommonUtils {
 
                 deserialisePartRole(partUnit, objectNode, errors);
 
-                // FIXME : Ugly hack as code evolved where metadataentity
+                // TODO : Ugly hack as code evolved where metadataentity
                 // and nikitaentity suddenly no longer are the same
                 // just to keep things moving ...
                 ((INoarkGeneralEntity) partUnit).setTitle("TEMP: REMOVE ME!");

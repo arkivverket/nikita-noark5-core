@@ -146,7 +146,7 @@ public class Screening
 
     @Override
     public String getBaseRel() {
-        return SCREENING; // FIXME, should it have a relation key?
+        return SCREENING; // TODO, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {
