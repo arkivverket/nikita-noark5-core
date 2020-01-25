@@ -117,7 +117,7 @@ public class Disposal
 
     @Override
     public String getBaseRel() {
-        return DISPOSAL; // FIXME, should it have a relation key?
+        return DISPOSAL; // TODO, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {

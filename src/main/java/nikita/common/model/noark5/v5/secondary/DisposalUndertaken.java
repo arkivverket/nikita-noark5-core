@@ -74,7 +74,7 @@ public class DisposalUndertaken
 
     @Override
     public String getBaseRel() {
-        return DISPOSAL_UNDERTAKEN; // FIXME, should it have a relation key?
+        return DISPOSAL_UNDERTAKEN; // TODO, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {

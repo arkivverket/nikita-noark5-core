@@ -463,7 +463,7 @@ public class RegistryEntryService
 
     private void validateRegistryEntryStatus(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
-        // FIXME note, RegistryEntry.*RecordStatus* is really
+        // TODO note, RegistryEntry.*RecordStatus* is really
         // operating on RegistryEntryStatus.
         RegistryEntryStatus registryEntryStatus =
             (RegistryEntryStatus) registryEntryStatusService

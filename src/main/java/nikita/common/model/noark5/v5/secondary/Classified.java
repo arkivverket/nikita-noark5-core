@@ -157,7 +157,7 @@ public class Classified
 
     @Override
     public String getBaseRel() {
-        return CLASSIFIED; // FIXME, should it have a relation key?
+        return CLASSIFIED; // TODO, should it have a relation key?
     }
 
     public List<Series> getReferenceSeries() {

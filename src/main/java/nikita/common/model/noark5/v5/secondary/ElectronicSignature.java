@@ -143,7 +143,7 @@ public class ElectronicSignature
 
     @Override
     public String getBaseRel() {
-        return ELECTRONIC_SIGNATURE; // FIXME, should it have a relation key?
+        return ELECTRONIC_SIGNATURE; // TODO, should it have a relation key?
     }
 
     public RegistryEntry getReferenceRegistryEntry() {

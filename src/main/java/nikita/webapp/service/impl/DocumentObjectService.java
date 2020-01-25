@@ -193,7 +193,7 @@ public class DocumentObjectService
             }
             documentObject.setMimeType(mimeType);
 
-            // FIXME find way to detect PRONOM code for a uploaded file.
+            // TODO find way to detect PRONOM code for a uploaded file.
             String format = documentObject.getFormatCode();
             if (null == format) {
                 logger.warn("Setting format for documentObject [" +
