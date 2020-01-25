@@ -45,12 +45,8 @@ public class DocumentObjectHateoasSerializer
                       documentObject.getChecksum());
         printNullable(jgen, DOCUMENT_OBJECT_CHECKSUM_ALGORITHM,
                       documentObject.getChecksumAlgorithm());
-        // FIXME file size need to be number, not string
-        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/150
-        if (documentObject.getFileSize() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_FILE_SIZE,
-                    Long.toString(documentObject.getFileSize()));
-        }
+        printNullable(jgen, DOCUMENT_OBJECT_FILE_SIZE,
+                      documentObject.getFileSize());
         printNullable(jgen, DOCUMENT_OBJECT_FILE_NAME,
                       documentObject.getOriginalFilename());
         printNullable(jgen, DOCUMENT_OBJECT_MIME_TYPE,

@@ -415,6 +415,27 @@ public final class CommonUtils {
                 return null;
             }
 
+            public static Long deserializeLong(String fieldname,
+                                               ObjectNode objectNode,
+                                               StringBuilder errors,
+                                               boolean required) {
+                JsonNode currentNode = objectNode.get(fieldname);
+                if (null != currentNode) {
+                    objectNode.remove(fieldname);
+                    if (currentNode.isNumber()) {
+                        return currentNode.longValue();
+                    } else {
+                        errors.append(fieldname + " (\"" +
+                                      currentNode.textValue() +
+                                      "\") is not numeric. ");
+                        return null;
+                    }
+                } else if (required) {
+                    errors.append(fieldname + " is missing. ");
+                }
+                return null;
+            }
+
             public static OffsetDateTime deserializeDate(String fieldname,
                                                          ObjectNode objectNode,
                                                          StringBuilder errors,

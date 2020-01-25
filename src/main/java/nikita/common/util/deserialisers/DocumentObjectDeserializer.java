@@ -86,11 +86,9 @@ public class DocumentObjectDeserializer
             objectNode.remove(DOCUMENT_OBJECT_CHECKSUM_ALGORITHM);
         }
         // Deserialize fileSize
-        currentNode = objectNode.get(DOCUMENT_OBJECT_FILE_SIZE);
-        if (null != currentNode) {
-            documentObject.setFileSize(currentNode.asLong());
-            objectNode.remove(DOCUMENT_OBJECT_FILE_SIZE);
-        }
+        documentObject.setFileSize
+            (deserializeLong(DOCUMENT_OBJECT_FILE_SIZE, objectNode,
+                                errors, false));
         // Deserialize filename
         currentNode = objectNode.get(DOCUMENT_OBJECT_FILE_NAME);
         if (null != currentNode) {
