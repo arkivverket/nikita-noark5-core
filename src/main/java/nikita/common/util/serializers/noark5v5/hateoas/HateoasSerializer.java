@@ -42,9 +42,9 @@ public class HateoasSerializer
             SerializerProvider provider)
             throws IOException {
         // For lists the output should be
-        //  { "entity": [], "_links": [] }
+        //  { "count": N, "results": [], "_links": [] }
         // An empty list should produce
-        // { "entity": [], "_links": [] }
+        // { "count": 0, "_links": [] }
         // An entity should produce
         // { "field" : "value", "_links": [] }
         // No such thing as an empty entity
@@ -52,6 +52,7 @@ public class HateoasSerializer
         if (list.size() > 0) {
             if (!hateoasObject.isSingleEntity()) {
                 jgen.writeStartObject();
+                jgen.writeNumberField(ENTITY_ROOT_NAME_LIST_COUNT, list.size());
                 jgen.writeFieldName(ENTITY_ROOT_NAME_LIST);
                 jgen.writeStartArray();
             }
