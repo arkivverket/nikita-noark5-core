@@ -68,24 +68,16 @@ public class NationalIdentifierSerializer
         jgen.writeStartObject();
         printSystemIdEntity(jgen, cadastralUnit);
 
-        jgen.writeStringField(MUNICIPALITY_NUMBER,
-                cadastralUnit.getMunicipalityNumber());
-
-        jgen.writeNumberField(HOLDING_NUMBER,
-                cadastralUnit.getHoldingNumber());
-
-        jgen.writeNumberField(SUB_HOLDING_NUMBER,
-                cadastralUnit.getSubHoldingNumber());
-
-        if (null != cadastralUnit.getLeaseNumber()) {
-            jgen.writeNumberField(LEASE_NUMBER,
-                    cadastralUnit.getLeaseNumber());
-        }
-
-        if (null != cadastralUnit.getSectionNumber()) {
-            jgen.writeNumberField(SECTION_NUMBER,
-                    cadastralUnit.getSectionNumber());
-        }
+        printNullable(jgen, MUNICIPALITY_NUMBER,
+                      cadastralUnit.getMunicipalityNumber());
+        printNullable(jgen, HOLDING_NUMBER,
+                      cadastralUnit.getHoldingNumber());
+        printNullable(jgen, SUB_HOLDING_NUMBER,
+                      cadastralUnit.getSubHoldingNumber());
+        printNullable(jgen, LEASE_NUMBER,
+                      cadastralUnit.getLeaseNumber());
+        printNullable(jgen, SECTION_NUMBER,
+                      cadastralUnit.getSectionNumber());
 
         printHateoasLinks(jgen, cadastralUnitHateoas.getLinks(cadastralUnit));
         jgen.writeEndObject();
@@ -98,7 +90,7 @@ public class NationalIdentifierSerializer
         throws IOException {
         jgen.writeStartObject();
         printSystemIdEntity(jgen, dNumber);
-        jgen.writeStringField(D_NUMBER_FIELD, dNumber.getdNumber());
+        printNullable(jgen, D_NUMBER_FIELD, dNumber.getdNumber());
         printHateoasLinks(jgen, dNumberHateoas.getLinks(dNumber));
         jgen.writeEndObject();
     }
@@ -110,18 +102,10 @@ public class NationalIdentifierSerializer
         throws IOException {
         jgen.writeStartObject();
         printSystemIdEntity(jgen, plan);
-        if (null != plan.getMunicipalityNumber()) {
-            jgen.writeStringField(MUNICIPALITY_NUMBER,
-                    plan.getMunicipalityNumber());
-        }
-        if (null != plan.getCountyNumber()) {
-            jgen.writeStringField(COUNTY_NUMBER, plan.getCountyNumber());
-        }
-        if (null != plan.getCountry()) {
-            jgen.writeStringField(COUNTRY, plan.getCountry().getCode());
-        }
-        jgen.writeStringField(PLAN_IDENTIFICATION,
-                plan.getPlanIdentification());
+        printNullable(jgen, MUNICIPALITY_NUMBER, plan.getMunicipalityNumber());
+        printNullable(jgen, COUNTY_NUMBER, plan.getCountyNumber());
+        printNullable(jgen, COUNTRY, plan.getCountry().getCode());
+        printNullable(jgen, PLAN_IDENTIFICATION, plan.getPlanIdentification());
         printHateoasLinks(jgen, planHateoas.getLinks(plan));
         jgen.writeEndObject();
     }
@@ -133,18 +117,12 @@ public class NationalIdentifierSerializer
         throws IOException {
         jgen.writeStartObject();
         printSystemIdEntity(jgen, position);
-
-        jgen.writeObjectFieldStart(COORDINATE_SYSTEM);
-        printCode(jgen,
-                  position.getCoordinateSystemCode(),
-                  position.getCoordinateSystemCodeName());
-        jgen.writeEndObject();
-
-        jgen.writeNumberField(X, position.getX());
-        jgen.writeNumberField(Y, position.getY());
-        if (null != position.getZ()) {
-            jgen.writeNumberField(Z, position.getZ());
-        }
+        printMetadataCode(jgen, COORDINATE_SYSTEM,
+                          position.getCoordinateSystemCode(),
+                          position.getCoordinateSystemCodeName());
+        printNullable(jgen, X, position.getX());
+        printNullable(jgen, Y, position.getY());
+        printNullable(jgen, Z, position.getZ());
         printHateoasLinks(jgen, positionHateoas.getLinks(position));
         jgen.writeEndObject();
     }
@@ -157,8 +135,8 @@ public class NationalIdentifierSerializer
         throws IOException {
         jgen.writeStartObject();
         printSystemIdEntity(jgen, socialSecurityNumber);
-        jgen.writeStringField(SOCIAL_SECURITY_NUMBER,
-                socialSecurityNumber.getSocialSecurityNumber());
+        printNullable(jgen, SOCIAL_SECURITY_NUMBER,
+                      socialSecurityNumber.getSocialSecurityNumber());
         printHateoasLinks(jgen, socialSecurityNumberHateoas.
                 getLinks(socialSecurityNumber));
         jgen.writeEndObject();
@@ -171,7 +149,7 @@ public class NationalIdentifierSerializer
         throws IOException {
         jgen.writeStartObject();
         printSystemIdEntity(jgen, unit);
-        print(jgen, ORGANISATION_NUMBER, unit.getOrganisationNumber());
+        printNullable(jgen, ORGANISATION_NUMBER, unit.getOrganisationNumber());
         printHateoasLinks(jgen, unitHateoas.getLinks(unit));
         jgen.writeEndObject();
     }

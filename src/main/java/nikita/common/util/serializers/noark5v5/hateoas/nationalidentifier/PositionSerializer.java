@@ -25,18 +25,12 @@ public class PositionSerializer
         Position position = (Position) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, position);
-
-        jgen.writeObjectFieldStart(COORDINATE_SYSTEM);
-        printCode(jgen,
-                  position.getCoordinateSystemCode(),
-                  position.getCoordinateSystemCodeName());
-        jgen.writeEndObject();
-
-        jgen.writeNumberField(X, position.getX());
-        jgen.writeNumberField(Y, position.getY());
-        if (null != position.getZ()) {
-            jgen.writeNumberField(Z, position.getZ());
-        }
+        printMetadataCode(jgen, COORDINATE_SYSTEM,
+                          position.getCoordinateSystemCode(),
+                          position.getCoordinateSystemCodeName());
+        printNullable(jgen, X, position.getX());
+        printNullable(jgen, Y, position.getY());
+        printNullable(jgen, Z, position.getZ());
         printHateoasLinks(jgen, positionHateoas.getLinks(position));
         jgen.writeEndObject();
     }

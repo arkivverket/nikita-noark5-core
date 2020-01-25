@@ -27,24 +27,16 @@ public class CadastralUnitSerializer
         jgen.writeStartObject();
         printSystemIdEntity(jgen, cadastralUnit);
 
-        jgen.writeStringField(MUNICIPALITY_NUMBER,
-                cadastralUnit.getMunicipalityNumber());
-
-        jgen.writeNumberField(HOLDING_NUMBER,
-                cadastralUnit.getHoldingNumber());
-
-        jgen.writeNumberField(SUB_HOLDING_NUMBER,
-                cadastralUnit.getSubHoldingNumber());
-
-        if (null != cadastralUnit.getLeaseNumber()) {
-            jgen.writeNumberField(LEASE_NUMBER,
-                    cadastralUnit.getLeaseNumber());
-        }
-
-        if (null != cadastralUnit.getSectionNumber()) {
-            jgen.writeNumberField(SECTION_NUMBER,
-                    cadastralUnit.getSectionNumber());
-        }
+        printNullable(jgen, MUNICIPALITY_NUMBER,
+                      cadastralUnit.getMunicipalityNumber());
+        printNullable(jgen, HOLDING_NUMBER,
+                      cadastralUnit.getHoldingNumber());
+        printNullable(jgen, SUB_HOLDING_NUMBER,
+                      cadastralUnit.getSubHoldingNumber());
+        printNullable(jgen, LEASE_NUMBER,
+                      cadastralUnit.getLeaseNumber());
+        printNullable(jgen, SECTION_NUMBER,
+                      cadastralUnit.getSectionNumber());
 
         printHateoasLinks(jgen, cadastralUnitHateoas.getLinks(cadastralUnit));
         jgen.writeEndObject();

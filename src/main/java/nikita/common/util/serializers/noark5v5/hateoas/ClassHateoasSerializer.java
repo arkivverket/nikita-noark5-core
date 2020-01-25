@@ -27,14 +27,12 @@ public class ClassHateoasSerializer
 
         jgen.writeStartObject();
         printSystemIdEntity(jgen, klass);
-        if (klass.getClassId() != null) {
-            jgen.writeStringField(CLASS_ID, klass.getClassId());
-        }
+        printNullable(jgen, CLASS_ID, klass.getClassId());
         printTitleAndDescription(jgen, klass);
         printKeyword(jgen, klass);
         printFinaliseEntity(jgen, klass);
         printModifiedEntity(jgen, klass);
-        // TODO: Fix this! Add printCrossReference(jgen, klass);
+        // FIXME: Fix this! Add printCrossReference(jgen, klass);
         printDisposal(jgen, klass);
         printScreening(jgen, klass);
         printClassified(jgen, klass);

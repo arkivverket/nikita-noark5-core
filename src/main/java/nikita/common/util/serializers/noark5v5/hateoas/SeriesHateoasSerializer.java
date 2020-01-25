@@ -9,7 +9,6 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 import java.io.IOException;
 
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
@@ -36,34 +35,22 @@ public class SeriesHateoasSerializer
 
         printSystemIdEntity(jgen, series);
         printTitleAndDescription(jgen, series);
-        if (series.getSeriesStatusCode() != null) {
-            jgen.writeObjectFieldStart(SERIES_STATUS);
-            printCode(jgen,
-                      series.getSeriesStatusCode(),
-                      series.getSeriesStatusCodeName());
-            jgen.writeEndObject();
-        }
+        printNullableMetadataCode(jgen, SERIES_STATUS,
+                                  series.getSeriesStatusCode(),
+                                  series.getSeriesStatusCodeName());
         printDocumentMedium(jgen, series);
         printStorageLocation(jgen, series);
         printFinaliseEntity(jgen, series);
         printModifiedEntity(jgen, series);
-        if (series.getSeriesStartDate() != null) {
-            jgen.writeStringField(SERIES_START_DATE,
-                    Serialize.formatDate(series.getSeriesStartDate()));
+        printNullableDate(jgen, SERIES_START_DATE, series.getSeriesStartDate());
+        printNullableDate(jgen, SERIES_END_DATE, series.getSeriesEndDate());
+        if (series.getReferencePrecursor() != null) {
+            printNullable(jgen, SERIES_PRECURSOR,
+                          series.getReferencePrecursor().getSystemId());
         }
-        if (series.getSeriesEndDate() != null) {
-            jgen.writeStringField(SERIES_END_DATE,
-                    Serialize.formatDate(series.getSeriesEndDate()));
-        }
-        if (series.getReferencePrecursor() != null &&
-                series.getReferencePrecursor().getSystemId() != null) {
-            jgen.writeStringField(SERIES_PRECURSOR,
-                    series.getReferencePrecursor().getSystemId());
-        }
-        if (series.getReferenceSuccessor() != null &&
-                series.getReferenceSuccessor().getSystemId() != null) {
-            jgen.writeStringField(SERIES_SUCCESSOR,
-                    series.getReferenceSuccessor().getSystemId());
+        if (series.getReferenceSuccessor() != null) {
+            printNullable(jgen, SERIES_SUCCESSOR,
+                          series.getReferenceSuccessor().getSystemId());
         }
         printDisposal(jgen, series);
         printDisposalUndertaken(jgen, series);

@@ -31,48 +31,30 @@ public class DocumentObjectHateoasSerializer
         // handle DocumentObject properties
         printSystemIdEntity(jgen, documentObject);
 
-        if (documentObject.getVersionNumber() != null) {
-            jgen.writeNumberField(DOCUMENT_OBJECT_VERSION_NUMBER,
-                    documentObject.getVersionNumber());
-        }
-        if (documentObject.getVariantFormatCode() != null) {
-            jgen.writeObjectFieldStart(DOCUMENT_OBJECT_VARIANT_FORMAT);
-            printCode(jgen,
-                    documentObject.getVariantFormatCode(),
-                    documentObject.getVariantFormatCodeName());
-            jgen.writeEndObject();
-        }
-        if (documentObject.getFormatCode() != null) {
-            jgen.writeObjectFieldStart(DOCUMENT_OBJECT_FORMAT);
-            printCode(jgen,
-                    documentObject.getFormatCode(),
-                    documentObject.getFormatCodeName());
-            jgen.writeEndObject();
-        }
-        if (documentObject.getFormatDetails() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_FORMAT_DETAILS,
-                    documentObject.getFormatDetails());
-        }
-        if (documentObject.getChecksum() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_CHECKSUM,
-                    documentObject.getChecksum());
-        }
-        if (documentObject.getChecksumAlgorithm() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_CHECKSUM_ALGORITHM,
-                    documentObject.getChecksumAlgorithm());
-        }
+        printNullable(jgen, DOCUMENT_OBJECT_VERSION_NUMBER,
+                      documentObject.getVersionNumber());
+        printNullableMetadataCode(jgen, DOCUMENT_OBJECT_VARIANT_FORMAT,
+                                  documentObject.getVariantFormatCode(),
+                                  documentObject.getVariantFormatCodeName());
+        printNullableMetadataCode(jgen, DOCUMENT_OBJECT_FORMAT,
+                                  documentObject.getFormatCode(),
+                                  documentObject.getFormatCodeName());
+        printNullable(jgen, DOCUMENT_OBJECT_FORMAT_DETAILS,
+                      documentObject.getFormatDetails());
+        printNullable(jgen, DOCUMENT_OBJECT_CHECKSUM,
+                      documentObject.getChecksum());
+        printNullable(jgen, DOCUMENT_OBJECT_CHECKSUM_ALGORITHM,
+                      documentObject.getChecksumAlgorithm());
+        // FIXME file size need to be number, not string
+        // https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/150
         if (documentObject.getFileSize() != null) {
             jgen.writeStringField(DOCUMENT_OBJECT_FILE_SIZE,
                     Long.toString(documentObject.getFileSize()));
         }
-        if (documentObject.getOriginalFilename() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_FILE_NAME,
-                    documentObject.getOriginalFilename());
-        }
-        if (documentObject.getMimeType() != null) {
-            jgen.writeStringField(DOCUMENT_OBJECT_MIME_TYPE,
-                    documentObject.getMimeType());
-        }
+        printNullable(jgen, DOCUMENT_OBJECT_FILE_NAME,
+                      documentObject.getOriginalFilename());
+        printNullable(jgen, DOCUMENT_OBJECT_MIME_TYPE,
+                      documentObject.getMimeType());
         printModifiedEntity(jgen, documentObject);
         printElectronicSignature(jgen, documentObject);
         printConversion(jgen, documentObject);

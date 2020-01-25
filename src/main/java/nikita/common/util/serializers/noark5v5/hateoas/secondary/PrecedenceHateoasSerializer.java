@@ -1,14 +1,16 @@
+
 package nikita.common.util.serializers.noark5v5.hateoas.secondary;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
+
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
  * Serialise an outgoing Precedence object as JSON.
@@ -31,8 +33,8 @@ public class PrecedenceHateoasSerializer extends HateoasSerializer implements IH
         Precedence precedence = (Precedence) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printPrecedence(jgen, precedence);
-        CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, precedenceHateoas.getLinks(precedence));
+        printPrecedence(jgen, precedence);
+        printHateoasLinks(jgen, precedenceHateoas.getLinks(precedence));
         jgen.writeEndObject();
     }
 }
