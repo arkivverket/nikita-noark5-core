@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 
 import java.io.IOException;
 
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
  * Serialise an outgoing AdministrativeUnit object as JSON.
@@ -29,22 +29,19 @@ public class AdministrativeUnitHateoasSerializer extends HateoasSerializer imple
         AdministrativeUnit administrativeUnit = (AdministrativeUnit) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, administrativeUnit);
-        if (administrativeUnit.getAdministrativeUnitName() != null) {
-            jgen.writeStringField(ADMINISTRATIVE_UNIT_NAME, administrativeUnit.getAdministrativeUnitName());
-        }
-        if (administrativeUnit.getShortName() != null) {
-            jgen.writeStringField(SHORT_NAME, administrativeUnit.getShortName());
-        }
-        CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, administrativeUnit);
-        if (administrativeUnit.getAdministrativeUnitStatus() != null) {
-            jgen.writeStringField(ADMINISTRATIVE_UNIT_STATUS, administrativeUnit.getAdministrativeUnitStatus());
-        }
+        printSystemIdEntity(jgen, administrativeUnit);
+        printNullable(jgen, ADMINISTRATIVE_UNIT_NAME,
+                      administrativeUnit.getAdministrativeUnitName());
+        printNullable(jgen, SHORT_NAME, administrativeUnit.getShortName());
+        printFinaliseEntity(jgen, administrativeUnit);
+        printNullable(jgen, ADMINISTRATIVE_UNIT_STATUS,
+                      administrativeUnit.getAdministrativeUnitStatus());
         if (administrativeUnit.getParentAdministrativeUnit() != null) {
             jgen.writeStringField(ADMINISTRATIVE_UNIT_PARENT_REFERENCE,
                     administrativeUnit.getParentAdministrativeUnit().getSystemId());
         }
-        CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, administrativeUnitHateoas.getLinks(administrativeUnit));
+        printHateoasLinks(jgen, administrativeUnitHateoas
+                          .getLinks(administrativeUnit));
         jgen.writeEndObject();
     }
 }

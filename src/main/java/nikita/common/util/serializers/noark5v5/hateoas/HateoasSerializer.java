@@ -13,10 +13,13 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST;
 import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST_COUNT;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.printCode;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
 
 
@@ -90,13 +93,46 @@ public class HateoasSerializer
     protected void printNullable(JsonGenerator jgen,
                                  String fieldName, Integer value)
             throws IOException {
-        jgen.writeNumberField(fieldName, value);
+        if (null != value)
+            jgen.writeNumberField(fieldName, value);
+    }
+
+    protected void printNullable(JsonGenerator jgen,
+                                 String fieldName, Long value)
+            throws IOException {
+        if (null != value)
+            jgen.writeNumberField(fieldName, value);
     }
 
     protected void printNullable(JsonGenerator jgen,
                                  String fieldName, Double value)
             throws IOException {
-        jgen.writeNumberField(fieldName, value);
+        if (null != value)
+            jgen.writeNumberField(fieldName, value);
+    }
+
+    protected void printNullableMetadataCode
+        (JsonGenerator jgen, String fieldName, String code, String codeName)
+            throws IOException {
+        if (null != code) {
+            jgen.writeObjectFieldStart(fieldName);
+            printCode(jgen, code, codeName);
+            jgen.writeEndObject();
+        }
+    }
+
+    protected void printNullableDate(JsonGenerator jgen,
+                                     String fieldName, OffsetDateTime value)
+            throws IOException {
+        if (null != value)
+            jgen.writeStringField(fieldName, Serialize.formatDate(value));
+    }
+
+    protected void printNullableDateTime(JsonGenerator jgen,
+				 String fieldName, OffsetDateTime value)
+            throws IOException {
+        if (null != value)
+	    jgen.writeStringField(fieldName, Serialize.formatDateTime(value));
     }
 
     /**
@@ -128,6 +164,29 @@ public class HateoasSerializer
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeNumberField(fieldName, value);
+    }
+
+    protected void printMetadataCode(JsonGenerator jgen, String fieldName,
+                                     String code, String codeName)
+            throws IOException {
+        checkNull(fieldName, code);
+        jgen.writeObjectFieldStart(fieldName);
+        printCode(jgen, code, codeName);
+        jgen.writeEndObject();
+    }
+
+    protected void printDate(JsonGenerator jgen,
+			      String fieldName, OffsetDateTime value)
+            throws IOException {
+        checkNull(fieldName, value);
+        jgen.writeStringField(fieldName, Serialize.formatDate(value));
+    }
+
+    protected void printDateTime(JsonGenerator jgen,
+				 String fieldName, OffsetDateTime value)
+            throws IOException {
+        checkNull(fieldName, value);
+        jgen.writeStringField(fieldName, Serialize.formatDateTime(value));
     }
 
     private void checkNull(String fieldName, Object value) {

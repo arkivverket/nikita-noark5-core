@@ -4,13 +4,13 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
 
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
  * Serialise an outgoing UserHateoas object as JSON.
@@ -34,18 +34,12 @@ public class UserHateoasSerializer
         User user = (User) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printSystemIdEntity(jgen, user);
-        if (user.getUsername() != null) {
-            jgen.writeStringField(USER_NAME, user.getUsername());
-        }
-        if (user.getFirstname() != null) {
-            jgen.writeStringField(FIRST_NAME, user.getFirstname());
-        }
-        if (user.getLastname() != null) {
-            jgen.writeStringField(SECOND_NAME, user.getLastname());
-        }
-        CommonUtils.Hateoas.Serialize.printFinaliseEntity(jgen, user);
-        CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, userHateoas.getLinks(user));
+        printSystemIdEntity(jgen, user);
+        printNullable(jgen, USER_NAME, user.getUsername());
+        printNullable(jgen, FIRST_NAME, user.getFirstname());
+        printNullable(jgen, SECOND_NAME, user.getLastname());
+        printFinaliseEntity(jgen, user);
+        printHateoasLinks(jgen, userHateoas.getLinks(user));
         jgen.writeEndObject();
     }
 }

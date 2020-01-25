@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
+
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
  * Serialise an outgoing CorrespondencePart object as JSON.
@@ -31,8 +32,8 @@ public class CorrespondencePartInternalHateoasSerializer extends HateoasSerializ
         CorrespondencePartInternal correspondencePart = (CorrespondencePartInternal) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        CommonUtils.Hateoas.Serialize.printCorrespondencePartInternal(jgen, correspondencePart);
-        CommonUtils.Hateoas.Serialize.printHateoasLinks(jgen, correspondencePartHateoas.getLinks(correspondencePart));
+        printCorrespondencePartInternal(jgen, correspondencePart);
+        printHateoasLinks(jgen, correspondencePartHateoas.getLinks(correspondencePart));
         jgen.writeEndObject();
     }
 }

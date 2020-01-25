@@ -26,18 +26,10 @@ public class PlanSerializer
         Plan plan = (Plan) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, plan);
-        if (null != plan.getMunicipalityNumber()) {
-            jgen.writeStringField(MUNICIPALITY_NUMBER,
-                    plan.getMunicipalityNumber());
-        }
-        if (null != plan.getCountyNumber()) {
-            jgen.writeStringField(COUNTY_NUMBER, plan.getCountyNumber());
-        }
-        if (null != plan.getCountry()) {
-            jgen.writeStringField(COUNTRY, plan.getCountry().getCode());
-        }
-        jgen.writeStringField(PLAN_IDENTIFICATION,
-                plan.getPlanIdentification());
+        printNullable(jgen, MUNICIPALITY_NUMBER, plan.getMunicipalityNumber());
+        printNullable(jgen, COUNTY_NUMBER, plan.getCountyNumber());
+        printNullable(jgen, COUNTRY, plan.getCountry().getCode());
+        printNullable(jgen, PLAN_IDENTIFICATION, plan.getPlanIdentification());
         printHateoasLinks(jgen, planHateoas.getLinks(plan));
         jgen.writeEndObject();
     }

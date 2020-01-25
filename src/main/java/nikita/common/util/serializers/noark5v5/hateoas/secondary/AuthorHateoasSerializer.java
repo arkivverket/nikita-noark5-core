@@ -38,9 +38,7 @@ public class AuthorHateoasSerializer
         Author author = (Author) noarkSystemIdEntity;
         jgen.writeStartObject();
 
-        if (author != null && null != author.getAuthor()) {
-            jgen.writeStringField(AUTHOR, author.getAuthor());
-        }
+        printNullable(jgen, AUTHOR, author.getAuthor());
 
         printHateoasLinks(jgen, authorHateoas.getLinks(author));
         jgen.writeEndObject();

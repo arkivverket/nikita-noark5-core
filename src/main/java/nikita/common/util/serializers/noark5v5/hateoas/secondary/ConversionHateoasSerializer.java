@@ -41,34 +41,18 @@ public class ConversionHateoasSerializer
 
         if (conversionEntity != null) {
             printSystemIdEntity(jgen, conversionEntity);
-
-            jgen.writeStringField(CONVERTED_DATE,
-                formatDate(conversionEntity.getConvertedDate()));
-
-            if (null != conversionEntity.getConvertedBy()) {
-                jgen.writeStringField(CONVERTED_BY,
-                    conversionEntity.getConvertedBy());
-            }
-
-            if (null != conversionEntity.getConvertedFromFormat()) {
-                jgen.writeStringField(CONVERTED_FROM_FORMAT,
-                    conversionEntity.getConvertedFromFormat());
-            }
-
-            if (null != conversionEntity.getConvertedToFormat()) {
-                jgen.writeStringField(CONVERTED_TO_FORMAT,
-                    conversionEntity.getConvertedToFormat());
-            }
-
-            if (null != conversionEntity.getConversionTool()) {
-                jgen.writeStringField(CONVERSION_TOOL,
-                    conversionEntity.getConversionTool());
-            }
-
-            if (null != conversionEntity.getConversionComment()) {
-                jgen.writeStringField(CONVERSION_COMMENT,
-                                      conversionEntity.getConversionComment());
-            }
+            printDate(jgen, CONVERTED_DATE,
+                      conversionEntity.getConvertedDate());
+            printNullable(jgen, CONVERTED_BY,
+                          conversionEntity.getConvertedBy());
+            printNullable(jgen, CONVERTED_FROM_FORMAT,
+                          conversionEntity.getConvertedFromFormat());
+            printNullable(jgen, CONVERTED_TO_FORMAT,
+                          conversionEntity.getConvertedToFormat());
+            printNullable(jgen, CONVERSION_TOOL,
+                          conversionEntity.getConversionTool());
+            printNullable(jgen, CONVERSION_COMMENT,
+                          conversionEntity.getConversionComment());
         }
         printHateoasLinks(jgen, conversionHateoas.getLinks(conversionEntity));
         jgen.writeEndObject();

@@ -27,8 +27,8 @@ public class SocialSecurityNumberSerializer
                 (SocialSecurityNumber) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, socialSecurityNumber);
-        jgen.writeStringField(SOCIAL_SECURITY_NUMBER,
-                socialSecurityNumber.getSocialSecurityNumber());
+        printNullable(jgen, SOCIAL_SECURITY_NUMBER,
+                      socialSecurityNumber.getSocialSecurityNumber());
         printHateoasLinks(jgen, socialSecurityNumberHateoas.
                 getLinks(socialSecurityNumber));
         jgen.writeEndObject();

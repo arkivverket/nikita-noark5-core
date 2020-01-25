@@ -26,7 +26,7 @@ public class DNumberSerializer
         DNumber dNumber = (DNumber) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, dNumber);
-        jgen.writeStringField(D_NUMBER_FIELD, dNumber.getdNumber());
+        printNullable(jgen, D_NUMBER_FIELD, dNumber.getdNumber());
         printHateoasLinks(jgen, dNumberHateoas.getLinks(dNumber));
         jgen.writeEndObject();
     }

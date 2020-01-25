@@ -43,42 +43,26 @@ public class DocumentDescriptionHateoasSerializer
 
         // handle DocumentDescription properties
         printSystemIdEntity(jgen, documentDescription);
-        if (documentDescription.getDocumentTypeCode() != null) {
-            jgen.writeObjectFieldStart(DOCUMENT_DESCRIPTION_DOCUMENT_TYPE);
-            printCode(jgen,
-                    documentDescription.getDocumentTypeCode(),
-                    documentDescription.getDocumentTypeCodeName());
-            jgen.writeEndObject();
-        }
-        if (documentDescription.getDocumentStatusCode() != null) {
-            jgen.writeObjectFieldStart(DOCUMENT_DESCRIPTION_STATUS);
-            printCode(jgen,
-                    documentDescription.getDocumentStatusCode(),
-                    documentDescription.getDocumentStatusCodeName());
-            jgen.writeEndObject();
-        }
+        printNullableMetadataCode(jgen, DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
+                                  documentDescription.getDocumentTypeCode(),
+                                  documentDescription.getDocumentTypeCodeName());
+        printNullableMetadataCode(jgen, DOCUMENT_DESCRIPTION_STATUS,
+                                  documentDescription.getDocumentStatusCode(),
+                                  documentDescription.getDocumentStatusCodeName());
         printTitleAndDescription(jgen, documentDescription);
-        if (documentDescription.getDocumentNumber() != null) {
-            jgen.writeNumberField(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
-                    documentDescription.getDocumentNumber());
-        }
-        if (documentDescription.getAssociationDate() != null) {
-            jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
-                    Serialize.formatDateTime(
-                            documentDescription.getAssociationDate()));
-        }
+        printNullable(jgen, DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
+                      documentDescription.getDocumentNumber());
+        printNullableDateTime(jgen, DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
+                              documentDescription.getAssociationDate());
+        // FIXME why test on date when printing the 'by' value?
         if (documentDescription.getAssociationDate() != null) {
             jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATION_BY,
                     documentDescription.getAssociatedBy());
         }
-        if (documentDescription.getAssociatedWithRecordAsCode() != null) {
-            jgen.writeObjectFieldStart(
-                DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS);
-            printCode(jgen,
-                      documentDescription.getAssociatedWithRecordAsCode(),
-                      documentDescription.getAssociatedWithRecordAsCodeName());
-            jgen.writeEndObject();
-        }
+        printNullableMetadataCode(jgen,
+             DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
+             documentDescription.getAssociatedWithRecordAsCode(),
+             documentDescription.getAssociatedWithRecordAsCodeName());
         printModifiedEntity(jgen, documentDescription);
         printAuthor(jgen, documentDescription);
         printComment(jgen, documentDescription);
@@ -87,14 +71,10 @@ public class DocumentDescriptionHateoasSerializer
         printDeletion(jgen, documentDescription);
         printScreening(jgen, documentDescription);
         printClassified(jgen, documentDescription);
-        if (documentDescription.getStorageLocation() != null) {
-            jgen.writeStringField(STORAGE_LOCATION,
-                    documentDescription.getStorageLocation());
-        }
-        if (documentDescription.getExternalReference() != null) {
-            jgen.writeStringField(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE,
-                    documentDescription.getExternalReference());
-        }
+        printNullable(jgen, STORAGE_LOCATION,
+                      documentDescription.getStorageLocation());
+        printNullable(jgen, DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE,
+                      documentDescription.getExternalReference());
         printElectronicSignature(jgen, documentDescription);
         printHateoasLinks(jgen,
                 documentDescriptionHateoas.getLinks(documentDescription));
