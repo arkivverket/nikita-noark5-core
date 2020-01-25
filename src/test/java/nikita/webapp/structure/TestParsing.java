@@ -1403,4 +1403,23 @@ public class TestParsing {
         assert(null != conversion);
         assert(systemID.equals(conversion.getSystemId()));
     }
+
+    @Test
+    public void parseAuthorComplete() throws Exception {
+        System.out.println("info: testing author parsing");
+        String authorname = "Henrik Ibsen";
+        String json = "{ "
+            +"  \"forfatter\": \"" + authorname + "\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        AuthorDeserializer authorDeserializer = new AuthorDeserializer();
+        Author author =
+            authorDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != author);
+        assert(authorname.equals(author.getAuthor()));
+    }
 }
