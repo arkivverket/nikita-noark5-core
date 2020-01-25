@@ -1501,12 +1501,16 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     fondsCreatorEntity.setFondsCreatorId(currentNode.textValue());
                     objectNode.remove(FONDS_CREATOR_ID);
+                } else {
+                    errors.append(FONDS_CREATOR_ID + " is missing. ");
                 }
                 // Deserialize fondsCreatorName
                 currentNode = objectNode.get(FONDS_CREATOR_NAME);
                 if (null != currentNode) {
                     fondsCreatorEntity.setFondsCreatorName(currentNode.textValue());
                     objectNode.remove(FONDS_CREATOR_NAME);
+                } else {
+                    errors.append(FONDS_CREATOR_NAME + " is missing. ");
                 }
                 // Deserialize description
                 currentNode = objectNode.get(DESCRIPTION);
