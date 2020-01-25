@@ -658,7 +658,7 @@ var caseHandlerController = app.controller('CaseHandlerController',
             $scope.doShowCaseFileListCard = function () {
                 (async () => {
                     try {
-                        $scope.caseFileList = await nikitaService.getCaseFileList($scope.token, $scope.series);
+                        $scope.caseFileList = await nikitaService.getCaseFileList($scope.token, $scope.selectedSeries);
                         $scope.$apply($scope.caseFileList);
                     } catch (error) {
                         console.log(error.message);
