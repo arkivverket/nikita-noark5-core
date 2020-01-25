@@ -2458,45 +2458,6 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printConversion(JsonGenerator jgen,
-                                               IConversion conversionEntity)
-                    throws IOException {
-                List<Conversion> conversions = conversionEntity.getReferenceConversion();
-                if (conversions != null && conversions.size() > 0) {
-                    for (Conversion conversion : conversions) {
-
-                        if (conversion != null) {
-                            jgen.writeObjectFieldStart(CONVERSION);
-                            if (conversion.getConvertedDate() != null) {
-                                jgen.writeStringField(CONVERTED_DATE,
-                                        formatDate(conversion.getConvertedDate()));
-                            }
-                            if (conversion.getConvertedBy() != null) {
-                                jgen.writeStringField(CONVERTED_BY,
-                                        conversion.getConvertedBy());
-                            }
-                            if (conversion.getConvertedFromFormat() != null) {
-                                jgen.writeStringField(CONVERTED_FROM_FORMAT,
-                                        conversion.getConvertedFromFormat());
-                            }
-                            if (conversion.getConvertedToFormat() != null) {
-                                jgen.writeStringField(CONVERTED_TO_FORMAT,
-                                        conversion.getConvertedToFormat());
-                            }
-                            if (conversion.getConversionTool() != null) {
-                                jgen.writeStringField(CONVERSION_TOOL,
-                                        conversion.getConversionTool());
-                            }
-                            if (conversion.getConversionComment() != null) {
-                                jgen.writeStringField(CONVERSION_COMMENT,
-                                        conversion.getConversionComment());
-                            }
-                            jgen.writeEndObject();
-                        }
-                    }
-                }
-            }
-
             public static void printFondsCreators(JsonGenerator jgen, IFondsCreator fondsCreatorObject)
                     throws IOException {
 
