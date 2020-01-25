@@ -836,9 +836,9 @@ var caseHandlerController = app.controller('CaseHandlerController',
                         if (caseFileStatusList[i].id === $scope.caseFile.saksstatus.kode)
                             $scope.selectedCaseFileStatus = caseFileStatusList[i].value;
                     }
+                    $scope.$apply($scope.caseFile);
                 });
             };
-
 
             $scope.doGetCorrespondencePartTemplate = function () {
 
