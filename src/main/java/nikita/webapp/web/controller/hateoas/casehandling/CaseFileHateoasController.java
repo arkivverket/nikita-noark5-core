@@ -18,7 +18,6 @@ import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
@@ -49,18 +48,15 @@ public class CaseFileHateoasController
     private ICaseFileHateoasHandler caseFileHateoasHandler;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
     private ApplicationEventPublisher applicationEventPublisher;
-    private IClassHateoasHandler classHateoasHandler;
 
     public CaseFileHateoasController(ICaseFileService caseFileService,
                                      ICaseFileHateoasHandler caseFileHateoasHandler,
                                      IRegistryEntryHateoasHandler registryEntryHateoasHandler,
-                                     ApplicationEventPublisher applicationEventPublisher,
-                                     IClassHateoasHandler classHateoasHandler) {
+                                     ApplicationEventPublisher applicationEventPublisher) {
         this.caseFileService = caseFileService;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
         this.applicationEventPublisher = applicationEventPublisher;
-        this.classHateoasHandler = classHateoasHandler;
     }
 
     // API - All POST Requests (CRUD - CREATE)
