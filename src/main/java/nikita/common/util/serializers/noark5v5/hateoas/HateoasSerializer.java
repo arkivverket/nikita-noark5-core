@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,6 +120,16 @@ public class HateoasSerializer
         if (null != code) {
             jgen.writeObjectFieldStart(fieldName);
             printCode(jgen, code, codeName);
+            jgen.writeEndObject();
+        }
+    }
+
+    protected void printNullableMetadata
+        (JsonGenerator jgen, String fieldName, IMetadataEntity m)
+            throws IOException {
+        if (null != m) {
+            jgen.writeObjectFieldStart(fieldName);
+            printCode(jgen, m.getCode(), m.getCodeName());
             jgen.writeEndObject();
         }
     }
