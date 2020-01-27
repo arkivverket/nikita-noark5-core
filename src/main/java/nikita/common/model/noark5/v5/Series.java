@@ -361,7 +361,7 @@ public class Series
     @Override
     public String toString() {
         return "Series{" + super.toString() +
-                "seriesStatusCode='" + seriesStatusCode + '\'' +
+                ", seriesStatusCode='" + seriesStatusCode + '\'' +
                 ", seriesStatusCodeName='" + seriesStatusCodeName + '\'' +
                 ", seriesStartDate=" + seriesStartDate +
                 ", seriesEndDate=" + seriesEndDate +
