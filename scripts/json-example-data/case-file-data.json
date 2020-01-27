@@ -3,9 +3,15 @@
   "offentligTittel": "Public title of the test file",
   "tittel": "Tittel til saksmappen",
   "beskrivelse": "Beskrivelse av saksmappen",
-  "dokumentmedium": "Elektronisk arkiv",
+  "dokumentmedium": {
+    "kode": "E",
+    "kodenavn": "Elektronisk arkiv"
+  },
   "saksaar": "2017",
   "sakssekvensnummer": "1",
   "journalenhet": "The recordsmanagement unit",
-  "saksstatus": "I gang ..."
+  "saksstatus": {
+    "kode": "B",
+    "kodenavn": "Under behandling"
+  }
 }

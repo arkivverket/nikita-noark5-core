@@ -1,6 +1,12 @@
 {
   "registreringsID"     : "0001",
   "tittel" : "Title of the registry entry",
-  "journalposttype": "Organinternt dokument uten oppfølging",
-  "journalstatus": "Journalført"
+  "journalposttype": {
+    "kode": "N",
+    "kodenavn": "Organinternt dokument uten oppfølging"
+  },
+  "journalstatus": {
+    "kode": "J",
+    "kodenavn": "Journalført"
+  }
 }
