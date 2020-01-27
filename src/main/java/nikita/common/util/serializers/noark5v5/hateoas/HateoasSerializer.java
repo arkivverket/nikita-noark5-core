@@ -88,7 +88,8 @@ public class HateoasSerializer
     protected void printNullable(JsonGenerator jgen,
                                  String fieldName, String value)
             throws IOException {
-        jgen.writeStringField(fieldName, value);
+        if (null != value)
+            jgen.writeStringField(fieldName, value);
     }
 
     protected void printNullable(JsonGenerator jgen,
