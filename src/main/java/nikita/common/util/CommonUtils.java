@@ -1380,8 +1380,8 @@ public final class CommonUtils {
                     }
                     // Deserialize dnummer
                     node= currentNode.get(D_NUMBER_FIELD);
-                    if (null != currentNode) {
-                        person.setdNumber(currentNode.textValue());
+                    if (null != node) {
+                        person.setdNumber(node.textValue());
                     }
                     // Only one of these are allowed, report error otherwise.
                     if (null != person.getSocialSecurityNumber() &&
