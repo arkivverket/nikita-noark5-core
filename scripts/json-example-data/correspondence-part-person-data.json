@@ -10,17 +10,29 @@
     "adresselinje1": "ADRL1: 742 Evergreen Terrace",
     "adresselinje2": "ADRL2: 742 Evergreen Terrace",
     "adresselinje3": "ADRL3: 742 Evergreen Terrace",
-    "postnummer": "90210",
+    "postnummer": {
+      "kode": "90210",
+      "kodenavn": "?"
+    },
     "poststed": "Springfield",
-    "landkode": "US"
+    "landkode": {
+      "kode": "US",
+      "kodenavn": "USA"
+    }
   },
   "bostedsadresse": {
     "adresselinje1": "ADRL1: 743 Evergreen Terrace",
     "adresselinje2": "ADRL2: 743 Evergreen Terrace",
     "adresselinje3": "ADRL3: 743 Evergreen Terrace",
-    "postnummer": "90210",
+    "postnummer": {
+      "kode": "90210",
+      "kodenavn": "?"
+    },
     "poststed": "Springfield",
-    "landkode": "US"
+    "landkode": {
+      "kode": "US",
+      "kodenavn": "USA"
+    }
   },
   "kontaktinformasjon": {
     "epostadresse": "nikita@example.com",
