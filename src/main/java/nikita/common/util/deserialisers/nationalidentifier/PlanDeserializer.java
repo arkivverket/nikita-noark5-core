@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.Country;
 import nikita.common.model.noark5.v5.nationalidentifier.Plan;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseMetadataValue;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
 
 public class PlanDeserializer
@@ -53,14 +55,14 @@ public class PlanDeserializer
             objectNode.remove(COUNTY_NUMBER);
         }
 
-        // Deserialize land
-        currentNode = objectNode.get(COUNTRY_CODE);
-        if (null != currentNode) {
-            Country country = new Country();
-            country.setCode(currentNode.textValue());
-            plan.setCountry(country);
-            objectNode.remove(COUNTRY_CODE);
-        }
+        // Deserialize landkode
+        Country country = (Country)
+            deserialiseMetadataValue(
+                objectNode,
+                COUNTRY_CODE,
+                new Country(),
+                errors, false);
+        plan.setCountry(country);
 
         // Deserialize planidentifikasjon
         currentNode = objectNode.get(PLAN_IDENTIFICATION);
