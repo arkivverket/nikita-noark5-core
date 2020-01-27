@@ -258,6 +258,38 @@ public class DocumentObjectService
 
     @Override
     public ConversionHateoas
+    generateDefaultConversion() {
+        Conversion defaultConversion = new Conversion();
+
+	/* Propose conversion done now by logged in user */
+	defaultConversion.setConvertedDate(OffsetDateTime.now());
+	String username =
+	    SecurityContextHolder.getContext().getAuthentication().getName();
+	defaultConversion.setConvertedBy(username);
+
+        ConversionHateoas conversionHateoas =
+	    new ConversionHateoas(defaultConversion);
+        conversionHateoasHandler.addLinksOnTemplate(conversionHateoas,
+                new Authorisation());
+	return conversionHateoas;
+    }
+
+    public ConversionHateoas
+    createConversionAssociatedWithDocumentObject(String systemId,
+                                                 Conversion conversion) {
+        DocumentObject documentObject =
+                getDocumentObjectOrThrow(systemId);
+        conversion.setReferenceDocumentObject(documentObject);
+        documentObject.addReferenceConversion(conversion);
+        ConversionHateoas conversionHateoas =
+            new ConversionHateoas(conversion);
+        conversionHateoasHandler.addLinksOnTemplate(conversionHateoas,
+                new Authorisation());
+        return conversionHateoas;
+    }
+
+    @Override
+    public ConversionHateoas
     findAllConversionAssociatedWithDocumentObject(String systemId) {
         ConversionHateoas conversionHateoas =
             new ConversionHateoas((List<INoarkEntity>) (List)

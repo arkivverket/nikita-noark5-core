@@ -10,7 +10,7 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.util.CommonUtils;
+import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -32,6 +32,7 @@ import java.util.List;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CONVERSION;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_PARAMETER;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -104,7 +105,7 @@ public class DocumentObjectHateoasController
                 documentObjectService.findDocumentObjectByOwner());
         documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
     }
 
@@ -181,11 +182,83 @@ public class DocumentObjectHateoasController
             @PathVariable("systemID") final String systemID)
             throws IOException {
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectService.findAllConversionAssociatedWithDocumentObject(systemID));
     }
 
+    // GET [contextPath][api]/arkivstruktur/dokumentobject/{systemId}/ny-konvertering
+    @ApiOperation(value = "Create a Conversion with default values",
+            response = ConversionHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Conversion returned",
+                    response = ConversionHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CONVERSION,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<ConversionHateoas> createDefaultConversion(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentObjectService.generateDefaultConversion());
+    }
+
     // API - All POST Requests (CRUD - CREATE)
+
+    // POST [contextPath][api]/arkivstruktur/dokumentobject/{systemId}/ny-konvertering
+    @ApiOperation(value = "Persists a Conversion object associated with " +
+            "the given DocumentObject systemId",
+            notes = "Returns the newly created Conversion after it was " +
+                    "associated with a DocumentObject object and " +
+                    "persisted to the database",
+            response = ConversionHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Conversion " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = ConversionHateoas.class),
+            @ApiResponse(code = 201, message = "Conversion " +
+                    API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = ConversionHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Conversion"),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CONVERSION,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<ConversionHateoas>
+    createConversionAssociatedWithDocumentObject(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of documentCbject to associate the" +
+                            " conversion with.",
+                    required = true)
+            @PathVariable String systemID,
+            @ApiParam(name = "conversion",
+                    value = "Incoming documentObject object",
+                    required = true)
+            @RequestBody Conversion conversion)
+            throws NikitaException {
+        ConversionHateoas conversionHateoas = documentObjectService
+            .createConversionAssociatedWithDocumentObject(systemID, conversion);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(conversionHateoas.getEntityVersion().toString())
+                .body(conversionHateoas);
+    }
 
     // upload a file and associate it with a documentObject
     // POST [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/referanseFil
@@ -327,7 +400,7 @@ public class DocumentObjectHateoasController
         documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedDocumentObject));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedDocumentObject.getVersion().toString())
                 .body(documentObjectHateoas);
     }

@@ -27,6 +27,12 @@ public interface IDocumentObjectService {
 
     List<DocumentObject> findDocumentObjectByOwner();
 
+    ConversionHateoas generateDefaultConversion();
+
+    ConversionHateoas
+    createConversionAssociatedWithDocumentObject(String systemID,
+                                                 Conversion conversion);
+
     ConversionHateoas
     findAllConversionAssociatedWithDocumentObject(String systemId);
 
