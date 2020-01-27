@@ -124,9 +124,6 @@ public class RegistryEntryService
     public ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
             @NotNull final String caseFileSystemId) {
         RegistryEntry defaultRegistryEntry = new RegistryEntry();
-        defaultRegistryEntry.setTitle(DEFAULT_TITLE + "RegistryEntry");
-        defaultRegistryEntry.setDescription(DEFAULT_DESCRIPTION + " a CaseFile " +
-                "with systemId [" + caseFileSystemId + "]");
         OffsetDateTime now = OffsetDateTime.now();
         defaultRegistryEntry.setRecordDate(now);
         defaultRegistryEntry.setDocumentDate(now);

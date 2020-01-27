@@ -225,8 +225,8 @@ public class DocumentObjectService
     @Override
     public DocumentObjectHateoas generateDefaultDocumentObject() {
         DocumentObject defaultDocumentObject = new DocumentObject();
-        // This is just temporary code as this will have to be replaced if
-        // this ever goes into production
+        // TODO This is just temporary code as this will have to be
+        // replaced if this ever goes into production
         defaultDocumentObject.setVariantFormatCode(PRODUCTION_VERSION_CODE);
         defaultDocumentObject.setVariantFormatCodeName(PRODUCTION_VERSION);
         defaultDocumentObject.setVersionNumber(1);

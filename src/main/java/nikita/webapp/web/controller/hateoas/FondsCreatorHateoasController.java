@@ -247,11 +247,8 @@ public class FondsCreatorHateoasController
             HttpServletRequest request
     ) throws NikitaException {
         FondsCreator suggestedFondsCreator = new FondsCreator();
-        // TODO: This should be replaced with configurable data based on whoever is logged in
-        //       Currently just returns the test values
-        suggestedFondsCreator.setFondsCreatorId("123456789");
-        suggestedFondsCreator.setFondsCreatorName("Eksempel kommune");
-        suggestedFondsCreator.setDescription("Eksempel kommune ligger i eksempel fylke nord for nord");
+        // TODO Defaults should be replaced with configurable data
+        // based on whoever is logged in
         FondsCreatorHateoas fondsCreatorHateoas = new FondsCreatorHateoas(suggestedFondsCreator);
         fondsHateoasHandler.addLinksOnTemplate(fondsCreatorHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)

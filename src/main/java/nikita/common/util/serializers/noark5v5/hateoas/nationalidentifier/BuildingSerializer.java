@@ -27,7 +27,7 @@ public class BuildingSerializer
         Building building = (Building) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, building);
-        print(jgen, BUILDING_NUMBER, building.getBuildingNumber());
+        printNullable(jgen, BUILDING_NUMBER, building.getBuildingNumber());
         printNullable(jgen, BUILDING_CHANGE_NUMBER,
                 building.getContinuousNumberingOfBuildingChange());
         printHateoasLinks(jgen, buildingHateoas.getLinks(building));
