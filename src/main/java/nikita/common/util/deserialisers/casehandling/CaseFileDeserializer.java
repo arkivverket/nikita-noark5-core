@@ -83,18 +83,14 @@ public class CaseFileDeserializer
 
         // Deserialise general properties for CaseFile
         // Deserialize caseYear
-        currentNode = objectNode.get(CASE_YEAR);
-        if (null != currentNode) {
-            caseFile.setCaseYear(currentNode.intValue());
-            objectNode.remove(CASE_YEAR);
-        }
+        caseFile.setCaseYear
+            (deserializeInteger(CASE_YEAR,
+                                objectNode, errors, false));
 
         // Deserialize caseSequenceNumber
-        currentNode = objectNode.get(CASE_SEQUENCE_NUMBER);
-        if (null != currentNode) {
-            caseFile.setCaseSequenceNumber(currentNode.intValue());
-            objectNode.remove(CASE_SEQUENCE_NUMBER);
-        }
+        caseFile.setCaseSequenceNumber
+            (deserializeInteger(CASE_SEQUENCE_NUMBER,
+                                objectNode, errors, false));
 
         // Deserialize caseDate
         caseFile.setCaseDate(deserializeDate(CASE_DATE, objectNode, errors));

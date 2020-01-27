@@ -94,13 +94,9 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         documentDescription.setAssociatedWithRecordAsCodeName(entity.getCodeName());
 
         // Deserialize documentNumber
-        JsonNode currentNode =
-	    objectNode.get(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER);
-        if (null != currentNode) {
-            documentDescription.setDocumentNumber(
-                    currentNode.intValue());
-            objectNode.remove(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER);
-        }
+        documentDescription.setDocumentNumber
+                    (deserializeInteger(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
+                                        objectNode, errors, false));
 
         // Deserialize associationDate
         documentDescription.setAssociationDate(
@@ -108,7 +104,8 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
                 objectNode, errors));
 
         // Deserialize associatedBy
-        currentNode = objectNode.get(DOCUMENT_DESCRIPTION_ASSOCIATED_BY);
+        JsonNode currentNode =
+            objectNode.get(DOCUMENT_DESCRIPTION_ASSOCIATED_BY);
         if (null != currentNode) {
             documentDescription.setAssociatedBy(currentNode.textValue());
             objectNode.remove(DOCUMENT_DESCRIPTION_ASSOCIATED_BY);

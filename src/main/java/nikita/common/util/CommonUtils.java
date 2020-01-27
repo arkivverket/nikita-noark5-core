@@ -394,6 +394,48 @@ public final class CommonUtils {
 
         public static final class Deserialize {
 
+            public static Integer deserializeInteger(String fieldname,
+                                                     ObjectNode objectNode,
+                                                     StringBuilder errors,
+                                                     boolean required) {
+                JsonNode currentNode = objectNode.get(fieldname);
+                if (null != currentNode) {
+                    objectNode.remove(fieldname);
+                    if (currentNode.isNumber()) {
+                        return currentNode.intValue();
+                    } else {
+                        errors.append(fieldname + " (\"" +
+                                      currentNode.textValue() +
+                                      "\") is not numeric. ");
+                        return null;
+                    }
+                } else if (required) {
+                    errors.append(fieldname + " is missing. ");
+                }
+                return null;
+            }
+
+            public static Long deserializeLong(String fieldname,
+                                               ObjectNode objectNode,
+                                               StringBuilder errors,
+                                               boolean required) {
+                JsonNode currentNode = objectNode.get(fieldname);
+                if (null != currentNode) {
+                    objectNode.remove(fieldname);
+                    if (currentNode.isNumber()) {
+                        return currentNode.longValue();
+                    } else {
+                        errors.append(fieldname + " (\"" +
+                                      currentNode.textValue() +
+                                      "\") is not numeric. ");
+                        return null;
+                    }
+                } else if (required) {
+                    errors.append(fieldname + " is missing. ");
+                }
+                return null;
+            }
+
             public static OffsetDateTime deserializeDate(String fieldname,
                                                          ObjectNode objectNode,
                                                          StringBuilder errors,
@@ -896,11 +938,9 @@ public final class CommonUtils {
                     objectNode.remove(DISPOSAL_AUTHORITY);
                 }
                 // Deserialize preservationTime
-                currentNode = objectNode.get(DISPOSAL_PRESERVATION_TIME);
-                if (null != currentNode) {
-                    disposalEntity.setPreservationTime(Integer.valueOf(currentNode.intValue()));
-                    objectNode.remove(DISPOSAL_PRESERVATION_TIME);
-                }
+                disposalEntity.setPreservationTime
+                    (deserializeInteger(DISPOSAL_PRESERVATION_TIME,
+                                        objectNode, errors, false));
                 // Deserialize disposalDate
                 disposalEntity.setDisposalDate(deserializeDate(DISPOSAL_DATE, objectNode, errors));
             }

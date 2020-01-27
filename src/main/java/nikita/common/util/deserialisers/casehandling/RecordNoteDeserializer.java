@@ -107,12 +107,9 @@ public class RecordNoteDeserializer
                         objectNode, errors));
 
         // Deserialize numberOfAttachments
-        currentNode = objectNode.get(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS);
-        if (null != currentNode) {
-            recordNote.setNumberOfAttachments(
-                    currentNode.intValue());
-            objectNode.remove(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS);
-        }
+        recordNote.setNumberOfAttachments
+            (deserializeInteger(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS,
+                                objectNode, errors, false));
         // Deserialize loanedDate
         recordNote.setLoanedDate(
                 deserializeDate(CASE_LOANED_DATE, objectNode, errors));

@@ -103,25 +103,18 @@ public class RegistryEntryDeserializer
 
         // Deserialize general registryEntry properties
         // Deserialize recordYear
-        currentNode = objectNode.get(REGISTRY_ENTRY_YEAR);
-        if (null != currentNode) {
-            registryEntry.setRecordYear(currentNode.intValue());
-            objectNode.remove(REGISTRY_ENTRY_YEAR);
-        }
+        registryEntry.setRecordYear
+            (deserializeInteger(REGISTRY_ENTRY_YEAR,
+                                objectNode, errors, false));
         // Deserialize recordSequenceNumber
-        currentNode = objectNode.get(REGISTRY_ENTRY_SEQUENCE_NUMBER);
-        if (null != currentNode) {
-            registryEntry.setRecordSequenceNumber(
-                    currentNode.intValue());
-            objectNode.remove(REGISTRY_ENTRY_SEQUENCE_NUMBER);
-        }
+        registryEntry.setRecordSequenceNumber
+            (deserializeInteger(REGISTRY_ENTRY_SEQUENCE_NUMBER,
+                                objectNode, errors, false));
         // Deserialize registryEntryNumber
-        currentNode = objectNode.get(REGISTRY_ENTRY_NUMBER);
-        if (null != currentNode) {
-            registryEntry.setRegistryEntryNumber(
-                    currentNode.intValue());
-            objectNode.remove(REGISTRY_ENTRY_NUMBER);
-        }
+        registryEntry.setRegistryEntryNumber
+            (deserializeInteger(REGISTRY_ENTRY_NUMBER,
+                                objectNode, errors, false));
+
         // Deserialize registryEntryType
         IMetadataEntity entity =
             deserialiseMetadataValue(objectNode,
@@ -166,12 +159,9 @@ public class RegistryEntryDeserializer
                         objectNode, errors));
 
         // Deserialize numberOfAttachments
-        currentNode = objectNode.get(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS);
-        if (null != currentNode) {
-            registryEntry.setNumberOfAttachments(
-                    currentNode.intValue());
-            objectNode.remove(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS);
-        }
+        registryEntry.setNumberOfAttachments
+            (deserializeInteger(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS,
+                                objectNode, errors, false));
         // Deserialize loanedDate
         registryEntry.setLoanedDate(
                 deserializeDate(CASE_LOANED_DATE, objectNode, errors));

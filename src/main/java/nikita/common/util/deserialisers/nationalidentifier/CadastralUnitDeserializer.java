@@ -15,8 +15,7 @@ import java.io.IOException;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class CadastralUnitDeserializer
         extends JsonDeserializer {
@@ -46,32 +45,24 @@ public class CadastralUnitDeserializer
         }
 
         // Deserialize gaardsnummer
-        currentNode = objectNode.get(HOLDING_NUMBER);
-        if (null != currentNode) {
-            cadastralUnit.setHoldingNumber(currentNode.intValue());
-            objectNode.remove(HOLDING_NUMBER);
-        }
+        cadastralUnit.setHoldingNumber
+            (deserializeInteger(HOLDING_NUMBER,
+                                objectNode, errors, true));
 
         // Deserialize bruksnummer
-        currentNode = objectNode.get(SUB_HOLDING_NUMBER);
-        if (null != currentNode) {
-            cadastralUnit.setSubHoldingNumber(currentNode.intValue());
-            objectNode.remove(SUB_HOLDING_NUMBER);
-        }
+        cadastralUnit.setSubHoldingNumber
+            (deserializeInteger(SUB_HOLDING_NUMBER,
+                                objectNode, errors, true));
 
         // Deserialize festenummer
-        currentNode = objectNode.get(LEASE_NUMBER);
-        if (null != currentNode) {
-            cadastralUnit.setLeaseNumber(currentNode.intValue());
-            objectNode.remove(LEASE_NUMBER);
-        }
+        cadastralUnit.setLeaseNumber
+            (deserializeInteger(LEASE_NUMBER,
+                                objectNode, errors, false));
 
         // Deserialize seksjonsnummer
-        currentNode = objectNode.get(SECTION_NUMBER);
-        if (null != currentNode) {
-            cadastralUnit.setSectionNumber(currentNode.intValue());
-            objectNode.remove(SECTION_NUMBER);
-        }
+        cadastralUnit.setSectionNumber
+            (deserializeInteger(SECTION_NUMBER,
+                                objectNode, errors, false));
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
