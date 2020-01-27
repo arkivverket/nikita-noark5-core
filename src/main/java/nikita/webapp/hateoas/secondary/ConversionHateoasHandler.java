@@ -29,9 +29,11 @@ public class ConversionHateoasHandler
     public void addSelfLink(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
 
-        String parentEntity = "";
-        String parentSystemId = "";
         Conversion conversion = (Conversion) entity;
+        String parentEntity =
+	    conversion.getReferenceDocumentObject().getBaseTypeName();
+        String parentSystemId =
+	    conversion.getReferenceDocumentObject().getSystemId();
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + parentEntity + SLASH +
                 parentSystemId + SLASH + CONVERSION + SLASH + entity.getSystemId(),
