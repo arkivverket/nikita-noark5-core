@@ -360,7 +360,7 @@ public class Series
 
     @Override
     public String toString() {
-        return "Series{" +
+        return "Series{" + super.toString() +
                 "seriesStatusCode='" + seriesStatusCode + '\'' +
                 ", seriesStatusCodeName='" + seriesStatusCodeName + '\'' +
                 ", seriesStartDate=" + seriesStartDate +
