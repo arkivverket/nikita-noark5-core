@@ -43,7 +43,6 @@ public class CaseFileHateoasHandler
         addReferenceSecondaryClassification(entity, hateoasNoarkObject);
         addNewReferenceSecondaryClassification(entity, hateoasNoarkObject);
         // Methods from this class
-        //addClass(entity, hateoasNoarkObject);
         addNewPrecedence(entity, hateoasNoarkObject);
         //addPrecedence(entity, hateoasNoarkObject);
         addNewRegistryEntry(entity, hateoasNoarkObject);
