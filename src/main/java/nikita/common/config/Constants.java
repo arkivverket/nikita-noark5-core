@@ -600,7 +600,7 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_NEW_D_NUMBER =
             REL_FONDS_STRUCTURE + NEW_D_NUMBER + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_PLAN =
-            REL_FONDS_STRUCTURE + PLAN + SLASH;
+            REL_FONDS_STRUCTURE + NEW_PLAN + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_POSITION =
             REL_FONDS_STRUCTURE + NEW_POSITION + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_SOCIAL_SECURITY_NUMBER =
