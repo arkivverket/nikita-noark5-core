@@ -127,7 +127,7 @@ public class HateoasSerializer
     protected void printNullableMetadata
         (JsonGenerator jgen, String fieldName, IMetadataEntity m)
             throws IOException {
-        if (null != m and null != m.getCode()) {
+        if (null != m && null != m.getCode()) {
             jgen.writeObjectFieldStart(fieldName);
             printCode(jgen, m.getCode(), m.getCodeName());
             jgen.writeEndObject();
