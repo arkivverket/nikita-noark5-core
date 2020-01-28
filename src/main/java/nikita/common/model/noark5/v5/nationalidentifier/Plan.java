@@ -54,11 +54,18 @@ public class Plan
     String countyNumber;
 
     /**
-     * M??? - land (xs:string)
+     * M??? - landkode code (xs:string)
      */
-    @Column(name = "country")
+    @Column(name = "country_code")
     @Audited
-    Country country;
+    String countryCode;
+
+    /**
+     * M??? - landkode code name (xs:string)
+     */
+    @Column(name = "country_code_name")
+    @Audited
+    String countryCodeName;
 
     /**
      * M??? - planidentifikasjon (xs:string)
@@ -89,12 +96,16 @@ public class Plan
 
     @Override
     public Country getCountry() {
+        Country country = new Country();
+        country.setCode(countryCode);
+        country.setCodeName(countryCodeName);
         return country;
     }
 
     @Override
     public void setCountry(Country country) {
-        this.country = country;
+        countryCode = country.getCode();
+        countryCodeName = country.getCodeName();
     }
 
     @Override
@@ -122,7 +133,8 @@ public class Plan
         return "Plan{" +
                 "municipalityNumber='" + municipalityNumber + '\'' +
                 ", countyNumber='" + countyNumber + '\'' +
-                ", country=" + country +
+                ", countryCode=" + countryCode +
+                ", countryCodeName=" + countryCodeName +
                 ", planIdentification='" + planIdentification + '\'' +
                 '}';
     }
@@ -143,7 +155,8 @@ public class Plan
                 .appendSuper(super.equals(other))
                 .append(municipalityNumber, rhs.municipalityNumber)
                 .append(countyNumber, rhs.countyNumber)
-                .append(country, rhs.country)
+                .append(countryCode, rhs.countryCode)
+                .append(countryCodeName, rhs.countryCodeName)
                 .append(planIdentification, rhs.planIdentification)
                 .isEquals();
     }
@@ -154,7 +167,8 @@ public class Plan
                 .appendSuper(super.hashCode())
                 .append(municipalityNumber)
                 .append(countyNumber)
-                .append(country)
+                .append(countryCode)
+                .append(countryCodeName)
                 .append(planIdentification)
                 .toHashCode();
     }
