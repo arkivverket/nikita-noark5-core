@@ -60,7 +60,7 @@ public class Conversion
      */
     @Column(name = CONVERSION_TOOL_ENG)
     @Audited
-    @JsonProperty(CONVERTED_TO_TOOL)
+    @JsonProperty(CONVERSION_TOOL)
     private String conversionTool;
 
     /**
