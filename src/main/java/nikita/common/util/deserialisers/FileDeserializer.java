@@ -77,7 +77,6 @@ public class FileDeserializer
             objectNode.remove(N5ResourceMappings.FILE_PUBLIC_TITLE);
         }
         // TODO: FIX THIS CommonCommonUtils.Hateoas.Deserialize.deserialiseCrossReference(file, objectNode);
-        CommonUtils.Hateoas.Deserialize.deserialiseComments(file, objectNode, errors);
         file.setReferenceDisposal(CommonUtils.Hateoas.Deserialize.deserialiseDisposal(objectNode, errors));
         file.setReferenceScreening(CommonUtils.Hateoas.Deserialize.deserialiseScreening(objectNode, errors));
         file.setReferenceClassified(CommonUtils.Hateoas.Deserialize.deserialiseClassified(objectNode, errors));

@@ -28,13 +28,16 @@ import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
+import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
@@ -42,6 +45,7 @@ import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.secondary.IAuthorService;
+import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -62,6 +66,7 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_CORRESPONDENCE_PART_RECORD;
 import static nikita.common.config.N5ResourceMappings.AUTHOR;
+import static nikita.common.config.N5ResourceMappings.COMMENT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -87,6 +92,7 @@ public class RecordService
             documentDescriptionHateoasHandler;
     private IDocumentDescriptionRepository documentDescriptionRepository;
     private IAuthorService authorService;
+    private ICommentService commentService;
     private ICorrespondencePartService correspondencePartService;
     private IDocumentMediumService documentMediumService;
     private INationalIdentifierService nationalIdentifierService;
@@ -95,6 +101,7 @@ public class RecordService
     private INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
     private IPartHateoasHandler partHateoasHandler;
     private IAuthorHateoasHandler authorHateoasHandler;
+    private ICommentHateoasHandler commentHateoasHandler;
 
     public RecordService(
             EntityManager entityManager,
@@ -109,6 +116,7 @@ public class RecordService
                     documentDescriptionHateoasHandler,
             IDocumentDescriptionRepository documentDescriptionRepository,
             IAuthorService authorService,
+            ICommentService commentService,
             ICorrespondencePartService correspondencePartService,
             IDocumentMediumService documentMediumService,
             INationalIdentifierService nationalIdentifierService,
@@ -116,7 +124,8 @@ public class RecordService
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
             INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
             IPartHateoasHandler partHateoasHandler,
-            IAuthorHateoasHandler authorHateoasHandler) {
+            IAuthorHateoasHandler authorHateoasHandler,
+            ICommentHateoasHandler commentHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
@@ -129,6 +138,7 @@ public class RecordService
                 documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.authorService = authorService;
+        this.commentService = commentService;
         this.correspondencePartService = correspondencePartService;
         this.documentMediumService = documentMediumService;
         this.nationalIdentifierService = nationalIdentifierService;
@@ -137,6 +147,7 @@ public class RecordService
         this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
         this.authorHateoasHandler = authorHateoasHandler;
+        this.commentHateoasHandler = commentHateoasHandler;
     }
 
     // All CREATE operations
@@ -292,6 +303,17 @@ public class RecordService
         ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().
                 getAuthentication().getName() : ownedBy;
         return recordRepository.findByOwnedBy(ownedBy);
+    }
+
+    @Override
+    public CommentHateoas getCommentAssociatedWithRecord(
+            @NotNull final String systemID) {
+        CommentHateoas commentHateoas =
+            new CommentHateoas((List<INoarkEntity>) (List)
+                getRecordOrThrow(systemID).getReferenceComment(),
+                COMMENT);
+        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
+        return commentHateoas;
     }
 
     @Override
@@ -463,6 +485,13 @@ public class RecordService
                 createNewUnit(unit, getRecordOrThrow(systemID));
     }
 
+    @Override
+    public CommentHateoas createCommentAssociatedWithRecord
+        (String systemID, Comment comment) {
+        return commentService.createNewComment
+            (comment, getRecordOrThrow(systemID));
+    }
+
     /**
      * Generate a Default CorrespondencePartUnit object that can be
      * associated with the identified Record.
@@ -485,6 +514,11 @@ public class RecordService
         RecordHateoas recordHateoas = new RecordHateoas(defaultRecord);
         recordHateoasHandler.addLinksOnTemplate(recordHateoas, new Authorisation());
         return recordHateoas;
+    }
+
+    @Override
+    public CommentHateoas generateDefaultComment() {
+        return commentService.generateDefaultComment();
     }
 
     /**

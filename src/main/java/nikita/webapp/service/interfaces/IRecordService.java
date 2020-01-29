@@ -12,23 +12,12 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
-import nikita.common.model.noark5.v5.nationalidentifier.Building;
-import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
-import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Plan;
-import nikita.common.model.noark5.v5.nationalidentifier.Position;
-import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Unit;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Author;
+import nikita.common.model.noark5.v5.secondary.Comment;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -42,7 +31,12 @@ public interface IRecordService {
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription);
 
+    CommentHateoas createCommentAssociatedWithRecord
+        (String systemID, Comment comment);
+
     RecordHateoas generateDefaultRecord();
+
+    CommentHateoas generateDefaultComment();
 
     CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
             String recordSystemId);
@@ -52,6 +46,9 @@ public interface IRecordService {
 
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
             String recordSystemId);
+
+    CommentHateoas getCommentAssociatedWithRecord
+        (@NotNull final String systemID);
 
     CorrespondencePartHateoas getCorrespondencePartAssociatedWithRecord(
             final String systemID);

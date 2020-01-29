@@ -44,7 +44,6 @@ public class FileHateoasSerializer
         printFinaliseEntity(jgen, file);
         printModifiedEntity(jgen, file);
         printCrossReferences(jgen, file);
-        printComment(jgen, file);
         printDisposal(jgen, file);
         printScreening(jgen, file);
         printClassified(jgen, file);

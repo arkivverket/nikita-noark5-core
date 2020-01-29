@@ -6,7 +6,9 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.secondary.Author;
+import nikita.common.model.noark5.v5.secondary.Comment;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -21,6 +23,9 @@ public interface IDocumentDescriptionService {
             String documentDescriptionSystemId,
             DocumentObject documentObject);
 
+    CommentHateoas createCommentAssociatedWithDocumentDescription
+	(String systemID, Comment comment);
+
     PartPersonHateoas createPartPersonAssociatedWithDocumentDescription(
             String systemID, PartPerson partPerson);
 
@@ -33,6 +38,8 @@ public interface IDocumentDescriptionService {
             String systemId, Author author);
 
     DocumentDescriptionHateoas generateDefaultDocumentDescription();
+
+    CommentHateoas generateDefaultComment();
 
     PartPersonHateoas generateDefaultPartPerson(String systemID);
 
@@ -52,6 +59,9 @@ public interface IDocumentDescriptionService {
 
     DocumentDescription findDocumentDescriptionBySystemId(
             @NotNull String systemId);
+
+    CommentHateoas getCommentAssociatedWithDocumentDescription
+	(@NotNull final String systemID);
 
     PartHateoas getPartAssociatedWithDocumentDescription(
             @NotNull final String systemID);

@@ -6,21 +6,10 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
-import nikita.common.model.noark5.v5.nationalidentifier.Building;
-import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
-import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Plan;
-import nikita.common.model.noark5.v5.nationalidentifier.Position;
-import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Unit;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
+import nikita.common.model.noark5.v5.secondary.Comment;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -32,6 +21,9 @@ public interface IFileService {
     File createFile(File file);
 
     FileHateoas createFileAssociatedWithFile(String systemId, File file);
+
+    CommentHateoas createCommentAssociatedWithFile
+        (String systemID, Comment comment);
 
     PartPersonHateoas createPartPersonAssociatedWithFile(
             String systemID, PartPerson partPerson);
@@ -94,10 +86,15 @@ public interface IFileService {
     ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithFile(@NotNull final String systemId);
 
+    CommentHateoas getCommentAssociatedWithFile
+        (@NotNull final String systemID);
+
     PartHateoas getPartAssociatedWithFile(@NotNull final String systemID);
 
     NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile
 	(@NotNull final String systemID);
+
+    CommentHateoas generateDefaultComment();
 
     BuildingHateoas generateDefaultBuilding();
 

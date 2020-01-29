@@ -1404,6 +1404,31 @@ public class TestParsing {
         assert(systemID.equals(conversion.getSystemId()));
     }
 
+
+    @Test
+    public void parseCommentComplete() throws Exception {
+        System.out.println("info: testing comment parsing");
+        String systemID = "2ae47aca-41dd-11ea-a0a9-afa29f03ad7d";
+        String json = "{"
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"merknadstekst\": \"A small note to the future\" "
+            +", \"merknadstype\": { \"kode\": \"MS\", \"kodenavn\": \"Merknad fra saksbehandler\" } "
+            +", \"merknadsdato\": \"2020-02-13T00:00:00+00:00\" "
+            +", \"merknadRegistrertAv\": \"Some One\" "
+            //+", \"referanseMerknadRegistrertAv\": \"Some One\" "
+            +"}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        CommentDeserializer commentDeserializer = new CommentDeserializer();
+        Comment comment =
+            commentDeserializer.deserialize(
+                jsonParser, null /* DeserializationContext */);
+        assert(null != comment);
+        assert(systemID.equals(comment.getSystemId()));
+    }
+
     @Test
     public void parseAuthorComplete() throws Exception {
         System.out.println("info: testing author parsing");

@@ -1,27 +1,27 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.*;
-import nikita.common.model.noark5.v5.interfaces.entities.ICommentEntity;
+import nikita.common.model.noark5.v5.metadata.CommentType;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICommentEntity;
+import nikita.common.util.deserialisers.secondary.CommentDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_COMMENT;
-import static nikita.common.config.Constants.TABLE_COMMENT;
-import static nikita.common.config.N5ResourceMappings.COMMENT;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_COMMENT)
+@JsonDeserialize(using = CommentDeserializer.class)
 public class Comment
         extends SystemIdEntity
         implements ICommentEntity {
@@ -36,11 +36,18 @@ public class Comment
     private String commentText;
 
     /**
-     * M084 - merknadstype (xs:string)
+     * M??? - merknadstype code (xs:string)
      */
-    @Column(name = "comment_type")
+    @Column(name = "comment_type_code")
     @Audited
-    private String commentType;
+    private String commentTypeCode;
+
+    /**
+     * M084 - merknadstype code name (xs:string)
+     */
+    @Column(name = "comment_type_code_name")
+    @Audited
+    private String commentTypeCodeName;
 
     /**
      * M611 - merknadsdato (xs:dateTime)
@@ -58,16 +65,43 @@ public class Comment
     private String commentRegisteredBy;
 
     // Link to File
-    @ManyToMany(mappedBy = "referenceComment")
-    private List<File> referenceFile = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = FOREIGN_KEY_FILE_PK)
+    private File referenceFile;
 
     // Links to Record
-    @ManyToMany(mappedBy = "referenceComment")
-    private List<Record> referenceRecord = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
+    private Record referenceRecord;
 
     // Link to DocumentDescription
-    @ManyToMany(mappedBy = "referenceComment")
-    private List<DocumentDescription> referenceDocumentDescription = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK)
+    private DocumentDescription referenceDocumentDescription;
+
+    /**
+     * Used to identify if the current comment is associated  with a file
+     * This can be used to save a potential lookup in the database.
+     */
+    @Column(name = "is_for_file")
+    @Audited
+    private Boolean isForFile = false;
+
+    /**
+     * Used to identify if the current comment is associated  with a record
+     * This can be used to save a potential lookup in the database.
+     */
+    @Column(name = "is_for_record")
+    @Audited
+    private Boolean isForRecord = false;
+
+    /**
+     * Used to identify if the current comment is associated  with a document
+     * description. This can be used to save a potential lookup in the database.
+     */
+    @Column(name = "is_for_document_description")
+    @Audited
+    private Boolean isForDocumentDescription = false;
 
     public String getCommentText() {
         return commentText;
@@ -77,12 +111,16 @@ public class Comment
         this.commentText = commentText;
     }
 
-    public String getCommentType() {
+    public CommentType getCommentType() {
+        CommentType commentType = new CommentType();
+        commentType.setCode(commentTypeCode);
+        commentType.setCodeName(commentTypeCodeName);
         return commentType;
     }
 
-    public void setCommentType(String commentType) {
-        this.commentType = commentType;
+    public void setCommentType(CommentType commentType) {
+        this.commentTypeCode = commentType.getCode();
+        this.commentTypeCodeName = commentType.getCodeName();
     }
 
     public OffsetDateTime getCommentDate() {
@@ -111,35 +149,52 @@ public class Comment
         return REL_FONDS_STRUCTURE_COMMENT;
     }
 
-    public List<File> getReferenceFile() {
+    public File getReferenceFile() {
         return referenceFile;
     }
 
-    public void setReferenceFile(List<File> referenceFile) {
+    public void setReferenceFile(File referenceFile) {
         this.referenceFile = referenceFile;
+        isForFile = true;
     }
 
-    public List<Record> getReferenceRecord() {
+    public Record getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
+    public void setReferenceRecord(Record referenceRecord) {
         this.referenceRecord = referenceRecord;
+        isForRecord = true;
     }
 
-    public List<DocumentDescription> getReferenceDocumentDescription() {
+    public DocumentDescription getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(List<DocumentDescription> referenceDocumentDescription) {
+    public void setReferenceDocumentDescription
+        (DocumentDescription referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
+        isForDocumentDescription = true;
+    }
+
+    public Boolean getForFile() {
+        return isForFile;
+    }
+
+    public Boolean getForRecord() {
+        return isForRecord;
+    }
+
+    public Boolean getForDocumentDescription() {
+        return isForDocumentDescription;
     }
 
     @Override
     public String toString() {
         return "Comment{" + super.toString() +
                 ", commentText='" + commentText + '\'' +
-                ", commentType='" + commentType + '\'' +
+                ", commentTypeCode='" + commentTypeCode + '\'' +
+                ", commentTypeCodeName='" + commentTypeCodeName + '\'' +
                 ", commentDate=" + commentDate +
                 ", commentRegisteredBy='" + commentRegisteredBy + '\'' +
                 '}';
@@ -160,7 +215,8 @@ public class Comment
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(commentText, rhs.commentText)
-                .append(commentType, rhs.commentType)
+                .append(commentTypeCode, rhs.commentTypeCode)
+                .append(commentTypeCodeName, rhs.commentTypeCodeName)
                 .append(commentDate, rhs.commentDate)
                 .append(commentRegisteredBy, rhs.commentRegisteredBy)
                 .isEquals();
@@ -171,7 +227,8 @@ public class Comment
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(commentText)
-                .append(commentType)
+                .append(commentTypeCode)
+                .append(commentTypeCodeName)
                 .append(commentDate)
                 .append(commentRegisteredBy)
                 .toHashCode();

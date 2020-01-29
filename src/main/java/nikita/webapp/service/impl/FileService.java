@@ -4,23 +4,12 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.nationalidentifier.Building;
-import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
-import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Plan;
-import nikita.common.model.noark5.v5.nationalidentifier.Position;
-import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Unit;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
@@ -28,11 +17,13 @@ import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
+import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
@@ -49,6 +40,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
@@ -68,9 +60,11 @@ public class FileService
     private IFileHateoasHandler fileHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
+    private ICommentService commentService;
     private IDocumentMediumService documentMediumService;
     private INationalIdentifierService nationalIdentifierService;
     private IPartService partService;
+    private ICommentHateoasHandler commentHateoasHandler;
     private INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
     private IPartHateoasHandler partHateoasHandler;
 
@@ -81,9 +75,11 @@ public class FileService
                        IFileHateoasHandler fileHateoasHandler,
                        ISeriesHateoasHandler seriesHateoasHandler,
                        IClassHateoasHandler classHateoasHandler,
+                       ICommentService commentService,
                        IDocumentMediumService documentMediumService,
                        INationalIdentifierService nationalIdentifierService,
                        IPartService partService,
+                       ICommentHateoasHandler commentHateoasHandler,
                        INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
                        IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
@@ -92,9 +88,11 @@ public class FileService
         this.fileHateoasHandler = fileHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
+        this.commentService = commentService;
         this.documentMediumService = documentMediumService;
         this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
+        this.commentHateoasHandler = commentHateoasHandler;
         this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
     }
@@ -132,6 +130,13 @@ public class FileService
             String systemId, File file) {
         file.setReferenceParentFile(getFileOrThrow(systemId));
         return save(file);
+    }
+
+    @Override
+    public CommentHateoas createCommentAssociatedWithFile
+        (String systemID, Comment comment) {
+        return commentService.createNewComment(comment,
+                                               getFileOrThrow(systemID));
     }
 
     @Override
@@ -252,6 +257,16 @@ public class FileService
         ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().
                 getAuthentication().getName() : ownedBy;
         return fileRepository.findByOwnedBy(ownedBy);
+    }
+
+    @Override
+    public CommentHateoas getCommentAssociatedWithFile(
+            @NotNull final String systemID) {
+        CommentHateoas commentHateoas = new CommentHateoas(
+                (List<INoarkEntity>) (List) getFileOrThrow(systemID).
+                        getReferenceComment(), COMMENT);
+        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
+        return commentHateoas;
     }
 
     @Override
@@ -408,6 +423,11 @@ public class FileService
         FileHateoas fileHateoas = new FileHateoas(defaultFile);
         fileHateoasHandler.addLinksOnTemplate(fileHateoas, new Authorisation());
         return fileHateoas;
+    }
+
+    @Override
+    public CommentHateoas generateDefaultComment() {
+        return commentService.generateDefaultComment();
     }
 
     @Override

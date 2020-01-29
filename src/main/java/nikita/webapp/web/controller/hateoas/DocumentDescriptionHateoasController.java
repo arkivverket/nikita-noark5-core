@@ -12,7 +12,9 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.secondary.Author;
+import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -158,6 +160,42 @@ public class DocumentDescriptionHateoasController
                                 systemID, author));
     }
 
+    // POST [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-merknad
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-merknad/
+    @ApiOperation(value = "Associates a Comment with a DocumentDescription identified by systemID",
+            notes = "Returns the comment", response = CommentHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = COMMENT + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = CommentHateoas.class),
+            @ApiResponse(code = 201, message = COMMENT + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = CommentHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " + COMMENT),
+            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<CommentHateoas> addCommentToDocumentDescription(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of DocumentDescription to associate the Comment with",
+                    required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "Comment",
+                    value = "comment",
+                    required = true)
+            @RequestBody Comment comment) throws NikitaException {
+        CommentHateoas commentHateoas = documentDescriptionService
+            .createCommentAssociatedWithDocumentDescription
+            (systemID, comment);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(commentHateoas.getEntityVersion().toString())
+                .body(commentHateoas);
+    }
+
     // Create a new PartUnit and associate it with the given documentDescription
     // POST [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-partenhet
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-partenhet/
@@ -290,6 +328,45 @@ public class DocumentDescriptionHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         return documentDescriptionService.findBySystemId(systemID);
+    }
+
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-merknad
+    @ApiOperation(value = "Create a Comment with default values", response = Comment.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comment returned", response = Comment.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT)
+    public ResponseEntity<CommentHateoas> createDefaultComment(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentDescriptionService.generateDefaultComment());
+    }
+
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/merknad
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/merknad/
+    @ApiOperation(value = "Retrieves all Comments associated with a DocumentDescription identified by a systemId",
+            response = CommentHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "DocumentDescription returned", response = DocumentDescriptionHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + COMMENT)
+    public ResponseEntity<CommentHateoas> findAllCommentsAssociatedWithDocumentDescription(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of the documentDescription to retrieve comments for",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentDescriptionService
+                      .getCommentAssociatedWithDocumentDescription(systemID));
     }
 
     // Create a suggested PartUnit (like a template) object
