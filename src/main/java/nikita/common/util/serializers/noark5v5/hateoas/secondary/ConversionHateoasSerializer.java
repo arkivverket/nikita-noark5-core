@@ -41,7 +41,7 @@ public class ConversionHateoasSerializer
 
         if (conversionEntity != null) {
             printSystemIdEntity(jgen, conversionEntity);
-            printDate(jgen, CONVERTED_DATE,
+            printDateTime(jgen, CONVERTED_DATE,
                       conversionEntity.getConvertedDate());
             printNullable(jgen, CONVERTED_BY,
                           conversionEntity.getConvertedBy());
