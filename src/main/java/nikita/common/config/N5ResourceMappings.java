@@ -49,6 +49,7 @@ public final class N5ResourceMappings {
     public static final String TITLE = "tittel";
     public static final String DESCRIPTION = "beskrivelse";
     public static final String SYSTEM_ID = "systemID";
+    public static final String SUB_SYSTEM_ID = "subSystemID";
     public static final String CREATED_DATE = "opprettetDato";
     public static final String CREATED_BY = "opprettetAv";
     public static final String FINALISED_DATE = "avsluttetDato";
@@ -59,6 +60,9 @@ public final class N5ResourceMappings {
 
     public static final String SYSTEM_ID_PARAMETER =
             LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
+
+    public static final String SUB_SYSTEM_ID_PARAMETER =
+            LEFT_PARENTHESIS + SUB_SYSTEM_ID + RIGHT_PARENTHESIS;
 
     // For metadata entities
     public static final String CODE_NAME = "kodenavn";

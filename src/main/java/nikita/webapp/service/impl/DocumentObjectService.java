@@ -9,6 +9,7 @@ import nikita.common.model.noark5.v5.metadata.Format;
 import nikita.common.model.noark5.v5.metadata.VariantFormat;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.repository.n5v5.IDocumentObjectRepository;
+import nikita.common.repository.n5v5.secondary.IConversionRepository;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
@@ -16,9 +17,9 @@ import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.IDocumentObjectService;
 import nikita.webapp.service.interfaces.metadata.IFormatService;
 import nikita.webapp.service.interfaces.metadata.IVariantFormatService;
-import nikita.webapp.service.interfaces.IDocumentObjectService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.config.TikaConfig;
@@ -38,7 +39,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MimeType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -62,15 +62,10 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
-import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF;
 import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
-import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION;
-import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
-import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION;
-import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
-import static nikita.common.config.N5ResourceMappings.CONVERSION;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ACCEPT;
@@ -107,6 +102,7 @@ public class DocumentObjectService
     @Value("${nikita.application.checksum-algorithm}")
     private String defaultChecksumAlgorithm = "SHA-256";
 
+    private IConversionRepository conversionRepository;
     private IFormatService formatService;
     private IVariantFormatService variantFormatService;
     private IConversionHateoasHandler conversionHateoasHandler;
@@ -117,6 +113,7 @@ public class DocumentObjectService
     public DocumentObjectService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IConversionRepository conversionRepository,
             IDocumentObjectRepository documentObjectRepository,
             IFormatService formatService,
             IVariantFormatService variantFormatService,
@@ -124,6 +121,7 @@ public class DocumentObjectService
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler) {
         super(entityManager, applicationEventPublisher);
+        this.conversionRepository = conversionRepository;
         this.documentObjectRepository = documentObjectRepository;
         this.formatService = formatService;
         this.variantFormatService = variantFormatService;
@@ -271,7 +269,7 @@ public class DocumentObjectService
 	    new ConversionHateoas(defaultConversion);
         conversionHateoasHandler.addLinksOnTemplate(conversionHateoas,
                 new Authorisation());
-	return conversionHateoas;
+        return conversionHateoas;
     }
 
     public ConversionHateoas
@@ -282,8 +280,8 @@ public class DocumentObjectService
         conversion.setReferenceDocumentObject(documentObject);
         documentObject.addReferenceConversion(conversion);
         ConversionHateoas conversionHateoas =
-            new ConversionHateoas(conversion);
-        conversionHateoasHandler.addLinksOnTemplate(conversionHateoas,
+            new ConversionHateoas(conversionRepository.save(conversion));
+        conversionHateoasHandler.addLinks(conversionHateoas,
                 new Authorisation());
         return conversionHateoas;
     }
@@ -297,6 +295,62 @@ public class DocumentObjectService
             CONVERSION);
         conversionHateoasHandler.addLinks(conversionHateoas,
                                           new Authorisation());
+        return conversionHateoas;
+    }
+
+    @Override
+    public ConversionHateoas
+    findConversionAssociatedWithDocumentObject(String systemId,
+                                               String subSystemId) {
+        DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
+        Conversion conversion = getConversionOrThrow(subSystemId);
+        if (null == conversion.getReferenceDocumentObject()
+            || conversion.getReferenceDocumentObject() != documentObject) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                " Conversion " + subSystemId +
+                " below DocumentObject " + systemId + ".";
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        ConversionHateoas conversionHateoas = new ConversionHateoas(conversion);
+        conversionHateoasHandler
+                .addLinks(conversionHateoas, new Authorisation());
+        setOutgoingRequestHeader(conversionHateoas);
+        return conversionHateoas;
+    }
+
+    @Override
+    public ConversionHateoas handleUpdateConversionBySystemId
+        (String systemId, String subSystemId, Conversion incomingConversion) {
+        DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
+        Conversion existingConversion = getConversionOrThrow(subSystemId);
+        if (null == existingConversion.getReferenceDocumentObject()
+            || existingConversion.getReferenceDocumentObject() != documentObject) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                " Conversion " + subSystemId +
+                " below DocumentObject " + systemId + ".";
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        existingConversion
+            .setConvertedDate(incomingConversion.getConvertedDate());
+        existingConversion
+            .setConvertedBy(incomingConversion.getConvertedBy());
+        existingConversion
+            .setConvertedFromFormat(incomingConversion.getConvertedFromFormat());
+        existingConversion
+            .setConvertedToFormat(incomingConversion.getConvertedToFormat());
+        existingConversion
+            .setConversionTool(incomingConversion.getConversionTool());
+        existingConversion
+            .setConversionComment(incomingConversion.getConversionComment());
+
+        ConversionHateoas conversionHateoas =
+            new ConversionHateoas(conversionRepository
+                                  .save(existingConversion));
+        conversionHateoasHandler.addLinks(conversionHateoas,
+                new Authorisation());
+        setOutgoingRequestHeader(conversionHateoas);
         return conversionHateoas;
     }
 
@@ -910,6 +964,21 @@ public class DocumentObjectService
             throw new NoarkEntityNotFoundException(info);
         }
         return documentObject;
+    }
+
+    protected Conversion getConversionOrThrow
+        (@NotNull String conversionSystemId) {
+        Conversion conversion =
+                conversionRepository.
+                        findBySystemId(UUID.fromString(conversionSystemId));
+        if (conversion == null) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " Conversion, using systemId " +
+                    conversionSystemId;
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        return conversion;
     }
 
     /**
