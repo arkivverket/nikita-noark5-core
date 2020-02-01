@@ -102,7 +102,8 @@ public class NoarkService {
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                         .getRequest();
-        response.addHeader(ETAG, noarkObject.getEntityVersion().toString());
+        response.addHeader(ETAG,
+                "\"" + noarkObject.getEntityVersion().toString() + "\"");
         response.addHeader(ALLOW, getMethodsForRequestAsListOrThrow(
                 request.getServletPath()));
     }
