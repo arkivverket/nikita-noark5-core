@@ -667,27 +667,6 @@ public final class CommonUtils {
                     setClassificationTypeCodeName(entity.getCodeName());
             }
 
-            public static void deserialiseAuthor(IAuthor authorEntity,
-                                                 ObjectNode objectNode, StringBuilder errors) {
-
-                // Deserialize author
-                JsonNode currentNode = objectNode.get(AUTHOR);
-                if (null != currentNode) {
-                    ArrayList<Author> authors = new ArrayList<>();
-                    if (currentNode.isArray()) {
-                        currentNode.iterator();
-                        for (JsonNode node : currentNode) {
-                            String location = node.textValue();
-                            Author author = new Author();
-                            author.setAuthor(location);
-                            authors.add(author);
-                        }
-                        authorEntity.setReferenceAuthor(authors);
-                    }
-                    objectNode.remove(AUTHOR);
-                }
-            }
-
             public static void deserialiseStorageLocation(IStorageLocation storageLocationEntity,
                                                           ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize storageLocation
@@ -1894,7 +1873,6 @@ public final class CommonUtils {
                         jgen.writeStringField(DESCRIPTION,
                                 record.getDescription());
                     }
-                    printAuthor(jgen, record);
                 }
             }
 
@@ -2465,20 +2443,6 @@ public final class CommonUtils {
                         jgen.writeStartObject();
                         printPrecedence(jgen, precedence);
                         jgen.writeEndObject();
-                    }
-                    jgen.writeEndArray();
-                }
-            }
-
-            public static void printAuthor(JsonGenerator jgen, IAuthor authorEntity)
-                    throws IOException {
-                List<Author> author = authorEntity.getReferenceAuthor();
-                if (author != null && author.size() > 0) {
-                    jgen.writeArrayFieldStart(AUTHOR);
-                    for (Author location : author) {
-                        if (location.getAuthor() != null) {
-                            jgen.writeString(location.getAuthor());
-                        }
                     }
                     jgen.writeEndArray();
                 }

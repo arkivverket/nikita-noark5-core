@@ -310,8 +310,8 @@ public class RecordHateoasController
             @RequestBody Author author)
             throws NikitaException {
         return ResponseEntity.status(CREATED)
-                .body(recordService.associatedAuthorWithRecord(
-                        systemID, author));
+                .body(recordService.associateAuthorWithRecord
+                      (systemID, author));
     }
 
     // Create a suggested CorrespondencePartPerson (like a template) object with default values (nothing persisted)

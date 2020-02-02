@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
-import nikita.common.repository.n5v5.secondary.IAuthorRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -23,6 +22,7 @@ import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;
 import nikita.webapp.service.interfaces.metadata.IDocumentTypeService;
+import nikita.webapp.service.interfaces.secondary.IAuthorService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,12 +59,12 @@ public class DocumentDescriptionService
     private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
+    private IAuthorService authorService;
     private IDocumentMediumService documentMediumService;
     private IDocumentStatusService documentStatusService;
     private IDocumentTypeService documentTypeService;
     private IPartService partService;
     private IPartHateoasHandler partHateoasHandler;
-    private IAuthorRepository authorRepository;
     private IAuthorHateoasHandler authorHateoasHandler;
 
     public DocumentDescriptionService(
@@ -76,12 +76,12 @@ public class DocumentDescriptionService
                     documentDescriptionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
+            IAuthorService authorService,
             IDocumentMediumService documentMediumService,
             IDocumentStatusService documentStatusService,
             IDocumentTypeService documentTypeService,
             IPartService partService,
             IPartHateoasHandler partHateoasHandler,
-            IAuthorRepository authorRepository,
             IAuthorHateoasHandler authorHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
@@ -90,12 +90,12 @@ public class DocumentDescriptionService
                 documentDescriptionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
+        this.authorService = authorService;
         this.documentMediumService = documentMediumService;
         this.documentStatusService = documentStatusService;
         this.documentTypeService = documentTypeService;
         this.partService = partService;
         this.partHateoasHandler = partHateoasHandler;
-        this.authorRepository = authorRepository;
         this.authorHateoasHandler = authorHateoasHandler;
     }
 
@@ -145,14 +145,8 @@ public class DocumentDescriptionService
     @Override
     public AuthorHateoas associateAuthorWithDocumentDescription(
             String systemId, Author author) {
-        DocumentDescription documentDescription =
-                getDocumentDescriptionOrThrow(systemId);
-        author.setReferenceDocumentDescription(documentDescription);
-        authorRepository.save(author);
-        AuthorHateoas authorHateoas = new AuthorHateoas(author);
-        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
-        setOutgoingRequestHeader(authorHateoas);
-        return authorHateoas;
+        return authorService.associateAuthorWithDocumentDescription
+            (author, getDocumentDescriptionOrThrow(systemId));
     }
 
     /**
@@ -197,11 +191,7 @@ public class DocumentDescriptionService
 
     @Override
     public AuthorHateoas generateDefaultAuthor(String systemID) {
-        Author suggestedPart = new Author();
-        suggestedPart.setAuthor("Ole Olsen");
-        AuthorHateoas partHateoas = new AuthorHateoas(suggestedPart);
-        authorHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
-        return partHateoas;
+        return authorService.generateDefaultAuthor();
     }
 
     /*
