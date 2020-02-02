@@ -239,16 +239,13 @@ public class DocumentObjectService
     @Override
     public List<DocumentObject> findDocumentObjectByOwner() {
 
-        String loggedInUser = SecurityContextHolder.getContext().
-                getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<DocumentObject> criteriaQuery = criteriaBuilder.
                 createQuery(DocumentObject.class);
         Root<DocumentObject> from = criteriaQuery.from(DocumentObject.class);
         CriteriaQuery<DocumentObject> select = criteriaQuery.select(from);
 
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"),
-                loggedInUser));
+        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
         TypedQuery<DocumentObject> typedQuery = entityManager.createQuery(select);
         return typedQuery.getResultList();
     }
@@ -261,9 +258,7 @@ public class DocumentObjectService
 
 	/* Propose conversion done now by logged in user */
 	defaultConversion.setConvertedDate(OffsetDateTime.now());
-	String username =
-	    SecurityContextHolder.getContext().getAuthentication().getName();
-	defaultConversion.setConvertedBy(username);
+	defaultConversion.setConvertedBy(getUser());
 
         ConversionHateoas conversionHateoas =
 	    new ConversionHateoas(defaultConversion);
@@ -481,8 +476,7 @@ public class DocumentObjectService
 
 
             // Set creation details. Logged in user is responsible
-            String username = SecurityContextHolder.getContext().
-                    getAuthentication().getName();
+            String username = getUser();
             archiveDocumentObject.setCreatedBy(username);
             archiveDocumentObject.setCreatedDate(OffsetDateTime.now());
 

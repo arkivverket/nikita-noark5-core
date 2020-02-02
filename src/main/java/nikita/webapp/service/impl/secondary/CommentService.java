@@ -57,9 +57,7 @@ public class CommentService
         Comment defaultComment = new Comment();
 
         defaultComment.setCommentDate(OffsetDateTime.now());
-        String username =
-            SecurityContextHolder.getContext().getAuthentication().getName();
-        defaultComment.setCommentRegisteredBy(username);
+        defaultComment.setCommentRegisteredBy(getUser());
         CommentHateoas commentHateoas = new CommentHateoas(defaultComment);
         commentHateoasHandler.addLinksOnTemplate(commentHateoas, new Authorisation());
         return commentHateoas;

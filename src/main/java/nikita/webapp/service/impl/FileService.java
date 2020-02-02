@@ -254,8 +254,7 @@ public class FileService
 
     // ownedBy
     public List<File> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().
-                getAuthentication().getName() : ownedBy;
+        ownedBy = (ownedBy == null) ? getUser() : ownedBy;
         return fileRepository.findByOwnedBy(ownedBy);
     }
 

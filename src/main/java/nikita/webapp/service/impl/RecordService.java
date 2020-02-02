@@ -300,8 +300,7 @@ public class RecordService
 
     // ownedBy
     public List<Record> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? SecurityContextHolder.getContext().
-                getAuthentication().getName() : ownedBy;
+        ownedBy = (ownedBy == null) ? getUser() : ownedBy;
         return recordRepository.findByOwnedBy(ownedBy);
     }
 

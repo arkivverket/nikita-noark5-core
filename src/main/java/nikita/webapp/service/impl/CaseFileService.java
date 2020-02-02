@@ -241,16 +241,13 @@ public class CaseFileService
     public List<CaseFile> findCaseFileByOwnerPaginated(
             Integer top, Integer skip) {
 
-        String loggedInUser = SecurityContextHolder.getContext().
-                getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<CaseFile> criteriaQuery =
                 criteriaBuilder.createQuery(CaseFile.class);
         Root<CaseFile> from = criteriaQuery.from(CaseFile.class);
         CriteriaQuery<CaseFile> select = criteriaQuery.select(from);
 
-        criteriaQuery.where(criteriaBuilder.
-                equal(from.get("ownedBy"), loggedInUser));
+        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
         TypedQuery<CaseFile> typedQuery = entityManager.createQuery(select);
         return typedQuery.getResultList();
     }
@@ -357,8 +354,7 @@ public class CaseFileService
 
     public CaseFileHateoas generateDefaultCaseFile() {
         CaseFile defaultCaseFile = new CaseFile();
-        defaultCaseFile.setCaseResponsible(SecurityContextHolder.getContext().
-                getAuthentication().getName());
+        defaultCaseFile.setCaseResponsible(getUser());
         defaultCaseFile.setCaseDate(OffsetDateTime.now());
         defaultCaseFile.setCaseStatusCode(defaultCaseFile.getCaseStatusCode());
         defaultCaseFile.setCaseStatusCodeName(defaultCaseFile.
