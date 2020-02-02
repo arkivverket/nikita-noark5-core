@@ -30,8 +30,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CONVERSION;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_PARAMETER;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -158,8 +157,8 @@ public class DocumentObjectHateoasController
 
     // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/konvertering
     @ApiOperation(value = "Return list of conversions related to the" +
-		  "documentObject identified by a systemId",
-		  response = ConversionHateoas.class)
+                  "documentObject identified by a systemId",
+                  response = ConversionHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = "List of Conversions returned",
@@ -177,13 +176,48 @@ public class DocumentObjectHateoasController
     findAllConversionAssociatedWithDocumentObject(
             HttpServletRequest request, HttpServletResponse response,
             @ApiParam(name = "systemID",
-		      value = "systemID of the documentObject",
-		      required = true)
+                      value = "systemID of the documentObject",
+                      required = true)
             @PathVariable("systemID") final String systemID)
             throws IOException {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectService.findAllConversionAssociatedWithDocumentObject(systemID));
+    }
+
+    // GET [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/konvertering/{subSystemID}
+    @ApiOperation(value = "Return a conversion related to the" +
+                  "documentObject identified by a systemId",
+                  response = ConversionHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Conversion returned",
+                    response = ConversionHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CONVERSION + SLASH + SUB_SYSTEM_ID_PARAMETER,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<ConversionHateoas>
+    findAllConversionAssociatedWithDocumentObject(
+            HttpServletRequest request, HttpServletResponse response,
+            @ApiParam(name = "systemID",
+                      value = "systemID of the documentObject",
+                      required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "subSystemID",
+                      value = "systemID of the Conversion",
+                      required = true)
+            @PathVariable("subSystemID") final String subSystemID)
+            throws IOException {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(documentObjectService
+                      .findConversionAssociatedWithDocumentObject
+                      (systemID, subSystemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/dokumentobject/{systemId}/ny-konvertering
@@ -405,4 +439,39 @@ public class DocumentObjectHateoasController
                 .body(documentObjectHateoas);
     }
 
+    // PUT [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/konvertering/{systemID}
+    @ApiOperation(value = "Updates a Conversion object", notes = "Returns the newly" +
+            " updateConversion object after it is persisted to the database", response = ConversionHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Conversion " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = ConversionHateoas.class),
+            @ApiResponse(code = 201, message = "Conversion " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = ConversionHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type Conversion"),
+            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CONVERSION +
+            SLASH + SUB_SYSTEM_ID_PARAMETER,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<ConversionHateoas> updateConversion(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of conversion to update.",
+                    required = true)
+            @PathVariable("systemID") String systemID,
+            @ApiParam(name = "subSystemID",
+                    value = "systemId of conversion to update.",
+                    required = true)
+            @PathVariable("subSystemID") String subSystemID,
+            @ApiParam(name = "conversion",
+                    value = "Incoming conversion object",
+                    required = true)
+            @RequestBody Conversion conversion) throws NikitaException {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(documentObjectService.handleUpdateConversionBySystemId
+                  (systemID, subSystemID, conversion));
+    }
 }

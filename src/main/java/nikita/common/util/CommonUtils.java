@@ -309,10 +309,10 @@ public final class CommonUtils {
 
             HttpMethod[] methods = getMethodsForRequest(servletPath);
             if (null == methods) {
-                logger.error("Error servletPath [" + servletPath +
-                        "] has no known HTTP methods");
-                throw new NikitaException("Error servletPath [" + servletPath
-                        + "] has no known HTTP methods");
+                String msg = "Error servletPath [" + servletPath
+                    + "] has no known HTTP methods.";
+                logger.error(msg);
+                throw new NikitaException(msg);
             }
             return Arrays.asList(methods)
                     .stream()
@@ -331,8 +331,10 @@ public final class CommonUtils {
 
             HttpMethod[] methods = getMethodsForRequest(servletPath);
             if (null == methods) {
-                logger.error("Error servletPath [" + servletPath + "] has no known HTTP methods");
-                throw new NikitaException("Error servletPath [" + servletPath + "] has no known HTTP methods");
+                String msg = "Error servletPath [" +
+                    servletPath + "] has no known HTTP methods.";
+                logger.error(msg);
+                throw new NikitaException(msg);
             }
             return methods;
         }
@@ -350,7 +352,10 @@ public final class CommonUtils {
                 servletPath += SLASH;
             }
 
-            //Next, we have to replace any occurrences of an actual UUID with the word systemID
+            // Next, we have to replace the first occurrence of an
+            // actual UUID with the word {systemID}, the next with
+            // {subSystemID} for non-metadata entries, and {kode} or
+            // {code}/{value} for metadata entries.
             String updatedServletPath = servletPath;
             if (servletPath.startsWith(SLASH + HREF_BASE_METADATA + SLASH)) {
                 Pattern pattern = Pattern.compile(SLASH + HREF_BASE_METADATA + SLASH +
@@ -378,7 +383,9 @@ public final class CommonUtils {
                 Pattern pattern = Pattern.compile(
                         "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
                 Matcher matcher = pattern.matcher(servletPath.toLowerCase());
-                updatedServletPath = matcher.replaceFirst(SYSTEM_ID_PARAMETER);
+                servletPath = matcher.replaceFirst(SYSTEM_ID_PARAMETER);
+                matcher = pattern.matcher(servletPath.toLowerCase());
+                updatedServletPath = matcher.replaceFirst(SUB_SYSTEM_ID_PARAMETER);
             }
 
             Set<HttpMethod> methods = requestMethodMap.get(

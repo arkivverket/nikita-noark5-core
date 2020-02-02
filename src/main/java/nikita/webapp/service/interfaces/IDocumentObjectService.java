@@ -36,6 +36,13 @@ public interface IDocumentObjectService {
     ConversionHateoas
     findAllConversionAssociatedWithDocumentObject(String systemId);
 
+    ConversionHateoas
+    findConversionAssociatedWithDocumentObject
+        (String systemId, String subSystemId);
+
+    ConversionHateoas handleUpdateConversionBySystemId
+        (String systemId, String subSystemId, Conversion conversion);
+
     // systemId
     ResponseEntity<DocumentObjectHateoas> findBySystemId(
             @NotNull String systemId);

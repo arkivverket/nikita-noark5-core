@@ -2,11 +2,9 @@ package nikita.webapp.hateoas.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
 import nikita.common.model.noark5.v5.secondary.Conversion;
-import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.SystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -31,18 +29,16 @@ public class ConversionHateoasHandler
 
         Conversion conversion = (Conversion) entity;
         String parentEntity =
-	    conversion.getReferenceDocumentObject().getBaseTypeName();
+            conversion.getReferenceDocumentObject().getBaseTypeName();
         String parentSystemId =
-	    conversion.getReferenceDocumentObject().getSystemId();
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + parentEntity + SLASH +
-                parentSystemId + SLASH + CONVERSION + SLASH + entity.getSystemId(),
-                getRelSelfLink()));
-
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + parentEntity + SLASH +
-                parentSystemId + SLASH + CONVERSION + SLASH + entity.getSystemId(),
-                entity.getBaseRel()));
+            conversion.getReferenceDocumentObject().getSystemId();
+        String selfhref = getOutgoingAddress() +
+            HREF_BASE_FONDS_STRUCTURE + SLASH + parentEntity + SLASH +
+            parentSystemId + SLASH + CONVERSION + SLASH + entity.getSystemId();
+        hateoasNoarkObject.addLink(entity,
+                                   new Link(selfhref, getRelSelfLink()));
+        hateoasNoarkObject.addLink(entity,
+                                   new Link(selfhref, entity.getBaseRel()));
     }
 
     @Override
@@ -66,7 +62,7 @@ public class ConversionHateoasHandler
                                   IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(conversion,
             new Link(getOutgoingAddress() +
-                     HREF_BASE_DOCUMENT_DESCRIPTION + SLASH +
+                     HREF_BASE_DOCUMENT_OBJECT + SLASH +
                      conversion.getReferenceDocumentObject().getSystemId(),
                      REL_FONDS_STRUCTURE_DOCUMENT_OBJECT));
     }
