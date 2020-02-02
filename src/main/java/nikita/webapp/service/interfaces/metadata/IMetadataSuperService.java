@@ -19,6 +19,18 @@ public interface IMetadataSuperService {
         String parent, String code, String codename);
 
     /**
+     * retrieve a valid metadata entity identified by particular code
+     * while verifying that the codename matches the code.
+     * Raise exception if the code is unknown or if the code and
+     * codename do not match the ones in the catalog.
+     *
+     * @param template The values of the object you wish to retrieve
+     * @return The metadata entity object
+     */
+    IMetadataEntity findValidMetadataOrThrow(
+        String parent, IMetadataEntity template);
+
+    /**
      * retrieve a metadata entity identified by particular code.
      * Return null if the code is unknown.
      *

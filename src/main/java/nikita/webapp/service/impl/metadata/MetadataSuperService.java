@@ -55,6 +55,24 @@ public abstract class MetadataSuperService
         }
         return entity;
     }
+
+    public MetadataSuperClass
+    findValidMetadataOrThrow(String parent, IMetadataEntity template) {
+        MetadataSuperClass entity =
+            (MetadataSuperClass) findMetadataByCodeOrThrow(template.getCode());
+        if (null != template.getCodeName() &&
+            ! entity.getCodeName().equals(template.getCodeName())) {
+            String entityname = entity.getBaseTypeName();
+            String info = template.getCodeName() + " code " +
+                template.getCode() + " and code name " +
+                template.getCodeName() + " did not match metadata catalog.";
+                logger.info(info);
+                throw new NoarkInvalidStructureException(
+                        info, parent, entityname);
+        }
+        return entity;
+    }
+
     public IMetadataEntity findMetadataByCodeOrThrow(@NotNull String code) {
         IMetadataEntity entity = findMetadataByCode(code);
         if (null == entity) {
