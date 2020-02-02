@@ -5,11 +5,11 @@ import nikita.common.model.noark5.v5.secondary.Author;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.UUID;
 
 @Repository
 public interface IAuthorRepository
         extends CrudRepository<Author, INoarkEntity> {
-    // systemId
-    Set<Author> findByAuthor(String author);
+
+    Author findBySystemId(UUID systemId);
 }

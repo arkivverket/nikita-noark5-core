@@ -31,34 +31,12 @@ public class AuthorHateoasHandler
     @Override
     public void addSelfLink(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
-
-        String parentEntity = "";
-        String parentSystemId = "";
-        Author author = (Author) entity;
-        if (author.getForDocumentDescription()) {
-            parentEntity =
-                    author.getReferenceDocumentDescription().getBaseTypeName();
-            parentSystemId =
-                    author.getReferenceDocumentDescription().getSystemId();
-            addDocumentDescription(author, hateoasNoarkObject);
-        }
-        if (author.getForRecord()) {
-            parentEntity =
-                    author.getReferenceRecord().getBaseTypeName();
-            parentSystemId =
-                    author.getReferenceRecord().getSystemId();
-            addRecord(author, hateoasNoarkObject);
-        }
-
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + parentEntity + SLASH +
-                parentSystemId + SLASH + AUTHOR + SLASH + entity.getSystemId(),
-                getRelSelfLink()));
-
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HATEOAS_API_PATH + SLASH + parentEntity + SLASH +
-                parentSystemId + SLASH + AUTHOR + SLASH + entity.getSystemId(),
-                entity.getBaseRel()));
+        String selfhref =  getOutgoingAddress() +
+            HREF_BASE_FONDS_STRUCTURE + SLASH + AUTHOR + SLASH + entity.getSystemId();
+        hateoasNoarkObject.addLink(entity,
+                                   new Link(selfhref, getRelSelfLink()));
+        hateoasNoarkObject.addLink(entity,
+                                   new Link(selfhref, entity.getBaseRel()));
     }
 
     @Override

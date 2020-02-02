@@ -32,7 +32,6 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
-import nikita.common.repository.n5v5.secondary.IAuthorRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
@@ -42,6 +41,7 @@ import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHa
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
+import nikita.webapp.service.interfaces.secondary.IAuthorService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -86,6 +86,7 @@ public class RecordService
     private IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
     private IDocumentDescriptionRepository documentDescriptionRepository;
+    private IAuthorService authorService;
     private ICorrespondencePartService correspondencePartService;
     private IDocumentMediumService documentMediumService;
     private INationalIdentifierService nationalIdentifierService;
@@ -93,7 +94,6 @@ public class RecordService
     private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
     private INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
     private IPartHateoasHandler partHateoasHandler;
-    private IAuthorRepository authorRepository;
     private IAuthorHateoasHandler authorHateoasHandler;
 
     public RecordService(
@@ -108,6 +108,7 @@ public class RecordService
             IDocumentDescriptionHateoasHandler
                     documentDescriptionHateoasHandler,
             IDocumentDescriptionRepository documentDescriptionRepository,
+            IAuthorService authorService,
             ICorrespondencePartService correspondencePartService,
             IDocumentMediumService documentMediumService,
             INationalIdentifierService nationalIdentifierService,
@@ -115,7 +116,6 @@ public class RecordService
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
             INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
             IPartHateoasHandler partHateoasHandler,
-            IAuthorRepository authorRepository,
             IAuthorHateoasHandler authorHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
@@ -128,6 +128,7 @@ public class RecordService
         this.documentDescriptionHateoasHandler =
                 documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
+        this.authorService = authorService;
         this.correspondencePartService = correspondencePartService;
         this.documentMediumService = documentMediumService;
         this.nationalIdentifierService = nationalIdentifierService;
@@ -135,7 +136,6 @@ public class RecordService
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
-        this.authorRepository = authorRepository;
         this.authorHateoasHandler = authorHateoasHandler;
     }
 
@@ -209,8 +209,7 @@ public class RecordService
 
     @Override
     public AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId) {
-        Record record =
-                getRecordOrThrow(systemId);
+        Record record = getRecordOrThrow(systemId);
         AuthorHateoas authorHateoas =
                 new AuthorHateoas((List<INoarkEntity>)
                         (List) record.getReferenceAuthor(),
@@ -593,11 +592,7 @@ public class RecordService
 
     @Override
     public AuthorHateoas generateDefaultAuthor(String systemID) {
-        Author suggestedPart = new Author();
-        suggestedPart.setAuthor("Ole Olsen");
-        AuthorHateoas partHateoas = new AuthorHateoas(suggestedPart);
-        authorHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
-        return partHateoas;
+        return authorService.generateDefaultAuthor();
     }
 
     /**
@@ -609,15 +604,10 @@ public class RecordService
      * @return author object wrapped as a AuthorHateaos
      */
     @Override
-    public AuthorHateoas associatedAuthorWithRecord(
+    public AuthorHateoas associateAuthorWithRecord(
             String systemId, Author author) {
-        Record record = getRecordOrThrow(systemId);
-        author.setReferenceRecord(record);
-        authorRepository.save(author);
-        AuthorHateoas authorHateoas = new AuthorHateoas(author);
-        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
-        setOutgoingRequestHeader(authorHateoas);
-        return authorHateoas;
+        return authorService.associateAuthorWithRecord
+            (author, getRecordOrThrow(systemId));
     }
 
     // All UPDATE operations

@@ -121,8 +121,6 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
             objectNode.remove(STORAGE_LOCATION);
         }
 
-        deserialiseAuthor(documentDescription, objectNode, errors);
-
         // Deserialize general documentDescription properties
         deserialiseDocumentMedium(documentDescription, objectNode, errors);
 

@@ -126,7 +126,7 @@ public interface IRecordService {
 
     List<Record> findByOwnedBy(String ownedBy);
 
-    AuthorHateoas associatedAuthorWithRecord(String systemId, Author author);
+    AuthorHateoas associateAuthorWithRecord(String systemId, Author author);
 
     // -- All UPDATE operations
     Record handleUpdate(@NotNull String systemId,
