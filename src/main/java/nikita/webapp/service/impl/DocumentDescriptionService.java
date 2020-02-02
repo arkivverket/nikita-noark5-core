@@ -6,10 +6,12 @@ import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.common.model.noark5.v5.secondary.Author;
+import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
@@ -17,12 +19,14 @@ import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;
 import nikita.webapp.service.interfaces.metadata.IDocumentTypeService;
 import nikita.webapp.service.interfaces.secondary.IAuthorService;
+import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,12 +64,14 @@ public class DocumentDescriptionService
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
     private IAuthorService authorService;
+    private ICommentService commentService;
     private IDocumentMediumService documentMediumService;
     private IDocumentStatusService documentStatusService;
     private IDocumentTypeService documentTypeService;
     private IPartService partService;
     private IPartHateoasHandler partHateoasHandler;
     private IAuthorHateoasHandler authorHateoasHandler;
+    private ICommentHateoasHandler commentHateoasHandler;
 
     public DocumentDescriptionService(
             EntityManager entityManager,
@@ -77,12 +83,14 @@ public class DocumentDescriptionService
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
             IAuthorService authorService,
+            ICommentService commentService,
             IDocumentMediumService documentMediumService,
             IDocumentStatusService documentStatusService,
             IDocumentTypeService documentTypeService,
             IPartService partService,
             IPartHateoasHandler partHateoasHandler,
-            IAuthorHateoasHandler authorHateoasHandler) {
+            IAuthorHateoasHandler authorHateoasHandler,
+            ICommentHateoasHandler commentHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
@@ -91,12 +99,14 @@ public class DocumentDescriptionService
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
         this.authorService = authorService;
+        this.commentService = commentService;
         this.documentMediumService = documentMediumService;
         this.documentStatusService = documentStatusService;
         this.documentTypeService = documentTypeService;
         this.partService = partService;
         this.partHateoasHandler = partHateoasHandler;
         this.authorHateoasHandler = authorHateoasHandler;
+        this.commentHateoasHandler = commentHateoasHandler;
     }
 
     // All CREATE operations
@@ -113,6 +123,13 @@ public class DocumentDescriptionService
         return documentObjectService.save(documentObject);
     }
 
+
+    @Override
+    public CommentHateoas createCommentAssociatedWithDocumentDescription
+        (String systemID, Comment comment) {
+        return commentService.createNewComment
+            (comment, getDocumentDescriptionOrThrow(systemID));
+    }
 
     @Override
     public PartPersonHateoas
@@ -177,6 +194,11 @@ public class DocumentDescriptionService
         documentDescriptionHateoasHandler.addLinksOnTemplate(
                 documentDescriptionHateoas, new Authorisation());
         return documentDescriptionHateoas;
+    }
+
+    @Override
+    public CommentHateoas generateDefaultComment() {
+        return commentService.generateDefaultComment();
     }
 
     @Override
@@ -289,6 +311,17 @@ public class DocumentDescriptionService
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(recordHateoas);
+    }
+
+    @Override
+    public CommentHateoas getCommentAssociatedWithDocumentDescription(
+            @NotNull final String systemID) {
+        CommentHateoas commentHateoas =
+            new CommentHateoas((List<INoarkEntity>) (List)
+                getDocumentDescriptionOrThrow(systemID).getReferenceComment(),
+                COMMENT);
+        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
+        return commentHateoas;
     }
 
     @Override

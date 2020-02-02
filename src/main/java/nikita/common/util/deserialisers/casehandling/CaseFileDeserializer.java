@@ -73,7 +73,6 @@ public class CaseFileDeserializer
         }
         caseFile.setReferenceCrossReference(
                 deserialiseCrossReferences(caseFile, objectNode, errors));
-        deserialiseComments(caseFile, objectNode, errors);
         caseFile.setReferenceDisposal(
                 deserialiseDisposal(objectNode, errors));
         caseFile.setReferenceScreening(

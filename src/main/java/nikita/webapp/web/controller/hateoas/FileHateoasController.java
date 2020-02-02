@@ -12,6 +12,7 @@ import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
@@ -192,22 +193,21 @@ public class FileHateoasController
     // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-merknad
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-merknad/
     @ApiOperation(value = "Associates a Comment with a File identified by systemID",
-            notes = "Returns the File with the comment associated with it", response = FileHateoas.class)
+            notes = "Returns the comment", response = CommentHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = COMMENT + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
+                    response = CommentHateoas.class),
             @ApiResponse(code = 201, message = COMMENT + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
+                    response = CommentHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " + COMMENT),
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> addCommentToFile(
+    public ResponseEntity<CommentHateoas> addCommentToFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemId of File to associate the Comment with",
@@ -217,13 +217,13 @@ public class FileHateoasController
                     value = "comment",
                     required = true)
             @RequestBody Comment comment) throws NikitaException {
-        //TODO: What do we return here? File + comment? comment?
-        // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-        //        return ResponseEntity.status(HttpStatus.CREATED)
-//                .eTag(comment.getVersion().toString())
-//                .body(commentHateoas);
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        CommentHateoas commentHateoas =
+                fileService.createCommentAssociatedWithFile(
+                        systemID, comment);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(commentHateoas.getEntityVersion().toString())
+                .body(commentHateoas);
     }
 
     // Add a Class to a File
@@ -676,39 +676,34 @@ public class FileHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT)
-    public ResponseEntity<String> createDefaultComment(
+    public ResponseEntity<CommentHateoas> createDefaultComment(
             HttpServletRequest request) {
-        /*
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(commentService.generateDefaultComment());
-        */
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+                .body(fileService.generateDefaultComment());
     }
 
     // Retrieve all Comments associated with a File
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/merknad
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/merknad/
     @ApiOperation(value = "Retrieves all Comments associated with a File identified by a systemId",
-            response = FileHateoas.class)
+            response = CommentHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "File returned", response = FileHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + COMMENT)
-    public ResponseEntity<String> findAllCommentsAssociatedWithFile(
+    public ResponseEntity<CommentHateoas> findAllCommentsAssociatedWithFile(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the file to retrieve comments for",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        //return new ResponseEntity<>(commentHateoas, HttpStatus.OK);
-        return errorResponse(HttpStatus.NOT_IMPLEMENTED,
-                             API_MESSAGE_NOT_IMPLEMENTED);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.getCommentAssociatedWithFile(systemID));
     }
 
     // Retrieve all CrossReference associated with a File

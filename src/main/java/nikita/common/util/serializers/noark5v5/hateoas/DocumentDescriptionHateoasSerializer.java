@@ -64,7 +64,6 @@ public class DocumentDescriptionHateoasSerializer
              documentDescription.getAssociatedWithRecordAsCode(),
              documentDescription.getAssociatedWithRecordAsCodeName());
         printModifiedEntity(jgen, documentDescription);
-        printComment(jgen, documentDescription);
         printDisposal(jgen, documentDescription);
         printDisposalUndertaken(jgen, documentDescription);
         printDeletion(jgen, documentDescription);

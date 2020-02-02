@@ -18,6 +18,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPers
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
@@ -454,6 +455,80 @@ public class RecordHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
                         generateDefaultAuthor(systemID));
+    }
+
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-merknad
+    @ApiOperation(value = "Create a Comment with default values",
+                  response = Comment.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comment returned", response = Comment.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT)
+    public ResponseEntity<CommentHateoas> createDefaultComment(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.generateDefaultComment());
+    }
+
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/merknad
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/merknad/
+    @ApiOperation(value = "Retrieves all Comments associated with a Record identified by a systemId",
+            response = CommentHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Record returned", response = RecordHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + COMMENT)
+    public ResponseEntity<CommentHateoas> findAllCommentsAssociatedWithRecord(
+            HttpServletRequest request,
+            @ApiParam(name = SYSTEM_ID,
+                      value = "systemID of the record to retrieve comments for",
+                      required = true)
+            @PathVariable(SYSTEM_ID) final String systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.getCommentAssociatedWithRecord(systemID));
+    }
+
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-merknad
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-merknad/
+    @ApiOperation(value = "Associates a Comment with a Record identified by systemID",
+            notes = "Returns the comment", response = CommentHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = COMMENT + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = CommentHateoas.class),
+            @ApiResponse(code = 201, message = COMMENT + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = CommentHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type " + COMMENT),
+            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT,
+                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<CommentHateoas> addCommentToRecord(
+            HttpServletRequest request,
+            @ApiParam(name = SYSTEM_ID,
+                      value = "systemId of Record to associate the Comment with",
+                      required = true)
+            @PathVariable(SYSTEM_ID) final String systemID,
+            @ApiParam(name = "Comment",
+                      value = "comment",
+                      required = true)
+            @RequestBody Comment comment) throws NikitaException {
+        CommentHateoas commentHateoas = recordService
+            .createCommentAssociatedWithRecord(systemID, comment);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(commentHateoas.getEntityVersion().toString())
+                .body(commentHateoas);
     }
 
     // Create a new CorrespondencePartPerson and associate it with the given journalpost

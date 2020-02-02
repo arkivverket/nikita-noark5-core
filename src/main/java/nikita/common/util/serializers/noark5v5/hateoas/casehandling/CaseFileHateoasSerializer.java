@@ -55,7 +55,6 @@ public class CaseFileHateoasSerializer
         printKeyword(jgen, caseFile);
         printFinaliseEntity(jgen, caseFile);
         printCrossReferences(jgen, caseFile);
-        printComment(jgen, caseFile);
         printDisposal(jgen, caseFile);
         printScreening(jgen, caseFile);
         printClassified(jgen, caseFile);

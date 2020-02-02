@@ -42,7 +42,6 @@ public class RecordHateoasSerializer
         printKeyword(jgen, record);
         printDocumentMedium(jgen, record);
         printStorageLocation(jgen, record);
-        printComment(jgen, record);
         // TODO: FIX THIS printCrossReference(jgen, record);
         if (record instanceof RegistryEntry) {
         /*

@@ -849,40 +849,6 @@ public final class CommonUtils {
                 objectNode.remove(CROSS_REFERENCE);
             }
 
-            public static void deserialiseComments(IComment commentObject, ObjectNode objectNode, StringBuilder errors) {
-                List<Comment> comments = commentObject.getReferenceComment();
-                for (Comment comment : comments) {
-                    deserialiseCommentEntity(comment, objectNode, errors);
-                }
-            }
-
-            public static void deserialiseCommentEntity(ICommentEntity commentEntity, ObjectNode objectNode, StringBuilder errors) {
-                // Deserialize commentText
-                JsonNode currentNode = objectNode.get(COMMENT_TEXT);
-                if (null != currentNode) {
-                    commentEntity.setCommentText(currentNode.textValue());
-                    objectNode.remove(COMMENT_TEXT);
-                }
-                // Deserialize commentType
-                currentNode = objectNode.get(COMMENT_TYPE);
-                if (null != currentNode) {
-                    commentEntity.setCommentType(currentNode.textValue());
-                    objectNode.remove(COMMENT_TYPE);
-                }
-
-                // Deserialize commentDate
-                commentEntity.setCommentDate(deserializeDate(COMMENT_DATE, objectNode, errors));
-
-                // Deserialize commentRegisteredBy
-                currentNode = objectNode.get(COMMENT_REGISTERED_BY);
-                if (null != currentNode) {
-                    commentEntity.setCommentRegisteredBy(currentNode.textValue());
-                    objectNode.remove(COMMENT_REGISTERED_BY);
-                }
-                objectNode.remove(COMMENT);
-            }
-
-
             public static List<Series> deserialiseReferenceMultipleSeries(ObjectNode objectNode, StringBuilder errors) {
                 List<Series> referenceSeries = null;
                 JsonNode node = objectNode.get(REFERENCE_SERIES);
@@ -2670,30 +2636,6 @@ public final class CommonUtils {
                         }
                         jgen.writeEndObject();
                     }
-                }
-            }
-
-            public static void printComment(JsonGenerator jgen, IComment commentEntity)
-                    throws IOException {
-                List<Comment> comments = commentEntity.getReferenceComment();
-                if (comments != null && comments.size() > 0) {
-                    jgen.writeArrayFieldStart(COMMENT);
-                    for (Comment comment : comments) {
-                        if (comment.getCommentText() != null) {
-                            jgen.writeStringField(COMMENT_TEXT, comment.getCommentText());
-                        }
-                        if (comment.getCommentType() != null) {
-                            jgen.writeStringField(COMMENT_TYPE, comment.getCommentType());
-                        }
-                        if (comment.getCommentDate() != null) {
-                            jgen.writeStringField(COMMENT_DATE,
-                                    formatDate(comment.getCommentDate()));
-                        }
-                        if (comment.getCommentRegisteredBy() != null) {
-                            jgen.writeStringField(COMMENT_REGISTERED_BY, comment.getCommentRegisteredBy());
-                        }
-                    }
-                    jgen.writeEndArray();
                 }
             }
 
