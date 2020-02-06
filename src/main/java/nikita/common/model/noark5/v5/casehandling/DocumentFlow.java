@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
@@ -12,7 +13,7 @@ import java.time.OffsetDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_DOCUMENT_FLOW)
@@ -22,34 +23,39 @@ public class DocumentFlow
     /**
      * M660 flytTil (xs:string)
      */
-    @Column(name = "flow_to")
+    @Column(name = DOCUMENT_FLOW_FLOW_TO_ENG)
     @Audited
+    @JsonProperty(DOCUMENT_FLOW_FLOW_TO)
     private String flowTo;
 
     /**
      * M665 flytFra  (xs:string)
      */
-    @Column(name = "flow_from")
+    @Column(name = DOCUMENT_FLOW_FLOW_FROM_ENG)
     @Audited
+    @JsonProperty(DOCUMENT_FLOW_FLOW_FROM)
     private String flowFrom;
 
     /**
      * M661 - flytMottattDato (xs:dateTime)
      */
-    @Column(name = "flow_received_date")
+    @Column(name = DOCUMENT_FLOW_FLOW_RECEIVED_DATE_ENG)
     @Audited
+    @JsonProperty(DOCUMENT_FLOW_FLOW_RECEIVED_DATE)
     private OffsetDateTime flowReceivedDate;
 
     /**
      * M662 flytSendtDato (xs:dateTime)
      */
-    @Column(name = "flow_sent_date")
+    @Column(name = DOCUMENT_FLOW_FLOW_SENT_DATE_ENG)
     @Audited
+    @JsonProperty(DOCUMENT_FLOW_FLOW_SENT_DATE)
     private OffsetDateTime flowSentDate;
 
     /**
      * M663 flytStatus (xs:string)
      */
+    // TODO convert to metadata value
     @Column(name = "flow_status")
     @Audited
     private String flowStatus;
@@ -57,8 +63,9 @@ public class DocumentFlow
     /**
      * M664 flytMerknad (xs:string)
      */
-    @Column(name = "flow_comment")
+    @Column(name = DOCUMENT_FLOW_FLOW_COMMENT_ENG)
     @Audited
+    @JsonProperty(DOCUMENT_FLOW_FLOW_COMMENT)
     private String flowComment;
 
     // Link to Series
