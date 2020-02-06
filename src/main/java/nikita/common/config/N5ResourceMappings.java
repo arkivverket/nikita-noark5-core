@@ -471,7 +471,7 @@ public final class N5ResourceMappings {
     public static final String COMMENT_TEXT_ENG = "merknadstekst";
     public static final String COMMENT_TYPE_ENG = "merknadstype";
     public static final String CONTACT_INFORMATION_ENG = "kontaktinformasjon";
-    public static final String CONTACT_PERSON_ENG = "kontaktperson";
+    public static final String CONTACT_PERSON_ENG = "contact_person";
     public static final String CONVERSION_COMMENT_ENG = "conversion_comment";
     public static final String CONVERSION_ENG = "konvertering";
     public static final String CONVERSION_TOOL_ENG = "conversion_tool";
@@ -481,7 +481,7 @@ public final class N5ResourceMappings {
     public static final String CONVERTED_TO_FORMAT_ENG = "converted_to_format";
     public static final String CORRESPONDENCE_PART_ENG = "korrespondansepart";
     public static final String CORRESPONDENCE_PART_INTERNAL_ENG = "korrespondansepartintern";
-    public static final String CORRESPONDENCE_PART_NAME_ENG = "navn";
+    public static final String CORRESPONDENCE_PART_NAME_ENG = "name";
     public static final String CORRESPONDENCE_PART_PERSON_ENG = "korrespondansepartperson";
     public static final String CORRESPONDENCE_PART_TYPE_ENG = "korrespondanseparttype";
     public static final String CORRESPONDENCE_PART_UNIT_ENG = "korrespondansepartenhet";
@@ -506,7 +506,7 @@ public final class N5ResourceMappings {
     public static final String DISPOSAL_UNDERTAKEN_BY_ENG = "kassertAv";
     public static final String DISPOSAL_UNDERTAKEN_DATE_ENG = "kassertDato";
     public static final String DISPOSAL_UNDERTAKEN_ENG = "utfoertKassasjon";
-    public static final String D_NUMBER_FIELD_ENG = "dnummer";
+    public static final String D_NUMBER_FIELD_ENG = "d_number";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG = "tilknyttetAv";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS_ENG = "tilknyttetRegistreringSom";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG = "associated_by";
@@ -571,7 +571,7 @@ public final class N5ResourceMappings {
     public static final String MEETING_REGISTRATION_TYPE_ENG = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG = "mobiltelefon";
     public static final String NAME_ENG = "navn";
-    public static final String ORGANISATION_NUMBER_ENG = "organisasjonsnummer";
+    public static final String ORGANISATION_NUMBER_ENG = "organisation_number";
     public static final String PARENT_CLASS_ENG = "overordnetklasse";
     public static final String POSTAL_ADDRESS_ENG = "postadresse";
     public static final String POSTAL_NUMBER_ENG = "postnummer";
@@ -688,7 +688,7 @@ public final class N5ResourceMappings {
     public static final String COMMENT_TEXT_ENG_OBJECT = "merknadstekst";
     public static final String COMMENT_TYPE_ENG_OBJECT = "merknadstype";
     public static final String CONTACT_INFORMATION_ENG_OBJECT = "kontaktinformasjon";
-    public static final String CONTACT_PERSON_ENG_OBJECT = "kontaktperson";
+    public static final String CONTACT_PERSON_ENG_OBJECT = "contactPerson";
     public static final String CONVERSION_COMMENT_ENG_OBJECT = "conversionComment";
     public static final String CONVERSION_ENG_OBJECT = "konvertering";
     public static final String CONVERSION_TOOL_ENG_OBJECT = "conversionTool";
@@ -698,7 +698,7 @@ public final class N5ResourceMappings {
     public static final String CONVERTED_TO_FORMAT_ENG_OBJECT = "convertedToFormat";
     public static final String CORRESPONDENCE_PART_ENG_OBJECT = "korrespondansepart";
     public static final String CORRESPONDENCE_PART_INTERNAL_ENG_OBJECT = "korrespondansepartintern";
-    public static final String CORRESPONDENCE_PART_NAME_ENG_OBJECT = "navn";
+    public static final String CORRESPONDENCE_PART_NAME_ENG_OBJECT = "name";
     public static final String CORRESPONDENCE_PART_PERSON_ENG_OBJECT = "korrespondansepartperson";
     public static final String CORRESPONDENCE_PART_TYPE_ENG_OBJECT = "korrespondanseparttype";
     public static final String CORRESPONDENCE_PART_UNIT_ENG_OBJECT = "korrespondansepartenhet";
@@ -723,7 +723,7 @@ public final class N5ResourceMappings {
     public static final String DISPOSAL_UNDERTAKEN_BY_ENG_OBJECT = "kassertAv";
     public static final String DISPOSAL_UNDERTAKEN_DATE_ENG_OBJECT = "kassertDato";
     public static final String DISPOSAL_UNDERTAKEN_ENG_OBJECT = "utfoertKassasjon";
-    public static final String D_NUMBER_FIELD_ENG_OBJECT = "dnummer";
+    public static final String D_NUMBER_FIELD_ENG_OBJECT = "dNumber";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG_OBJECT = "tilknyttetAv";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT = "tilknyttetRegistreringSom";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG_OBJECT = "associatedBy";
@@ -788,7 +788,7 @@ public final class N5ResourceMappings {
     public static final String MEETING_REGISTRATION_TYPE_ENG_OBJECT = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
     public static final String NAME_ENG_OBJECT = "navn";
-    public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisasjonsnummer";
+    public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisationNumber";
     public static final String PARENT_CLASS_ENG_OBJECT = "overklasse";
     public static final String POSTAL_ADDRESS_ENG_OBJECT = "postadresse";
     public static final String POSTAL_NUMBER_ENG_OBJECT = "postnummer";
