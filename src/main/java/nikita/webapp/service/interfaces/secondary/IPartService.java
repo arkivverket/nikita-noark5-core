@@ -1,8 +1,11 @@
 package nikita.webapp.service.interfaces.secondary;
 
 import nikita.common.model.noark5.v5.*;
-import nikita.common.model.noark5.v5.hateoas.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.PartUnitHateoas;
+import nikita.common.model.noark5.v5.secondary.Part;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartUnit;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 
 import javax.validation.constraints.NotNull;
 

@@ -1,14 +1,14 @@
-package nikita.common.model.noark5.v5;
+package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.casehandling.secondary.BusinessAddress;
 import nikita.common.model.noark5.v5.casehandling.secondary.ContactInformation;
 import nikita.common.model.noark5.v5.casehandling.secondary.PostalAddress;
-import nikita.common.model.noark5.v5.hateoas.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartUnitEntity;
-import nikita.common.util.deserialisers.PartUnitDeserializer;
-import nikita.webapp.hateoas.PartUnitHateoasHandler;
+import nikita.common.util.deserialisers.secondary.PartUnitDeserializer;
+import nikita.webapp.hateoas.secondary.PartUnitHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;

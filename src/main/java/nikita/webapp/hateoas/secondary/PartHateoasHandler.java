@@ -1,10 +1,11 @@
-package nikita.webapp.hateoas;
+package nikita.webapp.hateoas.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
+import nikita.webapp.hateoas.SystemIdHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.HREF_BASE_METADATA;

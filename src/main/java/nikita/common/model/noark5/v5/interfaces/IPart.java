@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.interfaces;
 
-import nikita.common.model.noark5.v5.Part;
+import nikita.common.model.noark5.v5.secondary.Part;
 
 import java.util.List;
 

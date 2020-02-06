@@ -1,9 +1,10 @@
-package nikita.common.util.serializers.noark5v5.hateoas;
+package nikita.common.util.serializers.noark5v5.hateoas.secondary;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import nikita.common.model.noark5.v5.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;

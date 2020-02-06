@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import nikita.common.model.noark5.v5.Part;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;

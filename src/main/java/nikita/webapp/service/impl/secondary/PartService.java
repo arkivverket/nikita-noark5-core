@@ -1,18 +1,21 @@
-package nikita.webapp.service.impl;
+package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v5.*;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
-import nikita.common.model.noark5.v5.hateoas.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
 import nikita.common.model.noark5.v5.metadata.PartRole;
-import nikita.common.repository.n5v5.IPartRepository;
+import nikita.common.repository.n5v5.secondary.IPartRepository;
 import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.metadata.IPartRoleService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
