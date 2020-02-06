@@ -73,10 +73,6 @@ public class PartUnit
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
-    // Links to Record
-    @ManyToMany(mappedBy = "referencePartUnit")
-    private List<Record> referenceRecord = new ArrayList<>();
-
     public String getOrganisationNumber() {
         return organisationNumber;
     }

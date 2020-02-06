@@ -75,10 +75,6 @@ public class PartPerson
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
-    // Links to Record
-    @ManyToMany(mappedBy = "referencePartPerson")
-    private List<Record> referenceRecord = new ArrayList<>();
-
     @Override
     public String getSocialSecurityNumber() {
         return socialSecurityNumber;
@@ -126,22 +122,6 @@ public class PartPerson
 
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
-    }
-
-    @Override
-    public List<Record> getReferenceRecord() {
-        return referenceRecord;
-    }
-
-    @Override
-    public void setReferenceRecord(
-            List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
-    @Override
-    public void addRecord(Record record) {
-        this.referenceRecord.add(record);
     }
 
     @Override

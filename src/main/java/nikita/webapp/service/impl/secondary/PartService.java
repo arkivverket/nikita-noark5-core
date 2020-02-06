@@ -161,7 +161,7 @@ public class PartService
 
         validatePartRole(part);
         createPerson(part);
-        part.addRecord(record);
+        part.addReferenceRecord(record);
         part = partRepository.save(part);
         record.addPart(part);
 
