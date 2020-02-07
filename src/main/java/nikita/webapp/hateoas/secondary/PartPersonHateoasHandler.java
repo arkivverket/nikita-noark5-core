@@ -1,4 +1,4 @@
-package nikita.webapp.hateoas;
+package nikita.webapp.hateoas.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;

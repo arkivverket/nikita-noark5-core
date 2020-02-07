@@ -1,5 +1,9 @@
-package nikita.common.model.noark5.v5;
+package nikita.common.model.noark5.v5.secondary;
 
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.NoarkGeneralEntity;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

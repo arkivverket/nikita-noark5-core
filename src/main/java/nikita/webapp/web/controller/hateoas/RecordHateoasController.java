@@ -19,6 +19,9 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnit
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;

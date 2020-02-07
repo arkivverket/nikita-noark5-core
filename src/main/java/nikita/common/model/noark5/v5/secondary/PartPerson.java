@@ -1,13 +1,14 @@
-package nikita.common.model.noark5.v5;
+package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.casehandling.secondary.ContactInformation;
 import nikita.common.model.noark5.v5.casehandling.secondary.PostalAddress;
 import nikita.common.model.noark5.v5.casehandling.secondary.ResidingAddress;
-import nikita.common.model.noark5.v5.hateoas.PartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartPersonEntity;
-import nikita.common.util.deserialisers.PartPersonDeserializer;
-import nikita.webapp.hateoas.PartPersonHateoasHandler;
+import nikita.common.util.deserialisers.secondary.PartPersonDeserializer;
+import nikita.webapp.hateoas.secondary.PartPersonHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -22,7 +23,7 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
-import static nikita.common.config.N5ResourceMappings.PART_PERSON;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_PART_PERSON)
@@ -34,26 +35,29 @@ public class PartPerson
         implements IPartPersonEntity {
 
     /**
-     * M??? - fødselsnummer (xs:string)
+     * M??? - foedselsnummer (xs:string)
      */
-    @Column(name = "social_security_number")
+    @Column(name = SOCIAL_SECURITY_NUMBER_ENG)
     @Audited
+    @JsonProperty(SOCIAL_SECURITY_NUMBER)
     private String socialSecurityNumber;
 
     /**
      * M??? - DNummer (xs:string)
      */
-    @Column(name = "d_number")
+    @Column(name = D_NUMBER_FIELD_ENG)
     @Audited
+    @JsonProperty(D_NUMBER_FIELD)
     private String dNumber;
 
     /**
-     * M400 - korrespondansepartNavn (xs:string)
+     * M302 - partNavn (xs:string)
      * Interface standard lists this as name. Using name until clarification
      * is provided
      */
+    @Column(name = CORRESPONDENCE_PART_NAME_ENG)
     @Audited
-    @Column(name = "name")
+    @JsonProperty(CORRESPONDENCE_PART_NAME)
     private String name;
 
     @OneToOne(mappedBy = "partPerson", cascade = ALL)
@@ -70,10 +74,6 @@ public class PartPerson
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
-
-    // Links to Record
-    @ManyToMany(mappedBy = "referencePartPerson")
-    private List<Record> referenceRecord = new ArrayList<>();
 
     @Override
     public String getSocialSecurityNumber() {
@@ -122,22 +122,6 @@ public class PartPerson
 
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
-    }
-
-    @Override
-    public List<Record> getReferenceRecord() {
-        return referenceRecord;
-    }
-
-    @Override
-    public void setReferenceRecord(
-            List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
-    @Override
-    public void addRecord(Record record) {
-        this.referenceRecord.add(record);
     }
 
     @Override

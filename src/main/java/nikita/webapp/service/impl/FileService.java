@@ -1,20 +1,23 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.PartPerson;
-import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Comment;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;

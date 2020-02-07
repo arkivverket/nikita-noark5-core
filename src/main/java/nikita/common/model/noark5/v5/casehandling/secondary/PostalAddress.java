@@ -1,10 +1,10 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.PartPerson;
-import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartUnit;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;

@@ -2,13 +2,16 @@ package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.PartPerson;
-import nikita.common.model.noark5.v5.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.model.noark5.v5.secondary.Comment;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartUnit;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;

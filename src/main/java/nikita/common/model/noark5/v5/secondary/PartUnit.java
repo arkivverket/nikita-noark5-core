@@ -1,13 +1,14 @@
-package nikita.common.model.noark5.v5;
+package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.casehandling.secondary.BusinessAddress;
 import nikita.common.model.noark5.v5.casehandling.secondary.ContactInformation;
 import nikita.common.model.noark5.v5.casehandling.secondary.PostalAddress;
-import nikita.common.model.noark5.v5.hateoas.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartUnitEntity;
-import nikita.common.util.deserialisers.PartUnitDeserializer;
-import nikita.webapp.hateoas.PartUnitHateoasHandler;
+import nikita.common.util.deserialisers.secondary.PartUnitDeserializer;
+import nikita.webapp.hateoas.secondary.PartUnitHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -22,7 +23,7 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
-import static nikita.common.config.N5ResourceMappings.PART_UNIT;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_PART_UNIT)
@@ -36,22 +37,25 @@ public class PartUnit
     /**
      * M??? - organisasjonsnummer (xs:string)
      */
-    @Column(name = "organisation_number")
+    @Column(name = ORGANISATION_NUMBER_ENG)
     @Audited
+    @JsonProperty(ORGANISATION_NUMBER)
     private String organisationNumber;
 
     /**
-     * M??? - navn (xs:string)
+     * M302 - partNavn (xs:string)
      */
-    @Column(name = "name")
+    @Column(name = CORRESPONDENCE_PART_NAME_ENG)
     @Audited
+    @JsonProperty(CORRESPONDENCE_PART_NAME)
     private String name;
 
     /**
      * M412 - kontaktperson  (xs:string)
      */
-    @Column(name = "contact_person")
+    @Column(name = CONTACT_PERSON_ENG)
     @Audited
+    @JsonProperty(CONTACT_PERSON)
     private String contactPerson;
 
     @OneToOne(mappedBy = "partUnit", cascade = ALL)
@@ -68,10 +72,6 @@ public class PartUnit
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
-
-    // Links to Record
-    @ManyToMany(mappedBy = "referencePartUnit")
-    private List<Record> referenceRecord = new ArrayList<>();
 
     public String getOrganisationNumber() {
         return organisationNumber;

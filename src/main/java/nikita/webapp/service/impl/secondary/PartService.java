@@ -1,18 +1,21 @@
-package nikita.webapp.service.impl;
+package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v5.*;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
-import nikita.common.model.noark5.v5.hateoas.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
 import nikita.common.model.noark5.v5.metadata.PartRole;
-import nikita.common.repository.n5v5.IPartRepository;
+import nikita.common.repository.n5v5.secondary.IPartRepository;
 import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.IPartHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.metadata.IPartRoleService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +105,7 @@ public class PartService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingPart.setVersion(version);
-        partRepository.save(existingPart);
+        existingPart = partRepository.save(existingPart);
         return existingPart;
     }
 
@@ -148,7 +151,7 @@ public class PartService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingPart.setVersion(version);
-        partRepository.save(existingPart);
+        existingPart = partRepository.save(existingPart);
         return existingPart;
     }
 
@@ -158,9 +161,9 @@ public class PartService
 
         validatePartRole(part);
         createPerson(part);
+        part.addReferenceRecord(record);
+        part = partRepository.save(part);
         record.addPart(part);
-        part.addRecord(record);
-        partRepository.save(part);
 
         PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
         partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
@@ -174,9 +177,9 @@ public class PartService
             @NotNull PartPerson part, @NotNull File file) {
         validatePartRole(part);
         createPerson(part);
-        file.addPart(part);
         part.addReferenceFile(file);
-        partRepository.save(part);
+        part = partRepository.save(part);
+        file.addPart(part);
         PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
         partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -190,9 +193,9 @@ public class PartService
         createUnit(part);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
+        part.addReferenceRecord(record);
+        part = partRepository.save(part);
         record.addPart(part);
-        part.getReferenceRecord().add(record);
-        partRepository.save(part);
 
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
         partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
@@ -209,9 +212,9 @@ public class PartService
         createUnit(part);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
-        file.addPart(part);
         part.addReferenceFile(file);
-        partRepository.save(part);
+        part = partRepository.save(part);
+        file.addPart(part);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
         partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -227,9 +230,9 @@ public class PartService
         createUnit(partUnit);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
-        documentDescription.addPart(partUnit);
         partUnit.addReferenceDocumentDescription(documentDescription);
-        partRepository.save(partUnit);
+        partUnit = partRepository.save(partUnit);
+        documentDescription.addPart(partUnit);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
         partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -243,9 +246,9 @@ public class PartService
             @NotNull DocumentDescription documentDescription) {
         validatePartRole(partPerson);
         createPerson(partPerson);
-        documentDescription.addPart(partPerson);
         partPerson.addReferenceDocumentDescription(documentDescription);
-        partRepository.save(partPerson);
+        partPerson = partRepository.save(partPerson);
+        documentDescription.addPart(partPerson);
         PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
         partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(

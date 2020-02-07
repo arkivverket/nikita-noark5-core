@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.FondsCreator;
-import nikita.common.model.noark5.v5.Part;
-import nikita.common.model.noark5.v5.PartPerson;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
