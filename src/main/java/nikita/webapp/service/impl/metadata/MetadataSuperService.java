@@ -58,8 +58,7 @@ public abstract class MetadataSuperService
     public IMetadataEntity findMetadataByCodeOrThrow(@NotNull String code) {
         IMetadataEntity entity = findMetadataByCode(code);
         if (null == entity) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                entity.getBaseTypeName() + ", using " + "code " + code + ".";
+            String info = "Unknown metadata code value '" + code + "'.";
             logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }
