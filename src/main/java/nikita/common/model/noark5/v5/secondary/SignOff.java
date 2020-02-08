@@ -5,6 +5,8 @@ import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISignOffEntity;
+import nikita.common.model.noark5.v5.metadata.SignOffMethod;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -23,7 +25,8 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @Entity
 @Table(name = TABLE_SIGN_OFF)
 public class SignOff
-        extends SystemIdEntity {
+        extends SystemIdEntity
+        implements ISignOffEntity {
 
     /**
      * M617 - avskrivningsdato
@@ -43,11 +46,18 @@ public class SignOff
     private String signOffBy;
 
     /**
-     * M619 - avskrivningsmaate
+     * M??? - avskrivningsmaate code
      */
-    @Column(name = "sign_off_method")
+    @Column(name = "sign_off_method_code")
     @Audited
-    private String signOffMethod;
+    private String signOffMethodCode;
+
+    /**
+     * M619 - avskrivningsmaate code name
+     */
+    @Column(name = "sign_off_method_code_name")
+    @Audited
+    private String signOffMethodCodeName;
 
     /**
      * M215 referanseAvskrivesAvJournalpost
@@ -66,31 +76,50 @@ public class SignOff
     private CorrespondencePart referenceSignedOffCorrespondencePart;
 
     // Links to RegistryEntry
-    @ManyToMany(mappedBy = "referenceSignOff")
-    private List<RegistryEntry> referenceRecord = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sign_off_registry_entry_id",
+                referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
+    private RegistryEntry referenceRecord;
 
+    @Override
     public OffsetDateTime getSignOffDate() {
         return signOffDate;
     }
 
+    @Override
     public void setSignOffDate(OffsetDateTime signOffDate) {
         this.signOffDate = signOffDate;
     }
 
+    @Override
     public String getSignOffBy() {
         return signOffBy;
     }
 
+    @Override
     public void setSignOffBy(String signOffBy) {
         this.signOffBy = signOffBy;
     }
 
-    public String getSignOffMethod() {
+    @Override
+    public SignOffMethod getSignOffMethod() {
+        if (null == signOffMethodCode)
+            return null;
+        SignOffMethod signOffMethod = new SignOffMethod();
+        signOffMethod.setCode(signOffMethodCode);
+        signOffMethod.setCodeName(signOffMethodCodeName);
         return signOffMethod;
     }
 
-    public void setSignOffMethod(String signOffMethod) {
-        this.signOffMethod = signOffMethod;
+    @Override
+    public void setSignOffMethod(SignOffMethod signOffMethod) {
+        if (null != signOffMethod) {
+            this.signOffMethodCode = signOffMethod.getCode();
+            this.signOffMethodCodeName = signOffMethod.getCodeName();
+        } else {
+            this.signOffMethodCode = null;
+            this.signOffMethodCodeName = null;
+        }
     }
 
     @Override
@@ -103,37 +132,44 @@ public class SignOff
         return REL_FONDS_STRUCTURE_SIGN_OFF;
     }
 
+    @Override
     public RegistryEntry getReferenceSignedOffRecord() {
         return referenceSignedOffRecord;
     }
 
+    @Override
     public void setReferenceSignedOffRecord(
             RegistryEntry referenceSignedOffRecord) {
         this.referenceSignedOffRecord = referenceSignedOffRecord;
     }
 
+    @Override
     public CorrespondencePart getReferenceSignedOffCorrespondencePart() {
         return referenceSignedOffCorrespondencePart;
     }
 
+    @Override
     public void setReferenceSignedOffCorrespondencePart(
             CorrespondencePart referenceSignedOffCorrespondencePart) {
         this.referenceSignedOffCorrespondencePart =
                 referenceSignedOffCorrespondencePart;
     }
 
-    public List<RegistryEntry> getReferenceRecord() {
+    @Override
+    public RegistryEntry getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<RegistryEntry> referenceRecord) {
+    @Override
+    public void setReferenceRecord(RegistryEntry referenceRecord) {
         this.referenceRecord = referenceRecord;
     }
 
     @Override
     public String toString() {
         return "SignOff{" + super.toString() +
-                "signOffMethod='" + signOffMethod + '\'' +
+                "signOffMethodCode='" + signOffMethodCode + '\'' +
+                "signOffMethodCodeName='" + signOffMethodCodeName + '\'' +
                 ", signOffBy='" + signOffBy + '\'' +
                 ", signOffDate=" + signOffDate +
                 '}';
@@ -153,7 +189,8 @@ public class SignOff
         SignOff rhs = (SignOff) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(signOffMethod, rhs.signOffMethod)
+                .append(signOffMethodCode, rhs.signOffMethodCode)
+                .append(signOffMethodCodeName, rhs.signOffMethodCodeName)
                 .append(signOffBy, rhs.signOffBy)
                 .append(signOffDate, rhs.signOffDate)
                 .isEquals();
@@ -163,7 +200,8 @@ public class SignOff
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(signOffMethod)
+                .append(signOffMethodCode)
+                .append(signOffMethodCodeName)
                 .append(signOffBy)
                 .append(signOffDate)
                 .toHashCode();
