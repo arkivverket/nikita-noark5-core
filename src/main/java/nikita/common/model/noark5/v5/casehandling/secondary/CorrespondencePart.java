@@ -46,38 +46,27 @@ public class CorrespondencePart
     @ManyToMany(mappedBy = "referenceCorrespondencePart")
     private List<Record> referenceRecord = new ArrayList<>();
 
-    private CorrespondencePartType correspondencePartType;
-
-    @Override
-    public String getCorrespondencePartTypeCode() {
-        return correspondencePartTypeCode;
-    }
-
-    @Override
-    public void setCorrespondencePartTypeCode(String correspondencePartTypeCode) {
-        this.correspondencePartTypeCode = correspondencePartTypeCode;
-    }
-
-    @Override
-    public String getCorrespondencePartTypeCodeName() {
-        return correspondencePartTypeCodeName;
-    }
-
-    @Override
-    public void setCorrespondencePartTypeCodeName(
-            String correspondencePartTypeCodeName) {
-        this.correspondencePartTypeCodeName = correspondencePartTypeCodeName;
-    }
-
     @Override
     public CorrespondencePartType getCorrespondencePartType() {
+        if (null == correspondencePartTypeCode)
+            return null;
+        CorrespondencePartType correspondencePartType =
+            new CorrespondencePartType();
+        correspondencePartType.setCode(correspondencePartTypeCode);
+        correspondencePartType.setCodeName(correspondencePartTypeCodeName);
         return correspondencePartType;
     }
 
     @Override
     public void setCorrespondencePartType(
             CorrespondencePartType correspondencePartType) {
-        this.correspondencePartType = correspondencePartType;
+        if (null != correspondencePartType) {
+            this.correspondencePartTypeCode = correspondencePartType.getCode();
+            this.correspondencePartTypeCodeName = correspondencePartType.getCodeName();
+        } else {
+            this.correspondencePartTypeCode = null;
+            this.correspondencePartTypeCodeName = null;
+        }
     }
 
     public List<Record> getReferenceRecord() {

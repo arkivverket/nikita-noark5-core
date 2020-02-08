@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartEntity;
+import nikita.common.model.noark5.v5.metadata.PartRole;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -67,20 +68,23 @@ public class Part
         this.referenceFile = referenceFile;
     }
 
-    public String getPartRoleCode() {
-        return partRoleCode;
+    public PartRole getPartRole() {
+        if (null == partRoleCode)
+            return null;
+        PartRole partRole = new PartRole();
+        partRole.setCode(partRoleCode);
+        partRole.setCodeName(partRoleCodeName);
+        return partRole;
     }
 
-    public void setPartRoleCode(String partRoleCode) {
-        this.partRoleCode = partRoleCode;
-    }
-
-    public String getPartRoleCodeName() {
-        return partRoleCodeName;
-    }
-
-    public void setPartRoleCodeName(String partRoleCodeName) {
-        this.partRoleCodeName = partRoleCodeName;
+    public void setPartRole(PartRole partRole) {
+	if (null != partRole) {
+	    this.partRoleCode = partRole.getCode();
+	    this.partRoleCodeName = partRole.getCodeName();
+	} else {
+	    this.partRoleCode = null;
+	    this.partRoleCodeName = null;
+	}
     }
 
     public void addReferenceFile(File file) {

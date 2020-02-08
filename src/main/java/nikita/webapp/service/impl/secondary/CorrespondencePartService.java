@@ -121,17 +121,12 @@ public class CorrespondencePartService
     private void updateCorrespondencePartType(
             CorrespondencePart incomingCorrespondencePart,
             CorrespondencePart existingCorrespondencePart) {
-
-        if (null != incomingCorrespondencePart.
-                getCorrespondencePartTypeCode()) {
-            existingCorrespondencePart.setCorrespondencePartTypeCode(
-                    incomingCorrespondencePart.getCorrespondencePartTypeCode());
-        }
-        if (null != incomingCorrespondencePart.
-                getCorrespondencePartTypeCodeName()) {
-            existingCorrespondencePart.setCorrespondencePartTypeCodeName(
-                    incomingCorrespondencePart.
-                            getCorrespondencePartTypeCodeName());
+        // Only copy if changed, in case it has an historical value
+        if (existingCorrespondencePart.getCorrespondencePartType()
+            != incomingCorrespondencePart.getCorrespondencePartType()) {
+            validateCorrespondencePartType(incomingCorrespondencePart);
+            existingCorrespondencePart.setCorrespondencePartType
+                (incomingCorrespondencePart.getCorrespondencePartType());
         }
     }
 
@@ -241,10 +236,12 @@ public class CorrespondencePartService
 
     private void createTemplateCorrespondencePartType(
             CorrespondencePart correspondencePart) {
-        correspondencePart.setCorrespondencePartTypeCode(
-                CORRESPONDENCE_PART_CODE_EA);
-        correspondencePart.setCorrespondencePartTypeCodeName(
-                CORRESPONDENCE_PART_DESCRIPTION_EA);
+	CorrespondencePartType correspondencePartType =
+	    (CorrespondencePartType) correspondencePartTypeService
+            .findValidMetadataOrThrow(correspondencePart.getBaseTypeName(),
+                                      CORRESPONDENCE_PART_CODE_EA, null);
+        correspondencePart.setCorrespondencePartType(correspondencePartType);
+
     }
 
     @Override
@@ -637,9 +634,8 @@ public class CorrespondencePartService
         CorrespondencePartType correspondencePartType =
             (CorrespondencePartType) correspondencePartTypeService
             .findValidMetadataOrThrow(correspondencePart.getBaseTypeName(),
-                                      correspondencePart.getCorrespondencePartTypeCode(),
-                                      correspondencePart.getCorrespondencePartTypeCodeName());
-        correspondencePart.setCorrespondencePartTypeCodeName(
-            correspondencePartType.getCodeName());
+                                      correspondencePart.getCorrespondencePartType());
+        correspondencePart.setCorrespondencePartType
+	    (correspondencePartType);
     }
 }

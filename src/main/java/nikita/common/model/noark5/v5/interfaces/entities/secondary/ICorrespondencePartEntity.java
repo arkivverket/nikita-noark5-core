@@ -10,15 +10,6 @@ import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 public interface ICorrespondencePartEntity
         extends ISystemId {
 
-    String getCorrespondencePartTypeCode();
-
-    void setCorrespondencePartTypeCode(String correspondencePartTypeCode);
-
-    String getCorrespondencePartTypeCodeName();
-
-    void setCorrespondencePartTypeCodeName(
-            String correspondencePartTypeCodeName);
-
     CorrespondencePartType getCorrespondencePartType();
 
     void setCorrespondencePartType(
