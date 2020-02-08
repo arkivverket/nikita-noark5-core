@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.CommonUtils;
@@ -26,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
@@ -108,22 +110,21 @@ public class RegistryEntryHateoasController
     @ApiOperation(value = "Persists a SignOff object associated with the given Record systemId",
                   notes = "Returns the newly created SignOff object after it " +
                   "was associated with a Record object and persisted to the database",
-                  response = SignOff.class) // SignOffHateoas.class
+                  response = SignOffHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "SignOff " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                         response = SignOff.class), // SignOffHateoas
+                         response = SignOffHateoas.class),
             @ApiResponse(code = 201, message = "SignOff " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                         response = SignOff.class), // SignOffHateoas
+                         response = SignOffHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type SignOff"),
             @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SIGN_OFF,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String>
+    public ResponseEntity<SignOffHateoas>
     createSignOffAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -135,19 +136,12 @@ public class RegistryEntryHateoasController
                     required = true)
             @RequestBody SignOff signOff)
             throws NikitaException {
-        /*
-        SignOff createdSignOff =
-                recordService.createSignOffAssociatedWithRecord(systemID, signOff);
-        SignOffHateoas signOffHateoas =
-                new SignOffHateoas(createdSignOff);
-        signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdSignOff));
+        SignOffHateoas signOffHateoas = registryEntryService
+            .createSignOffAssociatedWithRegistryEntry(systemID, signOff);
         return ResponseEntity.status(CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-             .header(ETAG, .getVersion().toString())
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(signOffHateoas.getEntityVersion().toString())
                 .body(signOffHateoas);
-	*/
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-presedens
@@ -221,26 +215,62 @@ public class RegistryEntryHateoasController
     }
 
 
-    // GET [contextPath][api]/arkivstruktur/journalpost/{systemId}/ny-avskrivning
+    // GET [contextPath][api]/sakarkiv/journalpost/{systemID}/avskrivning/{subSystemID}
+    @ApiOperation(value = "Return a sign off related to the" +
+                  "registryEntry identified by a systemId",
+                  response = SignOffHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "SignOff returned",
+                    response = SignOffHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF + SLASH + SUB_SYSTEM_ID_PARAMETER,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<SignOffHateoas>
+    findAllSignOffAssociatedWithRegistryEntry(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                      value = "systemID of the registryEntry",
+                      required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "subSystemID",
+                      value = "systemID of the SignOff",
+                      required = true)
+            @PathVariable("subSystemID") final String subSystemID)
+            throws IOException {
+        return ResponseEntity.status(OK)
+                .body(registryEntryService
+                      .findSignOffAssociatedWithRegistryEntry
+                      (systemID, subSystemID));
+    }
+
+    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/ny-avskrivning
     //  https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-avskrivning/
     @ApiOperation(value = "Create a SignOff with default values",
-                  response = SignOff.class) // SignOffHateoas
+                  response = SignOffHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "SignOff returned",
-			 response = SignOff.class), // SignOffHateoas
+                         response = SignOffHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SIGN_OFF)
-    public ResponseEntity<String> createDefaultSignOff(
-            HttpServletRequest request) {
-        /*
+    public ResponseEntity<SignOffHateoas> createDefaultSignOff(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of record to associate the SignOff with.",
+                    required = true)
+            @PathVariable("systemID") String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(signOffService.generateDefaultSignOff());
-        */
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+                .body(registryEntryService.generateDefaultSignOff(systemID));
     }
 
 
@@ -302,36 +332,28 @@ public class RegistryEntryHateoasController
 
 
     // Retrieve all SignOff associated with a RegistryEntry identified by systemId
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/avskrivning
+    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/avskrivning
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/avskrivning/
     @ApiOperation(value = "Retrieves a list of SignOffs associated with a RegistryEntry",
             response = SignOff.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "SignOff returned", response = SignOff.class), //SignOffHateoas
+            @ApiResponse(code = 200, message = "SignOff returned",
+                         response = SignOffHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF)
-    public ResponseEntity<String> findAllSignOffAssociatedWithRecord(
+    public ResponseEntity<SignOffHateoas> findAllSignOffAssociatedWithRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated Record",
+                    value = "systemID of the signoff to retrieve associated Record",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        /*  Record record = recordService.findBySystemId(UUID.fromString(systemId));
-            if (record == null) {
-            throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
-        }
-        SignOffHateoas documentDescriptionHateoas = new
-                SignOffHateoas((List<INoarkEntity>) (List)record.getReferenceSignOff()));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentDescriptionHateoas);
-                */
-        return errorResponse(NOT_IMPLEMENTED,
-                API_MESSAGE_NOT_IMPLEMENTED);
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(registryEntryService
+                      .findAllSignOffAssociatedWithRegistryEntry(systemID));
     }
 
     // Retrieve all Precedence associated with a RegistryEntry identified by systemId
@@ -505,5 +527,81 @@ public class RegistryEntryHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedRegistryEntry.getVersion().toString())
                 .body(registryEntryHateoas);
+    }
+
+    // PUT [contextPath][api]/sakarkiv/journalpost/{systemID}/avskrivning/{subSystemID}
+    @ApiOperation(value = "Update a sign off related to the" +
+                  "registryEntry identified by a systemId",
+                  response = SignOffHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "SignOff returned",
+                    response = SignOffHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF + SLASH + SUB_SYSTEM_ID_PARAMETER,
+                produces = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<SignOffHateoas>
+    updateSignOffAssociatedWithRegistryEntry(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                      value = "systemID of the registryEntry",
+                      required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "subSystemID",
+                      value = "systemID of the SignOff",
+                      required = true)
+            @PathVariable("subSystemID") final String subSystemID,
+            @ApiParam(name = "SignOff",
+                    value = "Incoming signOff object",
+                    required = true)
+            @RequestBody SignOff signOff)
+            throws IOException {
+        SignOffHateoas signOffHateoas =
+            registryEntryService.handleUpdateSignOff
+            (systemID, subSystemID, parseETAG(request.getHeader(ETAG)),
+             signOff);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(signOffHateoas.getEntityVersion().toString())
+                .body(signOffHateoas);
+    }
+
+    // DELETE [contextPath][api]/sakarkiv/journalpost/{systemID}/avskrivning/{subSystemID}
+    @ApiOperation(value = "Delete a sign off related to the" +
+                  "registryEntry identified by a systemId",
+                  response = SignOffHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "SignOff returned",
+                    response = SignOffHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF + SLASH + SUB_SYSTEM_ID_PARAMETER,
+                   produces = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String>
+    deleteeSignOffAssociatedWithRegistryEntry(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                      value = "systemID of the registryEntry",
+                      required = true)
+            @PathVariable("systemID") final String systemID,
+            @ApiParam(name = "subSystemID",
+                      value = "systemID of the SignOff",
+                      required = true)
+            @PathVariable("subSystemID") final String subSystemID) {
+        registryEntryService.deleteSignOff(systemID, subSystemID);
+        return ResponseEntity.status(OK)
+                .body("{\"status\" : \"Success\"}");
     }
 }

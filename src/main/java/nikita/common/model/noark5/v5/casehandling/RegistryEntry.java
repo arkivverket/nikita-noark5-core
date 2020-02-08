@@ -373,6 +373,10 @@ public class RegistryEntry
         this.referenceSignOff = referenceSignOff;
     }
 
+    public void addReferenceSignOff(SignOff signOff) {
+        this.referenceSignOff.add(signOff);
+    }
+
     public List<Precedence> getReferencePrecedence() {
         return referencePrecedence;
     }

@@ -25,6 +25,7 @@ import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.admin.*;
 import nikita.common.model.noark5.v5.casehandling.*;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
+import nikita.common.model.noark5.v5.metadata.*;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.*;
@@ -1444,5 +1445,31 @@ public class TestParsing {
                 jsonParser, null /* DeserializationContext */);
         assert(null != author);
         assert(authorname.equals(author.getAuthor()));
+    }
+
+    @Test
+    public void parseSignOffComplete() throws Exception {
+        System.out.println("info: testing sign off parsing");
+        String systemID = "b75299d4-4a79-11ea-8c73-83a54e215d84";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
+            +", \"avskrevetAv\": \"Some Person\" "
+            +", \"avskrivningsdato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"avskrivningsmaate\": { \"kode\": \"BY\", \"kodenavn\": \"Besvart med brev\" } "
+            //+", \"referanseAvskrevetAv\": \"?\" "
+            //+", \"referanseAvskrivesAvJournalpost\": \"?\" "
+            //+", \"referanseAvskrivesAvKorrespondansepart\": \"?\" "
+            +"}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        SignOffDeserializer signOffDeserializer = new SignOffDeserializer();
+        SignOff signOff = signOffDeserializer.deserialize
+            (jsonParser, null /* DeserializationContext */);
+        assert(null != signOff);
+        assert(systemID.equals(signOff.getSystemId()));
+        SignOffMethod m = signOff.getSignOffMethod();
+        assert("BY".equals(m.getCode()));
+        assert("Besvart med brev".equals(m.getCodeName()));
     }
 }
