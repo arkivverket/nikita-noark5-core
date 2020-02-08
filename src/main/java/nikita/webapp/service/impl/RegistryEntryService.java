@@ -154,13 +154,12 @@ public class RegistryEntryService
             skip = 0;
         }
 
-        String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<RegistryEntry> criteriaQuery = criteriaBuilder.createQuery(RegistryEntry.class);
         Root<RegistryEntry> from = criteriaQuery.from(RegistryEntry.class);
         CriteriaQuery<RegistryEntry> select = criteriaQuery.select(from);
 
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), loggedInUser));
+        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
         TypedQuery<RegistryEntry> typedQuery = entityManager.createQuery(select);
         typedQuery.setFirstResult(skip);
         typedQuery.setMaxResults(top);

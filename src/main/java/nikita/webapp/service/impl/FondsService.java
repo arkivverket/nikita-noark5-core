@@ -302,13 +302,12 @@ public class FondsService
     @Override
     public FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip) {
 
-        String loggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Fonds> criteriaQuery = criteriaBuilder.createQuery(Fonds.class);
         Root<Fonds> from = criteriaQuery.from(Fonds.class);
         CriteriaQuery<Fonds> select = criteriaQuery.select(from);
 
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), loggedInUser));
+        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
         TypedQuery<Fonds> typedQuery = entityManager.createQuery(select);
 
         FondsHateoas fondsHateoas = new

@@ -230,10 +230,8 @@ public class DocumentDescriptionService
         validateDocumentMedium(documentMediumService, documentDescription);
         validateDocumentStatus(documentDescription);
         validateDocumentType(documentDescription);
-        String username = SecurityContextHolder.getContext().
-                getAuthentication().getName();
         documentDescription.setAssociationDate(OffsetDateTime.now());
-        documentDescription.setAssociatedBy(username);
+        documentDescription.setAssociatedBy(getUser());
         return documentDescriptionRepository.save(documentDescription);
     }
 

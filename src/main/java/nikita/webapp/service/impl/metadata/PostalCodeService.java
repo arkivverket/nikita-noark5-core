@@ -60,8 +60,7 @@ public class PostalCodeService
     @Override
     public MetadataHateoas createNewPostalCode(
             PostalCode postalCode) {
-        postalCode.setOwnedBy(SecurityContextHolder.getContext().
-                getAuthentication().getName());
+        postalCode.setOwnedBy(getUser());
 
         MetadataHateoas metadataHateoas = new MetadataHateoas(
                 postalCodeRepository.save(postalCode));
