@@ -15,7 +15,6 @@ import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
@@ -35,6 +34,7 @@ import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThro
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping(value = HREF_BASE_DOCUMENT_OBJECT)
@@ -79,7 +79,12 @@ public class DocumentObjectHateoasController
                     value = "systemID of the documentObject to retrieve",
                     required = true)
             @PathVariable("systemID") final String documentObjectSystemId) {
-        return documentObjectService.findBySystemId(documentObjectSystemId);
+        DocumentObjectHateoas documentObjectHateoas =
+            documentObjectService.findBySystemId(documentObjectSystemId);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(documentObjectHateoas.getEntityVersion().toString())
+                .body(documentObjectHateoas);
     }
 
     // Get all documentObject
@@ -99,10 +104,8 @@ public class DocumentObjectHateoasController
     @GetMapping(produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> findAllDocumentObject(
             HttpServletRequest request) {
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas((List<INoarkEntity>) (List)
-                documentObjectService.findDocumentObjectByOwner());
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
+        DocumentObjectHateoas documentObjectHateoas =
+	    documentObjectService.findDocumentObjectByOwner();
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
@@ -180,7 +183,7 @@ public class DocumentObjectHateoasController
                       required = true)
             @PathVariable("systemID") final String systemID)
             throws IOException {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectService.findAllConversionAssociatedWithDocumentObject(systemID));
     }
@@ -214,7 +217,7 @@ public class DocumentObjectHateoasController
                       required = true)
             @PathVariable("subSystemID") final String subSystemID)
             throws IOException {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .body(documentObjectService
                       .findConversionAssociatedWithDocumentObject
                       (systemID, subSystemID));
@@ -288,7 +291,7 @@ public class DocumentObjectHateoasController
             throws NikitaException {
         ConversionHateoas conversionHateoas = documentObjectService
             .createConversionAssociatedWithDocumentObject(systemID, conversion);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(conversionHateoas.getEntityVersion().toString())
                 .body(conversionHateoas);
@@ -320,7 +323,10 @@ public class DocumentObjectHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID)
             throws IOException {
-        return documentObjectService.handleIncomingFile(systemID, request);
+        DocumentObjectHateoas documentObjectHateoas =
+            documentObjectService.handleIncomingFile(systemID, request);
+        return ResponseEntity.status(CREATED)
+                .body(documentObjectHateoas);
     }
 
     // konverterFil
@@ -347,8 +353,12 @@ public class DocumentObjectHateoasController
                     required = true)
             @PathVariable("systemID") final String documentObjectSystemId)
             throws Exception {
-        return documentObjectService.
-                convertDocumentToPDF(documentObjectSystemId);
+        DocumentObjectHateoas documentObjectHateoas = documentObjectService.
+            convertDocumentToPDF(documentObjectSystemId);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(documentObjectHateoas.getEntityVersion().toString())
+                .body(documentObjectHateoas);
     }
 
     // Delete a DocumentObject identified by systemID
@@ -427,15 +437,12 @@ public class DocumentObjectHateoasController
                     value = "Incoming documentObject object",
                     required = true)
             @RequestBody DocumentObject documentObject) throws NikitaException {
-        validateForUpdate(documentObject);
-
-        DocumentObject updatedDocumentObject = documentObjectService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), documentObject);
-        DocumentObjectHateoas documentObjectHateoas = new DocumentObjectHateoas(updatedDocumentObject);
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedDocumentObject));
-        return ResponseEntity.status(HttpStatus.CREATED)
+        DocumentObjectHateoas documentObjectHateoas =
+            documentObjectService.handleUpdate
+                (systemID, parseETAG(request.getHeader(ETAG)), documentObject);
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedDocumentObject.getVersion().toString())
+                .eTag(documentObjectHateoas.getEntityVersion().toString())
                 .body(documentObjectHateoas);
     }
 
@@ -470,7 +477,7 @@ public class DocumentObjectHateoasController
                     value = "Incoming conversion object",
                     required = true)
             @RequestBody Conversion conversion) throws NikitaException {
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
             .body(documentObjectService.handleUpdateConversionBySystemId
                   (systemID, subSystemID, conversion));
     }
