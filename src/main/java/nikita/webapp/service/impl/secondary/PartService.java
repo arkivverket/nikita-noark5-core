@@ -83,14 +83,15 @@ public class PartService
         PartPerson existingPart = (PartPerson) getPartOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        // First the values
-        copyCodeValues(incomingPart, existingPart);
         existingPart.setdNumber(
                 incomingPart.getdNumber());
         existingPart.setName(
                 incomingPart.getName());
         existingPart.setSocialSecurityNumber(
                 incomingPart.getSocialSecurityNumber());
+        // Only copy if changed, in case it has an historical value
+        if (existingPart.getPartRole() != incomingPart.getPartRole())
+            existingPart.setPartRole(incomingPart.getPartRole());
 
         // Then secondary objects
         updatePartContactInformationCreateIfNull(
@@ -109,17 +110,6 @@ public class PartService
         return existingPart;
     }
 
-    private void copyCodeValues(@NotNull Part incomingPart,
-                                @NotNull Part existingPart) {
-        if (null != incomingPart.getPartRoleCode()) {
-            existingPart.setPartRoleCode(incomingPart.getPartRoleCode());
-            if (null != incomingPart.getPartRoleCodeName()) {
-                existingPart.setPartRoleCodeName(
-                        incomingPart.getPartRoleCodeName());
-            }
-        }
-    }
-
     @Override
     public PartUnit updatePartUnit(
             @NotNull String systemId, @NotNull Long version,
@@ -129,13 +119,15 @@ public class PartService
 
         // Copy all the values you are allowed to copy ....
         // First the values
-        copyCodeValues(incomingPart, existingPart);
         existingPart.setName(
                 incomingPart.getName());
         existingPart.setOrganisationNumber(
                 incomingPart.getOrganisationNumber());
         existingPart.setContactPerson(
                 incomingPart.getContactPerson());
+        // Only copy if changed, in case it has an historical value
+        if (existingPart.getPartRole() != incomingPart.getPartRole())
+            existingPart.setPartRole(incomingPart.getPartRole());
 
         // Then secondary objects
         // Contact information
@@ -339,21 +331,23 @@ public class PartService
     public void updatePartUnitBusinessAddressCreateIfNull(
             IBusinessAddress existingPart,
             IBusinessAddress incomingPart) {
-
-        if (existingPart.getBusinessAddress() != null &&
-                incomingPart.getBusinessAddress() != null) {
-            updateAddress(existingPart.
-                            getBusinessAddress().getSimpleAddress(),
-                    incomingPart.
-                            getBusinessAddress().getSimpleAddress());
+        if (null == incomingPart.getBusinessAddress()) {
+            existingPart.setBusinessAddress(null);
+            return;
+        }
+        if (null != existingPart.getBusinessAddress()
+            && null != incomingPart.getBusinessAddress()) {
+            updateAddress
+                (existingPart.getBusinessAddress().getSimpleAddress(),
+                 incomingPart.getBusinessAddress().getSimpleAddress());
         }
         // Create a new BusinessAddress object based on the incoming one
-        else if (incomingPart.getBusinessAddress() != null) {
+        else {
             BusinessAddress businessAddress = new BusinessAddress();
             businessAddress.setSimpleAddress(new SimpleAddress());
-            updateAddress(businessAddress.getSimpleAddress(),
-                    incomingPart.getBusinessAddress()
-                            .getSimpleAddress());
+            updateAddress
+                (businessAddress.getSimpleAddress(),
+                 incomingPart.getBusinessAddress().getSimpleAddress());
             existingPart.setBusinessAddress(businessAddress);
         }
         existingPart.getBusinessAddress().getSimpleAddress().
@@ -370,21 +364,23 @@ public class PartService
     public void updatePartResidingAddressCreateIfNull(
             IResidingAddress existingPart,
             IResidingAddress incomingPart) {
-
-        if (existingPart.getResidingAddress() != null &&
-                incomingPart.getResidingAddress() != null) {
-            updateAddress(existingPart.
-                            getResidingAddress().getSimpleAddress(),
-                    incomingPart.
-                            getResidingAddress().getSimpleAddress());
+        if (null == incomingPart.getResidingAddress()) {
+            existingPart.setResidingAddress(null);
+            return;
+        }
+        if (null != existingPart.getResidingAddress()
+            && null != incomingPart.getResidingAddress()) {
+            updateAddress
+                (existingPart.getResidingAddress().getSimpleAddress(),
+                 incomingPart.getResidingAddress().getSimpleAddress());
         }
         // Create a new ResidingAddress object based on the incoming one
-        else if (incomingPart.getResidingAddress() != null) {
+        else {
             ResidingAddress residingAddress = new ResidingAddress();
             residingAddress.setSimpleAddress(new SimpleAddress());
-            updateAddress(residingAddress.getSimpleAddress(),
-                    incomingPart.getResidingAddress()
-                            .getSimpleAddress());
+            updateAddress
+                (residingAddress.getSimpleAddress(),
+                 incomingPart.getResidingAddress().getSimpleAddress());
             existingPart.setResidingAddress(residingAddress);
         }
         // Make sure the addressType field is set
@@ -401,27 +397,30 @@ public class PartService
      * @param incomingPostalAddress The incoming Part
      */
     public void updatePartPostalAddressCreateIfNull(
-            IPostalAddress existingPostalAddress,
-            IPostalAddress incomingPostalAddress) {
+            IPostalAddress existingPart,
+            IPostalAddress incomingPart) {
+        if (null == incomingPart.getPostalAddress()) {
+            existingPart.setPostalAddress(null);
+            return;
+        }
 
-        if (existingPostalAddress.getPostalAddress() != null
-                && incomingPostalAddress.getPostalAddress() != null) {
-            updateAddress(existingPostalAddress.
-                            getPostalAddress().getSimpleAddress(),
-                    incomingPostalAddress.
-                            getPostalAddress().getSimpleAddress());
+        if (null != existingPart.getPostalAddress()
+            && null != incomingPart.getPostalAddress()) {
+            updateAddress
+                (existingPart.getPostalAddress().getSimpleAddress(),
+                 incomingPart.getPostalAddress().getSimpleAddress());
         }
         // Create a new PostalAddress object based on the incoming one
-        else if (incomingPostalAddress.getPostalAddress() != null) {
+        else {
             PostalAddress postalAddress = new PostalAddress();
             postalAddress.setSimpleAddress(new SimpleAddress());
-            updateAddress(postalAddress.getSimpleAddress(),
-                    incomingPostalAddress.getPostalAddress().
-                            getSimpleAddress());
-            existingPostalAddress.setPostalAddress(postalAddress);
+            updateAddress
+                (postalAddress.getSimpleAddress(),
+                 incomingPart.getPostalAddress().getSimpleAddress());
+            existingPart.setPostalAddress(postalAddress);
         }
         // Make sure the addressType field is set
-        existingPostalAddress.getPostalAddress().getSimpleAddress().
+        existingPart.getPostalAddress().getSimpleAddress().
                 setAddressType(POSTAL_ADDRESS);
     }
 
@@ -435,19 +434,21 @@ public class PartService
     public void updatePartContactInformationCreateIfNull(
             IContactInformation existingPart,
             IContactInformation incomingPart) {
-
+        if (null == incomingPart.getContactInformation()) {
+            existingPart.setContactInformation(null);
+            return;
+        }
         if (existingPart.getContactInformation() != null &&
                 incomingPart.getContactInformation() != null) {
-            updateContactInformation(existingPart.
-                            getContactInformation(),
-                    incomingPart.
-                            getContactInformation());
+            updateContactInformation
+                (existingPart.getContactInformation(),
+                 incomingPart.getContactInformation());
         }
         // Create a new ContactInformation object based on the incoming one
         else if (incomingPart.getContactInformation() != null) {
-            existingPart.setContactInformation(
-                    updateContactInformation(new ContactInformation(),
-                            incomingPart.getContactInformation()));
+            existingPart.setContactInformation(updateContactInformation
+                 (new ContactInformation(),
+                  incomingPart.getContactInformation()));
         }
     }
 
@@ -545,16 +546,17 @@ public class PartService
     }
 
     private void setDefaultPartRole(@NotNull Part part) {
-        part.setPartRoleCode(TEMPLATE_PART_ROLE_CODE);
-        part.setPartRoleCodeName(TEMPLATE_PART_ROLE_NAME);
+        PartRole partRole = (PartRole) partRoleService
+            .findValidMetadataOrThrow(part.getBaseTypeName(),
+                                      TEMPLATE_PART_ROLE_CODE, null);
+        part.setPartRole(partRole);
     }
 
     private void validatePartRole(Part part) {
         // Assume value already set, as the deserialiser will enforce it.
         PartRole partRole = (PartRole) partRoleService
             .findValidMetadataOrThrow(part.getBaseTypeName(),
-                                      part.getPartRoleCode(),
-                                      part.getPartRoleCodeName());
-        part.setPartRoleCodeName(partRole.getCodeName());
+                                      part.getPartRole());
+        part.setPartRole(partRole);
     }
 }

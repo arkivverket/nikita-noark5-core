@@ -274,9 +274,9 @@ public class CorrespondencePartHateoasController
                 .body(correspondencePartInternalHateoas);
     }
 
-    // Delete a correspondencePartUnit identified by kode
-    // DELETE [contextPath][api]/sakarkiv/korrespondansepartenhet/{kode}/
-    @ApiOperation(value = "Deletes a single CorrespondencePartUnit entity identified by kode")
+    // Delete a correspondencePartUnit identified by systemID
+    // DELETE [contextPath][api]/arkivstruktur/korrespondansepartenhet/{systemID}/
+    @ApiOperation(value = "Deletes a single CorrespondencePartUnit entity identified by systemID")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CorrespondencePartUnit deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -284,20 +284,20 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @DeleteMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + CODE_PARAMETER)
+    @DeleteMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteCorrespondencePartUnit(
-            @ApiParam(name = "kode",
-                    value = "kode of the correspondencePartUnit to delete",
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemID of the correspondencePartUnit to delete",
                     required = true)
-            @PathVariable("kode") final String kode) {
-        correspondencePartService.deleteCorrespondencePartUnit(kode);
+            @PathVariable(SYSTEM_ID) final String systemID) {
+        correspondencePartService.deleteCorrespondencePartUnit(systemID);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("{\"status\" : \"Success\"}");
     }
 
-    // Delete a correspondencePartPerson identified by kode
-    // DELETE [contextPath][api]/sakarkiv/korrespondansepartperson/{kode}/
-    @ApiOperation(value = "Deletes a single CorrespondencePartPerson entity identified by kode")
+    // Delete a correspondencePartPerson identified by systemID
+    // DELETE [contextPath][api]/arkivstruktur/korrespondansepartperson/{systemID}/
+    @ApiOperation(value = "Deletes a single CorrespondencePartPerson entity identified by systemID")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CorrespondencePartPerson deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -305,20 +305,20 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @DeleteMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + CODE_PARAMETER)
+    @DeleteMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteCorrespondencePartPerson(
-            @ApiParam(name = "kode",
-                    value = "kode of the correspondencePartPerson to delete",
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemID of the correspondencePartPerson to delete",
                     required = true)
-            @PathVariable("kode") final String kode) {
-        correspondencePartService.deleteCorrespondencePartPerson(kode);
+            @PathVariable(SYSTEM_ID) final String systemID) {
+        correspondencePartService.deleteCorrespondencePartPerson(systemID);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("{\"status\" : \"Success\"}");
     }
 
-    // Delete a correspondencePartInternal identified by kode
-    // DELETE [contextPath][api]/sakarkiv/korrespondansepartintern/{kode}/
-    @ApiOperation(value = "Deletes a single CorrespondencePartInternal entity identified by kode")
+    // Delete a correspondencePartInternal identified by systemID
+    // DELETE [contextPath][api]/arkivstruktur/korrespondansepartintern/{systemID}/
+    @ApiOperation(value = "Deletes a single CorrespondencePartInternal entity identified by systemID")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CorrespondencePartInternal deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -326,13 +326,13 @@ public class CorrespondencePartHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
-    @DeleteMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + CODE_PARAMETER)
+    @DeleteMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteCorrespondencePartInternal(
-            @ApiParam(name = "kode",
-                    value = "kode of the correspondencePartInternal to delete",
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemID of the correspondencePartInternal to delete",
                     required = true)
-            @PathVariable("kode") final String kode) {
-        correspondencePartService.deleteCorrespondencePartInternal(kode);
+            @PathVariable(SYSTEM_ID) final String systemID) {
+        correspondencePartService.deleteCorrespondencePartInternal(systemID);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("{\"status\" : \"Success\"}");
     }

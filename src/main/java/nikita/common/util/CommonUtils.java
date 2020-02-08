@@ -634,28 +634,24 @@ public final class CommonUtils {
                     ICorrespondencePartEntity correspondencePart,
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize korrespondanseparttype
-                IMetadataEntity entity =
+                CorrespondencePartType entity = (CorrespondencePartType)
                     deserialiseMetadataValue(objectNode,
                                              CORRESPONDENCE_PART_TYPE,
                                              new CorrespondencePartType(),
                                              errors, true);
-                correspondencePart.
-                    setCorrespondencePartTypeCode(entity.getCode());
-                correspondencePart.
-                    setCorrespondencePartTypeCodeName(entity.getCodeName());
+                correspondencePart.setCorrespondencePartType(entity);
             }
 
             private static void deserialisePartRole(
                     IPartEntity part,
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize partrole
-                IMetadataEntity entity =
+                PartRole entity = (PartRole)
                     deserialiseMetadataValue(objectNode,
                                              PART_ROLE_FIELD,
                                              new PartRole(),
                                              errors, true);
-                part.setPartRoleCode(entity.getCode());
-                part.setPartRoleCodeName(entity.getCodeName());
+                part.setPartRole(entity);
             }
 
             public static void deserialiseClassificationSystemType(
@@ -1808,6 +1804,16 @@ public final class CommonUtils {
                 }
             }
 
+            public static void printCode
+                (JsonGenerator jgen, IMetadataEntity metadataEntity)
+                    throws IOException {
+                jgen.writeStringField(CODE, metadataEntity.getCode());
+                if (null != metadataEntity.getCodeName()) {
+                    jgen.writeStringField(CODE_NAME,
+                                          metadataEntity.getCodeName());
+                }
+            }
+
             public static void printRecordEntity(JsonGenerator jgen,
                                                  IRecordEntity record)
                     throws IOException {
@@ -2022,8 +2028,7 @@ public final class CommonUtils {
                     throws IOException {
                 // e.g."mappetype" {}
                 if (metadataEntity != null) {
-                    printCode(jgen, metadataEntity.getCode(),
-                            metadataEntity.getCodeName());
+                    printCode(jgen, metadataEntity);
                     if (metadataEntity.getInactive() != null &&
                             metadataEntity.getInactive()) {
                         jgen.writeBooleanField(CODE_INACTIVE,
@@ -2039,8 +2044,7 @@ public final class CommonUtils {
                 // e.g."mappetype" {}
                 if (metadataEntity != null) {
                     jgen.writeObjectFieldStart(objectName);
-                    printCode(jgen, metadataEntity.getCode(),
-                            metadataEntity.getCodeName());
+                    printCode(jgen, metadataEntity);
                     if (metadataEntity.getInactive() != null &&
                             metadataEntity.getInactive()) {
                         jgen.writeBooleanField(CODE_INACTIVE,
@@ -2057,14 +2061,10 @@ public final class CommonUtils {
 
                 if (correspondencePart != null) {
                     printSystemIdEntity(jgen, correspondencePart);
-                    if (correspondencePart.
-                            getCorrespondencePartTypeCode() != null) {
+                    if (null != correspondencePart.getCorrespondencePartType()) {
                         jgen.writeObjectFieldStart(CORRESPONDENCE_PART_TYPE);
-                        printCode(jgen,
-                                correspondencePart.
-                                        getCorrespondencePartTypeCode(),
-                                correspondencePart.
-                                        getCorrespondencePartTypeCodeName());
+                        printCode(jgen, correspondencePart
+				  .getCorrespondencePartType());
                         jgen.writeEndObject();
                     }
                 }
@@ -2165,10 +2165,9 @@ public final class CommonUtils {
                     throws IOException {
                 if (part != null) {
                     printSystemIdEntity(jgen, part);
-                    if (part.getPartRoleCode() != null) {
+                    if (part.getPartRole() != null) {
                         jgen.writeObjectFieldStart(PART_ROLE_FIELD);
-                        printCode(jgen, part.getPartRoleCode(),
-                                part.getPartRoleCodeName());
+                        printCode(jgen, part.getPartRole());
                         jgen.writeEndObject();
                     }
                 }

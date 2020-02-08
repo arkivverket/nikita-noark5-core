@@ -13,13 +13,9 @@ import java.util.List;
 public interface IPartEntity
         extends ISystemId {
 
-    String getPartRoleCode();
+    PartRole getPartRole();
 
-    void setPartRoleCode(String partRoleCode);
-
-    String getPartRoleCodeName();
-
-    void setPartRoleCodeName(String partRoleCodeName);
+    void setPartRole(PartRole partRole);
 
     List<Record> getReferenceRecord();
 

@@ -129,7 +129,7 @@ public class HateoasSerializer
             throws IOException {
         if (null != m && null != m.getCode()) {
             jgen.writeObjectFieldStart(fieldName);
-            printCode(jgen, m.getCode(), m.getCodeName());
+            printCode(jgen, m);
             jgen.writeEndObject();
         }
     }
