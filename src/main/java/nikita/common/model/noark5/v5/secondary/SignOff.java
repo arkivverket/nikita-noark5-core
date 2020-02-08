@@ -64,7 +64,7 @@ public class SignOff
     @JoinColumn(name = "pk_correspondence_part_id")
     private CorrespondencePart referenceSignedOffCorrespondencePart;
 
-    // Links to RegistryEnty
+    // Links to RegistryEntry
     @ManyToMany(mappedBy = "referenceSignOff")
     private List<RegistryEntry> referenceRecord = new ArrayList<>();
 
