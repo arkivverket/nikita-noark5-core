@@ -65,6 +65,7 @@ public class CommentService
 
     @Override
     public CommentHateoas createNewComment(Comment comment, File file) {
+        checkCommentType(comment);
         if (null == comment.getCommentDate())
             comment.setCommentDate(OffsetDateTime.now());
         comment.setReferenceFile(file);
@@ -77,6 +78,7 @@ public class CommentService
 
     @Override
     public CommentHateoas createNewComment(Comment comment, Record record) {
+        checkCommentType(comment);
         if (null == comment.getCommentDate())
             comment.setCommentDate(OffsetDateTime.now());
         comment.setReferenceRecord(record);
@@ -90,6 +92,7 @@ public class CommentService
     @Override
     public CommentHateoas createNewComment
         (Comment comment, DocumentDescription documentDescription) {
+        checkCommentType(comment);
         if (null == comment.getCommentDate())
             comment.setCommentDate(OffsetDateTime.now());
         comment.setReferenceDocumentDescription(documentDescription);
@@ -115,6 +118,10 @@ public class CommentService
                                        @NotNull Long version,
                                        @NotNull Comment incomingComment) {
         Comment existingComment = getCommentOrThrow(commentSystemId);
+
+	/* Only check if it changed, in case it has a historical value */
+	if (existingComment.getCommentType() != incomingComment.getCommentType())
+	    checkCommentType(incomingComment);
 
         // Copy all the values you are allowed to copy ....
         existingComment.setCommentText(incomingComment.getCommentText());
@@ -147,5 +154,14 @@ public class CommentService
             throw new NoarkEntityNotFoundException(info);
         }
         return comment;
+    }
+
+    private void checkCommentType(Comment comment) {
+        if (comment.getCommentType() != null) {
+            CommentType commentType = (CommentType) commentTypeService
+                .findValidMetadataOrThrow(comment.getBaseTypeName(),
+                                          comment.getCommentType());
+            comment.setCommentType(commentType);
+        }
     }
 }

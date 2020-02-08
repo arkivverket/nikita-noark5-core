@@ -112,6 +112,8 @@ public class Comment
     }
 
     public CommentType getCommentType() {
+        if (null == commentTypeCode)
+            return null;
         CommentType commentType = new CommentType();
         commentType.setCode(commentTypeCode);
         commentType.setCodeName(commentTypeCodeName);
@@ -119,8 +121,13 @@ public class Comment
     }
 
     public void setCommentType(CommentType commentType) {
-        this.commentTypeCode = commentType.getCode();
-        this.commentTypeCodeName = commentType.getCodeName();
+        if (null != commentType) {
+            this.commentTypeCode = commentType.getCode();
+            this.commentTypeCodeName = commentType.getCodeName();
+        } else {
+            this.commentTypeCode = null;
+            this.commentTypeCodeName = null;
+        }
     }
 
     public OffsetDateTime getCommentDate() {
