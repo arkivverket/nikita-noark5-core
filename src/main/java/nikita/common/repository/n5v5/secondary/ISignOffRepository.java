@@ -9,6 +9,4 @@ import java.util.UUID;
 @Repository
 public interface ISignOffRepository extends
         NoarkEntityRepository<SignOff, UUID> {
-
-    int deleteByOwnedBy(String ownedBy);
 }
