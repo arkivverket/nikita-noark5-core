@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
@@ -14,9 +15,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_SIGN_OFF;
-import static nikita.common.config.Constants.TABLE_SIGN_OFF;
-import static nikita.common.config.N5ResourceMappings.SIGN_OFF;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 
@@ -28,17 +28,18 @@ public class SignOff
     /**
      * M617 - avskrivningsdato
      */
-    @Column(name = "sign_off_date")
+    @Column(name = SIGN_OFF_DATE_ENG)
     @DateTimeFormat(iso = DATE)
-
     @Audited
+    @JsonProperty(SIGN_OFF_DATE)
     private OffsetDateTime signOffDate;
 
     /**
      * M618 - avskrevetAv
      */
-    @Column(name = "sign_off_name")
+    @Column(name = SIGN_OFF_BY_ENG)
     @Audited
+    @JsonProperty(SIGN_OFF_BY)
     private String signOffBy;
 
     /**
@@ -53,13 +54,13 @@ public class SignOff
      */
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_record_id")
-
     private RegistryEntry referenceSignedOffRecord;
+
     /**
      * M??? - referanseAvskrivesAvKorrespondansepart
-     * Note this is new to v5, I think. Missing Metatdata number
+     * Note this is missing in Noark v5. No Metadata number.
+     * See https://github.com/arkivverket/schemas/issues/21
      */
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pk_correspondence_part_id")
     private CorrespondencePart referenceSignedOffCorrespondencePart;

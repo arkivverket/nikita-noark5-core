@@ -300,7 +300,7 @@ public final class N5ResourceMappings {
 
     // SignOff
     public static final String SIGN_OFF = "avskrivning";
-    public static final String SIGN_OFF_DATE = "avskrivning";
+    public static final String SIGN_OFF_DATE = "avskrivningsdato";
     public static final String SIGN_OFF_BY = "avskrevetAv";
     public static final String SIGN_OFF_METHOD = "avskrivningsmaate";
 
@@ -621,8 +621,8 @@ public final class N5ResourceMappings {
     public static final String SERIES_STATUS_ENG = "arkivdelstatus";
     public static final String SERIES_SUCCESSOR_ENG = "arvtager";
     public static final String SHORT_NAME_ENG = "short_name";
-    public static final String SIGN_OFF_BY_ENG = "avskrevetAv";
-    public static final String SIGN_OFF_DATE_ENG = "avskrivning";
+    public static final String SIGN_OFF_BY_ENG = "sign_off_by";
+    public static final String SIGN_OFF_DATE_ENG = "sign_off_date";
     public static final String SIGN_OFF_ENG = "avskrivning";
     public static final String STORAGE_LOCATION_ENG = "storage_location";
     public static final String SIGN_OFF_METHOD_ENG = "avskrivningsmaate";
@@ -839,8 +839,8 @@ public final class N5ResourceMappings {
     public static final String SERIES_STATUS_ENG_OBJECT = "arkivdelstatus";
     public static final String SERIES_SUCCESSOR_ENG_OBJECT = "arvtager";
     public static final String SHORT_NAME_ENG_OBJECT = "shortName";
-    public static final String SIGN_OFF_BY_ENG_OBJECT = "avskrevetAv";
-    public static final String SIGN_OFF_DATE_ENG_OBJECT = "avskrivning";
+    public static final String SIGN_OFF_BY_ENG_OBJECT = "signOffBy";
+    public static final String SIGN_OFF_DATE_ENG_OBJECT = "signOffDate";
     public static final String SOCIAL_SECURITY_NUMBER_ENG_OBJECT = "socialSecurityNumber";
     public static final String SIGN_OFF_ENG_OBJECT = "avskrivning";
     public static final String STORAGE_LOCATION_ENG_OBJECT = "storageLocation";
