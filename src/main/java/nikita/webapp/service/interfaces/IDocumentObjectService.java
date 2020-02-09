@@ -7,7 +7,6 @@ import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +24,7 @@ public interface IDocumentObjectService {
 
     DocumentObjectHateoas generateDefaultDocumentObject();
 
-    List<DocumentObject> findDocumentObjectByOwner();
+    DocumentObjectHateoas findDocumentObjectByOwner();
 
     ConversionHateoas generateDefaultConversion();
 
@@ -44,13 +43,12 @@ public interface IDocumentObjectService {
         (String systemId, String subSystemId, Conversion conversion);
 
     // systemId
-    ResponseEntity<DocumentObjectHateoas> findBySystemId(
-            @NotNull String systemId);
+    DocumentObjectHateoas findBySystemId(@NotNull String systemId);
 
     // All UPDATE operations
-    DocumentObject handleUpdate(@NotNull final String systemId,
-                                @NotNull final Long version,
-                                @NotNull final DocumentObject documentObject);
+    DocumentObjectHateoas handleUpdate
+        (@NotNull final String systemId, @NotNull final Long version,
+         @NotNull final DocumentObject documentObject);
 
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);
@@ -68,12 +66,12 @@ public interface IDocumentObjectService {
      * original documentObject
      *
      **/
-    ResponseEntity<DocumentObjectHateoas>
+    DocumentObjectHateoas
     convertDocumentToPDF(String documentObjectSystemId)
             throws Exception;
 
 
-    ResponseEntity<DocumentObjectHateoas>
+    DocumentObjectHateoas
     handleIncomingFile(@NotNull String systemId,
                        @NotNull HttpServletRequest request) throws IOException;
 

@@ -20,6 +20,7 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import nikita.webapp.service.interfaces.metadata.IFormatService;
 import nikita.webapp.service.interfaces.metadata.IVariantFormatService;
+import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.config.TikaConfig;
@@ -35,7 +36,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,10 +67,7 @@ import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ACCEPT;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 /**
  * The following methods
@@ -237,7 +234,7 @@ public class DocumentObjectService
     }
 
     @Override
-    public List<DocumentObject> findDocumentObjectByOwner() {
+    public DocumentObjectHateoas findDocumentObjectByOwner() {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<DocumentObject> criteriaQuery = criteriaBuilder.
@@ -247,7 +244,12 @@ public class DocumentObjectService
 
         criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
         TypedQuery<DocumentObject> typedQuery = entityManager.createQuery(select);
-        return typedQuery.getResultList();
+        DocumentObjectHateoas documentObjectHateoas = new
+                DocumentObjectHateoas((List<INoarkEntity>) (List)
+                                      typedQuery.getResultList());
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
+                                              new Authorisation());
+        return documentObjectHateoas;
     }
 
 
@@ -593,17 +595,14 @@ public class DocumentObjectService
     }
 
     @Override
-    public ResponseEntity<DocumentObjectHateoas> findBySystemId(
+    public DocumentObjectHateoas findBySystemId(
             String systemId) {
         DocumentObjectHateoas documentObjectHateoas = new
                 DocumentObjectHateoas(getDocumentObjectOrThrow(systemId));
 
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(documentObjectHateoas.getEntityVersion().toString())
-                .body(documentObjectHateoas);
+        return documentObjectHateoas;
     }
 
     // All UPDATE operations
@@ -633,7 +632,7 @@ public class DocumentObjectService
      * @return the updated documentObject after it is persisted
      */
     @Override
-    public DocumentObject handleUpdate(
+    public DocumentObjectHateoas handleUpdate(
             @NotNull final String systemId, @NotNull final Long version,
             @NotNull final DocumentObject incomingDocumentObject) {
 
@@ -665,7 +664,13 @@ public class DocumentObjectService
         // exception as it checks the ETAG value
         existingDocumentObject.setVersion(version);
         documentObjectRepository.save(existingDocumentObject);
-        return existingDocumentObject;
+        DocumentObjectHateoas documentObjectHateoas =
+	    new DocumentObjectHateoas(existingDocumentObject);
+        documentObjectHateoasHandler
+	    .addLinks(documentObjectHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent
+	    (new AfterNoarkEntityUpdatedEvent(this, existingDocumentObject));
+        return documentObjectHateoas;
     }
 
     // All DELETE operations
@@ -689,21 +694,18 @@ public class DocumentObjectService
     // Related metadata is a one:one. So we either overwrite that the
     // original conversion happened or throw an Exception
     // Probably need administrator rights to reconvert document.
-    public ResponseEntity<DocumentObjectHateoas>
+    public DocumentObjectHateoas
     convertDocumentToPDF(String documentObjectSystemId) {
         DocumentObject originalDocumentObject =
                 getDocumentObjectOrThrow(documentObjectSystemId);
 
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas(
-                convertDocumentToPDF(originalDocumentObject));
+        DocumentObjectHateoas documentObjectHateoas =
+            new DocumentObjectHateoas
+                (convertDocumentToPDF(originalDocumentObject));
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
 
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(documentObjectHateoas.getEntityVersion().toString())
-                .body(documentObjectHateoas);
+        return documentObjectHateoas;
     }
 
     // All HELPER operations
@@ -880,7 +882,7 @@ public class DocumentObjectService
     }
 
     @Override
-    public ResponseEntity<DocumentObjectHateoas>
+    public DocumentObjectHateoas
     handleIncomingFile(String systemID, HttpServletRequest request)
             throws IOException {
 
@@ -932,7 +934,7 @@ public class DocumentObjectService
                 DocumentObjectHateoas(documentObject);
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
-        return new ResponseEntity<>(documentObjectHateoas, CREATED);
+        return documentObjectHateoas;
 
     }
 

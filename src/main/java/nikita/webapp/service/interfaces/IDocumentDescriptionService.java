@@ -12,7 +12,6 @@ import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 
@@ -21,7 +20,7 @@ public interface IDocumentDescriptionService {
     // -- All CREATE operations
     DocumentDescription save(DocumentDescription documentDescription);
 
-    DocumentObject
+    DocumentObjectHateoas
     createDocumentObjectAssociatedWithDocumentDescription(
             String documentDescriptionSystemId,
             DocumentObject documentObject);
@@ -48,15 +47,14 @@ public interface IDocumentDescriptionService {
 
     PartUnitHateoas generateDefaultPartUnit(String systemID);
 
-    ResponseEntity<DocumentDescriptionHateoas> findAll();
+    DocumentDescriptionHateoas findAll();
 
-    ResponseEntity<DocumentDescriptionHateoas> findBySystemId(
-            @NotNull String systemId);
+    DocumentDescriptionHateoas findBySystemId(@NotNull String systemId);
 
-    ResponseEntity<RecordHateoas>
+    RecordHateoas
     findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId);
 
-    ResponseEntity<DocumentObjectHateoas>
+    DocumentObjectHateoas
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId);
 
@@ -70,10 +68,9 @@ public interface IDocumentDescriptionService {
             @NotNull final String systemID);
     // -- All UPDATE operations
 
-    DocumentDescription handleUpdate(@NotNull final String systemId,
-                                     @NotNull final Long version,
-                                     @NotNull final DocumentDescription
-                                             documentDescription);
+    DocumentDescriptionHateoas handleUpdate
+        (@NotNull final String systemId, @NotNull final Long version,
+         @NotNull final DocumentDescription documentDescription);
 
     // -- All DELETE operations
     void deleteEntity(@NotNull String systemId);

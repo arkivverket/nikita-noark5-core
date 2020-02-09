@@ -101,17 +101,13 @@ public class DocumentDescriptionHateoasController
                     required = true)
             @RequestBody DocumentObject documentObject)
             throws NikitaException {
-        DocumentObject createdDocumentObject =
-                documentDescriptionService.
-                        createDocumentObjectAssociatedWithDocumentDescription(
-                                systemID, documentObject);
         DocumentObjectHateoas documentObjectHateoas =
-                new DocumentObjectHateoas(documentObject);
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
+	    documentDescriptionService
+	    .createDocumentObjectAssociatedWithDocumentDescription
+	    (systemID, documentObject);
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdDocumentObject.getVersion().toString())
+                .eTag(documentObjectHateoas.getEntityVersion().toString())
                 .body(documentObjectHateoas);
     }
 
@@ -330,7 +326,12 @@ public class DocumentDescriptionHateoasController
                     value = "systemID of the documentDescription to retrieve",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        return documentDescriptionService.findBySystemId(systemID);
+        DocumentDescriptionHateoas documentDescriptionHateoas =
+            documentDescriptionService.findBySystemId(systemID);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
+                .body(documentDescriptionHateoas);
     }
 
     // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-merknad
@@ -489,8 +490,13 @@ public class DocumentDescriptionHateoasController
     @Counted
     @GetMapping
     public ResponseEntity<DocumentDescriptionHateoas>
-    findAllDocumentDescription() {
-        return documentDescriptionService.findAll();
+    findAllDocumentDescription(HttpServletRequest request) {
+        DocumentDescriptionHateoas documentDescriptionHateoas =
+            documentDescriptionService.findAll();
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
+                .body(documentDescriptionHateoas);
     }
 
     // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-dokumentobjekt
@@ -540,9 +546,13 @@ public class DocumentDescriptionHateoasController
                             "associated DocumentObject",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        return documentDescriptionService.
+        DocumentObjectHateoas documentObjectHateoas =
+	    documentDescriptionService.
                 findAllDocumentObjectWithDocumentDescriptionBySystemId(
                         systemID);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentObjectHateoas);
     }
 
     // Retrieve all Authors associated with a DocumentDescription identified
@@ -621,14 +631,19 @@ public class DocumentDescriptionHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + RECORD)
     public ResponseEntity<RecordHateoas>
     findAllRecordAssociatedWithDocumentDescription(
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the DocumentDescription to retrieve " +
                             "associated Records",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        return documentDescriptionService.
+        RecordHateoas recordHateoas =
+            documentDescriptionService.
                 findAllRecordWithDocumentDescriptionBySystemId(
                         systemID);
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordHateoas);
     }
 
     // Delete a DocumentDescription identified by systemID
@@ -720,18 +735,12 @@ public class DocumentDescriptionHateoasController
                     required = true)
             @RequestBody DocumentDescription documentDescription)
             throws NikitaException {
-        validateForUpdate(documentDescription);
-
-        DocumentDescription updatedDocumentDescription =
+        DocumentDescriptionHateoas documentDescriptionHateoas =
                 documentDescriptionService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), documentDescription);
-        DocumentDescriptionHateoas documentDescriptionHateoas =
-                new DocumentDescriptionHateoas(updatedDocumentDescription);
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
-                new Authorisation());
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedDocumentDescription.getVersion().toString())
+                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
                 .body(documentDescriptionHateoas);
     }
 }

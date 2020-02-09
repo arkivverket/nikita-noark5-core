@@ -34,7 +34,6 @@ import nikita.webapp.service.interfaces.secondary.IPartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,9 +47,7 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
@@ -114,7 +111,7 @@ public class DocumentDescriptionService
 
     // All CREATE operations
     @Override
-    public DocumentObject
+    public DocumentObjectHateoas
     createDocumentObjectAssociatedWithDocumentDescription(
             String documentDescriptionSystemId, DocumentObject documentObject) {
         DocumentDescription documentDescription =
@@ -123,7 +120,12 @@ public class DocumentDescriptionService
         List<DocumentObject> documentObjects = documentDescription
                 .getReferenceDocumentObject();
         documentObjects.add(documentObject);
-        return documentObjectService.save(documentObject);
+        DocumentObjectHateoas documentObjectHateoas =
+                new DocumentObjectHateoas
+                    (documentObjectService.save(documentObject));
+        documentObjectHateoasHandler.addLinks
+	    (documentObjectHateoas, new Authorisation());
+        return documentObjectHateoas;
     }
 
 
@@ -236,17 +238,14 @@ public class DocumentDescriptionService
     }
 
     @Override
-    public ResponseEntity<DocumentDescriptionHateoas>
+    public DocumentDescriptionHateoas
     findBySystemId(String systemId) {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas(
                 getDocumentDescriptionOrThrow(systemId));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
                 new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
-                .body(documentDescriptionHateoas);
+        return documentDescriptionHateoas;
     }
 
     @Override
@@ -271,21 +270,18 @@ public class DocumentDescriptionService
 
     @Override
     @SuppressWarnings("unchecked")
-    public ResponseEntity<DocumentDescriptionHateoas> findAll() {
+    public DocumentDescriptionHateoas findAll() {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas((List<INoarkEntity>)
                 (List) documentDescriptionRepository.findByOwnedBy(getUser()));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
                 new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
-                .body(documentDescriptionHateoas);
+        return documentDescriptionHateoas;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ResponseEntity<DocumentObjectHateoas>
+    public DocumentObjectHateoas
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId) {
         DocumentObjectHateoas documentObjectHateoas = new
@@ -294,14 +290,12 @@ public class DocumentDescriptionService
                         .getReferenceDocumentObject());
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(documentObjectHateoas);
+        return documentObjectHateoas;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ResponseEntity<RecordHateoas>
+    public RecordHateoas
     findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId) {
         RecordHateoas recordHateoas = new
                 RecordHateoas((List<INoarkEntity>)
@@ -309,9 +303,7 @@ public class DocumentDescriptionService
                         .getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas,
                 new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(recordHateoas);
+        return recordHateoas;
     }
 
     @Override
@@ -364,7 +356,7 @@ public class DocumentDescriptionService
      * @return the updated documentDescription after it is persisted
      */
     @Override
-    public DocumentDescription handleUpdate(
+    public DocumentDescriptionHateoas handleUpdate(
             @NotNull String systemId, @NotNull Long version,
             @NotNull DocumentDescription incomingDocumentDescription) {
         DocumentDescription existingDocumentDescription =
@@ -376,7 +368,12 @@ public class DocumentDescriptionService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingDocumentDescription.setVersion(version);
-        return documentDescriptionRepository.save(existingDocumentDescription);
+        DocumentDescriptionHateoas documentDescriptionHateoas =
+                new DocumentDescriptionHateoas
+            (documentDescriptionRepository.save(existingDocumentDescription));
+        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
+                new Authorisation());
+        return documentDescriptionHateoas;
     }
 
     // All DELETE operations
