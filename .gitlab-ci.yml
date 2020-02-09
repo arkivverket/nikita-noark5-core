@@ -53,6 +53,7 @@ noark5tester-inoutin:
   - cd noark5-tester
   - export LC_ALL=C.UTF-8
   - ./runtest  --baseurl $baseurl --keep
+  - ./export-all --baseurl $baseurl --verbose
   - ./export-all --baseurl $baseurl --xml --verbose
   - find uttrekk-*
   - depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
@@ -61,6 +62,7 @@ noark5tester-inoutin:
   artifacts:
     paths:
     - build-run.log
+    - noark5-tester/json-dump-*/*
     - noark5-tester/uttrekk-*/*
 
 maven-build:
