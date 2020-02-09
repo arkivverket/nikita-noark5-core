@@ -170,12 +170,11 @@ public class RegistryEntryService
     public SignOffHateoas
     createSignOffAssociatedWithRegistryEntry(String systemId,
                                              SignOff signOff) {
-        RegistryEntry registryEntry =
-                getRegistryEntryOrThrow(systemId);
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemId);
         signOff.setReferenceRecord(registryEntry);
+        signOff = signOffRepository.save(signOff);
         registryEntry.addReferenceSignOff(signOff);
-        SignOffHateoas signOffHateoas =
-            new SignOffHateoas(signOffRepository.save(signOff));
+        SignOffHateoas signOffHateoas = new SignOffHateoas(signOff);
         signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         return signOffHateoas;
     }
