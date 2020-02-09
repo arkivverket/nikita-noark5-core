@@ -25,23 +25,13 @@ public class CaseFileHateoasHandler
     @Override
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
-        // Not calling  super.addEntityLinks(entity, hateoasNoarkObject);
-        // because addExpandToCaseFile, addExpandToMeetingFile, addSubFile, addNewSubFile
-        // are not applicable. Instead we invoke the methods directly here.
-        // Methods from base class
-        addEndFile(entity, hateoasNoarkObject);
-        addRecord(entity, hateoasNoarkObject);
-        addNewRecord(entity, hateoasNoarkObject);
-        addComment(entity, hateoasNoarkObject);
-        addNewComment(entity, hateoasNoarkObject);
-        addCrossReference(entity, hateoasNoarkObject);
-        addNewCrossReference(entity, hateoasNoarkObject);
-        addClass(entity, hateoasNoarkObject);
-        addNewClass(entity, hateoasNoarkObject);
-        addReferenceSeries(entity, hateoasNoarkObject);
-        addNewReferenceSeries(entity, hateoasNoarkObject);
-        addReferenceSecondaryClassification(entity, hateoasNoarkObject);
-        addNewReferenceSecondaryClassification(entity, hateoasNoarkObject);
+        // Not calling super.addEntityLinks(entity,
+        // hateoasNoarkObject); because addExpandToCaseFile,
+        // addExpandToMeetingFile, addNewSubFile are not
+        // applicable. The links /inherited from File are fetched
+        // using AddFileLinks() instead.
+        addFileLinks(entity, hateoasNoarkObject);
+
         // Methods from this class
         addNewPrecedence(entity, hateoasNoarkObject);
         addPrecedence(entity, hateoasNoarkObject);
@@ -50,6 +40,7 @@ public class CaseFileHateoasHandler
         addNewRecordNote(entity, hateoasNoarkObject);
         addRecordNote(entity, hateoasNoarkObject);
         //addSecondaryClassification(entity, hateoasNoarkObject);
+        addNewSubCaseFile(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -131,7 +122,7 @@ public class CaseFileHateoasHandler
     public void addRecordNote(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-		HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + RECORD_NOTE,
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + RECORD_NOTE,
                 REL_CASE_HANDLING_RECORD_NOTE));
     }
 
@@ -151,5 +142,12 @@ public class CaseFileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_RECORD_NOTE,
                 REL_CASE_HANDLING_NEW_RECORD_NOTE));
+    }
+
+    @Override
+    public void addNewSubCaseFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_FILE,
+                REL_CASE_HANDLING_NEW_CASE_FILE, false));
     }
 }

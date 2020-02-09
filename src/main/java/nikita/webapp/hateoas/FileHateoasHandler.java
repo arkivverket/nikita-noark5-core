@@ -29,24 +29,22 @@ public class FileHateoasHandler
     @Override
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
+        addFileLinks(entity, hateoasNoarkObject);
 
-        // Add the child links
-        addRecord(entity, hateoasNoarkObject);
-        addNewRecord(entity, hateoasNoarkObject);
-        // Add the parent links
-        addSeries(entity, hateoasNoarkObject);
-        // Add action links
-        addEndFile(entity, hateoasNoarkObject);
         addExpandToCaseFile(entity, hateoasNoarkObject);
         //addExpandToMeetingFile(entity, hateoasNoarkObject);
-        // Add the secondary entity links
-        addPart(entity, hateoasNoarkObject);
-        addNewPartPerson(entity, hateoasNoarkObject);
-        addNewPartUnit(entity, hateoasNoarkObject);
+        addNewSubFile(entity, hateoasNoarkObject);
+    }
+
+    protected void addFileLinks(ISystemId entity,
+                                IHateoasNoarkObject hateoasNoarkObject) {
+        addEndFile(entity, hateoasNoarkObject);
+        addSeries(entity, hateoasNoarkObject);
+        addSubFile(entity, hateoasNoarkObject);
+        addRecord(entity, hateoasNoarkObject);
+        addNewRecord(entity, hateoasNoarkObject);
         addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
-        addSubFile(entity, hateoasNoarkObject);
-        addNewSubFile(entity, hateoasNoarkObject);
         addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         addClass(entity, hateoasNoarkObject);
@@ -55,7 +53,11 @@ public class FileHateoasHandler
         addNewReferenceSeries(entity, hateoasNoarkObject);
         addReferenceSecondaryClassification(entity, hateoasNoarkObject);
         addNewReferenceSecondaryClassification(entity, hateoasNoarkObject);
-        // Add national identifiers
+
+        addPart(entity, hateoasNoarkObject);
+        addNewPartPerson(entity, hateoasNoarkObject);
+        addNewPartUnit(entity, hateoasNoarkObject);
+
         addNewBuilding(entity, hateoasNoarkObject);
         addNewCadastralUnit(entity, hateoasNoarkObject);
         addNewDNumber(entity, hateoasNoarkObject);

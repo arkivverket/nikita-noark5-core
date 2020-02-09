@@ -40,4 +40,7 @@ public interface ICaseFileHateoasHandler
 
     void addRecordNote(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewSubCaseFile(ISystemId entity,
+                           IHateoasNoarkObject hateoasNoarkObject);
 }
