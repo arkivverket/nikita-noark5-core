@@ -32,7 +32,7 @@ public class ClassHateoasSerializer
         printKeyword(jgen, klass);
         printFinaliseEntity(jgen, klass);
         printModifiedEntity(jgen, klass);
-        // FIXME: Fix this! Add printCrossReference(jgen, klass);
+        // TODO: Fix this! Add printCrossReference(jgen, klass);
         printDisposal(jgen, klass);
         printScreening(jgen, klass);
         printClassified(jgen, klass);

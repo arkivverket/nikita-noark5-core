@@ -54,7 +54,7 @@ public class DocumentDescriptionHateoasSerializer
                       documentDescription.getDocumentNumber());
         printNullableDateTime(jgen, DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
                               documentDescription.getAssociationDate());
-        // FIXME why test on date when printing the 'by' value?
+        // TODO why test on date when printing the 'by' value?
         if (documentDescription.getAssociationDate() != null) {
             jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATION_BY,
                     documentDescription.getAssociatedBy());
