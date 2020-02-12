@@ -46,7 +46,7 @@ public class Building
      */
     @Column(name = "building_change_number")
     @Audited
-    Integer continuousNumberingOfBuildingChange;
+    Integer runningChangeNumber;
 
     @Override
     public Integer getBuildingNumber() {
@@ -59,13 +59,13 @@ public class Building
     }
 
     @Override
-    public Integer getContinuousNumberingOfBuildingChange() {
-        return continuousNumberingOfBuildingChange;
+    public Integer getRunningChangeNumber() {
+        return runningChangeNumber;
     }
 
     @Override
-    public void setContinuousNumberingOfBuildingChange(Integer continuousNumberingOfBuildingChange) {
-        this.continuousNumberingOfBuildingChange = continuousNumberingOfBuildingChange;
+    public void setRunningChangeNumber(Integer runningChangeNumber) {
+        this.runningChangeNumber = runningChangeNumber;
     }
 
     @Override
@@ -82,8 +82,8 @@ public class Building
     public String toString() {
         return "Building{" +
                 "buildingNumber=" + buildingNumber +
-                ", continuousNumberingOfBuildingChange=" +
-                continuousNumberingOfBuildingChange +
+                ", runningChangeNumber=" +
+                runningChangeNumber +
                 '}';
     }
 
@@ -102,8 +102,8 @@ public class Building
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(buildingNumber, rhs.buildingNumber)
-                .append(continuousNumberingOfBuildingChange,
-                        rhs.continuousNumberingOfBuildingChange)
+                .append(runningChangeNumber,
+                        rhs.runningChangeNumber)
                 .isEquals();
     }
 
@@ -112,7 +112,7 @@ public class Building
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(buildingNumber)
-                .append(continuousNumberingOfBuildingChange)
+                .append(runningChangeNumber)
                 .toHashCode();
     }
 }

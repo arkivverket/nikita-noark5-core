@@ -45,7 +45,7 @@ public class BuildingDeserializer
                                 objectNode, errors, true));
 
         // Deserialize endringsloepenummer
-        building.setContinuousNumberingOfBuildingChange
+        building.setRunningChangeNumber
             (deserializeInteger(BUILDING_CHANGE_NUMBER,
                                 objectNode, errors, false));
 
