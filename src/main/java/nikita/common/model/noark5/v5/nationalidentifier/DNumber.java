@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_D_NUMBER;
 import static nikita.common.config.Constants.TABLE_D_NUMBER;
-import static nikita.common.config.N5ResourceMappings.D_NUMBER;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_D_NUMBER)
@@ -37,8 +38,9 @@ public class DNumber
     /**
      * M??? - DNummer (xs:string)
      */
-    @Column(name = "d_number", nullable = false)
+    @Column(name = D_NUMBER_FIELD_ENG, nullable = false)
     @Audited
+    @JsonProperty(D_NUMBER_FIELD)
     private String dNumber;
 
     @Override

@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_BUILDING;
 import static nikita.common.config.Constants.TABLE_BUILDING;
-import static nikita.common.config.N5ResourceMappings.BUILDING;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_BUILDING)
@@ -37,15 +38,17 @@ public class Building
     /**
      * M??? bygningsnummer - (xs:integer)
      */
-    @Column(name = "building_number", nullable = false)
+    @Column(name = BUILDING_NUMBER_ENG, nullable = false)
     @Audited
+    @JsonProperty(BUILDING_NUMBER)
     Integer buildingNumber;
 
     /**
      * M??? endringsloepenummer - (xs:integer)
      */
-    @Column(name = "building_change_number")
+    @Column(name = BUILDING_CHANGE_NUMBER)
     @Audited
+    @JsonProperty(BUILDING_CHANGE_NUMBER)
     Integer continuousNumberingOfBuildingChange;
 
     @Override

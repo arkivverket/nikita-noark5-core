@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CADASTRAL_UNIT;
 import static nikita.common.config.Constants.TABLE_CADASTRAL;
-import static nikita.common.config.N5ResourceMappings.CADASTRAL_UNIT;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CADASTRAL)
@@ -37,36 +38,41 @@ public class CadastralUnit
     /**
      * M??? - kommunenummer (xs:string)
      */
-    @Column(name = "municipality_number", nullable = false)
+    @Column(name = MUNICIPALITY_NUMBER_ENG, nullable = false)
     @Audited
+    @JsonProperty(MUNICIPALITY_NUMBER)
     String municipalityNumber;
 
     /**
      * M??? gaardsnummer - (xs:integer)
      */
-    @Column(name = "holding_number", nullable = false)
+    @Column(name = HOLDING_NUMBER_ENG, nullable = false)
     @Audited
+    @JsonProperty(HOLDING_NUMBER)
     Integer holdingNumber;
 
     /**
      * M??? bruksnummer - (xs:integer)
      */
-    @Column(name = "sub_holding_number", nullable = false)
+    @Column(name = SUB_HOLDING_NUMBER_ENG, nullable = false)
     @Audited
+    @JsonProperty(SUB_HOLDING_NUMBER)
     Integer subHoldingNumber;
 
     /**
      * M??? festenummer - (xs:integer)
      */
-    @Column(name = "lease_number")
+    @Column(name = LEASE_NUMBER_ENG)
     @Audited
+    @JsonProperty(LEASE_NUMBER)
     Integer leaseNumber;
 
     /**
      * M??? seksjonsnummer - (xs:integer)
      */
-    @Column(name = "section_number")
+    @Column(name = SECTION_NUMBER_ENG)
     @Audited
+    @JsonProperty(SECTION_NUMBER)
     Integer sectionNumber;
 
     @Override

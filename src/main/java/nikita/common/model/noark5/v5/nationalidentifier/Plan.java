@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
@@ -22,7 +23,7 @@ import javax.persistence.Table;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_PLAN;
 import static nikita.common.config.Constants.TABLE_PLAN;
-import static nikita.common.config.N5ResourceMappings.PLAN;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Note this should be implemented shuch that only one of
@@ -42,15 +43,17 @@ public class Plan
     /**
      * M??? - kommunenummer (xs:string)
      */
-    @Column(name = "municipality_number")
+    @Column(name = MUNICIPALITY_NUMBER)
     @Audited
+    @JsonProperty(MUNICIPALITY_NUMBER)
     String municipalityNumber;
 
     /**
      * M??? - fylkenummer (xs:string)
      */
-    @Column(name = "county_number")
+    @Column(name = COUNTY_NUMBER_ENG)
     @Audited
+    @JsonProperty(COUNTY_NUMBER)
     String countyNumber;
 
     /**
@@ -70,8 +73,9 @@ public class Plan
     /**
      * M??? - planidentifikasjon (xs:string)
      */
-    @Column(name = "plan_identification", nullable = false)
+    @Column(name = PLAN_IDENTIFICATION_ENG, nullable = false)
     @Audited
+    @JsonProperty(PLAN_IDENTIFICATION)
     String planIdentification;
 
     @Override
