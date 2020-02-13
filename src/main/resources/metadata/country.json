@@ -1,0 +1,1000 @@
+{
+  "Country": [
+    {
+      "code": "AW",
+      "codename": "Aruba"
+    },
+    {
+      "code": "AF",
+      "codename": "Afghanistan"
+    },
+    {
+      "code": "AO",
+      "codename": "Angola"
+    },
+    {
+      "code": "AI",
+      "codename": "Anguilla"
+    },
+    {
+      "code": "AX",
+      "codename": "Åland Islands"
+    },
+    {
+      "code": "AL",
+      "codename": "Albania"
+    },
+    {
+      "code": "AD",
+      "codename": "Andorra"
+    },
+    {
+      "code": "AE",
+      "codename": "United Arab Emirates"
+    },
+    {
+      "code": "AR",
+      "codename": "Argentina"
+    },
+    {
+      "code": "AM",
+      "codename": "Armenia"
+    },
+    {
+      "code": "AS",
+      "codename": "American Samoa"
+    },
+    {
+      "code": "AQ",
+      "codename": "Antarctica"
+    },
+    {
+      "code": "TF",
+      "codename": "French Southern Territories"
+    },
+    {
+      "code": "AG",
+      "codename": "Antigua and Barbuda"
+    },
+    {
+      "code": "AU",
+      "codename": "Australia"
+    },
+    {
+      "code": "AT",
+      "codename": "Austria"
+    },
+    {
+      "code": "AZ",
+      "codename": "Azerbaijan"
+    },
+    {
+      "code": "BI",
+      "codename": "Burundi"
+    },
+    {
+      "code": "BE",
+      "codename": "Belgium"
+    },
+    {
+      "code": "BJ",
+      "codename": "Benin"
+    },
+    {
+      "code": "BQ",
+      "codename": "Bonaire, Sint Eustatius and Saba"
+    },
+    {
+      "code": "BF",
+      "codename": "Burkina Faso"
+    },
+    {
+      "code": "BD",
+      "codename": "Bangladesh"
+    },
+    {
+      "code": "BG",
+      "codename": "Bulgaria"
+    },
+    {
+      "code": "BH",
+      "codename": "Bahrain"
+    },
+    {
+      "code": "BS",
+      "codename": "Bahamas"
+    },
+    {
+      "code": "BA",
+      "codename": "Bosnia and Herzegovina"
+    },
+    {
+      "code": "BL",
+      "codename": "Saint Barthélemy"
+    },
+    {
+      "code": "BY",
+      "codename": "Belarus"
+    },
+    {
+      "code": "BZ",
+      "codename": "Belize"
+    },
+    {
+      "code": "BM",
+      "codename": "Bermuda"
+    },
+    {
+      "code": "BO",
+      "codename": "Bolivia, Plurinational State of"
+    },
+    {
+      "code": "BR",
+      "codename": "Brazil"
+    },
+    {
+      "code": "BB",
+      "codename": "Barbados"
+    },
+    {
+      "code": "BN",
+      "codename": "Brunei Darussalam"
+    },
+    {
+      "code": "BT",
+      "codename": "Bhutan"
+    },
+    {
+      "code": "BV",
+      "codename": "Bouvet Island"
+    },
+    {
+      "code": "BW",
+      "codename": "Botswana"
+    },
+    {
+      "code": "CF",
+      "codename": "Central African Republic"
+    },
+    {
+      "code": "CA",
+      "codename": "Canada"
+    },
+    {
+      "code": "CC",
+      "codename": "Cocos (Keeling) Islands"
+    },
+    {
+      "code": "CH",
+      "codename": "Switzerland"
+    },
+    {
+      "code": "CL",
+      "codename": "Chile"
+    },
+    {
+      "code": "CN",
+      "codename": "China"
+    },
+    {
+      "code": "CI",
+      "codename": "Côte d'Ivoire"
+    },
+    {
+      "code": "CM",
+      "codename": "Cameroon"
+    },
+    {
+      "code": "CD",
+      "codename": "Congo, The Democratic Republic of the"
+    },
+    {
+      "code": "CG",
+      "codename": "Congo"
+    },
+    {
+      "code": "CK",
+      "codename": "Cook Islands"
+    },
+    {
+      "code": "CO",
+      "codename": "Colombia"
+    },
+    {
+      "code": "KM",
+      "codename": "Comoros"
+    },
+    {
+      "code": "CV",
+      "codename": "Cabo Verde"
+    },
+    {
+      "code": "CR",
+      "codename": "Costa Rica"
+    },
+    {
+      "code": "CU",
+      "codename": "Cuba"
+    },
+    {
+      "code": "CW",
+      "codename": "Curaçao"
+    },
+    {
+      "code": "CX",
+      "codename": "Christmas Island"
+    },
+    {
+      "code": "KY",
+      "codename": "Cayman Islands"
+    },
+    {
+      "code": "CY",
+      "codename": "Cyprus"
+    },
+    {
+      "code": "CZ",
+      "codename": "Czechia"
+    },
+    {
+      "code": "DE",
+      "codename": "Germany"
+    },
+    {
+      "code": "DJ",
+      "codename": "Djibouti"
+    },
+    {
+      "code": "DM",
+      "codename": "Dominica"
+    },
+    {
+      "code": "DK",
+      "codename": "Denmark"
+    },
+    {
+      "code": "DO",
+      "codename": "Dominican Republic"
+    },
+    {
+      "code": "DZ",
+      "codename": "Algeria"
+    },
+    {
+      "code": "EC",
+      "codename": "Ecuador"
+    },
+    {
+      "code": "EG",
+      "codename": "Egypt"
+    },
+    {
+      "code": "ER",
+      "codename": "Eritrea"
+    },
+    {
+      "code": "EH",
+      "codename": "Western Sahara"
+    },
+    {
+      "code": "ES",
+      "codename": "Spain"
+    },
+    {
+      "code": "EE",
+      "codename": "Estonia"
+    },
+    {
+      "code": "ET",
+      "codename": "Ethiopia"
+    },
+    {
+      "code": "FI",
+      "codename": "Finland"
+    },
+    {
+      "code": "FJ",
+      "codename": "Fiji"
+    },
+    {
+      "code": "FK",
+      "codename": "Falkland Islands (Malvinas)"
+    },
+    {
+      "code": "FR",
+      "codename": "France"
+    },
+    {
+      "code": "FO",
+      "codename": "Faroe Islands"
+    },
+    {
+      "code": "FM",
+      "codename": "Micronesia, Federated States of"
+    },
+    {
+      "code": "GA",
+      "codename": "Gabon"
+    },
+    {
+      "code": "GB",
+      "codename": "United Kingdom"
+    },
+    {
+      "code": "GE",
+      "codename": "Georgia"
+    },
+    {
+      "code": "GG",
+      "codename": "Guernsey"
+    },
+    {
+      "code": "GH",
+      "codename": "Ghana"
+    },
+    {
+      "code": "GI",
+      "codename": "Gibraltar"
+    },
+    {
+      "code": "GN",
+      "codename": "Guinea"
+    },
+    {
+      "code": "GP",
+      "codename": "Guadeloupe"
+    },
+    {
+      "code": "GM",
+      "codename": "Gambia"
+    },
+    {
+      "code": "GW",
+      "codename": "Guinea-Bissau"
+    },
+    {
+      "code": "GQ",
+      "codename": "Equatorial Guinea"
+    },
+    {
+      "code": "GR",
+      "codename": "Greece"
+    },
+    {
+      "code": "GD",
+      "codename": "Grenada"
+    },
+    {
+      "code": "GL",
+      "codename": "Greenland"
+    },
+    {
+      "code": "GT",
+      "codename": "Guatemala"
+    },
+    {
+      "code": "GF",
+      "codename": "French Guiana"
+    },
+    {
+      "code": "GU",
+      "codename": "Guam"
+    },
+    {
+      "code": "GY",
+      "codename": "Guyana"
+    },
+    {
+      "code": "HK",
+      "codename": "Hong Kong"
+    },
+    {
+      "code": "HM",
+      "codename": "Heard Island and McDonald Islands"
+    },
+    {
+      "code": "HN",
+      "codename": "Honduras"
+    },
+    {
+      "code": "HR",
+      "codename": "Croatia"
+    },
+    {
+      "code": "HT",
+      "codename": "Haiti"
+    },
+    {
+      "code": "HU",
+      "codename": "Hungary"
+    },
+    {
+      "code": "ID",
+      "codename": "Indonesia"
+    },
+    {
+      "code": "IM",
+      "codename": "Isle of Man"
+    },
+    {
+      "code": "IN",
+      "codename": "India"
+    },
+    {
+      "code": "IO",
+      "codename": "British Indian Ocean Territory"
+    },
+    {
+      "code": "IE",
+      "codename": "Ireland"
+    },
+    {
+      "code": "IR",
+      "codename": "Iran, Islamic Republic of"
+    },
+    {
+      "code": "IQ",
+      "codename": "Iraq"
+    },
+    {
+      "code": "IS",
+      "codename": "Iceland"
+    },
+    {
+      "code": "IL",
+      "codename": "Israel"
+    },
+    {
+      "code": "IT",
+      "codename": "Italy"
+    },
+    {
+      "code": "JM",
+      "codename": "Jamaica"
+    },
+    {
+      "code": "JE",
+      "codename": "Jersey"
+    },
+    {
+      "code": "JO",
+      "codename": "Jordan"
+    },
+    {
+      "code": "JP",
+      "codename": "Japan"
+    },
+    {
+      "code": "KZ",
+      "codename": "Kazakhstan"
+    },
+    {
+      "code": "KE",
+      "codename": "Kenya"
+    },
+    {
+      "code": "KG",
+      "codename": "Kyrgyzstan"
+    },
+    {
+      "code": "KH",
+      "codename": "Cambodia"
+    },
+    {
+      "code": "KI",
+      "codename": "Kiribati"
+    },
+    {
+      "code": "KN",
+      "codename": "Saint Kitts and Nevis"
+    },
+    {
+      "code": "KR",
+      "codename": "Korea, Republic of"
+    },
+    {
+      "code": "KW",
+      "codename": "Kuwait"
+    },
+    {
+      "code": "LA",
+      "codename": "Lao People's Democratic Republic"
+    },
+    {
+      "code": "LB",
+      "codename": "Lebanon"
+    },
+    {
+      "code": "LR",
+      "codename": "Liberia"
+    },
+    {
+      "code": "LY",
+      "codename": "Libya"
+    },
+    {
+      "code": "LC",
+      "codename": "Saint Lucia"
+    },
+    {
+      "code": "LI",
+      "codename": "Liechtenstein"
+    },
+    {
+      "code": "LK",
+      "codename": "Sri Lanka"
+    },
+    {
+      "code": "LS",
+      "codename": "Lesotho"
+    },
+    {
+      "code": "LT",
+      "codename": "Lithuania"
+    },
+    {
+      "code": "LU",
+      "codename": "Luxembourg"
+    },
+    {
+      "code": "LV",
+      "codename": "Latvia"
+    },
+    {
+      "code": "MO",
+      "codename": "Macao"
+    },
+    {
+      "code": "MF",
+      "codename": "Saint Martin (French part)"
+    },
+    {
+      "code": "MA",
+      "codename": "Morocco"
+    },
+    {
+      "code": "MC",
+      "codename": "Monaco"
+    },
+    {
+      "code": "MD",
+      "codename": "Moldova, Republic of"
+    },
+    {
+      "code": "MG",
+      "codename": "Madagascar"
+    },
+    {
+      "code": "MV",
+      "codename": "Maldives"
+    },
+    {
+      "code": "MX",
+      "codename": "Mexico"
+    },
+    {
+      "code": "MH",
+      "codename": "Marshall Islands"
+    },
+    {
+      "code": "MK",
+      "codename": "North Macedonia"
+    },
+    {
+      "code": "ML",
+      "codename": "Mali"
+    },
+    {
+      "code": "MT",
+      "codename": "Malta"
+    },
+    {
+      "code": "MM",
+      "codename": "Myanmar"
+    },
+    {
+      "code": "ME",
+      "codename": "Montenegro"
+    },
+    {
+      "code": "MN",
+      "codename": "Mongolia"
+    },
+    {
+      "code": "MP",
+      "codename": "Northern Mariana Islands"
+    },
+    {
+      "code": "MZ",
+      "codename": "Mozambique"
+    },
+    {
+      "code": "MR",
+      "codename": "Mauritania"
+    },
+    {
+      "code": "MS",
+      "codename": "Montserrat"
+    },
+    {
+      "code": "MQ",
+      "codename": "Martinique"
+    },
+    {
+      "code": "MU",
+      "codename": "Mauritius"
+    },
+    {
+      "code": "MW",
+      "codename": "Malawi"
+    },
+    {
+      "code": "MY",
+      "codename": "Malaysia"
+    },
+    {
+      "code": "YT",
+      "codename": "Mayotte"
+    },
+    {
+      "code": "NA",
+      "codename": "Namibia"
+    },
+    {
+      "code": "NC",
+      "codename": "New Caledonia"
+    },
+    {
+      "code": "NE",
+      "codename": "Niger"
+    },
+    {
+      "code": "NF",
+      "codename": "Norfolk Island"
+    },
+    {
+      "code": "NG",
+      "codename": "Nigeria"
+    },
+    {
+      "code": "NI",
+      "codename": "Nicaragua"
+    },
+    {
+      "code": "NU",
+      "codename": "Niue"
+    },
+    {
+      "code": "NL",
+      "codename": "Netherlands"
+    },
+    {
+      "code": "NO",
+      "codename": "Norway"
+    },
+    {
+      "code": "NP",
+      "codename": "Nepal"
+    },
+    {
+      "code": "NR",
+      "codename": "Nauru"
+    },
+    {
+      "code": "NZ",
+      "codename": "New Zealand"
+    },
+    {
+      "code": "OM",
+      "codename": "Oman"
+    },
+    {
+      "code": "PK",
+      "codename": "Pakistan"
+    },
+    {
+      "code": "PA",
+      "codename": "Panama"
+    },
+    {
+      "code": "PN",
+      "codename": "Pitcairn"
+    },
+    {
+      "code": "PE",
+      "codename": "Peru"
+    },
+    {
+      "code": "PH",
+      "codename": "Philippines"
+    },
+    {
+      "code": "PW",
+      "codename": "Palau"
+    },
+    {
+      "code": "PG",
+      "codename": "Papua New Guinea"
+    },
+    {
+      "code": "PL",
+      "codename": "Poland"
+    },
+    {
+      "code": "PR",
+      "codename": "Puerto Rico"
+    },
+    {
+      "code": "KP",
+      "codename": "Korea, Democratic People's Republic of"
+    },
+    {
+      "code": "PT",
+      "codename": "Portugal"
+    },
+    {
+      "code": "PY",
+      "codename": "Paraguay"
+    },
+    {
+      "code": "PS",
+      "codename": "Palestine, State of"
+    },
+    {
+      "code": "PF",
+      "codename": "French Polynesia"
+    },
+    {
+      "code": "QA",
+      "codename": "Qatar"
+    },
+    {
+      "code": "RE",
+      "codename": "Réunion"
+    },
+    {
+      "code": "RO",
+      "codename": "Romania"
+    },
+    {
+      "code": "RU",
+      "codename": "Russian Federation"
+    },
+    {
+      "code": "RW",
+      "codename": "Rwanda"
+    },
+    {
+      "code": "SA",
+      "codename": "Saudi Arabia"
+    },
+    {
+      "code": "SD",
+      "codename": "Sudan"
+    },
+    {
+      "code": "SN",
+      "codename": "Senegal"
+    },
+    {
+      "code": "SG",
+      "codename": "Singapore"
+    },
+    {
+      "code": "GS",
+      "codename": "South Georgia and the South Sandwich Islands"
+    },
+    {
+      "code": "SH",
+      "codename": "Saint Helena, Ascension and Tristan da Cunha"
+    },
+    {
+      "code": "SJ",
+      "codename": "Svalbard and Jan Mayen"
+    },
+    {
+      "code": "SB",
+      "codename": "Solomon Islands"
+    },
+    {
+      "code": "SL",
+      "codename": "Sierra Leone"
+    },
+    {
+      "code": "SV",
+      "codename": "El Salvador"
+    },
+    {
+      "code": "SM",
+      "codename": "San Marino"
+    },
+    {
+      "code": "SO",
+      "codename": "Somalia"
+    },
+    {
+      "code": "PM",
+      "codename": "Saint Pierre and Miquelon"
+    },
+    {
+      "code": "RS",
+      "codename": "Serbia"
+    },
+    {
+      "code": "SS",
+      "codename": "South Sudan"
+    },
+    {
+      "code": "ST",
+      "codename": "Sao Tome and Principe"
+    },
+    {
+      "code": "SR",
+      "codename": "Suriname"
+    },
+    {
+      "code": "SK",
+      "codename": "Slovakia"
+    },
+    {
+      "code": "SI",
+      "codename": "Slovenia"
+    },
+    {
+      "code": "SE",
+      "codename": "Sweden"
+    },
+    {
+      "code": "SZ",
+      "codename": "Eswatini"
+    },
+    {
+      "code": "SX",
+      "codename": "Sint Maarten (Dutch part)"
+    },
+    {
+      "code": "SC",
+      "codename": "Seychelles"
+    },
+    {
+      "code": "SY",
+      "codename": "Syrian Arab Republic"
+    },
+    {
+      "code": "TC",
+      "codename": "Turks and Caicos Islands"
+    },
+    {
+      "code": "TD",
+      "codename": "Chad"
+    },
+    {
+      "code": "TG",
+      "codename": "Togo"
+    },
+    {
+      "code": "TH",
+      "codename": "Thailand"
+    },
+    {
+      "code": "TJ",
+      "codename": "Tajikistan"
+    },
+    {
+      "code": "TK",
+      "codename": "Tokelau"
+    },
+    {
+      "code": "TM",
+      "codename": "Turkmenistan"
+    },
+    {
+      "code": "TL",
+      "codename": "Timor-Leste"
+    },
+    {
+      "code": "TO",
+      "codename": "Tonga"
+    },
+    {
+      "code": "TT",
+      "codename": "Trinidad and Tobago"
+    },
+    {
+      "code": "TN",
+      "codename": "Tunisia"
+    },
+    {
+      "code": "TR",
+      "codename": "Turkey"
+    },
+    {
+      "code": "TV",
+      "codename": "Tuvalu"
+    },
+    {
+      "code": "TW",
+      "codename": "Taiwan, Province of China"
+    },
+    {
+      "code": "TZ",
+      "codename": "Tanzania, United Republic of"
+    },
+    {
+      "code": "UG",
+      "codename": "Uganda"
+    },
+    {
+      "code": "UA",
+      "codename": "Ukraine"
+    },
+    {
+      "code": "UM",
+      "codename": "United States Minor Outlying Islands"
+    },
+    {
+      "code": "UY",
+      "codename": "Uruguay"
+    },
+    {
+      "code": "US",
+      "codename": "United States"
+    },
+    {
+      "code": "UZ",
+      "codename": "Uzbekistan"
+    },
+    {
+      "code": "VA",
+      "codename": "Holy See (Vatican City State)"
+    },
+    {
+      "code": "VC",
+      "codename": "Saint Vincent and the Grenadines"
+    },
+    {
+      "code": "VE",
+      "codename": "Venezuela, Bolivarian Republic of"
+    },
+    {
+      "code": "VG",
+      "codename": "Virgin Islands, British"
+    },
+    {
+      "code": "VI",
+      "codename": "Virgin Islands, U.S."
+    },
+    {
+      "code": "VN",
+      "codename": "Viet Nam"
+    },
+    {
+      "code": "VU",
+      "codename": "Vanuatu"
+    },
+    {
+      "code": "WF",
+      "codename": "Wallis and Futuna"
+    },
+    {
+      "code": "WS",
+      "codename": "Samoa"
+    },
+    {
+      "code": "YE",
+      "codename": "Yemen"
+    },
+    {
+      "code": "ZA",
+      "codename": "South Africa"
+    },
+    {
+      "code": "ZM",
+      "codename": "Zambia"
+    },
+    {
+      "code": "ZW",
+      "codename": "Zimbabwe"
+    }
+  ]
+}
