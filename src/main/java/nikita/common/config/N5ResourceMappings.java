@@ -431,6 +431,8 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG = "tilknyttetregistreringsom";
     public static final String AUTHOR_ENG = "forfatter";
+    public static final String BUILDING_CHANGE_NUMBER_ENG = "building_change_number";
+    public static final String BUILDING_NUMBER_ENG = "building_number";
     public static final String RECORD_ENG = "Record";
     public static final String RECORD_ID_ENG = "record_id";
     public static final String BUSINESS_ADDRESS_ENG = "forretningsadresse";
@@ -485,6 +487,7 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_UNIT_ENG = "korrespondansepartenhet";
     public static final String COUNTRY_CODE_ENG = "landkode";
     public static final String COUNTRY_ENG = "land";
+    public static final String COUNTY_NUMBER_ENG = "county_number";
     public static final String CREATED_BY_ENG = "created_by";
     public static final String CREATED_DATE_ENG = "created_date";
     public static final String CROSS_REFERENCE_CLASS_ENG = "referanseTilKlasse";
@@ -557,9 +560,11 @@ public final class N5ResourceMappings {
     public static final String FONDS_STATUS_ENG = "arkivstatus";
     public static final String FOREIGN_ADDRESS_ENG = "utenlandsadresse";
     public static final String FORMAT_ENG = "format";
+    public static final String HOLDING_NUMBER_ENG = "holding_number";
     public static final String KEYWORD_ENG = "noekkelord";
     public static final String LAST_MODIFIED_BY_ENG = "last_modified_by";
     public static final String LAST_MODIFIED_DATE_ENG = "last_modified_date";
+    public static final String LEASE_NUMBER_ENG = "lease_number";
     public static final String MEETING_FILE_ENG = "moetemappe";
     public static final String MEETING_FILE_TYPE_ENG = "moetesakstype";
     public static final String MEETING_PARTICIPANT_ENG = "moetedeltager";
@@ -568,9 +573,11 @@ public final class N5ResourceMappings {
     public static final String MEETING_REGISTRATION_STATUS_ENG = "moteregistreringsstatus";
     public static final String MEETING_REGISTRATION_TYPE_ENG = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG = "mobiltelefon";
+    public static final String MUNICIPALITY_NUMBER_ENG = "municipality_number";
     public static final String NAME_ENG = "navn";
     public static final String ORGANISATION_NUMBER_ENG = "organisation_number";
     public static final String PARENT_CLASS_ENG = "overordnetklasse";
+    public static final String PLAN_IDENTIFICATION_ENG = "plan_identification";
     public static final String POSTAL_ADDRESS_ENG = "postadresse";
     public static final String POSTAL_NUMBER_ENG = "postnummer";
     public static final String POSTAL_TOWN_ENG = "poststed";
@@ -612,6 +619,7 @@ public final class N5ResourceMappings {
     public static final String SCREENING_METADATA_ENG = "skjermingMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG = "sekundaerklassifikasjonssystem";
+    public static final String SECTION_NUMBER_ENG = "section_number";
     public static final String SERIES_END_DATE_ENG = "series_end_date";
     public static final String SERIES_ENG = "series";
     public static final String SERIES_PRECURSOR_ENG = "forloeper";
@@ -627,12 +635,16 @@ public final class N5ResourceMappings {
     public static final String SOCIAL_SECURITY_NUMBER_ENG = "social_security_number";
     public static final String SUB_CLASS_ENG = "underklasse";
     public static final String SUB_FONDS_ENG = "underarkiv";
+    public static final String SUB_HOLDING_NUMBER_ENG = "sub_holding_number";
     public static final String SYSTEM_ID_ENG = "systemID";
     public static final String TELEPHONE_NUMBER_ENG = "telefonnummer";
     public static final String TITLE_ENG = "title";
     public static final String USER_ENG = "bruker";
     public static final String USER_NAME_ENG = "brukerNavn";
     public static final String VARIANT_FORMAT_ENG = "variantformat";
+    public static final String X_ENG = "x";
+    public static final String Y_ENG = "y";
+    public static final String Z_ENG = "z";
 
     // English version of above, sorted alphabetically. The following are the
     // english object names as used within the Noark domain model
@@ -648,6 +660,8 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG_OBJECT = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT = "tilknyttetregistreringsom";
     public static final String AUTHOR_ENG_OBJECT = "forfatter";
+    public static final String BUILDING_CHANGE_NUMBER_ENG_OBJECT = "continuousNumberingOfBuildingChange";
+    public static final String BUILDING_NUMBER_ENG_OBJECT = "buildingNumber";
     public static final String RECORD_ENG_OBJECT = "Record";
     public static final String RECORD_ID_ENG_OBJECT = "recordId";
     public static final String BUSINESS_ADDRESS_ENG_OBJECT = "forretningsadresse";
@@ -702,6 +716,7 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_UNIT_ENG_OBJECT = "korrespondansepartenhet";
     public static final String COUNTRY_CODE_ENG_OBJECT = "landkode";
     public static final String COUNTRY_ENG_OBJECT = "land";
+    public static final String COUNTY_NUMBER_ENG_OBJECT = "countyNumber";
     public static final String CREATED_BY_ENG_OBJECT = "createdBy";
     public static final String CREATED_DATE_ENG_OBJECT = "createdDate";
     public static final String CROSS_REFERENCE_CLASS_ENG_OBJECT = "referanseTilKlasse";
@@ -774,9 +789,11 @@ public final class N5ResourceMappings {
     public static final String FONDS_STATUS_ENG_OBJECT = "arkivstatus";
     public static final String FOREIGN_ADDRESS_ENG_OBJECT = "utenlandsadresse";
     public static final String FORMAT_ENG_OBJECT = "format";
+    public static final String HOLDING_NUMBER_ENG_OBJECT = "holdingNumber";
     public static final String KEYWORD_ENG_OBJECT = "noekkelord";
     public static final String LAST_MODIFIED_BY_ENG_OBJECT = "lastModifiedBy";
     public static final String LAST_MODIFIED_DATE_ENG_OBJECT = "lastModifiedDate";
+    public static final String LEASE_NUMBER_ENG_OBJECT = "leaseNumber";
     public static final String MEETING_FILE_ENG_OBJECT = "moetemappe";
     public static final String MEETING_FILE_TYPE_ENG_OBJECT = "moetesakstype";
     public static final String MEETING_PARTICIPANT_ENG_OBJECT = "moetedeltager";
@@ -785,9 +802,11 @@ public final class N5ResourceMappings {
     public static final String MEETING_REGISTRATION_STATUS_ENG_OBJECT = "moteregistreringsstatus";
     public static final String MEETING_REGISTRATION_TYPE_ENG_OBJECT = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
+    public static final String MUNICIPALITY_NUMBER_ENG_OBJECT = "municipalityNumber";
     public static final String NAME_ENG_OBJECT = "navn";
     public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisationNumber";
     public static final String PARENT_CLASS_ENG_OBJECT = "overklasse";
+    public static final String PLAN_IDENTIFICATION_ENG_OBJECT = "planIdentification";
     public static final String POSTAL_ADDRESS_ENG_OBJECT = "postadresse";
     public static final String POSTAL_NUMBER_ENG_OBJECT = "postnummer";
     public static final String POSTAL_TOWN_ENG_OBJECT = "poststed";
@@ -830,6 +849,7 @@ public final class N5ResourceMappings {
     public static final String SCREENING_METADATA_ENG_OBJECT = "skjermingMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG_OBJECT = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG_OBJECT = "sekundaerklassifikasjonssystem";
+    public static final String SECTION_NUMBER_ENG_OBJECT = "sectionNumber";
     public static final String SERIES_END_DATE_ENG_OBJECT = "seriesEndDate";
     public static final String SERIES_ENG_OBJECT = "Series";
     public static final String SERIES_PRECURSOR_ENG_OBJECT = "forloeper";
@@ -845,12 +865,16 @@ public final class N5ResourceMappings {
     public static final String SIGN_OFF_METHOD_ENG_OBJECT = "avskrivningsmaate";
     public static final String SUB_CLASS_ENG_OBJECT = "underklasse";
     public static final String SUB_FONDS_ENG_OBJECT = "underarkiv";
+    public static final String SUB_HOLDING_NUMBER_ENG_OBJECT = "subHoldingNumber";
     public static final String SYSTEM_ID_ENG_OBJECT = "systemId";
     public static final String TELEPHONE_NUMBER_ENG_OBJECT = "telefonnummer";
     public static final String TITLE_ENG_OBJECT = "title";
     public static final String USER_ENG_OBJECT = "bruker";
     public static final String USER_NAME_ENG_OBJECT = "brukerNavn";
     public static final String VARIANT_FORMAT_ENG_OBJECT = "variantformat";
+    public static final String X_ENG_OBJECT = "x";
+    public static final String Y_ENG_OBJECT = "y";
+    public static final String Z_ENG_OBJECT = "z";
 
     public static final String REFERENCE_CLASSIFICATION_SYSTEM
             = "referenceClassificationSystem";

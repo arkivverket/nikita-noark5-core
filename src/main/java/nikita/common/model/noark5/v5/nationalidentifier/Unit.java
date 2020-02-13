@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_NI_UNIT;
 import static nikita.common.config.Constants.TABLE_UNIT;
-import static nikita.common.config.N5ResourceMappings.NI_UNIT;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_UNIT)
@@ -37,8 +38,9 @@ public class Unit
     /**
      * M??? - organisasjonsnummer (xs:string)
      */
-    @Column(name = "organisation_number", nullable = false)
+    @Column(name = ORGANISATION_NUMBER_ENG, nullable = false)
     @Audited
+    @JsonProperty(ORGANISATION_NUMBER)
     private String organisationNumber;
 
     @Override

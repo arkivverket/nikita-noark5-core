@@ -208,6 +208,14 @@ public class InternalNameTranslator {
                         ASSOCIATED_WITH_RECORD_AS_ENG,
                         ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (BUILDING_CHANGE_NUMBER,
+                        BUILDING_CHANGE_NUMBER_ENG,
+                        BUILDING_CHANGE_NUMBER_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (BUILDING_NUMBER,
+                        BUILDING_NUMBER_ENG,
+                        BUILDING_NUMBER_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (BUSINESS_ADDRESS,
                         BUSINESS_ADDRESS_ENG,
                         BUSINESS_ADDRESS_ENG_OBJECT);
@@ -383,6 +391,10 @@ public class InternalNameTranslator {
                 (COUNTRY_CODE,
                         COUNTRY_CODE_ENG,
                         COUNTRY_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (COUNTY_NUMBER,
+                        COUNTY_NUMBER_ENG,
+                        COUNTY_NUMBER_ENG_OBJECT);
         addNorToEnglishNameMap
                 (CREATED_BY,
                         CREATED_BY_ENG,
@@ -607,6 +619,10 @@ public class InternalNameTranslator {
                         FORMAT_ENG,
                         FORMAT_ENG_OBJECT);
         addNorToEnglishNameMap
+                (HOLDING_NUMBER,
+                        HOLDING_NUMBER_ENG,
+                        HOLDING_NUMBER_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (LAST_MODIFIED_BY,
                         LAST_MODIFIED_BY_ENG,
                         LAST_MODIFIED_BY_ENG_OBJECT);
@@ -614,6 +630,10 @@ public class InternalNameTranslator {
                 (LAST_MODIFIED_DATE,
                         LAST_MODIFIED_DATE_ENG,
                         LAST_MODIFIED_DATE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (LEASE_NUMBER,
+                        LEASE_NUMBER_ENG,
+                        LEASE_NUMBER_ENG_OBJECT);
         addNorToEnglishNameMap
                 (MEETING_FILE_TYPE,
                         MEETING_FILE_TYPE_ENG,
@@ -635,6 +655,10 @@ public class InternalNameTranslator {
                         MOBILE_TELEPHONE_NUMBER_ENG,
                         MOBILE_TELEPHONE_NUMBER_ENG_OBJECT);
         addNorToEnglishNameMap
+                (MUNICIPALITY_NUMBER,
+                        MUNICIPALITY_NUMBER_ENG,
+                        MUNICIPALITY_NUMBER_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (NAME,
                         NAME_ENG,
                         NAME_ENG_OBJECT);
@@ -646,6 +670,10 @@ public class InternalNameTranslator {
                 (PARENT_CLASS,
                         PARENT_CLASS_ENG,
                         PARENT_CLASS_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (PLAN_IDENTIFICATION,
+                        PLAN_IDENTIFICATION_ENG,
+                        PLAN_IDENTIFICATION_ENG_OBJECT);
         addNorToEnglishNameMap
                 (POSTAL_ADDRESS,
                         POSTAL_ADDRESS_ENG,
@@ -794,6 +822,10 @@ public class InternalNameTranslator {
                         SECONDARY_CLASSIFICATION_SYSTEM_ENG,
                         SECONDARY_CLASSIFICATION_SYSTEM_ENG_OBJECT);
         addNorToEnglishNameMap
+                (SECTION_NUMBER,
+                        SECTION_NUMBER_ENG,
+                        SECTION_NUMBER_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (SERIES,
                         SERIES_ENG,
                         SERIES_ENG_OBJECT);
@@ -842,6 +874,10 @@ public class InternalNameTranslator {
                         SUB_CLASS_ENG,
                         SUB_CLASS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (SUB_HOLDING_NUMBER,
+                        SUB_HOLDING_NUMBER_ENG,
+                        SUB_HOLDING_NUMBER_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (SYSTEM_ID,
                         SYSTEM_ID_ENG,
                         SYSTEM_ID_ENG_OBJECT);
@@ -861,5 +897,8 @@ public class InternalNameTranslator {
                 (VARIANT_FORMAT,
                         VARIANT_FORMAT_ENG,
                         VARIANT_FORMAT_ENG_OBJECT);
+        addNorToEnglishNameMap(X, X_ENG, X_ENG_OBJECT);
+        addNorToEnglishNameMap(Y, Y_ENG, Y_ENG_OBJECT);
+        addNorToEnglishNameMap(Z, Z_ENG, Z_ENG_OBJECT);
     }
 }

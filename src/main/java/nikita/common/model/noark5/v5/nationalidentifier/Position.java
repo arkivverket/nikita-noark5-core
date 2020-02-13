@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_POSITION;
 import static nikita.common.config.Constants.TABLE_POSITION;
-import static nikita.common.config.N5ResourceMappings.POSITION;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_POSITION)
@@ -52,24 +53,27 @@ public class Position
      * M??? - x (xs:decimal)
      * Comment: East-West / latitude
      */
-    @Column(name = "x", nullable = false)
+    @Column(name = X_ENG, nullable = false)
     @Audited
+    @JsonProperty(X)
     private Double x;
 
     /**
      * M??? - y (xs:decimal)
      * Comment: north-south / longitude
      */
-    @Column(name = "y", nullable = false)
+    @Column(name = Y_ENG, nullable = false)
     @Audited
+    @JsonProperty(Y)
     private Double y;
 
     /**
      * M??? - z (xs:decimal)
      * height
      */
-    @Column(name = "z")
+    @Column(name = Z_ENG)
     @Audited
+    @JsonProperty(Z)
     private Double z;
 
     @Override
