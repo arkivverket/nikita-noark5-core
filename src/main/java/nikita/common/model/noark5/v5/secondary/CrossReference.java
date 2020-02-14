@@ -23,7 +23,7 @@ import static nikita.common.config.N5ResourceMappings.CROSS_REFERENCE;
  * domain model in the API-standard.
  * <p>
  * A cross reference can occur between File, Class and Record. The fields
- * fromsSystemId and toSystemId show the one way relationship.
+ * fromSystemId and toSystemId show the one way relationship.
  */
 @Entity
 @Table(name = TABLE_CROSS_REFERENCE)
