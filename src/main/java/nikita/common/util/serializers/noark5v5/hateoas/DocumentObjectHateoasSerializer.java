@@ -33,12 +33,10 @@ public class DocumentObjectHateoasSerializer
 
         printNullable(jgen, DOCUMENT_OBJECT_VERSION_NUMBER,
                       documentObject.getVersionNumber());
-        printNullableMetadataCode(jgen, DOCUMENT_OBJECT_VARIANT_FORMAT,
-                                  documentObject.getVariantFormatCode(),
-                                  documentObject.getVariantFormatCodeName());
-        printNullableMetadataCode(jgen, DOCUMENT_OBJECT_FORMAT,
-                                  documentObject.getFormatCode(),
-                                  documentObject.getFormatCodeName());
+        printNullableMetadata(jgen, DOCUMENT_OBJECT_VARIANT_FORMAT,
+                              documentObject.getVariantFormat());
+        printNullableMetadata(jgen, DOCUMENT_OBJECT_FORMAT,
+                              documentObject.getFormat());
         printNullable(jgen, DOCUMENT_OBJECT_FORMAT_DETAILS,
                       documentObject.getFormatDetails());
         printNullable(jgen, DOCUMENT_OBJECT_CHECKSUM,

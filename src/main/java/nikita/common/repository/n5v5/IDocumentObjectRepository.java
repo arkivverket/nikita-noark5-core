@@ -31,5 +31,5 @@ public interface IDocumentObjectRepository extends
     long deleteBySystemId(UUID uuid);
 
     Long countByReferenceDocumentDescriptionAndVariantFormatCode(
-            DocumentDescription documentDescription, String variantFormat);
+            DocumentDescription documentDescription, String variantFormatCode);
 }

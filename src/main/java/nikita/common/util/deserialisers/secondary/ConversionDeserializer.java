@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.secondary.Conversion;
+import nikita.common.model.noark5.v5.metadata.Format;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 
 import java.io.IOException;
@@ -41,17 +42,23 @@ public class ConversionDeserializer
             objectNode.remove(CONVERTED_BY);
         }
         // Deserialize konvertertFraFormat
-        currentNode = objectNode.get(CONVERTED_FROM_FORMAT);
-        if (null != currentNode) {
-            conversion.setConvertedFromFormat(currentNode.textValue());
-            objectNode.remove(CONVERTED_FROM_FORMAT);
-        }
-	// Deserialize konvertertTilFormat
-        currentNode = objectNode.get(CONVERTED_TO_FORMAT);
-        if (null != currentNode) {
-            conversion.setConvertedToFormat(currentNode.textValue());
-            objectNode.remove(CONVERTED_TO_FORMAT);
-        }
+        Format fromFormat = (Format)
+            deserialiseMetadataValue(
+                objectNode,
+                CONVERTED_FROM_FORMAT,
+                new Format(),
+                errors, true);
+        if (null != fromFormat.getCode())
+            conversion.setConvertedFromFormat(fromFormat);
+        // Deserialize konvertertTilFormat
+        Format toFormat = (Format)
+            deserialiseMetadataValue(
+                objectNode,
+                CONVERTED_TO_FORMAT,
+                new Format(),
+                errors, true);
+        if (null != toFormat.getCode())
+            conversion.setConvertedToFormat(toFormat);
 	// Deserialize konverteringsverktoey
         currentNode = objectNode.get(CONVERSION_TOOL);
         if (null != currentNode) {

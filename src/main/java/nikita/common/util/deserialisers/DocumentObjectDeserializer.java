@@ -60,13 +60,11 @@ public class DocumentObjectDeserializer
                                      DOCUMENT_OBJECT_VARIANT_FORMAT,
                                      new VariantFormat(),
                                      errors, true);
-        documentObject.setVariantFormatCode(entity.getCode());
-        documentObject.setVariantFormatCodeName(entity.getCodeName());
+        documentObject.setVariantFormat((VariantFormat)entity);
         // Deserialize format
         entity = deserialiseMetadataValue(objectNode, DOCUMENT_OBJECT_FORMAT,
                                      new Format(), errors, false);
-        documentObject.setFormatCode(entity.getCode());
-        documentObject.setFormatCodeName(entity.getCodeName());
+        documentObject.setFormat((Format)entity);
         // Deserialize formatDetails
         JsonNode currentNode = objectNode.get(DOCUMENT_OBJECT_FORMAT_DETAILS);
         if (null != currentNode) {

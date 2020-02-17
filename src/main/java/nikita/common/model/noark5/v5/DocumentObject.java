@@ -6,6 +6,8 @@ import nikita.common.model.noark5.v5.interfaces.IConversion;
 import nikita.common.model.noark5.v5.interfaces.IElectronicSignature;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.metadata.Format;
+import nikita.common.model.noark5.v5.metadata.VariantFormat;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.model.noark5.v5.secondary.ElectronicSignature;
 import nikita.common.util.deserialisers.DocumentObjectDeserializer;
@@ -167,36 +169,42 @@ public class DocumentObject
         this.versionNumber = versionNumber;
     }
 
-    public String getVariantFormatCode() {
-        return variantFormatCode;
+    public VariantFormat getVariantFormat() {
+        if (null == variantFormatCode)
+            return null;
+        VariantFormat variantFormat = new VariantFormat();
+        variantFormat.setCode(variantFormatCode);
+        variantFormat.setCodeName(variantFormatCodeName);
+        return variantFormat;
     }
 
-    public void setVariantFormatCode(String variantFormatCode) {
-        this.variantFormatCode = variantFormatCode;
+    public void setVariantFormat(VariantFormat variantFormat) {
+        if (null != variantFormat) {
+            this.variantFormatCode = variantFormat.getCode();
+            this.variantFormatCodeName = variantFormat.getCodeName();
+        } else {
+            this.variantFormatCode = null;
+            this.variantFormatCodeName = null;
+        }
     }
 
-    public String getVariantFormatCodeName() {
-        return variantFormatCodeName;
+   public Format getFormat() {
+        if (null == formatCode)
+            return null;
+        Format format = new Format();
+        format.setCode(formatCode);
+        format.setCodeName(formatCodeName);
+        return format;
     }
 
-    public void setVariantFormatCodeName(String variantFormatCodeName) {
-        this.variantFormatCodeName = variantFormatCodeName;
-    }
-
-    public String getFormatCode() {
-        return formatCode;
-    }
-
-    public void setFormatCode(String formatCode) {
-        this.formatCode = formatCode;
-    }
-
-    public String getFormatCodeName() {
-        return formatCodeName;
-    }
-
-    public void setFormatCodeName(String formatCodeName) {
-        this.formatCodeName = formatCodeName;
+    public void setFormat(Format format) {
+        if (null != format) {
+            this.formatCode = format.getCode();
+            this.formatCodeName = format.getCodeName();
+        } else {
+            this.formatCode = null;
+            this.formatCodeName = null;
+        }
     }
 
     public String getFormatDetails() {
