@@ -45,8 +45,8 @@ public class TestParsing {
 
     @Test
     public void validdates() throws Exception {
-	System.out.println("info: testing date and datetime parsing");
-	String[] datetimemust = {
+        System.out.println("info: testing date and datetime parsing");
+        String[] datetimemust = {
             "1997-07-16T19:20+01:00",
             "1997-07-16T19:20:30+01:00",
             "1997-07-16T19:20:30.45+01:00",
@@ -71,87 +71,87 @@ public class TestParsing {
             "1997-07",
             "1997-07-16",
         };
-	for (String teststr : datetimemust) {
-	    StringBuilder errors = new StringBuilder();
-	    String json = "{ \"d\": \"" + teststr+ "\"}";
-	    ObjectNode objectNode =
-		(ObjectNode) new ObjectMapper().readTree(json);
-	    OffsetDateTime d =
-		deserializeDateTime("d", objectNode, errors);
-	    if (null != d) {
-		System.out.println("success: datetime '" + teststr + "' parsed to " + d);
-		String str = formatDateTime(d);
-		if (str.equals(teststr)) {
-		    System.out.println("success: datetime serialized back to '" + str + "'");
-		} else {
-		    // Some datetime are not expected to stay
-		    // unchanged, like 19:30 -> 19:30:00, so only flag
-		    // warning, not error.
-		    System.out.println("warning: serialized datetime changed to '" + str + "'");
-		}
-	    } else {
-		System.out.println("error: unable to parse datetime '" + teststr + "'");
-	    }
-	}
-	for (String teststr : datetimereject) {
-	    StringBuilder errors = new StringBuilder();
-	    String json = "{ \"d\": \"" + teststr+ "\"}";
-	    ObjectNode objectNode =
-		(ObjectNode) new ObjectMapper().readTree(json);
-	    OffsetDateTime d =
-		deserializeDateTime("d", objectNode, errors);
-	    if (null != d) {
-		System.out.println("error: datetime '" + teststr + "' parsed to " + d);
-	    } else {
-		System.out.println("success: unable to parse datetime '" + teststr + "'");
-	    }
-	}
+        for (String teststr : datetimemust) {
+            StringBuilder errors = new StringBuilder();
+            String json = "{ \"d\": \"" + teststr+ "\"}";
+            ObjectNode objectNode =
+                (ObjectNode) new ObjectMapper().readTree(json);
+            OffsetDateTime d =
+                deserializeDateTime("d", objectNode, errors);
+            if (null != d) {
+                System.out.println("success: datetime '" + teststr + "' parsed to " + d);
+                String str = formatDateTime(d);
+                if (str.equals(teststr)) {
+                    System.out.println("success: datetime serialized back to '" + str + "'");
+                } else {
+                    // Some datetime are not expected to stay
+                    // unchanged, like 19:30 -> 19:30:00, so only flag
+                    // warning, not error.
+                    System.out.println("warning: serialized datetime changed to '" + str + "'");
+                }
+            } else {
+                System.out.println("error: unable to parse datetime '" + teststr + "'");
+            }
+        }
+        for (String teststr : datetimereject) {
+            StringBuilder errors = new StringBuilder();
+            String json = "{ \"d\": \"" + teststr+ "\"}";
+            ObjectNode objectNode =
+                (ObjectNode) new ObjectMapper().readTree(json);
+            OffsetDateTime d =
+                deserializeDateTime("d", objectNode, errors);
+            if (null != d) {
+                System.out.println("error: datetime '" + teststr + "' parsed to " + d);
+            } else {
+                System.out.println("success: unable to parse datetime '" + teststr + "'");
+            }
+        }
 
-	String[] datemust = {
+        String[] datemust = {
             "1997-07-16+01:00",
             "1997-07-16-01:00",
             "1997-07-16Z",
             "1865-02-13Z",
-	};
-	String[] datereject = {
+        };
+        String[] datereject = {
             "1997-07-16+0100",
             "1997-07-16-0100",
             "1997-07-16+01",
             "1997-07-16-01",
             "1997-07-16",
-	};
-	for (String teststr : datemust) {
-	    StringBuilder errors = new StringBuilder();
-	    String json = "{ \"d\": \"" + teststr+ "\"}";
-	    ObjectNode objectNode =
-		(ObjectNode) new ObjectMapper().readTree(json);
-	    OffsetDateTime d =
-		deserializeDate("d", objectNode, errors);
-	    if (null != d) {
-		System.out.println("success: date '" + teststr + "' parsed to " + d);
-		String str = formatDate(d);
-		if (str.equals(teststr)) {
-		    System.out.println("success: date serialized back to '" + str + "'");
-		} else {
-		    System.out.println("error: serialized date changed to '" + str + "'");
-		}
-	    } else {
-		System.out.println("error: unable to parse date '" + teststr + "'");
-	    }
-	}
-	for (String teststr : datereject) {
-	    StringBuilder errors = new StringBuilder();
-	    String json = "{ \"d\": \"" + teststr+ "\"}";
-	    ObjectNode objectNode =
-		(ObjectNode) new ObjectMapper().readTree(json);
-	    OffsetDateTime d =
-		deserializeDate("d", objectNode, errors);
-	    if (null != d) {
-		System.out.println("error: date '" + teststr + "' parsed to " + d);
-	    } else {
-		System.out.println("success: unable to parse date '" + teststr + "'");
-	    }
-	}
+        };
+        for (String teststr : datemust) {
+            StringBuilder errors = new StringBuilder();
+            String json = "{ \"d\": \"" + teststr+ "\"}";
+            ObjectNode objectNode =
+                (ObjectNode) new ObjectMapper().readTree(json);
+            OffsetDateTime d =
+                deserializeDate("d", objectNode, errors);
+            if (null != d) {
+                System.out.println("success: date '" + teststr + "' parsed to " + d);
+                String str = formatDate(d);
+                if (str.equals(teststr)) {
+                    System.out.println("success: date serialized back to '" + str + "'");
+                } else {
+                    System.out.println("error: serialized date changed to '" + str + "'");
+                }
+            } else {
+                System.out.println("error: unable to parse date '" + teststr + "'");
+            }
+        }
+        for (String teststr : datereject) {
+            StringBuilder errors = new StringBuilder();
+            String json = "{ \"d\": \"" + teststr+ "\"}";
+            ObjectNode objectNode =
+                (ObjectNode) new ObjectMapper().readTree(json);
+            OffsetDateTime d =
+                deserializeDate("d", objectNode, errors);
+            if (null != d) {
+                System.out.println("error: date '" + teststr + "' parsed to " + d);
+            } else {
+                System.out.println("success: unable to parse date '" + teststr + "'");
+            }
+        }
     }
 
     @Test
@@ -209,7 +209,7 @@ public class TestParsing {
 
     @Test
     public void parseClassificationSystemComplete() throws Exception {
-	System.out.println("info: testing classificationSystem parsing");
+        System.out.println("info: testing classificationSystem parsing");
         String systemID = "a36ff3f6-3086-11ea-b94d-eb793f1c877e";
         String title = "A classification System title";
         String json = "{ "
@@ -242,61 +242,61 @@ public class TestParsing {
 
     @Test
     public void parseClassComplete() throws Exception {
-	System.out.println("info: testing class parsing");
-	String json = "{ "
-	    +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+        System.out.println("info: testing class parsing");
+        String json = "{ "
+            +"\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    +", \"klasseID\": \"a class id\" "
-	    +", \"tittel\": \"A class title\" "
-	    +", \"beskrivelse\": \"A class description\" "
-	    +", \"noekkelord\": [ \"new\", \"inbox\" ] "
-	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-	    +", \"opprettetAv\": \"Some Person\" "
-	    +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
-	    +", \"avsluttetAv\": \"Another Person\" "
-	    +", \"kassasjon\": { "
-	    +"    \"kassasjonsvedtak\": {"
-	    +"      \"kode\": \"K\", "
-	    +"      \"kodenavn\": \"Kasseres\""
-	    +"    }, "
-	    +"    \"kassasjonshjemmel\": \"enHjemmel\", "
-	    +"    \"bevaringstid\": 45, "
-	    +"    \"kassasjonsdato\": \"1942-07-25\" "
-	    +"  } "
-	    +", \"skjerming\": { "
-	    +"    \"tilgangsrestriksjon\": {"
-	    +"      \"kode\": \"P\","
-	    +"      \"kodenavn\": \"Personalsaker\""
-	    +"    }, "
-	    +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
-	    +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
-	    +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
-	    +"    \"skjermingsvarighet\": 60, "
-	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
-	    +"} "
-	    +", \"gradering\": { "
-	    +"    \"graderingskode\": { "
-	    +"      \"kode\":\"SH\","
-	    +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
-	    +"    }, "
-	    +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
-	    +"    \"gradertAv\": \"PST\", "
-	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
-	    +"    \"nedgradertAv\": \"PST\" "
-	    +"  } "
-	    +"}";
+            +", \"klasseID\": \"a class id\" "
+            +", \"tittel\": \"A class title\" "
+            +", \"beskrivelse\": \"A class description\" "
+            +", \"noekkelord\": [ \"new\", \"inbox\" ] "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"avsluttetAv\": \"Another Person\" "
+            +", \"kassasjon\": { "
+            +"    \"kassasjonsvedtak\": {"
+            +"      \"kode\": \"K\", "
+            +"      \"kodenavn\": \"Kasseres\""
+            +"    }, "
+            +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+            +"    \"bevaringstid\": 45, "
+            +"    \"kassasjonsdato\": \"1942-07-25\" "
+            +"  } "
+            +", \"skjerming\": { "
+            +"    \"tilgangsrestriksjon\": {"
+            +"      \"kode\": \"P\","
+            +"      \"kodenavn\": \"Personalsaker\""
+            +"    }, "
+            +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+            +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+            +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+            +"    \"skjermingsvarighet\": 60, "
+            +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+            +"} "
+            +", \"gradering\": { "
+            +"    \"graderingskode\": { "
+            +"      \"kode\":\"SH\","
+            +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+            +"    }, "
+            +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+            +"    \"gradertAv\": \"PST\", "
+            +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+            +"    \"nedgradertAv\": \"PST\" "
+            +"  } "
+            +"}";
 
-	ObjectMapper objectMapper = new ObjectMapper();
-	JsonParser jsonParser =
-	    objectMapper.getJsonFactory().createJsonParser(json);
-	ClassDeserializer classDeserializer = new ClassDeserializer();
-	Class klass =
-	    classDeserializer.deserialize(jsonParser,
-					  null /* DeserializationContext */);
-	assert(null != klass);
-	assert("A class title".equals(klass.getTitle()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        ClassDeserializer classDeserializer = new ClassDeserializer();
+        Class klass =
+            classDeserializer.deserialize(jsonParser,
+                                          null /* DeserializationContext */);
+        assert(null != klass);
+        assert("A class title".equals(klass.getTitle()));
     }
 
     @Test
@@ -364,87 +364,87 @@ public class TestParsing {
 
     @Test
     public void parseSeriesComplete() throws Exception {
-	System.out.println("info: testing series parsing");
-	String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
-	String title = "A series title";
-	String json = "{ "
-	    +"  \"systemID\": \"" + systemID + "\" "
+        System.out.println("info: testing series parsing");
+        String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+        String title = "A series title";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    +", \"tittel\": \"" + title + "\" "
-	    +", \"beskrivelse\": \"A series description\" "
-	    +", \"arkivdelstatus\": { \"kode\": \"P\", \"kodenavn\": \"Avsluttet periode\" } "
+            +", \"tittel\": \"" + title + "\" "
+            +", \"beskrivelse\": \"A series description\" "
+            +", \"arkivdelstatus\": { \"kode\": \"P\", \"kodenavn\": \"Avsluttet periode\" } "
             +", \"dokumentmedium\": { \"kode\": \"E\", \"kodenavn\": \"Elektronisk arkiv\" } "
-	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-	    +", \"opprettetAv\": \"Some Person\" "
-	    //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
-	    +", \"avsluttetAv\": \"Another Person\" "
-	    //+", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
-	    +", \"arkivperiodeStartDato\": \"1863-10-10+00:00\" "
-	    +", \"arkivperiodeSluttDato\": \"1863-10-10+00:00\" "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
+            +", \"avsluttetDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"avsluttetAv\": \"Another Person\" "
+            //+", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
+            +", \"arkivperiodeStartDato\": \"1863-10-10+00:00\" "
+            +", \"arkivperiodeSluttDato\": \"1863-10-10+00:00\" "
             //+", \"referanseForloeper\": \"\" "
             //+", \"referanseArvtaker\": \"\" "
-	    +", \"kassasjon\": { "
-	    +"    \"kassasjonsvedtak\": {"
-	    +"      \"kode\": \"K\", "
-	    +"      \"kodenavn\": \"Kasseres\""
-	    +"    }, "
-	    +"    \"kassasjonshjemmel\": \"enHjemmel\", "
-	    +"    \"bevaringstid\": 45, "
-	    +"    \"kassasjonsdato\": \"1942-07-25\" "
-	    +"  } "
-	    +", \"utfoertKassasjon\": { "
-	    +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "
-	    +"    \"kassertAv\": \"Ryddig Gutt\", "
-	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
-	    +"  } "
-	    +", \"sletting\": { "
-	    +"    \"slettingstype\": {"
-	    +"      \"kode\": \"SP\","
-	    +"      \"kodenavn\": \"Sletting av produksjonsformat\""
-	    +"    }, "
-	    +"    \"slettetDato\": \"1863-10-10T00:00:00+00:00\", "
-	    +"    \"slettetAv\": \"Ryddig Gutt\", "
-	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
-	    +"} "
-	    +", \"skjerming\": { "
-	    +"    \"tilgangsrestriksjon\": {"
-	    +"      \"kode\": \"P\","
-	    +"      \"kodenavn\": \"Personalsaker\""
-	    +"    }, "
-	    +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
-	    +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
-	    +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
-	    +"    \"skjermingsvarighet\": 60, "
-	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
-	    +"} "
-	    +", \"gradering\": { "
-	    +"    \"graderingskode\": { "
-	    +"      \"kode\":\"SH\","
-	    +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
-	    +"    }, "
-	    +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
-	    +"    \"gradertAv\": \"PST\", "
-	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
-	    +"    \"nedgradertAv\": \"PST\" "
-	    +"  } "
-	    +"}";
-	ObjectMapper objectMapper = new ObjectMapper();
-	JsonParser jsonParser =
-	    objectMapper.getJsonFactory().createJsonParser(json);
-	SeriesDeserializer seriesDeserializer = new SeriesDeserializer();
-	Series series =
-	    seriesDeserializer.deserialize(jsonParser,
-					  null /* DeserializationContext */);
-	assert(null != series);
+            +", \"kassasjon\": { "
+            +"    \"kassasjonsvedtak\": {"
+            +"      \"kode\": \"K\", "
+            +"      \"kodenavn\": \"Kasseres\""
+            +"    }, "
+            +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+            +"    \"bevaringstid\": 45, "
+            +"    \"kassasjonsdato\": \"1942-07-25\" "
+            +"  } "
+            +", \"utfoertKassasjon\": { "
+            +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "
+            +"    \"kassertAv\": \"Ryddig Gutt\", "
+            +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+            +"  } "
+            +", \"sletting\": { "
+            +"    \"slettingstype\": {"
+            +"      \"kode\": \"SP\","
+            +"      \"kodenavn\": \"Sletting av produksjonsformat\""
+            +"    }, "
+            +"    \"slettetDato\": \"1863-10-10T00:00:00+00:00\", "
+            +"    \"slettetAv\": \"Ryddig Gutt\", "
+            +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+            +"} "
+            +", \"skjerming\": { "
+            +"    \"tilgangsrestriksjon\": {"
+            +"      \"kode\": \"P\","
+            +"      \"kodenavn\": \"Personalsaker\""
+            +"    }, "
+            +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+            +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+            +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+            +"    \"skjermingsvarighet\": 60, "
+            +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+            +"} "
+            +", \"gradering\": { "
+            +"    \"graderingskode\": { "
+            +"      \"kode\":\"SH\","
+            +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+            +"    }, "
+            +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+            +"    \"gradertAv\": \"PST\", "
+            +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+            +"    \"nedgradertAv\": \"PST\" "
+            +"  } "
+            +"}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        SeriesDeserializer seriesDeserializer = new SeriesDeserializer();
+        Series series =
+            seriesDeserializer.deserialize(jsonParser,
+                                          null /* DeserializationContext */);
+        assert(null != series);
         assert(systemID.equals(series.getSystemId()));
         assert(title.equals(series.getTitle()));
-	Classified c = series.getReferenceClassified();
-	assert("SH".equals(c.getClassificationCode()));
-	assert("Strengt hemmelig (sikkerhetsgrad)"
-	       .equals(c.getClassificationCodeName()));
+        Classified c = series.getReferenceClassified();
+        assert("SH".equals(c.getClassificationCode()));
+        assert("Strengt hemmelig (sikkerhetsgrad)"
+               .equals(c.getClassificationCodeName()));
     }
 
     @Test
@@ -601,65 +601,65 @@ public class TestParsing {
 
     @Test
     public void parseRecordComplete() throws Exception {
-	System.out.println("info: testing record parsing");
-	String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
-	String title = "A record title";
-	String json = "{ "
-	    +"  \"systemID\": \"" + systemID + "\" "
+        System.out.println("info: testing record parsing");
+        String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+        String title = "A record title";
+        String json = "{ "
+            +"  \"systemID\": \"" + systemID + "\" "
             +", \"oppdatertAv\": \"Some Person\" "
             +", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
             //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
-	    +", \"opprettetAv\": \"Some Person\" "
-	    +", \"arkivertDato\": \"1863-10-10T00:00:00+00:00\" "
-	    +", \"arkivertAv\": \"Min Venn\" "
-	    +", \"kassasjon\": { "
-	    +"    \"kassasjonsvedtak\": {"
-	    +"      \"kode\": \"K\", "
-	    +"      \"kodenavn\": \"Kasseres\""
-	    +"    }, "
-	    +"    \"kassasjonshjemmel\": \"enHjemmel\", "
-	    +"    \"bevaringstid\": 45, "
-	    +"    \"kassasjonsdato\": \"1942-07-25\" "
-	    +"  } "
-	    +", \"skjerming\": { "
-	    +"    \"tilgangsrestriksjon\": {"
-	    +"      \"kode\": \"P\","
-	    +"      \"kodenavn\": \"Personalsaker\""
-	    +"    }, "
-	    +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
-	    +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
-	    +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
-	    +"    \"skjermingsvarighet\": 60, "
-	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
-	    +"  } "
-	    +", \"gradering\": { "
-	    +"    \"graderingskode\": { "
-	    +"      \"kode\":\"SH\","
-	    +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
-	    +"    }, "
-	    +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
-	    +"    \"gradertAv\": \"PST\", "
-	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
-	    +"    \"nedgradertAv\": \"PST\" "
-	    +"  } "
-	    +", \"registreringsID\": \"a record id\" "
-	    +", \"tittel\": \"" + title + "\" "
-	    +", \"offentligTittel\": \"A public record title\" "
-	    +", \"beskrivelse\": \"En beskrivelse\" "
-	    +", \"noekkelord\": [ \"ny\", \"inbox\" ] "
+            +", \"opprettetDato\": \"1865-02-13T00:00:00+00:00\" "
+            +", \"opprettetAv\": \"Some Person\" "
+            +", \"arkivertDato\": \"1863-10-10T00:00:00+00:00\" "
+            +", \"arkivertAv\": \"Min Venn\" "
+            +", \"kassasjon\": { "
+            +"    \"kassasjonsvedtak\": {"
+            +"      \"kode\": \"K\", "
+            +"      \"kodenavn\": \"Kasseres\""
+            +"    }, "
+            +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+            +"    \"bevaringstid\": 45, "
+            +"    \"kassasjonsdato\": \"1942-07-25\" "
+            +"  } "
+            +", \"skjerming\": { "
+            +"    \"tilgangsrestriksjon\": {"
+            +"      \"kode\": \"P\","
+            +"      \"kodenavn\": \"Personalsaker\""
+            +"    }, "
+            +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+            +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+            +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+            +"    \"skjermingsvarighet\": 60, "
+            +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+            +"  } "
+            +", \"gradering\": { "
+            +"    \"graderingskode\": { "
+            +"      \"kode\":\"SH\","
+            +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+            +"    }, "
+            +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+            +"    \"gradertAv\": \"PST\", "
+            +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+            +"    \"nedgradertAv\": \"PST\" "
+            +"  } "
+            +", \"registreringsID\": \"a record id\" "
+            +", \"tittel\": \"" + title + "\" "
+            +", \"offentligTittel\": \"A public record title\" "
+            +", \"beskrivelse\": \"En beskrivelse\" "
+            +", \"noekkelord\": [ \"ny\", \"inbox\" ] "
             +", \"dokumentmedium\": { \"kode\": \"E\", \"kodenavn\": \"Elektronisk arkiv\" } "
             //+", \"virksomhetsspesifikkeMetadata\": {} "
-	    +"}";
+            +"}";
 
-	ObjectMapper objectMapper = new ObjectMapper();
-	JsonParser jsonParser =
-	    objectMapper.getJsonFactory().createJsonParser(json);
-	RecordDeserializer recordDeserializer = new RecordDeserializer();
-	Record record =
-	    recordDeserializer.deserialize(jsonParser,
-					   null /* DeserializationContext */);
-	assert(null != record);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+            objectMapper.getJsonFactory().createJsonParser(json);
+        RecordDeserializer recordDeserializer = new RecordDeserializer();
+        Record record =
+            recordDeserializer.deserialize(jsonParser,
+                                           null /* DeserializationContext */);
+        assert(null != record);
         assert(systemID.equals(record.getSystemId()));
         assert(title.equals(record.getTitle()));
         Classified c = record.getReferenceClassified();
@@ -848,7 +848,7 @@ public class TestParsing {
 
     @Test
     public void parseDocumentDescriptionComplete() throws Exception {
-	System.out.println("info: testing documentdescription parsing");
+        System.out.println("info: testing documentdescription parsing");
         String json = "{ "
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
             +", \"oppdatertAv\": \"Some Person\" "
@@ -859,59 +859,59 @@ public class TestParsing {
             //+", \"referanseOpprettetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
             +", \"dokumenttype\": { \"kode\": \"B\", \"kodenavn\": \"Brev\" } "
             +", \"dokumentstatus\": { \"kode\": \"F\", \"kodenavn\": \"Dokumentet er ferdigstilt\" } "
-	    +", \"tittel\": \"A document description title\" "
-	    +", \"beskrivelse\": \"A document description description\" "
+            +", \"tittel\": \"A document description title\" "
+            +", \"beskrivelse\": \"A document description description\" "
             +", \"dokumentmedium\": { \"kode\": \"E\", \"kodenavn\": \"Elektronisk arkiv\" } "
-	    +", \"oppbevaringssted\": [ \"Over the rainbow\" ] "
+            +", \"oppbevaringssted\": [ \"Over the rainbow\" ] "
             +", \"tilknyttetRegistreringSom\": { \"kode\": \"H\", \"kodenavn\": \"Hoveddokument\" } "
-	    +", \"dokumentnummer\": 1 "
+            +", \"dokumentnummer\": 1 "
             +", \"tilknyttetAv\": \"Some Person\" "
             +", \"tilknyttetDato\": \"1865-02-13T00:00:00+00:00\" "
             //+", \"referanseTilknyttetAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
-	    +", \"kassasjon\": { "
-	    +"    \"kassasjonsvedtak\": {"
-	    +"      \"kode\": \"K\", "
-	    +"      \"kodenavn\": \"Kasseres\""
-	    +"    }, "
-	    +"    \"kassasjonshjemmel\": \"enHjemmel\", "
-	    +"    \"bevaringstid\": 45, "
-	    +"    \"kassasjonsdato\": \"1942-07-25Z\" "
-	    +"  } "
-	    +", \"utfoertKassasjon\": { "
-	    +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "
-	    +"    \"kassertAv\": \"Ryddig Gutt\", "
-	    +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
-	    +"  } "
-	    +", \"sletting\": { "
-	    +"    \"slettingstype\": {"
-	    +"      \"kode\": \"SP\","
-	    +"      \"kodenavn\": \"Sletting av produksjonsformat\""
-	    +"    }, "
-	    +"    \"slettetDato\": \"1863-10-10T00:00:00+00:00\", "
-	    +"    \"slettetAv\": \"Ryddig Gutt\", "
-	    +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
-	    +"} "
-	    +", \"skjerming\": { "
-	    +"    \"tilgangsrestriksjon\": {"
-	    +"      \"kode\": \"P\","
-	    +"      \"kodenavn\": \"Personalsaker\""
-	    +"    }, "
-	    +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
-	    +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
-	    +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
-	    +"    \"skjermingsvarighet\": 60, "
-	    +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
-	    +"} "
-	    +", \"gradering\": { "
-	    +"    \"graderingskode\": { "
-	    +"      \"kode\":\"SH\","
-	    +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
-	    +"    }, "
-	    +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
-	    +"    \"gradertAv\": \"PST\", "
-	    +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
-	    +"    \"nedgradertAv\": \"PST\" "
-	    +"  } "
+            +", \"kassasjon\": { "
+            +"    \"kassasjonsvedtak\": {"
+            +"      \"kode\": \"K\", "
+            +"      \"kodenavn\": \"Kasseres\""
+            +"    }, "
+            +"    \"kassasjonshjemmel\": \"enHjemmel\", "
+            +"    \"bevaringstid\": 45, "
+            +"    \"kassasjonsdato\": \"1942-07-25Z\" "
+            +"  } "
+            +", \"utfoertKassasjon\": { "
+            +"    \"kassertDato\": \"1863-10-10T00:00:00+00:00\", "
+            +"    \"kassertAv\": \"Ryddig Gutt\", "
+            +"    \"referanseKassertAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+            +"  } "
+            +", \"sletting\": { "
+            +"    \"slettingstype\": {"
+            +"      \"kode\": \"SP\","
+            +"      \"kodenavn\": \"Sletting av produksjonsformat\""
+            +"    }, "
+            +"    \"slettetDato\": \"1863-10-10T00:00:00+00:00\", "
+            +"    \"slettetAv\": \"Ryddig Gutt\", "
+            +"    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+            +"} "
+            +", \"skjerming\": { "
+            +"    \"tilgangsrestriksjon\": {"
+            +"      \"kode\": \"P\","
+            +"      \"kodenavn\": \"Personalsaker\""
+            +"    }, "
+            +"    \"skjermingshjemmel\": \"Unntatt etter Offentleglova\", "
+            +"    \"skjermingMetadata\": { \"kode\": \"S\", \"kodenavn\": \"Skjermet\" }, "
+            +"    \"skjermingDokument\": { \"kode\": \"H\", \"kodenavn\": \"Skjerming av hele dokumentet\" }, "
+            +"    \"skjermingsvarighet\": 60, "
+            +"    \"skjermingOpphoererDato\": \"1942-07-25Z\" "
+            +"} "
+            +", \"gradering\": { "
+            +"    \"graderingskode\": { "
+            +"      \"kode\":\"SH\","
+            +"      \"kodenavn\":\"Strengt hemmelig (sikkerhetsgrad)\""
+            +"    }, "
+            +"    \"graderingsdato\": \"1865-02-13T00:00:00+00:00\", "
+            +"    \"gradertAv\": \"PST\", "
+            +"    \"nedgraderingsdato\": \"2070-02-13T12:00:00+00:00\", "
+            +"    \"nedgradertAv\": \"PST\" "
+            +"  } "
             +", \"elektroniskSignatur\": { "
             +"    \"elektroniskSignaturSikkerhetsnivaa\": { "
             +"      \"kode\":\"PS\","
@@ -924,7 +924,7 @@ public class TestParsing {
             +"    \"verifisertDato\": \"2070-02-13+01:00\", "
             +"    \"verifisertAv\": \"PST\" "
             +"  } "
-	    +", \"eksternReferanse\" : \"RT #1234\" "
+            +", \"eksternReferanse\" : \"RT #1234\" "
             //+", \"virksomhetsspesifikkeMetadata\": {} "
             +"}";
 
@@ -946,7 +946,7 @@ public class TestParsing {
 
     @Test
     public void parseDocumentObjectComplete() throws Exception {
-	System.out.println("info: testing documentobject parsing");
+        System.out.println("info: testing documentobject parsing");
         String json = "{ "
             +"  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
             +", \"oppdatertAv\": \"Some Person\" "
