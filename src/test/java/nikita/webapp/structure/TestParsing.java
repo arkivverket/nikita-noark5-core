@@ -384,6 +384,8 @@ public class TestParsing {
 	    //+", \"referanseAvsluttetAv\": \"4025f87a-3006-11ea-a626-53980911d4d2\" "
 	    +", \"arkivperiodeStartDato\": \"1863-10-10+00:00\" "
 	    +", \"arkivperiodeSluttDato\": \"1863-10-10+00:00\" "
+            //+", \"referanseForloeper\": \"\" "
+            //+", \"referanseArvtaker\": \"\" "
 	    +", \"kassasjon\": { "
 	    +"    \"kassasjonsvedtak\": {"
 	    +"      \"kode\": \"K\", "
