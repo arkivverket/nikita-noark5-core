@@ -987,7 +987,7 @@ public class TestParsing {
             documentObjectDeserializer.deserialize(
                 jsonParser, null /* DeserializationContext */);
         assert(null != documentObject);
-        assert("fmt/95".equals(documentObject.getFormatCode()));
+        assert("fmt/95".equals(documentObject.getFormat().getCode()));
     }
 
     @Test
@@ -1380,12 +1380,14 @@ public class TestParsing {
     public void parseConversionComplete() throws Exception {
         System.out.println("info: testing conversion parsing");
         String systemID = "60771e06-33b7-11ea-aaca-e359aca50a62";
+        String fromFormatCode = "fmt/95";
+        String toFormatCode = "fmt/96";
         String json = "{ "
             +"  \"systemID\": \"" + systemID + "\" "
             +", \"konvertertDato\": \"2020-02-13T00:00:00+00:00\" "
             +", \"konvertertAv\": \"Some One\" "
-            +", \"konvertertFraFormat\": \"Some One\" "
-            +", \"konvertertTilFormat\": \"Some One\" "
+            +", \"konvertertFraFormat\": { \"kode\": \"" + fromFormatCode + "\" } "
+            +", \"konvertertTilFormat\": { \"kode\": \"" + toFormatCode + "\" } "
             +", \"konverteringsverktoey\": \"Some One\" "
             +", \"konverteringskommentar\": \"Some One\" "
             +"}";
@@ -1400,6 +1402,8 @@ public class TestParsing {
                 jsonParser, null /* DeserializationContext */);
         assert(null != conversion);
         assert(systemID.equals(conversion.getSystemId()));
+        assert(fromFormatCode.equals(conversion.getConvertedFromFormat().getCode()));
+        assert(toFormatCode.equals(conversion.getConvertedToFormat().getCode()));
     }
 
 

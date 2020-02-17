@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
+import nikita.common.model.noark5.v5.metadata.Format;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -40,20 +41,32 @@ public class Conversion
     private String convertedBy;
 
     /**
-     * M712 - konvertertFraFormat (xs:string)
+     * M??? - konvertertFraFormat code (xs:string)
      */
-    @Column(name = CONVERTED_FROM_FORMAT_ENG)
+    @Column(name = "converted_from_format_code")
     @Audited
-    @JsonProperty(CONVERTED_FROM_FORMAT)
-    private String convertedFromFormat;
+    private String convertedFromFormatCode;
 
     /**
-     * M713 - konvertertTilFormat (xs:string)
+     * M712 - konvertertFraFormat code name (xs:string)
      */
-    @Column(name = CONVERTED_TO_FORMAT_ENG)
+    @Column(name = "converted_from_format_code_name")
     @Audited
-    @JsonProperty(CONVERTED_TO_FORMAT)
-    private String convertedToFormat;
+    private String convertedFromFormatCodeName;
+
+    /**
+     * M??? - konvertertTilFormat code (xs:string)
+     */
+    @Column(name = "converted_to_format_code")
+    @Audited
+    private String convertedToFormatCode;
+
+    /**
+     * M713 - konvertertTilFormat code name (xs:string)
+     */
+    @Column(name = "converted_to_format_code_name")
+    @Audited
+    private String convertedToFormatCodeName;
 
     /**
      * M714 - konverteringsverktoey (xs:string)
@@ -98,23 +111,45 @@ public class Conversion
     }
 
     @Override
-    public String getConvertedFromFormat() {
+    public Format getConvertedFromFormat() {
+        if (null == convertedFromFormatCode)
+            return null;
+        Format convertedFromFormat = new Format();
+        convertedFromFormat.setCode(convertedFromFormatCode);
+        convertedFromFormat.setCodeName(convertedFromFormatCodeName);
         return convertedFromFormat;
     }
 
     @Override
-    public void setConvertedFromFormat(String convertedFromFormat) {
-        this.convertedFromFormat = convertedFromFormat;
+    public void setConvertedFromFormat(Format convertedFromFormat) {
+        if (null != convertedFromFormat) {
+            this.convertedFromFormatCode = convertedFromFormat.getCode();
+            this.convertedFromFormatCodeName = convertedFromFormat.getCodeName();
+        } else {
+            this.convertedFromFormatCode = null;
+            this.convertedFromFormatCodeName = null;
+        }
     }
 
     @Override
-    public String getConvertedToFormat() {
+    public Format getConvertedToFormat() {
+        if (null == convertedToFormatCode)
+            return null;
+        Format convertedToFormat = new Format();
+        convertedToFormat.setCode(convertedToFormatCode);
+        convertedToFormat.setCodeName(convertedToFormatCodeName);
         return convertedToFormat;
     }
 
     @Override
-    public void setConvertedToFormat(String convertedToFormat) {
-        this.convertedToFormat = convertedToFormat;
+    public void setConvertedToFormat(Format convertedToFormat) {
+        if (null != convertedToFormat) {
+            this.convertedToFormatCode = convertedToFormat.getCode();
+            this.convertedToFormatCodeName = convertedToFormat.getCodeName();
+        } else {
+            this.convertedToFormatCode = null;
+            this.convertedToFormatCodeName = null;
+        }
     }
 
     @Override
@@ -163,8 +198,10 @@ public class Conversion
         return "Conversion{" + super.toString() +
                 ", convertedDate=" + convertedDate +
                 ", convertedBy='" + convertedBy + '\'' +
-                ", convertedFromFormat='" + convertedFromFormat + '\'' +
-                ", convertedToFormat='" + convertedToFormat + '\'' +
+                ", convertedFromFormatCode='" + convertedFromFormatCode + '\'' +
+                ", convertedFromFormatCodeName='" + convertedFromFormatCodeName + '\'' +
+                ", convertedToFormatCode='" + convertedToFormatCode + '\'' +
+                ", convertedToFormatCodeName='" + convertedToFormatCodeName + '\'' +
                 ", conversionTool='" + conversionTool + '\'' +
                 ", conversionComment='" + conversionComment + '\'' +
                 '}';
@@ -186,8 +223,9 @@ public class Conversion
                 .appendSuper(super.equals(other))
                 .append(convertedDate, rhs.convertedDate)
                 .append(convertedBy, rhs.convertedBy)
-                .append(convertedFromFormat, rhs.convertedFromFormat)
-                .append(convertedToFormat, rhs.convertedToFormat)
+                .append(convertedFromFormatCode, rhs.convertedFromFormatCode)
+                .append(convertedFromFormatCodeName, rhs.convertedFromFormatCodeName)
+                .append(convertedToFormatCodeName, rhs.convertedToFormatCodeName)
                 .append(conversionTool, rhs.conversionTool)
                 .append(conversionComment, rhs.conversionComment)
                 .isEquals();
@@ -199,8 +237,10 @@ public class Conversion
                 .appendSuper(super.hashCode())
                 .append(convertedDate)
                 .append(convertedBy)
-                .append(convertedFromFormat)
-                .append(convertedToFormat)
+                .append(convertedFromFormatCode)
+                .append(convertedFromFormatCodeName)
+                .append(convertedToFormatCode)
+                .append(convertedToFormatCodeName)
                 .append(conversionTool)
                 .append(conversionComment)
                 .toHashCode();

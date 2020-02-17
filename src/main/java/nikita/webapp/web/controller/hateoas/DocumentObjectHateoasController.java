@@ -239,10 +239,15 @@ public class DocumentObjectHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CONVERSION,
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ConversionHateoas> createDefaultConversion(
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemId of documentCbject to associate the" +
+                            " conversion with.",
+                    required = true)
+            @PathVariable String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentObjectService.generateDefaultConversion());
+                .body(documentObjectService.generateDefaultConversion(systemID));
     }
 
     // API - All POST Requests (CRUD - CREATE)

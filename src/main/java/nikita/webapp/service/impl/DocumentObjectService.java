@@ -135,7 +135,7 @@ public class DocumentObjectService
                 documentObjectRepository.
                         countByReferenceDocumentDescriptionAndVariantFormatCode(
                                 documentObject.getReferenceDocumentDescription(),
-                                documentObject.getVariantFormatCode());
+                                documentObject.getVariantFormat().getCode());
         // + 1 because while arrays start at 0, document counts start at 1
         documentObject.setVersionNumber(version.intValue() + 1);
 
@@ -189,13 +189,14 @@ public class DocumentObjectService
             documentObject.setMimeType(mimeType);
 
             // TODO find way to detect PRONOM code for a uploaded file.
-            String format = documentObject.getFormatCode();
+            Format format = documentObject.getFormat();
             if (null == format) {
                 logger.warn("Setting format for documentObject [" +
                             documentObject.toString() +
                             "] to UNKNOWN after upload.");
-                documentObject.setFormatCode("UNKNOWN");
-                documentObject.setFormatCodeName(null);
+                Format newFormat = new Format();
+                newFormat.setCode("UNKNOWN");
+                documentObject.setFormat(newFormat);
                 validateFormat(documentObject);
             }
 
@@ -222,8 +223,10 @@ public class DocumentObjectService
         DocumentObject defaultDocumentObject = new DocumentObject();
         // TODO This is just temporary code as this will have to be
         // replaced if this ever goes into production
-        defaultDocumentObject.setVariantFormatCode(PRODUCTION_VERSION_CODE);
-        defaultDocumentObject.setVariantFormatCodeName(PRODUCTION_VERSION);
+        VariantFormat variantFormat = new VariantFormat();
+        variantFormat.setCode(PRODUCTION_VERSION_CODE);
+        defaultDocumentObject.setVariantFormat(variantFormat);
+        validateVariantFormat(defaultDocumentObject);
         defaultDocumentObject.setVersionNumber(1);
 
         DocumentObjectHateoas documentObjectHateoas =
@@ -255,12 +258,15 @@ public class DocumentObjectService
 
     @Override
     public ConversionHateoas
-    generateDefaultConversion() {
+    generateDefaultConversion(String systemId) {
+        DocumentObject documentObject =
+                getDocumentObjectOrThrow(systemId);
         Conversion defaultConversion = new Conversion();
 
 	/* Propose conversion done now by logged in user */
 	defaultConversion.setConvertedDate(OffsetDateTime.now());
 	defaultConversion.setConvertedBy(getUser());
+	defaultConversion.setConvertedToFormat(documentObject.getFormat());
 
         ConversionHateoas conversionHateoas =
 	    new ConversionHateoas(defaultConversion);
@@ -375,13 +381,18 @@ public class DocumentObjectService
         // method. Consider the scenario where a file called .htaccess
         // is uploaded, or a file with no file extension
 
-        archiveDocumentObject.setFormatCode(FILE_EXTENSION_PDF_CODE);
-        archiveDocumentObject.setFormatCodeName(null);
+        Format format = new Format();
+        format.setCode(FILE_EXTENSION_PDF_CODE);
+        archiveDocumentObject.setFormat(format);
         validateFormat(archiveDocumentObject);
+
         archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
         archiveDocumentObject.setFormatDetails(FORMAT_PDF_DETAILS);
-        archiveDocumentObject.setVariantFormatCode(ARCHIVE_VERSION_CODE);
-        archiveDocumentObject.setVariantFormatCodeName(ARCHIVE_VERSION);
+
+        VariantFormat variantFormat = new VariantFormat();
+        variantFormat.setCode(ARCHIVE_VERSION_CODE);
+        archiveDocumentObject.setVariantFormat(variantFormat);
+        validateVariantFormat(archiveDocumentObject);
 
         setFilenameAndExtensionForArchiveDocument(
                 productionDocumentObject, archiveDocumentObject);
@@ -489,9 +500,9 @@ public class DocumentObjectService
             conversion.setConvertedBy(username);
             conversion.setConvertedDate(OffsetDateTime.now());
             conversion.setConvertedFromFormat(
-                    originalDocumentObject.getFormatCode());
+                    originalDocumentObject.getFormat());
             conversion.setConvertedToFormat(
-                    archiveDocumentObject.getFormatCode());
+                    archiveDocumentObject.getFormat());
             conversion.setReferenceDocumentObject(archiveDocumentObject);
             archiveDocumentObject.addReferenceConversion(conversion);
 
@@ -640,21 +651,15 @@ public class DocumentObjectService
                 getDocumentObjectOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
-        existingDocumentObject.setFormatCode(
-                incomingDocumentObject.getFormatCode());
-        existingDocumentObject.setFormatCodeName(
-                incomingDocumentObject.getFormatCodeName());
+        existingDocumentObject.setFormat(
+                incomingDocumentObject.getFormat());
         existingDocumentObject.setFormatDetails(
                 incomingDocumentObject.getFormatDetails());
         existingDocumentObject.setOriginalFilename
                 (incomingDocumentObject.getOriginalFilename());
-        if (null != incomingDocumentObject.getVariantFormatCode()) {
-            existingDocumentObject.setVariantFormatCode(
-                    incomingDocumentObject.getVariantFormatCode());
-        }
-        if (null != incomingDocumentObject.getVariantFormatCodeName()) {
-            existingDocumentObject.setVariantFormatCodeName(
-                    incomingDocumentObject.getVariantFormatCodeName());
+        if (null != incomingDocumentObject.getVariantFormat()) {
+            existingDocumentObject.setVariantFormat(
+                    incomingDocumentObject.getVariantFormat());
         }
         if (null != incomingDocumentObject.getVersionNumber()) {
             existingDocumentObject.setVersionNumber(
@@ -1069,23 +1074,21 @@ public class DocumentObjectService
     }
 
     private void validateFormat(DocumentObject documentObject) {
-        if (null != documentObject.getFormatCode()) {
+        if (null != documentObject.getFormat()) {
             Format format =
                 (Format) formatService
                 .findValidMetadataOrThrow(documentObject.getBaseTypeName(),
-                                          documentObject.getFormatCode(),
-                                          documentObject.getFormatCodeName());
-            documentObject.setFormatCodeName(format.getCodeName());
+                                          documentObject.getFormat());
+            documentObject.setFormat(format);
         }
     }
 
     private void validateVariantFormat(DocumentObject documentObject) {
-	// Assume value already set, as the deserialiser will enforce it.
+        // Assume value already set, as the deserialiser will enforce it.
         VariantFormat variantFormat =
             (VariantFormat) variantFormatService
             .findValidMetadataOrThrow(documentObject.getBaseTypeName(),
-                                      documentObject.getVariantFormatCode(),
-                                      documentObject.getVariantFormatCodeName());
-        documentObject.setVariantFormatCodeName(variantFormat.getCodeName());
+                                      documentObject.getVariantFormat());
+        documentObject.setVariantFormat(variantFormat);
     }
 }
