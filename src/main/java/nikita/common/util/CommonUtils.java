@@ -406,13 +406,6 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     objectNode.remove(fieldname);
-                    // TODO TEMP HACK because of presentation. Needs to be
-                    // removed! import-email is importing emails with
-                    // versjonsnummer as a : "0", rather than a : 0
-                    if (currentNode.isTextual()) {
-                        String val = currentNode.textValue();
-                        return Integer.valueOf(val);
-                    }
                     if (currentNode.isNumber()) {
                         return currentNode.intValue();
                     } else {
