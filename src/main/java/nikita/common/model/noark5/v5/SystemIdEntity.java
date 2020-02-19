@@ -46,6 +46,7 @@ public class SystemIdEntity
     @Type(type = "uuid-char")
     private UUID systemId;
 
+    @Override
     public String getSystemId() {
         if (null != systemId)
             return systemId.toString();
@@ -53,14 +54,17 @@ public class SystemIdEntity
             return null;
     }
 
+    @Override
     public void setSystemId(UUID systemId) {
         this.systemId = systemId;
     }
 
-    public String getId() {
-        return systemId.toString();
+    @Override
+    public UUID getId() {
+        return systemId;
     }
 
+    @Override
     public void setId(UUID systemId) {
         this.systemId = systemId;
     }
