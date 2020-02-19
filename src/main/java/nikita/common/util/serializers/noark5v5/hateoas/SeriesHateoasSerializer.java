@@ -44,13 +44,13 @@ public class SeriesHateoasSerializer
         printModifiedEntity(jgen, series);
         printNullableDate(jgen, SERIES_START_DATE, series.getSeriesStartDate());
         printNullableDate(jgen, SERIES_END_DATE, series.getSeriesEndDate());
-        if (series.getReferencePrecursor() != null) {
-            printNullable(jgen, SERIES_PRECURSOR,
-                          series.getReferencePrecursor().getSystemId());
+        if (null != series.getReferencePrecursorSystemID()) {
+            print(jgen, SERIES_ASSOCIATE_AS_PRECURSOR,
+                  series.getReferencePrecursorSystemID().toString());
         }
-        if (series.getReferenceSuccessor() != null) {
-            printNullable(jgen, SERIES_SUCCESSOR,
-                          series.getReferenceSuccessor().getSystemId());
+        if (null != series.getReferenceSuccessorSystemID()) {
+            print(jgen, SERIES_ASSOCIATE_AS_SUCCESSOR,
+                  series.getReferenceSuccessorSystemID().toString());
         }
         printDisposal(jgen, series);
         printDisposalUndertaken(jgen, series);

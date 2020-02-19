@@ -163,6 +163,7 @@ public class FondsService
 
         Fonds fonds = getFondsOrThrow(fondsSystemId);
 
+        seriesService.updateSeriesReferences(series);
         seriesService.checkSeriesStatusUponCreation(series);
         checkFondsNotClosed(fonds);
         checkFondsDoesNotContainSubFonds(fonds);

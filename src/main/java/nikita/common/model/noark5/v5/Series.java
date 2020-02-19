@@ -13,6 +13,7 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
@@ -106,11 +108,27 @@ public class Series
     @JsonIgnore
     private Fonds referenceFonds;
 
-    // Link to precursor Series
+    /**
+     * M202 - referanseForloeper (xs:ID)
+     */
+    @Column(name = "reference_precursor_id")
+    @Type(type = "uuid-char")
+    @JsonProperty(SERIES_ASSOCIATE_AS_PRECURSOR)
+    private UUID referencePrecursorSystemID;
+
+    /**
+     * M203 - referanseArvtaker (xs:ID)
+     */
+    @Column(name = "reference_successor_id")
+    @Type(type = "uuid-char")
+    @JsonProperty(SERIES_ASSOCIATE_AS_SUCCESSOR)
+    private UUID referenceSuccessorSystemID;
+
+    // Link to precursor Series if present
     @OneToOne(fetch = LAZY)
     private Series referencePrecursor;
 
-    // Link to successor Series
+    // Link to successor Series if present
     @OneToOne(fetch = LAZY, mappedBy = "referencePrecursor")
     private Series referenceSuccessor;
 
@@ -251,6 +269,22 @@ public class Series
 
     public void setReferenceFonds(Fonds referenceFonds) {
         this.referenceFonds = referenceFonds;
+    }
+
+    public UUID getReferencePrecursorSystemID() {
+        return referencePrecursorSystemID;
+    }
+
+    public void setReferencePrecursorSystemID(UUID referencePrecursorSystemID) {
+        this.referencePrecursorSystemID = referencePrecursorSystemID;
+    }
+
+    public UUID getReferenceSuccessorSystemID() {
+        return referenceSuccessorSystemID;
+    }
+
+    public void setReferenceSuccessorSystemID(UUID referenceSuccessorSystemID) {
+        this.referenceSuccessorSystemID = referenceSuccessorSystemID;
     }
 
     public Series getReferencePrecursor() {

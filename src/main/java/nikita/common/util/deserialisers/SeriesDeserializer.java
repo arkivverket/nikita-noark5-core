@@ -18,12 +18,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
-import static nikita.common.config.N5ResourceMappings.CODE;
-import static nikita.common.config.N5ResourceMappings.SERIES_END_DATE;
-import static nikita.common.config.N5ResourceMappings.SERIES_PRECURSOR;
-import static nikita.common.config.N5ResourceMappings.SERIES_START_DATE;
-import static nikita.common.config.N5ResourceMappings.SERIES_STATUS;
-import static nikita.common.config.N5ResourceMappings.SERIES_SUCCESSOR;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -87,25 +82,18 @@ public class SeriesDeserializer
         series.setSeriesEndDate(CommonUtils.Hateoas.Deserialize.deserializeDate(SERIES_END_DATE, objectNode, errors));
 
         // Deserialize referencePrecursor
-        JsonNode currentNode = objectNode.get(SERIES_PRECURSOR);
+        JsonNode currentNode = objectNode.get(SERIES_ASSOCIATE_AS_PRECURSOR);
         if (null != currentNode) {
-            Series seriesPrecursor = new Series();
-            seriesPrecursor.setSystemId(UUID.fromString(currentNode.textValue()));
-            series.setReferencePrecursor(seriesPrecursor);
-            // TODO: Does this imply that the current arkivdel is the successor?
-            // I would not set it here, as the service class has to check that
-            // the seriesPrecursor object actually exists
-            objectNode.remove(SERIES_PRECURSOR);
+            series.setReferencePrecursorSystemID
+                (UUID.fromString(currentNode.textValue()));
+            objectNode.remove(SERIES_ASSOCIATE_AS_PRECURSOR);
         }
         // Deserialize referenceSuccessor
-        currentNode = objectNode.get(SERIES_SUCCESSOR);
+        currentNode = objectNode.get(SERIES_ASSOCIATE_AS_SUCCESSOR);
         if (null != currentNode) {
-            Series seriesSuccessor = new Series();
-            seriesSuccessor.setSystemId(UUID.fromString(currentNode.textValue()));
-            series.setReferenceSuccessor(seriesSuccessor);
-            // TODO: Does this imply that the current arkivdel is the precursor?
-            // I would not set it here, as the service class should do this
-            objectNode.remove(SERIES_SUCCESSOR);
+            series.setReferenceSuccessorSystemID
+                (UUID.fromString(currentNode.textValue()));
+            objectNode.remove(SERIES_ASSOCIATE_AS_SUCCESSOR);
         }
         series.setReferenceDisposal(CommonUtils.Hateoas.Deserialize.deserialiseDisposal(objectNode, errors));
         series.setReferenceDisposalUndertaken(CommonUtils.Hateoas.Deserialize.deserialiseDisposalUndertaken(objectNode, errors));

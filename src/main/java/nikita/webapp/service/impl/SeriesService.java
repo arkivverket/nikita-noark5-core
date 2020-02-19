@@ -257,11 +257,39 @@ public class SeriesService
             existingSeries.setDocumentMediumCodeName(
                     incomingSeries.getDocumentMediumCodeName());
         }
+
+        existingSeries.setReferencePrecursorSystemID
+            (incomingSeries.getReferencePrecursorSystemID());
+        existingSeries.setReferenceSuccessorSystemID
+            (incomingSeries.getReferenceSuccessorSystemID());
+        updateSeriesReferences(existingSeries);
+
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingSeries.setVersion(version);
         seriesRepository.save(existingSeries);
         return existingSeries;
+    }
+
+    @Override
+    public void updateSeriesReferences(Series series) {
+        if (null != series.getReferencePrecursorSystemID()) {
+            Series referenceSeries = seriesRepository.
+                findBySystemId(series.getReferencePrecursorSystemID());
+            // Will set to null if not found
+            series.setReferencePrecursor(referenceSeries);
+        } else {
+            series.setReferencePrecursor(null);
+        }
+
+        if (null != series.getReferenceSuccessorSystemID()) {
+            Series referenceSeries = seriesRepository.
+                findBySystemId(series.getReferenceSuccessorSystemID());
+            // Will set to null if not found
+            series.setReferenceSuccessor(referenceSeries);
+        } else {
+            series.setReferenceSuccessor(null);
+        }
     }
 
     // All DELETE operations
