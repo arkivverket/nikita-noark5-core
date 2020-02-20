@@ -242,7 +242,7 @@ public class RegistryEntryService
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemId);
         SignOff signOff = getSignOffOrThrow(subSystemId);
         if (null == signOff.getReferenceRecord()
-            || signOff.getReferenceRecord() != registryEntry) {
+            || !signOff.getReferenceRecord().equals(registryEntry)) {
             String info = INFO_CANNOT_FIND_OBJECT +
                 " SignOff " + subSystemId +
                 " below RegistryEntry " + systemId + ".";
