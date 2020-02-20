@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.metadata.Format;
 
 // TODO check if this inheritence is ok.
 public interface IConversionEntity
@@ -18,13 +19,13 @@ public interface IConversionEntity
 
     void setConvertedBy(String convertedBy);
 
-    String getConvertedFromFormat();
+    Format getConvertedFromFormat();
 
-    void setConvertedFromFormat(String convertedFromFormat);
+    void setConvertedFromFormat(Format convertedFromFormat);
 
-    String getConvertedToFormat();
+    Format getConvertedToFormat();
 
-    void setConvertedToFormat(String convertedToFormat);
+    void setConvertedToFormat(Format convertedToFormat);
 
     String getConversionTool();
 

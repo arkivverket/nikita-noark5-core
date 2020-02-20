@@ -45,9 +45,9 @@ public class ConversionHateoasSerializer
                       conversionEntity.getConvertedDate());
             printNullable(jgen, CONVERTED_BY,
                           conversionEntity.getConvertedBy());
-            printNullable(jgen, CONVERTED_FROM_FORMAT,
+            printNullableMetadata(jgen, CONVERTED_FROM_FORMAT,
                           conversionEntity.getConvertedFromFormat());
-            printNullable(jgen, CONVERTED_TO_FORMAT,
+            printNullableMetadata(jgen, CONVERTED_TO_FORMAT,
                           conversionEntity.getConvertedToFormat());
             printNullable(jgen, CONVERSION_TOOL,
                           conversionEntity.getConversionTool());
