@@ -49,7 +49,7 @@ public class Building
     @Column(name = BUILDING_CHANGE_NUMBER)
     @Audited
     @JsonProperty(BUILDING_CHANGE_NUMBER)
-    Integer continuousNumberingOfBuildingChange;
+    Integer runningChangeNumber;
 
     @Override
     public Integer getBuildingNumber() {
