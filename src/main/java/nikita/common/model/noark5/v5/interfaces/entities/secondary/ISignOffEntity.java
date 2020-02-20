@@ -1,14 +1,11 @@
 package nikita.common.model.noark5.v5.interfaces.entities.secondary;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
-import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.SignOffMethod;
+
+import java.time.OffsetDateTime;
 
 // TODO check if this inheritence is ok.
 public interface ISignOffEntity
@@ -21,6 +18,14 @@ public interface ISignOffEntity
 
     void setSignOffBy(String signOffBy);
 
+    String getSignOffMethodCodeName();
+
+    void setSignOffMethodCodeName(String signOffMethodCodeName);
+
+    String getSignOffMethodCode();
+
+    void setSignOffMethodCode(String signOffMethodCode);
+
     SignOffMethod getSignOffMethod();
 
     void setSignOffMethod(SignOffMethod signOffMethod);
@@ -28,7 +33,7 @@ public interface ISignOffEntity
     RegistryEntry getReferenceSignedOffRecord();
 
     void setReferenceSignedOffRecord
-	(RegistryEntry referenceSignedOffRecord);
+            (RegistryEntry referenceSignedOffRecord);
 
     CorrespondencePart getReferenceSignedOffCorrespondencePart();
 

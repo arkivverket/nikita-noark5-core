@@ -1,12 +1,17 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import nikita.common.model.noark5.v5.NoarkEntity;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
+import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISignOffEntity;
 import nikita.common.model.noark5.v5.metadata.SignOffMethod;
+import nikita.common.util.deserialisers.secondary.SignOffDeserializer;
+import nikita.webapp.hateoas.secondary.SignOffHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -14,8 +19,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -24,6 +27,9 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
 @Table(name = TABLE_SIGN_OFF)
+@JsonDeserialize(using = SignOffDeserializer.class)
+@HateoasPacker(using = SignOffHateoasHandler.class)
+@HateoasObject(using = SignOffHateoas.class)
 public class SignOff
         extends SystemIdEntity
         implements ISignOffEntity {
@@ -99,6 +105,26 @@ public class SignOff
     @Override
     public void setSignOffBy(String signOffBy) {
         this.signOffBy = signOffBy;
+    }
+
+    @Override
+    public String getSignOffMethodCode() {
+        return signOffMethodCode;
+    }
+
+    @Override
+    public void setSignOffMethodCode(String signOffMethodCode) {
+        this.signOffMethodCode = signOffMethodCode;
+    }
+
+    @Override
+    public String getSignOffMethodCodeName() {
+        return signOffMethodCodeName;
+    }
+
+    @Override
+    public void setSignOffMethodCodeName(String signOffMethodCodeName) {
+        this.signOffMethodCodeName = signOffMethodCodeName;
     }
 
     @Override

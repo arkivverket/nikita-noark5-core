@@ -2,15 +2,13 @@ package nikita.webapp.service.impl.metadata;
 
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.MetadataSuperClass;
 import nikita.common.model.noark5.v5.metadata.SignOffMethod;
 import nikita.common.repository.n5v5.metadata.ISignOffMethodRepository;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.common.util.exceptions.NoarkInvalidStructureException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
-import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.ISignOffMethodService;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,7 +19,8 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.TEMPLATE_SIGN_OFF_METHOD_CODE;
+import static nikita.common.config.Constants.TEMPLATE_SIGN_OFF_METHOD_NAME;
 import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
 
 /**
@@ -133,4 +132,28 @@ public class SignOffMethodService
                 new Authorisation());
         return SignOffMethodHateoas;
     }
+
+    public MetadataSuperClass findValidMetadataOrThrow(
+            String parent, String code, String codename) {
+        if (null == code) {
+            String entityname = "TODO unknown entity name";
+            String info = entityname + " malformed, missing code.";
+            logger.info(info);
+            throw new NoarkInvalidStructureException(
+                    info, parent, entityname);
+        }
+        MetadataSuperClass entity =
+                (MetadataSuperClass) findMetadataByCodeOrThrow(code);
+        if (null != codename &&
+                !entity.getCodeName().equals(codename)) {
+            String entityname = entity.getBaseTypeName();
+            String info = entityname + " code " + code + " and code name " +
+                    codename + " did not match metadata catalog.";
+            logger.info(info);
+            throw new NoarkInvalidStructureException(
+                    info, parent, entityname);
+        }
+        return entity;
+    }
+
 }
