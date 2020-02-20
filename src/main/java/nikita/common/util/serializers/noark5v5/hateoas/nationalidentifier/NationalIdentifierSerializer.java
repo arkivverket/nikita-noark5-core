@@ -55,7 +55,7 @@ public class NationalIdentifierSerializer
         printSystemIdEntity(jgen, building);
         print(jgen, BUILDING_NUMBER, building.getBuildingNumber());
         printNullable(jgen, BUILDING_CHANGE_NUMBER,
-                building.getContinuousNumberingOfBuildingChange());
+                building.getRunningChangeNumber());
         printHateoasLinks(jgen, buildingHateoas.getLinks(building));
         jgen.writeEndObject();
     }

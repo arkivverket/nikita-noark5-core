@@ -8,8 +8,7 @@ public interface IBuildingEntity
 
     void setBuildingNumber(Integer buildingNumber);
 
-    Integer getContinuousNumberingOfBuildingChange();
+    Integer getRunningChangeNumber();
 
-    void setContinuousNumberingOfBuildingChange(
-            Integer continuousNumberingOfBuildingChange);
+    void setRunningChangeNumber(Integer runningChangeNumber);
 }

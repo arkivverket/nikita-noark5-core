@@ -257,8 +257,8 @@ public class NationalIdentifierService
         // First the values
         existingBuilding.setBuildingNumber
             (incomingBuilding.getBuildingNumber());
-        existingBuilding.setContinuousNumberingOfBuildingChange
-            (incomingBuilding.getContinuousNumberingOfBuildingChange());
+        existingBuilding.setRunningChangeNumber
+            (incomingBuilding.getRunningChangeNumber());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG

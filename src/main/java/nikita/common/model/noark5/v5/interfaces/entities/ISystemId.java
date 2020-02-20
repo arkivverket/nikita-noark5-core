@@ -6,4 +6,6 @@ public interface ISystemId
         extends INoarkEntity {
     String getSystemId();
     void setSystemId(UUID systemId);
+    UUID getId();
+    void setId(UUID systemId);
 }
