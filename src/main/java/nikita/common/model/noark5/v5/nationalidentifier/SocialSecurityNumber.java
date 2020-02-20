@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_SOCIAL_SECURITY_NUMBER;
 import static nikita.common.config.Constants.TABLE_SOCIAL_SECURITY_NUMBER;
-import static nikita.common.config.N5ResourceMappings.SOCIAL_SECURITY_NUMBER;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_SOCIAL_SECURITY_NUMBER)
@@ -36,8 +37,9 @@ public class SocialSecurityNumber
     /**
      * M??? - foedselsnummer (xs:string)
      */
-    @Column(name = "social_security_number")
+    @Column(name = SOCIAL_SECURITY_NUMBER_ENG)
     @Audited
+    @JsonProperty(SOCIAL_SECURITY_NUMBER)
     private String socialSecurityNumber;
 
     @Override
