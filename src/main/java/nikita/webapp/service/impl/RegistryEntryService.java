@@ -7,14 +7,19 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
+import nikita.common.model.noark5.v5.metadata.SignOffMethod;
+import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
+import nikita.common.repository.n5v5.secondary.ISignOffRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.ISignOffHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
@@ -22,13 +27,13 @@ import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryStatusService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryTypeService;
+import nikita.webapp.service.interfaces.metadata.ISignOffMethodService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +52,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.SIGN_OFF;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
@@ -66,9 +72,12 @@ public class RegistryEntryService
     private IRegistryEntryTypeService registryEntryTypeService;
     private IRegistryEntryRepository registryEntryRepository;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
+    private ISignOffHateoasHandler signOffHateoasHandler;
     private ISequenceNumberGeneratorService numberGeneratorService;
+    private ISignOffRepository signOffRepository;
     private IUserRepository userRepository;
     private IAdministrativeUnitService administrativeUnitService;
+    private ISignOffMethodService signOffMethodService;
 
     public RegistryEntryService(
             EntityManager entityManager,
@@ -79,9 +88,12 @@ public class RegistryEntryService
             IRegistryEntryTypeService registryEntryTypeService,
             IRegistryEntryRepository registryEntryRepository,
             IRegistryEntryHateoasHandler registryEntryHateoasHandler,
+            ISignOffHateoasHandler signOffHateoasHandler,
             ISequenceNumberGeneratorService numberGeneratorService,
+            ISignOffRepository signOffRepository,
             IUserRepository userRepository,
-            IAdministrativeUnitService administrativeUnitService) {
+            IAdministrativeUnitService administrativeUnitService,
+            ISignOffMethodService signOffMethodService) {
         super(entityManager, applicationEventPublisher);
         this.precedenceService = precedenceService;
         this.documentMediumService = documentMediumService;
@@ -89,9 +101,12 @@ public class RegistryEntryService
         this.registryEntryTypeService = registryEntryTypeService;
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
+        this.signOffHateoasHandler = signOffHateoasHandler;
         this.numberGeneratorService = numberGeneratorService;
         this.userRepository = userRepository;
+        this.signOffRepository = signOffRepository;
         this.administrativeUnitService = administrativeUnitService;
+        this.signOffMethodService = signOffMethodService;
     }
 
     @Override
@@ -142,6 +157,33 @@ public class RegistryEntryService
     }
 
 
+    @Override
+    public SignOffHateoas generateDefaultSignOff
+       (@NotNull final String registryEntrySystemId) {
+        SignOff defaultSignOff = new SignOff();
+        OffsetDateTime now = OffsetDateTime.now();
+        defaultSignOff.setSignOffDate(now);
+        defaultSignOff.setSignOffBy(getUser());
+        SignOffHateoas signOffHateoas = new SignOffHateoas(defaultSignOff);
+        signOffHateoasHandler
+            .addLinksOnTemplate(signOffHateoas, new Authorisation());
+        return signOffHateoas;
+    }
+
+    @Override
+    public SignOffHateoas
+    createSignOffAssociatedWithRegistryEntry(String systemId,
+                                             SignOff signOff) {
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemId);
+        validateSignOff(signOff);
+        signOff.setReferenceRecord(registryEntry);
+        signOff = signOffRepository.save(signOff);
+        registryEntry.addReferenceSignOff(signOff);
+        SignOffHateoas signOffHateoas = new SignOffHateoas(signOff);
+        signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
+        return signOffHateoas;
+    }
+
     // All READ operations
     public List<RegistryEntry> findRegistryEntryByOwnerPaginated(Integer top,
                                                                  Integer skip) {
@@ -184,6 +226,38 @@ public class RegistryEntryService
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(registryEntryHateoas);
+    }
+
+    @Override
+    public SignOffHateoas
+    findAllSignOffAssociatedWithRegistryEntry(String systemId) {
+        SignOffHateoas signOffHateoas =
+            new SignOffHateoas((List<INoarkEntity>) (List)
+            getRegistryEntryOrThrow(systemId).getReferenceSignOff(),
+            SIGN_OFF);
+        signOffHateoasHandler.addLinks(signOffHateoas,
+                                       new Authorisation());
+        return signOffHateoas;
+    }
+
+    @Override
+    public SignOffHateoas
+    findSignOffAssociatedWithRegistryEntry(String systemId,
+                                           String subSystemId) {
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemId);
+        SignOff signOff = getSignOffOrThrow(subSystemId);
+        if (null == signOff.getReferenceRecord()
+            || !signOff.getReferenceRecord().equals(registryEntry)) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                " SignOff " + subSystemId +
+                " below RegistryEntry " + systemId + ".";
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        SignOffHateoas signOffHateoas = new SignOffHateoas(signOff);
+        signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
+        setOutgoingRequestHeader(signOffHateoas);
+        return signOffHateoas;
     }
 
     @Override
@@ -274,6 +348,38 @@ public class RegistryEntryService
         return existingRegistryEntry;
     }
 
+    @Override
+    public SignOffHateoas
+    handleUpdateSignOff(@NotNull final String systemID,
+                        @NotNull final String signOffSystemID,
+                        @NotNull final Long version,
+                        @NotNull final SignOff incomingSignOff) {
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
+        SignOff existingSignOff = getSignOffOrThrow(signOffSystemID);
+        if (null == existingSignOff.getReferenceRecord()
+            || existingSignOff.getReferenceRecord() != registryEntry) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                " Conversion " + signOffSystemID +
+                " below DocumentObject " + systemID + ".";
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+
+        existingSignOff.setSignOffMethod(incomingSignOff.getSignOffMethod());
+        existingSignOff.setReferenceSignedOffRecord
+            (incomingSignOff.getReferenceSignedOffRecord());
+        existingSignOff.setReferenceSignedOffCorrespondencePart
+            (incomingSignOff.getReferenceSignedOffCorrespondencePart());
+
+        SignOffHateoas signOffHateoas =
+            new SignOffHateoas(signOffRepository
+                                  .save(existingSignOff));
+        signOffHateoasHandler.addLinks(signOffHateoas,
+                new Authorisation());
+        setOutgoingRequestHeader(signOffHateoas);
+        return signOffHateoas;
+    }
+
     // All DELETE operations
 
     /**
@@ -299,6 +405,23 @@ public class RegistryEntryService
     public long deleteAllByOwnedBy() {
         return registryEntryRepository.deleteByOwnedBy(getUser());
     }
+
+    @Override
+    public void deleteSignOff(@NotNull String systemID,
+                              @NotNull String signOffSystemID) {
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
+        SignOff signOff = getSignOffOrThrow(signOffSystemID);
+        if (null == signOff.getReferenceRecord()
+            || signOff.getReferenceRecord() != registryEntry) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                " Conversion " + signOffSystemID +
+                " below DocumentObject " + systemID + ".";
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        deleteEntity(signOff);
+    }
+
     // All helper methods
 
     /**
@@ -457,6 +580,19 @@ public class RegistryEntryService
         return registryEntry;
     }
 
+    protected SignOff getSignOffOrThrow(@NotNull String signOffSystemId) {
+        SignOff signOff = signOffRepository
+	    .findBySystemId(UUID.fromString(signOffSystemId));
+        if (signOff == null) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " SignOff, using systemId " +
+                    signOffSystemId;
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        return signOff;
+    }
+
     private void validateRegistryEntryStatus(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
         // TODO note, RegistryEntry.*RecordStatus* is really
@@ -472,10 +608,20 @@ public class RegistryEntryService
     private void validateRegistryEntryType(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
         RegistryEntryType registryEntryType =
-            (RegistryEntryType) registryEntryTypeService
-            .findValidMetadataOrThrow(registryEntry.getBaseTypeName(),
-                                      registryEntry.getRegistryEntryTypeCode(),
-                                      registryEntry.getRegistryEntryTypeCodeName());
+                (RegistryEntryType) registryEntryTypeService
+                        .findValidMetadataOrThrow(registryEntry.getBaseTypeName(),
+                                registryEntry.getRegistryEntryTypeCode(),
+                                registryEntry.getRegistryEntryTypeCodeName());
         registryEntry.setRegistryEntryTypeCodeName(registryEntryType.getCodeName());
+    }
+
+    private void validateSignOff(SignOff incomingSignOff) {
+        // Assume value already set, as the deserialiser will enforce it.
+        SignOffMethod signOffMethod =
+                (SignOffMethod) signOffMethodService
+                        .findValidMetadataOrThrow(incomingSignOff.getBaseTypeName(),
+                                incomingSignOff.getSignOffMethodCode(),
+                                incomingSignOff.getSignOffMethodCodeName());
+        incomingSignOff.setSignOffMethodCodeName(signOffMethod.getCodeName());
     }
 }

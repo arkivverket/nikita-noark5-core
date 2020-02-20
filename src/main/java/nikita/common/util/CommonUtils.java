@@ -2296,33 +2296,6 @@ public final class CommonUtils {
             }
             */
 
-            public static void printSignOff(JsonGenerator jgen, ISignOff signOffEntity)
-                    throws IOException {
-                List<SignOff> signOffs = signOffEntity.getReferenceSignOff();
-                if (signOffs != null && signOffs.size() > 0) {
-                    jgen.writeArrayFieldStart(SIGN_OFF);
-                    for (SignOff signOff : signOffs) {
-                        if (signOff != null) {
-
-                            jgen.writeObjectFieldStart(SIGN_OFF);
-
-                            if (signOff.getSignOffDate() != null) {
-                                jgen.writeStringField(SIGN_OFF_DATE,
-                                        formatDate(signOff.getSignOffDate()));
-                            }
-                            if (signOff.getSignOffBy() != null) {
-                                jgen.writeStringField(SIGN_OFF_BY, signOff.getSignOffBy());
-                            }
-                            if (signOff.getSignOffMethod() != null) {
-                                jgen.writeStringField(SIGN_OFF_METHOD, signOff.getSignOffMethod());
-                            }
-                            jgen.writeEndObject();
-                        }
-                    }
-                    jgen.writeEndArray();
-                }
-            }
-
             public static void printDocumentFlow(JsonGenerator jgen, IDocumentFlow documentFlowEntity)
                     throws IOException {
                 List<DocumentFlow> documentFlows = documentFlowEntity.getReferenceDocumentFlow();

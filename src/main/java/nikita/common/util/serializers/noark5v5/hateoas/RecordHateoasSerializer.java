@@ -50,7 +50,6 @@ public class RecordHateoasSerializer
         printCorrespondencePartUnits(jgen, registryEntry);
         printCorrespondencePartInternals(jgen, registryEntry);
         */
-            printSignOff(jgen, (RegistryEntry) record);
             printDocumentFlow(jgen, (RegistryEntry) record);
             //printPrecedence(jgen, registryEntry);
             printElectronicSignature(jgen, (RegistryEntry) record);
