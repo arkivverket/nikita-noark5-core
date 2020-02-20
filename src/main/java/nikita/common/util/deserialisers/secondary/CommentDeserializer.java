@@ -23,7 +23,7 @@ public class CommentDeserializer
         extends JsonDeserializer {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(AuthorDeserializer.class);
+            LoggerFactory.getLogger(CommentDeserializer.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
