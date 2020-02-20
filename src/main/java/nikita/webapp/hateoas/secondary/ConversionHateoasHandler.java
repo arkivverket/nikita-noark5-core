@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CONVERSION;
+import static nikita.common.config.N5ResourceMappings.FORMAT;
 
 /*
  * Used to add ConversionHateoas links with Conversion specific information
@@ -46,7 +47,16 @@ public class ConversionHateoasHandler
                                IHateoasNoarkObject hateoasNoarkObject) {
         Conversion conversion = (Conversion) entity;
         addDocumentObject(conversion, hateoasNoarkObject);
+        addFormat(conversion, hateoasNoarkObject);
     }
+
+    @Override
+    public void addEntityLinksOnTemplate
+        (ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        Conversion conversion = (Conversion) entity;
+        addFormat(conversion, hateoasNoarkObject);
+    }
+
     /**
      * Create a REL/HREF pair for the parent DocumentObject associated
      * with the given Conversion
@@ -65,5 +75,13 @@ public class ConversionHateoasHandler
                      HREF_BASE_DOCUMENT_OBJECT + SLASH +
                      conversion.getReferenceDocumentObject().getSystemId(),
                      REL_FONDS_STRUCTURE_DOCUMENT_OBJECT));
+    }
+
+    @Override
+    public void addFormat(IConversionEntity conversion,
+                          IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(conversion,
+            new Link(getOutgoingAddress() + HREF_BASE_METADATA + SLASH + FORMAT,
+                REL_METADATA_FORMAT, true));
     }
 }
