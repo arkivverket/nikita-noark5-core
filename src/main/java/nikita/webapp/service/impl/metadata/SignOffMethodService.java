@@ -132,28 +132,4 @@ public class SignOffMethodService
                 new Authorisation());
         return SignOffMethodHateoas;
     }
-
-    public MetadataSuperClass findValidMetadataOrThrow(
-            String parent, String code, String codename) {
-        if (null == code) {
-            String entityname = "TODO unknown entity name";
-            String info = entityname + " malformed, missing code.";
-            logger.info(info);
-            throw new NoarkInvalidStructureException(
-                    info, parent, entityname);
-        }
-        MetadataSuperClass entity =
-                (MetadataSuperClass) findMetadataByCodeOrThrow(code);
-        if (null != codename &&
-                !entity.getCodeName().equals(codename)) {
-            String entityname = entity.getBaseTypeName();
-            String info = entityname + " code " + code + " and code name " +
-                    codename + " did not match metadata catalog.";
-            logger.info(info);
-            throw new NoarkInvalidStructureException(
-                    info, parent, entityname);
-        }
-        return entity;
-    }
-
 }
