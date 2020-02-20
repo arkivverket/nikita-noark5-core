@@ -95,7 +95,7 @@ public class FileDeserializer
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
-            logger.info("Payload contains " + LINKS + ". " +
+            logger.debug("Payload contains " + LINKS + ". " +
                     "This value is being ignored.");
             objectNode.remove(LINKS);
         }
