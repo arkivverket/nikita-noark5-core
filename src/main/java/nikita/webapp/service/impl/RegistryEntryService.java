@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
+import nikita.common.model.noark5.v5.metadata.SignOffMethod;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
 import nikita.common.repository.n5v5.secondary.ISignOffRepository;
@@ -26,13 +27,13 @@ import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryStatusService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryTypeService;
+import nikita.webapp.service.interfaces.metadata.ISignOffMethodService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,6 +77,7 @@ public class RegistryEntryService
     private ISignOffRepository signOffRepository;
     private IUserRepository userRepository;
     private IAdministrativeUnitService administrativeUnitService;
+    private ISignOffMethodService signOffMethodService;
 
     public RegistryEntryService(
             EntityManager entityManager,
@@ -90,7 +92,8 @@ public class RegistryEntryService
             ISequenceNumberGeneratorService numberGeneratorService,
             ISignOffRepository signOffRepository,
             IUserRepository userRepository,
-            IAdministrativeUnitService administrativeUnitService) {
+            IAdministrativeUnitService administrativeUnitService,
+            ISignOffMethodService signOffMethodService) {
         super(entityManager, applicationEventPublisher);
         this.precedenceService = precedenceService;
         this.documentMediumService = documentMediumService;
@@ -103,6 +106,7 @@ public class RegistryEntryService
         this.userRepository = userRepository;
         this.signOffRepository = signOffRepository;
         this.administrativeUnitService = administrativeUnitService;
+        this.signOffMethodService = signOffMethodService;
     }
 
     @Override
@@ -171,6 +175,7 @@ public class RegistryEntryService
     createSignOffAssociatedWithRegistryEntry(String systemId,
                                              SignOff signOff) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemId);
+        validateSignOff(signOff);
         signOff.setReferenceRecord(registryEntry);
         signOff = signOffRepository.save(signOff);
         registryEntry.addReferenceSignOff(signOff);
@@ -603,10 +608,20 @@ public class RegistryEntryService
     private void validateRegistryEntryType(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
         RegistryEntryType registryEntryType =
-            (RegistryEntryType) registryEntryTypeService
-            .findValidMetadataOrThrow(registryEntry.getBaseTypeName(),
-                                      registryEntry.getRegistryEntryTypeCode(),
-                                      registryEntry.getRegistryEntryTypeCodeName());
+                (RegistryEntryType) registryEntryTypeService
+                        .findValidMetadataOrThrow(registryEntry.getBaseTypeName(),
+                                registryEntry.getRegistryEntryTypeCode(),
+                                registryEntry.getRegistryEntryTypeCodeName());
         registryEntry.setRegistryEntryTypeCodeName(registryEntryType.getCodeName());
+    }
+
+    private void validateSignOff(SignOff incomingSignOff) {
+        // Assume value already set, as the deserialiser will enforce it.
+        SignOffMethod signOffMethod =
+                (SignOffMethod) signOffMethodService
+                        .findValidMetadataOrThrow(incomingSignOff.getBaseTypeName(),
+                                incomingSignOff.getSignOffMethodCode(),
+                                incomingSignOff.getSignOffMethodCodeName());
+        incomingSignOff.setSignOffMethodCodeName(signOffMethod.getCodeName());
     }
 }
