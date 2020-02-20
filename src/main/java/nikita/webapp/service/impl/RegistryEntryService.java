@@ -175,7 +175,7 @@ public class RegistryEntryService
     createSignOffAssociatedWithRegistryEntry(String systemId,
                                              SignOff signOff) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemId);
-        validateSignOff(signOff);
+        validateSignOffMethod(signOff);
         signOff.setReferenceRecord(registryEntry);
         signOff = signOffRepository.save(signOff);
         registryEntry.addReferenceSignOff(signOff);
@@ -615,7 +615,7 @@ public class RegistryEntryService
         registryEntry.setRegistryEntryTypeCodeName(registryEntryType.getCodeName());
     }
 
-    private void validateSignOff(SignOff incomingSignOff) {
+    private void validateSignOffMethod(SignOff incomingSignOff) {
         // Assume value already set, as the deserialiser will enforce it.
         SignOffMethod signOffMethod =
                 (SignOffMethod) signOffMethodService
