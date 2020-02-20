@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -55,9 +56,25 @@ public class SignOffDeserializer
 				     errors, true);
 	signOff.setSignOffMethod(entity);
 
-	// TODO handle referanseAvskrevetAv,
-	// referanseAvskrivesAvJournalpost and
-	// referanseAvskrivesAvKorrespondansepart.
+        // TODO handle referanseAvskrevetAv
+
+        // Deserialize referanseAvskrivesAvJournalpost
+        currentNode = objectNode.get(SIGN_OFF_REFERENCE_RECORD);
+        if (null != currentNode) {
+            signOff.setReferenceSignedOffRecordSystemID
+                (UUID.fromString(currentNode.textValue()));
+            objectNode.remove(SIGN_OFF_REFERENCE_RECORD);
+        } else {
+            errors.append(SIGN_OFF_REFERENCE_RECORD + " is missing. ");
+        }
+
+        // Deserialize referanseAvskrivesAvKorrespondansepart.
+        currentNode = objectNode.get(SIGN_OFF_REFERENCE_CORRESPONDENCE_PART);
+        if (null != currentNode) {
+            signOff.setReferenceSignedOffCorrespondencePartSystemID
+                (UUID.fromString(currentNode.textValue()));
+            objectNode.remove(SIGN_OFF_REFERENCE_CORRESPONDENCE_PART);
+        }
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

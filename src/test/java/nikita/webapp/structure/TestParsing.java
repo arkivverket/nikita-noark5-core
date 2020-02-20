@@ -1460,8 +1460,8 @@ public class TestParsing {
                 + ", \"avskrivningsdato\": \"1865-02-13T00:00:00+00:00\" "
                 + ", \"avskrivningsmaate\": { \"kode\": \"BY\", \"kodenavn\": \"Besvart med brev\" } "
                 //+", \"referanseAvskrevetAv\": \"?\" "
-                //+", \"referanseAvskrivesAvJournalpost\": \"?\" "
-                //+", \"referanseAvskrivesAvKorrespondansepart\": \"?\" "
+                +", \"referanseAvskrivesAvJournalpost\": \"909c1d62-5422-11ea-a529-9b91c0834dde\" "
+                +", \"referanseAvskrivesAvKorrespondansepart\": \"95c230b0-5422-11ea-8738-37155656d12d\" "
                 + "}";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonParser jsonParser =

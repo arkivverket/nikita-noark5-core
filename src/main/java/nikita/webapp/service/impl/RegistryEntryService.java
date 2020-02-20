@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
@@ -16,6 +17,7 @@ import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
 import nikita.common.repository.n5v5.secondary.ISignOffRepository;
 import nikita.common.repository.nikita.IUserRepository;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
@@ -28,6 +30,7 @@ import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryStatusService;
 import nikita.webapp.service.interfaces.metadata.IRegistryEntryTypeService;
 import nikita.webapp.service.interfaces.metadata.ISignOffMethodService;
+import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -53,6 +56,8 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.SIGN_OFF;
+import static nikita.common.config.N5ResourceMappings.SIGN_OFF_REFERENCE_RECORD;
+import static nikita.common.config.N5ResourceMappings.SIGN_OFF_REFERENCE_CORRESPONDENCE_PART;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
@@ -66,6 +71,7 @@ public class RegistryEntryService
 
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryService.class);
+    private ICorrespondencePartService correspondencePartService;
     private IPrecedenceService precedenceService;
     private IDocumentMediumService documentMediumService;
     private IRegistryEntryStatusService registryEntryStatusService;
@@ -82,6 +88,7 @@ public class RegistryEntryService
     public RegistryEntryService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            ICorrespondencePartService correspondencePartService,
             IPrecedenceService precedenceService,
             IDocumentMediumService documentMediumService,
             IRegistryEntryStatusService registryEntryStatusService,
@@ -95,6 +102,7 @@ public class RegistryEntryService
             IAdministrativeUnitService administrativeUnitService,
             ISignOffMethodService signOffMethodService) {
         super(entityManager, applicationEventPublisher);
+        this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
         this.documentMediumService = documentMediumService;
         this.registryEntryStatusService = registryEntryStatusService;
@@ -176,12 +184,81 @@ public class RegistryEntryService
                                              SignOff signOff) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemId);
         validateSignOffMethod(signOff);
+        updateSignOffReferences(signOff);
+
+        if (null == signOff.getReferenceSignedOffRecord()) {
+            String info = "Rejecting invalid reference in field "
+                + SIGN_OFF_REFERENCE_RECORD + ".";
+            logger.info(info);
+            throw new NikitaMalformedInputDataException(info);
+        }
+        //  This one is optional, but must be valid if set
+        if (null != signOff.getReferenceSignedOffCorrespondencePartSystemID()
+            && null == signOff.getReferenceSignedOffCorrespondencePart()) {
+            String info = "Rejecting invalid reference in field "
+                + SIGN_OFF_REFERENCE_CORRESPONDENCE_PART + ".";
+            logger.info(info);
+            throw new NikitaMalformedInputDataException(info);
+        }
+
         signOff.setReferenceRecord(registryEntry);
         signOff = signOffRepository.save(signOff);
         registryEntry.addReferenceSignOff(signOff);
         SignOffHateoas signOffHateoas = new SignOffHateoas(signOff);
         signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         return signOffHateoas;
+    }
+
+    private void updateSignOffReferences(SignOff signOff) {
+        RegistryEntry referenceRegistryEntry = null;
+        CorrespondencePart referenceCorrespondencePart = null;
+
+        UUID registryEntryID = signOff.getReferenceSignedOffRecordSystemID();
+        UUID partID = signOff.getReferenceSignedOffCorrespondencePartSystemID();
+
+        if (null == registryEntryID && null != partID) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                " CorrespondencePart " + partID.toString() +
+                " without providing RegistryEntry.";
+            logger.info(info);
+            throw new NikitaMalformedInputDataException(info);
+        }
+
+        // look up IDs before changing anything, to avoid changing
+        // instance if one of the IDs are unknown.
+        if (null != registryEntryID) {
+            // Will throw if registry entry is unknown
+            // TODO avoid UUID->String->UUID conversion
+            referenceRegistryEntry = findBySystemId(registryEntryID.toString());
+        }
+        if (null != partID) {
+            // Will throw if correspondence part is unknown
+            // TODO avoid UUID->String->UUID conversion
+            referenceCorrespondencePart =
+                correspondencePartService.findBySystemId(partID.toString());
+        }
+
+        if (null != referenceCorrespondencePart) {
+            if (!referenceCorrespondencePart.getReferenceRecord()
+                .equals(referenceRegistryEntry)) {
+                String info = INFO_CANNOT_FIND_OBJECT +
+                    " CorrespondencePart " + partID.toString() +
+                    " below RegistryEntry " +
+                    referenceRegistryEntry.getSystemId() + ".";
+                logger.info(info);
+                throw new NoarkEntityNotFoundException(info);
+            }
+            signOff.setReferenceSignedOffCorrespondencePart
+                (referenceCorrespondencePart);
+        } else {
+            signOff.setReferenceSignedOffCorrespondencePart(null);
+        }
+
+        if (null != registryEntryID && null != referenceRegistryEntry) {
+            signOff.setReferenceSignedOffRecord(referenceRegistryEntry);
+        } else {
+            signOff.setReferenceSignedOffRecord(null);
+        }
     }
 
     // All READ operations
@@ -357,15 +434,21 @@ public class RegistryEntryService
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
         SignOff existingSignOff = getSignOffOrThrow(signOffSystemID);
         if (null == existingSignOff.getReferenceRecord()
-            || existingSignOff.getReferenceRecord() != registryEntry) {
+            || ! existingSignOff.getReferenceRecord().equals(registryEntry)) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                " Conversion " + signOffSystemID +
-                " below DocumentObject " + systemID + ".";
+                " SignOff " + signOffSystemID +
+                " below RegistryEntry " + systemID + ".";
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
 
+        updateSignOffReferences(incomingSignOff);
+
         existingSignOff.setSignOffMethod(incomingSignOff.getSignOffMethod());
+        existingSignOff.setReferenceSignedOffRecordSystemID
+            (incomingSignOff.getReferenceSignedOffRecordSystemID());
+        existingSignOff.setReferenceSignedOffCorrespondencePartSystemID
+            (incomingSignOff.getReferenceSignedOffCorrespondencePartSystemID());
         existingSignOff.setReferenceSignedOffRecord
             (incomingSignOff.getReferenceSignedOffRecord());
         existingSignOff.setReferenceSignedOffCorrespondencePart
@@ -412,7 +495,7 @@ public class RegistryEntryService
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
         SignOff signOff = getSignOffOrThrow(signOffSystemID);
         if (null == signOff.getReferenceRecord()
-            || signOff.getReferenceRecord() != registryEntry) {
+            || ! signOff.getReferenceRecord().equals(registryEntry)) {
             String info = INFO_CANNOT_FIND_OBJECT +
                 " Conversion " + signOffSystemID +
                 " below DocumentObject " + systemID + ".";
@@ -582,7 +665,7 @@ public class RegistryEntryService
 
     protected SignOff getSignOffOrThrow(@NotNull String signOffSystemId) {
         SignOff signOff = signOffRepository
-	    .findBySystemId(UUID.fromString(signOffSystemId));
+            .findBySystemId(UUID.fromString(signOffSystemId));
         if (signOff == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " SignOff, using systemId " +

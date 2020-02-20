@@ -46,6 +46,8 @@ public class SignOffHateoasHandler
                                IHateoasNoarkObject hateoasNoarkObject) {
         SignOff signOff = (SignOff) entity;
         addRegistryEntry(signOff, hateoasNoarkObject);
+        addReferenceSignedOffRegistryEntry(signOff, hateoasNoarkObject);
+        addReferenceSignedOffCorrespondenceParty(signOff, hateoasNoarkObject);
         addSignOffMethod(signOff, hateoasNoarkObject);
     }
 
@@ -63,6 +65,28 @@ public class SignOffHateoasHandler
             new Link(getOutgoingAddress() +
                      HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getReferenceRecord().getSystemId(),
                      REL_CASE_HANDLING_REGISTRY_ENTRY));
+    }
+
+    @Override
+    public void addReferenceSignedOffRegistryEntry(ISignOffEntity entity,
+                                  IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != entity.getReferenceSignedOffRecord()) {
+            hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() +
+                     HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getReferenceSignedOffRecord().getSystemId(),
+                     REL_CASE_HANDLING_SIGN_OFF_REFERENCE_RECORD));
+        }
+    }
+
+    @Override
+    public void addReferenceSignedOffCorrespondenceParty
+        (ISignOffEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != entity.getReferenceSignedOffCorrespondencePart()) {
+            hateoasNoarkObject.addLink(entity,
+                new Link(getOutgoingAddress() +
+                     HREF_BASE_CASE_HANDLING + SLASH + CORRESPONDENCE_PART + SLASH + entity.getReferenceSignedOffCorrespondencePart().getSystemId(),
+                     REL_FONDS_STRUCTURE_CORRESPONDENCE_PART));
+        }
     }
 
     @Override

@@ -305,6 +305,8 @@ public final class N5ResourceMappings {
     public static final String SIGN_OFF_DATE = "avskrivningsdato";
     public static final String SIGN_OFF_BY = "avskrevetAv";
     public static final String SIGN_OFF_METHOD = "avskrivningsmaate";
+    public static final String SIGN_OFF_REFERENCE_RECORD = "referanseAvskrivesAvJournalpost";
+    public static final String SIGN_OFF_REFERENCE_CORRESPONDENCE_PART = "referanseAvskrivesAvKorrespondansepart";
 
     // DocumentFlow
     public static final String DOCUMENT_FLOW = "dokumentflyt";

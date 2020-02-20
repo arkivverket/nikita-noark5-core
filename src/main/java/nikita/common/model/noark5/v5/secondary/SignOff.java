@@ -19,6 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -68,15 +69,27 @@ public class SignOff
     /**
      * M215 referanseAvskrivesAvJournalpost
      */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_record_id")
-    private RegistryEntry referenceSignedOffRecord;
+    @Column(name = "reference_record_id")
+    @Audited
+    @JsonProperty(SIGN_OFF_REFERENCE_RECORD)
+    private UUID referenceSignedOffRecordSystemID;
 
     /**
      * M??? - referanseAvskrivesAvKorrespondansepart
      * Note this is missing in Noark v5. No Metadata number.
      * See https://github.com/arkivverket/schemas/issues/21
      */
+    @Column(name = "reference_correspondence_part_id")
+    @Audited
+    @JsonProperty(SIGN_OFF_REFERENCE_CORRESPONDENCE_PART)
+    private UUID referenceSignedOffCorrespondencePartSystemID;
+
+    // Link to reference registry entry if present
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_record_id")
+    private RegistryEntry referenceSignedOffRecord;
+
+    // Link to reference correspondence part if present
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pk_correspondence_part_id")
     private CorrespondencePart referenceSignedOffCorrespondencePart;
@@ -155,7 +168,31 @@ public class SignOff
 
     @Override
     public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_SIGN_OFF;
+        return REL_CASE_HANDLING_SIGN_OFF;
+    }
+
+    @Override
+    public UUID getReferenceSignedOffRecordSystemID() {
+        return referenceSignedOffRecordSystemID;
+    }
+
+    @Override
+    public void setReferenceSignedOffRecordSystemID(
+            UUID referenceSignedOffRecordSystemID) {
+        this.referenceSignedOffRecordSystemID =
+            referenceSignedOffRecordSystemID;
+    }
+
+    @Override
+    public UUID getReferenceSignedOffCorrespondencePartSystemID() {
+        return referenceSignedOffCorrespondencePartSystemID;
+    }
+
+    @Override
+    public void setReferenceSignedOffCorrespondencePartSystemID(
+            UUID referenceSignedOffCorrespondencePartSystemID) {
+        this.referenceSignedOffCorrespondencePartSystemID =
+                referenceSignedOffCorrespondencePartSystemID;
     }
 
     @Override

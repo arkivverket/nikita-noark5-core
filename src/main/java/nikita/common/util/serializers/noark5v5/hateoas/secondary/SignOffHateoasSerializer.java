@@ -47,9 +47,15 @@ public class SignOffHateoasSerializer
                           signOffEntity.getSignOffBy());
             printNullableMetadata(jgen, SIGN_OFF_METHOD,
                                   signOffEntity.getSignOffMethod());
-            // TODO handle referanseAvskrevetAv,
-            // referanseAvskrivesAvJournalpost and
-            // referanseAvskrivesAvKorrespondansepart.
+            // TODO handle referanseAvskrevetAv
+            if (null != signOffEntity.getReferenceSignedOffRecordSystemID()) {
+                print(jgen, SIGN_OFF_REFERENCE_RECORD,
+                      signOffEntity.getReferenceSignedOffRecordSystemID().toString());
+            }
+            if (null != signOffEntity.getReferenceSignedOffCorrespondencePartSystemID()) {
+                print(jgen, SIGN_OFF_REFERENCE_CORRESPONDENCE_PART,
+                      signOffEntity.getReferenceSignedOffCorrespondencePartSystemID().toString());
+            }
         }
         printHateoasLinks(jgen, signOffHateoas.getLinks(signOffEntity));
         jgen.writeEndObject();
