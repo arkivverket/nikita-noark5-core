@@ -26,13 +26,7 @@ public interface ISeriesHateoasHandler
     void addSeriesSuccessor(ISystemId entity, 
                             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewSeriesSuccessor(ISystemId entity, 
-                            IHateoasNoarkObject hateoasNoarkObject);
-
     void addSeriesPrecursor(ISystemId entity, 
-                            IHateoasNoarkObject hateoasNoarkObject);
-
-    void addNewSeriesPrecursor(ISystemId entity, 
                             IHateoasNoarkObject hateoasNoarkObject);
 
     void addRegistration(ISystemId entity, 

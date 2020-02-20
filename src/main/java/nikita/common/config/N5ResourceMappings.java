@@ -78,6 +78,8 @@ public final class N5ResourceMappings {
     public static final String SERIES_STATUS = "arkivdelstatus";
     public static final String SERIES_START_DATE = "arkivperiodeStartDato";
     public static final String SERIES_END_DATE = "arkivperiodeSluttDato";
+    public static final String SERIES_ASSOCIATE_AS_PRECURSOR = "referanseForloeper";
+    public static final String SERIES_ASSOCIATE_AS_SUCCESSOR = "referanseArvtaker";
     public static final String SERIES_SUCCESSOR = "arvtager";
     public static final String SERIES_PRECURSOR = "forloeper";
 

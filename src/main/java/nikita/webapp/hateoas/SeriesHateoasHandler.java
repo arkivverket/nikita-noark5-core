@@ -48,9 +48,7 @@ public class SeriesHateoasHandler
         addCaseFile(entity, hateoasNoarkObject);
         addClassificationSystem(entity, hateoasNoarkObject);
         addSeriesSuccessor(entity, hateoasNoarkObject);
-        addNewSeriesSuccessor(entity, hateoasNoarkObject);
         addSeriesPrecursor(entity, hateoasNoarkObject);
-        addNewSeriesPrecursor(entity, hateoasNoarkObject);
         addFonds(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
@@ -82,7 +80,7 @@ public class SeriesHateoasHandler
      * associated successor. In the example below 5431 is the systemID of the
      * successor Series object.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/5431"
+     * "../hateoas-api/arkivstruktur/arkivdel/5431"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/nestearkivdel/"
      *
      * @param entity             series
@@ -97,17 +95,6 @@ public class SeriesHateoasHandler
                     HREF_BASE_SERIES + SLASH + series.getReferenceSuccessor().getSystemId(),
                     REL_FONDS_STRUCTURE_SUCCESSOR));
         }
-    }
-
-    @Override
-    /**
-     * Associate an existing Series (A) as the successor of another existing Series (B). (A) becomes the
-     * successor to (B). A is identified first, B is identified through a ref link (PUT)
-     */
-    public void addNewSeriesSuccessor(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_SERIES_SUCCESSOR + SLASH,
-                REL_FONDS_STRUCTURE_NEW_SUCCESSOR, false));
     }
 
     /**
@@ -131,18 +118,6 @@ public class SeriesHateoasHandler
                     HREF_BASE_SERIES + SLASH + series.getReferencePrecursor().getSystemId(),
                     REL_FONDS_STRUCTURE_PRECURSOR));
         }
-    }
-
-    @Override
-    /**
-     * Associate an existing Series (A) as the precursor  of another existing Series (B). (A) becomes the
-     * precursor to (B). A is identified first, B is identified through a ref link (PUT)
-     */
-    public void addNewSeriesPrecursor(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_SERIES_PRECURSOR + SLASH,
-                REL_FONDS_STRUCTURE_NEW_PRECURSOR,
-                false));
     }
 
     @Override

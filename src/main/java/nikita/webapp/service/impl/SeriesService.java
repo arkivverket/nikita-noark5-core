@@ -12,6 +12,7 @@ import nikita.common.repository.n5v5.ISeriesRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.common.util.exceptions.NoarkInvalidStructureException;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
@@ -257,11 +258,57 @@ public class SeriesService
             existingSeries.setDocumentMediumCodeName(
                     incomingSeries.getDocumentMediumCodeName());
         }
+
+        existingSeries.setReferencePrecursorSystemID
+            (incomingSeries.getReferencePrecursorSystemID());
+        existingSeries.setReferenceSuccessorSystemID
+            (incomingSeries.getReferenceSuccessorSystemID());
+        updateSeriesReferences(existingSeries);
+
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingSeries.setVersion(version);
         seriesRepository.save(existingSeries);
         return existingSeries;
+    }
+
+    @Override
+    public void updateSeriesReferences(Series series) {
+        if (null != series.getReferencePrecursorSystemID()) {
+            Series referenceSeries = seriesRepository.
+                findBySystemId(series.getReferencePrecursorSystemID());
+            if (null != referenceSeries) {
+                if (null != referenceSeries.getReferenceSuccessorSystemID()) {
+                    String info = "not allowed to set precursor to series with existing successor";
+                    throw new NikitaMalformedInputDataException(info);
+                }
+                referenceSeries
+                    .setReferenceSuccessorSystemID(series.getId());
+                referenceSeries.setReferenceSuccessor(series);
+            }
+            // Will set reference to null if series with SystemID not found
+            series.setReferencePrecursor(referenceSeries);
+        } else {
+            series.setReferencePrecursor(null);
+        }
+
+        if (null != series.getReferenceSuccessorSystemID()) {
+            Series referenceSeries = seriesRepository.
+                findBySystemId(series.getReferenceSuccessorSystemID());
+            if (null != referenceSeries) {
+                if (null != referenceSeries.getReferencePrecursorSystemID()) {
+                    String info = "not allowed to set successor to series with existing precursor";
+                    throw new NikitaMalformedInputDataException(info);
+                }
+                referenceSeries
+                    .setReferencePrecursorSystemID(series.getId());
+                referenceSeries.setReferencePrecursor(series);
+            }
+            // Will set reference to null if series with SystemID not found
+            series.setReferenceSuccessor(referenceSeries);
+        } else {
+            series.setReferenceSuccessor(null);
+        }
     }
 
     // All DELETE operations

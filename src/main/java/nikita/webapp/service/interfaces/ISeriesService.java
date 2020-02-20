@@ -54,6 +54,8 @@ public interface ISeriesService {
                         @NotNull final Long version,
                         @NotNull final Series incomingSeries);
 
+    void updateSeriesReferences(Series series);
+
     // All DELETE operations
     void deleteEntity(@NotNull String systemId);
 
