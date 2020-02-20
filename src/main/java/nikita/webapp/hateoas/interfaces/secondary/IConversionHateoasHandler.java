@@ -10,4 +10,6 @@ public interface IConversionHateoasHandler
     void addDocumentObject(IConversionEntity conversion,
                            IHateoasNoarkObject hateoasNoarkObject);
 
+    void addFormat(IConversionEntity conversion,
+                   IHateoasNoarkObject hateoasNoarkObject);
 }
