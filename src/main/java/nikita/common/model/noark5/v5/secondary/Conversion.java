@@ -1,11 +1,17 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
 import nikita.common.model.noark5.v5.metadata.Format;
+import nikita.common.util.deserialisers.secondary.ConversionDeserializer;
+import nikita.webapp.hateoas.secondary.ConversionHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -18,6 +24,9 @@ import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CONVERSION)
+@JsonDeserialize(using = ConversionDeserializer.class)
+@HateoasPacker(using = ConversionHateoasHandler.class)
+@HateoasObject(using = ConversionHateoas.class)
 public class Conversion
         extends SystemIdEntity
         implements IConversionEntity {
