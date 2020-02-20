@@ -55,7 +55,7 @@ public class ODataService
         implements IODataService {
 
     private final Logger logger =
-            LoggerFactory.getLogger(ODataController.class);
+            LoggerFactory.getLogger(ODataService.class);
 
     private final Pattern pairRegex = Pattern.compile("\\/" + REGEX_UUID + "\\/");
     private final EntityManager entityManager;

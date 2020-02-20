@@ -56,7 +56,7 @@ public class DocumentDescriptionService
         implements IDocumentDescriptionService {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(FileService.class);
+            LoggerFactory.getLogger(DocumentDescriptionService.class);
 
     private DocumentObjectService documentObjectService;
     private IDocumentDescriptionRepository documentDescriptionRepository;
