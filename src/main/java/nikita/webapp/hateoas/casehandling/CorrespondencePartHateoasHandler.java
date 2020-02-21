@@ -1,5 +1,6 @@
 package nikita.webapp.hateoas.casehandling;
 
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
@@ -24,9 +25,25 @@ public class CorrespondencePartHateoasHandler
         implements ICorrespondencePartHateoasHandler {
 
     @Override
+    public void addEntityLinks(ISystemId entity,
+                               IHateoasNoarkObject hateoasNoarkObject) {
+        addRecord(entity, hateoasNoarkObject);
+        addCorrespondencePartType(entity, hateoasNoarkObject);
+    }
+
+    @Override
     public void addEntityLinksOnTemplate(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         addCorrespondencePartType(entity, hateoasNoarkObject);
+    }
+
+    @Override
+    public void addRecord(INoarkEntity entity,
+                          IHateoasNoarkObject hateoasNoarkObject) {
+        CorrespondencePart correspondencePart = (CorrespondencePart) entity;
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + correspondencePart.getReferenceRecord().getSystemId(),
+                REL_FONDS_STRUCTURE_RECORD));
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.InheritanceType.JOINED;
+import static nikita.common.config.Constants.FOREIGN_KEY_RECORD_PK;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART;
 
@@ -42,9 +43,10 @@ public class CorrespondencePart
     @Audited
     private String correspondencePartTypeCodeName;
 
-    // Links to Record
-    @ManyToMany(mappedBy = "referenceCorrespondencePart")
-    private List<Record> referenceRecord = new ArrayList<>();
+    // Link to Record
+    @ManyToOne
+    @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
+    private Record referenceRecord;
 
     @Override
     public CorrespondencePartType getCorrespondencePartType() {
@@ -69,16 +71,12 @@ public class CorrespondencePart
         }
     }
 
-    public List<Record> getReferenceRecord() {
+    public Record getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
+    public void setReferenceRecord(Record referenceRecord) {
         this.referenceRecord = referenceRecord;
-    }
-
-    public void addRecord(Record referenceRecord) {
-        this.referenceRecord.add(referenceRecord);
     }
 
     @Override

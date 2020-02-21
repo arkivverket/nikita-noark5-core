@@ -124,14 +124,8 @@ public class Record
     private List<Part> referencePart = new ArrayList<>();
 
     // Links to CorrespondencePart
-    @ManyToMany
-    @JoinTable(name = TABLE_RECORD_CORRESPONDENCE_PART,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_CORRESPONDENCE_PART_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    @OneToMany(mappedBy = "referenceRecord",
+            cascade = ALL, orphanRemoval = true)
     private List<CorrespondencePart>
             referenceCorrespondencePart = new ArrayList<>();
 
