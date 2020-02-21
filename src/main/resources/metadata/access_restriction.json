@@ -1,0 +1,52 @@
+{
+  "AccessRestriction": [
+    {
+      "code": "B",
+      "codename": "Begrenset etter sikkerhetsinstruksen"
+    },
+    {
+      "code": "K",
+      "codename": "Konfidensielt etter sikkerhetsinstruksen"
+    },
+    {
+      "code": "H",
+      "codename": "Hemmelig etter sikkerhetsinstruksen"
+    },
+    {
+      "code": "F",
+      "codename": "Fortrolig etter beskyttelsesinstruksen"
+    },
+    {
+      "code": "SF",
+      "codename": "Strengt fortrolig etter beskyttelsesinstruksen"
+    },
+    {
+      "code": "5",
+      "codename": "Unntatt etter offentlighetsloven § 5"
+    },
+    {
+      "code": "5a",
+      "codename": "Unntatt etter offentlighetsloven § 5a"
+    },
+    {
+      "code": "6",
+      "codename": "Unntatt etter offentlighetsloven § 6"
+    },
+    {
+      "code": "11",
+      "codename": "Unntatt etter offentlighetsloven § 11"
+    },
+    {
+      "code": "XX",
+      "codename": "Midlertidig sperret"
+    },
+    {
+      "code": "P",
+      "codename": "Personalsaker"
+    },
+    {
+      "code": "KL",
+      "codename": "Klientsaker"
+    }
+  ]
+}
