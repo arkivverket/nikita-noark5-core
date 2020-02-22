@@ -44,7 +44,7 @@ public class RecordNoteHateoasHandler
                                 IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemId() + SLASH + DOCUMENT_FLOW,
-                REL_FONDS_STRUCTURE_DOCUMENT_FLOW));
+                REL_CASE_HANDLING_DOCUMENT_FLOW));
     }
 
     /**
@@ -63,6 +63,6 @@ public class RecordNoteHateoasHandler
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW,
-                REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW));
+                REL_CASE_HANDLING_NEW_DOCUMENT_FLOW));
     }
 }

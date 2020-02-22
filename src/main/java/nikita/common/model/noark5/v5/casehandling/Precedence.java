@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_PRECEDENCE;
+import static nikita.common.config.Constants.REL_CASE_HANDLING_PRECEDENCE;
 import static nikita.common.config.Constants.TABLE_PRECEDENCE;
 import static nikita.common.config.N5ResourceMappings.PRECEDENCE;
 
@@ -131,7 +131,7 @@ public class Precedence
 
     @Override
     public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_PRECEDENCE;
+        return REL_CASE_HANDLING_PRECEDENCE;
     }
 
     @Override
