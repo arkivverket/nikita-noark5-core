@@ -51,14 +51,14 @@ public class RegistryEntryHateoasHandler
     public void addPrecedence(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + PRECEDENCE + SLASH,
-                REL_FONDS_STRUCTURE_PRECEDENCE, false));
+                REL_CASE_HANDLING_PRECEDENCE, false));
     }
 
     @Override
     public void addNewPrecedence(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_PRECEDENCE + SLASH,
-                REL_FONDS_STRUCTURE_NEW_PRECEDENCE, false));
+                REL_CASE_HANDLING_NEW_PRECEDENCE, false));
     }
 
     @Override
@@ -79,14 +79,14 @@ public class RegistryEntryHateoasHandler
     public void addDocumentFlow(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + DOCUMENT_FLOW + SLASH,
-                REL_FONDS_STRUCTURE_DOCUMENT_FLOW, false));
+                REL_CASE_HANDLING_DOCUMENT_FLOW, false));
     }
 
     @Override
     public void addNewDocumentFlow(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW + SLASH,
-                REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW, false));
+                REL_CASE_HANDLING_NEW_DOCUMENT_FLOW, false));
     }
 
     // Metadata entries

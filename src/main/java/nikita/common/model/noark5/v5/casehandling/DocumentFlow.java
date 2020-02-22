@@ -134,7 +134,7 @@ public class DocumentFlow
 
     @Override
     public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_DOCUMENT_FLOW;
+        return REL_CASE_HANDLING_DOCUMENT_FLOW;
     }
 
     @Override

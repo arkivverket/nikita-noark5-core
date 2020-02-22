@@ -513,9 +513,9 @@ public final class Constants {
             REL_FONDS_STRUCTURE + NEW_DOCUMENT_DESCRIPTION + SLASH;
 
     // Precedence
-    public static final String REL_FONDS_STRUCTURE_PRECEDENCE =
+    public static final String REL_CASE_HANDLING_PRECEDENCE =
             REL_CASE_HANDLING + PRECEDENCE + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_PRECEDENCE =
+    public static final String REL_CASE_HANDLING_NEW_PRECEDENCE =
             REL_CASE_HANDLING + NEW_PRECEDENCE + SLASH;
 
     // SignOff
@@ -527,9 +527,9 @@ public final class Constants {
             NIKITA_CONFORMANCE_REL + SIGN_OFF_REFERENCE_RECORD + SLASH;
 
     // DocumentFlow
-    public static final String REL_FONDS_STRUCTURE_DOCUMENT_FLOW =
+    public static final String REL_CASE_HANDLING_DOCUMENT_FLOW =
             REL_CASE_HANDLING + DOCUMENT_FLOW + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_DOCUMENT_FLOW =
+    public static final String REL_CASE_HANDLING_NEW_DOCUMENT_FLOW =
             REL_CASE_HANDLING + NEW_DOCUMENT_FLOW + SLASH;
 
     public static final String REL_FONDS_STRUCTURE_CORRESPONDENCE_PART =
