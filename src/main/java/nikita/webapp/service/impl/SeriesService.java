@@ -37,6 +37,8 @@ import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_O
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.SERIES_STATUS_CLOSED_CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.updateDeletion;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDeletion;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -115,6 +117,7 @@ public class SeriesService
     @Override
     public Series save(Series series) {
         validateDocumentMedium(documentMediumService, series);
+        validateDeletion(series.getReferenceDeletion());
         if (null == series.getSeriesStatusCode()) {
             checkSeriesStatusUponCreation(series);
         }
@@ -249,6 +252,7 @@ public class SeriesService
                                @NotNull final Series incomingSeries) {
         Series existingSeries = getSeriesOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
+        updateDeletion(incomingSeries, existingSeries);
         updateTitleAndDescription(incomingSeries, existingSeries);
         if (null != incomingSeries.getDocumentMediumCode()) {
             existingSeries.setDocumentMediumCode(

@@ -2,6 +2,7 @@ package nikita.common.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
@@ -917,30 +918,37 @@ public final class CommonUtils {
 
             public static Deletion deserialiseDeletion(ObjectNode objectNode, StringBuilder errors) {
                 Deletion deletion = null;
-                JsonNode deletionNode = objectNode.get(DELETION);
-                if (deletionNode != null) {
+                JsonNode currentNode = objectNode.get(DELETION);
+                if (null != currentNode
+                    && !currentNode.equals(NullNode.getInstance())) {
                     deletion = new Deletion();
-                    deserialiseDeletionEntity(deletion, deletionNode.deepCopy(),
+                    deserialiseDeletionEntity(deletion, currentNode.deepCopy(),
                                               errors);
-                    objectNode.remove(DELETION);
                 }
+                objectNode.remove(DELETION);
                 return deletion;
             }
 
             public static void deserialiseDeletionEntity(IDeletionEntity deletionEntity, ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize deletionBy
                 JsonNode currentNode = objectNode.get(DELETION_BY);
-                if (null != currentNode) {
+                if (null != currentNode
+                    && !currentNode.equals(NullNode.getInstance())) {
                     deletionEntity.setDeletionBy(currentNode.textValue());
                     objectNode.remove(DELETION_BY);
+                } else {
+                    errors.append(DELETION_BY + " is missing. ");
                 }
 
+                // TODO referanseSlettetAv
+
                 // Deserialize deletionType
-                currentNode = objectNode.get(DELETION_TYPE);
-                if (null != currentNode) {
-                    deletionEntity.setDeletionType(currentNode.textValue());
-                    objectNode.remove(DELETION_TYPE);
-                }
+                DeletionType entity = (DeletionType)
+                    deserialiseMetadataValue(objectNode,
+                                             DELETION_TYPE,
+                                             new DeletionType(),
+                                             errors, true);
+                deletionEntity.setDeletionType(entity);
 
                 // Deserialize deletionDate
                 deletionEntity.setDeletionDate(deserializeDateTime(DELETION_DATE, objectNode, errors));
@@ -2562,8 +2570,10 @@ public final class CommonUtils {
                         if (deletion.getDeletionBy() != null) {
                             jgen.writeStringField(DELETION_BY, deletion.getDeletionBy());
                         }
-                        if (deletion.getDeletionType() != null) {
-                            jgen.writeStringField(DELETION_TYPE, deletion.getDeletionType());
+                        if (null != deletion.getDeletionType()) {
+                            jgen.writeObjectFieldStart(DELETION_TYPE);
+                            printCode(jgen, deletion.getDeletionType());
+                            jgen.writeEndObject();
                         }
                         if (deletion.getDeletionDate() != null) {
                             jgen.writeStringField(DELETION_DATE,

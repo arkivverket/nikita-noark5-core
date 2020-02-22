@@ -1,10 +1,12 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IDeletionEntity;
+import nikita.common.model.noark5.v5.metadata.DeletionType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_DELETION;
-import static nikita.common.config.N5ResourceMappings.DELETION;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -31,26 +33,37 @@ public class Deletion
     private static final long serialVersionUID = 1L;
 
     /**
-     * M089 - slettingstype (xs:string)
+     * M??? - slettingstype code (xs:string)
      */
-    @Column(name = "deletion_type")
+    @Column(name = "deletion_type_code")
     @Audited
-    private String deletionType;
+    private String deletionTypeCode;
+
+    /**
+     * M089 - slettingstype code name (xs:string)
+     */
+    @Column(name = "deletion_type_code_name")
+    @Audited
+    private String deletionTypeCodeName;
 
     /**
      * M614 - slettetAv (xs:string)
      */
-    @Column(name = "deletion_by")
+    @Column(name = DELETION_BY_ENG)
     @Audited
+    @JsonProperty(DELETION_BY)
     private String deletionBy;
 
     /**
      * M613 slettetDato (xs:dateTime)
      */
-    @Column(name = "deletion_date")
+    @Column(name = DELETION_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(DELETION_DATE)
     private OffsetDateTime deletionDate;
+
+    // TODO add 'referanseSlettetAv'
 
     // Links to Series
     @OneToMany(mappedBy = "referenceDeletion")
@@ -61,12 +74,23 @@ public class Deletion
     private List<DocumentDescription>
             referenceDocumentDescription = new ArrayList<>();
 
-    public String getDeletionType() {
+    public DeletionType getDeletionType() {
+        if (null == deletionTypeCode)
+            return null;
+        DeletionType deletionType = new DeletionType();
+        deletionType.setCode(deletionTypeCode);
+        deletionType.setCodeName(deletionTypeCodeName);
         return deletionType;
     }
 
-    public void setDeletionType(String deletionType) {
-        this.deletionType = deletionType;
+    public void setDeletionType(DeletionType deletionType) {
+        if (null != deletionType) {
+            this.deletionTypeCode = deletionType.getCode();
+            this.deletionTypeCodeName = deletionType.getCodeName();
+        } else {
+            this.deletionTypeCode = null;
+            this.deletionTypeCodeName = null;
+        }
     }
 
     public String getDeletionBy() {
@@ -117,7 +141,8 @@ public class Deletion
         return "Deletion{" + super.toString() +
                 "deletionDate=" + deletionDate +
                 ", deletionBy='" + deletionBy + '\'' +
-                ", deletionType='" + deletionType + '\'' +
+                ", deletionTypeCode='" + deletionTypeCode + '\'' +
+                ", deletionTypeCodeName='" + deletionTypeCodeName + '\'' +
                 '}';
     }
 
@@ -137,7 +162,8 @@ public class Deletion
                 .appendSuper(super.equals(other))
                 .append(deletionDate, rhs.deletionDate)
                 .append(deletionBy, rhs.deletionBy)
-                .append(deletionType, rhs.deletionType)
+                .append(deletionTypeCode, rhs.deletionTypeCode)
+                .append(deletionTypeCodeName, rhs.deletionTypeCodeName)
                 .isEquals();
     }
 
@@ -147,7 +173,8 @@ public class Deletion
                 .appendSuper(super.hashCode())
                 .append(deletionDate)
                 .append(deletionBy)
-                .append(deletionType)
+                .append(deletionTypeCode)
+                .append(deletionTypeCodeName)
                 .toHashCode();
     }
 }
