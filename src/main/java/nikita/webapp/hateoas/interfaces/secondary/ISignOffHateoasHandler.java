@@ -10,6 +10,12 @@ public interface ISignOffHateoasHandler
     void addRegistryEntry(ISignOffEntity signOff,
                           IHateoasNoarkObject hateoasNoarkObject);
 
+    void addReferenceSignedOffRegistryEntry
+        (ISignOffEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+
+    void addReferenceSignedOffCorrespondenceParty
+        (ISignOffEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+
     void addSignOffMethod(ISignOffEntity signOff,
                           IHateoasNoarkObject hateoasNoarkObject);
 }

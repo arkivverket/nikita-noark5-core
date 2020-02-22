@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.SignOffMethod;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 // TODO check if this inheritence is ok.
 public interface ISignOffEntity
@@ -29,6 +30,16 @@ public interface ISignOffEntity
     SignOffMethod getSignOffMethod();
 
     void setSignOffMethod(SignOffMethod signOffMethod);
+
+    UUID getReferenceSignedOffRecordSystemID();
+
+    void setReferenceSignedOffRecordSystemID(
+            UUID referenceSignedOffRecordSystemID);
+
+    UUID getReferenceSignedOffCorrespondencePartSystemID();
+
+    void setReferenceSignedOffCorrespondencePartSystemID(
+            UUID referenceSignedOffCorrespondencePartSystemID);
 
     RegistryEntry getReferenceSignedOffRecord();
 

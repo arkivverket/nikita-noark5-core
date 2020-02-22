@@ -65,14 +65,14 @@ public class RegistryEntryHateoasHandler
     public void addSignOff(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + SIGN_OFF + SLASH,
-                REL_FONDS_STRUCTURE_SIGN_OFF, false));
+                REL_CASE_HANDLING_SIGN_OFF, false));
     }
 
     @Override
     public void addNewSignOff(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemId() + SLASH + NEW_SIGN_OFF + SLASH,
-                REL_FONDS_STRUCTURE_NEW_SIGN_OFF, false));
+                REL_CASE_HANDLING_NEW_SIGN_OFF, false));
     }
 
     @Override

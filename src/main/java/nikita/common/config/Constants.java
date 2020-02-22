@@ -519,10 +519,12 @@ public final class Constants {
             REL_CASE_HANDLING + NEW_PRECEDENCE + SLASH;
 
     // SignOff
-    public static final String REL_FONDS_STRUCTURE_SIGN_OFF =
+    public static final String REL_CASE_HANDLING_SIGN_OFF =
             REL_CASE_HANDLING + SIGN_OFF + SLASH;
-    public static final String REL_FONDS_STRUCTURE_NEW_SIGN_OFF =
+    public static final String REL_CASE_HANDLING_NEW_SIGN_OFF =
             REL_CASE_HANDLING + NEW_SIGN_OFF + SLASH;
+    public static final String REL_CASE_HANDLING_SIGN_OFF_REFERENCE_RECORD =
+            NIKITA_CONFORMANCE_REL + SIGN_OFF_REFERENCE_RECORD + SLASH;
 
     // DocumentFlow
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_FLOW =
