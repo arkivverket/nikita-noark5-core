@@ -47,6 +47,8 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.updateDeletion;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDeletion;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 
 @Service
@@ -232,6 +234,7 @@ public class DocumentDescriptionService
         validateDocumentMedium(documentMediumService, documentDescription);
         validateDocumentStatus(documentDescription);
         validateDocumentType(documentDescription);
+        validateDeletion(documentDescription.getReferenceDeletion());
         documentDescription.setAssociationDate(OffsetDateTime.now());
         documentDescription.setAssociatedBy(getUser());
         return documentDescriptionRepository.save(documentDescription);
@@ -361,6 +364,8 @@ public class DocumentDescriptionService
             @NotNull DocumentDescription incomingDocumentDescription) {
         DocumentDescription existingDocumentDescription =
                 getDocumentDescriptionOrThrow(systemId);
+        updateDeletion(incomingDocumentDescription,
+                existingDocumentDescription);
         updateTitleAndDescription(incomingDocumentDescription,
                 existingDocumentDescription);
         updateDocumentDescription(incomingDocumentDescription,
