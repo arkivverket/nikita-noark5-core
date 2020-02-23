@@ -498,10 +498,10 @@ public final class N5ResourceMappings {
     public static final String CROSS_REFERENCE_ENG = "kryssreferanse";
     public static final String CROSS_REFERENCE_FILE_ENG = "referanseTilMappe";
     public static final String CROSS_REFERENCE_RECORD_ENG = "referanseTilRegistrering";
-    public static final String DELETION_BY_ENG = "slettetAv";
-    public static final String DELETION_DATE_ENG = "slettetDato";
+    public static final String DELETION_BY_ENG = "deletion_by";
+    public static final String DELETION_DATE_ENG = "deletion_date";
     public static final String DELETION_ENG = "sletting";
-    public static final String DELETION_TYPE_ENG = "slettingstype";
+    public static final String DELETION_TYPE_ENG = "deletion_type";
     public static final String DESCRIPTION_ENG = "description";
     public static final String DISPOSAL_AUTHORITY_ENG = "kassasjonshjemmel";
     public static final String DISPOSAL_DATE_ENG = "kassasjonsdato";
@@ -727,10 +727,10 @@ public final class N5ResourceMappings {
     public static final String CROSS_REFERENCE_ENG_OBJECT = "kryssreferanse";
     public static final String CROSS_REFERENCE_FILE_ENG_OBJECT = "referanseTilMappe";
     public static final String CROSS_REFERENCE_RECORD_ENG_OBJECT = "referanseTilRegistrering";
-    public static final String DELETION_BY_ENG_OBJECT = "slettetAv";
-    public static final String DELETION_DATE_ENG_OBJECT = "slettetDato";
+    public static final String DELETION_BY_ENG_OBJECT = "deletionBy";
+    public static final String DELETION_DATE_ENG_OBJECT = "deletionDate";
     public static final String DELETION_ENG_OBJECT = "sletting";
-    public static final String DELETION_TYPE_ENG_OBJECT = "slettingstype";
+    public static final String DELETION_TYPE_ENG_OBJECT = "deletionType";
     public static final String DESCRIPTION_ENG_OBJECT = "description";
     public static final String DISPOSAL_AUTHORITY_ENG_OBJECT = "kassasjonshjemmel";
     public static final String DISPOSAL_DATE_ENG_OBJECT = "kassasjonsdato";
