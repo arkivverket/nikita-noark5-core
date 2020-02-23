@@ -8,11 +8,13 @@ import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
 import nikita.common.model.noark5.v5.metadata.SignOffMethod;
+import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
 import nikita.common.repository.n5v5.secondary.ISignOffRepository;
@@ -21,6 +23,7 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IDocumentFlowHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ISignOffHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
@@ -28,6 +31,7 @@ import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
+import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -67,10 +71,12 @@ public class RegistryEntryService
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryService.class);
     private ICorrespondencePartService correspondencePartService;
+    private IDocumentFlowService documentFlowService;
     private IPrecedenceService precedenceService;
     private IMetadataService metadataService;
     private IRegistryEntryRepository registryEntryRepository;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
+    private IDocumentFlowHateoasHandler documentFlowHateoasHandler;
     private ISignOffHateoasHandler signOffHateoasHandler;
     private ISequenceNumberGeneratorService numberGeneratorService;
     private ISignOffRepository signOffRepository;
@@ -81,10 +87,12 @@ public class RegistryEntryService
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             ICorrespondencePartService correspondencePartService,
+            IDocumentFlowService documentFlowService,
             IPrecedenceService precedenceService,
             IMetadataService metadataService,
             IRegistryEntryRepository registryEntryRepository,
             IRegistryEntryHateoasHandler registryEntryHateoasHandler,
+            IDocumentFlowHateoasHandler documentFlowHateoasHandler,
             ISignOffHateoasHandler signOffHateoasHandler,
             ISequenceNumberGeneratorService numberGeneratorService,
             ISignOffRepository signOffRepository,
@@ -92,10 +100,12 @@ public class RegistryEntryService
             IAdministrativeUnitService administrativeUnitService) {
         super(entityManager, applicationEventPublisher);
         this.correspondencePartService = correspondencePartService;
+        this.documentFlowService = documentFlowService;
         this.precedenceService = precedenceService;
         this.metadataService = metadataService;
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
+        this.documentFlowHateoasHandler = documentFlowHateoasHandler;
         this.signOffHateoasHandler = signOffHateoasHandler;
         this.numberGeneratorService = numberGeneratorService;
         this.userRepository = userRepository;
@@ -128,6 +138,11 @@ public class RegistryEntryService
         return registryEntry;
     }
 
+
+    @Override
+    public DocumentFlowHateoas generateDefaultDocumentFlow(String systemID) {
+        return documentFlowService.generateDefaultDocumentFlow();
+    }
 
     @Override
     public ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
@@ -292,6 +307,19 @@ public class RegistryEntryService
     }
 
     @Override
+    public DocumentFlowHateoas findAllDocumentFlowWithRegistryEntryBySystemId
+        (String systemID) {
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
+        DocumentFlowHateoas documentFlowHateoas =
+                new DocumentFlowHateoas((List<INoarkEntity>)
+                        (List) registryEntry.getReferenceDocumentFlow());
+        documentFlowHateoasHandler.addLinks(documentFlowHateoas,
+                                            new Authorisation());
+        setOutgoingRequestHeader(documentFlowHateoas);
+        return documentFlowHateoas;
+    }
+
+    @Override
     public SignOffHateoas
     findAllSignOffAssociatedWithRegistryEntry(String systemId) {
         SignOffHateoas signOffHateoas =
@@ -321,6 +349,13 @@ public class RegistryEntryService
         signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         setOutgoingRequestHeader(signOffHateoas);
         return signOffHateoas;
+    }
+
+    @Override
+    public DocumentFlowHateoas associateDocumentFlowWithRegistryEntry(
+            String systemId, DocumentFlow documentFlow) {
+        return documentFlowService.associateDocumentFlowWithRegistryEntry
+            (documentFlow, getRegistryEntryOrThrow(systemId));
     }
 
     @Override

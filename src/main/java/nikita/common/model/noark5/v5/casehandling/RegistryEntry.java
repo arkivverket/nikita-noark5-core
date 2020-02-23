@@ -5,6 +5,7 @@ import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IRegistryEntryEntity;
+import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.model.noark5.v5.secondary.ElectronicSignature;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.deserialisers.casehandling.RegistryEntryDeserializer;
@@ -364,6 +365,10 @@ public class RegistryEntry
         this.referenceDocumentFlow = referenceDocumentFlow;
     }
 
+    @Override
+    public void addReferenceDocumentFlow(DocumentFlow referenceDocumentFlow) {
+        this.referenceDocumentFlow.add(referenceDocumentFlow);
+    }
 
     public List<SignOff> getReferenceSignOff() {
         return referenceSignOff;

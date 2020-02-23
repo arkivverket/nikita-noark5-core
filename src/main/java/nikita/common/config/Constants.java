@@ -276,6 +276,8 @@ public final class Constants {
     public static final String TEMPLATE_REGISTRY_ENTRY_STATUS_NAME =
             "Journalført";
 
+    public static final String TEMPLATE_DOCUMENT_FLOW_FLOW_STATUS_CODE = "I";
+
     public static final String TEMPLATE_PRECEDENCE_STATUS_CODE = "G";
     public static final String TEMPLATE_PRECEDENCE_STATUS_NAME =
             "Gjeldende";
@@ -967,10 +969,14 @@ public final class Constants {
     public static final String FILE_CLASSIFIED_ID = "file_classified_id";
     public static final String FILE_SCREENING_ID = "file_screening_id";
     public static final String FILE_DISPOSAL_ID = "file_disposal_id";
-    public static final String WORK_FLOW_REGISTRY_ENTRY_ID =
-            "work_flow_registry_entry_id";
-    public static final String WORK_FLOW_RECORD_NOTE_ID =
-            "work_flow_record_note_id";
+    public static final String DOCUMENT_FLOW_FLOW_TO_ID =
+            "document_flow_flow_to_id";
+    public static final String DOCUMENT_FLOW_FLOW_FROM_ID =
+            "document_flow_flow_from_id";
+    public static final String DOCUMENT_FLOW_REGISTRY_ENTRY_ID =
+            "document_flow_registry_entry_id";
+    public static final String DOCUMENT_FLOW_RECORD_NOTE_ID =
+            "document_flow_record_note_id";
 
     public static final String RECORD_FILE_ID = "record_file_id";
     public static final String RECORD_CLASS_ID = "record_class_id";
@@ -1061,6 +1067,9 @@ public final class Constants {
     public static final String HREF_BASE_RECORD_NOTE =
             HREF_BASE_CASE_HANDLING + SLASH + RECORD_NOTE;
 
+    public static final String HREF_BASE_REGISTRY_ENTRY =
+            HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY;
+
     public static final String HREF_BASE_FILE =
             HREF_BASE_FONDS_STRUCTURE + SLASH + FILE;
 
@@ -1080,7 +1089,7 @@ public final class Constants {
             HREF_BASE_FONDS_STRUCTURE + SLASH + FONDS;
 
     public static final String HREF_BASE_DOCUMENT_FLOW =
-            HREF_BASE_FONDS_STRUCTURE + SLASH + DOCUMENT_FLOW;
+            HREF_BASE_CASE_HANDLING + SLASH + DOCUMENT_FLOW;
 
     private Constants() {
     }

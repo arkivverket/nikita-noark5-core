@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
 import nikita.webapp.util.exceptions.UsernameExistsException;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IUserService {
 
@@ -19,6 +20,10 @@ public interface IUserService {
             incomingUser);
 
     boolean userExists(String username);
+
+    User userGetByUsername(String username);
+
+    User userGetBySystemId(UUID systemId);
 
     boolean authorityExists(AuthorityName authority);
 

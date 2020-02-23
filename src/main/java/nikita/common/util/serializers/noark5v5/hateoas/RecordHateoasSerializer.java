@@ -50,12 +50,10 @@ public class RecordHateoasSerializer
         printCorrespondencePartUnits(jgen, registryEntry);
         printCorrespondencePartInternals(jgen, registryEntry);
         */
-            printDocumentFlow(jgen, (RegistryEntry) record);
             //printPrecedence(jgen, registryEntry);
             printElectronicSignature(jgen, (RegistryEntry) record);
 
         } else if (record instanceof RecordNote) {
-            printDocumentFlow(jgen, (RecordNote) record);
         }
 
         printHateoasLinks(jgen, recordHateoas.getLinks(record));
