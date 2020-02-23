@@ -30,7 +30,6 @@ public class RecordNoteHateoasSerializer
         printRecordEntity(jgen, recordNote);
         printRecordNoteEntity(jgen, recordNote);
 
-        printDocumentFlow(jgen, recordNote);
         printHateoasLinks(jgen, recordNoteHateoas.getLinks(recordNote));
         jgen.writeEndObject();
     }

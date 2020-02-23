@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.interfaces;
 
-import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
+import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 
 import java.util.List;
 
@@ -11,4 +11,6 @@ public interface IDocumentFlow {
     List<DocumentFlow> getReferenceDocumentFlow();
 
     void setReferenceDocumentFlow(List<DocumentFlow> documentFlow);
+
+    void addReferenceDocumentFlow(DocumentFlow documentFlow);
 }

@@ -1481,4 +1481,37 @@ public class TestParsing {
         assert ("BY".equals(m.getCode()));
         assert ("Besvart med brev".equals(m.getCodeName()));
     }
+
+    @Test
+    public void parseDocumentFlowComplete() throws Exception {
+        System.out.println("info: testing document flow parsing");
+        String systemID = UUID.randomUUID().toString();
+        String flowTo = "The Boss";
+        String flowFrom = "Me";
+        String json = "{ "
+                + "  \"systemID\": \"" + systemID + "\" "
+                + ", \"flytTil\": \"" + flowTo + "\" "
+                + ", \"referanseFlytTil\": \"8241d28c-566d-11ea-b6dd-372492b73cfc\" "
+                + ", \"flytFra\": \"" + flowFrom + "\" "
+                + ", \"referanseFlytFra\": \"86ecc936-566d-11ea-87e5-5f4424c512e8\" "
+                + ", \"flytMottattDato\": \"1865-02-13T12:30:00+02:00\" "
+                + ", \"flytSendtDato\": \"1865-02-13T12:00:00+02:00\" "
+                + ", \"flytStatus\": { \"kode\": \"I\", \"kodenavn\": \"Ikke godkjent\" } "
+                + ", \"flytMerknad\": \"Flown away\" "
+                + "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+                objectMapper.getFactory().createParser(json);
+        DocumentFlowDeserializer documentFlowDeserializer =
+            new DocumentFlowDeserializer();
+        DocumentFlow documentFlow = documentFlowDeserializer.deserialize
+                (jsonParser, null /* DeserializationContext */);
+        assert (null != documentFlow);
+        assert (systemID.equals(documentFlow.getSystemId()));
+        assert (flowTo.equals(documentFlow.getFlowTo()));
+        assert (flowFrom.equals(documentFlow.getFlowFrom()));
+        FlowStatus m = documentFlow.getFlowStatus();
+        assert ("I".equals(m.getCode()));
+        assert ("Ikke godkjent".equals(m.getCodeName()));
+    }
 }

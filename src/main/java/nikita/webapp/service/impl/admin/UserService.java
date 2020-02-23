@@ -160,6 +160,38 @@ public class UserService
     }
 
     /**
+     * Look up username and return the equivalent User instance if it
+     * exist, or null if not.
+     *
+     * @param username The username/emailaddress to check
+     * @return User if the username is registered, null otherwise
+     */
+    @Override
+    public User userGetByUsername(String username) {
+	Optional<User> userOptional = userRepository.findByUsername(username);
+	if (userOptional.isPresent()) {
+	    return userOptional.get();
+	}
+	return null;
+    }
+
+    /**
+     * Look up systemID/UUID and return the equivalent User instance
+     * if it exist, or null if not.
+     *
+     * @param systemID UUID for the username to check
+     * @return User if the UUID is registered, null otherwise
+     */
+    @Override
+    public User userGetBySystemId(UUID systemId) {
+	Optional<User> userOptional = userRepository.findBySystemId(systemId);
+	if (userOptional.isPresent()) {
+	    return userOptional.get();
+	}
+	return null;
+    }
+
+    /**
      * Check to see is a particular authority already exists
      * in the system.
      *

@@ -6,13 +6,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
-import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
@@ -78,7 +79,7 @@ public class RegistryEntryHateoasController
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_FLOW,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String>
+    public ResponseEntity<DocumentFlowHateoas>
     createDocumentFlowAssociatedWithRegistryEntry(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -90,18 +91,9 @@ public class RegistryEntryHateoasController
                       required = true)
             @RequestBody DocumentFlow documentFlow)
             throws NikitaException {
-        /*
-        DocumentFlowHateoas documentFlowHateoas =
-                new DocumentFlowHateoas(
-                        recordService.createDocumentFlowAssociatedWithRecord(systemID,
-                                documentFlow));
-        documentFlowHateoasHandler.addLinks(documentFlowHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-           return ResponseEntity.status(CREATED)
-                .header(ETAG, .getVersion().toString())
-                .body(documentFlowHateoas);
-        */
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        return ResponseEntity.status(CREATED)
+                .body(registryEntryService.associateDocumentFlowWithRegistryEntry
+                      (systemID, documentFlow));
     }
 
     // Create a new SignOff and associate it with the given journalpost
@@ -203,17 +195,17 @@ public class RegistryEntryHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_FLOW)
-    public ResponseEntity<String> createDefaultDocumentFlow(
-            HttpServletRequest request) {
-        /*
+    public ResponseEntity<DocumentFlowHateoas> createDefaultDocumentFlow(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                      value = "systemID of the registryEntry",
+                      required = true)
+            @PathVariable("systemID") final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentFlowService.
-                        generateDefaultDocumentFlow());
-        */
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+                .body(registryEntryService.
+                        generateDefaultDocumentFlow(systemID));
     }
-
 
     // GET [contextPath][api]/sakarkiv/journalpost/{systemID}/avskrivning/{subSystemID}
     @ApiOperation(value = "Return a sign off related to the" +
@@ -310,24 +302,17 @@ public class RegistryEntryHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_FLOW)
-    public ResponseEntity<String> findAllDocumentFlowAssociatedWithRecord(
+    public ResponseEntity<DocumentFlowHateoas> findAllDocumentFlowAssociatedWithRegistryEntry(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
-                    value = "systemID of the file to retrieve associated Record",
+                    value = "systemID of the file to retrieve associated RegistryEntry",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        /*  Record record = recordService.findBySystemId(UUID.fromString(systemId));
-            if (record == null) {
-            throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
-        }
-        DocumentFlowHateoas documentDescriptionHateoas = new
-                DocumentFlowHateoas((List<INoarkEntity>) (List)record.getReferenceDocumentFlow()));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentDescriptionHateoas);
-                */
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        return ResponseEntity
+                .status(OK)
+                .body(registryEntryService.
+                        findAllDocumentFlowWithRegistryEntryBySystemId(
+                                systemID));
     }
 
 

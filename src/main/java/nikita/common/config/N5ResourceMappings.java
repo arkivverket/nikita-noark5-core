@@ -311,7 +311,9 @@ public final class N5ResourceMappings {
     // DocumentFlow
     public static final String DOCUMENT_FLOW = "dokumentflyt";
     public static final String DOCUMENT_FLOW_FLOW_TO = "flytTil";
+    public static final String DOCUMENT_FLOW_REFERENCE_FLOW_FROM = "referanseFlytFra";
     public static final String DOCUMENT_FLOW_FLOW_FROM = "flytFra";
+    public static final String DOCUMENT_FLOW_REFERENCE_FLOW_TO = "referanseFlytTil";
     public static final String DOCUMENT_FLOW_FLOW_RECEIVED_DATE = "flytMottattDato";
     public static final String DOCUMENT_FLOW_FLOW_SENT_DATE = "flytSendtDato";
     public static final String DOCUMENT_FLOW_FLOW_STATUS = "flytStatus";
@@ -521,13 +523,15 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION_ENG = "documentDescrption";
     public static final String DOCUMENT_DESCRIPTION_STATUS_ENG = "dokumentstatus";
     public static final String DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG = "external_reference";
-    public static final String DOCUMENT_FLOW_ENG = "dokumentflyt";
+    public static final String DOCUMENT_FLOW_ENG = "document_flow";
     public static final String DOCUMENT_FLOW_FLOW_COMMENT_ENG = "flow_comment";
     public static final String DOCUMENT_FLOW_FLOW_FROM_ENG = "flow_from";
     public static final String DOCUMENT_FLOW_FLOW_RECEIVED_DATE_ENG = "flow_received_date";
     public static final String DOCUMENT_FLOW_FLOW_SENT_DATE_ENG = "flow_sent_date";
-    public static final String DOCUMENT_FLOW_FLOW_STATUS_ENG = "flytStatus";
+    public static final String DOCUMENT_FLOW_FLOW_STATUS_ENG = "flow_status";
     public static final String DOCUMENT_FLOW_FLOW_TO_ENG = "flow_to";
+    public static final String DOCUMENT_FLOW_REFERENCE_FLOW_FROM_ENG = "reference_flow_from";
+    public static final String DOCUMENT_FLOW_REFERENCE_FLOW_TO_ENG = "reference_flow_to";
     public static final String DOCUMENT_MEDIUM_ENG = "dokumentmedium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG = "checksum_algorithm";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ENG = "checksum";
@@ -556,7 +560,7 @@ public final class N5ResourceMappings {
     public static final String FILE_TYPE_ENG = "mappetype";
     public static final String FINALISED_BY_ENG = "finalised_by";
     public static final String FINALISED_DATE_ENG = "finalised_date";
-    public static final String FLOW_STATUS_ENG = "flytstatus";
+    public static final String FLOW_STATUS_ENG = "flow_status";
     public static final String FONDS_CREATOR_ENG = "fondsCreator";
     public static final String FONDS_CREATOR_ID_ENG = "fonds_creator_id";
     public static final String FONDS_CREATOR_NAME_ENG = "fonds_creator_name";
@@ -756,7 +760,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_FLOW_FLOW_FROM_ENG_OBJECT = "flowFrom";
     public static final String DOCUMENT_FLOW_FLOW_RECEIVED_DATE_ENG_OBJECT = "flowReceivedDate";
     public static final String DOCUMENT_FLOW_FLOW_SENT_DATE_ENG_OBJECT = "flowSentDate";
-    public static final String DOCUMENT_FLOW_FLOW_STATUS_ENG_OBJECT = "flytStatus";
+    public static final String DOCUMENT_FLOW_FLOW_STATUS_ENG_OBJECT = "flowStatus";
     public static final String DOCUMENT_FLOW_FLOW_TO_ENG_OBJECT = "flowTo";
     public static final String DOCUMENT_MEDIUM_ENG_OBJECT = "dokumentmedium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG_OBJECT = "checksumAlgorithm";
