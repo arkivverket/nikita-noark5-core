@@ -81,20 +81,6 @@ maven-build:
     paths:
     - target/*.jar
 
-dast:
-  stage: test
-  image: registry.gitlab.com/gitlab-org/security-products/zaproxy
-  variables:
-    website: "https://example.com"
-  allow_failure: false
-  script:
-  - mkdir /zap/wrk/
-  - /zap/zap-baseline.py -h || true
-  - /zap/zap-baseline.py -w gl-dast-report.md -t $website || true
-  - cp /zap/wrk/gl-dast-report.md .
-  artifacts:
-    paths: [gl-dast-report.md]
-
 dependency_scanning:
   image: docker:stable
   variables:
