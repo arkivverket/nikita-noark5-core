@@ -23,7 +23,7 @@ public class SignOffDeserializer
         extends JsonDeserializer {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(ConversionDeserializer.class);
+            LoggerFactory.getLogger(SignOffDeserializer.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
