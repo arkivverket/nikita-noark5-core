@@ -9,16 +9,13 @@ import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,15 +23,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_DOCUMENT_OBJECT)
@@ -207,17 +201,18 @@ public class DocumentObjectHateoasController
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ConversionHateoas>
     findAllConversionAssociatedWithDocumentObject(
-            HttpServletRequest request, HttpServletResponse response,
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
-                      value = "systemID of the documentObject",
-                      required = true)
+                    value = "systemID of the documentObject",
+                    required = true)
             @PathVariable("systemID") final String systemID,
             @ApiParam(name = "subSystemID",
-                      value = "systemID of the Conversion",
-                      required = true)
+                    value = "systemID of the Conversion",
+                    required = true)
             @PathVariable("subSystemID") final String subSystemID)
             throws IOException {
         return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectService
                       .findConversionAssociatedWithDocumentObject
                       (systemID, subSystemID));

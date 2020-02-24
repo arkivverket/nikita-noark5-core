@@ -11,7 +11,7 @@ import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -40,25 +40,25 @@ public class RecordNoteService
     private static final Logger logger =
             LoggerFactory.getLogger(RecordNoteService.class);
     private final IRecordNoteRepository recordNoteRepository;
-    private final IDocumentMediumService documentMediumService;
+    private final IMetadataService metadataService;
     private final IRecordNoteHateoasHandler recordNoteHateoasHandler;
 
     public RecordNoteService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IRecordNoteRepository recordNoteRepository,
-            IDocumentMediumService documentMediumService,
+            IMetadataService metadataService,
             IRecordNoteHateoasHandler recordNoteHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.recordNoteRepository = recordNoteRepository;
-        this.documentMediumService = documentMediumService;
+        this.metadataService = metadataService;
         this.recordNoteHateoasHandler = recordNoteHateoasHandler;
     }
 
     @Override
     public ResponseEntity<RecordNoteHateoas> save(
             @NotNull final RecordNote recordNote) {
-        validateDocumentMedium(documentMediumService, recordNote);
+        validateDocumentMedium(metadataService, recordNote);
         RecordNoteHateoas recordNoteHateoas = new
                 RecordNoteHateoas(recordNoteRepository.save(recordNote));
         recordNoteHateoasHandler.addLinks(recordNoteHateoas,

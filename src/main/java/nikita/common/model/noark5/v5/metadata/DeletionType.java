@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.DELETION_TYPE;
 @Entity
 @Table(name = TABLE_DELETION_TYPE)
 public class DeletionType
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

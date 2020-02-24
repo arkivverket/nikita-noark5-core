@@ -1,0 +1,16 @@
+{
+  "DisposalDecision": [
+    {
+      "code": "B",
+      "codename": "Bevares"
+    },
+    {
+      "code": "K",
+      "codename": "Kasseres"
+    },
+    {
+      "code": "G",
+      "codename": "Vurderes senere"
+    }
+  ]
+}

@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
 @Entity
 @Table(name = TABLE_COMMENT_TYPE)
 public class CommentType
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

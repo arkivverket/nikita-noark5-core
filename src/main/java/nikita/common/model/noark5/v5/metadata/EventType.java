@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.EVENT_TYPE;
 @Entity
 @Table(name = TABLE_EVENT_TYPE)
 public class EventType
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

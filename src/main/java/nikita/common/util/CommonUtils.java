@@ -357,24 +357,14 @@ public final class CommonUtils {
             // {code}/{value} for metadata entries.
             String updatedServletPath = servletPath;
             if (servletPath.startsWith(SLASH + HREF_BASE_METADATA + SLASH)) {
-                Pattern pattern = Pattern.compile(SLASH + HREF_BASE_METADATA + SLASH +
-                        "/[a-z]+/");
-                int ignoreFirstChars = (SLASH + HREF_BASE_METADATA + SLASH).length();
-                String toCheck = servletPath.substring(ignoreFirstChars);
-                int slashLocation = toCheck.indexOf("/");
-                if (slashLocation > 0) {
-                    toCheck = toCheck.substring(0, slashLocation);
-                    String path = SLASH + HREF_BASE_METADATA + SLASH + toCheck + SLASH;
-
-                    if (!path.equals(servletPath)) {
-                        updatedServletPath = path + "{" + CODE + "}" + SLASH;
-                        if (servletPath.contains("/format/")) {
-                            updatedServletPath += "{value}/";
-                        }
-                    }
-                } else {
-                    updatedServletPath = servletPath;
-                }
+                // Anything to do with metadata, just let it through
+                HttpMethod[] methods = new HttpMethod[5];
+                methods[0] = GET;
+                methods[1] = POST;
+                methods[2] = DELETE;
+                methods[3] = PUT;
+                methods[4] = OPTIONS;
+                return methods;
             } else {
 
                 // The following pattern is taken from
@@ -411,8 +401,8 @@ public final class CommonUtils {
                         return currentNode.intValue();
                     } else {
                         errors.append(fieldname + " (\"" +
-                                      currentNode.textValue() +
-                                      "\") is not numeric. ");
+                                currentNode.textValue() +
+                                "\") is not numeric. ");
                         return null;
                     }
                 } else if (required) {
@@ -432,8 +422,8 @@ public final class CommonUtils {
                         return currentNode.longValue();
                     } else {
                         errors.append(fieldname + " (\"" +
-                                      currentNode.textValue() +
-                                      "\") is not numeric. ");
+                                currentNode.textValue() +
+                                "\") is not numeric. ");
                         return null;
                     }
                 } else if (required) {
@@ -556,14 +546,14 @@ public final class CommonUtils {
             public static void deserialiseDocumentMedium(IDocumentMedium documentMediumEntity, ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize documentMedium
                 IMetadataEntity entity =
-                    deserialiseMetadataValue(objectNode,
-                                             DOCUMENT_MEDIUM,
-                                             new DocumentMedium(),
-                                             errors, false);
+                        deserialiseMetadataValue(objectNode,
+                                DOCUMENT_MEDIUM,
+                                new DocumentMedium(),
+                                errors, false);
                 documentMediumEntity
-		    .setDocumentMediumCode(entity.getCode());
+                        .setDocumentMediumCode(entity.getCode());
                 documentMediumEntity
-		    .setDocumentMediumCodeName(entity.getCodeName());
+                        .setDocumentMediumCodeName(entity.getCodeName());
             }
 
             public static void deserialiseNoarkSystemIdEntity(
@@ -601,13 +591,13 @@ public final class CommonUtils {
             }
 
             public static void deserialiseCaseStatus(ICaseFileEntity caseFile,
-                    ObjectNode objectNode, StringBuilder errors) {
+                                                     ObjectNode objectNode, StringBuilder errors) {
                 IMetadataEntity entity =
-                    deserialiseMetadataValue(objectNode,
-                                             CASE_STATUS,
-                                             new CaseStatus(),
-                                             errors, false);
-		caseFile.setCaseStatusCode(entity.getCode());
+                        deserialiseMetadataValue(objectNode,
+                                CASE_STATUS,
+                                new CaseStatus(),
+                                errors, false);
+                caseFile.setCaseStatusCode(entity.getCode());
                 caseFile.setCaseStatusCodeName(entity.getCodeName());
             }
 
@@ -636,10 +626,10 @@ public final class CommonUtils {
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize korrespondanseparttype
                 CorrespondencePartType entity = (CorrespondencePartType)
-                    deserialiseMetadataValue(objectNode,
-                                             CORRESPONDENCE_PART_TYPE,
-                                             new CorrespondencePartType(),
-                                             errors, true);
+                        deserialiseMetadataValue(objectNode,
+                                CORRESPONDENCE_PART_TYPE,
+                                new CorrespondencePartType(),
+                                errors, true);
                 correspondencePart.setCorrespondencePartType(entity);
             }
 
@@ -648,10 +638,10 @@ public final class CommonUtils {
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize partrole
                 PartRole entity = (PartRole)
-                    deserialiseMetadataValue(objectNode,
-                                             PART_ROLE_FIELD,
-                                             new PartRole(),
-                                             errors, true);
+                        deserialiseMetadataValue(objectNode,
+                                PART_ROLE_FIELD,
+                                new PartRole(),
+                                errors, true);
                 part.setPartRole(entity);
             }
 
@@ -659,14 +649,14 @@ public final class CommonUtils {
                     IClassificationSystemEntity classificationSystem,
                     ObjectNode objectNode, StringBuilder errors) {
                 IMetadataEntity entity =
-                    deserialiseMetadataValue(objectNode,
-                                             CLASSIFICATION_SYSTEM_TYPE,
-                                             new ClassificationType(),
-                                             errors, false);
+                        deserialiseMetadataValue(objectNode,
+                                CLASSIFICATION_SYSTEM_TYPE,
+                                new ClassificationType(),
+                                errors, false);
                 classificationSystem.
-                    setClassificationTypeCode(entity.getCode());
+                        setClassificationTypeCode(entity.getCode());
                 classificationSystem.
-                    setClassificationTypeCodeName(entity.getCodeName());
+                        setClassificationTypeCodeName(entity.getCodeName());
             }
 
             public static void deserialiseStorageLocation(IStorageLocation storageLocationEntity,
@@ -707,12 +697,12 @@ public final class CommonUtils {
              * Deserialize to make sure GET + modify + PUT work.
              */
             public static void deserialiseNoarkLastModifiedEntity(
-                        ILastModified nikitaEntity,
-                        ObjectNode objectNode, StringBuilder errors) {
+                    ILastModified nikitaEntity,
+                    ObjectNode objectNode, StringBuilder errors) {
                 JsonNode currentNode = objectNode.get(LAST_MODIFIED_DATE);
                 if (null != currentNode) {
-		    nikitaEntity.setLastModifiedDate(deserializeDateTime(
-			LAST_MODIFIED_DATE, objectNode, errors));
+                    nikitaEntity.setLastModifiedDate(deserializeDateTime(
+                            LAST_MODIFIED_DATE, objectNode, errors));
                     objectNode.remove(LAST_MODIFIED_DATE);
                 }
                 currentNode = objectNode.get(LAST_MODIFIED_BY);
@@ -886,8 +876,8 @@ public final class CommonUtils {
                 }
                 // Deserialize preservationTime
                 disposalEntity.setPreservationTime
-                    (deserializeInteger(DISPOSAL_PRESERVATION_TIME,
-                                        objectNode, errors, false));
+                        (deserializeInteger(DISPOSAL_PRESERVATION_TIME,
+                                objectNode, errors, false));
                 // Deserialize disposalDate
                 disposalEntity.setDisposalDate(deserializeDate(DISPOSAL_DATE, objectNode, errors));
             }
@@ -1118,10 +1108,10 @@ public final class CommonUtils {
                         simpleAddress.setPostalTown(currentNode.textValue());
                         objectNode.remove(POSTAL_TOWN);
                     } else {
-			errors.append(addressType
-				      + "." + POSTAL_TOWN
-				      + " is missing. ");
-		    }
+                        errors.append(addressType
+                                + "." + POSTAL_TOWN
+                                + " is missing. ");
+                    }
                     // Deserialize landkode
                     currentNode = objectNode.get(COUNTRY_CODE);
                     if (null != currentNode) {
@@ -1266,16 +1256,16 @@ public final class CommonUtils {
                 // Deserialize organisasjonsnummer
                 currentNode = objectNode.get(UNIT_IDENTIFIER);
                 if (null != currentNode) {
-		    JsonNode node = currentNode.get(ORGANISATION_NUMBER);
-		    if (null != node) {
-			partUnit.setOrganisationNumber(node.textValue());
+                    JsonNode node = currentNode.get(ORGANISATION_NUMBER);
+                    if (null != node) {
+                        partUnit.setOrganisationNumber(node.textValue());
 
-			// This remove() call is placed inside block
-			// to report error if no organisasjonsnummer
-			// was found.
-			objectNode.remove(UNIT_IDENTIFIER);
-		    }
-		}
+                        // This remove() call is placed inside block
+                        // to report error if no organisasjonsnummer
+                        // was found.
+                        objectNode.remove(UNIT_IDENTIFIER);
+                    }
+                }
                 // Deserialize kontaktperson
                 currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
@@ -1333,16 +1323,16 @@ public final class CommonUtils {
                         person.setSocialSecurityNumber(node.textValue());
                     }
                     // Deserialize dnummer
-                    node= currentNode.get(D_NUMBER_FIELD);
+                    node = currentNode.get(D_NUMBER_FIELD);
                     if (null != node) {
                         person.setdNumber(node.textValue());
                     }
                     // Only one of these are allowed, report error otherwise.
                     if (null != person.getSocialSecurityNumber() &&
-                        null != person.getdNumber()) {
+                            null != person.getdNumber()) {
                         errors.append("Only one of " + SOCIAL_SECURITY_NUMBER
-                                      + " and " + D_NUMBER_FIELD
-                                      + " can be set at the time. ");
+                                + " and " + D_NUMBER_FIELD
+                                + " can be set at the time. ");
                     } else {
                         objectNode.remove(PERSON_IDENTIFIER);
                     }
@@ -1578,10 +1568,10 @@ public final class CommonUtils {
 
                 // Deserialize classification
                 IMetadataEntity entity =
-                    deserialiseMetadataValue(objectNode,
-                                             CLASSIFICATION,
-                                             new ClassifiedCode(),
-                                             errors, true);
+                        deserialiseMetadataValue(objectNode,
+                                CLASSIFICATION,
+                                new ClassifiedCode(),
+                                errors, true);
                 classifiedEntity.setClassificationCode(entity.getCode());
                 classifiedEntity.setClassificationCodeName(entity.getCodeName());
                 // Deserialize classificationDate
@@ -1607,13 +1597,13 @@ public final class CommonUtils {
             }
 
             public static ElectronicSignature deserialiseElectronicSignature(
-                        ObjectNode objectNode, StringBuilder errors) {
+                    ObjectNode objectNode, StringBuilder errors) {
                 ElectronicSignature es = null;
                 JsonNode esNode = objectNode.get(ELECTRONIC_SIGNATURE);
                 if (null != esNode) {
                     es = new ElectronicSignature();
                     deserialiseElectronicSignatureEntity(es, esNode.deepCopy(),
-                                                         errors);
+                            errors);
                 }
                 //TODO: Only remove if the hashset is actually empty, otherwise let it go back up with the extra values
                 objectNode.remove(ELECTRONIC_SIGNATURE);
@@ -1621,14 +1611,14 @@ public final class CommonUtils {
             }
 
             public static ElectronicSignature deserialiseElectronicSignatureEntity(
-                        ElectronicSignature electronicSignature,
-                        ObjectNode objectNode, StringBuilder errors) {
+                    ElectronicSignature electronicSignature,
+                    ObjectNode objectNode, StringBuilder errors) {
                 // Deserialise elektroniskSignaturSikkerhetsnivaa
                 IMetadataEntity entity =
-                    deserialiseMetadataValue(objectNode,
-                                             ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
-                                             new ElectronicSignatureSecurityLevel(),
-                                             errors, true);
+                        deserialiseMetadataValue(objectNode,
+                                ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                                new ElectronicSignatureSecurityLevel(),
+                                errors, true);
                 electronicSignature.setElectronicSignatureSecurityLevelCode(
                         entity.getCode());
                 electronicSignature.setElectronicSignatureSecurityLevelCodeName(
@@ -1636,10 +1626,10 @@ public final class CommonUtils {
 
                 // Deserialise elektroniskSignaturVerifisert
                 entity =
-                    deserialiseMetadataValue(objectNode,
-                                             ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
-                                             new ElectronicSignatureVerified(),
-                                             errors, true);
+                        deserialiseMetadataValue(objectNode,
+                                ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                                new ElectronicSignatureVerified(),
+                                errors, true);
                 electronicSignature.setElectronicSignatureVerifiedCode(
                         entity.getCode());
                 electronicSignature.setElectronicSignatureVerifiedCodeName(
@@ -1647,16 +1637,16 @@ public final class CommonUtils {
 
                 // Deserialise verifisertDato
                 JsonNode currentNode =
-                    objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
+                        objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
                 if (null != currentNode) {
                     electronicSignature.setVerifiedDate(
-                        deserializeDate(currentNode.textValue(),
-                                        objectNode, errors));
+                            deserializeDate(currentNode.textValue(),
+                                    objectNode, errors));
                     objectNode.remove(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
                 } else {
                     errors.append(ELECTRONIC_SIGNATURE
-                                  + "." + ELECTRONIC_SIGNATURE_VERIFIED_DATE
-                                  + " is missing. ");
+                            + "." + ELECTRONIC_SIGNATURE_VERIFIED_DATE
+                            + " is missing. ");
                 }
 
                 // Deserialise verifisertAv
@@ -1666,8 +1656,8 @@ public final class CommonUtils {
                     objectNode.remove(ELECTRONIC_SIGNATURE_VERIFIED_BY);
                 } else {
                     errors.append(ELECTRONIC_SIGNATURE
-                                  + "." + ELECTRONIC_SIGNATURE_VERIFIED_BY
-                                  + " is missing. ");
+                            + "." + ELECTRONIC_SIGNATURE_VERIFIED_BY
+                            + " is missing. ");
                 }
 
                 return electronicSignature;
@@ -1720,8 +1710,8 @@ public final class CommonUtils {
                 if (classificationSystem.getClassificationTypeCode() != null) {
                     jgen.writeObjectFieldStart(CLASSIFICATION_SYSTEM_TYPE);
                     printCode(jgen,
-                              classificationSystem.getClassificationTypeCode(),
-                              classificationSystem.getClassificationTypeCodeName());
+                            classificationSystem.getClassificationTypeCode(),
+                            classificationSystem.getClassificationTypeCodeName());
                     jgen.writeEndObject();
                 }
             }
@@ -1919,16 +1909,16 @@ public final class CommonUtils {
                                 registryEntry.getRegistryEntryNumber());
                     }
                     if (registryEntry.getRegistryEntryTypeCode() != null) {
-			jgen.writeObjectFieldStart(REGISTRY_ENTRY_TYPE);
-			printCode(jgen,
-				  registryEntry.getRegistryEntryTypeCode(),
-				  registryEntry.getRegistryEntryTypeCodeName());
-			jgen.writeEndObject();
+                        jgen.writeObjectFieldStart(REGISTRY_ENTRY_TYPE);
+                        printCode(jgen,
+                                registryEntry.getRegistryEntryTypeCode(),
+                                registryEntry.getRegistryEntryTypeCodeName());
+                        jgen.writeEndObject();
                     }
                     if (registryEntry.getRecordStatusCode() != null) {
                         jgen.writeObjectFieldStart(REGISTRY_ENTRY_STATUS);
                         printCode(jgen, registryEntry.getRecordStatusCode(),
-                                  registryEntry.getRecordStatusCodeName());
+                                registryEntry.getRecordStatusCodeName());
                         jgen.writeEndObject();
                     }
                     if (registryEntry.getRecordDate() != null) {
@@ -1948,7 +1938,7 @@ public final class CommonUtils {
                 if (documentMedium.getDocumentMediumCode() != null) {
                     jgen.writeObjectFieldStart(DOCUMENT_MEDIUM);
                     printCode(jgen, documentMedium.getDocumentMediumCode(),
-                              documentMedium.getDocumentMediumCodeName());
+                            documentMedium.getDocumentMediumCodeName());
                     jgen.writeEndObject();
                 }
 
@@ -2451,21 +2441,21 @@ public final class CommonUtils {
                                                         IElectronicSignature esEntity)
                     throws IOException {
                 ElectronicSignature es =
-		    esEntity.getReferenceElectronicSignature();
+                        esEntity.getReferenceElectronicSignature();
                 if (es != null) {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
                     if (null != es.getElectronicSignatureSecurityLevelCode()) {
                         jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
                         printCode(jgen,
-				  es.getElectronicSignatureSecurityLevelCode(),
-				  es.getElectronicSignatureSecurityLevelCodeName());
+                                es.getElectronicSignatureSecurityLevelCode(),
+                                es.getElectronicSignatureSecurityLevelCodeName());
                         jgen.writeEndObject();
                     }
                     if (es.getElectronicSignatureSecurityLevelCode() != null) {
                         jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
                         printCode(jgen,
-				  es.getElectronicSignatureSecurityLevelCode(),
-				  es.getElectronicSignatureSecurityLevelCodeName());
+                                es.getElectronicSignatureSecurityLevelCode(),
+                                es.getElectronicSignatureSecurityLevelCodeName());
                         jgen.writeEndObject();
                     }
                     if (es.getElectronicSignatureVerifiedCodeName() != null) {
@@ -2493,7 +2483,7 @@ public final class CommonUtils {
                         if (classified.getClassificationCode() != null) {
                             jgen.writeObjectFieldStart(CLASSIFICATION);
                             printCode(jgen, classified.getClassificationCode(),
-                                      classified.getClassificationCodeName());
+                                    classified.getClassificationCodeName());
                             jgen.writeEndObject();
                         }
                         if (classified.getClassificationDate() != null) {

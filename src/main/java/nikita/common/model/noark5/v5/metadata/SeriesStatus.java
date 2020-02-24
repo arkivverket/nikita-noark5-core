@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.SERIES_STATUS;
 @Entity
 @Table(name = TABLE_SERIES_STATUS)
 public class SeriesStatus
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

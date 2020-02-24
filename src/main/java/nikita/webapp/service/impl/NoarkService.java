@@ -9,6 +9,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.ITitleDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -25,6 +26,7 @@ import static nikita.common.util.CommonUtils.Validation.parseETAG;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestAsListOrThrow;
 import static org.springframework.http.HttpHeaders.ALLOW;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpMethod.*;
 
 public class NoarkService {
 
@@ -100,10 +102,24 @@ public class NoarkService {
         HttpServletResponse response = ((ServletRequestAttributes)
                 RequestContextHolder.getRequestAttributes()).getResponse();
         HttpServletRequest request =
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-                        .getRequest();
+                ((ServletRequestAttributes) RequestContextHolder
+                        .getRequestAttributes()).getRequest();
         response.addHeader(ETAG,
                 "\"" + noarkObject.getEntityVersion().toString() + "\"");
+        response.addHeader(ALLOW, getMethodsForRequestAsListOrThrow(
+                request.getServletPath()));
+    }
+
+    /**
+     * Set the outgoing ALLOW header
+     */
+    protected void setOutgoingRequestHeaderList() {
+        HttpServletResponse response = ((ServletRequestAttributes)
+                RequestContextHolder.getRequestAttributes()).getResponse();
+        HttpServletRequest request =
+                ((ServletRequestAttributes)
+                        RequestContextHolder
+                                .getRequestAttributes()).getRequest();
         response.addHeader(ALLOW, getMethodsForRequestAsListOrThrow(
                 request.getServletPath()));
     }
@@ -126,5 +142,21 @@ public class NoarkService {
         entityManager.remove(entity);
         entityManager.flush();
         entityManager.clear();
+    }
+
+
+    /**
+     * Temporary fix until we figure out role based access control
+     *
+     * @return
+     */
+    protected HttpMethod[] getMethodDummy() {
+        HttpMethod[] methods = new HttpMethod[5];
+        methods[0] = GET;
+        methods[1] = POST;
+        methods[2] = DELETE;
+        methods[3] = PUT;
+        methods[4] = OPTIONS;
+        return methods;
     }
 }

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.springframework.http.HttpStatus.*;
 
 /**
@@ -174,7 +176,9 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(ClassCastException.class)
+    @ExceptionHandler({ClassCastException.class, ClassNotFoundException.class,
+            NoSuchMethodException.class, IllegalAccessException.class,
+            InvocationTargetException.class, InstantiationException.class})
     public ResponseEntity<Object> handleMisconfigurationExceptionCast(
             final RuntimeException ex, final WebRequest request) {
         logger.error(INTERNAL_SERVER_ERROR + " Misconfiguration on ", ex);

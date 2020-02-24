@@ -2,13 +2,6 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.nationalidentifier.Building;
-import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
-import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Plan;
-import nikita.common.model.noark5.v5.nationalidentifier.Position;
-import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Unit;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
@@ -17,20 +10,14 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
@@ -39,15 +26,15 @@ import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
+import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
-import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.IRecordService;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.IAuthorService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
@@ -98,7 +85,7 @@ public class RecordService
     private IAuthorService authorService;
     private ICommentService commentService;
     private ICorrespondencePartService correspondencePartService;
-    private IDocumentMediumService documentMediumService;
+    private IMetadataService metadataService;
     private INationalIdentifierService nationalIdentifierService;
     private IPartService partService;
     private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
@@ -122,7 +109,7 @@ public class RecordService
             IAuthorService authorService,
             ICommentService commentService,
             ICorrespondencePartService correspondencePartService,
-            IDocumentMediumService documentMediumService,
+            IMetadataService metadataService,
             INationalIdentifierService nationalIdentifierService,
             IPartService partService,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
@@ -144,7 +131,7 @@ public class RecordService
         this.authorService = authorService;
         this.commentService = commentService;
         this.correspondencePartService = correspondencePartService;
-        this.documentMediumService = documentMediumService;
+        this.metadataService = metadataService;
         this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
@@ -157,7 +144,7 @@ public class RecordService
     // All CREATE operations
     @Override
     public ResponseEntity<RecordHateoas> save(Record record) {
-        validateDocumentMedium(documentMediumService, record);
+        validateDocumentMedium(metadataService, record);
         RecordHateoas recordHateoas =
                 new RecordHateoas(recordRepository.save(record));
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
@@ -173,7 +160,7 @@ public class RecordService
 
         Record record = getRecordOrThrow(systemID);
 
-        validateDocumentMedium(documentMediumService, documentDescription);
+        validateDocumentMedium(metadataService, documentDescription);
         // Adding 1 as documentNumber starts at 1, not 0
         long documentNumber =
                 documentDescriptionRepository.

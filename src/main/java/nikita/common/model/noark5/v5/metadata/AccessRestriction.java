@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.ACCESS_RESTRICTION;
 @Entity
 @Table(name = TABLE_ACCESS_RESTRICTION)
 public class AccessRestriction
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

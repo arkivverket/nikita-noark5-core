@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.CLASSIFIED_CODE;
 @Entity
 @Table(name = TABLE_CLASSIFIED_CODE)
 public class ClassifiedCode
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

@@ -18,15 +18,13 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.IFondsService;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
-import nikita.webapp.service.interfaces.metadata.IFondsStatusService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,8 +58,7 @@ public class FondsService
 
     private IFondsRepository fondsRepository;
     private SeriesService seriesService;
-    private IDocumentMediumService documentMediumService;
-    private IFondsStatusService fondsStatusService;
+    private IMetadataService metadataService;
     private IFondsCreatorService fondsCreatorService;
     private IFondsHateoasHandler fondsHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
@@ -71,8 +68,7 @@ public class FondsService
                         ApplicationEventPublisher applicationEventPublisher,
                         IFondsRepository fondsRepository,
                         SeriesService seriesService,
-                        IDocumentMediumService documentMediumService,
-                        IFondsStatusService fondsStatusService,
+                        IMetadataService metadataService,
                         IFondsCreatorService fondsCreatorService,
                         IFondsHateoasHandler fondsHateoasHandler,
                         ISeriesHateoasHandler seriesHateoasHandler,
@@ -81,8 +77,7 @@ public class FondsService
         super(entityManager, applicationEventPublisher);
         this.fondsRepository = fondsRepository;
         this.seriesService = seriesService;
-        this.documentMediumService = documentMediumService;
-        this.fondsStatusService = fondsStatusService;
+        this.metadataService = metadataService;
         this.fondsCreatorService = fondsCreatorService;
         this.entityManager = entityManager;
         this.fondsHateoasHandler = fondsHateoasHandler;
@@ -102,7 +97,7 @@ public class FondsService
      */
     @Override
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
-        validateDocumentMedium(documentMediumService, fonds);
+        validateDocumentMedium(metadataService, fonds);
         if (null == fonds.getFondsStatusCode()) {
             fonds.setFondsStatusCode(FONDS_STATUS_OPEN_CODE);
         }
@@ -605,10 +600,11 @@ public class FondsService
      */
     private void checkFondsStatusUponCreation(Fonds fonds) {
         if (fonds.getFondsStatusCode() != null) {
-            FondsStatus fondsStatus = (FondsStatus) fondsStatusService
-                .findValidMetadataOrThrow(fonds.getBaseTypeName(),
-                                          fonds.getFondsStatusCode(),
-                                          fonds.getFondsStatusCodeName());
+            FondsStatus fondsStatus = (FondsStatus) metadataService
+                    .findValidMetadataByEntityTypeOrThrow(
+                            FONDS_STATUS,
+                            fonds.getFondsStatusCode(),
+                            fonds.getFondsStatusCodeName());
             fonds.setFondsStatusCodeName(fondsStatus.getCodeName());
         }
     }

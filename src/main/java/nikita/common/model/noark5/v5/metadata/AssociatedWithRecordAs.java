@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.ASSOCIATED_WITH_RECORD_AS;
 @Entity
 @Table(name = TABLE_ASSOCIATED_WITH_RECORD_AS)
 public class AssociatedWithRecordAs
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.DISPOSAL_DECISION;
 @Entity
 @Table(name = TABLE_DISPOSAL_DECISION)
 public class DisposalDecision
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 
