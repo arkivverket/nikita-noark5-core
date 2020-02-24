@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.FILE_TYPE;
 @Entity
 @Table(name = TABLE_FILE_TYPE)
 public class FileType
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

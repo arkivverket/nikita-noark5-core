@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
 @Entity
 @Table(name = TABLE_SIGN_OFF_METHOD)
 public class SignOffMethod
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

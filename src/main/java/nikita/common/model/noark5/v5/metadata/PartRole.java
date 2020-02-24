@@ -3,9 +3,7 @@ package nikita.common.model.noark5.v5.metadata;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 
 import static nikita.common.config.Constants.REL_METADATA_PART_ROLE;
 import static nikita.common.config.Constants.TABLE_PART_ROLE;
@@ -16,7 +14,7 @@ import static nikita.common.config.N5ResourceMappings.PART_ROLE;
 @Table(name = TABLE_PART_ROLE)
 @Audited
 public class PartRole
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

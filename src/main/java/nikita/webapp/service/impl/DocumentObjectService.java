@@ -18,8 +18,7 @@ import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
-import nikita.webapp.service.interfaces.metadata.IFormatService;
-import nikita.webapp.service.interfaces.metadata.IVariantFormatService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -36,7 +35,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,8 +98,7 @@ public class DocumentObjectService
     private String defaultChecksumAlgorithm = "SHA-256";
 
     private IConversionRepository conversionRepository;
-    private IFormatService formatService;
-    private IVariantFormatService variantFormatService;
+    private IMetadataService metadataService;
     private IConversionHateoasHandler conversionHateoasHandler;
     private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
     private IDocumentDescriptionHateoasHandler
@@ -112,16 +109,14 @@ public class DocumentObjectService
             ApplicationEventPublisher applicationEventPublisher,
             IConversionRepository conversionRepository,
             IDocumentObjectRepository documentObjectRepository,
-            IFormatService formatService,
-            IVariantFormatService variantFormatService,
+            IMetadataService metadataService,
             IConversionHateoasHandler conversionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.conversionRepository = conversionRepository;
         this.documentObjectRepository = documentObjectRepository;
-        this.formatService = formatService;
-        this.variantFormatService = variantFormatService;
+        this.metadataService = metadataService;
         this.conversionHateoasHandler = conversionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
         this.documentDescriptionHateoasHandler =
@@ -1076,9 +1071,10 @@ public class DocumentObjectService
     private void validateFormat(DocumentObject documentObject) {
         if (null != documentObject.getFormat()) {
             Format format =
-                (Format) formatService
-                .findValidMetadataOrThrow(documentObject.getBaseTypeName(),
-                                          documentObject.getFormat());
+                    (Format) metadataService
+                            .findValidMetadataByEntityTypeOrThrow(
+                                    FORMAT,
+                                    documentObject.getFormat());
             documentObject.setFormat(format);
         }
     }
@@ -1086,9 +1082,10 @@ public class DocumentObjectService
     private void validateVariantFormat(DocumentObject documentObject) {
         // Assume value already set, as the deserialiser will enforce it.
         VariantFormat variantFormat =
-            (VariantFormat) variantFormatService
-            .findValidMetadataOrThrow(documentObject.getBaseTypeName(),
-                                      documentObject.getVariantFormat());
+                (VariantFormat) metadataService
+                        .findValidMetadataByEntityTypeOrThrow(
+                                VARIANT_FORMAT,
+                                documentObject.getVariantFormat());
         documentObject.setVariantFormat(variantFormat);
     }
 }

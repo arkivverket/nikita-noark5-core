@@ -15,7 +15,7 @@ import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
 @Entity
 @Table(name = TABLE_CASE_STATUS)
 public class CaseStatus
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

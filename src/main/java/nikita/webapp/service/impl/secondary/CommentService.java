@@ -11,12 +11,11 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
-import nikita.webapp.service.interfaces.metadata.ICommentTypeService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +25,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
 
 @Service
 @Transactional
@@ -36,20 +36,20 @@ public class CommentService
     private static final Logger logger =
             LoggerFactory.getLogger(CommentService.class);
 
+    private IMetadataService metadataService;
     private ICommentRepository commentRepository;
     private ICommentHateoasHandler commentHateoasHandler;
-    private ICommentTypeService commentTypeService;
 
     public CommentService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IMetadataService metadataService,
             ICommentRepository commentRepository,
-            ICommentHateoasHandler commentHateoasHandler,
-            ICommentTypeService commentTypeService) {
+            ICommentHateoasHandler commentHateoasHandler) {
         super(entityManager, applicationEventPublisher);
+        this.metadataService = metadataService;
         this.commentRepository = commentRepository;
         this.commentHateoasHandler = commentHateoasHandler;
-        this.commentTypeService = commentTypeService;
     }
 
     @Override
@@ -158,9 +158,9 @@ public class CommentService
 
     private void checkCommentType(Comment comment) {
         if (comment.getCommentType() != null) {
-            CommentType commentType = (CommentType) commentTypeService
-                .findValidMetadataOrThrow(comment.getBaseTypeName(),
-                                          comment.getCommentType());
+            CommentType commentType = (CommentType) metadataService
+                    .findValidMetadataByEntityTypeOrThrow(COMMENT_TYPE,
+                            comment.getCommentType());
             comment.setCommentType(commentType);
         }
     }

@@ -1,0 +1,20 @@
+{
+  "EventType": [
+    {
+      "code": "C",
+      "codename": "'Opprett"
+    },
+    {
+      "code": "R",
+      "codename": "Les"
+    },
+    {
+      "code": "U",
+      "codename": "Oppdater"
+    },
+    {
+      "code": "D",
+      "codename": "Slett"
+    }
+  ]
+}

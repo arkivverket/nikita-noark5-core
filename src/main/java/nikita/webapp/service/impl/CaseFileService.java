@@ -22,14 +22,12 @@ import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
-import nikita.webapp.service.interfaces.metadata.ICaseStatusService;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +44,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
@@ -65,8 +64,7 @@ public class CaseFileService
     private ISequenceNumberGeneratorService numberGeneratorService;
     private IAdministrativeUnitService administrativeUnitService;
     private IUserRepository userRepository;
-    private ICaseStatusService caseStatusService;
-    private IDocumentMediumService documentMediumService;
+    private IMetadataService metadataService;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
 
     public CaseFileService(
@@ -78,8 +76,7 @@ public class CaseFileService
             ISequenceNumberGeneratorService numberGeneratorService,
             IAdministrativeUnitService administrativeUnitService,
             IUserRepository userRepository,
-            ICaseStatusService caseStatusService,
-            IDocumentMediumService documentMediumService,
+            IMetadataService metadataService,
             ICaseFileHateoasHandler caseFileHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.registryEntryService = registryEntryService;
@@ -88,14 +85,14 @@ public class CaseFileService
         this.numberGeneratorService = numberGeneratorService;
         this.administrativeUnitService = administrativeUnitService;
         this.userRepository = userRepository;
-        this.caseStatusService = caseStatusService;
-        this.documentMediumService = documentMediumService;
+        this.metadataService = metadataService;
+        this.metadataService = metadataService;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
     }
 
     @Override
     public CaseFile save(CaseFile caseFile) {
-        validateDocumentMedium(documentMediumService, caseFile);
+        validateDocumentMedium(metadataService, caseFile);
 
         validateCaseStatus(caseFile);
 
@@ -484,10 +481,11 @@ public class CaseFileService
 
     private void validateCaseStatus(CaseFile caseFile) {
         if (null != caseFile.getCaseStatusCode()) {
-            CaseStatus caseStatus = (CaseStatus) caseStatusService
-                .findValidMetadataOrThrow(caseFile.getBaseTypeName(),
-                                          caseFile.getCaseStatusCode(),
-                                          caseFile.getCaseStatusCodeName());
+            CaseStatus caseStatus = (CaseStatus) metadataService
+                    .findValidMetadataByEntityTypeOrThrow(
+                            CASE_STATUS,
+                            caseFile.getCaseStatusCode(),
+                            caseFile.getCaseStatusCodeName());
             caseFile.setCaseStatusCodeName(caseStatus.getCodeName());
         }
     }

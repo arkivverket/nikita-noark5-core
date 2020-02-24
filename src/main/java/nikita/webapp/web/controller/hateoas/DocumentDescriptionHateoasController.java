@@ -8,12 +8,10 @@ import io.swagger.annotations.ApiResponses;
 import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
@@ -21,7 +19,6 @@ import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import org.springframework.http.ResponseEntity;
@@ -575,6 +572,7 @@ public class DocumentDescriptionHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + AUTHOR)
     public ResponseEntity<AuthorHateoas>
     findAllAuthorAssociatedWithDocumentDescription(
+            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the DocumentDescription to retrieve " +
                             "associated Authors",
@@ -582,6 +580,7 @@ public class DocumentDescriptionHateoasController
             @PathVariable("systemID") final String systemID) {
         return ResponseEntity
                 .status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionService.
                         findAllAuthorWithDocumentDescriptionBySystemId(
                                 systemID));

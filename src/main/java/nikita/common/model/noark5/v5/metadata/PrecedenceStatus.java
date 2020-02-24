@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.PRECEDENCE_STATUS;
 @Entity
 @Table(name = TABLE_PRECEDENCE_STATUS)
 public class PrecedenceStatus
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

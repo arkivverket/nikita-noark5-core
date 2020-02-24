@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.FLOW_STATUS;
 @Entity
 @Table(name = TABLE_FLOW_STATUS)
 public class FlowStatus
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

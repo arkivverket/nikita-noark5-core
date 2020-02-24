@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY_TYPE;
 @Entity
 @Table(name = TABLE_REGISTRY_ENTRY_TYPE)
 public class RegistryEntryType
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

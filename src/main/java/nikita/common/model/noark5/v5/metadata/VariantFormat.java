@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.VARIANT_FORMAT;
 @Entity
 @Table(name = TABLE_VARIANT_FORMAT)
 public class VariantFormat
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

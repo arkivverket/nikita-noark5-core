@@ -26,10 +26,7 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
-import nikita.webapp.service.interfaces.metadata.IRegistryEntryStatusService;
-import nikita.webapp.service.interfaces.metadata.IRegistryEntryTypeService;
-import nikita.webapp.service.interfaces.metadata.ISignOffMethodService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -55,9 +52,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.SIGN_OFF;
-import static nikita.common.config.N5ResourceMappings.SIGN_OFF_REFERENCE_RECORD;
-import static nikita.common.config.N5ResourceMappings.SIGN_OFF_REFERENCE_CORRESPONDENCE_PART;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
@@ -73,9 +68,7 @@ public class RegistryEntryService
             LoggerFactory.getLogger(RegistryEntryService.class);
     private ICorrespondencePartService correspondencePartService;
     private IPrecedenceService precedenceService;
-    private IDocumentMediumService documentMediumService;
-    private IRegistryEntryStatusService registryEntryStatusService;
-    private IRegistryEntryTypeService registryEntryTypeService;
+    private IMetadataService metadataService;
     private IRegistryEntryRepository registryEntryRepository;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
     private ISignOffHateoasHandler signOffHateoasHandler;
@@ -83,30 +76,25 @@ public class RegistryEntryService
     private ISignOffRepository signOffRepository;
     private IUserRepository userRepository;
     private IAdministrativeUnitService administrativeUnitService;
-    private ISignOffMethodService signOffMethodService;
 
     public RegistryEntryService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             ICorrespondencePartService correspondencePartService,
             IPrecedenceService precedenceService,
-            IDocumentMediumService documentMediumService,
-            IRegistryEntryStatusService registryEntryStatusService,
-            IRegistryEntryTypeService registryEntryTypeService,
+            IMetadataService metadataService,
             IRegistryEntryRepository registryEntryRepository,
             IRegistryEntryHateoasHandler registryEntryHateoasHandler,
             ISignOffHateoasHandler signOffHateoasHandler,
             ISequenceNumberGeneratorService numberGeneratorService,
             ISignOffRepository signOffRepository,
             IUserRepository userRepository,
-            IAdministrativeUnitService administrativeUnitService,
-            ISignOffMethodService signOffMethodService) {
+            IAdministrativeUnitService administrativeUnitService) {
         super(entityManager, applicationEventPublisher);
         this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
-        this.documentMediumService = documentMediumService;
-        this.registryEntryStatusService = registryEntryStatusService;
-        this.registryEntryTypeService = registryEntryTypeService;
+        this.metadataService = metadataService;
+        this.metadataService = metadataService;
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
         this.signOffHateoasHandler = signOffHateoasHandler;
@@ -114,12 +102,11 @@ public class RegistryEntryService
         this.userRepository = userRepository;
         this.signOffRepository = signOffRepository;
         this.administrativeUnitService = administrativeUnitService;
-        this.signOffMethodService = signOffMethodService;
     }
 
     @Override
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
-        validateDocumentMedium(documentMediumService, registryEntry);
+        validateDocumentMedium(metadataService, registryEntry);
         validateRegistryEntryStatus(registryEntry);
         validateRegistryEntryType(registryEntry);
         registryEntry.setRecordDate(OffsetDateTime.now());
@@ -681,18 +668,20 @@ public class RegistryEntryService
         // TODO note, RegistryEntry.*RecordStatus* is really
         // operating on RegistryEntryStatus.
         RegistryEntryStatus registryEntryStatus =
-            (RegistryEntryStatus) registryEntryStatusService
-            .findValidMetadataOrThrow(registryEntry.getBaseTypeName(),
-                                      registryEntry.getRecordStatusCode(),
-                                      registryEntry.getRecordStatusCodeName());
+                (RegistryEntryStatus) metadataService
+                        .findValidMetadataByEntityTypeOrThrow(
+                                REGISTRY_ENTRY_STATUS,
+                                registryEntry.getRecordStatusCode(),
+                                registryEntry.getRecordStatusCodeName());
         registryEntry.setRecordStatusCodeName(registryEntryStatus.getCodeName());
     }
 
     private void validateRegistryEntryType(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
         RegistryEntryType registryEntryType =
-                (RegistryEntryType) registryEntryTypeService
-                        .findValidMetadataOrThrow(registryEntry.getBaseTypeName(),
+                (RegistryEntryType) metadataService
+                        .findValidMetadataByEntityTypeOrThrow(
+                                REGISTRY_ENTRY_TYPE,
                                 registryEntry.getRegistryEntryTypeCode(),
                                 registryEntry.getRegistryEntryTypeCodeName());
         registryEntry.setRegistryEntryTypeCodeName(registryEntryType.getCodeName());
@@ -701,8 +690,8 @@ public class RegistryEntryService
     private void validateSignOffMethod(SignOff incomingSignOff) {
         // Assume value already set, as the deserialiser will enforce it.
         SignOffMethod signOffMethod =
-                (SignOffMethod) signOffMethodService
-                        .findValidMetadataOrThrow(incomingSignOff.getBaseTypeName(),
+                (SignOffMethod) metadataService
+                        .findValidMetadataByEntityTypeOrThrow(incomingSignOff.getBaseTypeName(),
                                 incomingSignOff.getSignOffMethodCode(),
                                 incomingSignOff.getSignOffMethodCodeName());
         incomingSignOff.setSignOffMethodCodeName(signOffMethod.getCodeName());

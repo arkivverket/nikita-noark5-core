@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.FORMAT;
 @Entity
 @Table(name = TABLE_FORMAT)
 public class Format
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

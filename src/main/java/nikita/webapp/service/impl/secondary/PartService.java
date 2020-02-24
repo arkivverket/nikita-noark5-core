@@ -1,21 +1,24 @@
 package nikita.webapp.service.impl.secondary;
 
-import nikita.common.model.noark5.v5.*;
-import nikita.common.model.noark5.v5.secondary.*;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
 import nikita.common.model.noark5.v5.metadata.PartRole;
-import nikita.common.repository.n5v5.secondary.IPartRepository;
+import nikita.common.model.noark5.v5.secondary.Part;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
+import nikita.common.repository.n5v5.secondary.IPartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
-import nikita.webapp.service.interfaces.metadata.IPartRoleService;
-import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.service.impl.NoarkService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +30,8 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.Constants.TEMPLATE_PART_ROLE_CODE;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @Service
@@ -41,19 +45,19 @@ public class PartService
 
     private final IPartRoleRepository partRoleRepository;
     private final IPartRepository partRepository;
-    private IPartRoleService partRoleService;
+    private IMetadataService metadataService;
     private final IPartHateoasHandler partHateoasHandler;
 
     public PartService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
                        IPartRoleRepository partRoleRepository,
                        IPartRepository partRepository,
-                       IPartRoleService partRoleService,
+                       IMetadataService metadataService,
                        IPartHateoasHandler partHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.partRoleRepository = partRoleRepository;
         this.partRepository = partRepository;
-        this.partRoleService = partRoleService;
+        this.metadataService = metadataService;
         this.partHateoasHandler = partHateoasHandler;
     }
 
@@ -546,17 +550,18 @@ public class PartService
     }
 
     private void setDefaultPartRole(@NotNull Part part) {
-        PartRole partRole = (PartRole) partRoleService
-            .findValidMetadataOrThrow(part.getBaseTypeName(),
-                                      TEMPLATE_PART_ROLE_CODE, null);
+        PartRole partRole = (PartRole) metadataService
+                .findValidMetadataByEntityTypeOrThrow(PART_ROLE,
+                        TEMPLATE_PART_ROLE_CODE, null);
         part.setPartRole(partRole);
     }
 
     private void validatePartRole(Part part) {
         // Assume value already set, as the deserialiser will enforce it.
-        PartRole partRole = (PartRole) partRoleService
-            .findValidMetadataOrThrow(part.getBaseTypeName(),
-                                      part.getPartRole());
+        PartRole partRole = (PartRole) metadataService
+                .findValidMetadataByEntityTypeOrThrow(
+                        PART_ROLE,
+                        part.getPartRole());
         part.setPartRole(partRole);
     }
 }

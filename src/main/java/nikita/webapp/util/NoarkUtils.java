@@ -6,14 +6,13 @@ import nikita.common.model.noark5.v5.interfaces.entities.IDeletionEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IFinalise;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.secondary.Deletion;
-import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
 
 public final class NoarkUtils {
 
@@ -31,14 +30,14 @@ public final class NoarkUtils {
             }
 
             public static void validateDocumentMedium(
-                    IDocumentMediumService service,
+                    IMetadataService service,
                     IDocumentMedium entity) {
                 if (null != entity.getDocumentMediumCode()) {
                     DocumentMedium metadata =
-                        (DocumentMedium) service.findValidMetadataOrThrow(
-                                entity.getBaseTypeName(),
-                                entity.getDocumentMediumCode(),
-                                entity.getDocumentMediumCodeName());
+                            (DocumentMedium) service.findValidMetadataByEntityTypeOrThrow(
+                                    DOCUMENT_MEDIUM,
+                                    entity.getDocumentMediumCode(),
+                                    entity.getDocumentMediumCodeName());
                     entity.setDocumentMediumCodeName(metadata.getCodeName());
                 }
             }
