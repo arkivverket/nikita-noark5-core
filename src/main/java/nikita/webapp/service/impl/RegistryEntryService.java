@@ -94,7 +94,6 @@ public class RegistryEntryService
         this.correspondencePartService = correspondencePartService;
         this.precedenceService = precedenceService;
         this.metadataService = metadataService;
-        this.metadataService = metadataService;
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
         this.signOffHateoasHandler = signOffHateoasHandler;
