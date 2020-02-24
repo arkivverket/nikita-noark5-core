@@ -29,7 +29,7 @@ public class CaseHandlingDetails extends APIDetails {
 
     private void create() {
 
-        // Add support for caeFile object
+        // Add support for caseFile object
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_CASE_FILE,
                 REL_CASE_HANDLING + CASE_FILE + SLASH,
