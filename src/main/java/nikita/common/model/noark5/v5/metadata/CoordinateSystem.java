@@ -10,7 +10,7 @@ import static nikita.common.config.N5ResourceMappings.COORDINATE_SYSTEM;
 // Noark 5v5 Koordinatsystem
 @Entity
 @Table(name = TABLE_COORDINATE_SYSTEM)
-public class CoordinateSystem extends MetadataSuperClass {
+public class CoordinateSystem extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

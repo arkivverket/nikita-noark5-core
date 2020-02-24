@@ -10,7 +10,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,7 +42,7 @@ public class FondsCreatorService
             getLogger(FondsCreatorService.class);
     private IFondsCreatorRepository fondsCreatorRepository;
     private IFondsRepository fondsRepository;
-    private IDocumentMediumService documentMediumService;
+    private IMetadataService metadataService;
     private IFondsHateoasHandler fondsHateoasHandler;
 
     public FondsCreatorService(
@@ -50,12 +50,12 @@ public class FondsCreatorService
             ApplicationEventPublisher applicationEventPublisher,
             IFondsCreatorRepository fondsCreatorRepository,
             IFondsRepository fondsRepository,
-            IDocumentMediumService documentMediumService,
+            IMetadataService metadataService,
             IFondsHateoasHandler fondsHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.fondsCreatorRepository = fondsCreatorRepository;
         this.fondsRepository = fondsRepository;
-        this.documentMediumService = documentMediumService;
+        this.metadataService = metadataService;
         this.fondsHateoasHandler = fondsHateoasHandler;
     }
 
@@ -79,7 +79,7 @@ public class FondsCreatorService
             String fondsCreatorSystemId, Fonds fonds) {
         FondsCreator fondsCreator =
                 getFondsCreatorOrThrow(fondsCreatorSystemId);
-        validateDocumentMedium(documentMediumService, fonds);
+        validateDocumentMedium(metadataService, fonds);
         fonds.setFondsStatusCode(FONDS_STATUS_OPEN_CODE);
         fonds.setFondsStatusCodeName(FONDS_STATUS_OPEN);
         setFinaliseEntityValues(fonds);

@@ -13,7 +13,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
-import nikita.webapp.service.interfaces.metadata.ICorrespondencePartTypeService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
@@ -29,7 +29,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_CORRESPONDENCE_PART;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
-import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_DESCRIPTION_EA;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @Service
@@ -46,7 +45,7 @@ public class CorrespondencePartService
             correspondencePartTypeRepository;
     private final ICorrespondencePartHateoasHandler
             correspondencePartHateoasHandler;
-    private final ICorrespondencePartTypeService correspondencePartTypeService;
+    private final IMetadataService metadataService;
 
     public CorrespondencePartService(
             EntityManager entityManager,
@@ -54,12 +53,12 @@ public class CorrespondencePartService
             ICorrespondencePartRepository correspondencePartRepository,
             ICorrespondencePartTypeRepository correspondencePartTypeRepository,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
-            ICorrespondencePartTypeService correspondencePartTypeService) {
+            IMetadataService metadataService) {
         super(entityManager, applicationEventPublisher);
         this.correspondencePartRepository = correspondencePartRepository;
         this.correspondencePartTypeRepository = correspondencePartTypeRepository;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
-        this.correspondencePartTypeService = correspondencePartTypeService;
+        this.metadataService = metadataService;
     }
 
     @Override
@@ -237,9 +236,9 @@ public class CorrespondencePartService
     private void createTemplateCorrespondencePartType(
             CorrespondencePart correspondencePart) {
 	CorrespondencePartType correspondencePartType =
-	    (CorrespondencePartType) correspondencePartTypeService
-            .findValidMetadataOrThrow(correspondencePart.getBaseTypeName(),
-                                      CORRESPONDENCE_PART_CODE_EA, null);
+	    (CorrespondencePartType) metadataService
+                .findValidMetadataByEntityTypeOrThrow(CORRESPONDENCE_PART_TYPE,
+                        CORRESPONDENCE_PART_CODE_EA, null);
         correspondencePart.setCorrespondencePartType(correspondencePartType);
 
     }
@@ -632,9 +631,10 @@ public class CorrespondencePartService
                 CorrespondencePart correspondencePart) {
         // Assume value already set, as the deserialiser will enforce it.
         CorrespondencePartType correspondencePartType =
-            (CorrespondencePartType) correspondencePartTypeService
-            .findValidMetadataOrThrow(correspondencePart.getBaseTypeName(),
-                                      correspondencePart.getCorrespondencePartType());
+                (CorrespondencePartType) metadataService
+                        .findValidMetadataByEntityTypeOrThrow(
+                                CORRESPONDENCE_PART_TYPE,
+                                correspondencePart.getCorrespondencePartType());
         correspondencePart.setCorrespondencePartType
 	    (correspondencePartType);
     }

@@ -16,9 +16,9 @@ import static nikita.common.config.N5ResourceMappings.POSTAL_NUMBER;
 @Entity
 @Table(name = TABLE_POSTAL_CODE)
 public class PostalCode
-        extends MetadataSuperClass {
+        extends Metadata {
 
-     private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Kommunenummer (xs:string)

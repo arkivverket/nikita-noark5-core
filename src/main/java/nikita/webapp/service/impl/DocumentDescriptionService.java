@@ -2,12 +2,10 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
+import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
@@ -19,22 +17,19 @@ import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
-import nikita.webapp.service.interfaces.metadata.IDocumentStatusService;
-import nikita.webapp.service.interfaces.metadata.IDocumentTypeService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.IAuthorService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,9 +42,7 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.updateDeletion;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDeletion;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 @Service
 @Transactional
@@ -67,9 +60,7 @@ public class DocumentDescriptionService
     private IRecordHateoasHandler recordHateoasHandler;
     private IAuthorService authorService;
     private ICommentService commentService;
-    private IDocumentMediumService documentMediumService;
-    private IDocumentStatusService documentStatusService;
-    private IDocumentTypeService documentTypeService;
+    private IMetadataService metadataService;
     private IPartService partService;
     private IPartHateoasHandler partHateoasHandler;
     private IAuthorHateoasHandler authorHateoasHandler;
@@ -86,9 +77,7 @@ public class DocumentDescriptionService
             IRecordHateoasHandler recordHateoasHandler,
             IAuthorService authorService,
             ICommentService commentService,
-            IDocumentMediumService documentMediumService,
-            IDocumentStatusService documentStatusService,
-            IDocumentTypeService documentTypeService,
+            IMetadataService metadataService,
             IPartService partService,
             IPartHateoasHandler partHateoasHandler,
             IAuthorHateoasHandler authorHateoasHandler,
@@ -102,9 +91,7 @@ public class DocumentDescriptionService
         this.recordHateoasHandler = recordHateoasHandler;
         this.authorService = authorService;
         this.commentService = commentService;
-        this.documentMediumService = documentMediumService;
-        this.documentStatusService = documentStatusService;
-        this.documentTypeService = documentTypeService;
+        this.metadataService = metadataService;
         this.partService = partService;
         this.partHateoasHandler = partHateoasHandler;
         this.authorHateoasHandler = authorHateoasHandler;
@@ -231,7 +218,7 @@ public class DocumentDescriptionService
      */
     @Override
     public DocumentDescription save(DocumentDescription documentDescription) {
-        validateDocumentMedium(documentMediumService, documentDescription);
+        validateDocumentMedium(metadataService, documentDescription);
         validateDocumentStatus(documentDescription);
         validateDocumentType(documentDescription);
         validateDeletion(documentDescription.getReferenceDeletion());
@@ -453,19 +440,21 @@ public class DocumentDescriptionService
     private void validateDocumentStatus(DocumentDescription documentDescription) {
         // Assume value already set, as the deserialiser will enforce it.
         DocumentStatus documentStatus =
-            (DocumentStatus) documentStatusService
-            .findValidMetadataOrThrow(documentDescription.getBaseTypeName(),
-                                      documentDescription.getDocumentStatusCode(),
-                                      documentDescription.getDocumentStatusCodeName());
+                (DocumentStatus) metadataService
+                        .findValidMetadataByEntityTypeOrThrow(
+                                DOCUMENT_STATUS,
+                                documentDescription.getDocumentStatusCode(),
+                                documentDescription.getDocumentStatusCodeName());
         documentDescription.setDocumentStatusCodeName(documentStatus.getCodeName());
     }
     private void validateDocumentType(DocumentDescription documentDescription) {
         // Assume value already set, as the deserialiser will enforce it.
         DocumentType documentType =
-            (DocumentType) documentTypeService
-            .findValidMetadataOrThrow(documentDescription.getBaseTypeName(),
-                                      documentDescription.getDocumentTypeCode(),
-                                      documentDescription.getDocumentTypeCodeName());
+                (DocumentType) metadataService
+                        .findValidMetadataByEntityTypeOrThrow(
+                                DOCUMENT_TYPE,
+                                documentDescription.getDocumentTypeCode(),
+                                documentDescription.getDocumentTypeCodeName());
         documentDescription.setDocumentTypeCodeName(documentType.getCodeName());
     }
 }

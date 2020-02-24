@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
 @Entity
 @Table(name = TABLE_CLASSIFICATION_TYPE)
 public class ClassificationType
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

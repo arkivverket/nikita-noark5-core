@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_VERIF
 @Entity
 @Table(name = TABLE_ELECTRONIC_SIGNATURE_VERIFIED)
 public class ElectronicSignatureVerified
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

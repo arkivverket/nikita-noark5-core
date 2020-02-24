@@ -14,7 +14,7 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
 @Table(name = TABLE_CORRESPONDENCE_PART_TYPE)
 @Audited
 public class CorrespondencePartType
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

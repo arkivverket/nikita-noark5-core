@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_SECUR
 @Entity
 @Table(name = TABLE_ELECTRONIC_SIGNATURE_SECURITY_LEVEL)
 public class ElectronicSignatureSecurityLevel
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

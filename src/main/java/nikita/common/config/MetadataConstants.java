@@ -7,6 +7,10 @@ package nikita.common.config;
  */
 public final class MetadataConstants {
 
+
+    public static final String METADATA_PACKAGE =
+            "nikita.common.model.noark5.v5.metadata";
+
     // CorrespondencePart Code
     public static final String CORRESPONDENCE_PART_CODE_EA = "EA";
     public static final String CORRESPONDENCE_PART_CODE_EM = "EM";

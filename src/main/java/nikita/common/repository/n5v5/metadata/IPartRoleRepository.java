@@ -7,6 +7,5 @@ import nikita.common.model.noark5.v5.metadata.PartRole;
  */
 
 public interface IPartRoleRepository
-        extends MetadataRepository<PartRole, String> {
-
+        extends IMetadataRepository<PartRole, String> {
 }

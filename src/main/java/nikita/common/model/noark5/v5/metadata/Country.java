@@ -10,7 +10,7 @@ import static nikita.common.config.N5ResourceMappings.COUNTRY;
 // Noark 5v5 Land
 @Entity
 @Table(name = TABLE_COUNTRY)
-public class Country extends MetadataSuperClass {
+public class Country extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

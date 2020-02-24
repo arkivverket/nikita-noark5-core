@@ -26,6 +26,10 @@ public interface IMetadataEntity
      */
     String getBaseTypeName();
 
+    void setBaseTypeName(String baseTypeName);
+
+    void setBaseRel(String baseRel);
+
     /**
      * Tell nikita what kind of endpoint you belong to. A Fonds returns "arkivstruktur", as does
      * a File, while a CaseFile returns "sakarkiv". DocumentStatus returns "metaadata".Required when
@@ -34,4 +38,6 @@ public interface IMetadataEntity
      * @return The name of the functional area the entity belongs to
      */
     String getFunctionalTypeName();
+
+    String setFunctionalTypeName(String functionalTypeName);
 }

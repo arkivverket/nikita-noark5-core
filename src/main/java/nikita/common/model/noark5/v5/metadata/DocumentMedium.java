@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
 @Entity
 @Table(name = TABLE_DOCUMENT_MEDIUM)
 public class DocumentMedium
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

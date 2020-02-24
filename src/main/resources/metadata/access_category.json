@@ -1,0 +1,24 @@
+{
+  "AccessCategory": [
+    {
+      "code": "A",
+      "codename": "arkivdel"
+    },
+    {
+      "code": "K",
+      "codename": "klasse"
+    },
+    {
+      "code": "M",
+      "codename": "mappe"
+    },
+    {
+      "code": "R",
+      "codename": "registrering"
+    },
+    {
+      "code": "D",
+      "codename": "dokumentbeskrivelse"
+    }
+  ]
+}

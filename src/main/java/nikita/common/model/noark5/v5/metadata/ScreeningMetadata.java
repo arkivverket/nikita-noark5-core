@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.SCREENING_METADATA;
 @Entity
 @Table(name = TABLE_SCREENING_METADATA)
 public class ScreeningMetadata
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

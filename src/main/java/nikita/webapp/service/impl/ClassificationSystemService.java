@@ -15,7 +15,7 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
-import nikita.webapp.service.interfaces.metadata.IClassificationTypeService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static org.springframework.http.HttpStatus.OK;
@@ -55,7 +56,7 @@ public class ClassificationSystemService
     private static final Logger logger = LoggerFactory.getLogger(
             ClassificationSystemService.class);
 
-    private IClassificationTypeService classificationTypeService;
+    private IMetadataService metadataService;
     private IClassService classService;
     private IClassificationSystemRepository classificationSystemRepository;
     private IClassificationSystemHateoasHandler
@@ -66,7 +67,7 @@ public class ClassificationSystemService
     public ClassificationSystemService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
-            IClassificationTypeService classificationTypeService,
+            IMetadataService metadataService,
             IClassService classService,
             IClassificationSystemRepository classificationSystemRepository,
             IClassificationSystemHateoasHandler
@@ -74,7 +75,7 @@ public class ClassificationSystemService
             IClassHateoasHandler classHateoasHandler,
             ISeriesHateoasHandler seriesHateoasHandler) {
         super(entityManager, applicationEventPublisher);
-	this.classificationTypeService = classificationTypeService;
+        this.metadataService = metadataService;
         this.classService = classService;
         this.classificationSystemRepository = classificationSystemRepository;
         this.classificationSystemHateoasHandler =
@@ -354,16 +355,18 @@ public class ClassificationSystemService
     }
 
     private void validateClassificationType(
-                ClassificationSystem classificationSystem) {
+            ClassificationSystem classificationSystem) {
         if (null != classificationSystem.getClassificationTypeCode()) {
             ClassificationType classificationType =
-                (ClassificationType) classificationTypeService
-                .findValidMetadataOrThrow(
-                classificationSystem.getBaseTypeName(),
-                classificationSystem.getClassificationTypeCode(),
-                classificationSystem.getClassificationTypeCodeName());
+                    (ClassificationType) metadataService
+                            .findValidMetadataByEntityTypeOrThrow(
+                                    CLASSIFICATION_TYPE,
+                                    classificationSystem.
+                                            getClassificationTypeCode(),
+                                    classificationSystem.
+                                            getClassificationTypeCodeName());
             classificationSystem.setClassificationTypeCodeName(
-                classificationType.getCodeName());
-	}
+                    classificationType.getCodeName());
+        }
     }
 }

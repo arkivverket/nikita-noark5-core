@@ -12,7 +12,7 @@ import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
 @Entity
 @Table(name = TABLE_FONDS_STATUS)
 public class FondsStatus
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

@@ -11,7 +11,7 @@ import static nikita.common.config.N5ResourceMappings.ACCESS_CATEGORY;
 @Entity
 @Table(name = TABLE_ACCESS_CATEGORY)
 public class AccessCategory
-        extends MetadataSuperClass {
+        extends Metadata {
 
     private static final long serialVersionUID = 1L;
 

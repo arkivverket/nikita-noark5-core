@@ -9,18 +9,16 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.repository.n5v5.ISeriesRepository;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.common.util.exceptions.NoarkInvalidStructureException;
-import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
-import nikita.webapp.service.interfaces.metadata.IDocumentMediumService;
-import nikita.webapp.service.interfaces.metadata.ISeriesStatusService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,11 +33,10 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.N5ResourceMappings.SERIES_STATUS;
 import static nikita.common.config.N5ResourceMappings.SERIES_STATUS_CLOSED_CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.updateDeletion;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDeletion;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -52,11 +49,10 @@ public class SeriesService
     private static final Logger logger =
             LoggerFactory.getLogger(SeriesService.class);
 
-    private IDocumentMediumService documentMediumService;
+    private IMetadataService metadataService;
     private IFileService fileService;
     private ICaseFileService caseFileService;
     private IClassificationSystemService classificationSystemService;
-    private ISeriesStatusService seriesStatusService;
     private ISeriesRepository seriesRepository;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IRecordHateoasHandler recordHateoasHandler;
@@ -69,10 +65,9 @@ public class SeriesService
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IClassificationSystemService classificationSystemService,
-            IDocumentMediumService documentMediumService,
             IFileService fileService,
             ICaseFileService caseFileService,
-            ISeriesStatusService seriesStatusService,
+            IMetadataService metadataService,
             ISeriesRepository seriesRepository,
             ISeriesHateoasHandler seriesHateoasHandler,
             IRecordHateoasHandler recordHateoasHandler,
@@ -81,10 +76,10 @@ public class SeriesService
             IClassificationSystemHateoasHandler
                     classificationSystemHateoasHandler) {
         super(entityManager, applicationEventPublisher);
-        this.documentMediumService = documentMediumService;
+        this.metadataService = metadataService;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
-        this.seriesStatusService = seriesStatusService;
+        this.metadataService = metadataService;
         this.seriesRepository = seriesRepository;
         this.classificationSystemService = classificationSystemService;
         this.seriesHateoasHandler = seriesHateoasHandler;
@@ -116,7 +111,7 @@ public class SeriesService
 
     @Override
     public Series save(Series series) {
-        validateDocumentMedium(documentMediumService, series);
+        validateDocumentMedium(metadataService, series);
         validateDeletion(series.getReferenceDeletion());
         if (null == series.getSeriesStatusCode()) {
             checkSeriesStatusUponCreation(series);
@@ -388,10 +383,11 @@ public class SeriesService
      */
     public void checkSeriesStatusUponCreation(Series series) {
         if (series.getSeriesStatusCode() != null) {
-            SeriesStatus seriesStatus = (SeriesStatus) seriesStatusService
-                .findValidMetadataOrThrow(series.getBaseTypeName(),
-                                         series.getSeriesStatusCode(),
-                                         series.getSeriesStatusCodeName());
+            SeriesStatus seriesStatus = (SeriesStatus) metadataService
+                    .findValidMetadataByEntityTypeOrThrow(
+                            SERIES_STATUS,
+                            series.getSeriesStatusCode(),
+                            series.getSeriesStatusCodeName());
             series.setSeriesStatusCodeName(seriesStatus.getCodeName());
         }
     }
