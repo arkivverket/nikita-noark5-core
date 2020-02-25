@@ -8,6 +8,8 @@ import nikita.common.util.serializers.noark5v5.hateoas.secondary.ConversionHateo
 
 import java.util.List;
 
+import static nikita.common.config.N5ResourceMappings.CONVERSION;
+
 @JsonSerialize(using = ConversionHateoasSerializer.class)
 public class ConversionHateoas
         extends HateoasNoarkObject
@@ -20,7 +22,7 @@ public class ConversionHateoas
         super(entity);
     }
 
-    public ConversionHateoas(List<INoarkEntity> entityList, String entityType) {
-        super(entityList, entityType);
+    public ConversionHateoas(List<INoarkEntity> entityList) {
+        super(entityList, CONVERSION);
     }
 }

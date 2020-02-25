@@ -8,6 +8,8 @@ import nikita.common.util.serializers.noark5v5.hateoas.secondary.SignOffHateoasS
 
 import java.util.List;
 
+import static nikita.common.config.N5ResourceMappings.SIGN_OFF;
+
 @JsonSerialize(using = SignOffHateoasSerializer.class)
 public class SignOffHateoas
         extends HateoasNoarkObject
@@ -20,7 +22,7 @@ public class SignOffHateoas
         super(entity);
     }
 
-    public SignOffHateoas(List<INoarkEntity> entityList, String entityType) {
-        super(entityList, entityType);
+    public SignOffHateoas(List<INoarkEntity> entityList) {
+        super(entityList, SIGN_OFF);
     }
 }
