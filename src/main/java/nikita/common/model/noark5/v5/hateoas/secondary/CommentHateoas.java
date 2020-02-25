@@ -10,6 +10,8 @@ import nikita.common.util.serializers.noark5v5.hateoas.secondary.CommentHateoasS
 
 import java.util.List;
 
+import static nikita.common.config.N5ResourceMappings.COMMENT;
+
 @JsonSerialize(using = CommentHateoasSerializer.class)
 @JsonDeserialize(using = CommentDeserializer.class)
 public class CommentHateoas
@@ -23,7 +25,7 @@ public class CommentHateoas
         super(entity);
     }
 
-    public CommentHateoas(List<INoarkEntity> entityList, String entityType) {
-        super(entityList, entityType);
+    public CommentHateoas(List<INoarkEntity> entityList) {
+        super(entityList, COMMENT);
     }
 }

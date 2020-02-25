@@ -10,6 +10,8 @@ import nikita.common.util.serializers.noark5v5.hateoas.secondary.AuthorHateoasSe
 
 import java.util.List;
 
+import static nikita.common.config.N5ResourceMappings.AUTHOR;
+
 @JsonSerialize(using = AuthorHateoasSerializer.class)
 @JsonDeserialize(using = AuthorDeserializer.class)
 public class AuthorHateoas
@@ -23,7 +25,7 @@ public class AuthorHateoas
         super(entity);
     }
 
-    public AuthorHateoas(List<INoarkEntity> entityList, String entityType) {
-        super(entityList, entityType);
+    public AuthorHateoas(List<INoarkEntity> entityList) {
+        super(entityList, AUTHOR);
     }
 }

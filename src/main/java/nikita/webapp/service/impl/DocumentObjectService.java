@@ -289,8 +289,7 @@ public class DocumentObjectService
     findAllConversionAssociatedWithDocumentObject(String systemId) {
         ConversionHateoas conversionHateoas =
             new ConversionHateoas((List<INoarkEntity>) (List)
-            getDocumentObjectOrThrow(systemId).getReferenceConversion(),
-            CONVERSION);
+            getDocumentObjectOrThrow(systemId).getReferenceConversion());
         conversionHateoasHandler.addLinks(conversionHateoas,
                                           new Authorisation());
         return conversionHateoas;
