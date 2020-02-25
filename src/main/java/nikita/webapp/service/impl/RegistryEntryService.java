@@ -690,9 +690,10 @@ public class RegistryEntryService
         // Assume value already set, as the deserialiser will enforce it.
         SignOffMethod signOffMethod =
                 (SignOffMethod) metadataService
-                        .findValidMetadataByEntityTypeOrThrow(incomingSignOff.getBaseTypeName(),
-                                incomingSignOff.getSignOffMethodCode(),
-                                incomingSignOff.getSignOffMethodCodeName());
+                    .findValidMetadataByEntityTypeOrThrow(
+                            SIGN_OFF_METHOD,
+                            incomingSignOff.getSignOffMethodCode(),
+                            incomingSignOff.getSignOffMethodCodeName());
         incomingSignOff.setSignOffMethodCodeName(signOffMethod.getCodeName());
     }
 }
