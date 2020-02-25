@@ -296,8 +296,7 @@ public class RegistryEntryService
     findAllSignOffAssociatedWithRegistryEntry(String systemId) {
         SignOffHateoas signOffHateoas =
             new SignOffHateoas((List<INoarkEntity>) (List)
-            getRegistryEntryOrThrow(systemId).getReferenceSignOff(),
-            SIGN_OFF);
+            getRegistryEntryOrThrow(systemId).getReferenceSignOff());
         signOffHateoasHandler.addLinks(signOffHateoas,
                                        new Authorisation());
         return signOffHateoas;

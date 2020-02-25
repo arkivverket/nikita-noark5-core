@@ -56,8 +56,6 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_CORRESPONDENCE_PART_RECORD;
-import static nikita.common.config.N5ResourceMappings.AUTHOR;
-import static nikita.common.config.N5ResourceMappings.COMMENT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -214,8 +212,7 @@ public class RecordService
         Record record = getRecordOrThrow(systemId);
         AuthorHateoas authorHateoas =
                 new AuthorHateoas((List<INoarkEntity>)
-                        (List) record.getReferenceAuthor(),
-                        AUTHOR);
+                        (List) record.getReferenceAuthor());
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
         setOutgoingRequestHeader(authorHateoas);
         return authorHateoas;
@@ -300,8 +297,7 @@ public class RecordService
             @NotNull final String systemID) {
         CommentHateoas commentHateoas =
             new CommentHateoas((List<INoarkEntity>) (List)
-                getRecordOrThrow(systemID).getReferenceComment(),
-                COMMENT);
+                getRecordOrThrow(systemID).getReferenceComment());
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }

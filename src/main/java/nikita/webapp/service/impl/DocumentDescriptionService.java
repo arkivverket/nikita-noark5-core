@@ -245,8 +245,7 @@ public class DocumentDescriptionService
                 getDocumentDescriptionOrThrow(systemId);
         AuthorHateoas authorHateoas =
                 new AuthorHateoas((List<INoarkEntity>)
-                        (List) documentDescription.getReferenceAuthor(),
-                        AUTHOR);
+                        (List) documentDescription.getReferenceAuthor());
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
         setOutgoingRequestHeader(authorHateoas);
         return authorHateoas;
@@ -301,8 +300,7 @@ public class DocumentDescriptionService
             @NotNull final String systemID) {
         CommentHateoas commentHateoas =
             new CommentHateoas((List<INoarkEntity>) (List)
-                getDocumentDescriptionOrThrow(systemID).getReferenceComment(),
-                COMMENT);
+                getDocumentDescriptionOrThrow(systemID).getReferenceComment());
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }
