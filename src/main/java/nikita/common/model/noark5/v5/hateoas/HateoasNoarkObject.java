@@ -1,8 +1,6 @@
 package nikita.common.model.noark5.v5.hateoas;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.util.deserialisers.hateoas.HateoasDeserializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +24,6 @@ import java.util.Map;
  * Scalability with the HashMap (1000's of entries) isn't an issue because
  * pagination is used in the core
  */
-@JsonDeserialize(using = HateoasDeserializer.class)
 public class HateoasNoarkObject implements IHateoasNoarkObject {
 
     /**
