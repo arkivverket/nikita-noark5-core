@@ -25,6 +25,9 @@ Release 0.5 2019-0X-XX (commit X)
     - Updated prepopulated format list to use PRONOM codes.
     - Implemented endpoint for system information.
     - Implemented national identifiers for both file and record.
+    - Implemented comments.
+    - implemented sign off.
+    - implemented conversion.
  * Improved/implemented OData search and paging support for more entities.
  * No longer exposes attribute Dokumentobjekt.referanseDokumentfil,
    one should use the relation in \_links instead.
@@ -32,7 +35,7 @@ Release 0.5 2019-0X-XX (commit X)
    https://rel.arkivverket.no/noark5/v5/api/administrasjon/, replacing
    'administrasjon' with 'admin'.
  * Fixed several security and stability issues discovered by Coverity.
- * Corrected handling  ETag errors, now return code 409.
+ * Corrected handling ETag errors, now return code 409.
  * Improved handling of Kryssreferanse.
  * Changed internal database model to use UUID/SystemID as primary keys
    in tables.
@@ -59,6 +62,13 @@ Release 0.5 2019-0X-XX (commit X)
    annotations.
  * Added first unit test code.
  * Updated web GUI to work with the updated API.
+ * Changed integer fields, enforce them as numeric.
+ * Rewrote and simplify metadata handling to use common service and
+   controller code instead of duplicating for each type.
+ * Implemented the remaining metadata types.
+ * Changed Country list source from Wikipedia to Debian iso-codes and
+   updated the list of Countries.
+ * Many many corrections and improvements.
 
 Release 0.4 2019-05-22 (commit 18d69a0dafa2f776bfae3f6d8b3835d6faba70c1)
 ----------------------
