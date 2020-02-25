@@ -34,6 +34,8 @@ import nikita.common.util.deserialisers.casehandling.*;
 import nikita.common.util.deserialisers.nationalidentifier.*;
 import nikita.common.util.deserialisers.secondary.*;
 
+import java.util.UUID;
+
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class)
 //@AutoConfigureRestDocs(outputDir = "target/snippets")
@@ -158,7 +160,7 @@ public class TestParsing {
     @Test
     public void parseAdministrativeUnitComplete() throws Exception {
         System.out.println("info: testing administrative unit parsing");
-        String systemID = "c093ea52-307a-11ea-bc98-bba88311e612";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"administrativEnhetNavn\": \"Everywhere\" "
@@ -186,7 +188,7 @@ public class TestParsing {
     @Test
     public void parseUserComplete() throws Exception {
         System.out.println("info: testing user parsing");
-        String systemID = "c24d1996-3079-11ea-83a5-f78c4a16ad93";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"brukerNavn\": \"Isaac Asmiov\" "
@@ -210,7 +212,7 @@ public class TestParsing {
     @Test
     public void parseClassificationSystemComplete() throws Exception {
         System.out.println("info: testing classificationSystem parsing");
-        String systemID = "a36ff3f6-3086-11ea-b94d-eb793f1c877e";
+        String systemID = UUID.randomUUID().toString();
         String title = "A classification System title";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -243,8 +245,9 @@ public class TestParsing {
     @Test
     public void parseClassComplete() throws Exception {
         System.out.println("info: testing class parsing");
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
-                + "\"systemID\": \"cee54630-2fc3-11ea-b478-6b8131698ea5\" "
+                + "\"systemID\": \"" + systemID + "\" "
                 + ", \"oppdatertAv\": \"Some Person\" "
                 + ", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
                 //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
@@ -302,7 +305,7 @@ public class TestParsing {
     @Test
     public void parseFondsCreatorComplete() throws Exception {
         System.out.println("info: testing fondsCreator parsing");
-        String systemID = "f44ad6ca-308f-11ea-bd07-ebb04f04b0cd";
+        String systemID = UUID.randomUUID().toString();
         String name = "The Fond Creator";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -333,8 +336,9 @@ public class TestParsing {
     @Test
     public void parseFondsComplete() throws Exception {
         System.out.println("info: testing fonds parsing");
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
-                + "  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+                + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"oppdatertAv\": \"Some Person\" "
                 + ", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
                 //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
@@ -365,7 +369,7 @@ public class TestParsing {
     @Test
     public void parseSeriesComplete() throws Exception {
         System.out.println("info: testing series parsing");
-        String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+        String systemID = UUID.randomUUID().toString();
         String title = "A series title";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -450,7 +454,7 @@ public class TestParsing {
     @Test
     public void parseFileComplete() throws Exception {
         System.out.println("info: testing file parsing");
-        String systemID = "de2b388c-3051-11ea-a4a3-ffcaf5680dd8";
+        String systemID = UUID.randomUUID().toString();
         String title = "A file title";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -521,7 +525,7 @@ public class TestParsing {
     @Test
     public void parseCaseFileComplete() throws Exception {
         System.out.println("info: testing caseFile parsing");
-        String systemID = "de2b388c-3051-11ea-a4a3-ffcaf5680dd8";
+        String systemID = UUID.randomUUID().toString();
         String title = "A case file title";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -602,7 +606,7 @@ public class TestParsing {
     @Test
     public void parseRecordComplete() throws Exception {
         System.out.println("info: testing record parsing");
-        String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+        String systemID = UUID.randomUUID().toString();
         String title = "A record title";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -671,7 +675,7 @@ public class TestParsing {
     @Test
     public void parseRegistryEntryComplete() throws Exception {
         System.out.println("info: testing registry entry parsing");
-        String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+        String systemID = UUID.randomUUID().toString();
         String title = "A registry entry title";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -769,7 +773,7 @@ public class TestParsing {
     @Test
     public void parseRecordNoteComplete() throws Exception {
         System.out.println("info: testing record note parsing");
-        String systemID = "cee54630-2fc3-11ea-b478-6b8131698ea5";
+        String systemID = UUID.randomUUID().toString();
         String title = "A record note title";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -849,8 +853,9 @@ public class TestParsing {
     @Test
     public void parseDocumentDescriptionComplete() throws Exception {
         System.out.println("info: testing documentdescription parsing");
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
-                + "  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+                + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"oppdatertAv\": \"Some Person\" "
                 + ", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
                 //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
@@ -947,8 +952,9 @@ public class TestParsing {
     @Test
     public void parseDocumentObjectComplete() throws Exception {
         System.out.println("info: testing documentobject parsing");
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
-                + "  \"systemID\": \"de2b388c-3051-11ea-a4a3-ffcaf5680dd8\" "
+                + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"oppdatertAv\": \"Some Person\" "
                 + ", \"oppdatertDato\": \"1865-02-13T00:00:00+00:00\" "
                 //+", \"referanseOppdatertAv\": \"36719e06-3006-11ea-928f-efccf0776eba\" "
@@ -993,7 +999,7 @@ public class TestParsing {
     @Test
     public void parsePartPersonComplete() throws Exception {
         System.out.println("info: testing part person parsing");
-        String systemID = "c093ea52-307a-11ea-bc98-bba88311e612";
+        String systemID = UUID.randomUUID().toString();
         String name = "Michael Jordan";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -1044,7 +1050,7 @@ public class TestParsing {
     @Test
     public void parsePartUnitComplete() throws Exception {
         System.out.println("info: testing part unit parsing");
-        String systemID = "c093ea52-307a-11ea-bc98-bba88311e612";
+        String systemID = UUID.randomUUID().toString();
         String name = "Shoes and stuff";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -1096,7 +1102,7 @@ public class TestParsing {
     @Test
     public void parseCorrespondencePartPersonComplete() throws Exception {
         System.out.println("info: testing correspondencepart person parsing");
-        String systemID = "bfbdb658-3115-11ea-b1cc-7b4a503aeb2b";
+        String systemID = UUID.randomUUID().toString();
         String name = "Michael Jordan";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -1147,7 +1153,7 @@ public class TestParsing {
     @Test
     public void parseCorrespondencePartUnitComplete() throws Exception {
         System.out.println("info: testing correspondencepart unit parsing");
-        String systemID = "ba236562-3115-11ea-9dac-83e02041d50d";
+        String systemID = UUID.randomUUID().toString();
         String name = "Shoes and stuff";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -1200,7 +1206,7 @@ public class TestParsing {
     @Test
     public void parseCorrespondencePartInternalComplete() throws Exception {
         System.out.println("info: testing correspondence part internal parsing");
-        String systemID = "807fcddc-3115-11ea-9f57-7324ed60655e";
+        String systemID = UUID.randomUUID().toString();
         String name = "Management";
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
@@ -1226,7 +1232,7 @@ public class TestParsing {
     @Test
     public void parseNIBuildingComplete() throws Exception {
         System.out.println("info: testing building parsing");
-        String systemID = "dcbea3b2-30d3-11ea-a59b-3f5e61ae0079";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"bygningsnummer\": 1 "
@@ -1247,7 +1253,7 @@ public class TestParsing {
     @Test
     public void parseNICadastralUnitComplete() throws Exception {
         System.out.println("info: testing cadastral unit parsing");
-        String systemID = "dcbea3b2-30d3-11ea-a59b-3f5e61ae0079";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"kommunenummer\": \"0101\" "
@@ -1271,7 +1277,7 @@ public class TestParsing {
     @Test
     public void parseNIDNumberComplete() throws Exception {
         System.out.println("info: testing dnumber parsing");
-        String systemID = "68b73216-30da-11ea-b010-1feb9fc1f024";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"dNummer\": \"01010101011\" "
@@ -1291,7 +1297,7 @@ public class TestParsing {
     @Test
     public void parseNIPlanComplete() throws Exception {
         System.out.println("info: testing plan parsing");
-        String systemID = "68b73216-30da-11ea-b010-1feb9fc1f024";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"kommunenummer\": \"0101\" "
@@ -1314,7 +1320,7 @@ public class TestParsing {
     @Test
     public void parseNIPositionComplete() throws Exception {
         System.out.println("info: testing position parsing");
-        String systemID = "71439d24-30db-11ea-9ebb-ab3498fff524";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"koordinatsystem\": { \"kode\": \"EPSG:4326\", \"kodenavn\": \"WGS84\" } "
@@ -1337,7 +1343,7 @@ public class TestParsing {
     @Test
     public void parseNISocialSecurityNumberComplete() throws Exception {
         System.out.println("info: testing social security number parsing");
-        String systemID = "f3944e5e-30db-11ea-a287-cb1109687cd7";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"foedselsnummer\": \"01010101011\" "
@@ -1358,7 +1364,7 @@ public class TestParsing {
     @Test
     public void parseNIUnitComplete() throws Exception {
         System.out.println("info: testing unit parsing");
-        String systemID = "19c274d4-30dc-11ea-8edd-03dbe5a725b5";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"organisasjonsnummer\": \"01010101011\" "
@@ -1379,7 +1385,7 @@ public class TestParsing {
     @Test
     public void parseConversionComplete() throws Exception {
         System.out.println("info: testing conversion parsing");
-        String systemID = "60771e06-33b7-11ea-aaca-e359aca50a62";
+        String systemID = UUID.randomUUID().toString();
         String fromFormatCode = "fmt/95";
         String toFormatCode = "fmt/96";
         String json = "{ "
@@ -1410,7 +1416,7 @@ public class TestParsing {
     @Test
     public void parseCommentComplete() throws Exception {
         System.out.println("info: testing comment parsing");
-        String systemID = "2ae47aca-41dd-11ea-a0a9-afa29f03ad7d";
+        String systemID = UUID.randomUUID().toString();
         String json = "{"
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"merknadstekst\": \"A small note to the future\" "
@@ -1453,7 +1459,7 @@ public class TestParsing {
     @Test
     public void parseSignOffComplete() throws Exception {
         System.out.println("info: testing sign off parsing");
-        String systemID = "b75299d4-4a79-11ea-8c73-83a54e215d84";
+        String systemID = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
                 + ", \"avskrevetAv\": \"Some Person\" "
