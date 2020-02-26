@@ -8,6 +8,10 @@ import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
+import nikita.webapp.hateoas.HateoasHandler;
+import nikita.webapp.security.Authorisation;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +62,48 @@ public class HateoasSerializer
                 jgen.writeStartArray();
             }
             for (INoarkEntity entity : list) {
-                serializeNoarkEntity(entity, hateoasObject, jgen);
+                if (!hateoasObject.isSingleEntity()) {
+		    /*
+		     * Use HateoasHandler for the leaf class, not the
+		     * base class, to ensure all _links entries for
+		     * the leaf class show up in the list
+		     */
+                    HateoasNoarkObject noarkObject;
+                    try {
+                        Class<? extends INoarkEntity> cls = entity.getClass();
+                        HateoasPacker packer =
+                            cls.getAnnotation(HateoasPacker.class);
+                        HateoasObject entityHateoasObject =
+                            cls.getAnnotation(HateoasObject.class);
+                        noarkObject =
+                            entityHateoasObject.using()
+                            .getDeclaredConstructor(cls)
+                            .newInstance(entity);
+                        HateoasHandler handler =
+                            packer.using().getConstructor().newInstance();
+
+                        // TODO get rid of hardcoding
+			/*
+			  These values should be extracted from
+			  request by HateoasHandler.getOutgoingAddress(),
+			  which seem to work for other uses of
+			  HateoasHandler, but this fail here, and both
+			  values end up as 'null'.  Add workaround for
+			  now.
+			*/
+                        handler.setPublicAddress("http://localhost:8092");
+                        handler.setContextPath("/noark5v5");
+
+                        handler.addLinks(noarkObject, new Authorisation());
+                    } catch (Exception e) {
+                        String err = "Introspection failed while serialising list, using base HateoasHandler.";
+                        logger.error(err);
+                        noarkObject = hateoasObject;
+                    }
+                    serializeNoarkEntity(entity, noarkObject, jgen);
+                } else {
+                    serializeNoarkEntity(entity, hateoasObject, jgen);
+                }
             }
             if (!hateoasObject.isSingleEntity()) {
                 jgen.writeEndArray();
