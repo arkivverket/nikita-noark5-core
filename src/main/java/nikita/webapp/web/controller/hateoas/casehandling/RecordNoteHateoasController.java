@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
@@ -175,7 +174,7 @@ public class RecordNoteHateoasController
             "systemID", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "RecordNote deleted",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -184,7 +183,7 @@ public class RecordNoteHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Count> deleteRecordNoteBySystemId(
+    public ResponseEntity<String> deleteRecordNoteBySystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the recordNote to delete",
                     required = true)
@@ -195,10 +194,10 @@ public class RecordNoteHateoasController
     // Delete all RecordNote
     // DELETE [contextPath][api]/arkivstruktur/arkivnotat/
     @ApiOperation(value = "Deletes all RecordNote belonging to the logged in " +
-            "user", response = Count.class)
+            "user", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all RecordNotes",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -207,7 +206,7 @@ public class RecordNoteHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllRecordNote() {
+    public ResponseEntity<String> deleteAllRecordNote() {
         return recordNoteService.deleteAllByOwnedBy();
     }
 

@@ -285,7 +285,7 @@ public class FondsCreatorHateoasController
     // DELETE [contextPath][api]/arkivstruktur/arkivskaper/{systemId}/
     @ApiOperation(value = "Deletes a single FondsCreator entity identified by systemID", response = FondsHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent Fonds returned", response = FondsHateoas.class),
+            @ApiResponse(code = 204, message = "Parent Fonds returned", response = FondsHateoas.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -307,9 +307,9 @@ public class FondsCreatorHateoasController
         FondsHateoas fondsHateoas = new FondsHateoas((List<INoarkEntity>) (List)fonds);
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
   */
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body("{\"status\" : \"Success\"}");
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all FondsCreator

@@ -562,7 +562,7 @@ public class RegistryEntryHateoasController
                   "registryEntry identified by a systemId",
                   response = SignOffHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
+            @ApiResponse(code = 204,
                     message = "SignOff returned",
                     response = SignOffHateoas.class),
             @ApiResponse(code = 401,
@@ -586,7 +586,7 @@ public class RegistryEntryHateoasController
                       required = true)
             @PathVariable("subSystemID") final String subSystemID) {
         registryEntryService.deleteSignOff(systemID, subSystemID);
-        return ResponseEntity.status(OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

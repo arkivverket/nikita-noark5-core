@@ -1,6 +1,5 @@
 package nikita.webapp.service.impl.casehandling;
 
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
@@ -242,7 +241,7 @@ public class RecordNoteService
      *                           you wish to delete
      */
     @Override
-    public ResponseEntity<Count> deleteEntity(
+    public ResponseEntity<String> deleteEntity(
             @NotNull final String recordNoteSystemId) {
         RecordNote recordNote = getRecordNoteOrThrow(recordNoteSystemId);
         if (deletePossible(recordNote)) {
@@ -251,7 +250,7 @@ public class RecordNoteService
                     new AfterNoarkEntityDeletedEvent(this, recordNote));
         }
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(1));
+                body(DELETE_RESPONSE);
     }
 
     /**
@@ -260,14 +259,14 @@ public class RecordNoteService
      * @return the number of objects deleted
      */
     @Override
-    public ResponseEntity<Count> deleteAllByOwnedBy() {
+    public ResponseEntity<String> deleteAllByOwnedBy() {
         String user = getUser();
         long count = recordNoteRepository.countByOwnedBy(user);
         recordNoteRepository.deleteByOwnedBy(user);
         logger.info("Deleted [" + count + "] RecordNote objects belonging to " +
                 "[" + user + "]");
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(count));
+                body(DELETE_RESPONSE);
     }
 
     @Override

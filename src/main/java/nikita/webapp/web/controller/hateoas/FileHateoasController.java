@@ -1612,7 +1612,7 @@ public class FileHateoasController
     // DELETE [contextPath][api]/arkivstruktur/mappe/{systemId}/
     @ApiOperation(value = "Deletes a single File entity identified by systemID", response = HateoasNoarkObject.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent entity (DocumentDescription or File) returned", response = HateoasNoarkObject.class),
+            @ApiResponse(code = 204, message = "Parent entity (DocumentDescription or File) returned", response = HateoasNoarkObject.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -1629,9 +1629,9 @@ public class FileHateoasController
         File file = fileService.findBySystemId(systemID);
         fileService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, file));
-        return ResponseEntity.status(OK)
+        return ResponseEntity.status(NO_CONTENT)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body("deleted");
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all File

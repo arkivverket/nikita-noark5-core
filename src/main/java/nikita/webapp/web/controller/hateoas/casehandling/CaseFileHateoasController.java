@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
@@ -303,7 +302,7 @@ public class CaseFileHateoasController
     // DELETE [contextPath][api]/sakarkiv/saksmappe/{systemId}/
     @ApiOperation(value = "Deletes a single CaseFile entity identified by systemID", response = HateoasNoarkObject.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent entity (DocumentDescription or CaseFile) returned", response = HateoasNoarkObject.class),
+            @ApiResponse(code = 204, message = "Parent entity (DocumentDescription or CaseFile) returned", response = HateoasNoarkObject.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -321,17 +320,18 @@ public class CaseFileHateoasController
                 caseFileService.findBySystemId(systemID);
         caseFileService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, caseFile));
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body("deleted");
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all CaseFile
     // DELETE [contextPath][api]/sakarkiv/saksmappe/
-    @ApiOperation(value = "Deletes all CaseFile", response = Count.class)
+    @ApiOperation(value = "Deletes all CaseFile",
+                  response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all CaseFile",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -340,9 +340,10 @@ public class CaseFileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllCaseFile() {
+    public ResponseEntity<String> deleteAllCaseFile() {
+        caseFileService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(caseFileService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 
     // Update a CaseFile with given values

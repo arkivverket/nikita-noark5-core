@@ -505,7 +505,7 @@ public class ClassHateoasController
     @ApiOperation(value = "Deletes a single Class entity identified by systemID",
             response = HateoasNoarkObject.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
+            @ApiResponse(code = 204,
                     message = "Parent entity (ClassificationSystem or Class) " +
                             "returned",
                     response = HateoasNoarkObject.class),
@@ -524,8 +524,8 @@ public class ClassHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         classService.deleteEntity(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all Class

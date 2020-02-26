@@ -650,9 +650,9 @@ public class DocumentDescriptionHateoasController
     @ApiOperation(value = "Deletes a single DocumentDescription entity " +
             "identified by systemID", response = RecordHateoas.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Parent Fonds returned",
-                    response = RecordHateoas.class),
+            @ApiResponse(code = 204,
+                    message = "{status:Success}",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -661,15 +661,15 @@ public class DocumentDescriptionHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Void> deleteDocumentDescriptionBySystemId(
+    public ResponseEntity<String> deleteDocumentDescriptionBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the documentDescription to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
         documentDescriptionService.deleteEntity(systemID);
-        return ResponseEntity.status(NO_CONTENT).
-                body(null);
+        return ResponseEntity.status(NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all DocumentDescription
@@ -688,10 +688,10 @@ public class DocumentDescriptionHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllDocumentDescription() {
-        return ResponseEntity.status(NO_CONTENT).
-                body(new Count(
-                        documentDescriptionService.deleteAllByOwnedBy()));
+    public ResponseEntity<String> deleteAllDocumentDescription() {
+        documentDescriptionService.deleteAllByOwnedBy();
+        return ResponseEntity.status(NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
