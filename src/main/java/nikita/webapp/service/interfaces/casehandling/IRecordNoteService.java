@@ -4,6 +4,8 @@ import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
+import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -23,6 +25,12 @@ public interface IRecordNoteService {
     ResponseEntity<RecordNoteHateoas> findAllRecordNoteByCaseFile(
             CaseFile caseFile);
 
+    DocumentFlowHateoas findAllDocumentFlowWithRecordNoteBySystemId
+        (String systemID);
+
+    DocumentFlowHateoas associateDocumentFlowWithRecordNote
+        (String systemId, DocumentFlow documentFlow);
+
     // All UPDATE operations
     ResponseEntity<RecordNoteHateoas> handleUpdate(
             @NotNull final String systemId,
@@ -35,4 +43,6 @@ public interface IRecordNoteService {
 
     ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
             @NotNull final String caseFilSystemId);
+
+    DocumentFlowHateoas generateDefaultDocumentFlow(String systemID);
 }

@@ -10,7 +10,6 @@ import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
-import nikita.common.model.noark5.v5.casehandling.DocumentFlow;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.Link;
@@ -2293,42 +2292,6 @@ public final class CommonUtils {
                 }
             }
             */
-
-            public static void printDocumentFlow(JsonGenerator jgen, IDocumentFlow documentFlowEntity)
-                    throws IOException {
-                List<DocumentFlow> documentFlows = documentFlowEntity.getReferenceDocumentFlow();
-                if (documentFlows != null && documentFlows.size() > 0) {
-                    jgen.writeArrayFieldStart(DOCUMENT_FLOW);
-                    for (DocumentFlow documentFlow : documentFlows) {
-                        if (documentFlow != null) {
-
-                            jgen.writeObjectFieldStart(DOCUMENT_FLOW);
-                            if (documentFlow.getFlowTo() != null) {
-                                jgen.writeStringField(DOCUMENT_FLOW_FLOW_TO, documentFlow.getFlowTo());
-                            }
-                            if (documentFlow.getFlowFrom() != null) {
-                                jgen.writeStringField(DOCUMENT_FLOW_FLOW_FROM, documentFlow.getFlowFrom());
-                            }
-                            if (documentFlow.getFlowReceivedDate() != null) {
-                                jgen.writeStringField(DOCUMENT_FLOW_FLOW_RECEIVED_DATE,
-                                        formatDate(documentFlow.getFlowReceivedDate()));
-                            }
-                            if (documentFlow.getFlowSentDate() != null) {
-                                jgen.writeStringField(DOCUMENT_FLOW_FLOW_SENT_DATE,
-                                        formatDate(documentFlow.getFlowSentDate()));
-                            }
-                            if (documentFlow.getFlowStatus() != null) {
-                                jgen.writeStringField(DOCUMENT_FLOW_FLOW_STATUS, documentFlow.getFlowStatus());
-                            }
-                            if (documentFlow.getFlowComment() != null) {
-                                jgen.writeStringField(DOCUMENT_FLOW_FLOW_COMMENT, documentFlow.getFlowComment());
-                            }
-                            jgen.writeEndObject();
-                        }
-                    }
-                    jgen.writeEndArray();
-                }
-            }
 
             public static void printPrecedence(JsonGenerator jgen, IPrecedenceEntity precedence) throws IOException {
                 if (precedence != null) {

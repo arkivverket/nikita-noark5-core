@@ -49,7 +49,6 @@ public class RegistryEntryHateoasSerializer
         printCorrespondencePartUnits(jgen, registryEntry);
         printCorrespondencePartInternals(jgen, registryEntry);
         */
-        printDocumentFlow(jgen, registryEntry);
         //printPrecedence(jgen, registryEntry);
         printElectronicSignature(jgen, registryEntry);
         printHateoasLinks(jgen, registryEntryHateoas.getLinks(registryEntry));

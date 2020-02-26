@@ -4,14 +4,18 @@ import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.repository.n5v5.casehandling.IRecordNoteRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IDocumentFlowHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -27,6 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.*;
@@ -40,19 +45,25 @@ public class RecordNoteService
     private static final Logger logger =
             LoggerFactory.getLogger(RecordNoteService.class);
     private final IRecordNoteRepository recordNoteRepository;
+    private final IDocumentFlowService documentFlowService;
     private final IMetadataService metadataService;
     private final IRecordNoteHateoasHandler recordNoteHateoasHandler;
+    private final IDocumentFlowHateoasHandler documentFlowHateoasHandler;
 
     public RecordNoteService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IRecordNoteRepository recordNoteRepository,
+            IDocumentFlowService documentFlowService,
             IMetadataService metadataService,
-            IRecordNoteHateoasHandler recordNoteHateoasHandler) {
+            IRecordNoteHateoasHandler recordNoteHateoasHandler,
+            IDocumentFlowHateoasHandler documentFlowHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.recordNoteRepository = recordNoteRepository;
+        this.documentFlowService = documentFlowService;
         this.metadataService = metadataService;
         this.recordNoteHateoasHandler = recordNoteHateoasHandler;
+        this.documentFlowHateoasHandler = documentFlowHateoasHandler;
     }
 
     @Override
@@ -110,6 +121,26 @@ public class RecordNoteService
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(recordNoteHateoas.getEntityVersion().toString())
                 .body(recordNoteHateoas);
+    }
+
+    @Override
+    public DocumentFlowHateoas findAllDocumentFlowWithRecordNoteBySystemId
+        (String systemID) {
+        RecordNote recordNote = getRecordNoteOrThrow(systemID);
+        DocumentFlowHateoas documentFlowHateoas =
+                new DocumentFlowHateoas((List<INoarkEntity>)
+                        (List) recordNote.getReferenceDocumentFlow());
+        documentFlowHateoasHandler.addLinks(documentFlowHateoas,
+                                            new Authorisation());
+        setOutgoingRequestHeader(documentFlowHateoas);
+        return documentFlowHateoas;
+    }
+
+    @Override
+    public DocumentFlowHateoas associateDocumentFlowWithRecordNote(
+            String systemId, DocumentFlow documentFlow) {
+        return documentFlowService.associateDocumentFlowWithRecordNote
+            (documentFlow, getRecordNoteOrThrow(systemId));
     }
 
     // All UPDATE operations
@@ -253,6 +284,11 @@ public class RecordNoteService
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(recordNoteHateoas);
+    }
+
+    @Override
+    public DocumentFlowHateoas generateDefaultDocumentFlow(String systemID) {
+        return documentFlowService.generateDefaultDocumentFlow();
     }
 
     // All helper methods

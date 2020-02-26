@@ -3,9 +3,11 @@ package nikita.webapp.service.interfaces;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
+import nikita.common.model.noark5.v5.secondary.DocumentFlow;
+import nikita.common.model.noark5.v5.secondary.SignOff;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -30,6 +32,9 @@ public interface IRegistryEntryService {
     findSignOffAssociatedWithRegistryEntry(String systemId,
                                            String subSystemId);
 
+    DocumentFlowHateoas associateDocumentFlowWithRegistryEntry
+        (String systemId, DocumentFlow documentFlow);
+
     // All find methods
     RegistryEntry findBySystemId(String systemId);
 
@@ -38,6 +43,8 @@ public interface IRegistryEntryService {
     ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryByCaseFile(
             CaseFile caseFile);
 
+    DocumentFlowHateoas findAllDocumentFlowWithRegistryEntryBySystemId
+        (String systemID);
 
     // All UPDATE operations
     RegistryEntry handleUpdate(@NotNull final String systemId,
@@ -58,9 +65,11 @@ public interface IRegistryEntryService {
     void deleteSignOff(@NotNull String systemId,
                        @NotNull String signOffSystemId);
 
+    DocumentFlowHateoas generateDefaultDocumentFlow(String systemID);
+
     ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
             @NotNull final String caseFileSystemId);
 
     SignOffHateoas generateDefaultSignOff
-	(@NotNull final String registryEntrySystemId);
+        (@NotNull final String registryEntrySystemId);
 }

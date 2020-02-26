@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordNoteEntity;
+import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.util.deserialisers.casehandling.RecordNoteDeserializer;
 import nikita.webapp.hateoas.casehandling.RecordNoteHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
@@ -174,6 +175,11 @@ public class RecordNote
     public void setReferenceDocumentFlow(
             List<DocumentFlow> referenceDocumentFlow) {
         this.referenceDocumentFlow = referenceDocumentFlow;
+    }
+
+    @Override
+    public void addReferenceDocumentFlow(DocumentFlow referenceDocumentFlow) {
+        this.referenceDocumentFlow.add(referenceDocumentFlow);
     }
 
     @Override
