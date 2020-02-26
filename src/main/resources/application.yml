@@ -34,8 +34,6 @@ spring:
       hibernate.discriminator.ignore_explicit_for_joined: true
       hibernate.hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
       org.hibernate.envers.audit_table_prefix: aud_
-#      hibernate.hbm2ddl.import_files: db/noark5_metadata_values.sql,
-#  db/postcode.sql
   profiles:
     active: security-oauth2-authentication
 
