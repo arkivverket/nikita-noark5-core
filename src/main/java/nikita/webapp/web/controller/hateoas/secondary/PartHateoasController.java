@@ -185,7 +185,7 @@ public class PartHateoasController
     // DELETE [contextPath][api]/arkivstruktur/partenhet/{systemID}/
     @ApiOperation(value = "Deletes a single PartUnit entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "PartUnit deleted"),
+            @ApiResponse(code = 204, message = "PartUnit deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -197,14 +197,14 @@ public class PartHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         partService.deletePartUnit(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // DELETE [contextPath][api]/arkivstruktur/partperson/{systemID}/
     @ApiOperation(value = "Deletes a single PartPerson entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "PartPerson deleted"),
+            @ApiResponse(code = 204, message = "PartPerson deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -216,7 +216,7 @@ public class PartHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         partService.deletePartPerson(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

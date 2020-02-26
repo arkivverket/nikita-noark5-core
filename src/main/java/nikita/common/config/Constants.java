@@ -48,6 +48,8 @@ public final class Constants {
     public static final String NEW_ANYTHING = NEW + DASH + "**";
     public static final String ANYTHING = "*";
 
+    public static final String DELETE_RESPONSE = "{}";
+
     // Create for new arkivstruktur objects
     public static final String NEW_FONDS = NEW + DASH + FONDS;
     public static final String NEW_FONDS_CREATOR = NEW + DASH + FONDS_CREATOR;

@@ -542,7 +542,7 @@ public class NationalIdentifierHateoasController
     // DELETE [contextPath][api]/arkivstruktur/bygning/{systemID}/
     @ApiOperation(value = "Deletes a single Building entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Building deleted"),
+            @ApiResponse(code = 204, message = "Building deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -554,15 +554,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteBuilding(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a cadastralUnit identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/matrikkel/{systemID}/
     @ApiOperation(value = "Deletes a single CadastralUnit entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CadastralUnit deleted"),
+            @ApiResponse(code = 204, message = "CadastralUnit deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -574,15 +574,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteCadastralUnit(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a dnumber identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/dnummer/{systemID}/
     @ApiOperation(value = "Deletes a single DNumber entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DNumber deleted"),
+            @ApiResponse(code = 204, message = "DNumber deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -594,15 +594,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteDNumber(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a plan identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/plan/{systemID}/
     @ApiOperation(value = "Deletes a single Plan entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Plan deleted"),
+            @ApiResponse(code = 204, message = "Plan deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -614,15 +614,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deletePlan(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a position identified by systemid
     // DELETE [contextPath][api]/arkivstruktur/posisjon/{systemID}/
     @ApiOperation(value = "Deletes a single Position entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Position deleted"),
+            @ApiResponse(code = 204, message = "Position deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -634,15 +634,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deletePosition(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a socialSecurityNumber identified by systemid
     // DELETE [contextPath][api]/arkivstruktur/foedselsnummer/{systemID}/
     @ApiOperation(value = "Deletes a single SocialSecurityNumber entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "SocialSecurityNumber deleted"),
+            @ApiResponse(code = 204, message = "SocialSecurityNumber deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -654,15 +654,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteSocialSecurityNumber(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a unit identified by systemid
     // DELETE [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemID}/
     @ApiOperation(value = "Deletes a single Unit entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Unit deleted"),
+            @ApiResponse(code = 204, message = "Unit deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -674,7 +674,7 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteUnit(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

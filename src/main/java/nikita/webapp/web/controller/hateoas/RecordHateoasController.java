@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
@@ -1058,10 +1057,10 @@ public class RecordHateoasController
 
     // Delete all Record
     // DELETE [contextPath][api]/arkivstruktur/registrering/
-    @ApiOperation(value = "Deletes all Record", response = Count.class)
+    @ApiOperation(value = "Deletes all Record", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all Record",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -1070,9 +1069,10 @@ public class RecordHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllRecord() {
+    public ResponseEntity<String> deleteAllRecord() {
+        recordService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(recordService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -1494,7 +1494,7 @@ public class RecordHateoasController
     // DELETE [contextPath][api]/arkivstruktur/registrering/{systemId}/
     @ApiOperation(value = "Deletes a single Record entity identified by systemID", response = HateoasNoarkObject.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent entity (DocumentDescription or Record) returned", response = HateoasNoarkObject.class),
+            @ApiResponse(code = 204, message = "Parent entity (DocumentDescription or Record) returned", response = HateoasNoarkObject.class),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -1508,6 +1508,7 @@ public class RecordHateoasController
             @PathVariable("systemID") final String systemID) {
 
         Record record = recordService.findBySystemId(systemID);
+        // TODO figure out if the comment below can be removed.
       /*  NoarkEntity parentEntity = record.chooseParent();
         HateoasNoarkObject hateoasNoarkObject;
         if (parentEntity instanceof Series) {
@@ -1528,9 +1529,9 @@ public class RecordHateoasController
         } */
         recordService.deleteEntity(systemID);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, record));
-        return ResponseEntity.status(OK)
+        return ResponseEntity.status(NO_CONTENT)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body("{\"status\": \"deleted\"}");
+                .body(DELETE_RESPONSE);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)

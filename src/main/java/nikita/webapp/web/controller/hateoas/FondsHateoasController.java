@@ -611,7 +611,7 @@ public class FondsHateoasController
             response = FondsStructureDetails.class)
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
+                    code = 204,
                     message = "Parent ApplicationDetails returned",
                     response = FondsStructureDetails.class),
             @ApiResponse(
@@ -636,8 +636,8 @@ public class FondsHateoasController
         // this is a little mesy, but probably just create the JSON manually
         // here and return it as type string
         fondsService.deleteEntity(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
 
