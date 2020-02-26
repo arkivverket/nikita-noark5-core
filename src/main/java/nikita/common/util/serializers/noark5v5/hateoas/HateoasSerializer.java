@@ -4,13 +4,22 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RecordNote;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
+import nikita.webapp.hateoas.casehandling.CaseFileHateoasHandler;
+import nikita.webapp.hateoas.casehandling.RecordNoteHateoasHandler;
+import nikita.webapp.hateoas.casehandling.RegistryEntryHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -58,7 +67,13 @@ public class HateoasSerializer
                 jgen.writeStartArray();
             }
             for (INoarkEntity entity : list) {
-                serializeNoarkEntity(entity, hateoasObject, jgen);
+                if (!hateoasObject.isSingleEntity()) {
+                    HateoasNoarkObject entityHateoasObject =
+                        findHateoasObjectFor(entity, hateoasObject);
+                    serializeNoarkEntity(entity, entityHateoasObject, jgen);
+                } else {
+                    serializeNoarkEntity(entity, hateoasObject, jgen);
+                }
             }
             if (!hateoasObject.isSingleEntity()) {
                 jgen.writeEndArray();
@@ -72,6 +87,35 @@ public class HateoasSerializer
             jgen.writeNumberField(ENTITY_ROOT_NAME_LIST_COUNT, 0);
             printHateoasLinks(jgen, hateoasObject.getSelfLinks());
             jgen.writeEndObject();
+        }
+    }
+
+    private HateoasNoarkObject findHateoasObjectFor(
+            INoarkEntity entity,
+            HateoasNoarkObject defaultHateoasObject) {
+        if (entity instanceof RegistryEntry) {
+            RegistryEntryHateoas h = new RegistryEntryHateoas(entity);
+            RegistryEntryHateoasHandler hh = new RegistryEntryHateoasHandler();
+            hh.setPublicAddress("http://localhost:8092");
+            hh.setContextPath("/noark5v5");
+            hh.addLinks(h, new Authorisation());
+            return h;
+        } else if (entity instanceof RecordNote) {
+            RecordNoteHateoas h = new RecordNoteHateoas(entity);
+            RecordNoteHateoasHandler hh = new RecordNoteHateoasHandler();
+            hh.setPublicAddress("http://localhost:8092");
+            hh.setContextPath("/noark5v5");
+            hh.addLinks(h, new Authorisation());
+            return h;
+        } else if (entity instanceof CaseFile) {
+            CaseFileHateoas h = new CaseFileHateoas(entity);
+            CaseFileHateoasHandler hh = new CaseFileHateoasHandler();
+            hh.setPublicAddress("http://localhost:8092");
+            hh.setContextPath("/noark5v5");
+            hh.addLinks(h, new Authorisation());
+            return h;
+        } else {
+            return defaultHateoasObject;
         }
     }
 
