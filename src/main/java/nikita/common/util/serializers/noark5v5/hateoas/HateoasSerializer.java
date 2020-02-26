@@ -74,43 +74,38 @@ public class HateoasSerializer
 		     */
                     HateoasNoarkObject noarkObject;
                     try {
-
                         Class<? extends INoarkEntity> cls = entity.getClass();
-                        HateoasPacker packer = cls.getAnnotation(
-                                HateoasPacker.class);
-                        HateoasObject individualHateoasObject =
-                                cls.getAnnotation(HateoasObject.class);
-
-                        // Temp, allow Nullpointer to be taken by catch below
-                        if (null == packer || null == individualHateoasObject) {
-                            logger.error("Internal misconfiguration: Missing " +
-                                    "annontations for " + entity.getClass()
-                                    .getSimpleName());
-                        }
-
-                        noarkObject = individualHateoasObject
-                                .using()
-                                .getDeclaredConstructor(
-                                        INoarkEntity.class)
-                                .newInstance(entity);
+                        HateoasPacker packer =
+                            cls.getAnnotation(HateoasPacker.class);
+                        HateoasObject entityHateoasObject =
+                            cls.getAnnotation(HateoasObject.class);
+                        noarkObject =
+                            entityHateoasObject.using()
+                            .getDeclaredConstructor(cls)
+                            .newInstance(entity);
                         HateoasHandler handler =
-                                packer.using().getConstructor().newInstance();
+                            packer.using().getConstructor().newInstance();
 
-                        handler.setPublicAddress(getAddress());
-                        handler.setContextPath(getContextPath());
+                        // TODO get rid of hardcoding
+			/*
+			  These values should be extracted from
+			  request by HateoasHandler.getOutgoingAddress(),
+			  which seem to work for other uses of
+			  HateoasHandler, but this fail here, and both
+			  values end up as 'null'.  Add workaround for
+			  now.
+			*/
+                        handler.setPublicAddress("http://localhost:8092");
+                        handler.setContextPath("/noark5v5");
+
                         handler.addLinks(noarkObject, new Authorisation());
                     } catch (Exception e) {
-                        String err = "Introspection failed while serialising" +
-                                " list, " +
-                                "using base HateoasHandler. (";
-                        err += e.getMessage();
-                        err += ")";
+                        String err = "Introspection failed while serialising list, using base HateoasHandler.";
                         logger.error(err);
                         noarkObject = hateoasObject;
                     }
                     serializeNoarkEntity(entity, noarkObject, jgen);
                 } else {
-
                     serializeNoarkEntity(entity, hateoasObject, jgen);
                 }
             }
