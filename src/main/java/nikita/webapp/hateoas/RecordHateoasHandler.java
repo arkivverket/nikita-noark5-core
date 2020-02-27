@@ -118,7 +118,7 @@ public class RecordHateoasHandler
      * Create a REL/HREF pair for the parent Series associated with the given
      * Record. Checks if the Record is actually associated with a Series.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkivdel/1234"
+     * "../api/arkivstruktur/arkivdel/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/"
      *
      * @param entity             record
@@ -139,7 +139,7 @@ public class RecordHateoasHandler
      * Create a REL/HREF pair for the parent File associated with the given
      * Record. Checks if the Record is actually associated with a File.
      * <p>
-     * "../hateoas-api/arkivstruktur/mappe/1234"
+     * "../api/arkivstruktur/mappe/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/mappe/"
      *
      * @param entity             record
@@ -161,7 +161,7 @@ public class RecordHateoasHandler
      * Create a REL/HREF pair for the parent Class associated with the given
      * Record. Checks if the Record is actually associated with a Class.
      * <p>
-     * "../hateoas-api/arkivstruktur/klasse/1234"
+     * "../api/arkivstruktur/klasse/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/"
      *
      * @param entity             record
@@ -262,7 +262,7 @@ public class RecordHateoasHandler
      * Create a REL/HREF pair to get the list of Author objects associated with
      * the given Record.
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/forfatter"
+     * "../api/arkivstruktur/dokumentbeskrivelse/1234/forfatter"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/forfatter/"
      *
      * @param entity             record
@@ -280,7 +280,7 @@ public class RecordHateoasHandler
      * Create a REL/HREF pair to create a new Author object associated with
      * the given Record.
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/ny-forfatter"
+     * "../api/arkivstruktur/dokumentbeskrivelse/1234/ny-forfatter"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-forfatter/"
      *
      * @param entity             record

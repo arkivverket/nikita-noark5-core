@@ -27,5 +27,5 @@ This returns the following response that includes the token to be used for subse
 
 Subsequent calls to the core will then use this token by adding it to a header called _Authorization_ in the request:
 
-   curl --header Accept:application/vnd.noark5-v4+json --header -X GET --header Authorization:eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTQ5MDk0Nzg5NTAzNywiZXhwIjoxNDkxNTUyNjk1fQ.2KfQBeCuOBZPDKn1VvMm5TIvIcJRdfonUHX1mrmHJ6n9H02qQVECZqu5qDVIxqAH9klCdQpyJVkajdKBSf2R7g  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/
+   curl --header Accept:application/vnd.noark5-v4+json --header -X GET --header Authorization:eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTQ5MDk0Nzg5NTAzNywiZXhwIjoxNDkxNTUyNjk1fQ.2KfQBeCuOBZPDKn1VvMm5TIvIcJRdfonUHX1mrmHJ6n9H02qQVECZqu5qDVIxqAH9klCdQpyJVkajdKBSf2R7g  http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/
 

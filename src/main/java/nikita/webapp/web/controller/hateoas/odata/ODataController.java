@@ -31,7 +31,7 @@ import static nikita.common.config.ODataConstants.*;
  * <p>
  * The basic idea is that the e.g. the following request:
  * <p>
- * http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/arkiv?%24filter
+ * http://localhost:8092/noark5v4/api/arkivstruktur/arkiv?%24filter
  * =contains%28tittel%2C%20%27bravo%27%29
  * <p>
  * is converted to:

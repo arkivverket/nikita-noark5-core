@@ -71,7 +71,7 @@ public class FondsHateoasHandler
      * given Fonds. Checks if the Fonds has any FondsCreator associated with
      * it.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234/arkivskaper"
+     * "../api/arkivstruktur/arkiv/1234/arkivskaper"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivskaper/"
      *
      * @param entity             fonds
@@ -91,7 +91,7 @@ public class FondsHateoasHandler
      * Create a REL/HREF pair for the list of Series associated with the
      * given Fonds. Checks if the Fonds has any Series associated with it.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234/arkivdel"
+     * "../api/arkivstruktur/arkiv/1234/arkivdel"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/"
      *
      * @param entity             fonds
@@ -111,7 +111,7 @@ public class FondsHateoasHandler
      * Create a REL/HREF pair for the given Fonds associated. This is the
      * equivalent to the self rel, but in addition identifies the object type.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234"
+     * "../api/arkivstruktur/arkiv/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/"
      *
      * @param entity             fonds
@@ -130,7 +130,7 @@ public class FondsHateoasHandler
      * given Fonds. Checks if the Fonds is actually associated with any sub
      * fonds.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234/underarkiv"
+     * "../api/arkivstruktur/arkiv/1234/underarkiv"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/underarkiv/"
      *
      * @param entity             fonds
@@ -149,7 +149,7 @@ public class FondsHateoasHandler
      * given Fonds. This link should only be generated if the user is
      * authorised to create a Series.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkivdel"
+     * "../api/arkivstruktur/arkiv/1234/ny-arkivdel"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivdel/"
      *
      * @param entity             fonds
@@ -168,7 +168,7 @@ public class FondsHateoasHandler
      * given Fonds. This link should only be generated if the user is
      * authorised to create a FondsCreator.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkivskaper"
+     * "../api/arkivstruktur/arkiv/1234/ny-arkivskaper"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivskaper/"
      *
      * @param entity             fonds
@@ -187,7 +187,7 @@ public class FondsHateoasHandler
      * the given Fonds. This link should only be generated if the user is
      * authorised to create a sub fonds.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234/ny-arkiv"
+     * "../api/arkivstruktur/arkiv/1234/ny-arkiv"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkiv/"
      *
      * @param entity             fonds
@@ -205,7 +205,7 @@ public class FondsHateoasHandler
      * Create a REL/HREF pair to get parent Fonds associated with
      * the given Fonds. Checks if parent fonds exists first.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/9856"
+     * "../api/arkivstruktur/arkiv/9856"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/forelderarkiv/"
      *
      * @param entity             fonds
@@ -227,7 +227,7 @@ public class FondsHateoasHandler
      * given Fonds. Checks if the Fonds is actually associated with a
      * Series.
      * <p>
-     * "../hateoas-api/metadata/arkivstatus"
+     * "../api/metadata/arkivstatus"
      * "https://rel.arkivverket.no/noark5/v5/api/metadata/arkivstatus/"
      *
      * @param entity             fonds
