@@ -82,7 +82,7 @@ var searchController = app.controller('SearchController',
         var queryPart = encodedQuery.replace("%3F", "?");
         queryPart = queryPart.replace(/'/g, "%27");
         var httpRequest = $scope.baseUrlForOdataSearch + "/" + queryPart;
-        httpRequest = httpRequest.replace("hateoas-api", "odata");
+        httpRequest = httpRequest.replace("api", "odata");
         $http({
           method: 'GET',
           url: httpRequest,

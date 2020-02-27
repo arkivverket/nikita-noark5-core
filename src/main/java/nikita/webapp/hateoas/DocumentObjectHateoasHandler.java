@@ -65,7 +65,7 @@ public class DocumentObjectHateoasHandler
      * Create a REL/HREF pair for the parent documentDescription associated
      * with the given DocumentObject
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234"
+     * "../api/arkivstruktur/dokumentbeskrivelse/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/registrering/"
      *
      * @param entity             documentObject

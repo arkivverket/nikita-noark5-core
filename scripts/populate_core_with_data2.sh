@@ -43,7 +43,7 @@ curlPutOpts+=("${curlOpts[@]}" "${contentTypeForPost[@]}" -X PUT );
 
 # Setup curl options for fonds
 curloptsCreateFonds+=("${curlPostOpts[@]}");
-curloptsCreateFonds+=( --data @"$curl_files_dir"fonds-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv' );
+curloptsCreateFonds+=( --data @"$curl_files_dir"fonds-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/ny-arkiv' );
 
 # Create a fonds object and capture the systemId
 systemIDCreatedFonds=$(curl "${curloptsCreateFonds[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -52,14 +52,14 @@ printf "created Fonds 1             ($systemIDCreatedFonds) \n";
 
 # Setup curl options for fondsCreator from existing fonds
 curloptsCreateFondsCreator+=("${curlPostOpts[@]}");
-curloptsCreateFondsCreator+=( --data @"$curl_files_dir"fonds-creator-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivskaper' );
+curloptsCreateFondsCreator+=( --data @"$curl_files_dir"fonds-creator-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivskaper' );
 systemIDCreatedFondsCreator=$(curl "${curloptsCreateFondsCreator[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created FondsCreator 2(arkiv)($systemIDCreatedFondsCreator) \n";
 
 
 # Setup curl options for series
 curloptsCreateSeries+=("${curlPostOpts[@]}");
-curloptsCreateSeries+=( --data @"$curl_files_dir"series-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivdel' )
+curloptsCreateSeries+=( --data @"$curl_files_dir"series-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivdel' )
 
 # Create a series object and capture the systemId
 systemIDCreatedSeries=$(curl "${curloptsCreateSeries[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -68,26 +68,26 @@ printf "created  Series 1            ($systemIDCreatedSeries) \n";
 
 # Setup curl options for file
 curloptsCreateFile+=("${curlPostOpts[@]}");
-curloptsCreateFile+=( --data @"$curl_files_dir"file-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-mappe/' )
+curloptsCreateFile+=( --data @"$curl_files_dir"file-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-mappe/' )
 systemIDCreatedFile=$(curl "${curloptsCreateFile[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created   File 1              ($systemIDCreatedFile) \n";
 
 # Setup curl options for Record
 curloptsCreateRecord+=("${curlPostOpts[@]}");
-curloptsCreateRecord+=( --data @"$curl_files_dir"record-data.json 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-registrering' )
+curloptsCreateRecord+=( --data @"$curl_files_dir"record-data.json 'http://localhost:8092/noark5v5/api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-registrering' )
 systemIDCreatedRecord=$(curl "${curloptsCreateRecord[@]}" | jq '.systemID' |  sed 's/\"//g');
 printf "created   Record 1              ($systemIDCreatedRecord) \n";
 
 
 # Setup curl options for documentDescription
 curloptsCreateDocumentDescription+=("${curlPostOpts[@]}");
-curloptsCreateDocumentDescription+=( --data @"$curl_files_dir"document-description-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/registrering/'$systemIDCreatedRecord'/ny-dokumentbeskrivelse' )
+curloptsCreateDocumentDescription+=( --data @"$curl_files_dir"document-description-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/registrering/'$systemIDCreatedRecord'/ny-dokumentbeskrivelse' )
 systemIDCreatedDocumentDescription=$(curl "${curloptsCreateDocumentDescription[@]}" | jq '.systemID' |  sed 's/\"//g');
 printf "created   DocumentDescription 1              ($systemIDCreatedDocumentDescription) \n";
 
 # Setup curl options for documentObject
 curloptsCreateDocumentObject+=("${curlPostOpts[@]}");
-curloptsCreateDocumentObject+=( --data @"$curl_files_dir"document-object-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription'/ny-dokumentobjekt' )
+curloptsCreateDocumentObject+=( --data @"$curl_files_dir"document-object-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription'/ny-dokumentobjekt' )
 systemIDCreatedDocumentObject=$(curl "${curloptsCreateDocumentObject[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created      DocumentObject      ($systemIDCreatedDocumentObject) associated with ($systemIDCreatedDocumentDescription) \n";
 #echo "${curloptsCreateDocumentObject[@]}" "\n";

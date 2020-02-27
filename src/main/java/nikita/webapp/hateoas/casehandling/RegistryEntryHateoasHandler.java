@@ -95,7 +95,7 @@ public class RegistryEntryHateoasHandler
      * Create a REL/HREF pair for the list of possible registryEntryStatus
      * (journalstatus) values
      * <p>
-     * "../hateoas-api/arkivstruktur/metadata/journalstatus"
+     * "../api/arkivstruktur/metadata/journalstatus"
      * "http://rel.kxml.no/noark5/v5/api/metadata/journalstatus/"
      *
      * @param entity             registryEntry
@@ -114,7 +114,7 @@ public class RegistryEntryHateoasHandler
      * Create a REL/HREF pair for the list of possible registryEntryType
      * (journalposttype) values
      * <p>
-     * "../hateoas-api/arkivstruktur/metadata/journalposttype"
+     * "../api/arkivstruktur/metadata/journalposttype"
      * "http://rel.kxml.no/noark5/v5/api/metadata/journalposttype/"
      *
      * @param entity             registryEntry

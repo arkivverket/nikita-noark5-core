@@ -112,7 +112,7 @@ public class CaseFileHateoasHandler
      * Create a REL/HREF pair for the RecordNote associated with the
      * given CaseFile.
      * <p>
-     * "../hateoas-api/arkivstruktur/sakarkiv/1234/arkivnotat"
+     * "../api/arkivstruktur/sakarkiv/1234/arkivnotat"
      * "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/arkivnotat/"
      *
      * @param entity             caseFile
@@ -130,7 +130,7 @@ public class CaseFileHateoasHandler
      * Create a REL/HREF pair for the RecordNote associated with the
      * given CaseFile.
      * <p>
-     * "../hateoas-api/arkivstruktur/sakarkiv/1234/ny-arkivnotat"
+     * "../api/arkivstruktur/sakarkiv/1234/ny-arkivnotat"
      * "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-arkivnotat/"
      *
      * @param entity             caseFile
