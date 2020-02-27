@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -14,7 +14,10 @@ import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -91,8 +94,8 @@ public class HateoasSerializer
 			  values end up as 'null'.  Add workaround for
 			  now.
 			*/
-                        handler.setPublicAddress("http://localhost:8092");
-                        handler.setContextPath("/noark5v5");
+                        handler.setPublicAddress(getAddress());
+                        handler.setContextPath(getContextPath());
 
                         handler.addLinks(noarkObject, new Authorisation());
                     } catch (Exception e) {
@@ -254,5 +257,36 @@ public class HateoasSerializer
             logger.error(msg);
             throw new NikitaMisconfigurationException(msg);
         }
+    }
+
+    protected String getContextPath() {
+        HttpServletRequest request = getRequest();
+        return request.getContextPath();
+    }
+
+    protected String getAddress() {
+        HttpServletRequest request = getRequest();
+        String address = request.getHeader("X-Forwarded-Host");
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        String port = request.getHeader("X-Forwarded-Port");
+
+
+        if (address == null && scheme == null) {
+            scheme = request.getScheme();
+            address = request.getServerName();
+            port = Integer.toString(request.getServerPort());
+        }
+
+        if (port != null) {
+            return scheme + "://" + address + ":" + port;
+        } else {
+            return scheme + "://" + address;
+        }
+    }
+
+    private HttpServletRequest getRequest() {
+        return ((ServletRequestAttributes)
+                RequestContextHolder.currentRequestAttributes())
+                .getRequest();
     }
 }
