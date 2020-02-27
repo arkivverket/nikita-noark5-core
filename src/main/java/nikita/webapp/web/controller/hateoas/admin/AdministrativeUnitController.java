@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.admin.AdministrativeUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
@@ -30,7 +29,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = HREF_BASE_ADMIN + SLASH,
-                produces = NOARK5_V5_CONTENT_TYPE_JSON)
+        produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class AdministrativeUnitController extends NoarkController {
 
     private IAdministrativeUnitService administrativeUnitService;
@@ -167,15 +166,16 @@ public class AdministrativeUnitController extends NoarkController {
     @Counted
 
     @PutMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<AdministrativeUnitHateoas> updateAdministrativeUnit(HttpServletRequest request,
-                                                                              @ApiParam(name = "systemID",
-                                                                                      value = "systemID of documentDescription to update.",
-                                                                                      required = true)
-                                                                              @PathVariable("systemID") String systemID,
-                                                                              @ApiParam(name = "administrativeUnit",
-                                                                                      value = "Incoming administrativeUnit object",
-                                                                                      required = true)
-                                                                              @RequestBody AdministrativeUnit administrativeUnit)
+    public ResponseEntity<AdministrativeUnitHateoas> updateAdministrativeUnit(
+            HttpServletRequest request,
+            @ApiParam(name = "systemID",
+                    value = "systemID of documentDescription to update.",
+                    required = true)
+            @PathVariable("systemID") String systemID,
+            @ApiParam(name = "administrativeUnit",
+                    value = "Incoming administrativeUnit object",
+                    required = true)
+            @RequestBody AdministrativeUnit administrativeUnit)
             throws NikitaException {
         administrativeUnitService.update(systemID,
                 parseETAG(request.getHeader(ETAG)), administrativeUnit);
@@ -188,10 +188,12 @@ public class AdministrativeUnitController extends NoarkController {
 
     // Delete all AdministrativeUnit
     // DELETE [contextPath][api]/admin/administrativtenhet/
-    @ApiOperation(value = "Deletes all AdministrativeUnit", response = Count.class)
+    @ApiOperation(value = "Deletes all AdministrativeUnit",
+            response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all AdministrativeUnit",
-                    response = Count.class),
+            @ApiResponse(code = 204,
+                    message = "Deleted all AdministrativeUnit",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -200,8 +202,35 @@ public class AdministrativeUnitController extends NoarkController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = ADMINISTRATIVE_UNIT)
-    public ResponseEntity<Count> deleteAllAdministrativeUnit() {
+    public ResponseEntity<String> deleteAllAdministrativeUnit() {
+        administrativeUnitService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(administrativeUnitService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
+    }
+
+    // Delete an AdministrativeUnit identified by systemID
+    // DELETE [contextPath][api]/admin/administrativtenhet/{systemId}/
+    @ApiOperation(value = "Delete an AdministrativeUnit object",
+            response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204,
+                    message = "Delete  AdministrativeUnit object",
+                    response = String.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @DeleteMapping(value = ADMINISTRATIVE_UNIT)
+    public ResponseEntity<String> deleteAdministrativeUnit(
+            @ApiParam(name = "systemID",
+                    value = "systemID of AdministrativeUnit to delete.",
+                    required = true)
+            @PathVariable("systemID") String systemID) {
+        administrativeUnitService.deleteEntity(systemID);
+        return ResponseEntity.status(NO_CONTENT).
+                body(DELETE_RESPONSE);
     }
 }

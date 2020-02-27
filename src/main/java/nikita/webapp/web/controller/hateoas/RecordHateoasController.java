@@ -5,8 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
-import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
@@ -16,14 +17,13 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInte
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
-import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
-import nikita.common.model.noark5.v5.secondary.*;
+import nikita.common.model.noark5.v5.secondary.Author;
+import nikita.common.model.noark5.v5.secondary.Comment;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
@@ -31,7 +31,6 @@ import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.IRecordService;
-import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -1492,45 +1491,27 @@ public class RecordHateoasController
 
     // Delete a Record identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/registrering/{systemId}/
-    @ApiOperation(value = "Deletes a single Record entity identified by systemID", response = HateoasNoarkObject.class)
+    @ApiOperation(value = "Delete a single Record entity identified by " +
+            "systemID", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Parent entity (DocumentDescription or Record) returned", response = HateoasNoarkObject.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204,
+                    message = "Record deleted",
+                    response = String.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteRecordBySystemId(
-            HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the record to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-
-        Record record = recordService.findBySystemId(systemID);
-        // TODO figure out if the comment below can be removed.
-      /*  NoarkEntity parentEntity = record.chooseParent();
-        HateoasNoarkObject hateoasNoarkObject;
-        if (parentEntity instanceof Series) {
-            hateoasNoarkObject = new SeriesHateoas(parentEntity);
-            seriesHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else if (parentEntity instanceof File) {
-            hateoasNoarkObject = new FileHateoas(parentEntity);
-            fileHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else if (parentEntity instanceof Class) {
-            hateoasNoarkObject = new ClassHateoas(parentEntity);
-            classHateoasHandler.addLinks(hateoasNoarkObject, new Authorisation());
-        }
-        else {
-            throw new nikita.webapp.util.exceptions.NikitaException("Internal error. Could not process"
-                    + request.getRequestURI());
-        } */
         recordService.deleteEntity(systemID);
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, record));
         return ResponseEntity.status(NO_CONTENT)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(DELETE_RESPONSE);
     }
 

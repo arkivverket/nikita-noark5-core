@@ -1,8 +1,6 @@
 package nikita.webapp.service.impl.odata;
 
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.HateoasHandler;
@@ -18,7 +16,6 @@ import nikita.webapp.spring.ODataRedirectFilter;
 import nikita.webapp.util.AddressComponent;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
-import nikita.webapp.web.controller.hateoas.odata.ODataController;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -42,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.net.URLDecoder.decode;
+import static nikita.common.config.Constants.DELETE_RESPONSE;
 import static nikita.common.config.Constants.REGEX_UUID;
 import static nikita.common.config.ODataConstants.DOLLAR_ID;
 import static nikita.common.config.ODataConstants.ODATA_DELETE_REF;
@@ -74,14 +72,14 @@ public class ODataService
     }
 
     @Override
-    public ResponseEntity<Count> processODataQueryDelete
+    public ResponseEntity<String> processODataQueryDelete
             (HttpServletRequest request) throws UnsupportedEncodingException {
         Query query = convertODataToHQL(request, "delete");
         int result = query.executeUpdate();
         logger.info(result + " records deleted for OData Query [" +
                 query.getQueryString() + "]");
         return ResponseEntity.status(NO_CONTENT)
-                .body(new Count(result));
+                .body(DELETE_RESPONSE);
     }
 
     @Override

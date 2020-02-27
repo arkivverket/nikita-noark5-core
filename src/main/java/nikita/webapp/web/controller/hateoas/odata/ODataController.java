@@ -1,6 +1,5 @@
 package nikita.webapp.web.controller.hateoas.odata;
 
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import org.slf4j.Logger;
@@ -237,7 +236,7 @@ public class ODataController {
     @SuppressWarnings("unused")
     @DeleteMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "/**",
             params = "!" + DOLLAR_ID)
-    public ResponseEntity<Count>
+    public ResponseEntity<String>
     deleteViaOData(HttpServletRequest request,
                    @RequestParam(value = DOLLAR_FILTER, required = false)
                            String filter,

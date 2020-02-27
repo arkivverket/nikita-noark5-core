@@ -33,6 +33,7 @@ import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
+import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -495,9 +496,12 @@ public class RegistryEntryService
      */
     @Override
     public void deleteEntity(@NotNull String registryEntrySystemId) {
-        deleteEntity(getRegistryEntryOrThrow(registryEntrySystemId));
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(
+                registryEntrySystemId);
+        deleteEntity(registryEntry);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, registryEntry));
     }
-
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
