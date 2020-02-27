@@ -30,7 +30,6 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
  * <p>
  * Note! Some functionality is missing. This will be added later!
  * TODO: You are missing M209 referanseSekundaerKlassifikasjon
- * TODO: Missing FileType!
  */
 
 public class CaseFileHateoasSerializer

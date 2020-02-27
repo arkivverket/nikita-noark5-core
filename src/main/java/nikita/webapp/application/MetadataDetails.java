@@ -138,12 +138,6 @@ public class MetadataDetails extends APIDetails {
                 NEW_CLASSIFICATION_TYPE,
                 REL_METADATA_CLASSIFICATION_TYPE);
 
-        // Add support for FileType
-        metadataRel(publicUrlPath,
-                FILE_TYPE,
-                NEW_FILE_TYPE,
-                REL_METADATA_FILE_TYPE);
-
         // Add support for VariantFormat
         metadataRel(publicUrlPath,
                 VARIANT_FORMAT,

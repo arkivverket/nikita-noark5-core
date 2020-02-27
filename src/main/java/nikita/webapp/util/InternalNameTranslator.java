@@ -102,10 +102,6 @@ public class InternalNameTranslator {
                         FILE_ENG,
                         FILE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (FILE_TYPE,
-                        FILE_TYPE_ENG,
-                        FILE_TYPE_ENG_OBJECT);
-        addNorToEnglishNameMap
                 (FLOW_STATUS,
                         FLOW_STATUS_ENG,
                         FLOW_STATUS_ENG_OBJECT);

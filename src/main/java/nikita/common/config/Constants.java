@@ -150,8 +150,6 @@ public final class Constants {
     public static final String NEW_PART_ROLE = NEW + DASH +
             PART_ROLE;
 
-    public static final String NEW_FILE_TYPE = NEW + DASH + FILE_TYPE;
-
     public static final String NEW_VARIANT_FORMAT = NEW + DASH + VARIANT_FORMAT;
 
     public static final String NEW_CLASSIFICATION_TYPE =
@@ -309,9 +307,6 @@ public final class Constants {
 
     public static final String TEMPLATE_PART_ROLE_CODE = "KLI";
     public static final String TEMPLATE_PART_ROLE_NAME = "Klient";
-
-    public static final String TEMPLATE_FILE_TYPE_CODE = "S";
-    public static final String TEMPLATE_FILE_TYPE_NAME = "Saksmappe";
 
     public static final String TEMPLATE_VARIANT_FORMAT_CODE = "P";
     public static final String TEMPLATE_VARIANT_FORMAT_NAME =
@@ -679,9 +674,6 @@ public final class Constants {
     public static final String REL_METADATA_PRECEDENCE_STATUS =
             REL_METADATA + PRECEDENCE_STATUS + SLASH;
 
-    public static final String REL_METADATA_FILE_TYPE =
-            REL_METADATA + FILE_TYPE + SLASH;
-
     public static final String REL_METADATA_CLASSIFICATION_TYPE =
             REL_METADATA + CLASSIFICATION_TYPE + SLASH;
 
@@ -893,7 +885,6 @@ public final class Constants {
     public static final String TABLE_ELECTRONIC_SIGNATURE_VERIFIED =
             "md_electronic_signature_verified";
     public static final String TABLE_EVENT_TYPE = "md_event_type";
-    public static final String TABLE_FILE_TYPE = "md_file_type";
     public static final String TABLE_FLOW_STATUS = "md_flow_status";
     public static final String TABLE_FONDS_STATUS = "md_fonds_status";
     public static final String TABLE_FORMAT = "md_format";

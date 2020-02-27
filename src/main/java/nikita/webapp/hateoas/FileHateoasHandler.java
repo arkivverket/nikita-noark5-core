@@ -74,7 +74,6 @@ public class FileHateoasHandler
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
-        addMetadataFileType(entity, hateoasNoarkObject);
     }
 
     /**
@@ -280,13 +279,6 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_SECONDARY_CLASSIFICATION_SYSTEM + SLASH,
                 REL_CASE_HANDLING_NEW_SECONDARY_CLASSIFICATION, false));
-    }
-
-    public void addMetadataFileType(ISystemId entity,
-                                    IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + SLASH + FILE_TYPE,
-                REL_METADATA_FILE_TYPE, false));
     }
 
     @Override
