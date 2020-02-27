@@ -2,7 +2,6 @@ package nikita.webapp.web.controller.hateoas;
 
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.*;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
@@ -577,10 +576,10 @@ public class SeriesHateoasController
     // Delete a Series identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/arkivdel/{systemId}/
     @ApiOperation(value = "Deletes a single Series entity identified by " +
-            "systemID", response = Count.class)
+            "systemID", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted Series",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401, message =
                     API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message =
@@ -589,23 +588,22 @@ public class SeriesHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Void> deleteSeriesBySystemId(
-            HttpServletRequest request,
+    public ResponseEntity<String> deleteSeriesBySystemId(
             @ApiParam(name = "systemID",
                     value = "systemID of the series to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
         seriesService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT).
-                body(null);
+                body(DELETE_RESPONSE);
     }
 
     // Delete all Series
     // DELETE [contextPath][api]/arkivstruktur/arkivdel/
-    @ApiOperation(value = "Deletes all Series", response = Count.class)
+    @ApiOperation(value = "Deletes all Series", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all Series",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -614,8 +612,9 @@ public class SeriesHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllSeries() {
+    public ResponseEntity<String> deleteAllSeries() {
+        seriesService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(seriesService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 }

@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiResponses;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
@@ -22,7 +21,6 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -300,14 +298,18 @@ public class CaseFileHateoasController
     
     // Delete a CaseFile identified by systemID
     // DELETE [contextPath][api]/sakarkiv/saksmappe/{systemId}/
-    @ApiOperation(value = "Deletes a single CaseFile entity identified by systemID", response = HateoasNoarkObject.class)
+    @ApiOperation(value = "Deletes a single CaseFile entity identified by " +
+            "systemID", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Parent entity (DocumentDescription or CaseFile) returned", response = HateoasNoarkObject.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204,
+                    message = "CaseFile deleted", response = String.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteCaseFileBySystemId(
             HttpServletRequest request,
@@ -315,13 +317,8 @@ public class CaseFileHateoasController
                     value = "systemID of the caseFile to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-
-        CaseFile caseFile =
-                caseFileService.findBySystemId(systemID);
         caseFileService.deleteEntity(systemID);
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, caseFile));
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(DELETE_RESPONSE);
     }
 

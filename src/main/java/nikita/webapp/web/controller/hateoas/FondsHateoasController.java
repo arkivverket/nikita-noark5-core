@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.Series;
@@ -13,7 +12,6 @@ import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.application.FondsStructureDetails;
 import nikita.webapp.service.interfaces.IFondsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -608,12 +606,12 @@ public class FondsHateoasController
     // DELETE [contextPath][api]/arkivstruktur/arkiv/{systemId}/
     @ApiOperation(
             value = "Deletes a single Fonds entity identified by systemID",
-            response = FondsStructureDetails.class)
+            response = String.class)
     @ApiResponses(value = {
             @ApiResponse(
                     code = 204,
-                    message = "Parent ApplicationDetails returned",
-                    response = FondsStructureDetails.class),
+                    message = "Fonds deleted",
+                    response = String.class),
             @ApiResponse(
                     code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -630,23 +628,17 @@ public class FondsHateoasController
                     value = "systemID of the series to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        // TODO: When dealing with a fonds, if you have a parent fonds, then
-        // you must return the parent fonds but if you don't have a parent
-        // fonds you must return an applicationdetails. The only way to handle
-        // this is a little mesy, but probably just create the JSON manually
-        // here and return it as type string
         fondsService.deleteEntity(systemID);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(DELETE_RESPONSE);
     }
 
-
     // Delete all Fonds
     // DELETE [contextPath][api]/arkivstruktur/arkiv/
-    @ApiOperation(value = "Deletes all Fonds", response = Count.class)
+    @ApiOperation(value = "Deletes all Fonds", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all Fonds",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -655,8 +647,9 @@ public class FondsHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(FONDS)
-    public ResponseEntity<Count> deleteAllFonds() {
+    public ResponseEntity<String> deleteAllFonds() {
+        fondsService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(fondsService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 }

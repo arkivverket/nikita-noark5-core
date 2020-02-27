@@ -11,7 +11,6 @@ import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.application.FondsStructureDetails;
 import nikita.webapp.service.application.ApplicationService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,6 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -284,10 +282,10 @@ public class ClassificationSystemHateoasController
     // Delete a ClassificationSystem identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/klassifikasjonssystem/{systemId}/
     @ApiOperation(value = "Deletes a single ClassificationSystem entity " +
-            "identified by systemID", response = FondsStructureDetails.class)
+            "identified by systemID", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204,
-                    message = "Parent ApplicationDetails returned",
+                    message = "ClassificationSystem deleted",
                     response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -316,7 +314,8 @@ public class ClassificationSystemHateoasController
     @ApiOperation(value = "Deletes all ClassificationSystem",
             response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all ClassificationSystem",
+            @ApiResponse(code = 204,
+                    message = "All ClassificationSystem deleted",
                     response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),

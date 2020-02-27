@@ -5,12 +5,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.ICaseFileService;
@@ -503,12 +505,11 @@ public class ClassHateoasController
     // Delete a Class identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/klasse/{systemId}/
     @ApiOperation(value = "Deletes a single Class entity identified by systemID",
-            response = HateoasNoarkObject.class)
+            response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204,
-                    message = "Parent entity (ClassificationSystem or Class) " +
-                            "returned",
-                    response = HateoasNoarkObject.class),
+                    message = "Class deleted",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -530,10 +531,10 @@ public class ClassHateoasController
 
     // Delete all Class
     // DELETE [contextPath][api]/arkivstruktur/klasse/
-    @ApiOperation(value = "Deletes all Class", response = Count.class)
+    @ApiOperation(value = "Deletes all Class", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all Class",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -542,9 +543,10 @@ public class ClassHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllClass() {
+    public ResponseEntity<String> deleteAllClass() {
+        classService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(classService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)

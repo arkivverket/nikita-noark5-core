@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
@@ -283,14 +282,19 @@ public class FondsCreatorHateoasController
 
     // Delete a FondsCreator identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/arkivskaper/{systemId}/
-    @ApiOperation(value = "Deletes a single FondsCreator entity identified by systemID", response = FondsHateoas.class)
+    @ApiOperation(value = "Deletes a single FondsCreator entity identified by" +
+            " systemID", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Parent Fonds returned", response = FondsHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204,
+                    message = "FondsCreator deleted",
+                    response = String.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @DeleteMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteSeriesBySystemId(
             HttpServletRequest request,
@@ -299,25 +303,21 @@ public class FondsCreatorHateoasController
                     required = true)
             @PathVariable("systemID") final String seriesSystemId) {
 
-        FondsCreator fondsCreator = fondsCreatorService.findBySystemId(seriesSystemId);
+        FondsCreator fondsCreator = fondsCreatorService
+                .findBySystemId(seriesSystemId);
         fondsCreatorService.deleteEntity(seriesSystemId);
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, fondsCreator));
-/*        List<Fonds> fonds = new List<>();
-        fonds.addAll(fondsCreator.getReferenceFonds());
-        FondsHateoas fondsHateoas = new FondsHateoas((List<INoarkEntity>) (List)fonds);
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-  */
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, fondsCreator));
+        return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
     }
 
     // Delete all FondsCreator
     // DELETE [contextPath][api]/arkivstruktur/arkivskaper/
-    @ApiOperation(value = "Deletes all FondsCreator", response = Count.class)
+    @ApiOperation(value = "Deletes all FondsCreator", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all FondsCreator",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -326,8 +326,9 @@ public class FondsCreatorHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = FONDS_CREATOR)
-    public ResponseEntity<Count> deleteAllFondsCreator() {
+    public ResponseEntity<String> deleteAllFondsCreator() {
+        fondsCreatorService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(fondsCreatorService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 }

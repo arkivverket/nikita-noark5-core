@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
@@ -648,10 +647,10 @@ public class DocumentDescriptionHateoasController
     // Delete a DocumentDescription identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}/
     @ApiOperation(value = "Deletes a single DocumentDescription entity " +
-            "identified by systemID", response = RecordHateoas.class)
+            "identified by systemID", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204,
-                    message = "{status:Success}",
+                    message = "Record deleted",
                     response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -675,11 +674,11 @@ public class DocumentDescriptionHateoasController
     // Delete all DocumentDescription
     // DELETE [contextPath][api]/arkivstruktur/dokumentbeskrivelse/
     @ApiOperation(value = "Deletes all DocumentDescription",
-            response = Count.class)
+            response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204,
-                    message = "Deleted all DocumentDescription",
-                    response = Count.class),
+                    message = "All DocumentDescription deleted",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,

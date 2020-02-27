@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.config.Constants;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
 import nikita.common.util.CommonUtils;
@@ -210,10 +208,10 @@ public class UserController
 
     // Delete all User
     // DELETE [contextPath][api]/admin/bruker/
-    @ApiOperation(value = "Deletes all User", response = Count.class)
+    @ApiOperation(value = "Deletes all User", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all User",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -222,16 +220,17 @@ public class UserController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = USER)
-    public ResponseEntity<Count> deleteAllUser() {
+    public ResponseEntity<String> deleteAllUser() {
+        userService.deleteAll();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(userService.deleteAll()));
+                body(DELETE_RESPONSE);
     }
 
-    // DELETE [contextPath][api]/admin/bruker/
-    @ApiOperation(value = "Deletes all User", response = Count.class)
+    // DELETE [contextPath][api]/admin/bruker/{systemId}/
+    @ApiOperation(value = "Deletes a User object", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all User",
-                    response = Count.class),
+            @ApiResponse(code = 204, message = "Deleted User object",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -240,9 +239,10 @@ public class UserController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Count> deleteSingleUser(
+    public ResponseEntity<String> deleteSingleUser(
             @PathVariable("username") final String username) {
+        userService.deleteByUsername(username);
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(userService.deleteByUsername(username)));
+                body(DELETE_RESPONSE);
     }
 }
