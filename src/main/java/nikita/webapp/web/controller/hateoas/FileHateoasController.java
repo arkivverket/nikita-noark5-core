@@ -5,11 +5,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
-import nikita.common.model.noark5.v5.*;
-import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
@@ -21,6 +20,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Comment;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
@@ -1610,12 +1611,17 @@ public class FileHateoasController
 
     // Delete a File identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/mappe/{systemId}/
-    @ApiOperation(value = "Deletes a single File entity identified by systemID", response = HateoasNoarkObject.class)
+    @ApiOperation(value = "Deletes a single File entity identified by systemID",
+            response = HateoasNoarkObject.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent entity (DocumentDescription or File) returned", response = HateoasNoarkObject.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204, message = "File deleted",
+                    response = String.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
@@ -1625,21 +1631,20 @@ public class FileHateoasController
                     value = "systemID of the file to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-
         File file = fileService.findBySystemId(systemID);
         fileService.deleteEntity(systemID);
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, file));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body("deleted");
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, file));
+        return ResponseEntity.status(NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all File
     // DELETE [contextPath][api]/arkivstruktur/mappe/
-    @ApiOperation(value = "Deletes all File", response = Count.class)
+    @ApiOperation(value = "Deletes all File", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all File",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -1648,9 +1653,10 @@ public class FileHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllFile() {
+    public ResponseEntity<String> deleteAllFile() {
+        fileService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(fileService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 }
 

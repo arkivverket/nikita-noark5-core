@@ -5,14 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.application.FondsStructureDetails;
 import nikita.webapp.service.application.ApplicationService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import org.springframework.http.HttpStatus;
@@ -26,7 +24,6 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -285,11 +282,11 @@ public class ClassificationSystemHateoasController
     // Delete a ClassificationSystem identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/klassifikasjonssystem/{systemId}/
     @ApiOperation(value = "Deletes a single ClassificationSystem entity " +
-            "identified by systemID", response = FondsStructureDetails.class)
+            "identified by systemID", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Parent ApplicationDetails returned",
-                    response = FondsStructureDetails.class),
+            @ApiResponse(code = 204,
+                    message = "ClassificationSystem deleted",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -298,7 +295,7 @@ public class ClassificationSystemHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<FondsStructureDetails>
+    public ResponseEntity<String>
     deleteClassificationSystemBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
@@ -306,19 +303,20 @@ public class ClassificationSystemHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         classificationSystemService.deleteEntity(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(applicationService.getFondsStructureDetails());
+                .body(DELETE_RESPONSE);
     }
 
 
     // Delete all ClassificationSystem
     // DELETE [contextPath][api]/arkivstruktur/klassifikasjonssystem/
     @ApiOperation(value = "Deletes all ClassificationSystem",
-            response = Count.class)
+            response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all ClassificationSystem",
-                    response = Count.class),
+            @ApiResponse(code = 204,
+                    message = "All ClassificationSystem deleted",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -327,9 +325,10 @@ public class ClassificationSystemHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = CLASSIFICATION_SYSTEM)
-    public ResponseEntity<Count> deleteAllClassificationSystem() {
+    public ResponseEntity<String> deleteAllClassificationSystem() {
+        classificationSystemService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(classificationSystemService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)

@@ -99,7 +99,7 @@ public class AuthorHateoasController
     // DELETE [contextPath][api]/arkivstruktur/forfatter/{systemID}/
     @ApiOperation(value = "Deletes a single Author entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Author deleted"),
+            @ApiResponse(code = 204, message = "Author deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -111,7 +111,7 @@ public class AuthorHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         authorService.deleteAuthorBySystemId(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

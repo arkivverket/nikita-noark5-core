@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
@@ -364,10 +363,11 @@ public class DocumentObjectHateoasController
     // Delete a DocumentObject identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}/
     @ApiOperation(value = "Deletes a single DocumentObject entity identified " +
-            "by systemID", response = Count.class)
+            "by systemID", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Delete DocumentObject",
-                    response = Count.class),
+            @ApiResponse(code = 204,
+                    message = "DocumentObject deleted",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -376,7 +376,7 @@ public class DocumentObjectHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Void> deleteDocumentObjectBySystemId(
+    public ResponseEntity<String> deleteDocumentObjectBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the documentObject to delete",
@@ -385,15 +385,16 @@ public class DocumentObjectHateoasController
         documentObjectService.deleteEntity(systemID);
         return ResponseEntity.
                 status(NO_CONTENT).
-                body(null);
+                body(DELETE_RESPONSE);
     }
 
     // Delete all DocumentObject
     // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/
-    @ApiOperation(value = "Deletes all DocumentObject", response = Count.class)
+    @ApiOperation(value = "Deletes all DocumentObject", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all DocumentObject",
-                    response = Count.class),
+            @ApiResponse(code = 204,
+                    message = "Deleted all DocumentObject",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -402,9 +403,10 @@ public class DocumentObjectHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllDocumentObject() {
+    public ResponseEntity<String> deleteAllDocumentObject() {
+        documentObjectService.deleteAll();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(documentObjectService.deleteAll()));
+                body(DELETE_RESPONSE);
     }
 
 

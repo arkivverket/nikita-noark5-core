@@ -134,7 +134,7 @@ public class DocumentFlowHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         documentFlowService.deleteDocumentFlowBySystemId(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

@@ -1,6 +1,5 @@
 package nikita.webapp.service.interfaces.casehandling;
 
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
@@ -37,9 +36,9 @@ public interface IRecordNoteService {
             @NotNull final RecordNote incomingRecordNote);
 
     // All DELETE operations
-    ResponseEntity<Count> deleteEntity(@NotNull final String systemId);
+    ResponseEntity<String> deleteEntity(@NotNull final String systemId);
 
-    ResponseEntity<Count> deleteAllByOwnedBy();
+    ResponseEntity<String> deleteAllByOwnedBy();
 
     ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
             @NotNull final String caseFilSystemId);

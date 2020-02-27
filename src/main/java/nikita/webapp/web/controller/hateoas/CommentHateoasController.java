@@ -133,7 +133,7 @@ public class CommentHateoasController
             response = String.class)
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
+                    code = 204,
                     message = "ok message",
                     response = String.class),
             @ApiResponse(
@@ -153,7 +153,7 @@ public class CommentHateoasController
                     required = true)
             @PathVariable("systemID") final String systemID) {
         commentService.deleteEntity(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

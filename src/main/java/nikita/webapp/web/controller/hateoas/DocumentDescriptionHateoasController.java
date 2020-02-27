@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
@@ -648,11 +647,11 @@ public class DocumentDescriptionHateoasController
     // Delete a DocumentDescription identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}/
     @ApiOperation(value = "Deletes a single DocumentDescription entity " +
-            "identified by systemID", response = RecordHateoas.class)
+            "identified by systemID", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Parent Fonds returned",
-                    response = RecordHateoas.class),
+            @ApiResponse(code = 204,
+                    message = "Record deleted",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -661,25 +660,25 @@ public class DocumentDescriptionHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Void> deleteDocumentDescriptionBySystemId(
+    public ResponseEntity<String> deleteDocumentDescriptionBySystemId(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the documentDescription to delete",
                     required = true)
             @PathVariable("systemID") final String systemID) {
         documentDescriptionService.deleteEntity(systemID);
-        return ResponseEntity.status(NO_CONTENT).
-                body(null);
+        return ResponseEntity.status(NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all DocumentDescription
     // DELETE [contextPath][api]/arkivstruktur/dokumentbeskrivelse/
     @ApiOperation(value = "Deletes all DocumentDescription",
-            response = Count.class)
+            response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204,
-                    message = "Deleted all DocumentDescription",
-                    response = Count.class),
+                    message = "All DocumentDescription deleted",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -688,10 +687,10 @@ public class DocumentDescriptionHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllDocumentDescription() {
-        return ResponseEntity.status(NO_CONTENT).
-                body(new Count(
-                        documentDescriptionService.deleteAllByOwnedBy()));
+    public ResponseEntity<String> deleteAllDocumentDescription() {
+        documentDescriptionService.deleteAllByOwnedBy();
+        return ResponseEntity.status(NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)

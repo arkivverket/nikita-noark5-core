@@ -24,6 +24,7 @@ import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
+import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -302,7 +303,10 @@ public class CaseFileService
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String caseFileSystemId) {
-        deleteEntity(getCaseFileOrThrow(caseFileSystemId));
+        CaseFile caseFile = getCaseFileOrThrow(caseFileSystemId);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, caseFile));
+        deleteEntity(caseFile);
     }
 
     /**
