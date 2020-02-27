@@ -63,12 +63,11 @@ public class Screening
     private OffsetDateTime screeningExpiresDate;
 
     /**
-     * M504 - skjermingsvarighet
-     * TODO: This should be an integer!!
+     * M504 - skjermingsvarighet (xs:integer)
      */
     @Column(name = "screening_duration")
     @Audited
-    private String screeningDuration;
+    private Integer screeningDuration;
 
     // Links to Series
     @ManyToMany(mappedBy = "referenceScreening")
@@ -131,11 +130,11 @@ public class Screening
         this.screeningExpiresDate = screeningExpiresDate;
     }
 
-    public String getScreeningDuration() {
+    public Integer getScreeningDuration() {
         return screeningDuration;
     }
 
-    public void setScreeningDuration(String screeningDuration) {
+    public void setScreeningDuration(Integer screeningDuration) {
         this.screeningDuration = screeningDuration;
     }
 
