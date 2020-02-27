@@ -64,6 +64,7 @@ public class HateoasSerializer
                 jgen.writeFieldName(ENTITY_ROOT_NAME_LIST);
                 jgen.writeStartArray();
             }
+
             for (INoarkEntity entity : list) {
                 if (!hateoasObject.isSingleEntity()) {
 		    /*
@@ -74,53 +75,36 @@ public class HateoasSerializer
                     HateoasNoarkObject noarkObject;
                     try {
 
-                        Class<? extends INoarkEntity> cls =
-                                list.get(0).getClass();
-                        HateoasPacker packer = cls.getAnnotation(HateoasPacker.class);
-                        HateoasObject hateoasObject2 =
+                        Class<? extends INoarkEntity> cls = entity.getClass();
+                        HateoasPacker packer = cls.getAnnotation(
+                                HateoasPacker.class);
+                        HateoasObject individualHateoasObject =
                                 cls.getAnnotation(HateoasObject.class);
-                        noarkObject =
-                                hateoasObject2.using().getDeclaredConstructor(List.class)
-                                        .newInstance(list);
+
+                        // Temp, allow Nullpointer to be taken by catch below
+                        if (null == packer || null == individualHateoasObject) {
+                            logger.error("Internal misconfiguration: Missing " +
+                                    "annontations for " + entity.getClass()
+                                    .getSimpleName());
+                        }
+
+                        noarkObject = individualHateoasObject
+                                .using()
+                                .getDeclaredConstructor(
+                                        INoarkEntity.class)
+                                .newInstance(entity);
                         HateoasHandler handler =
                                 packer.using().getConstructor().newInstance();
-                        System.out.println("here");
-                        /*
-                        handler = packer.using().getConstructor().newInstance();
 
-
-                        Class<? extends INoarkEntity> cls = entity.getClass();
-                        HateoasPacker packer =
-                            cls.getAnnotation(HateoasPacker.class);
-                        HateoasObject entityHateoasObject =
-                            cls.getAnnotation(HateoasObject.class);
-                        noarkObject =
-                            entityHateoasObject.using()
-                            .getDeclaredConstructor(cls)
-                            .newInstance(entity);
-                        HateoasHandler handler =
-                            packer.using().getConstructor().newInstance();
-*/
-                        // TODO get rid of hardcoding
-			/*
-			  These values should be extracted from
-			  request by HateoasHandler.getOutgoingAddress(),
-			  which seem to work for other uses of
-			  HateoasHandler, but this fail here, and both
-			  values end up as 'null'.  Add workaround for
-			  now.
-			*/
                         handler.setPublicAddress(getAddress());
                         handler.setContextPath(getContextPath());
-
                         handler.addLinks(noarkObject, new Authorisation());
                     } catch (Exception e) {
-                        System.out.println("NPXC -" + list.get(0).getClass()
-                                .getSimpleName());
-                        String err = list.get(0).getClass().getSimpleName();
-                        err += "Introspection failed while serialising list, " +
-                                "using base HateoasHandler.";
+                        String err = "Introspection failed while serialising" +
+                                " list, " +
+                                "using base HateoasHandler. (";
                         err += e.getMessage();
+                        err += ")";
                         logger.error(err);
                         noarkObject = hateoasObject;
                     }
