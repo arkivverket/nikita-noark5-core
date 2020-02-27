@@ -95,8 +95,8 @@ public class HateoasSerializer
 			  values end up as 'null'.  Add workaround for
 			  now.
 			*/
-                        handler.setPublicAddress("http://localhost:8092");
-                        handler.setContextPath("/noark5v5");
+                        handler.setPublicAddress(getAddress());
+                        handler.setContextPath(getContextPath());
 
                         handler.addLinks(noarkObject, new Authorisation());
                     } catch (Exception e) {
