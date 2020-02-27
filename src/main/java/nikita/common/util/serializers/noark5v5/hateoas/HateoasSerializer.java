@@ -63,6 +63,11 @@ public class HateoasSerializer
             }
             for (INoarkEntity entity : list) {
                 if (!hateoasObject.isSingleEntity()) {
+		    /*
+		     * Use HateoasHandler for the leaf class, not the
+		     * base class, to ensure all _links entries for
+		     * the leaf class show up in the list
+		     */
                     HateoasNoarkObject noarkObject;
                     try {
                         Class<? extends INoarkEntity> cls = entity.getClass();
@@ -78,12 +83,20 @@ public class HateoasSerializer
                             packer.using().getConstructor().newInstance();
 
                         // TODO get rid of hardcoding
+			/*
+			  These values should be extracted from
+			  request by HateoasHandler.getOutgoingAddress(),
+			  which seem to work for other uses of
+			  HateoasHandler, but this fail here, and both
+			  values end up as 'null'.  Add workaround for
+			  now.
+			*/
                         handler.setPublicAddress("http://localhost:8092");
                         handler.setContextPath("/noark5v5");
 
                         handler.addLinks(noarkObject, new Authorisation());
                     } catch (Exception e) {
-                        String err = "Introspection failed serialising list.";
+                        String err = "Introspection failed while serialising list, using base HateoasHandler.";
                         logger.error(err);
                         noarkObject = hateoasObject;
                     }
