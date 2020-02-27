@@ -74,6 +74,22 @@ public class HateoasSerializer
 		     */
                     HateoasNoarkObject noarkObject;
                     try {
+
+                        Class<? extends INoarkEntity> cls =
+                                list.get(0).getClass();
+                        HateoasPacker packer = cls.getAnnotation(HateoasPacker.class);
+                        HateoasObject hateoasObject2 =
+                                cls.getAnnotation(HateoasObject.class);
+                        noarkObject =
+                                hateoasObject2.using().getDeclaredConstructor(List.class)
+                                        .newInstance(list);
+                        HateoasHandler handler =
+                                packer.using().getConstructor().newInstance();
+                        System.out.println("here");
+                        /*
+                        handler = packer.using().getConstructor().newInstance();
+
+
                         Class<? extends INoarkEntity> cls = entity.getClass();
                         HateoasPacker packer =
                             cls.getAnnotation(HateoasPacker.class);
@@ -85,7 +101,7 @@ public class HateoasSerializer
                             .newInstance(entity);
                         HateoasHandler handler =
                             packer.using().getConstructor().newInstance();
-
+*/
                         // TODO get rid of hardcoding
 			/*
 			  These values should be extracted from
@@ -100,12 +116,18 @@ public class HateoasSerializer
 
                         handler.addLinks(noarkObject, new Authorisation());
                     } catch (Exception e) {
-                        String err = "Introspection failed while serialising list, using base HateoasHandler.";
+                        System.out.println("NPXC -" + list.get(0).getClass()
+                                .getSimpleName());
+                        String err = list.get(0).getClass().getSimpleName();
+                        err += "Introspection failed while serialising list, " +
+                                "using base HateoasHandler.";
+                        err += e.getMessage();
                         logger.error(err);
                         noarkObject = hateoasObject;
                     }
                     serializeNoarkEntity(entity, noarkObject, jgen);
                 } else {
+
                     serializeNoarkEntity(entity, hateoasObject, jgen);
                 }
             }
