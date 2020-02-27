@@ -175,7 +175,7 @@ public class MetadataService
         if (metadata != null) {
             metadataRepository.delete(metadata);
             return ResponseEntity.status(NO_CONTENT)
-                    .body(null);
+                    .body(DELETE_RESPONSE);
         }
         String errorMessage = METADATA_ENTITY_MISSING + entityType;
         logger.error(errorMessage);
