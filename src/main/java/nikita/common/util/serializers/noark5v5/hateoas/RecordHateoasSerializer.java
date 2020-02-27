@@ -44,12 +44,6 @@ public class RecordHateoasSerializer
         printStorageLocation(jgen, record);
         // TODO: FIX THIS printCrossReference(jgen, record);
         if (record instanceof RegistryEntry) {
-        /*
-        TODO: Temp disabled!
-        printCorrespondencePartPersons(jgen, registryEntry);
-        printCorrespondencePartUnits(jgen, registryEntry);
-        printCorrespondencePartInternals(jgen, registryEntry);
-        */
             //printPrecedence(jgen, registryEntry);
             printElectronicSignature(jgen, (RegistryEntry) record);
 
