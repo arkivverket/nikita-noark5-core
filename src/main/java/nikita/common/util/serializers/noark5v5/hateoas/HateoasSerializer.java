@@ -14,12 +14,16 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
+import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.casehandling.CaseFileHateoasHandler;
 import nikita.webapp.hateoas.casehandling.RecordNoteHateoasHandler;
 import nikita.webapp.hateoas.casehandling.RegistryEntryHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -68,9 +72,31 @@ public class HateoasSerializer
             }
             for (INoarkEntity entity : list) {
                 if (!hateoasObject.isSingleEntity()) {
-                    HateoasNoarkObject entityHateoasObject =
-                        findHateoasObjectFor(entity, hateoasObject);
-                    serializeNoarkEntity(entity, entityHateoasObject, jgen);
+                    HateoasNoarkObject noarkObject;
+                    try {
+                        Class<? extends INoarkEntity> cls = entity.getClass();
+                        HateoasPacker packer =
+                            cls.getAnnotation(HateoasPacker.class);
+                        HateoasObject entityHateoasObject =
+                            cls.getAnnotation(HateoasObject.class);
+                        noarkObject =
+                            entityHateoasObject.using()
+                            .getDeclaredConstructor(cls)
+                            .newInstance(entity);
+                        HateoasHandler handler =
+                            packer.using().getConstructor().newInstance();
+
+                        // TODO get rid of hardcoding
+                        handler.setPublicAddress("http://localhost:8092");
+                        handler.setContextPath("/noark5v5");
+
+                        handler.addLinks(noarkObject, new Authorisation());
+                    } catch (Exception e) {
+                        String err = "Introspection failed serialising list.";
+                        logger.error(err);
+                        noarkObject = hateoasObject;
+                    }
+                    serializeNoarkEntity(entity, noarkObject, jgen);
                 } else {
                     serializeNoarkEntity(entity, hateoasObject, jgen);
                 }
@@ -87,35 +113,6 @@ public class HateoasSerializer
             jgen.writeNumberField(ENTITY_ROOT_NAME_LIST_COUNT, 0);
             printHateoasLinks(jgen, hateoasObject.getSelfLinks());
             jgen.writeEndObject();
-        }
-    }
-
-    private HateoasNoarkObject findHateoasObjectFor(
-            INoarkEntity entity,
-            HateoasNoarkObject defaultHateoasObject) {
-        if (entity instanceof RegistryEntry) {
-            RegistryEntryHateoas h = new RegistryEntryHateoas(entity);
-            RegistryEntryHateoasHandler hh = new RegistryEntryHateoasHandler();
-            hh.setPublicAddress("http://localhost:8092");
-            hh.setContextPath("/noark5v5");
-            hh.addLinks(h, new Authorisation());
-            return h;
-        } else if (entity instanceof RecordNote) {
-            RecordNoteHateoas h = new RecordNoteHateoas(entity);
-            RecordNoteHateoasHandler hh = new RecordNoteHateoasHandler();
-            hh.setPublicAddress("http://localhost:8092");
-            hh.setContextPath("/noark5v5");
-            hh.addLinks(h, new Authorisation());
-            return h;
-        } else if (entity instanceof CaseFile) {
-            CaseFileHateoas h = new CaseFileHateoas(entity);
-            CaseFileHateoasHandler hh = new CaseFileHateoasHandler();
-            hh.setPublicAddress("http://localhost:8092");
-            hh.setContextPath("/noark5v5");
-            hh.addLinks(h, new Authorisation());
-            return h;
-        } else {
-            return defaultHateoasObject;
         }
     }
 
