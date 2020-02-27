@@ -1543,11 +1543,9 @@ public final class CommonUtils {
                 screeningEntity.setScreeningExpiresDate(deserializeDate(SCREENING_EXPIRES_DATE, objectNode, errors));
 
                 // Deserialize screeningDuration
-                currentNode = objectNode.get(SCREENING_DURATION);
-                if (null != currentNode) {
-                    screeningEntity.setScreeningDuration(currentNode.textValue());
-                    objectNode.remove(SCREENING_DURATION);
-                }
+                screeningEntity.setScreeningDuration
+                        (deserializeInteger(SCREENING_DURATION,
+                                objectNode, errors, false));
                 objectNode.remove(SCREENING);
             }
 
@@ -2565,7 +2563,7 @@ public final class CommonUtils {
                         }
                         if (screening.getScreeningDuration() != null) {
                             jgen.writeStringField(SCREENING_DURATION,
-                                    screening.getScreeningDuration());
+                                    Integer.toString(screening.getScreeningDuration()));
                         }
                         jgen.writeEndObject();
                     }

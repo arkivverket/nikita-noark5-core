@@ -27,7 +27,7 @@ public interface IScreeningEntity extends Serializable {
 
     void setScreeningExpiresDate(OffsetDateTime screeningExpiresDate);
 
-    String getScreeningDuration();
+    Integer getScreeningDuration();
 
-    void setScreeningDuration(String screeningDuration);
+    void setScreeningDuration(Integer screeningDuration);
 }
