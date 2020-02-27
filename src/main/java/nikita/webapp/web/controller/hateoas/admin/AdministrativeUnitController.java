@@ -223,12 +223,12 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 500,
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-    @DeleteMapping(value = ADMINISTRATIVE_UNIT)
+    @DeleteMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteAdministrativeUnit(
             @ApiParam(name = "systemID",
                     value = "systemID of AdministrativeUnit to delete.",
                     required = true)
-            @PathVariable("systemID") String systemID) {
+            @PathVariable(SYSTEM_ID) String systemID) {
         administrativeUnitService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);
