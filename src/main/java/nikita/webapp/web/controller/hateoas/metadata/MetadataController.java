@@ -154,7 +154,7 @@ public class MetadataController {
             response = String.class)
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
+                    code = 204,
                     message = "Metadata entity deleted",
                     response = String.class),
             @ApiResponse(
@@ -168,7 +168,7 @@ public class MetadataController {
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = "**" + SLASH + CODE_PARAMETER)
-    public ResponseEntity<Void> deleteMetadata(
+    public ResponseEntity<String> deleteMetadata(
             @ApiParam(name = CODE,
                     value = "Code of metadata object to delete.",
                     required = true)
