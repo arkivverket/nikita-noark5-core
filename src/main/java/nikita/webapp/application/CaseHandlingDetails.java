@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.CASE_FILE;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW;
+import static nikita.common.config.N5ResourceMappings.PRECEDENCE;
 import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY;
 
 @JsonSerialize(using = APIDetailsSerializer.class)
@@ -48,6 +49,13 @@ public class CaseHandlingDetails extends APIDetails {
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_CASE_HANDLING + SLASH + DOCUMENT_FLOW,
                 REL_CASE_HANDLING_DOCUMENT_FLOW,
+                true
+        ));
+
+        // Add support for Precedence object
+        aPIDetails.add(new APIDetail(
+                publicUrlPath + HREF_BASE_CASE_HANDLING + SLASH + PRECEDENCE,
+                REL_CASE_HANDLING_PRECEDENCE,
                 true
         ));
     }

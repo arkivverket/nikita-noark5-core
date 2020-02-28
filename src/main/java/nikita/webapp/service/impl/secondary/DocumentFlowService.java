@@ -110,7 +110,7 @@ public class DocumentFlowService
 	existing.setFlowSentDate(incoming.getFlowSentDate());
 	*/
 
-        User to = validateUserReference
+        User to = userService.validateUserReference
             (DOCUMENT_FLOW_FLOW_TO, incoming.getReferenceFlowTo(),
              incoming.getFlowTo(),
              incoming.getReferenceFlowToSystemID());
@@ -124,7 +124,7 @@ public class DocumentFlowService
         }
 
         /* Only allow 'from' to be set during creation
-        User from = validateUserReference
+        User from = userService.validateUserReference
             (DOCUMENT_FLOW_FLOW_FROM, incoming.getReferenceFlowFrom(),
              incoming.getFlowFrom(),
              incoming.getReferenceFlowFromSystemID());
@@ -154,32 +154,17 @@ public class DocumentFlowService
         }
     }
 
-    private User validateUserReference
-        (String type, User user, String username, UUID systemID) {
-        if (null == user && null != systemID) {
-            user = userService.userGetBySystemId(systemID);
-        }
-        if (null != user &&
-             ( user.getUsername() != username
-               || user.getId() != systemID)) {
-            String info = "Inconsistent " + type + " values rejected. ";
-            throw new NikitaMalformedInputDataException(info);
-        }
-        // The values are consistent, return existing user
-        return user;
-    }
-
     private void createUserReferences(DocumentFlow documentFlow) {
         // Verify during creation: If systemid is set, and point to an
         // existing user, verify the username match the existing user
         // and set the reference to this user.  If systemid is not
         // set, make sure username is set and accept username and
         // systemid verbatim.
-        User to = validateUserReference
+        User to = userService.validateUserReference
             (DOCUMENT_FLOW_FLOW_TO, documentFlow.getReferenceFlowTo(),
              documentFlow.getFlowTo(),
              documentFlow.getReferenceFlowToSystemID());
-        User from = validateUserReference
+        User from = userService.validateUserReference
             (DOCUMENT_FLOW_FLOW_FROM, documentFlow.getReferenceFlowFrom(),
              documentFlow.getFlowFrom(),
              documentFlow.getReferenceFlowFromSystemID());

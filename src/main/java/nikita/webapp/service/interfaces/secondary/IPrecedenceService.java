@@ -1,14 +1,21 @@
 package nikita.webapp.service.interfaces.secondary;
 
+import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 
-import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 
 public interface IPrecedenceService {
 
-    Precedence updatePrecedence(String systemId, Long version,
-                                                Precedence incomingPrecedence);
+    PrecedenceHateoas updatePrecedenceBySystemId
+        (String systemId, Long version, Precedence incomingPrecedence);
 
-    Precedence createNewPrecedence(Precedence entity);
+    PrecedenceHateoas createNewPrecedence(Precedence entity);
 
-    Precedence findBySystemId(String precedenceSystemId);
+    void deletePrecedenceBySystemId(String systemID);
+
+    PrecedenceHateoas findAllByOwner();
+
+    PrecedenceHateoas findBySystemId(String precedenceSystemId);
+
+    PrecedenceHateoas generateDefaultPrecedence();
 }

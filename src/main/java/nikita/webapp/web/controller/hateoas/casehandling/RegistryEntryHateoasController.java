@@ -5,14 +5,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.hateoas.casehandling.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
@@ -133,7 +133,7 @@ public class RegistryEntryHateoasController
                 .body(signOffHateoas);
     }
 
-    // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-presedens
+    // POST [contextPath][api]/sakarkiv/journalpost/{systemId}/ny-presedens
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-presedens/
     @ApiOperation(value = "Persists a Precedence object associated with the given Record systemId",
             notes = "Returns the newly created Precedence object after " +
@@ -153,30 +153,20 @@ public class RegistryEntryHateoasController
     @Counted
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PRECEDENCE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> createPrecedenceAssociatedWithRecord(
+    public ResponseEntity<PrecedenceHateoas> createPrecedenceAssociatedWithRecord(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of record to associate the Precedence with.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "Precedence",
                     value = "Incoming Precedence object",
                     required = true)
-            @RequestBody Precedence Precedence)
+            @RequestBody Precedence precedence)
             throws NikitaException {
-        /*
-        Precedence createdPrecedence =
-                registryEntryService.createPrecedenceAssociatedWithRecord(systemID, Precedence);
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas(createdPrecedence);
-        precedenceHateoasHandler.addLinks(PrecedenceHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdPrecedence));
         return ResponseEntity.status(CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-            .header(ETAG, .getVersion().toString())
-                .body(precedenceHateoas);
-        */
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+                .body(registryEntryService.createPrecedenceAssociatedWithRecord
+                        (systemID, precedence));
     }
 
 
@@ -263,7 +253,7 @@ public class RegistryEntryHateoasController
     }
 
 
-    // GET [contextPath][api]/arkivstruktur/journalpost/{systemId}/ny-presedens
+    // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/ny-presedens
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-presedens/
     @ApiOperation(value = "Create a Precedence with default values",
             response = PrecedenceHateoas.class)
@@ -278,14 +268,16 @@ public class RegistryEntryHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PRECEDENCE)
-    public ResponseEntity<String> createDefaultPrecedence(
-            HttpServletRequest request) {
-        /*
+    public ResponseEntity<PrecedenceHateoas> createDefaultPrecedence(
+            HttpServletRequest request,
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemId of record to associate the Precedence with.",
+                    required = true)
+            @PathVariable(SYSTEM_ID) String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(precedenceService.generateDefaultPrecedence());
-        */
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+                .body(registryEntryService.
+                        generateDefaultPrecedence(systemID));
     }
 
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/dokumentflyt
@@ -338,7 +330,6 @@ public class RegistryEntryHateoasController
                         .findAllSignOffAssociatedWithRegistryEntry(systemID));
     }
 
-    // Retrieve all Precedence associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/presedens
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/presedens/
     @ApiOperation(value = "Retrieves a list of Precedences associated with a RegistryEntry",
@@ -350,24 +341,16 @@ public class RegistryEntryHateoasController
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + PRECEDENCE)
-    public ResponseEntity<String> findAllPrecedenceAssociatedWithRecord(
+    public ResponseEntity<PrecedenceHateoas> findAllPrecedenceForRecord(
             HttpServletRequest request,
             @ApiParam(name = "systemID",
                     value = "systemID of the registryEntry to retrieve associated Precedence",
                     required = true)
             @PathVariable("systemID") final String systemID) {
-        /*   Record record = recordService.findBySystemId(UUID.fromString(systemId));
-        if (record == null) {
-            throw new NoarkEntityNotFoundException("Could not find File object with systemID " + systemID);
-        }
-        PrecedenceHateoas documentDescriptionHateoas = new
-                PrecedenceHateoas((List<INoarkEntity>) (List)record.getReferencePrecedence()));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentDescriptionHateoas);
-                */
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        return ResponseEntity
+                .status(OK)
+                .body(registryEntryService.
+                        findAllPrecedenceForRegistryEntry(systemID));
     }
 
     // Retrieve a single registryEntry identified by systemId
