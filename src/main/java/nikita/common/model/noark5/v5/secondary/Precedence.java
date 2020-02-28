@@ -1,8 +1,15 @@
-package nikita.common.model.noark5.v5.casehandling;
+package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.IPrecedenceEntity;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPrecedenceEntity;
+import nikita.common.model.noark5.v5.metadata.PrecedenceStatus;
+import nikita.common.util.deserialisers.secondary.PrecedenceDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -10,17 +17,21 @@ import org.hibernate.envers.Audited;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import static nikita.common.config.Constants.REL_CASE_HANDLING_PRECEDENCE;
-import static nikita.common.config.Constants.TABLE_PRECEDENCE;
-import static nikita.common.config.N5ResourceMappings.PRECEDENCE;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_PRECEDENCE)
+@JsonDeserialize(using = PrecedenceDeserializer.class)
 public class Precedence
         extends NoarkGeneralEntity
         implements IPrecedenceEntity {
@@ -28,46 +39,73 @@ public class Precedence
     /**
      * M111 - presedensDato (xs:date)
      */
-    @Column(name = "precedence_date")
+    @Column(name = PRECEDENCE_DATE_ENG)
     @Audited
+    @JsonProperty(PRECEDENCE_DATE)
     private OffsetDateTime precedenceDate;
 
     /**
      * M311 - presedensHjemmel (xs:string)
      */
-    @Column(name = "precedence_authority")
+    @Column(name = PRECEDENCE_AUTHORITY_ENG)
     @Audited
+    @JsonProperty(PRECEDENCE_AUTHORITY)
     private String precedenceAuthority;
 
     /**
      * M312 - rettskildefaktor (xs:string)
      */
-    @Column(name = "source_of_law")
+    @Column(name = PRECEDENCE_SOURCE_OF_LAW_ENG)
     @Audited
+    @JsonProperty(PRECEDENCE_SOURCE_OF_LAW)
     private String sourceOfLaw;
 
     /**
-     * M628 - presedensGodkjentDato (xs:date)
+     * M628 - presedensGodkjentDato (xs:datetime)
      */
-    @Column(name = "precedence_approved_date")
+    @Column(name = PRECEDENCE_APPROVED_DATE_ENG)
     @Audited
+    @JsonProperty(PRECEDENCE_APPROVED_DATE)
     private OffsetDateTime precedenceApprovedDate;
 
     /**
      * M629 - presedensGodkjentAv (xs:string)
      */
-    @Column(name = "precedence_approved_by")
+    @Column(name = PRECEDENCE_APPROVED_BY_ENG)
     @Audited
+    @JsonProperty(PRECEDENCE_APPROVED_BY)
     private String precedenceApprovedBy;
 
     /**
-     * M056 - presedensStatus (xs:string)
+     * M?? referansePresedensGodkjentAv (xs:string)
      */
-    @Column(name = "precedence_status")
+    @Column(name = PRECEDENCE_REFERENCE_APPROVED_BY_ENG)
     @Audited
-    private String precedenceStatus;
+    @JsonProperty(PRECEDENCE_REFERENCE_APPROVED_BY)
+    private UUID referencePrecedenceApprovedBySystemID;
 
-    // Link to RegistryEntry
+    /**
+     * M056 - presedensStatus code (xs:string)
+     */
+    @Column(name = "precedence_status_code")
+    @Audited
+    private String precedenceStatusCode;
+
+    /**
+     * M056 - presedensStatus code name (xs:string)
+     */
+    @Column(name = "precedence_status_code_name")
+    @Audited
+    private String precedenceStatusCodeName;
+
+    // Link to user to (if referencePrecedenceApprovedBySystemID refer
+    // to existing user)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = PRECEDENCE_APPROVED_BY_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
+    private User referencePrecedenceApprovedBy;
+
+    // Links to RegistryEntry
     @ManyToMany(mappedBy = "referencePrecedence")
     private List<RegistryEntry> referenceRegistryEntry = new ArrayList<>();
 
@@ -76,52 +114,98 @@ public class Precedence
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
 
+    @Override
     public OffsetDateTime getPrecedenceDate() {
         return precedenceDate;
     }
 
+    @Override
     public void setPrecedenceDate(OffsetDateTime precedenceDate) {
         this.precedenceDate = precedenceDate;
     }
 
+    @Override
     public String getPrecedenceAuthority() {
         return precedenceAuthority;
     }
 
+    @Override
     public void setPrecedenceAuthority(String precedenceAuthority) {
         this.precedenceAuthority = precedenceAuthority;
     }
 
+    @Override
     public String getSourceOfLaw() {
         return sourceOfLaw;
     }
 
+    @Override
     public void setSourceOfLaw(String sourceOfLaw) {
         this.sourceOfLaw = sourceOfLaw;
     }
 
+    @Override
     public OffsetDateTime getPrecedenceApprovedDate() {
         return precedenceApprovedDate;
     }
 
+    @Override
     public void setPrecedenceApprovedDate(OffsetDateTime precedenceApprovedDate) {
         this.precedenceApprovedDate = precedenceApprovedDate;
     }
 
+    @Override
     public String getPrecedenceApprovedBy() {
         return precedenceApprovedBy;
     }
 
+    @Override
     public void setPrecedenceApprovedBy(String precedenceApprovedBy) {
         this.precedenceApprovedBy = precedenceApprovedBy;
     }
 
-    public String getPrecedenceStatus() {
+    @Override
+    public UUID getReferencePrecedenceApprovedBySystemID() {
+        return referencePrecedenceApprovedBySystemID;
+    }
+
+    @Override
+    public void setReferencePrecedenceApprovedBySystemID
+        (UUID referencePrecedenceApprovedBySystemID) {
+        this.referencePrecedenceApprovedBySystemID =
+            referencePrecedenceApprovedBySystemID;
+    }
+
+    @Override
+    public User getReferencePrecedenceApprovedBy() {
+        return referencePrecedenceApprovedBy;
+    }
+
+    @Override
+    public void setReferencePrecedenceApprovedBy
+        (User referencePrecedenceApprovedBy) {
+        this.referencePrecedenceApprovedBy = referencePrecedenceApprovedBy;
+    }
+
+    @Override
+    public PrecedenceStatus getPrecedenceStatus() {
+        if (null == precedenceStatusCode)
+            return null;
+        PrecedenceStatus precedenceStatus = new PrecedenceStatus();
+        precedenceStatus.setCode(precedenceStatusCode);
+        precedenceStatus.setCodeName(precedenceStatusCodeName);
         return precedenceStatus;
     }
 
-    public void setPrecedenceStatus(String precedenceStatus) {
-        this.precedenceStatus = precedenceStatus;
+    @Override
+    public void setPrecedenceStatus(PrecedenceStatus precedenceStatus) {
+        if (null != precedenceStatus) {
+            this.precedenceStatusCode = precedenceStatus.getCode();
+            this.precedenceStatusCodeName = precedenceStatus.getCodeName();
+        } else {
+            this.precedenceStatusCode = null;
+            this.precedenceStatusCodeName = null;
+        }
     }
 
     @Override
@@ -139,19 +223,23 @@ public class Precedence
         return Constants.NOARK_CASE_HANDLING_PATH;
     }
 
+    @Override
     public List<RegistryEntry> getReferenceRegistryEntry() {
         return referenceRegistryEntry;
     }
 
+    @Override
     public void setReferenceRegistryEntry(
             List<RegistryEntry> referenceRegistryEntry) {
         this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
+    @Override
     public List<CaseFile> getReferenceCaseFile() {
         return referenceCaseFile;
     }
 
+    @Override
     public void setReferenceCaseFile(List<CaseFile> referenceCaseFile) {
         this.referenceCaseFile = referenceCaseFile;
     }
@@ -159,7 +247,8 @@ public class Precedence
     @Override
     public String toString() {
         return "Precedence{" + super.toString() +
-                "precedenceStatus='" + precedenceStatus + '\'' +
+                "precedenceStatusCode='" + precedenceStatusCode + '\'' +
+                "precedenceStatusCodeName='" + precedenceStatusCodeName + '\'' +
                 ", precedenceApprovedBy='" + precedenceApprovedBy + '\'' +
                 ", precedenceApprovedDate=" + precedenceApprovedDate +
                 ", sourceOfLaw='" + sourceOfLaw + '\'' +
@@ -182,7 +271,8 @@ public class Precedence
         Precedence rhs = (Precedence) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(precedenceStatus, rhs.precedenceStatus)
+                .append(precedenceStatusCode, rhs.precedenceStatusCode)
+                .append(precedenceStatusCodeName, rhs.precedenceStatusCodeName)
                 .append(precedenceApprovedBy, rhs.precedenceApprovedBy)
                 .append(precedenceApprovedDate, rhs.precedenceApprovedDate)
                 .append(sourceOfLaw, rhs.sourceOfLaw)
@@ -195,7 +285,8 @@ public class Precedence
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(precedenceStatus)
+                .append(precedenceStatusCode)
+                .append(precedenceStatusCodeName)
                 .append(precedenceApprovedBy)
                 .append(precedenceApprovedDate)
                 .append(sourceOfLaw)

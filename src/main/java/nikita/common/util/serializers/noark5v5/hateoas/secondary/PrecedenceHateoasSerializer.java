@@ -2,7 +2,7 @@
 package nikita.common.util.serializers.noark5v5.hateoas.secondary;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
@@ -10,6 +10,7 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 
 import java.io.IOException;
 
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
@@ -33,7 +34,22 @@ public class PrecedenceHateoasSerializer extends HateoasSerializer implements IH
         Precedence precedence = (Precedence) noarkSystemIdEntity;
 
         jgen.writeStartObject();
-        printPrecedence(jgen, precedence);
+        printSystemIdEntity(jgen, precedence);
+        printNullableDate(jgen, PRECEDENCE_DATE,
+                          precedence.getPrecedenceDate());
+        printCreateEntity(jgen, precedence);
+        printTitleAndDescription(jgen, precedence);
+        printNullable(jgen, PRECEDENCE_AUTHORITY,
+                      precedence.getPrecedenceAuthority());
+        printNullable(jgen, PRECEDENCE_SOURCE_OF_LAW,
+                      precedence.getSourceOfLaw());
+        printNullableDateTime(jgen, PRECEDENCE_APPROVED_DATE,
+                              precedence.getPrecedenceApprovedDate());
+        printNullable(jgen, PRECEDENCE_APPROVED_BY,
+                      precedence.getPrecedenceApprovedBy());
+        printFinaliseEntity(jgen, precedence);
+        printNullableMetadata(jgen, PRECEDENCE_PRECEDENCE_STATUS,
+                              precedence.getPrecedenceStatus());
         printHateoasLinks(jgen, precedenceHateoas.getLinks(precedence));
         jgen.writeEndObject();
     }

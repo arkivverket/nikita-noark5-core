@@ -33,4 +33,7 @@ public interface IUserService {
     long deleteAll();
 
     long deleteByUsername(String username);
+
+    User validateUserReference(String type, User user,
+                               String username, UUID systemID);
 }

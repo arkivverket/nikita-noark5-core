@@ -10,7 +10,7 @@ import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
-import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.*;
@@ -943,49 +943,6 @@ public final class CommonUtils {
 
                 // Deserialize deletionDate
                 deletionEntity.setDeletionDate(deserializeDateTime(DELETION_DATE, objectNode, errors));
-            }
-
-            public static List<Precedence> deserialisePrecedences(ObjectNode objectNode, StringBuilder errors) {
-//                objectNode.remove(PRECEDENCE);
-                // TODO : Looks like I'm missing!!!
-                return null;
-            }
-
-            public static void deserialisePrecedence(IPrecedenceEntity precedenceEntity, ObjectNode objectNode, StringBuilder errors) {
-
-                deserialiseNoarkCreateEntity(precedenceEntity, objectNode, errors);
-                deserialiseNoarkTitleDescriptionEntity(precedenceEntity, objectNode, errors);
-                deserialiseNoarkFinaliseEntity(precedenceEntity, objectNode, errors);
-
-                // Deserialize precedenceDate
-                precedenceEntity.setPrecedenceDate(deserializeDate(PRECEDENCE_DATE, objectNode, errors));
-
-                // Deserialize precedenceAuthority
-                JsonNode currentNode = objectNode.get(PRECEDENCE_AUTHORITY);
-                if (null != currentNode) {
-                    precedenceEntity.setPrecedenceAuthority(currentNode.textValue());
-                    objectNode.remove(PRECEDENCE_AUTHORITY);
-                }
-                // Deserialize sourceOfLaw
-                currentNode = objectNode.get(PRECEDENCE_SOURCE_OF_LAW);
-                if (null != currentNode) {
-                    precedenceEntity.setSourceOfLaw(currentNode.textValue());
-                    objectNode.remove(PRECEDENCE_SOURCE_OF_LAW);
-                }
-                // Deserialize precedenceApprovedBy
-                currentNode = objectNode.get(PRECEDENCE_APPROVED_BY);
-                if (null != currentNode) {
-                    precedenceEntity.setPrecedenceApprovedBy(currentNode.textValue());
-                    objectNode.remove(PRECEDENCE_APPROVED_BY);
-                }
-                // Deserialize precedenceStatus
-                currentNode = objectNode.get(PRECEDENCE_PRECEDENCE_STATUS);
-                if (null != currentNode) {
-                    precedenceEntity.setPrecedenceStatus(currentNode.textValue());
-                    objectNode.remove(PRECEDENCE_PRECEDENCE_STATUS);
-                }
-                // Deserialize precedenceApprovedDate
-                precedenceEntity.setPrecedenceApprovedDate(deserializeDate(PRECEDENCE_APPROVED_DATE, objectNode, errors));
             }
 
             public static List<Part> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
@@ -2211,40 +2168,6 @@ public final class CommonUtils {
                 }
             }
             */
-
-            public static void printPrecedence(JsonGenerator jgen, IPrecedenceEntity precedence) throws IOException {
-                if (precedence != null) {
-                    printNullableDate(jgen, PRECEDENCE_DATE,
-                                      precedence.getPrecedenceDate());
-                    printCreateEntity(jgen, precedence);
-                    printTitleAndDescription(jgen, precedence);
-                    printNullable(jgen, PRECEDENCE_AUTHORITY,
-                                  precedence.getPrecedenceAuthority());
-                    printNullable(jgen, PRECEDENCE_SOURCE_OF_LAW,
-                                  precedence.getSourceOfLaw());
-                    printNullableDate(jgen, PRECEDENCE_APPROVED_DATE,
-                                      precedence.getPrecedenceApprovedDate());
-                    printNullable(jgen, PRECEDENCE_APPROVED_BY,
-                                  precedence.getPrecedenceApprovedBy());
-                    printFinaliseEntity(jgen, precedence);
-                    printNullable(jgen, PRECEDENCE_PRECEDENCE_STATUS,
-                                  precedence.getPrecedenceStatus());
-                }
-            }
-
-            public static void printPrecedences(JsonGenerator jgen, IPrecedence precedenceObject)
-                    throws IOException {
-                List<Precedence> precedences = precedenceObject.getReferencePrecedence();
-                if (precedences != null && precedences.size() > 0) {
-                    jgen.writeArrayFieldStart(PRECEDENCE);
-                    for (Precedence precedence : precedences) {
-                        jgen.writeStartObject();
-                        printPrecedence(jgen, precedence);
-                        jgen.writeEndObject();
-                    }
-                    jgen.writeEndArray();
-                }
-            }
 
             public static void printStorageLocation(JsonGenerator jgen, IStorageLocation storageLocationEntity)
                     throws IOException {

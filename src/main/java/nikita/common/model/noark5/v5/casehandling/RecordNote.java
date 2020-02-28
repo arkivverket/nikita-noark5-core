@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordNoteEntity;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.util.deserialisers.casehandling.RecordNoteDeserializer;
 import nikita.webapp.hateoas.casehandling.RecordNoteHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;

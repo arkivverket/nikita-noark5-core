@@ -151,8 +151,6 @@ public class CaseFileDeserializer
 
         caseFile.setReferencePart(
                 deserialiseCaseParties(objectNode, errors));
-        caseFile.setReferencePrecedence(
-                deserialisePrecedences(objectNode, errors));
 
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

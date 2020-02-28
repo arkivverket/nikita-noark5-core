@@ -1,6 +1,6 @@
 package nikita.common.model.noark5.v5.interfaces;
 
-import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 
 import java.util.List;
 

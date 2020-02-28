@@ -11,7 +11,9 @@ import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -133,6 +135,43 @@ public class CaseFileHateoasController
                 .eTag(createdRegistryEntry.getVersion().toString())
                 .body(registryEntryHateoas);
     }
+
+    // POST [contextPath][api]/sakarkiv/saksmappe/{systemId}/ny-presedens
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-presedens/
+    @ApiOperation(value = "Persists a Precedence object associated with the given File systemId",
+            notes = "Returns the newly created Precedence object after " +
+                    "it was associated with a File object and persisted to " +
+                    "the database",
+            response = PrecedenceHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Precedence " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+                    response = PrecedenceHateoas.class),
+            @ApiResponse(code = 201, message = "Precedence " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+                    response = PrecedenceHateoas.class),
+            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type Precedence"),
+            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PRECEDENCE,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<PrecedenceHateoas> createPrecedenceAssociatedWithFile(
+            HttpServletRequest request,
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemId of file to associate the Precedence with.",
+                    required = true)
+            @PathVariable(SYSTEM_ID) String systemID,
+            @ApiParam(name = "Precedence",
+                    value = "Incoming Precedence object",
+                    required = true)
+            @RequestBody Precedence precedence)
+            throws NikitaException {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(caseFileService.createPrecedenceAssociatedWithFile
+                        (systemID, precedence));
+    }
+
 
     // API - All GET Requests (CRUD - READ)
 
@@ -296,6 +335,62 @@ public class CaseFileHateoasController
                 .body(caseFileHateoas);
     }
     
+    // GET [contextPath][api]/sakarkiv/saksmappe/{systemID}/presedens
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/presedens/
+    @ApiOperation(value = "Retrieves all Precedence associated with a " +
+            "CaseFile identified by systemId",
+            response = PrecedenceHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Precedence list returned",
+                    response = PrecedenceHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + PRECEDENCE)
+    public ResponseEntity<PrecedenceHateoas>
+    findPrecedenceForCaseFileBySystemId(
+            @ApiParam(name = "systemID",
+                    value = "systemID of the caseFile to retrieve",
+                    required = true)
+            @PathVariable("systemID") final String systemID) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(caseFileService.
+                        findAllPrecedenceForCaseFile(systemID));
+    }
+
+    // GET [contextPath][api]/sakarkiv/saksmappe/{systemId}/ny-presedens
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-presedens/
+    @ApiOperation(value = "Create a Precedence with default values",
+            response = PrecedenceHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Precedence returned",
+                    response = PrecedenceHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PRECEDENCE)
+    public ResponseEntity<PrecedenceHateoas> createDefaultPrecedence(
+            HttpServletRequest request,
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemId of file to associate the Precedence with.",
+                    required = true)
+            @PathVariable(SYSTEM_ID) String systemID) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(caseFileService.
+                        generateDefaultPrecedence(systemID));
+    }
+
     // Delete a CaseFile identified by systemID
     // DELETE [contextPath][api]/sakarkiv/saksmappe/{systemId}/
     @ApiOperation(value = "Deletes a single CaseFile entity identified by " +

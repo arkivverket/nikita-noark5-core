@@ -980,6 +980,9 @@ public final class Constants {
     public static final String DOCUMENT_FLOW_RECORD_NOTE_ID =
             "document_flow_record_note_id";
 
+    public static final String PRECEDENCE_APPROVED_BY_ID =
+            "precedence_approved_by_id";
+
     public static final String RECORD_FILE_ID = "record_file_id";
     public static final String RECORD_CLASS_ID = "record_class_id";
     public static final String RECORD_CLASSIFIED_ID = "record_classified_id";

@@ -1,12 +1,13 @@
 package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.casehandling.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import org.springframework.http.ResponseEntity;
 
@@ -18,7 +19,7 @@ public interface IRegistryEntryService {
     // All save methods
     RegistryEntry save(RegistryEntry registryEntry);
 
-    Precedence createPrecedenceAssociatedWithRecord(
+    PrecedenceHateoas createPrecedenceAssociatedWithRecord(
             String registryEntrysystemID, Precedence precedence);
 
     SignOffHateoas
@@ -46,6 +47,9 @@ public interface IRegistryEntryService {
     DocumentFlowHateoas findAllDocumentFlowWithRegistryEntryBySystemId
         (String systemID);
 
+    PrecedenceHateoas findAllPrecedenceForRegistryEntry(
+            @NotNull final String systemID);
+
     // All UPDATE operations
     RegistryEntry handleUpdate(@NotNull final String systemId,
                                @NotNull final Long version,
@@ -64,6 +68,8 @@ public interface IRegistryEntryService {
 
     void deleteSignOff(@NotNull String systemId,
                        @NotNull String signOffSystemId);
+
+    PrecedenceHateoas generateDefaultPrecedence(String systemID);
 
     DocumentFlowHateoas generateDefaultDocumentFlow(String systemID);
 
