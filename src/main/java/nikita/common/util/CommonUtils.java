@@ -977,10 +977,10 @@ public final class CommonUtils {
                     objectNode.remove(PRECEDENCE_APPROVED_BY);
                 }
                 // Deserialize precedenceStatus
-                currentNode = objectNode.get(PRECEDENCE_STATUS);
+                currentNode = objectNode.get(PRECEDENCE_PRECEDENCE_STATUS);
                 if (null != currentNode) {
                     precedenceEntity.setPrecedenceStatus(currentNode.textValue());
-                    objectNode.remove(PRECEDENCE_STATUS);
+                    objectNode.remove(PRECEDENCE_PRECEDENCE_STATUS);
                 }
                 // Deserialize precedenceApprovedDate
                 precedenceEntity.setPrecedenceApprovedDate(deserializeDate(PRECEDENCE_APPROVED_DATE, objectNode, errors));
@@ -2331,7 +2331,7 @@ public final class CommonUtils {
                         jgen.writeStringField(FINALISED_BY, precedence.getFinalisedBy());
                     }
                     if (null != precedence.getPrecedenceStatus()) {
-                        jgen.writeStringField(PRECEDENCE_STATUS, precedence.getPrecedenceStatus());
+                        jgen.writeStringField(PRECEDENCE_PRECEDENCE_STATUS, precedence.getPrecedenceStatus());
                     }
                 }
             }
