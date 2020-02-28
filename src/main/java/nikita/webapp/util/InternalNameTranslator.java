@@ -715,9 +715,9 @@ public class InternalNameTranslator {
                         PRECEDENCE_SOURCE_OF_LAW_ENG,
                         PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT);
         addNorToEnglishNameMap
-                (PRECEDENCE_STATUS,
-                        PRECEDENCE_STATUS_ENG,
-                        PRECEDENCE_STATUS_ENG_OBJECT);
+                (PRECEDENCE_PRECEDENCE_STATUS,
+                        PRECEDENCE_PRECEDENCE_STATUS_ENG,
+                        PRECEDENCE_PRECEDENCE_STATUS_ENG_OBJECT);
         addNorToEnglishNameMap
                 (RECORD_ARCHIVED_BY, RECORD_ARCHIVED_BY_ENG,
                         RECORD_ARCHIVED_BY_ENG_OBJECT);
