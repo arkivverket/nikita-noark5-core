@@ -1678,6 +1678,14 @@ public final class CommonUtils {
                     jgen.writeStringField(fieldName, value);
             }
 
+            public static void printNullable(JsonGenerator jgen,
+                                             String fieldName,
+                                             Integer value)
+                throws IOException {
+                if (null != value)
+                    jgen.writeNumberField(fieldName, value);
+            }
+
             public static void printNullableDate(JsonGenerator jgen,
                                                      String fieldName,
                                                      OffsetDateTime value)
@@ -2351,10 +2359,8 @@ public final class CommonUtils {
                                       disposal.getDisposalDecision());
                         printNullable(jgen, DISPOSAL_AUTHORITY,
                                       disposal.getDisposalAuthority());
-                        if (disposal.getPreservationTime() != null) {
-                            jgen.writeStringField(DISPOSAL_PRESERVATION_TIME,
-                                    Integer.toString(disposal.getPreservationTime()));
-                        }
+                        printNullable(jgen, DISPOSAL_PRESERVATION_TIME,
+                                      disposal.getPreservationTime());
                         printNullableDate(jgen, DISPOSAL_DATE,
                                           disposal.getDisposalDate());
                         jgen.writeEndObject();
@@ -2411,10 +2417,8 @@ public final class CommonUtils {
                                     screening.getScreeningDocument());
                         printNullableDate(jgen, SCREENING_EXPIRES_DATE,
                                           screening.getScreeningExpiresDate());
-                        if (screening.getScreeningDuration() != null) {
-                            jgen.writeStringField(SCREENING_DURATION,
-                                    Integer.toString(screening.getScreeningDuration()));
-                        }
+                        printNullable(jgen, SCREENING_DURATION,
+                                      screening.getScreeningDuration());
                         jgen.writeEndObject();
                     }
                 }
