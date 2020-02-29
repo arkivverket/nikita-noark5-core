@@ -1750,13 +1750,8 @@ public final class CommonUtils {
             public static void printCaseFileEntity(JsonGenerator jgen,
                                                    ICaseFileEntity caseFile)
                     throws IOException {
-
-                printNullableDateTime(jgen, CREATED_DATE,
-                                      caseFile.getCreatedDate());
-                printNullable(jgen, CREATED_BY, caseFile.getCreatedBy());
-                printNullableDateTime(jgen, FINALISED_DATE,
-                                      caseFile.getFinalisedDate());
-                printNullable(jgen, FINALISED_BY, caseFile.getFinalisedBy());
+                printCreateEntity(jgen, caseFile);
+                printFinaliseEntity(jgen, caseFile);
                 if (caseFile.getCaseYear() != null) {
                     jgen.writeNumberField(CASE_YEAR,
                             caseFile.getCaseYear());
@@ -2219,12 +2214,8 @@ public final class CommonUtils {
                 if (precedence != null) {
                     printNullableDate(jgen, PRECEDENCE_DATE,
                                       precedence.getPrecedenceDate());
-                    printNullableDateTime(jgen, CREATED_DATE,
-                                          precedence.getCreatedDate());
-                    printNullable(jgen, CREATED_BY, precedence.getCreatedBy());
-                    printNullable(jgen, TITLE, precedence.getTitle());
-                    printNullable(jgen, DESCRIPTION,
-                                  precedence.getDescription());
+                    printCreateEntity(jgen, precedence);
+                    printTitleAndDescription(jgen, precedence);
                     printNullable(jgen, PRECEDENCE_AUTHORITY,
                                   precedence.getPrecedenceAuthority());
                     printNullable(jgen, PRECEDENCE_SOURCE_OF_LAW,
@@ -2233,10 +2224,7 @@ public final class CommonUtils {
                                       precedence.getPrecedenceApprovedDate());
                     printNullable(jgen, PRECEDENCE_APPROVED_BY,
                                   precedence.getPrecedenceApprovedBy());
-                    printNullableDateTime(jgen, FINALISED_DATE,
-                                          precedence.getFinalisedDate());
-                    printNullable(jgen, FINALISED_BY,
-                                  precedence.getFinalisedBy());
+                    printFinaliseEntity(jgen, precedence);
                     printNullable(jgen, PRECEDENCE_PRECEDENCE_STATUS,
                                   precedence.getPrecedenceStatus());
                 }
