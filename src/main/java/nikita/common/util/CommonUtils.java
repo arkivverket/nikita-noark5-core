@@ -1809,6 +1809,27 @@ public final class CommonUtils {
                 }
             }
 
+            public static void printNullableMetadataCode
+                (JsonGenerator jgen, String fieldName,
+                 String code, String codeName)
+                throws IOException {
+                if (null != code) {
+                    jgen.writeObjectFieldStart(fieldName);
+                    printCode(jgen, code, codeName);
+                    jgen.writeEndObject();
+                }
+            }
+
+            public static void printNullableMetadata
+                (JsonGenerator jgen, String fieldName, IMetadataEntity m)
+                throws IOException {
+                if (null != m && null != m.getCode()) {
+                    jgen.writeObjectFieldStart(fieldName);
+                    printCode(jgen, m);
+                    jgen.writeEndObject();
+                }
+            }
+
             public static void printRecordEntity(JsonGenerator jgen,
                                                  IRecordEntity record)
                     throws IOException {
@@ -1905,19 +1926,12 @@ public final class CommonUtils {
                         jgen.writeNumberField(REGISTRY_ENTRY_NUMBER,
                                 registryEntry.getRegistryEntryNumber());
                     }
-                    if (registryEntry.getRegistryEntryTypeCode() != null) {
-                        jgen.writeObjectFieldStart(REGISTRY_ENTRY_TYPE);
-                        printCode(jgen,
-                                registryEntry.getRegistryEntryTypeCode(),
-                                registryEntry.getRegistryEntryTypeCodeName());
-                        jgen.writeEndObject();
-                    }
-                    if (registryEntry.getRecordStatusCode() != null) {
-                        jgen.writeObjectFieldStart(REGISTRY_ENTRY_STATUS);
-                        printCode(jgen, registryEntry.getRecordStatusCode(),
-                                registryEntry.getRecordStatusCodeName());
-                        jgen.writeEndObject();
-                    }
+                    printNullableMetadataCode(jgen, REGISTRY_ENTRY_TYPE,
+                              registryEntry.getRegistryEntryTypeCode(),
+                              registryEntry.getRegistryEntryTypeCodeName());
+                    printNullableMetadataCode(jgen, REGISTRY_ENTRY_STATUS,
+                              registryEntry.getRecordStatusCode(),
+                              registryEntry.getRecordStatusCodeName());
                     if (registryEntry.getRecordDate() != null) {
                         jgen.writeStringField(REGISTRY_ENTRY_DATE,
                                 formatDate(registryEntry.getRecordDate()));
@@ -1932,13 +1946,10 @@ public final class CommonUtils {
             public static void printDocumentMedium(JsonGenerator jgen,
                                                    IDocumentMedium documentMedium)
                     throws IOException {
-                if (documentMedium.getDocumentMediumCode() != null) {
-                    jgen.writeObjectFieldStart(DOCUMENT_MEDIUM);
-                    printCode(jgen, documentMedium.getDocumentMediumCode(),
-                            documentMedium.getDocumentMediumCodeName());
-                    jgen.writeEndObject();
-                }
-
+                printNullableMetadataCode
+                    (jgen, DOCUMENT_MEDIUM,
+                     documentMedium.getDocumentMediumCode(),
+                     documentMedium.getDocumentMediumCodeName());
             }
 
             public static void printFinaliseEntity(JsonGenerator jgen,
@@ -2056,12 +2067,9 @@ public final class CommonUtils {
 
                 if (correspondencePart != null) {
                     printSystemIdEntity(jgen, correspondencePart);
-                    if (null != correspondencePart.getCorrespondencePartType()) {
-                        jgen.writeObjectFieldStart(CORRESPONDENCE_PART_TYPE);
-                        printCode(jgen, correspondencePart
-				  .getCorrespondencePartType());
-                        jgen.writeEndObject();
-                    }
+                    printNullableMetadata
+                        (jgen, CORRESPONDENCE_PART_TYPE,
+                         correspondencePart.getCorrespondencePartType());
                 }
             }
 
@@ -2160,11 +2168,8 @@ public final class CommonUtils {
                     throws IOException {
                 if (part != null) {
                     printSystemIdEntity(jgen, part);
-                    if (part.getPartRole() != null) {
-                        jgen.writeObjectFieldStart(PART_ROLE_FIELD);
-                        printCode(jgen, part.getPartRole());
-                        jgen.writeEndObject();
-                    }
+                    printNullableMetadata(jgen, PART_ROLE_FIELD,
+                                          part.getPartRole());
                 }
             }
 
@@ -2405,24 +2410,14 @@ public final class CommonUtils {
                         esEntity.getReferenceElectronicSignature();
                 if (es != null) {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
-                    if (null != es.getElectronicSignatureSecurityLevelCode()) {
-                        jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
-                        printCode(jgen,
-                                es.getElectronicSignatureSecurityLevelCode(),
-                                es.getElectronicSignatureSecurityLevelCodeName());
-                        jgen.writeEndObject();
-                    }
-                    if (es.getElectronicSignatureSecurityLevelCode() != null) {
-                        jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
-                        printCode(jgen,
-                                es.getElectronicSignatureSecurityLevelCode(),
-                                es.getElectronicSignatureSecurityLevelCodeName());
-                        jgen.writeEndObject();
-                    }
-                    if (es.getElectronicSignatureVerifiedCodeName() != null) {
-                        jgen.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
-                                es.getElectronicSignatureVerifiedCodeName());
-                    }
+                    printNullableMetadataCode
+                        (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                         es.getElectronicSignatureSecurityLevelCode(),
+                         es.getElectronicSignatureSecurityLevelCodeName());
+                    printNullableMetadataCode
+                        (jgen, ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                         es.getElectronicSignatureVerifiedCode(),
+                         es.getElectronicSignatureVerifiedCodeName());
                     if (es.getVerifiedDate() != null) {
                         jgen.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                                 formatDate(es.getVerifiedDate()));
@@ -2441,12 +2436,10 @@ public final class CommonUtils {
                     Classified classified = classifiedEntity.getReferenceClassified();
                     if (classified != null) {
                         jgen.writeObjectFieldStart(CLASSIFIED);
-                        if (classified.getClassificationCode() != null) {
-                            jgen.writeObjectFieldStart(CLASSIFICATION);
-                            printCode(jgen, classified.getClassificationCode(),
-                                    classified.getClassificationCodeName());
-                            jgen.writeEndObject();
-                        }
+                        printNullableMetadataCode
+                            (jgen, CLASSIFICATION,
+                             classified.getClassificationCode(),
+                             classified.getClassificationCodeName());
                         if (classified.getClassificationDate() != null) {
                             jgen.writeStringField(CLASSIFICATION_DATE,
                                     formatDateTime(classified.getClassificationDate()));
@@ -2521,11 +2514,8 @@ public final class CommonUtils {
                         if (deletion.getDeletionBy() != null) {
                             jgen.writeStringField(DELETION_BY, deletion.getDeletionBy());
                         }
-                        if (null != deletion.getDeletionType()) {
-                            jgen.writeObjectFieldStart(DELETION_TYPE);
-                            printCode(jgen, deletion.getDeletionType());
-                            jgen.writeEndObject();
-                        }
+                        printNullableMetadata(jgen, DELETION_TYPE,
+                                              deletion.getDeletionType());
                         if (deletion.getDeletionDate() != null) {
                             jgen.writeStringField(DELETION_DATE,
                                     formatDateTime(deletion.getDeletionDate()));
