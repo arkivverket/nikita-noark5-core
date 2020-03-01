@@ -732,6 +732,8 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     titleDescriptionEntity.setTitle(currentNode.textValue());
                     objectNode.remove(TITLE);
+                } else {
+                    errors.append(TITLE + " is missing. ");
                 }
 
                 // Deserialize description
