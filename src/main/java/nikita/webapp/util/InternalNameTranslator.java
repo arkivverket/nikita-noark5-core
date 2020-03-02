@@ -802,9 +802,9 @@ public class InternalNameTranslator {
                         SCREENING_AUTHORITY_ENG,
                         SCREENING_AUTHORITY_ENG_OBJECT);
         addNorToEnglishNameMap
-                (SCREENING_DOCUMENT,
-                        SCREENING_DOCUMENT_ENG,
-                        SCREENING_DOCUMENT_ENG_OBJECT);
+                (SCREENING_SCREENING_DOCUMENT,
+                        SCREENING_SCREENING_DOCUMENT_ENG,
+                        SCREENING_SCREENING_DOCUMENT_ENG_OBJECT);
         addNorToEnglishNameMap
                 (SCREENING_DURATION,
                         SCREENING_DURATION_ENG,
@@ -814,9 +814,9 @@ public class InternalNameTranslator {
                         SCREENING_EXPIRES_DATE_ENG,
                         SCREENING_EXPIRES_DATE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (SCREENING_METADATA,
-                        SCREENING_METADATA_ENG,
-                        SCREENING_METADATA_ENG_OBJECT);
+                (SCREENING_SCREENING_METADATA,
+                        SCREENING_SCREENING_METADATA_ENG,
+                        SCREENING_SCREENING_METADATA_ENG_OBJECT);
         addNorToEnglishNameMap
                 (SECONDARY_CLASSIFICATION_SYSTEM,
                         SECONDARY_CLASSIFICATION_SYSTEM_ENG,

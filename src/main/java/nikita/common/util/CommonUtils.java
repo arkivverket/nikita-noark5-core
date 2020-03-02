@@ -1470,39 +1470,50 @@ public final class CommonUtils {
             public static Screening deserialiseScreening(ObjectNode objectNode, StringBuilder errors) {
                 Screening screening = null;
                 JsonNode screeningNode = objectNode.get(SCREENING);
-                if (screeningNode != null) {
+                if (null != screeningNode
+                    && !screeningNode.equals(NullNode.getInstance())) {
                     screening = new Screening();
-                    deserialiseScreeningEntity(screening, screeningNode.deepCopy(), errors);
+                    ObjectNode screeningObjectNode = screeningNode.deepCopy();
+                    deserialiseScreeningEntity(screening, screeningObjectNode,
+                                               errors);
+                    if (0 == screeningObjectNode.size()) {
+                        objectNode.remove(SCREENING);
+                    }
+                } else if (null != screeningNode) { // Remove NullNode
+                    objectNode.remove(SCREENING);
                 }
-                objectNode.remove(SCREENING);
                 return screening;
             }
 
             public static void deserialiseScreeningEntity(IScreeningEntity screeningEntity, ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize accessRestriction
-                JsonNode currentNode = objectNode.get(SCREENING_ACCESS_RESTRICTION);
-                if (null != currentNode) {
-                    screeningEntity.setAccessRestriction(currentNode.textValue());
-                    objectNode.remove(SCREENING_ACCESS_RESTRICTION);
-                }
+                AccessRestriction accessRestriction = (AccessRestriction)
+                        deserialiseMetadataValue(objectNode,
+                                SCREENING_ACCESS_RESTRICTION,
+                                new AccessRestriction(),
+                                errors, true);
+                screeningEntity.setAccessRestriction(accessRestriction);
                 // Deserialize screeningAuthority
-                currentNode = objectNode.get(SCREENING_AUTHORITY);
+                JsonNode currentNode = objectNode.get(SCREENING_AUTHORITY);
                 if (null != currentNode) {
                     screeningEntity.setScreeningAuthority(currentNode.textValue());
                     objectNode.remove(SCREENING_AUTHORITY);
+                } else {
+                    errors.append(SCREENING_AUTHORITY + " is missing. ");
                 }
                 // Deserialize screeningMetadata
-                currentNode = objectNode.get(SCREENING_METADATA);
+                currentNode = objectNode.get(SCREENING_SCREENING_METADATA);
                 if (null != currentNode) {
                     screeningEntity.setScreeningMetadata(currentNode.textValue());
-                    objectNode.remove(SCREENING_METADATA);
+                    objectNode.remove(SCREENING_SCREENING_METADATA);
                 }
                 // Deserialize screeningDocument
-                currentNode = objectNode.get(SCREENING_DOCUMENT);
-                if (null != currentNode) {
-                    screeningEntity.setScreeningDocument(currentNode.textValue());
-                    objectNode.remove(SCREENING_DOCUMENT);
-                }
+                ScreeningDocument screeningDocument = (ScreeningDocument)
+                        deserialiseMetadataValue(objectNode,
+                                SCREENING_SCREENING_DOCUMENT,
+                                new ScreeningDocument(),
+                                errors, false);
+                screeningEntity.setScreeningDocument(screeningDocument);
                 // Deserialize screeningExpiresDate
                 screeningEntity.setScreeningExpiresDate(deserializeDate(SCREENING_EXPIRES_DATE, objectNode, errors));
 
@@ -1510,7 +1521,6 @@ public final class CommonUtils {
                 screeningEntity.setScreeningDuration
                         (deserializeInteger(SCREENING_DURATION,
                                 objectNode, errors, false));
-                objectNode.remove(SCREENING);
             }
 
             public static Classified deserialiseClassified(ObjectNode objectNode, StringBuilder errors) {
@@ -2335,14 +2345,14 @@ public final class CommonUtils {
                     Screening screening = screeningEntity.getReferenceScreening();
                     if (screening != null) {
                         jgen.writeObjectFieldStart(SCREENING);
-                        printNullable(jgen, SCREENING_ACCESS_RESTRICTION,
-                                    screening.getAccessRestriction());
+                        printNullableMetadata(jgen, SCREENING_ACCESS_RESTRICTION,
+                                              screening.getAccessRestriction());
                         printNullable(jgen, SCREENING_AUTHORITY,
                                     screening.getScreeningAuthority());
-                        printNullable(jgen, SCREENING_METADATA,
+                        printNullable(jgen, SCREENING_SCREENING_METADATA,
                                     screening.getScreeningMetadata());
-                        printNullable(jgen, SCREENING_DOCUMENT,
-                                    screening.getScreeningDocument());
+                        printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
+                                              screening.getScreeningDocument());
                         printNullableDate(jgen, SCREENING_EXPIRES_DATE,
                                           screening.getScreeningExpiresDate());
                         printNullable(jgen, SCREENING_DURATION,
