@@ -244,10 +244,12 @@ public final class N5ResourceMappings {
 
     // Screening
     public static final String SCREENING = "skjerming";
-    public static final String SCREENING_ACCESS_RESTRICTION = "tilgangsrestriksjon";
-    public static final String SCREENING_AUTHORITY = "skjermingshjemmel";
     public static final String SCREENING_METADATA = "skjermingmetadata";
     public static final String SCREENING_DOCUMENT = "skjermingdokument";
+    public static final String SCREENING_ACCESS_RESTRICTION = "tilgangsrestriksjon";
+    public static final String SCREENING_AUTHORITY = "skjermingshjemmel";
+    public static final String SCREENING_SCREENING_METADATA = "skjermingMetadata";
+    public static final String SCREENING_SCREENING_DOCUMENT = "skjermingDokument";
     public static final String NEW_SCREENING_METADATA = NEW + DASH +
             SCREENING_METADATA;
     public static final String NEW_SCREENING_DOCUMENT = NEW + DASH +
@@ -621,11 +623,11 @@ public final class N5ResourceMappings {
     public static final String RIGHT_ENG = "rettighet";
     public static final String SCREENING_ACCESS_RESTRICTION_ENG = "tilgangsrestriksjon";
     public static final String SCREENING_AUTHORITY_ENG = "skjermingshjemmel";
-    public static final String SCREENING_DOCUMENT_ENG = "skjermingDokument";
     public static final String SCREENING_DURATION_ENG = "skjermingsvarighet";
     public static final String SCREENING_ENG = "skjerming";
     public static final String SCREENING_EXPIRES_DATE_ENG = "skjermingOpphoererDato";
-    public static final String SCREENING_METADATA_ENG = "skjermingMetadata";
+    public static final String SCREENING_SCREENING_DOCUMENT_ENG = "skjermingDokument";
+    public static final String SCREENING_SCREENING_METADATA_ENG = "skjermingMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG = "sekundaerklassifikasjonssystem";
     public static final String SECTION_NUMBER_ENG = "section_number";
@@ -851,11 +853,11 @@ public final class N5ResourceMappings {
     public static final String RIGHT_ENG_OBJECT = "rettighet";
     public static final String SCREENING_ACCESS_RESTRICTION_ENG_OBJECT = "tilgangsrestriksjon";
     public static final String SCREENING_AUTHORITY_ENG_OBJECT = "skjermingshjemmel";
-    public static final String SCREENING_DOCUMENT_ENG_OBJECT = "skjermingDokument";
     public static final String SCREENING_DURATION_ENG_OBJECT = "skjermingsvarighet";
     public static final String SCREENING_ENG_OBJECT = "skjerming";
     public static final String SCREENING_EXPIRES_DATE_ENG_OBJECT = "skjermingOpphoererDato";
-    public static final String SCREENING_METADATA_ENG_OBJECT = "skjermingMetadata";
+    public static final String SCREENING_SCREENING_DOCUMENT_ENG_OBJECT = "skjermingDokument";
+    public static final String SCREENING_SCREENING_METADATA_ENG_OBJECT = "skjermingMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG_OBJECT = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG_OBJECT = "sekundaerklassifikasjonssystem";
     public static final String SECTION_NUMBER_ENG_OBJECT = "sectionNumber";

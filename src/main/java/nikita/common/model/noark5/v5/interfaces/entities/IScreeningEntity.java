@@ -1,5 +1,8 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
+import nikita.common.model.noark5.v5.metadata.AccessRestriction;
+import nikita.common.model.noark5.v5.metadata.ScreeningDocument;
+
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
@@ -7,9 +10,9 @@ import java.time.OffsetDateTime;
  * Created by tsodring on 12/7/16.
  */
 public interface IScreeningEntity extends Serializable {
-    String getAccessRestriction();
+    AccessRestriction getAccessRestriction();
 
-    void setAccessRestriction(String accessRestriction);
+    void setAccessRestriction(AccessRestriction accessRestriction);
 
     String getScreeningAuthority();
 
@@ -19,9 +22,9 @@ public interface IScreeningEntity extends Serializable {
 
     void setScreeningMetadata(String screeningMetadata);
 
-    String getScreeningDocument();
+    ScreeningDocument getScreeningDocument();
 
-    void setScreeningDocument(String screeningDocument);
+    void setScreeningDocument(ScreeningDocument screeningDocument);
 
     OffsetDateTime getScreeningExpiresDate();
 
