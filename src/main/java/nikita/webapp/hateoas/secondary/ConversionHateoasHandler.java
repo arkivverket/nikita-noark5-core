@@ -61,7 +61,7 @@ public class ConversionHateoasHandler
      * Create a REL/HREF pair for the parent DocumentObject associated
      * with the given Conversion
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/{systemId}"
+     * "../api/arkivstruktur/dokumentbeskrivelse/{systemId}"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/dokumentobject/"
      *
      * @param conversion         The Conversion object

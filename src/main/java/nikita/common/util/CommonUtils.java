@@ -273,7 +273,7 @@ public final class CommonUtils {
          * <p>
          * Consider adding a list of allowed HTTP methods, but assuming spring will return allowed methods
          *
-         * @param servletPath The incoming servletPath e.g. /hateoas-api/arkivstruktur/
+         * @param servletPath The incoming servletPath e.g. /api/arkivstruktur/
          * @param method      An instance of a single HTTP method
          */
         public static void addRequestToMethodMap(@NotNull String servletPath, @NotNull Set<HttpMethod> method) {

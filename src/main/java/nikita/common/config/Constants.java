@@ -37,7 +37,7 @@ public final class Constants {
     public static final String ROLE_GUEST = "GUEST";
 
     // Names of APIs that the core supports
-    public static final String HATEOAS_API_PATH = "hateoas-api";
+    public static final String HATEOAS_API_PATH = "api";
 
     public static final String SLASH = "/";
     public static final String LEFT_PARENTHESIS = "{";

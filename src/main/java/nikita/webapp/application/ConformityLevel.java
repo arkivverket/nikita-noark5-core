@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
  *
  *
  * The following is an example of this:
- * "href" : "http://localhost:8092/noark5v5/hateoas-api/arkivstruktur",
+ * "href" : "http://localhost:8092/noark5v5/api/arkivstruktur",
  *  "rel" : "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur"
  *
  *

@@ -33,7 +33,7 @@ public class RecordNoteHateoasHandler
      * Create a REL/HREF pair for the DocumentFlow associated with the
      * given RecordNote.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkivnotat/1234/dokumentflyt"
+     * "../api/arkivstruktur/arkivnotat/1234/dokumentflyt"
      * "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/dokumentflyt/"
      *
      * @param entity             recordNote
@@ -51,7 +51,7 @@ public class RecordNoteHateoasHandler
      * Create a REL/HREF pair to create a new DocumentFlow associated with the
      * given RecordNote.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkivnotat/1234/ny-dokumentflyt"
+     * "../api/arkivstruktur/arkivnotat/1234/ny-dokumentflyt"
      * "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-dokumentflyt/"
      *
      * @param entity             recordNote

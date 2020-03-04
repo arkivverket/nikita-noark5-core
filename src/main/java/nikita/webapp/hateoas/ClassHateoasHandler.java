@@ -62,7 +62,7 @@ public class ClassHateoasHandler
      * a ClassificationSystem. Note every Class should actually be associated
      * with a ClassificationSystem, but we are not doing that check here.
      * <p>
-     * "../hateoas-api/arkivstruktur/klassifikasjonssystem/1234"
+     * "../api/arkivstruktur/klassifikasjonssystem/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/"
      *
      * @param entity             class
@@ -83,7 +83,7 @@ public class ClassHateoasHandler
      * Create a REL/HREF pair for the parent Class associated with the given
      * Class. Checks if the Class is actually associated with a Class.
      * <p>
-     * "../hateoas-api/arkivstruktur/klasse/1234"
+     * "../api/arkivstruktur/klasse/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/"
      *
      * @param entity             class

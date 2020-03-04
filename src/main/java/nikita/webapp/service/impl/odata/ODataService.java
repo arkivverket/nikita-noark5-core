@@ -147,8 +147,8 @@ public class ODataService
         originalRequest.append(decode(request.getQueryString(), StandardCharsets.UTF_8));
         // Add owned by to the query as first parameter
         addOwnedBy(originalRequest);
-        int start = originalRequest.indexOf("hateoas-api/");
-        start += "hateoas-api/".length();
+        int start = originalRequest.indexOf("api/");
+        start += "api/".length();
         String odataCommand = originalRequest.substring(start);
         return convertODataToHQL(odataCommand, dmlStatementType);
     }

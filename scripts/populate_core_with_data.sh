@@ -43,7 +43,7 @@ curlPutOpts+=("${curlOpts[@]}" "${contentTypeForPost[@]}" -X PUT );
 
 # Setup curl options for fonds
 curloptsCreateFonds+=("${curlPostOpts[@]}");
-curloptsCreateFonds+=( --data @"$curl_files_dir"fonds-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv' );
+curloptsCreateFonds+=( --data @"$curl_files_dir"fonds-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/ny-arkiv' );
 
 # Create a fonds object and capture the systemId
 systemIDCreatedFonds=$(curl "${curloptsCreateFonds[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -53,7 +53,7 @@ echo  "${curloptsCreateFonds[@]}";
 
 # Setup curl options for fondsCreator from root
 curloptsCreateFondsCreatorFromRoot+=("${curlPostOpts[@]}");
-curloptsCreateFondsCreatorFromRoot+=( --data @"$curl_files_dir"fonds-creator-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkivskaper' );
+curloptsCreateFondsCreatorFromRoot+=( --data @"$curl_files_dir"fonds-creator-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/ny-arkivskaper' );
 systemIDCreatedFondsCreator=$(curl "${curloptsCreateFondsCreatorFromRoot[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created FondsCreator 1(root)($systemIDCreatedFondsCreator) \n";
 #echo "${curloptsCreateFondsCreatorFromRoot[@]}" ;
@@ -61,7 +61,7 @@ printf "created FondsCreator 1(root)($systemIDCreatedFondsCreator) \n";
 
 
 curloptsCreateFondsCreatorUpdate+=("${curlPutOpts[@]}");
-curloptsCreateFondsCreatorUpdate+=(  --header Etag:\"0\" --data '{"arkivskaperID": "123456789U", "arkivskaperNavn": "Eksempel kommune UPDATED",  "beskrivelse": "Eksempel kommune ligger i eksempel fylke nord for nord UPDATED" } ' 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivskaper/'$systemIDCreatedFondsCreator );
+curloptsCreateFondsCreatorUpdate+=(  --header Etag:\"0\" --data '{"arkivskaperID": "123456789U", "arkivskaperNavn": "Eksempel kommune UPDATED",  "beskrivelse": "Eksempel kommune ligger i eksempel fylke nord for nord UPDATED" } ' 'http://localhost:8092/noark5v5/api/arkivstruktur/arkivskaper/'$systemIDCreatedFondsCreator );
 systemIDCreatedFondsCreator=$(curl "${curloptsCreateFondsCreatorUpdate[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "updated FondsCreator 1      ($systemIDCreatedFondsCreator) \n";
 #echo "${curloptsCreateFondsCreatorUpdate[@]}";
@@ -69,21 +69,21 @@ printf "updated FondsCreator 1      ($systemIDCreatedFondsCreator) \n";
 
 # Setup curl options for fondsCreator from existing fonds
 curloptsCreateFondsCreator+=("${curlPostOpts[@]}");
-curloptsCreateFondsCreator+=( --data @"$curl_files_dir"fonds-creator-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivskaper' );
+curloptsCreateFondsCreator+=( --data @"$curl_files_dir"fonds-creator-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivskaper' );
 systemIDCreatedFondsCreator=$(curl "${curloptsCreateFondsCreator[@]}" | jq '.systemID' | sed 's/\"//g');
 printf "created FondsCreator 2(arkiv)($systemIDCreatedFondsCreator) \n";
 
 # Setup curl options for fonds from existing fondsCreator
 #curloptsCreateFondsFromFondsCreator+=("${curlPostOpts[@]}");
 #curloptsCreateFondsFromFondsCreator+=( --data @"$curl_files_dir"fonds-data
-# .json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivskaper/'$systemIDCreatedFondsCreator'/ny-arkiv' );
+# .json  'http://localhost:8092/noark5v5/api/arkivstruktur/arkivskaper/'$systemIDCreatedFondsCreator'/ny-arkiv' );
 #systemIDCreatedFonds=$(curl "${curloptsCreateFondsFromFondsCreator[@]}" | jq
 # '.systemID' | sed 's/\"//g');
 #printf "created Fonds 2(arkivskaper)($systemIDCreatedFonds) \n";
 
 # Setup curl options for series
 curloptsCreateSeries+=("${curlPostOpts[@]}");
-curloptsCreateSeries+=( --data @"$curl_files_dir"series-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivdel' )
+curloptsCreateSeries+=( --data @"$curl_files_dir"series-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivdel' )
 
 # Create a series object and capture the systemId
 systemIDCreatedSeries=$(curl "${curloptsCreateSeries[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -92,12 +92,12 @@ echo ${curloptsCreateSeries[@]};
 
 # Setup curl options for file
 curloptsCreateFile+=("${curlPostOpts[@]}");
-curloptsCreateFile+=( --data @"$curl_files_dir"file-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-mappe/' )
+curloptsCreateFile+=( --data @"$curl_files_dir"file-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-mappe/' )
 
 
 # Setup curl options for ClassificationSystem
 curloptsCreateClassificationSystem+=("${curlPostOpts[@]}");
-curloptsCreateClassificationSystem+=( --data @"$curl_files_dir"classification-system-data.json 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-klassifikasjonssystem/' )
+curloptsCreateClassificationSystem+=( --data @"$curl_files_dir"classification-system-data.json 'http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-klassifikasjonssystem/' )
 
 # Create a ClassificationSystem object and capture the systemId
 systemIDCreatedClassificationSystem=$(curl "${curloptsCreateClassificationSystem[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -105,7 +105,7 @@ printf "created   ClassificationSystem 1              ($systemIDCreatedClassific
 #echo ${curloptsCreateFile[@]};
 
 curloptsCreateClass+=("${curlPostOpts[@]}");
-curloptsCreateClass+=( --data @"$curl_files_dir"class-data.json 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/klassifikasjonssystem/'$systemIDCreatedClassificationSystem'/ny-klasse/' )
+curloptsCreateClass+=( --data @"$curl_files_dir"class-data.json 'http://localhost:8092/noark5v5/api/arkivstruktur/klassifikasjonssystem/'$systemIDCreatedClassificationSystem'/ny-klasse/' )
 
 # Create a Class object and capture the systemId
 systemIDCreatedClass=$(curl "${curloptsCreateClass[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -114,7 +114,7 @@ echo ${curloptsCreateClass[@]};
 
 # Setup curl options for file
 curloptsCreateFileClass+=("${curlPostOpts[@]}");
-curloptsCreateFileClass+=( --data @"$curl_files_dir"case-file-data.json 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/klasse/'$systemIDCreatedClass'/ny-saksmappe/' )
+curloptsCreateFileClass+=( --data @"$curl_files_dir"case-file-data.json 'http://localhost:8092/noark5v5/api/arkivstruktur/klasse/'$systemIDCreatedClass'/ny-saksmappe/' )
 
 echo ${curloptsCreateFileClass[@]};
 systemIDCreatedFile=$(curl "${curloptsCreateFileClass[@]}" | jq '.systemID' |
@@ -128,7 +128,7 @@ printf "created   File 1              ($systemIDCreatedFile) \n";
 # The only relevant data that could be uploaded is referenceSeries, which is a type of secondary reference to multiple series
 # Setup curl options for Record
 curloptsCreateRecord+=("${curlPostOpts[@]}");
-curloptsCreateRecord+=( --data @"$curl_files_dir"record-data.json 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-registrering' )
+curloptsCreateRecord+=( --data @"$curl_files_dir"record-data.json 'http://localhost:8092/noark5v5/api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-registrering' )
 echo  ${curloptsCreateRecord[@]};
 
 # Create record 1 associated with a file 1 and capture systemId
@@ -139,7 +139,7 @@ exit;
 
 # Setup curl options for documentDescription
 curloptsCreateDocumentDescription+=("${curlPostOpts[@]}");
-curloptsCreateDocumentDescription+=( --data @"$curl_files_dir"document-description-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/registrering/'$systemIDCreatedRecord'/ny-dokumentbeskrivelse' )
+curloptsCreateDocumentDescription+=( --data @"$curl_files_dir"document-description-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/registrering/'$systemIDCreatedRecord'/ny-dokumentbeskrivelse' )
 
 # Create documentDescription 1 associated with a file 1 / record 1 and capture systemId
 systemIDCreatedDocumentDescription=$(curl "${curloptsCreateDocumentDescription[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -148,7 +148,7 @@ printf "created     DocumentDescription ($systemIDCreatedDocumentDescription) as
 
 # Setup curl options for documentObject
 curloptsCreateDocumentObject+=("${curlPostOpts[@]}");
-curloptsCreateDocumentObject+=( --data @"$curl_files_dir"document-object-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription'/ny-dokumentobjekt' )
+curloptsCreateDocumentObject+=( --data @"$curl_files_dir"document-object-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription'/ny-dokumentobjekt' )
 #echo "${curloptsCreateDocumentObject[@]}" "\n";
 
 # Create documentObject 1 associated with file 1 / record 1 / documentDescription 1 /  and capture systemId
@@ -161,7 +161,7 @@ printf "created      DocumentObject      ($systemIDCreatedDocumentObject) associ
 # For windows, just remove  -o /dev/null and ignore output on screen
 curlPostFileOpts+=( -s  -X POST --header "Accept:application/vnd.noark5+json" --header "Authorization:Bearer $authToken" --header CONTENT-Length:19610 --header Content-Type:application/vnd.oasis.opendocument.text -o /dev/null  --data-binary "@nikita_test_doc.odt");
 curloptsUploadFile+=("${curlPostFileOpts[@]}");
-curloptsUploadFile+=( -w "%{http_code}" 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
+curloptsUploadFile+=( -w "%{http_code}" 'http://localhost:8092/noark5v5/api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
 echo "${curloptsUploadFile[@]} ";
 
 resultFileUpload=$(curl "${curloptsUploadFile[@]}");
@@ -169,19 +169,19 @@ printf "uploaded file to DocumentObject  ($systemIDCreatedDocumentObject) Result
 
 curlGetFileOpts+=( -s --header "Authorization:Bearer $authToken" -X GET -o downloaded_odt_file.odt -w "%{http_code}");
 curloptsDownloadFile+=("${curlGetFileOpts[@]}");
-curloptsDownloadFile+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
+curloptsDownloadFile+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/referanseFil' )
 
 # Convert document to archive format
 curlConvertFileOpts+=( -s --header "Authorization:Bearer $authToken" -X PUT -o downloaded_converted_odt_file.pdf -w "%{http_code}");
 curloptsDownloadFile+=("${curlConvertFileOpts[@]}");
-curloptsDownloadFile+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/konverterFil' )
+curloptsDownloadFile+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject'/konverterFil' )
 
 resultFileDownload=$(curl "${curloptsDownloadFile[@]}");
 echo "${curloptsDownloadFile[@]}";
 printf "downloaded file from DocumentObject  ($systemIDCreatedDocumentObject) Result $resultFileDownload\n";
 
 curloptsCreateBasicRecord+=("${curlPostOpts[@]}");
-curloptsCreateBasicRecord+=( --data @"$curl_files_dir"basic-record-data.json 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-basisregistrering' )
+curloptsCreateBasicRecord+=( --data @"$curl_files_dir"basic-record-data.json 'http://localhost:8092/noark5v5/api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-basisregistrering' )
 
 # Create basicRecord 1 associated with a file 1 and capture systemId. Not creating DocumentDescription/Object
 systemIDCreatedBasicRecord=$(curl "${curloptsCreateBasicRecord[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -189,7 +189,7 @@ printf "created    BasicRecord 1            ($systemIDCreatedBasicRecord) associ
 
 # Setup curl options for caseFile
 curloptsCreateCaseFile+=("${curlPostOpts[@]}");
-curloptsCreateCaseFile+=( --data @"$curl_files_dir"case-file-data.json  'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-saksmappe/' )
+curloptsCreateCaseFile+=( --data @"$curl_files_dir"case-file-data.json  'http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-saksmappe/' )
 
 # Create caseFile 1 associated with series 1 and capture systemId
 systemIDCreatedCaseFile=$(curl "${curloptsCreateCaseFile[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -198,7 +198,7 @@ printf "created   CaseFile 1          ($systemIDCreatedCaseFile) \n";
 
 # Setup curl options for registryEntry
 curloptsCreateRegistryEntry+=("${curlPostOpts[@]}");
-curloptsCreateRegistryEntry+=( --data @"$curl_files_dir"registry-entry-data.json 'http://localhost:8092/noark5v5/hateoas-api/sakarkiv/saksmappe/'$systemIDCreatedCaseFile'/ny-journalpost' )
+curloptsCreateRegistryEntry+=( --data @"$curl_files_dir"registry-entry-data.json 'http://localhost:8092/noark5v5/api/sakarkiv/saksmappe/'$systemIDCreatedCaseFile'/ny-journalpost' )
 
 # Create registryEntry 1 associated with a caseFile 1 and capture systemId
 systemIDCreatedRegistryEntry=$(curl "${curloptsCreateRegistryEntry[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -207,7 +207,7 @@ printf "created    RegistryEntry 1     ($systemIDCreatedRegistryEntry) associate
 
 # Setup curl options for correspondencePartPErson
 curloptsCorrespondencePart+=("${curlPostOpts[@]}");
-curloptsCorrespondencePart+=( --data @"$curl_files_dir"correspondence-part-person-data.json 'http://localhost:8092/noark5v5/hateoas-api/sakarkiv/journalpost/'$systemIDCreatedRegistryEntry'/ny-korrespondansepartperson' )
+curloptsCorrespondencePart+=( --data @"$curl_files_dir"correspondence-part-person-data.json 'http://localhost:8092/noark5v5/api/sakarkiv/journalpost/'$systemIDCreatedRegistryEntry'/ny-korrespondansepartperson' )
 #echo "${curloptsCorrespondencePart[@]}";
 
 systemIDCreatedCorrespondencePart=$(curl "${curloptsCorrespondencePart[@]}" | jq '.systemID' | sed 's/\"//g');
@@ -301,25 +301,25 @@ exit;
 curlGetNewEntityOpts+=( -s -S -X GET --header "Accept:application/vnd.noark5+json" -b /tmp/cookie.txt -w "%{http_code} ");
 
 curloptsNewFonds+=("${curlGetNewEntityOpts[@]}" -o ./fonds-data.json );
-curloptsNewFonds+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv' )
+curloptsNewFonds+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/ny-arkiv' )
 curloptsNewSeries+=("${curlGetNewEntityOpts[@]}" -o ./series-data.json);
-curloptsNewSeries+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivdel' )
+curloptsNewSeries+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/'$systemIDCreatedFonds'/ny-arkivdel' )
 curloptsNewFile+=("${curlGetNewEntityOpts[@]}" -o ./file-data.json);
-curloptsNewFile+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-mappe/' )
+curloptsNewFile+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-mappe/' )
 curloptsNewRecord+=("${curlGetNewEntityOpts[@]}" -o ./record-data.json);
-curloptsNewRecord+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-registrering' )
+curloptsNewRecord+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-registrering' )
 curloptsNewBasicRecord+=("${curlGetNewEntityOpts[@]}" -o ./basic-record-data.json);
-curloptsNewBasicRecord+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-basisregistrering' )
+curloptsNewBasicRecord+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/mappe/'$systemIDCreatedFile'/ny-basisregistrering' )
 curloptsNewDocumentDescription+=("${curlGetNewEntityOpts[@]}" -o ./document-description-data.json);
-curloptsNewDocumentDescription+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/registrering/'$systemIDCreatedRecord'/ny-dokumentbeskrivelse' )
+curloptsNewDocumentDescription+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/registrering/'$systemIDCreatedRecord'/ny-dokumentbeskrivelse' )
 curloptsNewDocumentObject+=("${curlGetNewEntityOpts[@]}" -o ./document-object-data.json);
-curloptsNewDocumentObject+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription'/ny-dokumentobjekt' )
+curloptsNewDocumentObject+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription'/ny-dokumentobjekt' )
 curloptsNewDocumentObject2+=("${curlGetNewEntityOpts[@]}" -o /dev/null);
-curloptsNewDocumentObject2+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/registrering/'$systemIDCreatedRecord'/ny-dokumentobjekt' )
+curloptsNewDocumentObject2+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/registrering/'$systemIDCreatedRecord'/ny-dokumentobjekt' )
 curloptsNewCaseFile+=("${curlGetNewEntityOpts[@]}" -o ./case-file-data.json);
-curloptsNewCaseFile+=( 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-saksmappe/' )
+curloptsNewCaseFile+=( 'http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/'$systemIDCreatedSeries'/ny-saksmappe/' )
 curloptsNewRegistryEntry+=("${curlGetNewEntityOpts[@]}" -o ./registry-entry-data.json);
-curloptsNewRegistryEntry+=( 'http://localhost:8092/noark5v5/hateoas-api/sakarkiv/saksmappe/'$systemIDCreatedCaseFile'/ny-journalpost' )
+curloptsNewRegistryEntry+=( 'http://localhost:8092/noark5v5/api/sakarkiv/saksmappe/'$systemIDCreatedCaseFile'/ny-journalpost' )
 
 resultNewFonds=$(curl "${curloptsNewFonds[@]}");
 
@@ -363,33 +363,33 @@ curlGetOpts+=( -X GET -b /tmp/cookie.txt );
 
 printf "Retrieving some of the created objects\n";
 printf " -- Retrieving fonds with systemID $systemIDCreatedFonds \n";
-curloptsGETFonds+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/'$systemIDCreatedFonds)
+curloptsGETFonds+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/'$systemIDCreatedFonds)
 output=$(curl "${curloptsGETFonds[@]}");
 
 printf "$output \n";
 
 printf " -- Retrieving series with systemID $systemIDCreatedSeries \n";
-curloptsGETSeries+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/'$systemIDCreatedSeries/)
+curloptsGETSeries+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/'$systemIDCreatedSeries/)
 output=$(curl "${curloptsGETSeries[@]}");
 printf "$output \n";
 
 printf " -- Retrieving caseFile with systemID $systemIDCreatedCaseFile \n";
-curloptsGETCaseFile+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/hateoas-api/sakarkiv/saksmappe/'$systemIDCreatedCaseFile)
+curloptsGETCaseFile+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/api/sakarkiv/saksmappe/'$systemIDCreatedCaseFile)
 output=$(curl "${curloptsGETCaseFile[@]}");
 printf "$output \n";
 
 printf " -- Retrieving registryEntry  with systemID $systemIDCreatedRegistryEntry \n";
-curloptsGETRegistryEntry+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/hateoas-api/sakarkiv/journalpost/'$systemIDCreatedRegistryEntry)
+curloptsGETRegistryEntry+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/api/sakarkiv/journalpost/'$systemIDCreatedRegistryEntry)
 output=$(curl "${curloptsGETRegistryEntry[@]}");
 printf "$output \n";
 
 printf " -- Retrieving documentDescription with systemID $systemIDCreatedDocumentDescription \n";
-curloptsGETDocumentDescription+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription)
+curloptsGETDocumentDescription+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/api/arkivstruktur/dokumentbeskrivelse/'$systemIDCreatedDocumentDescription)
 output=$(curl "${curloptsGETDocumentDescription[@]}");
 printf "$output \n";
 
 printf " -- Retrieving documentObject with systemID $systemIDCreatedDocumentObject \n";
-curloptsGETDocumentObject+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject)
+curloptsGETDocumentObject+=( "${curlGetOpts[@]}" 'http://localhost:8092/noark5v5/api/arkivstruktur/dokumentobjekt/'$systemIDCreatedDocumentObject)
 output=$(curl "${curloptsGETDocumentObject[@]}");
 printf "$output \n";
 
@@ -397,33 +397,33 @@ printf "$output \n";
 #curl -i -X POST -d username=admin -d password=password -c/tmp/cookie.txt http://localhost:8092/noark5v5/doLogin
 #
 ## Get template for arkiv
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/api/arkivstruktur/ny-arkiv
 ## Create an arkiv
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @fonds-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/ny-arkiv
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @fonds-data.json http://localhost:8092/noark5v5/api/arkivstruktur/ny-arkiv
 #
 ## Get template for arkivdel using ny-arkivdel
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/f7c3077f-d40b-494a-bc77-da7b0ec8debc/ny-arkivdel
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/f7c3077f-d40b-494a-bc77-da7b0ec8debc/ny-arkivdel
 ## Create an arkivdel
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @series-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/f7c3077f-d40b-494a-bc77-da7b0ec8debc/ny-arkivdelcurl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @series-data.json http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/f7c3077f-d40b-494a-bc77-da7b0ec8debc/ny-arkivdelcurl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe
 #
 ## Get template for File using ny-mappe
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe/
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe/
 ## Create a mappe
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @file-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @file-data.json http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-mappe
 #
 ## Get template for record using ny-registrering
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-registrering/
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-registrering/
 #
 ## Create a record
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @record-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-registrering
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @record-data.json http://localhost:8092/noark5v5/api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-registrering
 #
 ## Get template for record using ny-dokumentbeskrivelse
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-dokumentbeskrivelse/
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/api/arkivstruktur/mappe/7dec239f-05d7-4e65-acb1-be562759e01d/ny-dokumentbeskrivelse/
 #
 ## Create a dokumentbeskrivelse
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @record-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/registrering/7dec239f-05d7-4e65-acb1-be562759e01d/ny-dokumentbeskrivelse
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @record-data.json http://localhost:8092/noark5v5/api/arkivstruktur/registrering/7dec239f-05d7-4e65-acb1-be562759e01d/ny-dokumentbeskrivelse
 #
 ## Get tempate for CaseFile using ny-saksmappe
-#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-saksmappe/
+#curl -v -s -S --header Accept:application/vnd.noark5+json -X GET -b /tmp/cookie.txt  http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-saksmappe/
 ## Create a casefile
-# curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @case-file-data.json http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-saksmappe/
+# curl -v -s -S --header Accept:application/vnd.noark5+json -X POST -b /tmp/cookie.txt  --header Content-Type:application/vnd.noark5+json --data @case-file-data.json http://localhost:8092/noark5v5/api/arkivstruktur/arkivdel/42d4ccab-24eb-46fd-bea7-18d44c20f8c4/ny-saksmappe/

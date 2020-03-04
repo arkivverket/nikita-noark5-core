@@ -168,7 +168,7 @@ responseFields(subsectionWithPath("_links").
         HttpEntity<String> request = new HttpEntity<>(serializedFonds, headers);
 
         ResponseEntity<HateoasNoarkObject> responseEntity =
-                restTemplate.exchange("/hateoas-api/arkivstruktur/ny-arkiv",
+                restTemplate.exchange("/api/arkivstruktur/ny-arkiv",
                         HttpMethod.POST,
                         request,
                         HateoasNoarkObject.class);
