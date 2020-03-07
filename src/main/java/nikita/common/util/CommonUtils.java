@@ -1777,6 +1777,7 @@ public final class CommonUtils {
                 }
             }
 
+            @Deprecated
             public static void printNullableMetadataCode
                 (JsonGenerator jgen, String fieldName,
                  String code, String codeName)
