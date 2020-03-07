@@ -913,10 +913,15 @@ public final class CommonUtils {
                 if (null != currentNode
                     && !currentNode.equals(NullNode.getInstance())) {
                     deletion = new Deletion();
-                    deserialiseDeletionEntity(deletion, currentNode.deepCopy(),
+                    ObjectNode deletionObjectNode = currentNode.deepCopy();
+                    deserialiseDeletionEntity(deletion, deletionObjectNode,
                                               errors);
+                    if (0 == deletionObjectNode.size()) {
+                        objectNode.remove(DELETION);
+                    }
+                } else if (null != currentNode) { // Remove NullNode
+                    objectNode.remove(DELETION);
                 }
-                objectNode.remove(DELETION);
                 return deletion;
             }
 
@@ -1467,9 +1472,15 @@ public final class CommonUtils {
                 JsonNode screeningNode = objectNode.get(SCREENING);
                 if (screeningNode != null) {
                     screening = new Screening();
-                    deserialiseScreeningEntity(screening, screeningNode.deepCopy(), errors);
+                    ObjectNode screeningObjectNode = screeningNode.deepCopy();
+                    deserialiseScreeningEntity(screening, screeningObjectNode,
+                                               errors);
+                    if (0 == screeningObjectNode.size()) {
+                        objectNode.remove(SCREENING);
+                    }
+                } else if (null != screeningNode) { // Remove NullNode
+                    objectNode.remove(SCREENING);
                 }
-                objectNode.remove(SCREENING);
                 return screening;
             }
 
@@ -1505,18 +1516,23 @@ public final class CommonUtils {
                 screeningEntity.setScreeningDuration
                         (deserializeInteger(SCREENING_DURATION,
                                 objectNode, errors, false));
-                objectNode.remove(SCREENING);
             }
 
             public static Classified deserialiseClassified(ObjectNode objectNode, StringBuilder errors) {
                 Classified classified = null;
                 JsonNode classifiedNode = objectNode.get(CLASSIFIED);
-                if (classifiedNode != null) {
+                if (null != classifiedNode
+                    && !classifiedNode.equals(NullNode.getInstance())) {
                     classified = new Classified();
-                    deserialiseClassifiedEntity(classified, classifiedNode.deepCopy(), errors);
+                    ObjectNode classifiedObjectNode = classifiedNode.deepCopy();
+                    deserialiseClassifiedEntity(classified,
+                                                classifiedObjectNode, errors);
+                    if (0 == classifiedObjectNode.size()) {
+                        objectNode.remove(CLASSIFIED);
+                    }
+                } else if (null != classifiedNode) { // Remove NullNode
+                    objectNode.remove(CLASSIFIED);
                 }
-                //TODO: Only remove if the hashset is actually empty, otherwise let it go back up with the extra values
-                objectNode.remove(CLASSIFIED);
                 return classified;
             }
 
@@ -1549,20 +1565,24 @@ public final class CommonUtils {
                     classifiedEntity.setClassificationDowngradedBy(currentNode.textValue());
                     objectNode.remove(CLASSIFICATION_DOWNGRADED_BY);
                 }
-                objectNode.remove(CLASSIFIED); // TODO why is this removed here?
             }
 
             public static ElectronicSignature deserialiseElectronicSignature(
                     ObjectNode objectNode, StringBuilder errors) {
                 ElectronicSignature es = null;
                 JsonNode esNode = objectNode.get(ELECTRONIC_SIGNATURE);
-                if (null != esNode) {
+                if (null != esNode
+                    && !esNode.equals(NullNode.getInstance())) {
                     es = new ElectronicSignature();
-                    deserialiseElectronicSignatureEntity(es, esNode.deepCopy(),
+                    ObjectNode esObjectNode = esNode.deepCopy();
+                    deserialiseElectronicSignatureEntity(es, esObjectNode,
                             errors);
+                    if (0 == esObjectNode.size()) {
+                        objectNode.remove(ELECTRONIC_SIGNATURE);
+                    }
+                } else if (null != esNode) { // Remove NullNode
+                    objectNode.remove(ELECTRONIC_SIGNATURE);
                 }
-                //TODO: Only remove if the hashset is actually empty, otherwise let it go back up with the extra values
-                objectNode.remove(ELECTRONIC_SIGNATURE);
                 return es;
             }
 
