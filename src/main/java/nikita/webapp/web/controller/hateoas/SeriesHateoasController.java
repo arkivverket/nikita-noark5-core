@@ -95,7 +95,7 @@ public class SeriesHateoasController
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystemAssociatedWithSeries(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of series to associate the " +
                             "ClassificationSystem with",
                     required = true)
@@ -137,7 +137,7 @@ public class SeriesHateoasController
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FileHateoas> createFileAssociatedWithSeries(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of series to associate the caseFile with",
                     required = true)
             @PathVariable String systemID,
@@ -178,7 +178,7 @@ public class SeriesHateoasController
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas> createCaseFileAssociatedWithSeries(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of series to associate the caseFile with",
                     required = true)
             @PathVariable String systemID,
@@ -218,7 +218,7 @@ public class SeriesHateoasController
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> createRecordAssociatedWithSeries(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of series to associate the record with",
                     required = true)
             @PathVariable String systemID,
@@ -258,7 +258,7 @@ public class SeriesHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> associateSeriesWithClassificationSystem(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "The systemId of the Series",
                     required = true)
             @PathVariable String classificationSystemSuccessorSystemId,
@@ -299,10 +299,10 @@ public class SeriesHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SeriesHateoas> updateSeries(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of fonds to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "series",
                     value = "Incoming series object",
                     required = true)
@@ -337,10 +337,10 @@ public class SeriesHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<SeriesHateoas> findOneSeriesBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findBySystemId(systemID);
     }
 
@@ -457,10 +457,10 @@ public class SeriesHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + RECORD)
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the series to find associated records",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findAllRecordAssociatedWithSeries(systemID);
     }
 
@@ -482,10 +482,10 @@ public class SeriesHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE)
     public ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findAllFileAssociatedWithSeries(systemID);
     }
 
@@ -510,10 +510,10 @@ public class SeriesHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASSIFICATION_SYSTEM)
     public ResponseEntity<ClassificationSystemHateoas>
     findParentClassificationSystemByFileSystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the Series ",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findClassificationSystemAssociatedWithSeries(
                 systemID);
     }
@@ -538,10 +538,10 @@ public class SeriesHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FONDS)
     public ResponseEntity<FondsHateoas> findParentFondsAssociatedWithSeries(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the Series ",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findFondsAssociatedWithSeries(systemID);
     }
 
@@ -564,10 +564,10 @@ public class SeriesHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CASE_FILE)
     public ResponseEntity<CaseFileHateoas> findAllCaseFileAssociatedWithCaseFile(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findCaseFilesBySeries(systemID);
     }
 
@@ -576,7 +576,7 @@ public class SeriesHateoasController
     // Delete a Series identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/arkivdel/{systemId}/
     @ApiOperation(value = "Deletes a single Series entity identified by " +
-            "systemID", response = String.class)
+            SYSTEM_ID, response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted Series",
                     response = String.class),
@@ -589,10 +589,10 @@ public class SeriesHateoasController
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteSeriesBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the series to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         seriesService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);

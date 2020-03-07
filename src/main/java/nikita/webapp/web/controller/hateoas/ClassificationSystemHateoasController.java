@@ -141,10 +141,10 @@ public class ClassificationSystemHateoasController
     @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<ClassificationSystemHateoas> findOne(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of classificationSystem to retrieve.",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.
                         findSingleClassificationSystem(systemID);
@@ -176,10 +176,10 @@ public class ClassificationSystemHateoasController
     @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER + SLASH + SERIES)
     public ResponseEntity<SeriesHateoas>
     findParentClassificationSystemByFileSystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the classificationSystem",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return classificationSystemService.
                 findSeriesAssociatedWithClassificationSystem(systemID);
     }
@@ -234,11 +234,11 @@ public class ClassificationSystemHateoasController
     findClassAssociatedWithClassificationSystem(
             HttpServletRequest request,
             @ApiParam(
-                    name = "systemID",
+                    name = SYSTEM_ID,
                     value = "systemId of ClassificationSystem you want " +
                             "retrieve associated  Class objects for",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.
@@ -270,10 +270,10 @@ public class ClassificationSystemHateoasController
     public ResponseEntity<ClassHateoas> createDefaultClass(
             HttpServletRequest request,
             @ApiParam(
-                    name = "systemID",
+                    name = SYSTEM_ID,
                     value = "systemId of Class to associate Class with.",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.generateDefaultClass(systemID));
@@ -298,10 +298,10 @@ public class ClassificationSystemHateoasController
     public ResponseEntity<String>
     deleteClassificationSystemBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the ClassificationSystem to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         classificationSystemService.deleteEntity(systemID);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -363,10 +363,10 @@ public class ClassificationSystemHateoasController
     public ResponseEntity<ClassificationSystemHateoas>
     updateClassificationSystem(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of classificationSystem to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "classificationSystem",
                     value = "Incoming classificationSystem object",
                     required = true)

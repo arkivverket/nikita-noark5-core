@@ -79,7 +79,7 @@ public class RegistryEntryHateoasController
     public ResponseEntity<DocumentFlowHateoas>
     createDocumentFlowAssociatedWithRegistryEntry(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of registry entry to associate the document flow with.",
                     required = true)
             @PathVariable String systemID,
@@ -116,10 +116,10 @@ public class RegistryEntryHateoasController
     public ResponseEntity<SignOffHateoas>
     createSignOffAssociatedWithRecord(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of registry entry to associate the signOff with.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "signOff",
                     value = "Incoming signOff object",
                     required = true)
@@ -184,10 +184,10 @@ public class RegistryEntryHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_FLOW)
     public ResponseEntity<DocumentFlowHateoas> createDefaultDocumentFlow(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the registryEntry",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.
@@ -214,10 +214,10 @@ public class RegistryEntryHateoasController
     public ResponseEntity<SignOffHateoas>
     findAllSignOffAssociatedWithRegistryEntry(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the registryEntry",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "subSystemID",
                     value = "systemID of the SignOff",
                     required = true)
@@ -243,10 +243,10 @@ public class RegistryEntryHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SIGN_OFF)
     public ResponseEntity<SignOffHateoas> createDefaultSignOff(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of record to associate the SignOff with.",
                     required = true)
-            @PathVariable("systemID") String systemID) {
+            @PathVariable(SYSTEM_ID) String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.generateDefaultSignOff(systemID));
@@ -293,10 +293,10 @@ public class RegistryEntryHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_FLOW)
     public ResponseEntity<DocumentFlowHateoas> findAllDocumentFlowAssociatedWithRegistryEntry(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the file to retrieve associated RegistryEntry",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(registryEntryService.
@@ -320,10 +320,10 @@ public class RegistryEntryHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF)
     public ResponseEntity<SignOffHateoas> findAllSignOffAssociatedWithRecord(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the signoff to retrieve associated Record",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService
@@ -343,10 +343,10 @@ public class RegistryEntryHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + PRECEDENCE)
     public ResponseEntity<PrecedenceHateoas> findAllPrecedenceForRecord(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the registryEntry to retrieve associated Precedence",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(registryEntryService.
@@ -365,10 +365,10 @@ public class RegistryEntryHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<RegistryEntryHateoas> findOneRegistryEntrybySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the registryEntry to retrieve",
                     required = true)
-            @PathVariable("systemID") final String registryEntrySystemId) {
+            @PathVariable(SYSTEM_ID) final String registryEntrySystemId) {
         RegistryEntry registryEntry = registryEntryService.findBySystemId(registryEntrySystemId);
 
         RegistryEntryHateoas registryEntryHateoas = new
@@ -427,10 +427,10 @@ public class RegistryEntryHateoasController
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteRecordBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the record to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         registryEntryService.deleteEntity(systemID);
         return ResponseEntity.status(OK)
                 .body(DELETE_RESPONSE);
@@ -477,10 +477,10 @@ public class RegistryEntryHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RegistryEntryHateoas> updateRegistryEntry(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of registryEntry to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "RegistryEntry",
                     value = "Incoming registryEntry object",
                     required = true)
@@ -517,10 +517,10 @@ public class RegistryEntryHateoasController
     public ResponseEntity<SignOffHateoas>
     updateSignOffAssociatedWithRegistryEntry(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the registryEntry",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "subSystemID",
                     value = "systemID of the SignOff",
                     required = true)
@@ -561,10 +561,10 @@ public class RegistryEntryHateoasController
     public ResponseEntity<String>
     deleteeSignOffAssociatedWithRegistryEntry(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the registryEntry",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "subSystemID",
                     value = "systemID of the SignOff",
                     required = true)

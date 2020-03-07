@@ -51,10 +51,10 @@ public class AuthorHateoasController
     @GetMapping(value = AUTHOR + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<AuthorHateoas> findAuthorBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the Author to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         AuthorHateoas authorHateoas = authorService.findBySystemId(systemId);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -80,10 +80,10 @@ public class AuthorHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<AuthorHateoas> updateAuthorBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of Author to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "Author",
                     value = "Incoming Author object",
                     required = true)

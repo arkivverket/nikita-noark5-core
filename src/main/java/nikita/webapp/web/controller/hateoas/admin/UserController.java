@@ -121,10 +121,10 @@ public class UserController
     @GetMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
     findBySystemId(HttpServletRequest request,
-		   @ApiParam(name = "systemID",
+		   @ApiParam(name = SYSTEM_ID,
 			     value = "systemID of the user to retrieve",
 			     required = true)
-		   @PathVariable("systemID") final String systemID) {
+		   @PathVariable(SYSTEM_ID) final String systemID) {
         UserHateoas userHateoas = userService.findBySystemID(systemID);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(CommonUtils.WebUtils.
@@ -188,10 +188,10 @@ public class UserController
     @PutMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
     updateUser(HttpServletRequest request,
-               @ApiParam(name = "systemID",
+               @ApiParam(name = SYSTEM_ID,
                        value = "systemID of documentDescription to update.",
                        required = true)
-               @PathVariable("systemID") String systemID,
+               @PathVariable(SYSTEM_ID) String systemID,
                @ApiParam(name = "user",
                        value = "Incoming user object",
                        required = true)
