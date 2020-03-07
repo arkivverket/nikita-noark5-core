@@ -114,6 +114,7 @@ public class HateoasSerializer
             jgen.writeNumberField(fieldName, value);
     }
 
+    @Deprecated
     protected void printNullableMetadataCode
         (JsonGenerator jgen, String fieldName, String code, String codeName)
             throws IOException {
@@ -179,6 +180,7 @@ public class HateoasSerializer
         jgen.writeNumberField(fieldName, value);
     }
 
+    @Deprecated
     protected void printMetadataCode(JsonGenerator jgen, String fieldName,
                                      String code, String codeName)
             throws IOException {
