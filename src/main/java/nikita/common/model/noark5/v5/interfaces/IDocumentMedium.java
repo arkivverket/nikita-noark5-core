@@ -1,5 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces;
 
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
+
 /**
  * Created by tsodring on 12/7/16.
  */
@@ -7,11 +9,7 @@ public interface IDocumentMedium {
     // Same as in INoarkEntity, to make it available for validateDocumentMedium
     String getBaseTypeName();
 
-    String getDocumentMediumCode();
+    DocumentMedium getDocumentMedium();
 
-    void setDocumentMediumCode(String documentMediumCode);
-
-    String getDocumentMediumCodeName();
-
-    void setDocumentMediumCodeName(String documentMediumCodeName);
+    void setDocumentMedium(DocumentMedium documentMediumCode);
 }

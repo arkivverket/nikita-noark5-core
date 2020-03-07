@@ -162,10 +162,14 @@ public class RegistryEntryService
         OffsetDateTime now = OffsetDateTime.now();
         defaultRegistryEntry.setRecordDate(now);
         defaultRegistryEntry.setDocumentDate(now);
-        defaultRegistryEntry.setRecordStatusCode(TEST_RECORD_STATUS_CODE);
-        defaultRegistryEntry.setRecordStatusCodeName(TEST_RECORD_STATUS);
-        defaultRegistryEntry.setRegistryEntryTypeCode(TEST_REGISTRY_ENTRY_TYPE_CODE);
-        defaultRegistryEntry.setRegistryEntryTypeCodeName(TEST_REGISTRY_ENTRY_TYPE);
+        RegistryEntryStatus registryEntryStatus = (RegistryEntryStatus)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (REGISTRY_ENTRY_STATUS, TEST_REGISTRY_ENTRY_STATUS_CODE, null);
+        defaultRegistryEntry.setRegistryEntryStatus(registryEntryStatus);
+        RegistryEntryType registryEntryType = (RegistryEntryType)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (REGISTRY_ENTRY_TYPE, TEST_REGISTRY_ENTRY_TYPE_CODE, null);
+        defaultRegistryEntry.setRegistryEntryType(registryEntryType);
         defaultRegistryEntry.setRecordYear(now.getYear());
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas(defaultRegistryEntry);
@@ -432,13 +436,9 @@ public class RegistryEntryService
         RegistryEntry existingRegistryEntry = getRegistryEntryOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingRegistryEntry, existingRegistryEntry);
-        if (null != incomingRegistryEntry.getDocumentMediumCode()) {
-            existingRegistryEntry.setDocumentMediumCode(
-                    incomingRegistryEntry.getDocumentMediumCode());
-        }
-        if (null != incomingRegistryEntry.getDocumentMediumCodeName()) {
-            existingRegistryEntry.setDocumentMediumCodeName(
-                    incomingRegistryEntry.getDocumentMediumCodeName());
+        if (null != incomingRegistryEntry.getDocumentMedium()) {
+            existingRegistryEntry.setDocumentMedium(
+                    incomingRegistryEntry.getDocumentMedium());
         }
         if (null != incomingRegistryEntry.getDocumentDate()) {
             existingRegistryEntry.setDocumentDate(
@@ -725,26 +725,20 @@ public class RegistryEntryService
 
     private void validateRegistryEntryStatus(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
-        // TODO note, RegistryEntry.*RecordStatus* is really
-        // operating on RegistryEntryStatus.
-        RegistryEntryStatus registryEntryStatus =
-                (RegistryEntryStatus) metadataService
-                        .findValidMetadataByEntityTypeOrThrow(
+        RegistryEntryStatus registryEntryStatus = (RegistryEntryStatus)
+                metadataService.findValidMetadataByEntityTypeOrThrow(
                                 REGISTRY_ENTRY_STATUS,
-                                registryEntry.getRecordStatusCode(),
-                                registryEntry.getRecordStatusCodeName());
-        registryEntry.setRecordStatusCodeName(registryEntryStatus.getCodeName());
+                                registryEntry.getRegistryEntryStatus());
+        registryEntry.setRegistryEntryStatus(registryEntryStatus);
     }
 
     private void validateRegistryEntryType(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
-        RegistryEntryType registryEntryType =
-                (RegistryEntryType) metadataService
-                        .findValidMetadataByEntityTypeOrThrow(
+        RegistryEntryType registryEntryType = (RegistryEntryType)
+                metadataService.findValidMetadataByEntityTypeOrThrow(
                                 REGISTRY_ENTRY_TYPE,
-                                registryEntry.getRegistryEntryTypeCode(),
-                                registryEntry.getRegistryEntryTypeCodeName());
-        registryEntry.setRegistryEntryTypeCodeName(registryEntryType.getCodeName());
+                                registryEntry.getRegistryEntryType());
+        registryEntry.setRegistryEntryType(registryEntryType);
     }
 
     private void validateSignOffMethod(SignOff incomingSignOff) {

@@ -32,13 +32,12 @@ public final class NoarkUtils {
             public static void validateDocumentMedium(
                     IMetadataService service,
                     IDocumentMedium entity) {
-                if (null != entity.getDocumentMediumCode()) {
-                    DocumentMedium metadata =
-                            (DocumentMedium) service.findValidMetadataByEntityTypeOrThrow(
+                if (null != entity.getDocumentMedium()) {
+                    DocumentMedium metadata = (DocumentMedium)
+                            service.findValidMetadataByEntityTypeOrThrow(
                                     DOCUMENT_MEDIUM,
-                                    entity.getDocumentMediumCode(),
-                                    entity.getDocumentMediumCodeName());
-                    entity.setDocumentMediumCodeName(metadata.getCodeName());
+                                    entity.getDocumentMedium());
+                    entity.setDocumentMedium(metadata);
                 }
             }
             public static void validateDeletion(IDeletionEntity entity) {

@@ -6,6 +6,8 @@ import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.interfaces.IDocumentMedium;
 import nikita.common.model.noark5.v5.interfaces.IFondsCreator;
 import nikita.common.model.noark5.v5.interfaces.IStorageLocation;
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
+import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.util.deserialisers.FondsDeserializer;
 import nikita.webapp.hateoas.FondsHateoasHandler;
@@ -100,36 +102,42 @@ public class Fonds
     )
     private List<FondsCreator> referenceFondsCreator = new ArrayList<>();
 
-    public String getFondsStatusCode() {
-        return fondsStatusCode;
+    public FondsStatus getFondsStatus() {
+        if (null == fondsStatusCode)
+            return null;
+        FondsStatus fondsStatus = new FondsStatus();
+        fondsStatus.setCode(fondsStatusCode);
+        fondsStatus.setCodeName(fondsStatusCodeName);
+        return fondsStatus;
     }
 
-    public void setFondsStatusCode(String fondsStatusCode) {
-        this.fondsStatusCode = fondsStatusCode;
+    public void setFondsStatus(FondsStatus fondsStatus) {
+        if (null != fondsStatus) {
+            this.fondsStatusCode = fondsStatus.getCode();
+            this.fondsStatusCodeName = fondsStatus.getCodeName();
+        } else {
+            this.fondsStatusCode = null;
+            this.fondsStatusCodeName = null;
+        }
     }
 
-    public String getFondsStatusCodeName() {
-        return fondsStatusCodeName;
+    public DocumentMedium getDocumentMedium() {
+        if (null == documentMediumCode)
+            return null;
+        DocumentMedium documentMedium = new DocumentMedium();
+        documentMedium.setCode(documentMediumCode);
+        documentMedium.setCodeName(documentMediumCodeName);
+        return documentMedium;
     }
 
-    public void setFondsStatusCodeName(String fondsStatusCodeName) {
-        this.fondsStatusCodeName = fondsStatusCodeName;
-    }
-
-    public String getDocumentMediumCode() {
-        return documentMediumCode;
-    }
-
-    public void setDocumentMediumCode(String documentMediumCode) {
-        this.documentMediumCode = documentMediumCode;
-    }
-
-    public String getDocumentMediumCodeName() {
-        return documentMediumCodeName;
-    }
-
-    public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMediumCodeName = documentMediumCodeName;
+    public void setDocumentMedium(DocumentMedium documentMedium) {
+        if (null != documentMedium) {
+            this.documentMediumCode = documentMedium.getCode();
+            this.documentMediumCodeName = documentMedium.getCodeName();
+        } else {
+            this.documentMediumCode = null;
+            this.documentMediumCodeName = null;
+        }
     }
 
     @Override
@@ -202,6 +210,7 @@ public class Fonds
         return "Fonds{" + super.toString() +
                 ", fondsStatusCode='" + fondsStatusCode + '\'' +
                 ", fondsStatusCodeName='" + fondsStatusCodeName + '\'' +
+                ", documentMediumCode='" + documentMediumCode + '\'' +
                 ", documentMediumCodeName='" + documentMediumCodeName + '\'' +
                 '}';
     }
@@ -222,6 +231,7 @@ public class Fonds
                 .appendSuper(super.equals(other))
                 .append(fondsStatusCode, rhs.fondsStatusCode)
                 .append(fondsStatusCodeName, rhs.fondsStatusCodeName)
+                .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMediumCodeName, rhs.documentMediumCodeName)
                 .isEquals();
     }
@@ -232,6 +242,7 @@ public class Fonds
                 .appendSuper(super.hashCode())
                 .append(fondsStatusCode)
                 .append(fondsStatusCodeName)
+                .append(documentMediumCode)
                 .append(documentMediumCodeName)
                 .toHashCode();
     }

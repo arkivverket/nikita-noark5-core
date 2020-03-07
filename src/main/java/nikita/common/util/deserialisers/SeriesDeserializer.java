@@ -67,14 +67,13 @@ public class SeriesDeserializer
         CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(series, objectNode, errors);
 
         // Deserialize seriesStatus
-        IMetadataEntity entity =
+        SeriesStatus seriesStatus = (SeriesStatus)
             CommonUtils.Hateoas.Deserialize.deserialiseMetadataValue(
                 objectNode,
                 SERIES_STATUS,
                 new SeriesStatus(),
                 errors, false);
-        series.setSeriesStatusCode(entity.getCode());
-        series.setSeriesStatusCodeName(entity.getCodeName());
+        series.setSeriesStatus(seriesStatus);
 
         // Deserialize seriesStartDate
         series.setSeriesStartDate(CommonUtils.Hateoas.Deserialize.deserializeDate(SERIES_START_DATE, objectNode, errors));

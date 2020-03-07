@@ -28,9 +28,8 @@ public class FondsHateoasSerializer
         jgen.writeStartObject();
         printSystemIdEntity(jgen, fonds);
         printTitleAndDescription(jgen, fonds);
-        printNullableMetadataCode(jgen, FONDS_STATUS,
-                                  fonds.getFondsStatusCode(),
-                                  fonds.getFondsStatusCodeName());
+        printNullableMetadata(jgen, FONDS_STATUS,
+                              fonds.getFondsStatus());
         printDocumentMedium(jgen, fonds);
         printStorageLocation(jgen, fonds);
         printFinaliseEntity(jgen, fonds);

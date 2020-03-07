@@ -1,16 +1,13 @@
 package nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier;
 
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.metadata.CoordinateSystem;
 
 public interface IPositionEntity
         extends ISystemId {
-    String getCoordinateSystemCode();
+    CoordinateSystem getCoordinateSystem();
 
-    void setCoordinateSystemCode(String coordinateSystemCode);
-
-    String getCoordinateSystemCodeName();
-
-    void setCoordinateSystemCodeName(String coordinateSystemCodeName);
+    void setCoordinateSystem(CoordinateSystem coordinateSystem);
 
     Double getX();
 

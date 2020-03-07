@@ -113,7 +113,7 @@ public class SeriesService
     public Series save(Series series) {
         validateDocumentMedium(metadataService, series);
         validateDeletion(series.getReferenceDeletion());
-        if (null == series.getSeriesStatusCode()) {
+        if (null == series.getSeriesStatus()) {
             checkSeriesStatusUponCreation(series);
         }
         return seriesRepository.save(series);
@@ -249,13 +249,9 @@ public class SeriesService
         // Here copy all the values you are allowed to copy ....
         updateDeletion(incomingSeries, existingSeries);
         updateTitleAndDescription(incomingSeries, existingSeries);
-        if (null != incomingSeries.getDocumentMediumCode()) {
-            existingSeries.setDocumentMediumCode(
-                    incomingSeries.getDocumentMediumCode());
-        }
-        if (null != incomingSeries.getDocumentMediumCodeName()) {
-            existingSeries.setDocumentMediumCodeName(
-                    incomingSeries.getDocumentMediumCodeName());
+        if (null != incomingSeries.getDocumentMedium()) {
+            existingSeries.setDocumentMedium(
+                    incomingSeries.getDocumentMedium());
         }
 
         existingSeries.setReferencePrecursorSystemID
@@ -338,7 +334,7 @@ public class SeriesService
      * @param series The series object to check if it open
      */
     private void checkOpenOrThrow(@NotNull Series series) {
-        if (series.getSeriesStatusCode().equals(SERIES_STATUS_CLOSED_CODE)) {
+        if (SERIES_STATUS_CLOSED_CODE.equals(series.getSeriesStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Series with systemId " + series.getSystemId() +
                     " has status code " + SERIES_STATUS_CLOSED_CODE;
@@ -382,13 +378,12 @@ public class SeriesService
      * @param series The series object
      */
     public void checkSeriesStatusUponCreation(Series series) {
-        if (series.getSeriesStatusCode() != null) {
+        if (series.getSeriesStatus() != null) {
             SeriesStatus seriesStatus = (SeriesStatus) metadataService
                     .findValidMetadataByEntityTypeOrThrow(
                             SERIES_STATUS,
-                            series.getSeriesStatusCode(),
-                            series.getSeriesStatusCodeName());
-            series.setSeriesStatusCodeName(seriesStatus.getCodeName());
+                            series.getSeriesStatus());
+            series.setSeriesStatus(seriesStatus);
         }
     }
 }

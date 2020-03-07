@@ -35,9 +35,8 @@ public class SeriesHateoasSerializer
 
         printSystemIdEntity(jgen, series);
         printTitleAndDescription(jgen, series);
-        printNullableMetadataCode(jgen, SERIES_STATUS,
-                                  series.getSeriesStatusCode(),
-                                  series.getSeriesStatusCodeName());
+        printNullableMetadata(jgen, SERIES_STATUS,
+                              series.getSeriesStatus());
         printDocumentMedium(jgen, series);
         printStorageLocation(jgen, series);
         printFinaliseEntity(jgen, series);

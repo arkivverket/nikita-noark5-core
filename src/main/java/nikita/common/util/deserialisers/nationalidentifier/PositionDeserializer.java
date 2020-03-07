@@ -40,14 +40,13 @@ public class PositionDeserializer
         deserialiseNoarkSystemIdEntity(position, objectNode, errors);
 
         // Deserialize koordinatsystem
-        IMetadataEntity entity =
+        CoordinateSystem coordinateSystem = (CoordinateSystem)
             deserialiseMetadataValue(
                 objectNode,
                 COORDINATE_SYSTEM,
                 new CoordinateSystem(),
                 errors, true);
-        position.setCoordinateSystemCode(entity.getCode());
-        position.setCoordinateSystemCodeName(entity.getCodeName());
+        position.setCoordinateSystem(coordinateSystem);
 
         // Deserialize
         JsonNode currentNode = objectNode.get(X);

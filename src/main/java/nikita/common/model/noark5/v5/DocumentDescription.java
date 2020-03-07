@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
 import nikita.common.model.noark5.v5.interfaces.entities.ITitleDescription;
+import nikita.common.model.noark5.v5.metadata.*;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
 import nikita.webapp.hateoas.DocumentDescriptionHateoasHandler;
@@ -250,36 +251,42 @@ public class DocumentDescription
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private List<Part> referencePart = new ArrayList<>();
 
-    public String getDocumentTypeCode() {
-        return documentTypeCode;
+    public DocumentType getDocumentType() {
+        if (null == documentTypeCode)
+            return null;
+        DocumentType documentType = new DocumentType();
+        documentType.setCode(documentTypeCode);
+        documentType.setCodeName(documentTypeCodeName);
+        return documentType;
     }
 
-    public void setDocumentTypeCode(String documentTypeCode) {
-        this.documentTypeCode = documentTypeCode;
+    public void setDocumentType(DocumentType documentType) {
+        if (null != documentType) {
+            this.documentTypeCode = documentType.getCode();
+            this.documentTypeCodeName = documentType.getCodeName();
+        } else {
+            this.documentTypeCode = null;
+            this.documentTypeCodeName = null;
+        }
     }
 
-    public String getDocumentTypeCodeName() {
-        return documentTypeCodeName;
+    public DocumentStatus getDocumentStatus() {
+        if (null == documentStatusCode)
+            return null;
+        DocumentStatus documentStatus = new DocumentStatus();
+        documentStatus.setCode(documentStatusCode);
+        documentStatus.setCodeName(documentStatusCodeName);
+        return documentStatus;
     }
 
-    public void setDocumentTypeCodeName(String documentTypeCodeName) {
-        this.documentTypeCodeName = documentTypeCodeName;
-    }
-
-    public String getDocumentStatusCode() {
-        return documentStatusCode;
-    }
-
-    public void setDocumentStatusCode(String documentStatusCode) {
-        this.documentStatusCode = documentStatusCode;
-    }
-
-    public String getDocumentStatusCodeName() {
-        return documentStatusCodeName;
-    }
-
-    public void setDocumentStatusCodeName(String documentStatusCodeName) {
-        this.documentStatusCodeName = documentStatusCodeName;
+    public void setDocumentStatus(DocumentStatus documentStatus) {
+        if (null != documentStatus) {
+            this.documentStatusCode = documentStatus.getCode();
+            this.documentStatusCodeName = documentStatus.getCodeName();
+        } else {
+            this.documentStatusCode = null;
+            this.documentStatusCodeName = null;
+        }
     }
 
     public String getTitle() {
@@ -314,36 +321,45 @@ public class DocumentDescription
         this.createdBy = createdBy;
     }
 
-    public String getDocumentMediumCode() {
-        return documentMediumCode;
+    public DocumentMedium getDocumentMedium() {
+        if (null == documentMediumCode)
+            return null;
+        DocumentMedium documentMedium = new DocumentMedium();
+        documentMedium.setCode(documentMediumCode);
+        documentMedium.setCodeName(documentMediumCodeName);
+        return documentMedium;
     }
 
-    public void setDocumentMediumCode(String documentMediumCode) {
-        this.documentMediumCode = documentMediumCode;
+    public void setDocumentMedium(DocumentMedium documentMedium) {
+        if (null != documentMedium) {
+            this.documentMediumCode = documentMedium.getCode();
+            this.documentMediumCodeName = documentMedium.getCodeName();
+        } else {
+            this.documentMediumCode = null;
+            this.documentMediumCodeName = null;
+        }
     }
 
-    public String getDocumentMediumCodeName() {
-        return documentMediumCodeName;
+    public AssociatedWithRecordAs getAssociatedWithRecordAs() {
+        if (null == associatedWithRecordAsCode)
+            return null;
+        AssociatedWithRecordAs associatedWithRecordAs =
+            new AssociatedWithRecordAs();
+        associatedWithRecordAs.setCode(associatedWithRecordAsCode);
+        associatedWithRecordAs.setCodeName(associatedWithRecordAsCodeName);
+        return associatedWithRecordAs;
     }
 
-    public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMediumCodeName = documentMediumCodeName;
-    }
-
-    public String getAssociatedWithRecordAsCode() {
-        return associatedWithRecordAsCode;
-    }
-
-    public void setAssociatedWithRecordAsCode(String associatedWithRecordAsCode) {
-        this.associatedWithRecordAsCode = associatedWithRecordAsCode;
-    }
-
-    public String getAssociatedWithRecordAsCodeName() {
-        return associatedWithRecordAsCodeName;
-    }
-
-    public void setAssociatedWithRecordAsCodeName(String associatedWithRecordAsCodeName) {
-        this.associatedWithRecordAsCodeName = associatedWithRecordAsCodeName;
+    public void setAssociatedWithRecordAs(AssociatedWithRecordAs associatedWithRecordAs) {
+        if (null != associatedWithRecordAs) {
+            this.associatedWithRecordAsCode =
+                associatedWithRecordAs.getCode();
+            this.associatedWithRecordAsCodeName =
+                associatedWithRecordAs.getCodeName();
+        } else {
+            this.associatedWithRecordAsCode = null;
+            this.associatedWithRecordAsCodeName = null;
+        }
     }
 
     @Override

@@ -667,13 +667,9 @@ public class RecordService
         Record existingRecord = getRecordOrThrow(recordSystemId);
         // Here copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingRecord, existingRecord);
-        if (null != incomingRecord.getDocumentMediumCode()) {
-            existingRecord.setDocumentMediumCode(
-                    incomingRecord.getDocumentMediumCode());
-        }
-        if (null != incomingRecord.getDocumentMediumCodeName()) {
-            existingRecord.setDocumentMediumCodeName(
-                    incomingRecord.getDocumentMediumCodeName());
+        if (null != incomingRecord.getDocumentMedium()) {
+            existingRecord.setDocumentMedium(
+                    incomingRecord.getDocumentMedium());
         }
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
