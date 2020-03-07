@@ -74,10 +74,10 @@ public class DocumentFlowHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<DocumentFlowHateoas> findDocumentFlowBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the DocumentFlow to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         DocumentFlowHateoas documentFlowHateoas = documentFlowService.findBySystemId(systemId);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -103,10 +103,10 @@ public class DocumentFlowHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentFlowHateoas> updateDocumentFlowBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of DocumentFlow to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "DocumentFlow",
                     value = "Incoming DocumentFlow object",
                     required = true)

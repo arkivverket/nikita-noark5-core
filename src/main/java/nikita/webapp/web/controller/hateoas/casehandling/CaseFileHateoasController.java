@@ -84,10 +84,10 @@ public class CaseFileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD_NOTE,
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordNoteHateoas> createRecordNoteAssociatedWithFile(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of file to associate the recordNote with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "RecordNote",
                     value = "Incoming recordNote object",
                     required = true)
@@ -115,10 +115,10 @@ public class CaseFileHateoasController
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RegistryEntryHateoas> createRegistryEntryAssociatedWithFile(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of file to associate the record with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "RegistryEntry",
                     value = "Incoming registryEntry object",
                     required = true)
@@ -192,11 +192,11 @@ public class CaseFileHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_REGISTRY_ENTRY)
     public ResponseEntity<RegistryEntryHateoas> createDefaultRegistryEntry(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the caseFile to retrieve a template " +
                             "RegistryEntry",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return caseFileService.generateDefaultRegistryEntry(systemID);
     }
 
@@ -217,11 +217,11 @@ public class CaseFileHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD_NOTE)
     public ResponseEntity<RecordNoteHateoas> createDefaultRecordNote(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the caseFile to retrieve a template " +
                             "RecordNote",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return caseFileService.generateDefaultRecordNote(systemID);
     }
 
@@ -238,10 +238,10 @@ public class CaseFileHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CaseFileHateoas> findOneCaseFilebySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable("systemID") final String caseFileSystemId) {
+            @PathVariable(SYSTEM_ID) final String caseFileSystemId) {
         CaseFile caseFile = caseFileService.findBySystemId(caseFileSystemId);
         if (caseFile == null) {
             throw new NoarkEntityNotFoundException(caseFileSystemId);
@@ -274,10 +274,10 @@ public class CaseFileHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REGISTRY_ENTRY)
     public ResponseEntity<RegistryEntryHateoas>
     findRegistryEntryToCaseFileBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return caseFileService.findAllRegistryEntryToCaseFile(systemID);
     }
 
@@ -300,10 +300,10 @@ public class CaseFileHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + RECORD_NOTE)
     public ResponseEntity<RecordNoteHateoas>
     findRecordNoteToCaseFileBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return caseFileService.findAllRecordNoteToCaseFile(systemID);
     }
 
@@ -354,10 +354,10 @@ public class CaseFileHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + PRECEDENCE)
     public ResponseEntity<PrecedenceHateoas>
     findPrecedenceForCaseFileBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(caseFileService.
@@ -394,7 +394,7 @@ public class CaseFileHateoasController
     // Delete a CaseFile identified by systemID
     // DELETE [contextPath][api]/sakarkiv/saksmappe/{systemId}/
     @ApiOperation(value = "Deletes a single CaseFile entity identified by " +
-            "systemID", response = String.class)
+            SYSTEM_ID, response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204,
                     message = "CaseFile deleted", response = String.class),
@@ -408,10 +408,10 @@ public class CaseFileHateoasController
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteCaseFileBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the caseFile to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         caseFileService.deleteEntity(systemID);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -458,10 +458,10 @@ public class CaseFileHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas> updateCaseFile(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of caseFile to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "CaseFile",
                     value = "Incoming caseFile object",
                     required = true)

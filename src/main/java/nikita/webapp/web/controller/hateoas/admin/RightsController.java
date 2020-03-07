@@ -95,7 +95,7 @@ public class RightsController extends NoarkController {
     @Counted
 
     @GetMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH)
-    public ResponseEntity<UserHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
+    public ResponseEntity<UserHateoas> findBySystemId(@PathVariable(SYSTEM_ID) final String systemId,
                                                                                    HttpServletRequest request) {
         User administrativeUnit = administrativeUnitService.findBySystemId(UUID.fromString(systemId));
         UserHateoas adminHateoas = new UserHateoas(administrativeUnit);
@@ -147,10 +147,10 @@ public class RightsController extends NoarkController {
 
     @PutMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas> updateUser(HttpServletRequest request,
-                                                                              @ApiParam(name = "systemID",
+                                                                              @ApiParam(name = SYSTEM_ID,
                                                                                       value = "systemID of documentDescription to update.",
                                                                                       required = true)
-                                                                              @PathVariable("systemID") String systemID,
+                                                                              @PathVariable(SYSTEM_ID) String systemID,
                                                                               @ApiParam(name = "administrativeUnit",
                                                                                       value = "Incoming administrativeUnit object",
                                                                                       required = true)

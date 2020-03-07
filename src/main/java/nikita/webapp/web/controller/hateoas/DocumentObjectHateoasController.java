@@ -68,10 +68,10 @@ public class DocumentObjectHateoasController
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> findOneDocumentObjectBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentObject to retrieve",
                     required = true)
-            @PathVariable("systemID") final String documentObjectSystemId) {
+            @PathVariable(SYSTEM_ID) final String documentObjectSystemId) {
         DocumentObjectHateoas documentObjectHateoas =
             documentObjectService.findBySystemId(documentObjectSystemId);
         return ResponseEntity.status(OK)
@@ -122,11 +122,11 @@ public class DocumentObjectHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + REFERENCE_FILE)
     public void handleFileDownload(
             HttpServletRequest request, HttpServletResponse response,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentObject that has a file " +
                             "associated with it",
                     required = true)
-            @PathVariable("systemID") final String documentObjectSystemId)
+            @PathVariable(SYSTEM_ID) final String documentObjectSystemId)
             throws IOException {
 
         Resource fileResource = documentObjectService.loadAsResource(
@@ -171,10 +171,10 @@ public class DocumentObjectHateoasController
     public ResponseEntity<ConversionHateoas>
     findAllConversionAssociatedWithDocumentObject(
             HttpServletRequest request, HttpServletResponse response,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                       value = "systemID of the documentObject",
                       required = true)
-            @PathVariable("systemID") final String systemID)
+            @PathVariable(SYSTEM_ID) final String systemID)
             throws IOException {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -201,10 +201,10 @@ public class DocumentObjectHateoasController
     public ResponseEntity<ConversionHateoas>
     findAllConversionAssociatedWithDocumentObject(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentObject",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "subSystemID",
                     value = "systemID of the Conversion",
                     required = true)
@@ -234,7 +234,7 @@ public class DocumentObjectHateoasController
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ConversionHateoas> createDefaultConversion(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of documentCbject to associate the" +
                             " conversion with.",
                     required = true)
@@ -278,7 +278,7 @@ public class DocumentObjectHateoasController
     public ResponseEntity<ConversionHateoas>
     createConversionAssociatedWithDocumentObject(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of documentCbject to associate the" +
                             " conversion with.",
                     required = true)
@@ -316,11 +316,11 @@ public class DocumentObjectHateoasController
                  produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> handleFileUpload(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentObject you wish to " +
                             "associate a file with",
                     required = true)
-            @PathVariable("systemID") final String systemID)
+            @PathVariable(SYSTEM_ID) final String systemID)
             throws IOException {
         DocumentObjectHateoas documentObjectHateoas =
             documentObjectService.handleIncomingFile(systemID, request);
@@ -346,11 +346,11 @@ public class DocumentObjectHateoasController
                 produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> convertFile(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentObject you wish to " +
                             "convert the file that is associated with it",
                     required = true)
-            @PathVariable("systemID") final String documentObjectSystemId)
+            @PathVariable(SYSTEM_ID) final String documentObjectSystemId)
             throws Exception {
         DocumentObjectHateoas documentObjectHateoas = documentObjectService.
             convertDocumentToPDF(documentObjectSystemId);
@@ -378,10 +378,10 @@ public class DocumentObjectHateoasController
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteDocumentObjectBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentObject to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         documentObjectService.deleteEntity(systemID);
         return ResponseEntity.
                 status(NO_CONTENT).
@@ -431,10 +431,10 @@ public class DocumentObjectHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentObjectHateoas> updateDocumentObject(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of documentObject to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "documentObject",
                     value = "Incoming documentObject object",
                     required = true)
@@ -467,10 +467,10 @@ public class DocumentObjectHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ConversionHateoas> updateConversion(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of conversion to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "subSystemID",
                     value = "systemId of conversion to update.",
                     required = true)

@@ -87,7 +87,7 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<DocumentObjectHateoas>
     createDocumentObjectAssociatedWithDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of documentDescription to associate the" +
                             " documentObject with.",
                     required = true)
@@ -139,7 +139,7 @@ public class DocumentDescriptionHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<AuthorHateoas>
     addAuthorAssociatedWithDocumentDescription(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of the documentDescription to associate" +
                             " the author with.",
                     required = true)
@@ -174,10 +174,10 @@ public class DocumentDescriptionHateoasController
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CommentHateoas> addCommentToDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of DocumentDescription to associate the Comment with",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "Comment",
                     value = "comment",
                     required = true)
@@ -224,11 +224,11 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<PartUnitHateoas>
     createPartUnitAssociatedWithDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of documentDescription to associate the " +
                             "PartUnit with.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "PartUnit",
                     value = "Incoming PartUnit object",
                     required = true)
@@ -278,11 +278,11 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<PartPersonHateoas>
     createPartPersonAssociatedWithDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of documentDescription to associate the " +
                             "PartPerson with.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "PartPerson",
                     value = "Incoming PartPerson object",
                     required = true)
@@ -318,10 +318,10 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<DocumentDescriptionHateoas>
     findOneDocumentDescriptionBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentDescription to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         DocumentDescriptionHateoas documentDescriptionHateoas =
             documentDescriptionService.findBySystemId(systemID);
         return ResponseEntity.status(OK)
@@ -359,10 +359,10 @@ public class DocumentDescriptionHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + COMMENT)
     public ResponseEntity<CommentHateoas> findAllCommentsAssociatedWithDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentDescription to retrieve comments for",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionService
@@ -392,11 +392,11 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<PartUnitHateoas>
     getPartUnitTemplate(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentDescription to retrieve " +
                             "associated Record",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionService.
@@ -425,11 +425,11 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<AuthorHateoas>
     getAuthorTemplate(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentDescription to retrieve " +
                             "associated Author",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionService.
@@ -459,11 +459,11 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<PartPersonHateoas>
     getPartPersonTemplate(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentDescription to retrieve " +
                             "associated Record",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionService.
@@ -537,11 +537,11 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<DocumentObjectHateoas>
     findAllDocumentDescriptionAssociatedWithRecord(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the DocumentDescription to retrieve " +
                             "associated DocumentObject",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         DocumentObjectHateoas documentObjectHateoas =
 	    documentDescriptionService.
                 findAllDocumentObjectWithDocumentDescriptionBySystemId(
@@ -572,11 +572,11 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<AuthorHateoas>
     findAllAuthorAssociatedWithDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the DocumentDescription to retrieve " +
                             "associated Authors",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity
                 .status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -600,10 +600,10 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<PartHateoas>
     findAllPartAssociatedWithDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the file to retrieve associated DocumentDescription",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
 
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -630,11 +630,11 @@ public class DocumentDescriptionHateoasController
     public ResponseEntity<RecordHateoas>
     findAllRecordAssociatedWithDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the DocumentDescription to retrieve " +
                             "associated Records",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         RecordHateoas recordHateoas =
             documentDescriptionService.
                 findAllRecordWithDocumentDescriptionBySystemId(
@@ -662,10 +662,10 @@ public class DocumentDescriptionHateoasController
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteDocumentDescriptionBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the documentDescription to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         documentDescriptionService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -724,10 +724,10 @@ public class DocumentDescriptionHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentDescriptionHateoas> updateDocumentDescription(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of documentDescription to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "documentDescription",
                     value = "Incoming documentDescription object",
                     required = true)

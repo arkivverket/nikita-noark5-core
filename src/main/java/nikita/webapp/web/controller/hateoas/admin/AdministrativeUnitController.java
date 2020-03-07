@@ -114,7 +114,7 @@ public class AdministrativeUnitController extends NoarkController {
             @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
     @GetMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<AdministrativeUnitHateoas> findBySystemId(@PathVariable("systemID") final String systemId,
+    public ResponseEntity<AdministrativeUnitHateoas> findBySystemId(@PathVariable(SYSTEM_ID) final String systemId,
                                                                     HttpServletRequest request) {
         AdministrativeUnit administrativeUnit =
                 administrativeUnitService.findBySystemId(UUID.fromString(systemId));
@@ -168,10 +168,10 @@ public class AdministrativeUnitController extends NoarkController {
     @PutMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<AdministrativeUnitHateoas> updateAdministrativeUnit(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of documentDescription to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "administrativeUnit",
                     value = "Incoming administrativeUnit object",
                     required = true)
@@ -225,7 +225,7 @@ public class AdministrativeUnitController extends NoarkController {
     @Counted
     @DeleteMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteAdministrativeUnit(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of AdministrativeUnit to delete.",
                     required = true)
             @PathVariable(SYSTEM_ID) String systemID) {

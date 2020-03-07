@@ -61,10 +61,10 @@ public class CommentHateoasController
     @GetMapping(value = COMMENT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CommentHateoas> findOne(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of comment to retrieve.",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         CommentHateoas commentHateoas =
 	    commentService.findSingleComment(systemID);
         return ResponseEntity.status(HttpStatus.OK)
@@ -109,10 +109,10 @@ public class CommentHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CommentHateoas> updateComment(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of comment to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "comment",
                     value = "Incoming comment object",
                     required = true)
@@ -148,10 +148,10 @@ public class CommentHateoasController
     @Counted
     @DeleteMapping(value = COMMENT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteCommentBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the comment to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         commentService.deleteEntity(systemID);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(DELETE_RESPONSE);
