@@ -1472,15 +1472,9 @@ public final class CommonUtils {
                 JsonNode screeningNode = objectNode.get(SCREENING);
                 if (screeningNode != null) {
                     screening = new Screening();
-                    ObjectNode screeningObjectNode = screeningNode.deepCopy();
-                    deserialiseScreeningEntity(screening, screeningObjectNode,
-                                               errors);
-                    if (0 == screeningObjectNode.size()) {
-                        objectNode.remove(SCREENING);
-                    }
-                } else if (null != screeningNode) { // Remove NullNode
-                    objectNode.remove(SCREENING);
+                    deserialiseScreeningEntity(screening, screeningNode.deepCopy(), errors);
                 }
+                objectNode.remove(SCREENING);
                 return screening;
             }
 
@@ -1516,6 +1510,7 @@ public final class CommonUtils {
                 screeningEntity.setScreeningDuration
                         (deserializeInteger(SCREENING_DURATION,
                                 objectNode, errors, false));
+                objectNode.remove(SCREENING);
             }
 
             public static Classified deserialiseClassified(ObjectNode objectNode, StringBuilder errors) {
