@@ -44,7 +44,6 @@ public class RecordHateoasSerializer
         printStorageLocation(jgen, record);
         // TODO: FIX THIS printCrossReference(jgen, record);
         if (record instanceof RegistryEntry) {
-            //printPrecedence(jgen, registryEntry);
             printElectronicSignature(jgen, (RegistryEntry) record);
 
         } else if (record instanceof RecordNote) {

@@ -691,10 +691,6 @@ public class InternalNameTranslator {
                         POST_CODE_ENG,
                         POST_CODE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (PRECEDENCE_APPROVED_BY,
-                        PRECEDENCE_APPROVED_BY_ENG,
-                        PRECEDENCE_APPROVED_BY_ENG_OBJECT);
-        addNorToEnglishNameMap
                 (PRECEDENCE_APPROVED_DATE,
                         PRECEDENCE_APPROVED_DATE_ENG,
                         PRECEDENCE_APPROVED_DATE_ENG_OBJECT);
@@ -711,13 +707,17 @@ public class InternalNameTranslator {
                         PRECEDENCE_ENG,
                         PRECEDENCE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (PRECEDENCE_SOURCE_OF_LAW,
-                        PRECEDENCE_SOURCE_OF_LAW_ENG,
-                        PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT);
-        addNorToEnglishNameMap
                 (PRECEDENCE_PRECEDENCE_STATUS,
                         PRECEDENCE_PRECEDENCE_STATUS_ENG,
                         PRECEDENCE_PRECEDENCE_STATUS_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (PRECEDENCE_REFERENCE_APPROVED_BY,
+                        PRECEDENCE_REFERENCE_APPROVED_BY_ENG,
+                        PRECEDENCE_REFERENCE_APPROVED_BY_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (PRECEDENCE_SOURCE_OF_LAW,
+                        PRECEDENCE_SOURCE_OF_LAW_ENG,
+                        PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT);
         addNorToEnglishNameMap
                 (RECORD_ARCHIVED_BY, RECORD_ARCHIVED_BY_ENG,
                         RECORD_ARCHIVED_BY_ENG_OBJECT);
