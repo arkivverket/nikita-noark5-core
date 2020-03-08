@@ -408,6 +408,14 @@ public class DocumentDescriptionService
             existingDocumentDescription.setAssociatedWithRecordAs(
                     incomingDocumentDescription.getAssociatedWithRecordAs());
         }
+        if (null != incomingDocumentDescription.getDocumentType()) {
+            existingDocumentDescription.setDocumentType(
+                    incomingDocumentDescription.getDocumentType());
+        }
+        if (null != incomingDocumentDescription.getDocumentStatus()) {
+            existingDocumentDescription.setDocumentStatus(
+                    incomingDocumentDescription.getDocumentStatus());
+        }
         existingDocumentDescription.setDocumentNumber(
                 incomingDocumentDescription.getDocumentNumber());
     }
