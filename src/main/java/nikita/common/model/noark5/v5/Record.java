@@ -82,7 +82,7 @@ public class Record
     @Column(name = FILE_PUBLIC_TITLE_ENG, length = TITLE_LENGTH)
     @Audited
     @JsonProperty(FILE_PUBLIC_TITLE)
-    private String officialTitle;
+    private String publicTitle;
 
     /**
      * M021 - beskrivelse (xs:string)
@@ -249,12 +249,12 @@ public class Record
         this.title = title;
     }
 
-    public String getOfficialTitle() {
-        return officialTitle;
+    public String getPublicTitle() {
+        return publicTitle;
     }
 
-    public void setOfficialTitle(String officialTitle) {
-        this.officialTitle = officialTitle;
+    public void setPublicTitle(String publicTitle) {
+        this.publicTitle = publicTitle;
     }
 
     public String getDescription() {
@@ -485,7 +485,7 @@ public class Record
                 "archivedBy='" + archivedBy + '\'' +
                 ", archivedDate=" + archivedDate +
                 ", description='" + description + '\'' +
-                ", officialTitle='" + officialTitle + '\'' +
+                ", publicTitle='" + publicTitle + '\'' +
                 ", title='" + title + '\'' +
                 ", recordId='" + recordId + '\'' +
                 '}';
@@ -509,7 +509,7 @@ public class Record
                 .append(archivedDate, rhs.archivedDate)
                 .append(recordId, rhs.recordId)
                 .append(title, rhs.title)
-                .append(officialTitle, rhs.officialTitle)
+                .append(publicTitle, rhs.publicTitle)
                 .append(description, rhs.description)
                 .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMediumCodeName, rhs.documentMediumCodeName)
@@ -524,7 +524,7 @@ public class Record
                 .append(archivedDate)
                 .append(recordId)
                 .append(title)
-                .append(officialTitle)
+                .append(publicTitle)
                 .append(description)
                 .append(documentMediumCode)
                 .append(documentMediumCodeName)

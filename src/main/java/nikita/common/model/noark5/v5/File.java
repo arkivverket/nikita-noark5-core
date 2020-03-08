@@ -53,7 +53,7 @@ public class File
     @Column(name = FILE_PUBLIC_TITLE_ENG, length = TITLE_LENGTH)
     @Audited
     @JsonProperty(FILE_PUBLIC_TITLE)
-    private String officialTitle;
+    private String publicTitle;
 
     /**
      * M??? - dokumentmedium code (xs:string)
@@ -165,12 +165,12 @@ public class File
         this.fileId = fileId;
     }
 
-    public String getOfficialTitle() {
-        return officialTitle;
+    public String getPublicTitle() {
+        return publicTitle;
     }
 
-    public void setOfficialTitle(String officialTitle) {
-        this.officialTitle = officialTitle;
+    public void setPublicTitle(String publicTitle) {
+        this.publicTitle = publicTitle;
     }
 
     public String getDocumentMediumCode() {
@@ -383,7 +383,7 @@ public class File
         return "File{" + super.toString() +
                 ", documentMediumCode='" + documentMediumCode + '\'' +
                 ", documentMediumCodeName='" + documentMediumCodeName + '\'' +
-                ", officialTitle='" + officialTitle + '\'' +
+                ", publicTitle='" + publicTitle + '\'' +
                 ", fileId='" + fileId + '\'' +
                 '}';
     }
@@ -404,7 +404,7 @@ public class File
                 .appendSuper(super.equals(other))
                 .append(documentMediumCode, rhs.documentMediumCode)
                 .append(documentMediumCodeName, rhs.documentMediumCodeName)
-                .append(officialTitle, rhs.officialTitle)
+                .append(publicTitle, rhs.publicTitle)
                 .append(fileId, rhs.fileId)
                 .isEquals();
     }
@@ -415,7 +415,7 @@ public class File
                 .appendSuper(super.hashCode())
                 .append(documentMediumCode)
                 .append(documentMediumCodeName)
-                .append(officialTitle)
+                .append(publicTitle)
                 .append(fileId)
                 .toHashCode();
     }

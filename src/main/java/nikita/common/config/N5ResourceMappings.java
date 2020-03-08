@@ -560,7 +560,7 @@ public final class N5ResourceMappings {
     public static final String EVENT_TYPE_ENG = "hendelsetype";
     public static final String FILE_ENG = "file";
     public static final String FILE_ID_ENG = "file_id";
-    public static final String FILE_PUBLIC_TITLE_ENG = "official_title";
+    public static final String FILE_PUBLIC_TITLE_ENG = "public_title";
     public static final String FILE_TYPE_ENG = "mappetype";
     public static final String FINALISED_BY_ENG = "finalised_by";
     public static final String FINALISED_DATE_ENG = "finalised_date";
@@ -790,7 +790,7 @@ public final class N5ResourceMappings {
     public static final String EVENT_TYPE_ENG_OBJECT = "hendelsetype";
     public static final String FILE_ENG_OBJECT = "File";
     public static final String FILE_ID_ENG_OBJECT = "fileId";
-    public static final String FILE_PUBLIC_TITLE_ENG_OBJECT = "officialTitle";
+    public static final String FILE_PUBLIC_TITLE_ENG_OBJECT = "publicTitle";
     public static final String FILE_TYPE_ENG_OBJECT = "mappetype";
     public static final String FINALISED_BY_ENG_OBJECT = "finalisedBy";
     public static final String FINALISED_DATE_ENG_OBJECT = "finalisedDate";

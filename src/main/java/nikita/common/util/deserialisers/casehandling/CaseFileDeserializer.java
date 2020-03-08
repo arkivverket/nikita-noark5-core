@@ -65,10 +65,10 @@ public class CaseFileDeserializer
             objectNode.remove(FILE_ID);
         }
 
-        // Deserialize officialTitle
+        // Deserialize publicTitle
         currentNode = objectNode.get(FILE_PUBLIC_TITLE);
         if (null != currentNode) {
-            caseFile.setOfficialTitle(currentNode.textValue());
+            caseFile.setPublicTitle(currentNode.textValue());
             objectNode.remove(FILE_PUBLIC_TITLE);
         }
         caseFile.setReferenceCrossReference(

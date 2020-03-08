@@ -87,10 +87,10 @@ public class RegistryEntryDeserializer
             registryEntry.setTitle(currentNode.textValue());
             objectNode.remove(TITLE);
         }
-        // Deserialize  officialTitle
+        // Deserialize  publicTitle
         currentNode = objectNode.get(FILE_PUBLIC_TITLE);
         if (null != currentNode) {
-            registryEntry.setOfficialTitle(currentNode.textValue());
+            registryEntry.setPublicTitle(currentNode.textValue());
             objectNode.remove(FILE_PUBLIC_TITLE);
         }
         // Deserialize description
