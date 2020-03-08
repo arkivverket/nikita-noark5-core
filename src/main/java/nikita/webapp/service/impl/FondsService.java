@@ -539,10 +539,11 @@ public class FondsService
      */
     private void checkFondsNotClosed(@NotNull Fonds fonds) {
         if (null != fonds.getFondsStatus() &&
-            FONDS_STATUS_CLOSED.equals(fonds.getFondsStatus().getCodeName())) {
+                FONDS_STATUS_CLOSED_CODE.equals(
+                        fonds.getFondsStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Fonds with fondsSystemId " + fonds.getSystemId() +
-                    " has status " + FONDS_STATUS_CLOSED;
+                    " has status code " + FONDS_STATUS_CLOSED_CODE;
             logger.info(info);
             throw new NoarkEntityEditWhenClosedException(info);
         }

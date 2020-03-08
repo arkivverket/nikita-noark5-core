@@ -361,6 +361,7 @@ public final class N5ResourceMappings {
     // Constant values defined in the FondsStatus Metadata catalogue
 
     public static final String FONDS_STATUS_OPEN_CODE = "O";
+    public static final String FONDS_STATUS_CLOSED_CODE = "A";
     public static final String FONDS_STATUS_CLOSED = "Avsluttet";
 
     // Constant values defined in the SeriesStatus Metadata catalogue
