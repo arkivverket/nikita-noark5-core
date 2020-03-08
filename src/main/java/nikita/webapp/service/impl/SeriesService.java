@@ -335,8 +335,7 @@ public class SeriesService
      */
     private void checkOpenOrThrow(@NotNull Series series) {
         if (null != series.getSeriesStatus() &&
-                SERIES_STATUS_CLOSED_CODE.equals(
-                        series.getSeriesStatus().getCode())) {
+                SERIES_STATUS_CLOSED_CODE.equals(series.getSeriesStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Series with systemId " + series.getSystemId() +
                     " has status code " + SERIES_STATUS_CLOSED_CODE;
