@@ -334,7 +334,9 @@ public class SeriesService
      * @param series The series object to check if it open
      */
     private void checkOpenOrThrow(@NotNull Series series) {
-        if (SERIES_STATUS_CLOSED_CODE.equals(series.getSeriesStatus().getCode())) {
+        if (null != series.getSeriesStatus() &&
+                SERIES_STATUS_CLOSED_CODE.equals(
+                        series.getSeriesStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Series with systemId " + series.getSystemId() +
                     " has status code " + SERIES_STATUS_CLOSED_CODE;
