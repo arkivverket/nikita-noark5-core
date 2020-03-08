@@ -55,10 +55,10 @@ public class PartHateoasController
     @GetMapping(value = PART_PERSON + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PartPersonHateoas> findOnePartPersonBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the partPerson to retrieve",
                     required = true)
-            @PathVariable("systemID") final String partPersonSystemId) {
+            @PathVariable(SYSTEM_ID) final String partPersonSystemId) {
         PartPerson partPerson =
                 (PartPerson) partService.findBySystemId(partPersonSystemId);
         PartPersonHateoas partPersonHateoas =
@@ -83,10 +83,10 @@ public class PartHateoasController
     @GetMapping(value = PART_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PartUnitHateoas> findOnePartUnitBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the partUnit to retrieve",
                     required = true)
-            @PathVariable("systemID") final String partUnitSystemId) {
+            @PathVariable(SYSTEM_ID) final String partUnitSystemId) {
         PartUnit partUnit =
                 (PartUnit) partService.findBySystemId(partUnitSystemId);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
@@ -116,10 +116,10 @@ public class PartHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartUnitHateoas> updatePartUnit(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of partUnit to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "PartUnit",
                     value = "Incoming partUnit object",
                     required = true)
@@ -158,10 +158,10 @@ public class PartHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartPersonHateoas> updatePartPerson(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of partPerson to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "PartPerson",
                     value = "Incoming partPerson object",
                     required = true)
@@ -182,7 +182,7 @@ public class PartHateoasController
 
     // DELETE [contextPath][api]/arkivstruktur/partenhet/{systemID}/
     @ApiOperation(value = "Deletes a single PartUnit entity identified by " +
-            "systemID")
+            SYSTEM_ID)
     @ApiResponses(value = {
             @ApiResponse(code = 204,
                     message = "PartUnit deleted"),
@@ -206,7 +206,7 @@ public class PartHateoasController
 
     // DELETE [contextPath][api]/arkivstruktur/partperson/{systemID}/
     @ApiOperation(value = "Deletes a single PartPerson entity identified by " +
-            "systemID")
+            SYSTEM_ID)
     @ApiResponses(value = {
             @ApiResponse(code = 204,
                     message = "PartPerson deleted"),

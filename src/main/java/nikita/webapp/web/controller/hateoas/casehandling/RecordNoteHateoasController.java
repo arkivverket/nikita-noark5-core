@@ -62,7 +62,7 @@ public class RecordNoteHateoasController
     public ResponseEntity<DocumentFlowHateoas>
     createDocumentFlowAssociatedWithRecordNote(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                       value = "systemID of registry entry to associate the document flow with.",
                       required = true)
             @PathVariable String systemID,
@@ -92,10 +92,10 @@ public class RecordNoteHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<RecordNoteHateoas> findRecordNoteBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the recordNote to retrieve",
                     required = true)
-            @PathVariable("systemID") final String recordNoteSystemId) {
+            @PathVariable(SYSTEM_ID) final String recordNoteSystemId) {
         return recordNoteService.findBySystemId(recordNoteSystemId);
     }
 
@@ -132,10 +132,10 @@ public class RecordNoteHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_FLOW)
     public ResponseEntity<DocumentFlowHateoas> findAllDocumentFlowAssociatedWithRecordNote(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the file to retrieve associated RecordNote",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(recordNoteService.
@@ -158,10 +158,10 @@ public class RecordNoteHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_FLOW)
     public ResponseEntity<DocumentFlowHateoas> createDefaultDocumentFlow(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                       value = "systemID of the recordNote",
                       required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordNoteService.
@@ -171,7 +171,7 @@ public class RecordNoteHateoasController
     // Delete a Record identified by systemID
     // DELETE [contextPath][api]/casehandling/arkivnotat/{systemId}/
     @ApiOperation(value = "Deletes a single RecordNote entity identified by " +
-            "systemID", response = String.class)
+            SYSTEM_ID, response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "RecordNote deleted",
                     response = String.class),
@@ -184,10 +184,10 @@ public class RecordNoteHateoasController
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteRecordNoteBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the recordNote to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return recordNoteService.deleteEntity(systemID);
     }
 
@@ -231,10 +231,10 @@ public class RecordNoteHateoasController
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordNoteHateoas> updateRecordNote(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of recordNote to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "RecordNote",
                     value = "Incoming recordNote object",
                     required = true)

@@ -68,10 +68,10 @@ public class CorrespondencePartHateoasController
     @GetMapping(value = CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartPersonHateoas> findOneCorrespondencePartPersonBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the correspondencePartPerson to retrieve",
                     required = true)
-            @PathVariable("systemID") final String correspondencePartPersonSystemId) {
+            @PathVariable(SYSTEM_ID) final String correspondencePartPersonSystemId) {
         CorrespondencePartPerson correspondencePartPerson =
                 (CorrespondencePartPerson) correspondencePartService.findBySystemId(correspondencePartPersonSystemId);
         CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
@@ -98,10 +98,10 @@ public class CorrespondencePartHateoasController
     @GetMapping(value = CORRESPONDENCE_PART_INTERNAL + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartInternalHateoas> findOneCorrespondencePartInternalBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the correspondencePartInternal to retrieve",
                     required = true)
-            @PathVariable("systemID") final String correspondencePartInternalSystemId) {
+            @PathVariable(SYSTEM_ID) final String correspondencePartInternalSystemId) {
         CorrespondencePartInternal correspondencePartInternal =
                 (CorrespondencePartInternal) correspondencePartService.findBySystemId(correspondencePartInternalSystemId);
         CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
@@ -128,10 +128,10 @@ public class CorrespondencePartHateoasController
     @GetMapping(value = CORRESPONDENCE_PART_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartUnitHateoas> findOneCorrespondencePartUnitBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the correspondencePartUnit to retrieve",
                     required = true)
-            @PathVariable("systemID") final String correspondencePartUnitSystemId) {
+            @PathVariable(SYSTEM_ID) final String correspondencePartUnitSystemId) {
         CorrespondencePartUnit correspondencePartUnit =
                 (CorrespondencePartUnit) correspondencePartService.findBySystemId(correspondencePartUnitSystemId);
         CorrespondencePartUnitHateoas correspondencePartUnitHateoas = new CorrespondencePartUnitHateoas(correspondencePartUnit);
@@ -163,10 +163,10 @@ public class CorrespondencePartHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartUnitHateoas> updateCorrespondencePartUnit(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of correspondencePartUnit to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "CorrespondencePartUnit",
                     value = "Incoming correspondencePartUnit object",
                     required = true)
@@ -207,10 +207,10 @@ public class CorrespondencePartHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartPersonHateoas> updateCorrespondencePartPerson(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of correspondencePartPerson to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "CorrespondencePartPerson",
                     value = "Incoming correspondencePartPerson object",
                     required = true)
@@ -251,10 +251,10 @@ public class CorrespondencePartHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartInternalHateoas> updateCorrespondencePartInternal(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of correspondencePartInternal to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "CorrespondencePartInternal",
                     value = "Incoming correspondencePartInternal object",
                     required = true)
