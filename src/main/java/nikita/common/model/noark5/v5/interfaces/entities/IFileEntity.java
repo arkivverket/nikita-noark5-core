@@ -14,7 +14,7 @@ public interface IFileEntity
 
     void setFileId(String fileId);
 
-    String getOfficialTitle();
+    String getPublicTitle();
 
-    void setOfficialTitle(String officialTitle);
+    void setPublicTitle(String publicTitle);
 }

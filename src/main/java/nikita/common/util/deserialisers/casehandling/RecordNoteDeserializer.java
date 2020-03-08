@@ -69,10 +69,10 @@ public class RecordNoteDeserializer
             recordNote.setTitle(currentNode.textValue());
             objectNode.remove(TITLE);
         }
-        // Deserialize  officialTitle
+        // Deserialize  publicTitle
         currentNode = objectNode.get(FILE_PUBLIC_TITLE);
         if (null != currentNode) {
-            recordNote.setOfficialTitle(currentNode.textValue());
+            recordNote.setPublicTitle(currentNode.textValue());
             objectNode.remove(FILE_PUBLIC_TITLE);
         }
         // Deserialize description

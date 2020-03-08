@@ -28,9 +28,9 @@ public interface IRecordEntity
 
     void setTitle(String title);
 
-    String getOfficialTitle();
+    String getPublicTitle();
 
-    void setOfficialTitle(String officialTitle);
+    void setPublicTitle(String publicTitle);
 
     String getDescription();
 

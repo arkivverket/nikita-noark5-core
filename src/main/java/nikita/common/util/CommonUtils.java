@@ -1728,7 +1728,7 @@ public final class CommonUtils {
                 printStorageLocation(jgen, file);
                 printNullable(jgen, FILE_ID, file.getFileId());
                 printTitleAndDescription(jgen, file);
-                printNullable(jgen, FILE_PUBLIC_TITLE, file.getOfficialTitle());
+                printNullable(jgen, FILE_PUBLIC_TITLE, file.getPublicTitle());
             }
 
             public static void printCaseFileEntity(JsonGenerator jgen,
@@ -1816,7 +1816,7 @@ public final class CommonUtils {
                                   record.getRecordId());
                     printTitleAndDescription(jgen, record);
                     printNullable(jgen, FILE_PUBLIC_TITLE,
-                                  record.getOfficialTitle());
+                                  record.getPublicTitle());
                 }
             }
 
