@@ -30,7 +30,6 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printCode;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
 
-
 /**
  * Created by tsodring on 2/9/17.
  */
@@ -106,9 +105,9 @@ public class HateoasSerializer
                         // hateoas links generator)
                         HateoasHandler handler =
                                 packer.using().getConstructor().newInstance();
-
-                        // Set the values for outgoing address (localhost,
-                        // X-Forwarded-*)
+                        
+                        // Set the values for outgoing address (localhost, or
+                        // from X-Forwarded-*)
                         handler.setPublicAddress(getAddress());
                         handler.setContextPath(getContextPath());
 
@@ -181,7 +180,6 @@ public class HateoasSerializer
             jgen.writeNumberField(fieldName, value);
     }
 
-    @Deprecated
     protected void printNullableMetadataCode
             (JsonGenerator jgen, String fieldName, String code, String codeName)
             throws IOException {
@@ -247,7 +245,6 @@ public class HateoasSerializer
         jgen.writeNumberField(fieldName, value);
     }
 
-    @Deprecated
     protected void printMetadataCode(JsonGenerator jgen, String fieldName,
                                      String code, String codeName)
             throws IOException {
@@ -280,11 +277,27 @@ public class HateoasSerializer
         }
     }
 
+    /**
+     * Get the context path.
+     *
+     * @return the context path
+     */
     protected String getContextPath() {
         HttpServletRequest request = getRequest();
         return request.getContextPath();
     }
 
+    /**
+     * Get the outgoing URL to use. If we are running from localhost, it will
+     * return http://localhost:8292. If we are running with forwarding from a
+     * web server it will return e.g. https://nikita.oslomet.no
+     * <p>
+     * First attempt to see if we are running behind a web server, retrieving
+     * X-Forwarded-* values. If these are null just use the values from the
+     * incoming request.
+     *
+     * @return the URL to use for outgoing links
+     */
     protected String getAddress() {
         HttpServletRequest request = getRequest();
         String address = request.getHeader("X-Forwarded-Host");
