@@ -691,10 +691,6 @@ public class InternalNameTranslator {
                         POST_CODE_ENG,
                         POST_CODE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (PRECEDENCE_APPROVED_BY,
-                        PRECEDENCE_APPROVED_BY_ENG,
-                        PRECEDENCE_APPROVED_BY_ENG_OBJECT);
-        addNorToEnglishNameMap
                 (PRECEDENCE_APPROVED_DATE,
                         PRECEDENCE_APPROVED_DATE_ENG,
                         PRECEDENCE_APPROVED_DATE_ENG_OBJECT);
@@ -711,13 +707,17 @@ public class InternalNameTranslator {
                         PRECEDENCE_ENG,
                         PRECEDENCE_ENG_OBJECT);
         addNorToEnglishNameMap
+                (PRECEDENCE_PRECEDENCE_STATUS,
+                        PRECEDENCE_PRECEDENCE_STATUS_ENG,
+                        PRECEDENCE_PRECEDENCE_STATUS_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (PRECEDENCE_REFERENCE_APPROVED_BY,
+                        PRECEDENCE_REFERENCE_APPROVED_BY_ENG,
+                        PRECEDENCE_REFERENCE_APPROVED_BY_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (PRECEDENCE_SOURCE_OF_LAW,
                         PRECEDENCE_SOURCE_OF_LAW_ENG,
                         PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT);
-        addNorToEnglishNameMap
-                (PRECEDENCE_STATUS,
-                        PRECEDENCE_STATUS_ENG,
-                        PRECEDENCE_STATUS_ENG_OBJECT);
         addNorToEnglishNameMap
                 (RECORD_ARCHIVED_BY, RECORD_ARCHIVED_BY_ENG,
                         RECORD_ARCHIVED_BY_ENG_OBJECT);
@@ -802,9 +802,9 @@ public class InternalNameTranslator {
                         SCREENING_AUTHORITY_ENG,
                         SCREENING_AUTHORITY_ENG_OBJECT);
         addNorToEnglishNameMap
-                (SCREENING_DOCUMENT,
-                        SCREENING_DOCUMENT_ENG,
-                        SCREENING_DOCUMENT_ENG_OBJECT);
+                (SCREENING_SCREENING_DOCUMENT,
+                        SCREENING_SCREENING_DOCUMENT_ENG,
+                        SCREENING_SCREENING_DOCUMENT_ENG_OBJECT);
         addNorToEnglishNameMap
                 (SCREENING_DURATION,
                         SCREENING_DURATION_ENG,
@@ -814,9 +814,9 @@ public class InternalNameTranslator {
                         SCREENING_EXPIRES_DATE_ENG,
                         SCREENING_EXPIRES_DATE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (SCREENING_METADATA,
-                        SCREENING_METADATA_ENG,
-                        SCREENING_METADATA_ENG_OBJECT);
+                (SCREENING_SCREENING_METADATA,
+                        SCREENING_SCREENING_METADATA_ENG,
+                        SCREENING_SCREENING_METADATA_ENG_OBJECT);
         addNorToEnglishNameMap
                 (SECONDARY_CLASSIFICATION_SYSTEM,
                         SECONDARY_CLASSIFICATION_SYSTEM_ENG,

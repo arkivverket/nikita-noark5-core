@@ -4,7 +4,7 @@ var postliste = app.controller('PostlisteController', ['$scope', '$http', functi
   // FIXME find href for rel
   // 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/'
   // dynamically
-  url = base_url + "/hateoas-api/arkivstruktur/arkiv";
+  url = base_url + "/api/arkivstruktur/arkiv";
   token = GetUserToken();
   $http({
     method: 'GET',

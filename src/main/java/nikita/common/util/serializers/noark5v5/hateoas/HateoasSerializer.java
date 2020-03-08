@@ -67,11 +67,11 @@ public class HateoasSerializer
 
             for (INoarkEntity entity : list) {
                 if (!hateoasObject.isSingleEntity()) {
-                    /*
-                     * Use HateoasHandler for the leaf class, not the
-                     * base class, to ensure all _links entries for
-                     * the leaf class show up in the list
-                     */
+		    /*
+		     * Use HateoasHandler for the leaf class, not the
+		     * base class, to ensure all _links entries for
+		     * the leaf class show up in the list
+		     */
                     HateoasNoarkObject noarkObject;
                     try {
 
@@ -81,49 +81,36 @@ public class HateoasSerializer
                         HateoasObject individualHateoasObject =
                                 cls.getAnnotation(HateoasObject.class);
 
-                        // If the class we require is missing a HateoasPacker
-                        // annotation, it is not possible to continue. This
-                        // should never happen, as all classes have a annotation
-                        // but new classes introduced into the domain model over
-                        // time may be missing the annotation
+                        // Temp, allow Nullpointer to be taken by catch below
                         if (null == packer || null == individualHateoasObject) {
-                            String errorMessage = "Internal misconfiguration" +
-                                    ": Missing annotations for " +
-                                    entity.getClass().getSimpleName();
-                            logger.error(errorMessage);
-                            throw new NikitaMisconfigurationException(
-                                    errorMessage);
+                            logger.error("Internal misconfiguration: Missing " +
+                                    "annontations for " + entity.getClass()
+                                    .getSimpleName());
                         }
 
-                        // Create an instance of the HateoasObject
                         noarkObject = individualHateoasObject
                                 .using()
                                 .getDeclaredConstructor(
                                         INoarkEntity.class)
                                 .newInstance(entity);
-
-                        // Create an instance of the HateoasHandler (
-                        // hateoas links generator)
                         HateoasHandler handler =
                                 packer.using().getConstructor().newInstance();
 
-                        // Set the values for outgoing address (localhost,
-                        // X-Forwarded-*)
                         handler.setPublicAddress(getAddress());
                         handler.setContextPath(getContextPath());
-
-                        // Add the hateoas links
                         handler.addLinks(noarkObject, new Authorisation());
                     } catch (Exception e) {
-                        String errorMessage = "Introspection failed while " +
-                                "serialising list, using base HateoasHandler." +
-                                " (" + e.getMessage() + ")";
-                        logger.error(errorMessage);
-                        throw new NikitaMisconfigurationException(
-                                errorMessage);
+                        String err = "Introspection failed while serialising" +
+                                " list, " +
+                                "using base HateoasHandler. (";
+                        err += e.getMessage();
+                        err += ")";
+                        logger.error(err);
+                        noarkObject = hateoasObject;
                     }
                     serializeNoarkEntity(entity, noarkObject, jgen);
                 } else {
+
                     serializeNoarkEntity(entity, hateoasObject, jgen);
                 }
             }
@@ -181,8 +168,9 @@ public class HateoasSerializer
             jgen.writeNumberField(fieldName, value);
     }
 
+    @Deprecated
     protected void printNullableMetadataCode
-            (JsonGenerator jgen, String fieldName, String code, String codeName)
+        (JsonGenerator jgen, String fieldName, String code, String codeName)
             throws IOException {
         if (null != code) {
             jgen.writeObjectFieldStart(fieldName);
@@ -192,7 +180,7 @@ public class HateoasSerializer
     }
 
     protected void printNullableMetadata
-            (JsonGenerator jgen, String fieldName, IMetadataEntity m)
+        (JsonGenerator jgen, String fieldName, IMetadataEntity m)
             throws IOException {
         if (null != m && null != m.getCode()) {
             jgen.writeObjectFieldStart(fieldName);
@@ -209,10 +197,10 @@ public class HateoasSerializer
     }
 
     protected void printNullableDateTime(JsonGenerator jgen,
-                                         String fieldName, OffsetDateTime value)
+				 String fieldName, OffsetDateTime value)
             throws IOException {
         if (null != value)
-            jgen.writeStringField(fieldName, Serialize.formatDateTime(value));
+	    jgen.writeStringField(fieldName, Serialize.formatDateTime(value));
     }
 
     /**
@@ -246,6 +234,7 @@ public class HateoasSerializer
         jgen.writeNumberField(fieldName, value);
     }
 
+    @Deprecated
     protected void printMetadataCode(JsonGenerator jgen, String fieldName,
                                      String code, String codeName)
             throws IOException {
@@ -256,14 +245,14 @@ public class HateoasSerializer
     }
 
     protected void printDate(JsonGenerator jgen,
-                             String fieldName, OffsetDateTime value)
+			      String fieldName, OffsetDateTime value)
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeStringField(fieldName, Serialize.formatDate(value));
     }
 
     protected void printDateTime(JsonGenerator jgen,
-                                 String fieldName, OffsetDateTime value)
+				 String fieldName, OffsetDateTime value)
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeStringField(fieldName, Serialize.formatDateTime(value));
@@ -288,6 +277,7 @@ public class HateoasSerializer
         String address = request.getHeader("X-Forwarded-Host");
         String scheme = request.getHeader("X-Forwarded-Proto");
         String port = request.getHeader("X-Forwarded-Port");
+
 
         if (address == null && scheme == null) {
             scheme = request.getScheme();

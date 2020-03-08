@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
@@ -63,7 +62,7 @@ public class RecordNoteHateoasController
     public ResponseEntity<DocumentFlowHateoas>
     createDocumentFlowAssociatedWithRecordNote(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                       value = "systemID of registry entry to associate the document flow with.",
                       required = true)
             @PathVariable String systemID,
@@ -93,10 +92,10 @@ public class RecordNoteHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<RecordNoteHateoas> findRecordNoteBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the recordNote to retrieve",
                     required = true)
-            @PathVariable("systemID") final String recordNoteSystemId) {
+            @PathVariable(SYSTEM_ID) final String recordNoteSystemId) {
         return recordNoteService.findBySystemId(recordNoteSystemId);
     }
 
@@ -133,10 +132,10 @@ public class RecordNoteHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_FLOW)
     public ResponseEntity<DocumentFlowHateoas> findAllDocumentFlowAssociatedWithRecordNote(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the file to retrieve associated RecordNote",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(recordNoteService.
@@ -159,10 +158,10 @@ public class RecordNoteHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_FLOW)
     public ResponseEntity<DocumentFlowHateoas> createDefaultDocumentFlow(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                       value = "systemID of the recordNote",
                       required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordNoteService.
@@ -172,10 +171,10 @@ public class RecordNoteHateoasController
     // Delete a Record identified by systemID
     // DELETE [contextPath][api]/casehandling/arkivnotat/{systemId}/
     @ApiOperation(value = "Deletes a single RecordNote entity identified by " +
-            "systemID", response = String.class)
+            SYSTEM_ID, response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "RecordNote deleted",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -184,21 +183,21 @@ public class RecordNoteHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<Count> deleteRecordNoteBySystemId(
-            @ApiParam(name = "systemID",
+    public ResponseEntity<String> deleteRecordNoteBySystemId(
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the recordNote to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return recordNoteService.deleteEntity(systemID);
     }
 
     // Delete all RecordNote
     // DELETE [contextPath][api]/arkivstruktur/arkivnotat/
     @ApiOperation(value = "Deletes all RecordNote belonging to the logged in " +
-            "user", response = Count.class)
+            "user", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all RecordNotes",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -207,7 +206,7 @@ public class RecordNoteHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllRecordNote() {
+    public ResponseEntity<String> deleteAllRecordNote() {
         return recordNoteService.deleteAllByOwnedBy();
     }
 
@@ -232,10 +231,10 @@ public class RecordNoteHateoasController
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordNoteHateoas> updateRecordNote(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of recordNote to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "RecordNote",
                     value = "Incoming recordNote object",
                     required = true)

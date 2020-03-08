@@ -16,7 +16,7 @@ public interface IMetadataService {
      * @param code The code of the metadata object to delete
      * @return empty response, but 206 No contet
      */
-    ResponseEntity<Void> deleteMetadataEntity(@NotNull final String code);
+    ResponseEntity<String> deleteMetadataEntity(@NotNull final String code);
 
     /**
      * Find a valid metadata object by entity type and check that the (code,

@@ -37,7 +37,7 @@ public final class Constants {
     public static final String ROLE_GUEST = "GUEST";
 
     // Names of APIs that the core supports
-    public static final String HATEOAS_API_PATH = "hateoas-api";
+    public static final String HATEOAS_API_PATH = "api";
 
     public static final String SLASH = "/";
     public static final String LEFT_PARENTHESIS = "{";
@@ -47,6 +47,8 @@ public final class Constants {
 
     public static final String NEW_ANYTHING = NEW + DASH + "**";
     public static final String ANYTHING = "*";
+
+    public static final String DELETE_RESPONSE = "{}";
 
     // Create for new arkivstruktur objects
     public static final String NEW_FONDS = NEW + DASH + FONDS;
@@ -977,6 +979,9 @@ public final class Constants {
             "document_flow_registry_entry_id";
     public static final String DOCUMENT_FLOW_RECORD_NOTE_ID =
             "document_flow_record_note_id";
+
+    public static final String PRECEDENCE_APPROVED_BY_ID =
+            "precedence_approved_by_id";
 
     public static final String RECORD_FILE_ID = "record_file_id";
     public static final String RECORD_CLASS_ID = "record_class_id";

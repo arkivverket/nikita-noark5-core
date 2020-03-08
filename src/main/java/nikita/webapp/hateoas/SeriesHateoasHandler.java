@@ -80,7 +80,7 @@ public class SeriesHateoasHandler
      * associated successor. In the example below 5431 is the systemID of the
      * successor Series object.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkivdel/5431"
+     * "../api/arkivstruktur/arkivdel/5431"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/nestearkivdel/"
      *
      * @param entity             series
@@ -103,7 +103,7 @@ public class SeriesHateoasHandler
      * associated precursor. In the example below 2345 is the systemID of the
      * precursor Series object.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkivdel/2345"
+     * "../api/arkivstruktur/arkivdel/2345"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/forrigearkivdel/"
      *
      * @param entity             series
@@ -221,7 +221,7 @@ public class SeriesHateoasHandler
      * Fonds. Note as this has to exist, we return a link to the actual parent
      * identified by its systemId
      * <p>
-     * "../hateoas-api/arkivstruktur/arkiv/1234"
+     * "../api/arkivstruktur/arkiv/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/"
      *
      * @param entity             series

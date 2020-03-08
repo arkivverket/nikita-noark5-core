@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.repository.nikita.IUserRepository;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -233,6 +234,22 @@ public class UserService
     @Override
     public long deleteByUsername(String username) {
         return userRepository.deleteByUsername(username);
+    }
+
+    @Override
+    public User validateUserReference
+        (String type, User user, String username, UUID systemID) {
+        if (null == user && null != systemID) {
+            user = userGetBySystemId(systemID);
+        }
+        if (null != user &&
+             ( user.getUsername() != username
+               || user.getId() != systemID)) {
+            String info = "Inconsistent " + type + " values rejected. ";
+            throw new NikitaMalformedInputDataException(info);
+        }
+        // The values are consistent, return existing user
+        return user;
     }
 
     /**

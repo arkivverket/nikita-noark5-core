@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IRegistryEntryEntity;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.model.noark5.v5.secondary.ElectronicSignature;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.deserialisers.casehandling.RegistryEntryDeserializer;
 import nikita.webapp.hateoas.casehandling.RegistryEntryHateoasHandler;

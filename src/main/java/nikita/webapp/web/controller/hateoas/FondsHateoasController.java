@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.Series;
@@ -13,7 +12,6 @@ import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.application.FondsStructureDetails;
 import nikita.webapp.service.interfaces.IFondsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -123,11 +121,11 @@ public class FondsHateoasController
                  consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsHateoas> createFondsAssociatedWithFonds(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of parent fonds to associate the fonds " +
                             "with.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "fonds",
                     value = "Incoming fonds object",
                     required = true)
@@ -187,10 +185,10 @@ public class FondsHateoasController
     public ResponseEntity<SeriesHateoas> createSeriesAssociatedWithFonds(
             HttpServletRequest request,
             @ApiParam(
-                    name = "systemID",
+                    name = SYSTEM_ID,
                     value = "systemId of fonds to associate the series with.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(
                     name = "series",
                     value = "Incoming series object",
@@ -252,10 +250,10 @@ public class FondsHateoasController
     createFondsCreatorAssociatedWithFonds(
             HttpServletRequest request,
             @ApiParam(
-                    name = "systemID",
+                    name = SYSTEM_ID,
                     value = "systemId of fonds to associate the series with.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(
                     name = "fondsCreator",
                     value = "Incoming fondsCreator object",
@@ -295,10 +293,10 @@ public class FondsHateoasController
     @GetMapping(value = FONDS + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<FondsHateoas> findOne(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of fonds to retrieve.",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         FondsHateoas fondsHateoas = fondsService.findSingleFonds(systemID);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -332,10 +330,10 @@ public class FondsHateoasController
     public ResponseEntity<SeriesHateoas> createDefaultSeries(
             HttpServletRequest request,
             @ApiParam(
-                    name = "systemID",
+                    name = SYSTEM_ID,
                     value = "systemId of fonds to associate Series with.",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.generateDefaultSeries(systemID));
@@ -364,11 +362,11 @@ public class FondsHateoasController
     public ResponseEntity<FondsCreatorHateoas>
     findFondsCreatorAssociatedWithFonds(
             @ApiParam(
-                    name = "systemID",
+                    name = SYSTEM_ID,
                     value = "systemId of fonds you want retrieve associated " +
                             "FondsCreator objects for.",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return fondsService.findFondsCreatorAssociatedWithFonds(systemID);
     }
 
@@ -396,11 +394,11 @@ public class FondsHateoasController
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithFonds(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of Fonds that has Series associated " +
                             "with it.",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -425,7 +423,7 @@ public class FondsHateoasController
     @GetMapping(value = FONDS + SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_FONDS)
     public ResponseEntity<FondsHateoas> findAllSubFondsAssociatedWithFonds(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                       value = "systemId of parent Fonds",
                       required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
@@ -504,10 +502,10 @@ public class FondsHateoasController
                          FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FONDS})
     public ResponseEntity<FondsHateoas> getSubFondsTemplate(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of fonds to associate the series with.",
                     required = true)
-            @PathVariable("systemID") String systemID
+            @PathVariable(SYSTEM_ID) String systemID
     ) throws NikitaException {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -584,10 +582,10 @@ public class FondsHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FondsHateoas> updateFonds(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of fonds to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "fonds",
                     value = "Incoming fonds object",
                     required = true)
@@ -608,12 +606,12 @@ public class FondsHateoasController
     // DELETE [contextPath][api]/arkivstruktur/arkiv/{systemId}/
     @ApiOperation(
             value = "Deletes a single Fonds entity identified by systemID",
-            response = FondsStructureDetails.class)
+            response = String.class)
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "Parent ApplicationDetails returned",
-                    response = FondsStructureDetails.class),
+                    code = 204,
+                    message = "Fonds deleted",
+                    response = String.class),
             @ApiResponse(
                     code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -626,27 +624,21 @@ public class FondsHateoasController
     @Counted
     @DeleteMapping(value = FONDS + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteFondsBySystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the series to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
-        // TODO: When dealing with a fonds, if you have a parent fonds, then
-        // you must return the parent fonds but if you don't have a parent
-        // fonds you must return an applicationdetails. The only way to handle
-        // this is a little mesy, but probably just create the JSON manually
-        // here and return it as type string
+            @PathVariable(SYSTEM_ID) final String systemID) {
         fondsService.deleteEntity(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
-
 
     // Delete all Fonds
     // DELETE [contextPath][api]/arkivstruktur/arkiv/
-    @ApiOperation(value = "Deletes all Fonds", response = Count.class)
+    @ApiOperation(value = "Deletes all Fonds", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all Fonds",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -655,8 +647,9 @@ public class FondsHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(FONDS)
-    public ResponseEntity<Count> deleteAllFonds() {
+    public ResponseEntity<String> deleteAllFonds() {
+        fondsService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(fondsService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 }

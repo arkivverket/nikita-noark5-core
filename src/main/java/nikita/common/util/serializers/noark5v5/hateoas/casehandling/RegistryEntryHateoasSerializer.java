@@ -43,13 +43,6 @@ public class RegistryEntryHateoasSerializer
         printRecordNoteEntity(jgen, registryEntry);
         printRegistryEntryEntity(jgen, registryEntry);
 
-        /*
-        TODO: Temp disabled!
-        printCorrespondencePartPersons(jgen, registryEntry);
-        printCorrespondencePartUnits(jgen, registryEntry);
-        printCorrespondencePartInternals(jgen, registryEntry);
-        */
-        //printPrecedence(jgen, registryEntry);
         printElectronicSignature(jgen, registryEntry);
         printHateoasLinks(jgen, registryEntryHateoas.getLinks(registryEntry));
         jgen.writeEndObject();

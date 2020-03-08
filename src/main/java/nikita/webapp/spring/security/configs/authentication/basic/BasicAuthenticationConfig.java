@@ -65,7 +65,7 @@ public class BasicAuthenticationConfig
                 // POST GET [api]/arkivstruktur/ny-*, need admin
                 .antMatchers(HttpMethod.POST, PATTERN_NEW_FONDS_STRUCTURE_ALL).hasAuthority(ROLE_RECORDS_MANAGER)
                 .antMatchers(HttpMethod.GET, PATTERN_NEW_FONDS_STRUCTURE_ALL).hasAuthority(ROLE_RECORDS_MANAGER)
-                .antMatchers(HttpMethod.OPTIONS, "/noark5v5/hateoas-api/arkivstruktur/ny-arkivskaper").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/noark5v5/api/arkivstruktur/ny-arkivskaper").permitAll()
                 // POST PUT PATCH [api]/arkivstruktur/**, need admin
                 .antMatchers(HttpMethod.PUT, FONDS + SLASH + "**").hasAuthority(ROLE_RECORDS_MANAGER)
                 .antMatchers(HttpMethod.PATCH, FONDS + SLASH + "**").hasAuthority(ROLE_RECORDS_MANAGER)

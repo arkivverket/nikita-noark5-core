@@ -51,10 +51,10 @@ public class AuthorHateoasController
     @GetMapping(value = AUTHOR + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<AuthorHateoas> findAuthorBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the Author to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         AuthorHateoas authorHateoas = authorService.findBySystemId(systemId);
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -80,10 +80,10 @@ public class AuthorHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<AuthorHateoas> updateAuthorBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of Author to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "Author",
                     value = "Incoming Author object",
                     required = true)
@@ -99,7 +99,7 @@ public class AuthorHateoasController
     // DELETE [contextPath][api]/arkivstruktur/forfatter/{systemID}/
     @ApiOperation(value = "Deletes a single Author entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Author deleted"),
+            @ApiResponse(code = 204, message = "Author deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -111,7 +111,7 @@ public class AuthorHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         authorService.deleteAuthorBySystemId(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

@@ -166,7 +166,7 @@ public class MetadataService
      * @return nothing, but set the status to 204 No Content
      */
     @Override
-    public ResponseEntity<Void> deleteMetadataEntity(
+    public ResponseEntity<String> deleteMetadataEntity(
             @NotNull final String code) {
         String entityType = getEntityTypeFromRequest();
         IMetadataRepository metadataRepository =
@@ -175,7 +175,7 @@ public class MetadataService
         if (metadata != null) {
             metadataRepository.delete(metadata);
             return ResponseEntity.status(NO_CONTENT)
-                    .body(null);
+                    .body(DELETE_RESPONSE);
         }
         String errorMessage = METADATA_ENTITY_MISSING + entityType;
         logger.error(errorMessage);

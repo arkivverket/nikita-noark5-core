@@ -55,7 +55,7 @@ public class AuthorHateoasHandler
      * Create a REL/HREF pair for the parent Record associated with the given
      * Author
      * <p>
-     * "../hateoas-api/arkivstruktur/registrering/1234"
+     * "../api/arkivstruktur/registrering/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/registrering/"
      *
      * @param author             Author
@@ -74,7 +74,7 @@ public class AuthorHateoasHandler
      * Create a REL/HREF pair for the parent DocumentDescription associated
      * with the given Author
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234"
+     * "../api/arkivstruktur/dokumentbeskrivelse/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/dokumentbeskrivelse/"
      *
      * @param author             The Author object

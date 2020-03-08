@@ -1,6 +1,5 @@
 package nikita.webapp.web.controller.hateoas.odata;
 
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import org.slf4j.Logger;
@@ -32,7 +31,7 @@ import static nikita.common.config.ODataConstants.*;
  * <p>
  * The basic idea is that the e.g. the following request:
  * <p>
- * http://localhost:8092/noark5v4/hateoas-api/arkivstruktur/arkiv?%24filter
+ * http://localhost:8092/noark5v4/api/arkivstruktur/arkiv?%24filter
  * =contains%28tittel%2C%20%27bravo%27%29
  * <p>
  * is converted to:
@@ -237,7 +236,7 @@ public class ODataController {
     @SuppressWarnings("unused")
     @DeleteMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "/**",
             params = "!" + DOLLAR_ID)
-    public ResponseEntity<Count>
+    public ResponseEntity<String>
     deleteViaOData(HttpServletRequest request,
                    @RequestParam(value = DOLLAR_FILTER, required = false)
                            String filter,

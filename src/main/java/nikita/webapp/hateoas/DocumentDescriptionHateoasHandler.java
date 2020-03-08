@@ -61,7 +61,7 @@ public class DocumentDescriptionHateoasHandler
      * Create a REL/HREF pair for the parent Record associated
      * with the given DocumentDescription
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/registrering"
+     * "../api/arkivstruktur/dokumentbeskrivelse/1234/registrering"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/registrering/"
      *
      * @param entity             documentDescription
@@ -135,7 +135,7 @@ public class DocumentDescriptionHateoasHandler
      * Create a REL/HREF pair for the list of Part objects associated with the
      * given DocumentDescription.
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/part"
+     * "../api/arkivstruktur/dokumentbeskrivelse/1234/part"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/part/"
      *
      * @param entity             documentDescription
@@ -169,7 +169,7 @@ public class DocumentDescriptionHateoasHandler
      * Create a REL/HREF pair to get the list of Author objects associated with
      * the given DocumentDescription.
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/forfatter"
+     * "../api/arkivstruktur/dokumentbeskrivelse/1234/forfatter"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/forfatter/"
      *
      * @param entity             documentDescription
@@ -187,7 +187,7 @@ public class DocumentDescriptionHateoasHandler
      * Create a REL/HREF pair to create a new Author object associated with
      * the given DocumentDescription.
      * <p>
-     * "../hateoas-api/arkivstruktur/dokumentbeskrivelse/1234/ny-forfatter"
+     * "../api/arkivstruktur/dokumentbeskrivelse/1234/ny-forfatter"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-forfatter/"
      *
      * @param entity             documentDescription

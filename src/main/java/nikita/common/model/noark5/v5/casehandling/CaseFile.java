@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.ICaseFileEntity;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.util.deserialisers.casehandling.CaseFileDeserializer;
 import nikita.webapp.hateoas.casehandling.CaseFileHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;

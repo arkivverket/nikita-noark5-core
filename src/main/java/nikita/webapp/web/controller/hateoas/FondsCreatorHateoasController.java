@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
@@ -116,7 +115,7 @@ public class FondsCreatorHateoasController
             @ApiParam(name = "systemId",
                     value = "systemId of FondsCreator to associate the Fonds with.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "fonds",
                     value = "Incoming fonds object",
                     required = true)
@@ -148,7 +147,7 @@ public class FondsCreatorHateoasController
                                                        @ApiParam(name = "systemId",
                                                                value = "systemId of FondsCreator to retrieve.",
                                                                required = true)
-                                                       @PathVariable("systemID") final String fondsCreatorSystemId) {
+                                                       @PathVariable(SYSTEM_ID) final String fondsCreatorSystemId) {
         FondsCreator fondsCreator = fondsCreatorService.findBySystemId(fondsCreatorSystemId);
         if (fondsCreator == null) {
             throw new NoarkEntityNotFoundException("Could not find FondsCreator object with systemID " +
@@ -216,7 +215,7 @@ public class FondsCreatorHateoasController
                                                                   @ApiParam(name = "systemId",
                                                                           value = "systemId of FondsCreator to retrieve.",
                                                                           required = true)
-                                                                      @PathVariable("systemID") final String systemID) {
+                                                                      @PathVariable(SYSTEM_ID) final String systemID) {
         FondsCreator createdFonds = fondsCreatorService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)),
                 fondsCreator);
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, createdFonds));
@@ -274,50 +273,51 @@ public class FondsCreatorHateoasController
     @Counted
     @GetMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER + SLASH + FONDS)
     public ResponseEntity<FondsHateoas> findParentFondsAssociatedWithSeries(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the Series ",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return fondsCreatorService.findFondsAssociatedWithFondsCreator(systemID);
     }
 
     // Delete a FondsCreator identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/arkivskaper/{systemId}/
-    @ApiOperation(value = "Deletes a single FondsCreator entity identified by systemID", response = FondsHateoas.class)
+    @ApiOperation(value = "Deletes a single FondsCreator entity identified by" +
+            " systemID", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Parent Fonds returned", response = FondsHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204,
+                    message = "FondsCreator deleted",
+                    response = String.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
-
     @DeleteMapping(value = FONDS_CREATOR + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteSeriesBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the fondsCreator to delete",
                     required = true)
-            @PathVariable("systemID") final String seriesSystemId) {
+            @PathVariable(SYSTEM_ID) final String seriesSystemId) {
 
-        FondsCreator fondsCreator = fondsCreatorService.findBySystemId(seriesSystemId);
+        FondsCreator fondsCreator = fondsCreatorService
+                .findBySystemId(seriesSystemId);
         fondsCreatorService.deleteEntity(seriesSystemId);
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityDeletedEvent(this, fondsCreator));
-/*        List<Fonds> fonds = new List<>();
-        fonds.addAll(fondsCreator.getReferenceFonds());
-        FondsHateoas fondsHateoas = new FondsHateoas((List<INoarkEntity>) (List)fonds);
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-  */
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .body("{\"status\" : \"Success\"}");
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, fondsCreator));
+        return ResponseEntity.status(NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all FondsCreator
     // DELETE [contextPath][api]/arkivstruktur/arkivskaper/
-    @ApiOperation(value = "Deletes all FondsCreator", response = Count.class)
+    @ApiOperation(value = "Deletes all FondsCreator", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all FondsCreator",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -326,8 +326,9 @@ public class FondsCreatorHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = FONDS_CREATOR)
-    public ResponseEntity<Count> deleteAllFondsCreator() {
+    public ResponseEntity<String> deleteAllFondsCreator() {
+        fondsCreatorService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(fondsCreatorService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 }

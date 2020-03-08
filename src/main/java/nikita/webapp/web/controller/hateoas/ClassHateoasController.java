@@ -5,12 +5,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.nikita.Count;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
+import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.ICaseFileService;
@@ -86,7 +88,7 @@ public class ClassHateoasController
     public ResponseEntity<ClassHateoas>
     createClassAssociatedWithClass(
             HttpServletRequest request,
-            @ApiParam(name = "systemID", value = "systemID of class to " +
+            @ApiParam(name = SYSTEM_ID, value = "systemID of class to " +
                     "associate the klass with.",
                     required = true)
             @PathVariable String systemID,
@@ -255,7 +257,7 @@ public class ClassHateoasController
             @ApiParam(name = "systemId",
                     value = "systemId of class to retrieve.",
                     required = true)
-            @PathVariable("systemID") final String classSystemId) {
+            @PathVariable(SYSTEM_ID) final String classSystemId) {
         ClassHateoas classHateoas = classService.findSingleClass(classSystemId);
         return ResponseEntity.status(OK)
                 .eTag(classHateoas.getEntityVersion().toString())
@@ -304,7 +306,7 @@ public class ClassHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_CLASS)
     public ResponseEntity<ClassHateoas> findAllChildrenClass(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                       value = "systemId of parent Class",
                       required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
@@ -335,10 +337,10 @@ public class ClassHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASSIFICATION_SYSTEM)
     public ResponseEntity<ClassificationSystemHateoas>
     findParentClassificationSystemByFileSystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the classificationSystem to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return classService.findClassificationSystemAssociatedWithClass(
                 systemID);
     }
@@ -361,10 +363,10 @@ public class ClassHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASS)
     public ResponseEntity<ClassHateoas> findParentClassByClassSystemId(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the class to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return classService.findClassAssociatedWithClass(systemID);
     }
     
@@ -391,10 +393,10 @@ public class ClassHateoasController
     public ResponseEntity<ClassHateoas> createDefaultClass(
             HttpServletRequest request,
             @ApiParam(
-                    name = "systemID",
+                    name = SYSTEM_ID,
                     value = "systemId of Class to associate Class with.",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classService.generateDefaultSubClass(systemID));
@@ -469,10 +471,10 @@ public class ClassHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + RECORD)
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithClass(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the class to find associated records",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return classService.findAllRecordAssociatedWithClass(systemID);
     }
 
@@ -493,22 +495,21 @@ public class ClassHateoasController
     @Counted
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE)
     public ResponseEntity<FileHateoas> findAllFileAssociatedWithClass(
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the class to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         return classService.findAllFileAssociatedWithClass(systemID);
     }
 
     // Delete a Class identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/klasse/{systemId}/
     @ApiOperation(value = "Deletes a single Class entity identified by systemID",
-            response = HateoasNoarkObject.class)
+            response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Parent entity (ClassificationSystem or Class) " +
-                            "returned",
-                    response = HateoasNoarkObject.class),
+            @ApiResponse(code = 204,
+                    message = "Class deleted",
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -519,21 +520,21 @@ public class ClassHateoasController
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteClass(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the class to delete",
                     required = true)
-            @PathVariable("systemID") final String systemID) {
+            @PathVariable(SYSTEM_ID) final String systemID) {
         classService.deleteEntity(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete all Class
     // DELETE [contextPath][api]/arkivstruktur/klasse/
-    @ApiOperation(value = "Deletes all Class", response = Count.class)
+    @ApiOperation(value = "Deletes all Class", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted all Class",
-                    response = Count.class),
+                    response = String.class),
             @ApiResponse(code = 401,
                     message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403,
@@ -542,9 +543,10 @@ public class ClassHateoasController
                     message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping
-    public ResponseEntity<Count> deleteAllClass() {
+    public ResponseEntity<String> deleteAllClass() {
+        classService.deleteAllByOwnedBy();
         return ResponseEntity.status(NO_CONTENT).
-                body(new Count(classService.deleteAllByOwnedBy()));
+                body(DELETE_RESPONSE);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -576,10 +578,10 @@ public class ClassHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas> updateClass(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of class to update.",
                     required = true)
-            @PathVariable("systemID") String systemID,
+            @PathVariable(SYSTEM_ID) String systemID,
             @ApiParam(name = "class",
                     value = "Incoming class object",
                     required = true)

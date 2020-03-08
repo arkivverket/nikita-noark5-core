@@ -9,12 +9,15 @@ import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.repository.n5v5.ICaseFileRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
@@ -23,7 +26,9 @@ import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
+import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -63,8 +68,10 @@ public class CaseFileService
     private ICaseFileRepository caseFileRepository;
     private ISequenceNumberGeneratorService numberGeneratorService;
     private IAdministrativeUnitService administrativeUnitService;
+    private IPrecedenceService precedenceService;
     private IUserRepository userRepository;
     private IMetadataService metadataService;
+    private IPrecedenceHateoasHandler precedenceHateoasHandler;
     private ICaseFileHateoasHandler caseFileHateoasHandler;
 
     public CaseFileService(
@@ -75,8 +82,10 @@ public class CaseFileService
             ICaseFileRepository caseFileRepository,
             ISequenceNumberGeneratorService numberGeneratorService,
             IAdministrativeUnitService administrativeUnitService,
+            IPrecedenceService precedenceService,
             IUserRepository userRepository,
             IMetadataService metadataService,
+            IPrecedenceHateoasHandler precedenceHateoasHandler,
             ICaseFileHateoasHandler caseFileHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.registryEntryService = registryEntryService;
@@ -84,9 +93,11 @@ public class CaseFileService
         this.caseFileRepository = caseFileRepository;
         this.numberGeneratorService = numberGeneratorService;
         this.administrativeUnitService = administrativeUnitService;
+        this.precedenceService = precedenceService;
         this.userRepository = userRepository;
         this.metadataService = metadataService;
         this.metadataService = metadataService;
+        this.precedenceHateoasHandler =  precedenceHateoasHandler;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
     }
 
@@ -137,6 +148,19 @@ public class CaseFileService
     }
 
     @Override
+    public PrecedenceHateoas findAllPrecedenceForCaseFile(
+            @NotNull final String systemID) {
+        CaseFile caseFile = getCaseFileOrThrow(systemID);
+        PrecedenceHateoas precedenceHateoas =
+                new PrecedenceHateoas((List<INoarkEntity>)
+                        (List) caseFile.getReferencePrecedence());
+        precedenceHateoasHandler
+            .addLinks(precedenceHateoas, new Authorisation());
+        setOutgoingRequestHeader(precedenceHateoas);
+        return precedenceHateoas;
+    }
+
+    @Override
     public ResponseEntity<RecordNoteHateoas> findAllRecordNoteToCaseFile(
             @NotNull final String caseFileSystemId) {
         return recordNoteService.findAllRecordNoteByCaseFile(
@@ -148,6 +172,17 @@ public class CaseFileService
             @NotNull final String caseFileSystemId) {
         return registryEntryService.findAllRegistryEntryByCaseFile(
                 getCaseFileOrThrow(caseFileSystemId));
+    }
+
+    @Override
+    public PrecedenceHateoas createPrecedenceAssociatedWithFile(
+            String caseFileSystemID, Precedence precedence) {
+
+        CaseFile caseFile = getCaseFileOrThrow(caseFileSystemID);
+        // bidirectional relationship @ManyToMany, set both sides of relationship
+        caseFile.getReferencePrecedence().add(precedence);
+        precedence.getReferenceCaseFile().add(caseFile);
+        return precedenceService.createNewPrecedence(precedence);
     }
 
     /**
@@ -233,6 +268,11 @@ public class CaseFileService
                 caseFileSystemId);
     }
 
+    @Override
+    public PrecedenceHateoas generateDefaultPrecedence(String systemID) {
+        return precedenceService.generateDefaultPrecedence();
+    }
+
     // All READ operations
     @Override
     public List<CaseFile> findCaseFileByOwnerPaginated(
@@ -302,7 +342,10 @@ public class CaseFileService
     // All DELETE operations
     @Override
     public void deleteEntity(@NotNull String caseFileSystemId) {
-        deleteEntity(getCaseFileOrThrow(caseFileSystemId));
+        CaseFile caseFile = getCaseFileOrThrow(caseFileSystemId);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, caseFile));
+        deleteEntity(caseFile);
     }
 
     /**

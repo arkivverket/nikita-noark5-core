@@ -4,11 +4,12 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.casehandling.Precedence;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
@@ -24,6 +25,7 @@ import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IDocumentFlowHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ISignOffHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
@@ -33,6 +35,7 @@ import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
+import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +80,7 @@ public class RegistryEntryService
     private IRegistryEntryRepository registryEntryRepository;
     private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
     private IDocumentFlowHateoasHandler documentFlowHateoasHandler;
+    private IPrecedenceHateoasHandler precedenceHateoasHandler;
     private ISignOffHateoasHandler signOffHateoasHandler;
     private ISequenceNumberGeneratorService numberGeneratorService;
     private ISignOffRepository signOffRepository;
@@ -93,6 +97,7 @@ public class RegistryEntryService
             IRegistryEntryRepository registryEntryRepository,
             IRegistryEntryHateoasHandler registryEntryHateoasHandler,
             IDocumentFlowHateoasHandler documentFlowHateoasHandler,
+            IPrecedenceHateoasHandler precedenceHateoasHandler,
             ISignOffHateoasHandler signOffHateoasHandler,
             ISequenceNumberGeneratorService numberGeneratorService,
             ISignOffRepository signOffRepository,
@@ -106,6 +111,7 @@ public class RegistryEntryService
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
         this.documentFlowHateoasHandler = documentFlowHateoasHandler;
+        this.precedenceHateoasHandler =  precedenceHateoasHandler;
         this.signOffHateoasHandler = signOffHateoasHandler;
         this.numberGeneratorService = numberGeneratorService;
         this.userRepository = userRepository;
@@ -138,6 +144,11 @@ public class RegistryEntryService
         return registryEntry;
     }
 
+
+    @Override
+    public PrecedenceHateoas generateDefaultPrecedence(String systemID) {
+        return precedenceService.generateDefaultPrecedence();
+    }
 
     @Override
     public DocumentFlowHateoas generateDefaultDocumentFlow(String systemID) {
@@ -320,6 +331,19 @@ public class RegistryEntryService
     }
 
     @Override
+    public PrecedenceHateoas findAllPrecedenceForRegistryEntry(
+            @NotNull final String systemID) {
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
+        PrecedenceHateoas precedenceHateoas =
+                new PrecedenceHateoas((List<INoarkEntity>)
+                        (List) registryEntry.getReferencePrecedence());
+        precedenceHateoasHandler.addLinks(precedenceHateoas,
+                                          new Authorisation());
+        setOutgoingRequestHeader(precedenceHateoas);
+        return precedenceHateoas;
+    }
+
+    @Override
     public SignOffHateoas
     findAllSignOffAssociatedWithRegistryEntry(String systemId) {
         SignOffHateoas signOffHateoas =
@@ -358,7 +382,7 @@ public class RegistryEntryService
     }
 
     @Override
-    public Precedence createPrecedenceAssociatedWithRecord(
+    public PrecedenceHateoas createPrecedenceAssociatedWithRecord(
             String registryEntrySystemID, Precedence precedence) {
 
         RegistryEntry registryEntry = getRegistryEntryOrThrow(
@@ -495,9 +519,12 @@ public class RegistryEntryService
      */
     @Override
     public void deleteEntity(@NotNull String registryEntrySystemId) {
-        deleteEntity(getRegistryEntryOrThrow(registryEntrySystemId));
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(
+                registryEntrySystemId);
+        deleteEntity(registryEntry);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, registryEntry));
     }
-
 
     /**
      * Delete all objects belonging to the user identified by ownedBy

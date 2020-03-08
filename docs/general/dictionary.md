@@ -28,6 +28,7 @@ concepts from Noark 5, as used by this project.
                 Mappetype  File Type
                   Merknad  Comment
                 Nøkkelord  Keyword
+         Offentlig tittel  Public Title
          Oppbevaringssted  Storage Location
                 Presedens  Precedence
              Registrering  Record

@@ -5,16 +5,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import nikita.common.model.noark5.v5.secondary.PartPerson;
-import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
+import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -57,10 +55,10 @@ public class PartHateoasController
     @GetMapping(value = PART_PERSON + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PartPersonHateoas> findOnePartPersonBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the partPerson to retrieve",
                     required = true)
-            @PathVariable("systemID") final String partPersonSystemId) {
+            @PathVariable(SYSTEM_ID) final String partPersonSystemId) {
         PartPerson partPerson =
                 (PartPerson) partService.findBySystemId(partPersonSystemId);
         PartPersonHateoas partPersonHateoas =
@@ -85,10 +83,10 @@ public class PartHateoasController
     @GetMapping(value = PART_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PartUnitHateoas> findOnePartUnitBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the partUnit to retrieve",
                     required = true)
-            @PathVariable("systemID") final String partUnitSystemId) {
+            @PathVariable(SYSTEM_ID) final String partUnitSystemId) {
         PartUnit partUnit =
                 (PartUnit) partService.findBySystemId(partUnitSystemId);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
@@ -118,10 +116,10 @@ public class PartHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartUnitHateoas> updatePartUnit(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of partUnit to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "PartUnit",
                     value = "Incoming partUnit object",
                     required = true)
@@ -160,10 +158,10 @@ public class PartHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartPersonHateoas> updatePartPerson(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of partPerson to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "PartPerson",
                     value = "Incoming partPerson object",
                     required = true)
@@ -183,12 +181,17 @@ public class PartHateoasController
     }
 
     // DELETE [contextPath][api]/arkivstruktur/partenhet/{systemID}/
-    @ApiOperation(value = "Deletes a single PartUnit entity identified by systemID")
+    @ApiOperation(value = "Deletes a single PartUnit entity identified by " +
+            SYSTEM_ID)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "PartUnit deleted"),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204,
+                    message = "PartUnit deleted"),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = PART_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deletePartUnit(
@@ -197,17 +200,22 @@ public class PartHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         partService.deletePartUnit(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // DELETE [contextPath][api]/arkivstruktur/partperson/{systemID}/
-    @ApiOperation(value = "Deletes a single PartPerson entity identified by systemID")
+    @ApiOperation(value = "Deletes a single PartPerson entity identified by " +
+            SYSTEM_ID)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "PartPerson deleted"),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(code = 204,
+                    message = "PartPerson deleted"),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
     @DeleteMapping(value = PART_PERSON + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deletePartPerson(
@@ -216,7 +224,7 @@ public class PartHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         partService.deletePartPerson(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

@@ -1,4 +1,4 @@
-package nikita.common.model.noark5.v5.hateoas.casehandling;
+package nikita.common.model.noark5.v5.hateoas.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.config.N5ResourceMappings;

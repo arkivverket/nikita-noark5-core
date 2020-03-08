@@ -300,6 +300,15 @@ public class TestParsing {
                         null /* DeserializationContext */);
         assert (null != klass);
         assert ("A class title".equals(klass.getTitle()));
+        Screening screening = klass.getReferenceScreening();
+        assert(null != screening);
+        assert(60 == screening.getScreeningDuration().intValue());
+        AccessRestriction accessRestriction = screening.getAccessRestriction();
+        assert("P".equals(accessRestriction.getCode()));
+        ScreeningDocument screeningDocument = screening.getScreeningDocument();
+        assert("H".equals(screeningDocument.getCode()));
+        assert("Skjerming av hele dokumentet"
+               .equals(screeningDocument.getCodeName()));
     }
 
     @Test
@@ -410,8 +419,8 @@ public class TestParsing {
                 + "      \"kodenavn\": \"Sletting av produksjonsformat\""
                 + "    }, "
                 + "    \"slettetDato\": \"1863-10-10T00:00:00+00:00\", "
-                + "    \"slettetAv\": \"Ryddig Gutt\", "
-                + "    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+                + "    \"slettetAv\": \"Ryddig Gutt\" "
+                //+ ",    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
                 + "} "
                 + ", \"skjerming\": { "
                 + "    \"tilgangsrestriksjon\": {"
@@ -893,8 +902,8 @@ public class TestParsing {
                 + "      \"kodenavn\": \"Sletting av produksjonsformat\""
                 + "    }, "
                 + "    \"slettetDato\": \"1863-10-10T00:00:00+00:00\", "
-                + "    \"slettetAv\": \"Ryddig Gutt\", "
-                + "    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
+                + "    \"slettetAv\": \"Ryddig Gutt\" "
+                //+ ",    \"referanseSlettetAv\": \"434939b4-3005-11ea-af00-47e34fa533df\" "
                 + "} "
                 + ", \"skjerming\": { "
                 + "    \"tilgangsrestriksjon\": {"
@@ -1513,5 +1522,42 @@ public class TestParsing {
         FlowStatus m = documentFlow.getFlowStatus();
         assert ("I".equals(m.getCode()));
         assert ("Ikke godkjent".equals(m.getCodeName()));
+    }
+
+    @Test
+    public void parsePrecedenceComplete() throws Exception {
+        System.out.println("info: testing precedence parsing");
+        String systemID = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString();
+        String json = "{ "
+                + "  \"systemID\": \"" + systemID + "\" "
+                + ", \"presedensDato\": \"1865-02-13Z\" "
+                + ", \"opprettetDato\": \"1865-02-13T12:30:00+02:00\" "
+                + ", \"opprettetAv\": \"Some One\" "
+                //+ ", \"referanseOpprettetAv\": \"" + uuid + "\" "
+                + ", \"tittel\": \"nice precedence\" "
+                + ", \"beskrivelse\": \"nicer precedence\" "
+                + ", \"presedensHjemmel\": \"nice law\" "
+                + ", \"rettskildefaktor\": \"high\" "
+                + ", \"presedensGodkjentDato\": \"1865-02-13T12:30:00+02:00\" "
+                + ", \"presedensGodkjentAv\": \"Some One\" "
+                + ", \"referansePresedensGodkjentAv\": \"" + uuid + "\" "
+                + ", \"avsluttetDato\": \"1865-02-13T12:30:00+02:00\" "
+                + ", \"avsluttetAv\": \"Some One\" "
+                //+ ", \"referanseAvsluttetAv\": \"" + uuid + "\" "
+                + ", \"presedensStatus\": { \"kode\": \"G\", \"kodenavn\": \"Gjeldende\" } "
+                + "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+                objectMapper.getFactory().createParser(json);
+        PrecedenceDeserializer precedenceDeserializer =
+            new PrecedenceDeserializer();
+        Precedence precedence = precedenceDeserializer.deserialize
+                (jsonParser, null /* DeserializationContext */);
+        assert (null != precedence);
+        assert (systemID.equals(precedence.getSystemId()));
+        PrecedenceStatus m = precedence.getPrecedenceStatus();
+        assert ("G".equals(m.getCode()));
+        assert ("Gjeldende".equals(m.getCodeName()));
     }
 }

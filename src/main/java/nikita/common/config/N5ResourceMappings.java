@@ -227,6 +227,8 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_SOURCE_OF_LAW = "rettskildefaktor";
     public static final String PRECEDENCE_APPROVED_DATE = "presedensGodkjentDato";
     public static final String PRECEDENCE_APPROVED_BY = "presedensGodkjentAv";
+    public static final String PRECEDENCE_REFERENCE_APPROVED_BY = "referansePresedensGodkjentAv";
+    public static final String PRECEDENCE_PRECEDENCE_STATUS = "presedensStatus";
     public static final String PRECEDENCE_STATUS = "presedensstatus";
 
     // Disposal
@@ -243,10 +245,12 @@ public final class N5ResourceMappings {
 
     // Screening
     public static final String SCREENING = "skjerming";
-    public static final String SCREENING_ACCESS_RESTRICTION = "tilgangsrestriksjon";
-    public static final String SCREENING_AUTHORITY = "skjermingshjemmel";
     public static final String SCREENING_METADATA = "skjermingmetadata";
     public static final String SCREENING_DOCUMENT = "skjermingdokument";
+    public static final String SCREENING_ACCESS_RESTRICTION = "tilgangsrestriksjon";
+    public static final String SCREENING_AUTHORITY = "skjermingshjemmel";
+    public static final String SCREENING_SCREENING_METADATA = "skjermingMetadata";
+    public static final String SCREENING_SCREENING_DOCUMENT = "skjermingDokument";
     public static final String NEW_SCREENING_METADATA = NEW + DASH +
             SCREENING_METADATA;
     public static final String NEW_SCREENING_DOCUMENT = NEW + DASH +
@@ -590,13 +594,14 @@ public final class N5ResourceMappings {
     public static final String POSTAL_NUMBER_ENG = "postnummer";
     public static final String POSTAL_TOWN_ENG = "poststed";
     public static final String POST_CODE_ENG = "postnummer";
-    public static final String PRECEDENCE_APPROVED_BY_ENG = "presedensGodkjentAv";
-    public static final String PRECEDENCE_APPROVED_DATE_ENG = "presedensGodkjentDato";
-    public static final String PRECEDENCE_AUTHORITY_ENG = "presedensHjemmel";
-    public static final String PRECEDENCE_DATE_ENG = "presedensDato";
-    public static final String PRECEDENCE_ENG = "presedens";
-    public static final String PRECEDENCE_SOURCE_OF_LAW_ENG = "rettskildefaktor";
-    public static final String PRECEDENCE_STATUS_ENG = "precedencestatus";
+    public static final String PRECEDENCE_APPROVED_BY_ENG = "precedence_approved_by";
+    public static final String PRECEDENCE_APPROVED_DATE_ENG = "precedence_approved_date";
+    public static final String PRECEDENCE_AUTHORITY_ENG = "precedence_authority";
+    public static final String PRECEDENCE_DATE_ENG = "precedence_date";
+    public static final String PRECEDENCE_ENG = "precedence";
+    public static final String PRECEDENCE_SOURCE_OF_LAW_ENG = "source_of_law";
+    public static final String PRECEDENCE_REFERENCE_APPROVED_BY_ENG = "precedence_approved_by_reference";
+    public static final String PRECEDENCE_PRECEDENCE_STATUS_ENG = "precedenceStatus";
     public static final String PRODUCTION_VERSION_ENG = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG = "archived_by";
     public static final String RECORD_ARCHIVED_DATE_ENG = "archived_date";
@@ -620,11 +625,11 @@ public final class N5ResourceMappings {
     public static final String RIGHT_ENG = "rettighet";
     public static final String SCREENING_ACCESS_RESTRICTION_ENG = "tilgangsrestriksjon";
     public static final String SCREENING_AUTHORITY_ENG = "skjermingshjemmel";
-    public static final String SCREENING_DOCUMENT_ENG = "skjermingDokument";
     public static final String SCREENING_DURATION_ENG = "skjermingsvarighet";
     public static final String SCREENING_ENG = "skjerming";
     public static final String SCREENING_EXPIRES_DATE_ENG = "skjermingOpphoererDato";
-    public static final String SCREENING_METADATA_ENG = "skjermingMetadata";
+    public static final String SCREENING_SCREENING_DOCUMENT_ENG = "skjermingDokument";
+    public static final String SCREENING_SCREENING_METADATA_ENG = "skjermingMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG = "sekundaerklassifikasjonssystem";
     public static final String SECTION_NUMBER_ENG = "section_number";
@@ -819,13 +824,14 @@ public final class N5ResourceMappings {
     public static final String POSTAL_NUMBER_ENG_OBJECT = "postnummer";
     public static final String POSTAL_TOWN_ENG_OBJECT = "poststed";
     public static final String POST_CODE_ENG_OBJECT = "postnummer";
-    public static final String PRECEDENCE_APPROVED_BY_ENG_OBJECT = "presedensGodkjentAv";
-    public static final String PRECEDENCE_APPROVED_DATE_ENG_OBJECT = "presedensGodkjentDato";
-    public static final String PRECEDENCE_AUTHORITY_ENG_OBJECT = "presedensHjemmel";
-    public static final String PRECEDENCE_DATE_ENG_OBJECT = "presedensDato";
-    public static final String PRECEDENCE_ENG_OBJECT = "presedens";
-    public static final String PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT = "rettskildefaktor";
-    public static final String PRECEDENCE_STATUS_ENG_OBJECT =
+    public static final String PRECEDENCE_APPROVED_BY_ENG_OBJECT = "precedenceApprovedBy";
+    public static final String PRECEDENCE_APPROVED_DATE_ENG_OBJECT = "precedenceApprovedDate";
+    public static final String PRECEDENCE_AUTHORITY_ENG_OBJECT = "precedenceAuthority";
+    public static final String PRECEDENCE_DATE_ENG_OBJECT = "precedenceDate";
+    public static final String PRECEDENCE_ENG_OBJECT = "precedence";
+    public static final String PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT = "sourceOfLaw";
+    public static final String PRECEDENCE_REFERENCE_APPROVED_BY_ENG_OBJECT = "referencePrecedenceApprovedBySystemID";
+    public static final String PRECEDENCE_PRECEDENCE_STATUS_ENG_OBJECT =
             "precedenceStatus";
     public static final String PRODUCTION_VERSION_ENG_OBJECT = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG_OBJECT = "arkivertAv";
@@ -850,11 +856,11 @@ public final class N5ResourceMappings {
     public static final String RIGHT_ENG_OBJECT = "rettighet";
     public static final String SCREENING_ACCESS_RESTRICTION_ENG_OBJECT = "tilgangsrestriksjon";
     public static final String SCREENING_AUTHORITY_ENG_OBJECT = "skjermingshjemmel";
-    public static final String SCREENING_DOCUMENT_ENG_OBJECT = "skjermingDokument";
     public static final String SCREENING_DURATION_ENG_OBJECT = "skjermingsvarighet";
     public static final String SCREENING_ENG_OBJECT = "skjerming";
     public static final String SCREENING_EXPIRES_DATE_ENG_OBJECT = "skjermingOpphoererDato";
-    public static final String SCREENING_METADATA_ENG_OBJECT = "skjermingMetadata";
+    public static final String SCREENING_SCREENING_DOCUMENT_ENG_OBJECT = "skjermingDokument";
+    public static final String SCREENING_SCREENING_METADATA_ENG_OBJECT = "skjermingMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG_OBJECT = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG_OBJECT = "sekundaerklassifikasjonssystem";
     public static final String SECTION_NUMBER_ENG_OBJECT = "sectionNumber";

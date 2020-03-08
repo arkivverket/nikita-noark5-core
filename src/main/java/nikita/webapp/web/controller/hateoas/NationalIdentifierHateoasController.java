@@ -67,10 +67,10 @@ public class NationalIdentifierHateoasController
     @GetMapping(value = BUILDING + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<BuildingHateoas> findOneBuildingBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the Building to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         Building building =
                 (Building) nationalIdentifierService.findBySystemId(systemId);
         BuildingHateoas buildingHateoas =
@@ -96,10 +96,10 @@ public class NationalIdentifierHateoasController
     @GetMapping(value = CADASTRAL_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CadastralUnitHateoas> findOneCadastralUnitBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the CadastralUnit to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         CadastralUnit cadastralUnit =
                 (CadastralUnit) nationalIdentifierService.findBySystemId(systemId);
         CadastralUnitHateoas cadastralUnitHateoas =
@@ -125,10 +125,10 @@ public class NationalIdentifierHateoasController
     @GetMapping(value = D_NUMBER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<DNumberHateoas> findOneDNumberBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the DNumber to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         DNumber dNumber =
                 (DNumber) nationalIdentifierService.findBySystemId(systemId);
         DNumberHateoas dNumberHateoas =
@@ -154,10 +154,10 @@ public class NationalIdentifierHateoasController
     @GetMapping(value = PLAN + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PlanHateoas> findOnePlanBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the Plan to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         Plan plan =
                 (Plan) nationalIdentifierService.findBySystemId(systemId);
         PlanHateoas planHateoas =
@@ -183,10 +183,10 @@ public class NationalIdentifierHateoasController
     @GetMapping(value = POSITION + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PositionHateoas> findOnePositionBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the position to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         Position position =
                 (Position) nationalIdentifierService.findBySystemId(systemId);
         PositionHateoas positionHateoas = new PositionHateoas(position);
@@ -211,10 +211,10 @@ public class NationalIdentifierHateoasController
     @GetMapping(value = SOCIAL_SECURITY_NUMBER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<SocialSecurityNumberHateoas> findOneSocialSecurityNumberBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the socialSecurityNumber to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         SocialSecurityNumber socialSecurityNumber =
                 (SocialSecurityNumber) nationalIdentifierService.findBySystemId(systemId);
         SocialSecurityNumberHateoas socialSecurityNumberHateoas = new SocialSecurityNumberHateoas(socialSecurityNumber);
@@ -239,10 +239,10 @@ public class NationalIdentifierHateoasController
     @GetMapping(value = NI_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UnitHateoas> findOneUnitBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemID of the unit to retrieve",
                     required = true)
-            @PathVariable("systemID") final String systemId) {
+            @PathVariable(SYSTEM_ID) final String systemId) {
         Unit unit =
                 (Unit) nationalIdentifierService.findBySystemId(systemId);
         UnitHateoas unitHateoas = new UnitHateoas(unit);
@@ -273,10 +273,10 @@ public class NationalIdentifierHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<BuildingHateoas> updateBuilding(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of nationalIdentifierPerson to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "Building",
                     value = "Incoming nationalIdentifierPerson object",
                     required = true)
@@ -314,10 +314,10 @@ public class NationalIdentifierHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CadastralUnitHateoas> updateCadastralUnit(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of nationalIdentifierPerson to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "CadastralUnit",
                     value = "Incoming nationalIdentifierPerson object",
                     required = true)
@@ -355,10 +355,10 @@ public class NationalIdentifierHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DNumberHateoas> updateDNumber(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of nationalIdentifierPerson to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "DNumber",
                     value = "Incoming nationalIdentifierPerson object",
                     required = true)
@@ -396,10 +396,10 @@ public class NationalIdentifierHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PlanHateoas> updatePlan(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of nationalIdentifierPerson to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "Plan",
                     value = "Incoming nationalIdentifierPerson object",
                     required = true)
@@ -437,10 +437,10 @@ public class NationalIdentifierHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PositionHateoas> updatePosition(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of position to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "Position",
                     value = "Incoming position object",
                     required = true)
@@ -477,10 +477,10 @@ public class NationalIdentifierHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SocialSecurityNumberHateoas> updateSocialSecurityNumber(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of socialSecurityNumber to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "SocialSecurityNumber",
                     value = "Incoming socialSecurityNumber object",
                     required = true)
@@ -517,10 +517,10 @@ public class NationalIdentifierHateoasController
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<UnitHateoas> updateUnit(
             HttpServletRequest request,
-            @ApiParam(name = "systemID",
+            @ApiParam(name = SYSTEM_ID,
                     value = "systemId of unit to update",
                     required = true)
-            @PathVariable("systemID") final String systemID,
+            @PathVariable(SYSTEM_ID) final String systemID,
             @ApiParam(name = "Unit",
                     value = "Incoming unit object",
                     required = true)
@@ -542,7 +542,7 @@ public class NationalIdentifierHateoasController
     // DELETE [contextPath][api]/arkivstruktur/bygning/{systemID}/
     @ApiOperation(value = "Deletes a single Building entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Building deleted"),
+            @ApiResponse(code = 204, message = "Building deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -554,15 +554,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteBuilding(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a cadastralUnit identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/matrikkel/{systemID}/
     @ApiOperation(value = "Deletes a single CadastralUnit entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CadastralUnit deleted"),
+            @ApiResponse(code = 204, message = "CadastralUnit deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -574,15 +574,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteCadastralUnit(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a dnumber identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/dnummer/{systemID}/
     @ApiOperation(value = "Deletes a single DNumber entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DNumber deleted"),
+            @ApiResponse(code = 204, message = "DNumber deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -594,15 +594,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteDNumber(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a plan identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/plan/{systemID}/
     @ApiOperation(value = "Deletes a single Plan entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Plan deleted"),
+            @ApiResponse(code = 204, message = "Plan deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -614,15 +614,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deletePlan(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a position identified by systemid
     // DELETE [contextPath][api]/arkivstruktur/posisjon/{systemID}/
     @ApiOperation(value = "Deletes a single Position entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Position deleted"),
+            @ApiResponse(code = 204, message = "Position deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -634,15 +634,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deletePosition(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a socialSecurityNumber identified by systemid
     // DELETE [contextPath][api]/arkivstruktur/foedselsnummer/{systemID}/
     @ApiOperation(value = "Deletes a single SocialSecurityNumber entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "SocialSecurityNumber deleted"),
+            @ApiResponse(code = 204, message = "SocialSecurityNumber deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -654,15 +654,15 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteSocialSecurityNumber(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // Delete a unit identified by systemid
     // DELETE [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemID}/
     @ApiOperation(value = "Deletes a single Unit entity identified by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Unit deleted"),
+            @ApiResponse(code = 204, message = "Unit deleted"),
             @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
@@ -674,7 +674,7 @@ public class NationalIdentifierHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         nationalIdentifierService.deleteUnit(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("{\"status\" : \"Success\"}");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 }

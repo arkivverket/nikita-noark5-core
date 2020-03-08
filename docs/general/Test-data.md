@@ -16,12 +16,12 @@ services. The can be accessed by:
       -X GET http://localhost:8092/noark5v5/
 
 A number of services are reported here, some are still in early development.
-The service at  http://localhost:8092/noark5v5/hateoas-api/arkivstruktur is the
+The service at  http://localhost:8092/noark5v5/api/arkivstruktur is the
 one you probably are looking for. This is the Noark 5v5 interface.
 
     {
       "_links" : [ {
-        "href" : "http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/",
+        "href" : "http://localhost:8092/noark5v5/api/arkivstruktur/",
         "rel" : "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur"
       } ]
     }
@@ -43,7 +43,7 @@ If you then run
     curl --header Accept:application/vnd.noark5-v4+json \
       --header Content-Type:application/vnd.noark5-v4+json \
       -X GET -b cookie.txt \
-      http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/
+      http://localhost:8092/noark5v5/api/arkivstruktur/
 
 You should get a list of Noark entities you can interact with.  These are all
 mapped to findAll calls and are automatically paginated. They do not have a
@@ -51,7 +51,7 @@ next/previous link at the moment
 
     {
       "_links" : [ {
-        "href" : "http://localhost:8092/noark5v5/hateoas-api/arkiv/",
+        "href" : "http://localhost:8092/noark5v5/api/arkiv/",
         "rel" : "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv",
         "templated" : true
       } ]
@@ -62,7 +62,7 @@ Next you can query the core for the various Noark entities. e.g.
     curl v --header Accept:application/vnd.noark5-v4+json \
       --header Content-Type:application/vnd.noark5-v4+json \
       -X GET -b cookie.txt \
-      http://localhost:8092/noark5v5/hateoas-api/arkivstruktur/arkiv/
+      http://localhost:8092/noark5v5/api/arkivstruktur/arkiv/
 
 
 Quick note on profiles.

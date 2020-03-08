@@ -83,7 +83,7 @@ public class FileHateoasHandler
      * File should actually be associated with a Series, but we are not doing
      * that check here.
      * <p>
-     * "../hateoas-api/arkivstruktur/arkivdel/1234"
+     * "../api/arkivstruktur/arkivdel/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/"
      *
      * @param entity             file
@@ -105,7 +105,7 @@ public class FileHateoasHandler
      * Create a REL/HREF pair for the parent Class associated with the given
      * File. Checks if the File is actually associated with a Class.
      * <p>
-     * "../hateoas-api/arkivstruktur/klasse/1234"
+     * "../api/arkivstruktur/klasse/1234"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klasse/"
      *
      * @param entity             file
@@ -200,7 +200,7 @@ public class FileHateoasHandler
      * Create a REL/HREF pair for the list of Part objects associated with the
      * given File.
      * <p>
-     * "../hateoas-api/arkivstruktur/mappe/1234/part"
+     * "../api/arkivstruktur/mappe/1234/part"
      * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/part/"
      *
      * @param entity             file
