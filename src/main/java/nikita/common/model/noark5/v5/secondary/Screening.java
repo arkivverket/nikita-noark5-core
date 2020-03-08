@@ -3,6 +3,8 @@ package nikita.common.model.noark5.v5.secondary;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.IScreeningEntity;
+import nikita.common.model.noark5.v5.metadata.ScreeningDocument;
+import nikita.common.model.noark5.v5.metadata.AccessRestriction;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -27,11 +29,18 @@ public class Screening
         implements IScreeningEntity {
 
     /**
-     * M500 - tilgangsrestriksjon n4 (JP.TGKODE)
+     * M??? - tilgangsrestriksjon code n4 (JP.TGKODE) (xs:string)
      */
-    @Column(name = "access_restriction")
+    @Column(name = "access_restriction_code")
     @Audited
-    private String accessRestriction;
+    private String accessRestrictionCode;
+
+    /**
+     * M500 - tilgangsrestriksjon code name n4 (JP.TGKODE) (xs:string)
+     */
+    @Column(name = "access_restriction_code_name")
+    @Audited
+    private String accessRestrictionCodeName;
 
     /**
      * M501 - skjermingshjemmel n4 (JP.UOFF)
@@ -45,14 +54,22 @@ public class Screening
      */
     @Column(name = "screening_metadata")
     @Audited
+    // TODO convert to list/entity
     private String screeningMetadata;
 
     /**
-     * M503 - skjermingDokument
+     * M??? - skjermingDokument code (xs:string)
      */
-    @Column(name = "screening_document")
+    @Column(name = "screening_document_code")
     @Audited
-    private String screeningDocument;
+    private String screeningDocumentCode;
+
+    /**
+     * M503 - skjermingDokument code name (xs:string)
+     */
+    @Column(name = "screening_document_code_name")
+    @Audited
+    private String screeningDocumentCodeName;
 
     /**
      * M505 - skjermingOpphoererDato n4(JP.AGDATO)
@@ -90,12 +107,23 @@ public class Screening
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
-    public String getAccessRestriction() {
+    public AccessRestriction getAccessRestriction() {
+        if (null == accessRestrictionCode)
+            return null;
+        AccessRestriction accessRestriction = new AccessRestriction();
+        accessRestriction.setCode(accessRestrictionCode);
+        accessRestriction.setCodeName(accessRestrictionCodeName);
         return accessRestriction;
     }
 
-    public void setAccessRestriction(String accessRestriction) {
-        this.accessRestriction = accessRestriction;
+    public void setAccessRestriction(AccessRestriction accessRestriction) {
+        if (null != accessRestriction) {
+            this.accessRestrictionCode = accessRestriction.getCode();
+            this.accessRestrictionCodeName = accessRestriction.getCodeName();
+        } else {
+            this.accessRestrictionCode = null;
+            this.accessRestrictionCodeName = null;
+        }
     }
 
     public String getScreeningAuthority() {
@@ -114,12 +142,23 @@ public class Screening
         this.screeningMetadata = screeningMetadata;
     }
 
-    public String getScreeningDocument() {
+    public ScreeningDocument getScreeningDocument() {
+        if (null == screeningDocumentCode)
+            return null;
+        ScreeningDocument screeningDocument = new ScreeningDocument();
+        screeningDocument.setCode(screeningDocumentCode);
+        screeningDocument.setCodeName(screeningDocumentCodeName);
         return screeningDocument;
     }
 
-    public void setScreeningDocument(String screeningDocument) {
-        this.screeningDocument = screeningDocument;
+    public void setScreeningDocument(ScreeningDocument screeningDocument) {
+        if (null != screeningDocument) {
+            this.screeningDocumentCode = screeningDocument.getCode();
+            this.screeningDocumentCodeName = screeningDocument.getCodeName();
+        } else {
+            this.screeningDocumentCode = null;
+            this.screeningDocumentCodeName = null;
+        }
     }
 
     public OffsetDateTime getScreeningExpiresDate() {
@@ -194,10 +233,12 @@ public class Screening
         return "Screening {" + super.toString() +
                 "screeningDuration='" + screeningDuration + '\'' +
                 ", screeningExpiresDate=" + screeningExpiresDate +
-                ", screeningDocument='" + screeningDocument + '\'' +
+                ", screeningDocumentCode='" + screeningDocumentCode + '\'' +
+                ", screeningDocumentCodeName='" + screeningDocumentCodeName + '\'' +
                 ", screeningMetadata='" + screeningMetadata + '\'' +
                 ", screeningAuthority='" + screeningAuthority + '\'' +
-                ", accessRestriction='" + accessRestriction + '\'' +
+                ", accessRestrictionCode='" + accessRestrictionCode + '\'' +
+                ", accessRestrictionCodeName='" + accessRestrictionCodeName + '\'' +
                 '}';
     }
 
@@ -217,10 +258,12 @@ public class Screening
                 .appendSuper(super.equals(other))
                 .append(screeningDuration, rhs.screeningDuration)
                 .append(screeningExpiresDate, rhs.screeningExpiresDate)
-                .append(screeningDocument, rhs.screeningDocument)
+                .append(screeningDocumentCode, rhs.screeningDocumentCode)
+                .append(screeningDocumentCodeName, rhs.screeningDocumentCodeName)
                 .append(screeningMetadata, rhs.screeningMetadata)
                 .append(screeningAuthority, rhs.screeningAuthority)
-                .append(accessRestriction, rhs.accessRestriction)
+                .append(accessRestrictionCode, rhs.accessRestrictionCode)
+                .append(accessRestrictionCodeName, rhs.accessRestrictionCodeName)
                 .isEquals();
     }
 
@@ -230,10 +273,12 @@ public class Screening
                 .appendSuper(super.hashCode())
                 .append(screeningDuration)
                 .append(screeningExpiresDate)
-                .append(screeningDocument)
+                .append(screeningDocumentCode)
+                .append(screeningDocumentCodeName)
                 .append(screeningMetadata)
                 .append(screeningAuthority)
-                .append(accessRestriction)
+                .append(accessRestrictionCode)
+                .append(accessRestrictionCodeName)
                 .toHashCode();
     }
 }

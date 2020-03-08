@@ -300,6 +300,15 @@ public class TestParsing {
                         null /* DeserializationContext */);
         assert (null != klass);
         assert ("A class title".equals(klass.getTitle()));
+        Screening screening = klass.getReferenceScreening();
+        assert(null != screening);
+        assert(60 == screening.getScreeningDuration().intValue());
+        AccessRestriction accessRestriction = screening.getAccessRestriction();
+        assert("P".equals(accessRestriction.getCode()));
+        ScreeningDocument screeningDocument = screening.getScreeningDocument();
+        assert("H".equals(screeningDocument.getCode()));
+        assert("Skjerming av hele dokumentet"
+               .equals(screeningDocument.getCodeName()));
     }
 
     @Test
