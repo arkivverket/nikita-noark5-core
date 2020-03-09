@@ -84,7 +84,21 @@ public class HateoasSerializer
                         // annotation, it is not possible to continue. This
                         // should never happen, as all classes have a annotation
                         // but new classes introduced into the domain model over
-                        // time may be missing the annotation
+                        // time may be missing the annotation. However Java
+                        // will not retrieve annotations belonging to the
+                        // parent class. Metadata objects will need a lookup
+                        // to the super class to retrieve the annotation
+                        if (null == packer || null == individualHateoasObject) {
+                            if (entity instanceof IMetadataEntity) {
+                                cls = (Class<? extends IMetadataEntity>)
+                                        entity.getClass().getSuperclass();
+                                packer = cls.getAnnotation(HateoasPacker.class);
+                                individualHateoasObject =
+                                        cls.getAnnotation(HateoasObject.class);
+                            }
+                        }
+                        // If they are still null, then the annotation is
+                        // actually missing
                         if (null == packer || null == individualHateoasObject) {
                             String errorMessage = "Internal misconfiguration" +
                                     ": Missing annotations for " +
@@ -93,19 +107,26 @@ public class HateoasSerializer
                             throw new NikitaMisconfigurationException(
                                     errorMessage);
                         }
-
-                        // Create an instance of the HateoasObject
-                        noarkObject = individualHateoasObject
-                                .using()
-                                .getDeclaredConstructor(
-                                        INoarkEntity.class)
-                                .newInstance(entity);
+                        if (entity instanceof IMetadataEntity) {
+                            // Create an instance of the HateoasObject
+                            noarkObject = individualHateoasObject
+                                    .using()
+                                    .getDeclaredConstructor(
+                                            IMetadataEntity.class)
+                                    .newInstance(entity);
+                        } else {
+                            noarkObject = individualHateoasObject
+                                    .using()
+                                    .getDeclaredConstructor(
+                                            INoarkEntity.class)
+                                    .newInstance(entity);
+                        }
 
                         // Create an instance of the HateoasHandler (
                         // hateoas links generator)
                         HateoasHandler handler =
                                 packer.using().getConstructor().newInstance();
-                        
+
                         // Set the values for outgoing address (localhost, or
                         // from X-Forwarded-*)
                         handler.setPublicAddress(getAddress());
