@@ -3,7 +3,7 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
-Release 0.5 2019-03-02 (commit bf83be0610b1fdc6b56b4c94ab07c3d1716940cb)
+Release 0.5 2020-03-02 (commit bf83be0610b1fdc6b56b4c94ab07c3d1716940cb)
 ----------------------
  * Updated to Noark 5 versjon 5.0 API specification.
     - Changed formatting of \_links from [] to {} to match IETF draft
