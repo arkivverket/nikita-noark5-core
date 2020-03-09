@@ -1,10 +1,17 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.model.noark5.v5.*;
-import nikita.common.model.noark5.v5.metadata.CommentType;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICommentEntity;
+import nikita.common.model.noark5.v5.metadata.CommentType;
 import nikita.common.util.deserialisers.secondary.CommentDeserializer;
+import nikita.webapp.hateoas.secondary.CommentHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -12,16 +19,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.COMMENT;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_COMMENT)
 @JsonDeserialize(using = CommentDeserializer.class)
+@HateoasPacker(using = CommentHateoasHandler.class)
+@HateoasObject(using = CommentHateoas.class)
 public class Comment
         extends SystemIdEntity
         implements ICommentEntity {

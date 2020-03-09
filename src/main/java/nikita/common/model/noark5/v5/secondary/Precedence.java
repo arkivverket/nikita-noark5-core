@@ -1,25 +1,24 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPrecedenceEntity;
 import nikita.common.model.noark5.v5.metadata.PrecedenceStatus;
 import nikita.common.util.deserialisers.secondary.PrecedenceDeserializer;
+import nikita.webapp.hateoas.secondary.PrecedenceHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +31,8 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Entity
 @Table(name = TABLE_PRECEDENCE)
 @JsonDeserialize(using = PrecedenceDeserializer.class)
+@HateoasPacker(using = PrecedenceHateoasHandler.class)
+@HateoasObject(using = PrecedenceHateoas.class)
 public class Precedence
         extends NoarkGeneralEntity
         implements IPrecedenceEntity {
