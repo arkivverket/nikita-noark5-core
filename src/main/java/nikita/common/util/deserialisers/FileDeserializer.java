@@ -70,10 +70,10 @@ public class FileDeserializer
             file.setFileId(currentNode.textValue());
             objectNode.remove(N5ResourceMappings.FILE_ID);
         }
-        // Deserialize officialTitle
+        // Deserialize publicTitle
         currentNode = objectNode.get(N5ResourceMappings.FILE_PUBLIC_TITLE);
         if (null != currentNode) {
-            file.setOfficialTitle(currentNode.textValue());
+            file.setPublicTitle(currentNode.textValue());
             objectNode.remove(N5ResourceMappings.FILE_PUBLIC_TITLE);
         }
         // TODO: FIX THIS CommonCommonUtils.Hateoas.Deserialize.deserialiseCrossReference(file, objectNode);
