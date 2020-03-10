@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.secondary;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.IClassifiedEntity;
+import nikita.common.model.noark5.v5.metadata.ClassifiedCode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -100,20 +101,23 @@ public class Classified
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
-    public String getClassificationCode() {
-        return classificationCode;
+    public ClassifiedCode getClassification() {
+        if (null == classificationCode)
+            return null;
+        ClassifiedCode classification = new ClassifiedCode();
+        classification.setCode(classificationCode);
+        classification.setCodeName(classificationCodeName);
+        return classification;
     }
 
-    public void setClassificationCode(String classificationCode) {
-        this.classificationCode = classificationCode;
-    }
-
-    public String getClassificationCodeName() {
-        return classificationCodeName;
-    }
-
-    public void setClassificationCodeName(String classificationCodeName) {
-        this.classificationCodeName = classificationCodeName;
+    public void setClassification(ClassifiedCode classification) {
+        if (null != classification) {
+            this.classificationCode = classification.getCode();
+            this.classificationCodeName = classification.getCodeName();
+        } else {
+            this.classificationCode = null;
+            this.classificationCodeName = null;
+        }
     }
 
     public OffsetDateTime getClassificationDate() {

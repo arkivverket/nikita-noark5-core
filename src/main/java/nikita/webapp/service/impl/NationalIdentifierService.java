@@ -9,6 +9,7 @@ import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
+import nikita.common.model.noark5.v5.metadata.CoordinateSystem;
 import nikita.common.model.noark5.v5.nationalidentifier.Building;
 import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
 import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
@@ -23,6 +24,7 @@ import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHa
 import nikita.webapp.hateoas.interfaces.nationalidentifier.IPositionHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,6 +36,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.N5ResourceMappings.COORDINATE_SYSTEM;
 
 @Service
 @Transactional
@@ -47,6 +50,7 @@ public class NationalIdentifierService
     private final INationalIdentifierRepository nationalIdentifierRepository;
     private final INationalIdentifierHateoasHandler
             nationalIdentifierHateoasHandler;
+    private final IMetadataService metadataService;
     private final IPositionHateoasHandler positionHateoasHandler;
 
     public NationalIdentifierService
@@ -54,11 +58,13 @@ public class NationalIdentifierService
              ApplicationEventPublisher applicationEventPublisher,
              INationalIdentifierRepository nationalIdentifierRepository,
              INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
+             IMetadataService metadataService,
              IPositionHateoasHandler positionHateoasHandler) {
         super(entityManager, applicationEventPublisher);
         this.nationalIdentifierRepository = nationalIdentifierRepository;
         this.nationalIdentifierHateoasHandler =
                 nationalIdentifierHateoasHandler;
+        this.metadataService = metadataService;
         this.positionHateoasHandler = positionHateoasHandler;
     }
 
@@ -354,10 +360,8 @@ public class NationalIdentifierService
         existingPosition.setX(incomingPosition.getX());
         existingPosition.setY(incomingPosition.getY());
         existingPosition.setZ(incomingPosition.getZ());
-        existingPosition.setCoordinateSystemCode
-            (incomingPosition.getCoordinateSystemCode());
-        existingPosition.setCoordinateSystemCodeName
-            (incomingPosition.getCoordinateSystemCodeName());
+        existingPosition.setCoordinateSystem
+            (incomingPosition.getCoordinateSystem());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
@@ -533,8 +537,10 @@ public class NationalIdentifierService
     @Override
     public PositionHateoas generateDefaultPosition() {
         Position position = new Position();
-        position.setCoordinateSystemCode("EPSG:4326");
-        position.setCoordinateSystemCodeName("WGS84");
+        CoordinateSystem coordinateSystem = (CoordinateSystem)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+            (COORDINATE_SYSTEM, "EPSG:4326", "WGS84");
+        position.setCoordinateSystem(coordinateSystem);
         PositionHateoas positionHateoas =
                 new PositionHateoas(position);
         positionHateoasHandler

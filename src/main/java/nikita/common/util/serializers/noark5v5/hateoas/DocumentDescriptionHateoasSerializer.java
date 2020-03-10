@@ -43,12 +43,12 @@ public class DocumentDescriptionHateoasSerializer
 
         // handle DocumentDescription properties
         printSystemIdEntity(jgen, documentDescription);
-        printNullableMetadataCode(jgen, DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
-                                  documentDescription.getDocumentTypeCode(),
-                                  documentDescription.getDocumentTypeCodeName());
-        printNullableMetadataCode(jgen, DOCUMENT_DESCRIPTION_STATUS,
-                                  documentDescription.getDocumentStatusCode(),
-                                  documentDescription.getDocumentStatusCodeName());
+        printNullableMetadata(jgen,
+             DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
+             documentDescription.getDocumentType());
+        printNullableMetadata(jgen,
+             DOCUMENT_DESCRIPTION_STATUS,
+             documentDescription.getDocumentStatus());
         printTitleAndDescription(jgen, documentDescription);
         printNullable(jgen, DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
                       documentDescription.getDocumentNumber());
@@ -59,10 +59,9 @@ public class DocumentDescriptionHateoasSerializer
             jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATION_BY,
                     documentDescription.getAssociatedBy());
         }
-        printNullableMetadataCode(jgen,
+        printNullableMetadata(jgen,
              DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
-             documentDescription.getAssociatedWithRecordAsCode(),
-             documentDescription.getAssociatedWithRecordAsCodeName());
+             documentDescription.getAssociatedWithRecordAs());
         printModifiedEntity(jgen, documentDescription);
         printDisposal(jgen, documentDescription);
         printDisposalUndertaken(jgen, documentDescription);

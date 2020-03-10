@@ -180,16 +180,6 @@ public class HateoasSerializer
             jgen.writeNumberField(fieldName, value);
     }
 
-    protected void printNullableMetadataCode
-            (JsonGenerator jgen, String fieldName, String code, String codeName)
-            throws IOException {
-        if (null != code) {
-            jgen.writeObjectFieldStart(fieldName);
-            printCode(jgen, code, codeName);
-            jgen.writeEndObject();
-        }
-    }
-
     protected void printNullableMetadata
             (JsonGenerator jgen, String fieldName, IMetadataEntity m)
             throws IOException {
@@ -243,15 +233,6 @@ public class HateoasSerializer
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeNumberField(fieldName, value);
-    }
-
-    protected void printMetadataCode(JsonGenerator jgen, String fieldName,
-                                     String code, String codeName)
-            throws IOException {
-        checkNull(fieldName, code);
-        jgen.writeObjectFieldStart(fieldName);
-        printCode(jgen, code, codeName);
-        jgen.writeEndObject();
     }
 
     protected void printDate(JsonGenerator jgen,

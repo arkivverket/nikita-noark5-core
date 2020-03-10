@@ -543,15 +543,12 @@ public final class CommonUtils {
 
             public static void deserialiseDocumentMedium(IDocumentMedium documentMediumEntity, ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize documentMedium
-                IMetadataEntity entity =
+                DocumentMedium documentMedium = (DocumentMedium)
                         deserialiseMetadataValue(objectNode,
                                 DOCUMENT_MEDIUM,
                                 new DocumentMedium(),
                                 errors, false);
-                documentMediumEntity
-                        .setDocumentMediumCode(entity.getCode());
-                documentMediumEntity
-                        .setDocumentMediumCodeName(entity.getCodeName());
+                documentMediumEntity.setDocumentMedium(documentMedium);
             }
 
             public static void deserialiseNoarkSystemIdEntity(
@@ -590,13 +587,12 @@ public final class CommonUtils {
 
             public static void deserialiseCaseStatus(ICaseFileEntity caseFile,
                                                      ObjectNode objectNode, StringBuilder errors) {
-                IMetadataEntity entity =
+                CaseStatus caseStatus = (CaseStatus)
                         deserialiseMetadataValue(objectNode,
                                 CASE_STATUS,
                                 new CaseStatus(),
                                 errors, false);
-                caseFile.setCaseStatusCode(entity.getCode());
-                caseFile.setCaseStatusCodeName(entity.getCodeName());
+                caseFile.setCaseStatus(caseStatus);
             }
 
             public static void deserialiseKeyword(IKeyword keywordEntity, ObjectNode objectNode, StringBuilder errors) {
@@ -646,15 +642,13 @@ public final class CommonUtils {
             public static void deserialiseClassificationSystemType(
                     IClassificationSystemEntity classificationSystem,
                     ObjectNode objectNode, StringBuilder errors) {
-                IMetadataEntity entity =
+                ClassificationType classificationType = (ClassificationType)
                         deserialiseMetadataValue(objectNode,
                                 CLASSIFICATION_SYSTEM_TYPE,
                                 new ClassificationType(),
                                 errors, false);
-                classificationSystem.
-                        setClassificationTypeCode(entity.getCode());
-                classificationSystem.
-                        setClassificationTypeCodeName(entity.getCodeName());
+                classificationSystem
+                    .setClassificationType(classificationType);
             }
 
             public static void deserialiseStorageLocation(IStorageLocation storageLocationEntity,
@@ -1543,13 +1537,13 @@ public final class CommonUtils {
             public static void deserialiseClassifiedEntity(IClassifiedEntity classifiedEntity, ObjectNode objectNode, StringBuilder errors) {
 
                 // Deserialize classification
-                IMetadataEntity entity =
+                ClassifiedCode classifiedCode = (ClassifiedCode)
                         deserialiseMetadataValue(objectNode,
                                 CLASSIFICATION,
                                 new ClassifiedCode(),
                                 errors, true);
-                classifiedEntity.setClassificationCode(entity.getCode());
-                classifiedEntity.setClassificationCodeName(entity.getCodeName());
+                classifiedEntity.setClassification(classifiedCode);
+
                 // Deserialize classificationDate
                 classifiedEntity.setClassificationDate(deserializeDateTime(CLASSIFICATION_DATE, objectNode, errors));
 
@@ -1594,26 +1588,23 @@ public final class CommonUtils {
                     ElectronicSignature electronicSignature,
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialise elektroniskSignaturSikkerhetsnivaa
-                IMetadataEntity entity =
+                ElectronicSignatureSecurityLevel essLevel =
+                    (ElectronicSignatureSecurityLevel)
                         deserialiseMetadataValue(objectNode,
                                 ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
                                 new ElectronicSignatureSecurityLevel(),
                                 errors, true);
-                electronicSignature.setElectronicSignatureSecurityLevelCode(
-                        entity.getCode());
-                electronicSignature.setElectronicSignatureSecurityLevelCodeName(
-                        entity.getCodeName());
+                electronicSignature
+                    .setElectronicSignatureSecurityLevel(essLevel);
 
                 // Deserialise elektroniskSignaturVerifisert
-                entity =
+                ElectronicSignatureVerified esVerified =
+                    (ElectronicSignatureVerified)
                         deserialiseMetadataValue(objectNode,
                                 ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
                                 new ElectronicSignatureVerified(),
                                 errors, true);
-                electronicSignature.setElectronicSignatureVerifiedCode(
-                        entity.getCode());
-                electronicSignature.setElectronicSignatureVerifiedCodeName(
-                        entity.getCodeName());
+                electronicSignature.setElectronicSignatureVerified(esVerified);
 
                 // Deserialise verifisertDato
                 JsonNode currentNode =
@@ -1714,10 +1705,9 @@ public final class CommonUtils {
                     throws IOException {
                 printSystemIdEntity(jgen, classificationSystem);
                 printTitleAndDescription(jgen, classificationSystem);
-                printNullableMetadataCode
+                printNullableMetadata
                     (jgen, CLASSIFICATION_SYSTEM_TYPE,
-                     classificationSystem.getClassificationTypeCode(),
-                     classificationSystem.getClassificationTypeCodeName());
+                     classificationSystem.getClassificationType());
             }
 
             public static void printFileEntity(JsonGenerator jgen,
@@ -1748,9 +1738,8 @@ public final class CommonUtils {
                               caseFile.getCaseResponsible());
                 printNullable(jgen, CASE_RECORDS_MANAGEMENT_UNIT,
                               caseFile.getRecordsManagementUnit());
-                printNullableMetadataCode(jgen, CASE_STATUS,
-                                          caseFile.getCaseStatusCode(),
-                                          caseFile.getCaseStatusCodeName());
+                printNullableMetadata(jgen, CASE_STATUS,
+                                      caseFile.getCaseStatus());
                 printNullableDate(jgen, CASE_LOANED_DATE,
                                   caseFile.getLoanedDate());
                 printNullable(jgen, CASE_LOANED_TO,
@@ -1773,18 +1762,6 @@ public final class CommonUtils {
                 if (null != metadataEntity.getCodeName()) {
                     jgen.writeStringField(CODE_NAME,
                                           metadataEntity.getCodeName());
-                }
-            }
-
-            @Deprecated
-            public static void printNullableMetadataCode
-                (JsonGenerator jgen, String fieldName,
-                 String code, String codeName)
-                throws IOException {
-                if (null != code) {
-                    jgen.writeObjectFieldStart(fieldName);
-                    printCode(jgen, code, codeName);
-                    jgen.writeEndObject();
                 }
             }
 
@@ -1861,12 +1838,10 @@ public final class CommonUtils {
                         jgen.writeNumberField(REGISTRY_ENTRY_NUMBER,
                                 registryEntry.getRegistryEntryNumber());
                     }
-                    printNullableMetadataCode(jgen, REGISTRY_ENTRY_TYPE,
-                              registryEntry.getRegistryEntryTypeCode(),
-                              registryEntry.getRegistryEntryTypeCodeName());
-                    printNullableMetadataCode(jgen, REGISTRY_ENTRY_STATUS,
-                              registryEntry.getRecordStatusCode(),
-                              registryEntry.getRecordStatusCodeName());
+                    printNullableMetadata(jgen, REGISTRY_ENTRY_TYPE,
+                              registryEntry.getRegistryEntryType());
+                    printNullableMetadata(jgen, REGISTRY_ENTRY_STATUS,
+                              registryEntry.getRegistryEntryStatus());
                     printNullableDate(jgen, REGISTRY_ENTRY_DATE,
                                       registryEntry.getRecordDate());
                     printNullable(jgen, CASE_RECORDS_MANAGEMENT_UNIT,
@@ -1877,10 +1852,9 @@ public final class CommonUtils {
             public static void printDocumentMedium(JsonGenerator jgen,
                                                    IDocumentMedium documentMedium)
                     throws IOException {
-                printNullableMetadataCode
+                printNullableMetadata
                     (jgen, DOCUMENT_MEDIUM,
-                     documentMedium.getDocumentMediumCode(),
-                     documentMedium.getDocumentMediumCodeName());
+                     documentMedium.getDocumentMedium());
             }
 
             public static void printFinaliseEntity(JsonGenerator jgen,
@@ -2245,14 +2219,12 @@ public final class CommonUtils {
                         esEntity.getReferenceElectronicSignature();
                 if (es != null) {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
-                    printNullableMetadataCode
+                    printNullableMetadata
                         (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
-                         es.getElectronicSignatureSecurityLevelCode(),
-                         es.getElectronicSignatureSecurityLevelCodeName());
-                    printNullableMetadataCode
+                         es.getElectronicSignatureSecurityLevel());
+                    printNullableMetadata
                         (jgen, ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
-                         es.getElectronicSignatureVerifiedCode(),
-                         es.getElectronicSignatureVerifiedCodeName());
+                         es.getElectronicSignatureVerified());
                     printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                                       es.getVerifiedDate());
                     printNullable(jgen, ELECTRONIC_SIGNATURE_VERIFIED_BY,
@@ -2267,10 +2239,9 @@ public final class CommonUtils {
                     Classified classified = classifiedEntity.getReferenceClassified();
                     if (classified != null) {
                         jgen.writeObjectFieldStart(CLASSIFIED);
-                        printNullableMetadataCode
+                        printNullableMetadata
                             (jgen, CLASSIFICATION,
-                             classified.getClassificationCode(),
-                             classified.getClassificationCodeName());
+                             classified.getClassification());
                         printNullableDateTime
                             (jgen, CLASSIFICATION_DATE,
                              classified.getClassificationDate());

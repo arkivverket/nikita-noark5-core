@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.interfaces.IPart;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePart;
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.RecordDeserializer;
@@ -265,20 +266,23 @@ public class Record
         this.description = description;
     }
 
-    public String getDocumentMediumCode() {
-        return documentMediumCode;
+    public DocumentMedium getDocumentMedium() {
+        if (null == documentMediumCode)
+            return null;
+        DocumentMedium documentMedium = new DocumentMedium();
+        documentMedium.setCode(documentMediumCode);
+        documentMedium.setCodeName(documentMediumCodeName);
+        return documentMedium;
     }
 
-    public void setDocumentMediumCode(String documentMediumCode) {
-        this.documentMediumCode = documentMediumCode;
-    }
-
-    public String getDocumentMediumCodeName() {
-        return documentMediumCodeName;
-    }
-
-    public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMediumCodeName = documentMediumCodeName;
+    public void setDocumentMedium(DocumentMedium documentMedium) {
+        if (null != documentMedium) {
+            this.documentMediumCode = documentMedium.getCode();
+            this.documentMediumCodeName = documentMedium.getCodeName();
+        } else {
+            this.documentMediumCode = null;
+            this.documentMediumCodeName = null;
+        }
     }
 
     @Override

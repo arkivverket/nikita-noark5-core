@@ -361,12 +361,11 @@ public final class N5ResourceMappings {
     // Constant values defined in the FondsStatus Metadata catalogue
 
     public static final String FONDS_STATUS_OPEN_CODE = "O";
-    public static final String FONDS_STATUS_OPEN = "Opprettet";
+    public static final String FONDS_STATUS_CLOSED_CODE = "A";
     public static final String FONDS_STATUS_CLOSED = "Avsluttet";
 
     // Constant values defined in the SeriesStatus Metadata catalogue
     public static final String SERIES_STATUS_ACTIVE_CODE = "A";
-    public static final String SERIES_STATUS_ACTIVE = "Aktiv periode";
     public static final String SERIES_STATUS_CLOSED_CODE = "P";
 
     // M300 dokumentmedium
@@ -377,11 +376,9 @@ public final class N5ResourceMappings {
 
     // M217 tilknyttetRegistreringSom
     public static final String MAIN_DOCUMENT_CODE = "H";
-    public static final String MAIN_DOCUMENT = "Hoveddokument";
     public static final String ATTACHMENT = "Vedlegg";
 
     // M083 dokumenttype
-    public static final String LETTER = "Brev";
     public static final String LETTER_CODE = "B";
     public static final String CIRCULAR = "Rundskriv";
     public static final String INVOICE = "Faktura";
@@ -389,7 +386,6 @@ public final class N5ResourceMappings {
 
     // M054 dokumentstatus
     public static final String DOCUMENT_STATUS_EDIT = "Dokumentet er under redigering";
-    public static final String DOCUMENT_STATUS_FINALISED = "Dokumentet er ferdigstilt";
     public static final String DOCUMENT_STATUS_FINALISED_CODE = "F";
 
     // M700 variantformat

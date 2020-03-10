@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.interfaces.ICrossReference;
 import nikita.common.model.noark5.v5.interfaces.entities.IFileEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.FileDeserializer;
@@ -173,20 +174,23 @@ public class File
         this.publicTitle = publicTitle;
     }
 
-    public String getDocumentMediumCode() {
-        return documentMediumCode;
+    public DocumentMedium getDocumentMedium() {
+        if (null == documentMediumCode)
+            return null;
+        DocumentMedium documentMedium = new DocumentMedium();
+        documentMedium.setCode(documentMediumCode);
+        documentMedium.setCodeName(documentMediumCodeName);
+        return documentMedium;
     }
 
-    public void setDocumentMediumCode(String documentMediumCode) {
-        this.documentMediumCode = documentMediumCode;
-    }
-
-    public String getDocumentMediumCodeName() {
-        return documentMediumCodeName;
-    }
-
-    public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMediumCodeName = documentMediumCodeName;
+    public void setDocumentMedium(DocumentMedium documentMedium) {
+        if (null != documentMedium) {
+            this.documentMediumCode = documentMedium.getCode();
+            this.documentMediumCodeName = documentMedium.getCodeName();
+        } else {
+            this.documentMediumCode = null;
+            this.documentMediumCodeName = null;
+        }
     }
 
     @Override

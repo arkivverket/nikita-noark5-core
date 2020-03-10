@@ -117,9 +117,8 @@ public class NationalIdentifierSerializer
         throws IOException {
         jgen.writeStartObject();
         printSystemIdEntity(jgen, position);
-        printMetadataCode(jgen, COORDINATE_SYSTEM,
-                          position.getCoordinateSystemCode(),
-                          position.getCoordinateSystemCodeName());
+        printNullableMetadata(jgen, COORDINATE_SYSTEM,
+                              position.getCoordinateSystem());
         printNullable(jgen, X, position.getX());
         printNullable(jgen, Y, position.getY());
         printNullable(jgen, Z, position.getZ());

@@ -175,23 +175,24 @@ public class CaseFile
     }
 
     @Override
-    public String getCaseStatusCode() {
-        return caseStatusCode;
+    public CaseStatus getCaseStatus() {
+        if (null == caseStatusCode)
+            return null;
+        CaseStatus caseStatus = new CaseStatus();
+        caseStatus.setCode(caseStatusCode);
+        caseStatus.setCodeName(caseStatusCodeName);
+        return caseStatus;
     }
 
     @Override
-    public void setCaseStatusCode(String caseStatusCode) {
-        this.caseStatusCode = caseStatusCode;
-    }
-
-    @Override
-    public String getCaseStatusCodeName() {
-        return caseStatusCodeName;
-    }
-
-    @Override
-    public void setCaseStatusCodeName(String caseStatusCodeName) {
-        this.caseStatusCodeName = caseStatusCodeName;
+    public void setCaseStatus(CaseStatus caseStatus) {
+        if (null != caseStatus) {
+            this.caseStatusCode = caseStatus.getCode();
+            this.caseStatusCodeName = caseStatus.getCodeName();
+        } else {
+            this.caseStatusCode = null;
+            this.caseStatusCodeName = null;
+        }
     }
 
     public OffsetDateTime getLoanedDate() {

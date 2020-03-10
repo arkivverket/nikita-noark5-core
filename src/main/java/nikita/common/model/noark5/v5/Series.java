@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
+import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.SeriesDeserializer;
 import nikita.webapp.hateoas.SeriesHateoasHandler;
@@ -189,36 +191,42 @@ public class Series
     @JsonIgnore
     private Deletion referenceDeletion;
 
-    public String getSeriesStatusCode() {
-        return seriesStatusCode;
+    public SeriesStatus getSeriesStatus() {
+        if (null == seriesStatusCode)
+            return null;
+        SeriesStatus seriesStatus = new SeriesStatus();
+        seriesStatus.setCode(seriesStatusCode);
+        seriesStatus.setCodeName(seriesStatusCodeName);
+        return seriesStatus;
     }
 
-    public void setSeriesStatusCode(String seriesStatusCode) {
-        this.seriesStatusCode = seriesStatusCode;
+    public void setSeriesStatus(SeriesStatus seriesStatus) {
+        if (null != seriesStatus) {
+            this.seriesStatusCode = seriesStatus.getCode();
+            this.seriesStatusCodeName = seriesStatus.getCodeName();
+        } else {
+            this.seriesStatusCode = null;
+            this.seriesStatusCodeName = null;
+        }
     }
 
-    public String getSeriesStatusCodeName() {
-        return seriesStatusCodeName;
+    public DocumentMedium getDocumentMedium() {
+        if (null == documentMediumCode)
+            return null;
+        DocumentMedium documentMedium = new DocumentMedium();
+        documentMedium.setCode(documentMediumCode);
+        documentMedium.setCodeName(documentMediumCodeName);
+        return documentMedium;
     }
 
-    public void setSeriesStatusCodeName(String seriesStatusCodeName) {
-        this.seriesStatusCodeName = seriesStatusCodeName;
-    }
-
-    public String getDocumentMediumCode() {
-        return documentMediumCode;
-    }
-
-    public void setDocumentMediumCode(String documentMediumCode) {
-        this.documentMediumCode = documentMediumCode;
-    }
-
-    public String getDocumentMediumCodeName() {
-        return documentMediumCodeName;
-    }
-
-    public void setDocumentMediumCodeName(String documentMediumCodeName) {
-        this.documentMediumCodeName = documentMediumCodeName;
+    public void setDocumentMedium(DocumentMedium documentMedium) {
+        if (null != documentMedium) {
+            this.documentMediumCode = documentMedium.getCode();
+            this.documentMediumCodeName = documentMedium.getCodeName();
+        } else {
+            this.documentMediumCode = null;
+            this.documentMediumCodeName = null;
+        }
     }
 
     public OffsetDateTime getSeriesStartDate() {

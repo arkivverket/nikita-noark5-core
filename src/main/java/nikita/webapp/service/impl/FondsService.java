@@ -7,7 +7,9 @@ import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
+import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -98,8 +100,11 @@ public class FondsService
     @Override
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
         validateDocumentMedium(metadataService, fonds);
-        if (null == fonds.getFondsStatusCode()) {
-            fonds.setFondsStatusCode(FONDS_STATUS_OPEN_CODE);
+        if (null == fonds.getFondsStatus()) {
+            FondsStatus fondsStatus = (FondsStatus)
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                    (FONDS_STATUS, FONDS_STATUS_OPEN_CODE, null);
+            fonds.setFondsStatus(fondsStatus);
         }
         checkFondsStatusUponCreation(fonds);
         setFinaliseEntityValues(fonds);
@@ -373,10 +378,14 @@ public class FondsService
     @Override
     public SeriesHateoas generateDefaultSeries(@NotNull String fondsSystemId) {
         Series defaultSeries = new Series();
-        defaultSeries.setSeriesStatusCode(SERIES_STATUS_ACTIVE_CODE);
-        defaultSeries.setSeriesStatusCodeName(SERIES_STATUS_ACTIVE);
-        defaultSeries.setDocumentMediumCode(DOCUMENT_MEDIUM_ELECTRONIC_CODE);
-        defaultSeries.setDocumentMediumCodeName(DOCUMENT_MEDIUM_ELECTRONIC);
+        SeriesStatus seriesStatus = (SeriesStatus)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (SERIES_STATUS, SERIES_STATUS_ACTIVE_CODE, null);
+        defaultSeries.setSeriesStatus(seriesStatus);
+        DocumentMedium documentMedium = (DocumentMedium)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (DOCUMENT_MEDIUM, DOCUMENT_MEDIUM_ELECTRONIC_CODE, null);
+        defaultSeries.setDocumentMedium(documentMedium);
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas(defaultSeries);
         seriesHateoasHandler.addLinksOnTemplate(seriesHateoas, new Authorisation());
@@ -400,8 +409,10 @@ public class FondsService
     @Override
     public FondsHateoas generateDefaultFonds(String fondsSystemId) {
         Fonds defaultFonds = new Fonds();
-        defaultFonds.setDocumentMediumCode(DOCUMENT_MEDIUM_ELECTRONIC_CODE);
-        defaultFonds.setDocumentMediumCodeName(DOCUMENT_MEDIUM_ELECTRONIC);
+        DocumentMedium documentMedium = (DocumentMedium)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (DOCUMENT_MEDIUM, DOCUMENT_MEDIUM_ELECTRONIC_CODE, null);
+        defaultFonds.setDocumentMedium(documentMedium);
         FondsHateoas fondsHateoas = new FondsHateoas(defaultFonds);
         fondsHateoasHandler.addLinksOnTemplate(fondsHateoas, new Authorisation());
         return fondsHateoas;
@@ -439,13 +450,9 @@ public class FondsService
 
         // Copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingFonds, existingFonds);
-        if (null != incomingFonds.getDocumentMediumCode()) {
-            existingFonds.setDocumentMediumCode(
-		incomingFonds.getDocumentMediumCode());
-        }
-        if (null != incomingFonds.getDocumentMediumCodeName()) {
-            existingFonds.setDocumentMediumCodeName(
-		incomingFonds.getDocumentMediumCodeName());
+        if (null != incomingFonds.getDocumentMedium()) {
+            existingFonds.setDocumentMedium(
+                incomingFonds.getDocumentMedium());
         }
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -531,11 +538,12 @@ public class FondsService
      * @param fonds The fonds object
      */
     private void checkFondsNotClosed(@NotNull Fonds fonds) {
-        if (fonds.getFondsStatusCodeName() != null &&
-                fonds.getFondsStatusCodeName().equals(FONDS_STATUS_CLOSED)) {
+        if (null != fonds.getFondsStatus() &&
+                FONDS_STATUS_CLOSED_CODE.equals(
+                        fonds.getFondsStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Fonds with fondsSystemId " + fonds.getSystemId() +
-                    " has status " + FONDS_STATUS_CLOSED;
+                    " has status code " + FONDS_STATUS_CLOSED_CODE;
             logger.info(info);
             throw new NoarkEntityEditWhenClosedException(info);
         }
@@ -599,13 +607,12 @@ public class FondsService
      * @param fonds The fonds object
      */
     private void checkFondsStatusUponCreation(Fonds fonds) {
-        if (fonds.getFondsStatusCode() != null) {
+        if (fonds.getFondsStatus() != null) {
             FondsStatus fondsStatus = (FondsStatus) metadataService
                     .findValidMetadataByEntityTypeOrThrow(
                             FONDS_STATUS,
-                            fonds.getFondsStatusCode(),
-                            fonds.getFondsStatusCodeName());
-            fonds.setFondsStatusCodeName(fondsStatus.getCodeName());
+                            fonds.getFondsStatus());
+            fonds.setFondsStatus(fondsStatus);
         }
     }
 }

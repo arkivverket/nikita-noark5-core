@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
+import nikita.common.model.noark5.v5.metadata.ClassificationType;
 
 import java.util.List;
 
@@ -13,13 +14,9 @@ public interface IClassificationSystemEntity
         extends INoarkGeneralEntity
 {
 
-    String getClassificationTypeCode();
+    ClassificationType getClassificationType();
 
-    void setClassificationTypeCode(String classificationTypeCode);
-
-    String getClassificationTypeCodeName();
-
-    void setClassificationTypeCodeName(String classificationTypeCodeName);
+    void setClassificationType(ClassificationType classificationType);
 
     List<Series> getReferenceSeries();
 

@@ -5,6 +5,8 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.metadata.ElectronicSignatureSecurityLevel;
+import nikita.common.model.noark5.v5.metadata.ElectronicSignatureVerified;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -80,45 +82,56 @@ public class ElectronicSignature
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentDescription referenceDocumentDescription;
 
-    public String getElectronicSignatureSecurityLevelCode() {
-        return electronicSignatureSecurityLevelCode;
+    public ElectronicSignatureSecurityLevel
+    getElectronicSignatureSecurityLevel() {
+        if (null == electronicSignatureSecurityLevelCode)
+            return null;
+        ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel =
+            new ElectronicSignatureSecurityLevel();
+        electronicSignatureSecurityLevel
+            .setCode(electronicSignatureSecurityLevelCode);
+        electronicSignatureSecurityLevel
+            .setCodeName(electronicSignatureSecurityLevelCodeName);
+        return electronicSignatureSecurityLevel;
     }
 
-    public void setElectronicSignatureSecurityLevelCode(
-            String electronicSignatureSecurityLevelCode) {
-        this.electronicSignatureSecurityLevelCode =
-                electronicSignatureSecurityLevelCode;
+    public void setElectronicSignatureSecurityLevel(
+            ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel) {
+        if (null != electronicSignatureSecurityLevel) {
+            this.electronicSignatureSecurityLevelCode =
+                electronicSignatureSecurityLevel.getCode();
+            this.electronicSignatureSecurityLevelCodeName =
+                electronicSignatureSecurityLevel.getCodeName();
+        } else {
+            this.electronicSignatureSecurityLevelCode = null;
+            this.electronicSignatureSecurityLevelCodeName = null;
+        }
     }
 
-    public String getElectronicSignatureSecurityLevelCodeName() {
-        return electronicSignatureSecurityLevelCodeName;
+    public ElectronicSignatureVerified getElectronicSignatureVerified() {
+        if (null == electronicSignatureVerifiedCode)
+            return null;
+        ElectronicSignatureVerified electronicSignatureVerified =
+            new ElectronicSignatureVerified();
+        electronicSignatureVerified
+            .setCode(electronicSignatureVerifiedCode);
+        electronicSignatureVerified
+            .setCodeName(electronicSignatureVerifiedCodeName);
+        return electronicSignatureVerified;
     }
 
-    public void setElectronicSignatureSecurityLevelCodeName(
-            String electronicSignatureSecurityLevelCodeName) {
-        this.electronicSignatureSecurityLevelCodeName =
-                electronicSignatureSecurityLevelCodeName;
-    }
-
-    public String getElectronicSignatureVerifiedCode() {
-        return electronicSignatureVerifiedCode;
-    }
-
-    public void setElectronicSignatureVerifiedCode(
-            String electronicSignatureVerifiedCode) {
-        this.electronicSignatureVerifiedCode =
-            electronicSignatureVerifiedCode;
-    }
-
-    public String getElectronicSignatureVerifiedCodeName() {
-        return electronicSignatureVerifiedCodeName;
-    }
-
-    public void setElectronicSignatureVerifiedCodeName(
-            String electronicSignatureVerifiedCodeName) {
-        this.electronicSignatureVerifiedCodeName =
-            electronicSignatureVerifiedCodeName;
-    }
+    public void setElectronicSignatureVerified(
+            ElectronicSignatureVerified electronicSignatureVerified) {
+         if (null != electronicSignatureVerified) {
+            this.electronicSignatureVerifiedCode =
+                electronicSignatureVerified.getCode();
+            this.electronicSignatureVerifiedCodeName =
+                electronicSignatureVerified.getCodeName();
+        } else {
+            this.electronicSignatureVerifiedCode = null;
+            this.electronicSignatureVerifiedCodeName = null;
+        }
+   }
 
     public OffsetDateTime getVerifiedDate() {
         return verifiedDate;

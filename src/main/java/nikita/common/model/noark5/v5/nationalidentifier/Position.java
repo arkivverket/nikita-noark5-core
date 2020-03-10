@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPositionEntity;
+import nikita.common.model.noark5.v5.metadata.CoordinateSystem;
 import nikita.common.util.deserialisers.nationalidentifier.PositionDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.PositionSerializer;
 import nikita.webapp.hateoas.nationalidentifier.PositionHateoasHandler;
@@ -77,23 +78,24 @@ public class Position
     private Double z;
 
     @Override
-    public String getCoordinateSystemCode() {
-        return coordinateSystemCode;
+    public CoordinateSystem getCoordinateSystem() {
+        if (null == coordinateSystemCode)
+            return null;
+        CoordinateSystem coordinateSystem = new CoordinateSystem();
+        coordinateSystem.setCode(coordinateSystemCode);
+        coordinateSystem.setCodeName(coordinateSystemCodeName);
+        return coordinateSystem;
     }
 
     @Override
-    public void setCoordinateSystemCode(String coordinateSystemCode) {
-        this.coordinateSystemCode = coordinateSystemCode;
-    }
-
-    @Override
-    public String getCoordinateSystemCodeName() {
-        return coordinateSystemCodeName;
-    }
-
-    @Override
-    public void setCoordinateSystemCodeName(String coordinateSystemCodeName) {
-        this.coordinateSystemCodeName = coordinateSystemCodeName;
+    public void setCoordinateSystem(CoordinateSystem coordinateSystem) {
+        if (null != coordinateSystem) {
+            this.coordinateSystemCode = coordinateSystem.getCode();
+            this.coordinateSystemCodeName = coordinateSystem.getCodeName();
+        } else {
+            this.coordinateSystemCode = null;
+            this.coordinateSystemCodeName = null;
+        }
     }
 
     @Override

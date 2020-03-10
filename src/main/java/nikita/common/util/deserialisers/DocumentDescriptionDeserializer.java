@@ -67,31 +67,28 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
                 objectNode, errors);
 
         // Deserialize documentType
-        IMetadataEntity entity =
+        DocumentType documentType = (DocumentType)
             deserialiseMetadataValue(objectNode,
                                      DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
                                      new DocumentType(),
                                      errors, true);
-        documentDescription.setDocumentTypeCode(entity.getCode());
-        documentDescription.setDocumentTypeCodeName(entity.getCodeName());
+        documentDescription.setDocumentType(documentType);
 
         // Deserialize documentStatus
-        entity =
+        DocumentStatus documentStatus = (DocumentStatus)
             deserialiseMetadataValue(objectNode,
                                      DOCUMENT_DESCRIPTION_STATUS,
                                      new DocumentStatus(),
                                      errors, true);
-        documentDescription.setDocumentStatusCode(entity.getCode());
-        documentDescription.setDocumentStatusCodeName(entity.getCodeName());
+        documentDescription.setDocumentStatus(documentStatus);
 
         // Deserialize associatedWithRecordAs
-        entity =
+        AssociatedWithRecordAs associatedWithRecordAs = (AssociatedWithRecordAs)
             deserialiseMetadataValue(objectNode,
                                      DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
                                      new AssociatedWithRecordAs(),
                                      errors, true);
-        documentDescription.setAssociatedWithRecordAsCode(entity.getCode());
-        documentDescription.setAssociatedWithRecordAsCodeName(entity.getCodeName());
+        documentDescription.setAssociatedWithRecordAs(associatedWithRecordAs);
 
         // Deserialize documentNumber
         documentDescription.setDocumentNumber

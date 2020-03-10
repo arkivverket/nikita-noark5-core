@@ -455,9 +455,9 @@ public class TestParsing {
         assert (systemID.equals(series.getSystemId()));
         assert (title.equals(series.getTitle()));
         Classified c = series.getReferenceClassified();
-        assert ("SH".equals(c.getClassificationCode()));
+        assert ("SH".equals(c.getClassification().getCode()));
         assert ("Strengt hemmelig (sikkerhetsgrad)"
-                .equals(c.getClassificationCodeName()));
+                .equals(c.getClassification().getCodeName()));
     }
 
     @Test
@@ -526,9 +526,9 @@ public class TestParsing {
         assert (systemID.equals(file.getSystemId()));
         assert (title.equals(file.getTitle()));
         Classified c = file.getReferenceClassified();
-        assert ("SH".equals(c.getClassificationCode()));
+        assert ("SH".equals(c.getClassification().getCode()));
         assert ("Strengt hemmelig (sikkerhetsgrad)"
-                .equals(c.getClassificationCodeName()));
+                .equals(c.getClassification().getCodeName()));
     }
 
     @Test
@@ -607,9 +607,9 @@ public class TestParsing {
         assert (systemID.equals(caseFile.getSystemId()));
         assert (title.equals(caseFile.getTitle()));
         Classified c = caseFile.getReferenceClassified();
-        assert ("SH".equals(c.getClassificationCode()));
+        assert ("SH".equals(c.getClassification().getCode()));
         assert ("Strengt hemmelig (sikkerhetsgrad)"
-                .equals(c.getClassificationCodeName()));
+                .equals(c.getClassification().getCodeName()));
     }
 
     @Test
@@ -676,9 +676,9 @@ public class TestParsing {
         assert (systemID.equals(record.getSystemId()));
         assert (title.equals(record.getTitle()));
         Classified c = record.getReferenceClassified();
-        assert ("SH".equals(c.getClassificationCode()));
+        assert ("SH".equals(c.getClassification().getCode()));
         assert ("Strengt hemmelig (sikkerhetsgrad)"
-                .equals(c.getClassificationCodeName()));
+                .equals(c.getClassification().getCodeName()));
     }
 
     @Test
@@ -774,9 +774,9 @@ public class TestParsing {
         assert (systemID.equals(registryEntry.getSystemId()));
         assert (title.equals(registryEntry.getTitle()));
         Classified c = registryEntry.getReferenceClassified();
-        assert ("SH".equals(c.getClassificationCode()));
+        assert ("SH".equals(c.getClassification().getCode()));
         assert ("Strengt hemmelig (sikkerhetsgrad)"
-                .equals(c.getClassificationCodeName()));
+                .equals(c.getClassification().getCodeName()));
     }
 
     @Test
@@ -854,9 +854,9 @@ public class TestParsing {
         assert (systemID.equals(recordNote.getSystemId()));
         assert (title.equals(recordNote.getTitle()));
         Classified c = recordNote.getReferenceClassified();
-        assert ("SH".equals(c.getClassificationCode()));
+        assert ("SH".equals(c.getClassification().getCode()));
         assert ("Strengt hemmelig (sikkerhetsgrad)"
-                .equals(c.getClassificationCodeName()));
+                .equals(c.getClassification().getCodeName()));
     }
 
     @Test
@@ -953,9 +953,9 @@ public class TestParsing {
         assert (null != documentDescription);
         assert ("A document description title".equals(documentDescription.getTitle()));
         Classified c = documentDescription.getReferenceClassified();
-        assert ("SH".equals(c.getClassificationCode()));
+        assert ("SH".equals(c.getClassification().getCode()));
         assert ("Strengt hemmelig (sikkerhetsgrad)"
-                .equals(c.getClassificationCodeName()));
+                .equals(c.getClassification().getCodeName()));
     }
 
     @Test
