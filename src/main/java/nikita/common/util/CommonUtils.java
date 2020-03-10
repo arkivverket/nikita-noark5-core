@@ -10,7 +10,6 @@ import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
-import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.*;
@@ -1728,7 +1727,7 @@ public final class CommonUtils {
                 printStorageLocation(jgen, file);
                 printNullable(jgen, FILE_ID, file.getFileId());
                 printTitleAndDescription(jgen, file);
-                printNullable(jgen, FILE_PUBLIC_TITLE, file.getOfficialTitle());
+                printNullable(jgen, FILE_PUBLIC_TITLE, file.getPublicTitle());
             }
 
             public static void printCaseFileEntity(JsonGenerator jgen,
@@ -1816,7 +1815,7 @@ public final class CommonUtils {
                                   record.getRecordId());
                     printTitleAndDescription(jgen, record);
                     printNullable(jgen, FILE_PUBLIC_TITLE,
-                                  record.getOfficialTitle());
+                                  record.getPublicTitle());
                 }
             }
 

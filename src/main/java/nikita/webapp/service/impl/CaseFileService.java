@@ -510,8 +510,8 @@ public class CaseFileService
                 incomingCaseFile.getRecordsManagementUnit());
         existingCaseFile.setCaseResponsible(
                 incomingCaseFile.getCaseResponsible());
-        existingCaseFile.setOfficialTitle(
-                incomingCaseFile.getOfficialTitle());
+        existingCaseFile.setPublicTitle(
+                incomingCaseFile.getPublicTitle());
         if (null != incomingCaseFile.getCaseStatusCode()) {
             existingCaseFile.setCaseStatusCode(
                     incomingCaseFile.getCaseStatusCode());

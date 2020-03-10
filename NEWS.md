@@ -3,7 +3,15 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
-Release 0.5 2019-03-02 (commit bf83be0610b1fdc6b56b4c94ab07c3d1716940cb)
+Release 0.6 2020-XX-XX (commit X)
+----------------------
+ * Changed internal URLs, replaced "hateoas-api" with "api".
+ * Implemented storing of Precedence.
+ * Corrected handling of screening.
+ * Corrected _links collection returned for list of mixed entity
+   types to match the specific entity.
+
+Release 0.5 2020-03-02 (commit bf83be0610b1fdc6b56b4c94ab07c3d1716940cb)
 ----------------------
  * Updated to Noark 5 versjon 5.0 API specification.
     - Changed formatting of \_links from [] to {} to match IETF draft

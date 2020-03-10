@@ -84,10 +84,10 @@ public class RecordDeserializer
             record.setTitle(currentNode.textValue());
             objectNode.remove(TITLE);
         }
-        // Deserialize  officialTitle
+        // Deserialize  publicTitle
         currentNode = objectNode.get(FILE_PUBLIC_TITLE);
         if (null != currentNode) {
-            record.setOfficialTitle(currentNode.textValue());
+            record.setPublicTitle(currentNode.textValue());
             objectNode.remove(FILE_PUBLIC_TITLE);
         }
         // Deserialize description
