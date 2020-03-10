@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.common.model.noark5.v5.secondary.Author;
@@ -176,12 +177,19 @@ public class DocumentDescriptionService
         DocumentDescription defaultDocumentDescription =
             new DocumentDescription();
 
-        defaultDocumentDescription.setAssociatedWithRecordAsCode(MAIN_DOCUMENT_CODE);
-        defaultDocumentDescription.setAssociatedWithRecordAsCodeName(MAIN_DOCUMENT);
-        defaultDocumentDescription.setDocumentTypeCode(LETTER_CODE);
-        defaultDocumentDescription.setDocumentTypeCodeName(LETTER);
-        defaultDocumentDescription.setDocumentStatusCode(DOCUMENT_STATUS_FINALISED_CODE);
-        defaultDocumentDescription.setDocumentStatusCodeName(DOCUMENT_STATUS_FINALISED);
+        AssociatedWithRecordAs associatedWithRecordAs = (AssociatedWithRecordAs)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (ASSOCIATED_WITH_RECORD_AS, MAIN_DOCUMENT_CODE, null);
+        defaultDocumentDescription
+            .setAssociatedWithRecordAs(associatedWithRecordAs);
+        DocumentType documentType = (DocumentType)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (DOCUMENT_TYPE, LETTER_CODE, null);
+        defaultDocumentDescription.setDocumentType(documentType);
+        DocumentStatus documentStatus = (DocumentStatus)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (DOCUMENT_STATUS, DOCUMENT_STATUS_FINALISED_CODE, null);
+        defaultDocumentDescription.setDocumentStatus(documentStatus);
 
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas(defaultDocumentDescription);
@@ -392,21 +400,21 @@ public class DocumentDescriptionService
     private void updateDocumentDescription(
             @NotNull final DocumentDescription incomingDocumentDescription,
             @NotNull final DocumentDescription existingDocumentDescription) {
-        if (null != incomingDocumentDescription.getDocumentMediumCode()) {
-            existingDocumentDescription.setDocumentMediumCode(
-                    incomingDocumentDescription.getDocumentMediumCode());
+        if (null != incomingDocumentDescription.getDocumentMedium()) {
+            existingDocumentDescription.setDocumentMedium(
+                    incomingDocumentDescription.getDocumentMedium());
         }
-        if (null != incomingDocumentDescription.getDocumentMediumCodeName()) {
-            existingDocumentDescription.setDocumentMediumCodeName(
-                    incomingDocumentDescription.getDocumentMediumCodeName());
+        if (null != incomingDocumentDescription.getAssociatedWithRecordAs()) {
+            existingDocumentDescription.setAssociatedWithRecordAs(
+                    incomingDocumentDescription.getAssociatedWithRecordAs());
         }
-        if (null != incomingDocumentDescription.getAssociatedWithRecordAsCode()) {
-            existingDocumentDescription.setAssociatedWithRecordAsCode(
-                    incomingDocumentDescription.getAssociatedWithRecordAsCode());
+        if (null != incomingDocumentDescription.getDocumentType()) {
+            existingDocumentDescription.setDocumentType(
+                    incomingDocumentDescription.getDocumentType());
         }
-        if (null != incomingDocumentDescription.getAssociatedWithRecordAsCodeName()) {
-            existingDocumentDescription.setAssociatedWithRecordAsCodeName(
-                    incomingDocumentDescription.getAssociatedWithRecordAsCodeName());
+        if (null != incomingDocumentDescription.getDocumentStatus()) {
+            existingDocumentDescription.setDocumentStatus(
+                    incomingDocumentDescription.getDocumentStatus());
         }
         existingDocumentDescription.setDocumentNumber(
                 incomingDocumentDescription.getDocumentNumber());
@@ -437,22 +445,18 @@ public class DocumentDescriptionService
     }
     private void validateDocumentStatus(DocumentDescription documentDescription) {
         // Assume value already set, as the deserialiser will enforce it.
-        DocumentStatus documentStatus =
-                (DocumentStatus) metadataService
-                        .findValidMetadataByEntityTypeOrThrow(
+        DocumentStatus documentStatus = (DocumentStatus)
+                metadataService.findValidMetadataByEntityTypeOrThrow(
                                 DOCUMENT_STATUS,
-                                documentDescription.getDocumentStatusCode(),
-                                documentDescription.getDocumentStatusCodeName());
-        documentDescription.setDocumentStatusCodeName(documentStatus.getCodeName());
+                                documentDescription.getDocumentStatus());
+        documentDescription.setDocumentStatus(documentStatus);
     }
     private void validateDocumentType(DocumentDescription documentDescription) {
         // Assume value already set, as the deserialiser will enforce it.
-        DocumentType documentType =
-                (DocumentType) metadataService
-                        .findValidMetadataByEntityTypeOrThrow(
+        DocumentType documentType = (DocumentType)
+                metadataService.findValidMetadataByEntityTypeOrThrow(
                                 DOCUMENT_TYPE,
-                                documentDescription.getDocumentTypeCode(),
-                                documentDescription.getDocumentTypeCodeName());
-        documentDescription.setDocumentTypeCodeName(documentType.getCodeName());
+                                documentDescription.getDocumentType());
+        documentDescription.setDocumentType(documentType);
     }
 }

@@ -3,6 +3,8 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 import nikita.common.model.noark5.v5.interfaces.IElectronicSignature;
 import nikita.common.model.noark5.v5.interfaces.IPrecedence;
 import nikita.common.model.noark5.v5.interfaces.ISignOff;
+import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
+import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
 
 import java.time.OffsetDateTime;
 
@@ -21,21 +23,13 @@ public interface IRegistryEntryEntity extends IRecordEntity, IRecordNoteEntity,
 
     void setRegistryEntryNumber(Integer registryEntryNumber);
 
-    String getRegistryEntryTypeCode();
+    RegistryEntryType getRegistryEntryType();
 
-    void setRegistryEntryTypeCode(String registryEntryTypeCode);
+    void setRegistryEntryType(RegistryEntryType registryEntryType);
 
-    String getRegistryEntryTypeCodeName();
+    RegistryEntryStatus getRegistryEntryStatus();
 
-    void setRegistryEntryTypeCodeName(String registryEntryTypeCodeName);
-
-    String getRecordStatusCode();
-
-    void setRecordStatusCode(String recordStatusCode);
-
-    String getRecordStatusCodeName();
-
-    void setRecordStatusCodeName(String recordStatusCodeName);
+    void setRegistryEntryStatus(RegistryEntryStatus registryEntryStatus);
 
     OffsetDateTime getRecordDate();
 

@@ -396,11 +396,10 @@ public class CaseFileService
         CaseFile defaultCaseFile = new CaseFile();
         defaultCaseFile.setCaseResponsible(getUser());
         defaultCaseFile.setCaseDate(OffsetDateTime.now());
-        defaultCaseFile.setCaseStatusCode(defaultCaseFile.getCaseStatusCode());
-        defaultCaseFile.setCaseStatusCodeName(defaultCaseFile.
-                        getCaseStatusCodeName());
-        defaultCaseFile.setCaseStatusCode(DEFAULT_CASE_STATUS_CODE);
-        defaultCaseFile.setCaseStatusCodeName(DEFAULT_CASE_STATUS_CODE_NAME);
+        CaseStatus caseStatus = (CaseStatus)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (CASE_STATUS, DEFAULT_CASE_STATUS_CODE, null);
+        defaultCaseFile.setCaseStatus(caseStatus);
 
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas(defaultCaseFile);
@@ -512,24 +511,19 @@ public class CaseFileService
                 incomingCaseFile.getCaseResponsible());
         existingCaseFile.setPublicTitle(
                 incomingCaseFile.getPublicTitle());
-        if (null != incomingCaseFile.getCaseStatusCode()) {
-            existingCaseFile.setCaseStatusCode(
-                    incomingCaseFile.getCaseStatusCode());
-        }
-        if (null != incomingCaseFile.getCaseStatusCodeName()) {
-            existingCaseFile.setCaseStatusCodeName(
-                    incomingCaseFile.getCaseStatusCodeName());
+        if (null != incomingCaseFile.getCaseStatus()) {
+            existingCaseFile.setCaseStatus(
+                    incomingCaseFile.getCaseStatus());
         }
     }
 
     private void validateCaseStatus(CaseFile caseFile) {
-        if (null != caseFile.getCaseStatusCode()) {
+        if (null != caseFile.getCaseStatus()) {
             CaseStatus caseStatus = (CaseStatus) metadataService
                     .findValidMetadataByEntityTypeOrThrow(
                             CASE_STATUS,
-                            caseFile.getCaseStatusCode(),
-                            caseFile.getCaseStatusCodeName());
-            caseFile.setCaseStatusCodeName(caseStatus.getCodeName());
+                            caseFile.getCaseStatus());
+            caseFile.setCaseStatus(caseStatus);
         }
     }
 }

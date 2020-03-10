@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IClassificationSystemEntity;
+import nikita.common.model.noark5.v5.metadata.ClassificationType;
 import nikita.common.util.deserialisers.ClassificationSystemDeserializer;
 import nikita.webapp.hateoas.ClassificationSystemHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
@@ -54,23 +55,24 @@ public class ClassificationSystem
     private List<Class> referenceClass = new ArrayList<>();
 
     @Override
-    public String getClassificationTypeCode() {
-        return classificationTypeCode;
+    public ClassificationType getClassificationType() {
+        if (null == classificationTypeCode)
+            return null;
+        ClassificationType classificationType = new ClassificationType();
+        classificationType.setCode(classificationTypeCode);
+        classificationType.setCodeName(classificationTypeCodeName);
+        return classificationType;
     }
 
     @Override
-    public void setClassificationTypeCode(String classificationTypeCode) {
-        this.classificationTypeCode = classificationTypeCode;
-    }
-
-    @Override
-    public String getClassificationTypeCodeName() {
-        return classificationTypeCodeName;
-    }
-
-    @Override
-    public void setClassificationTypeCodeName(String classificationTypeCodeName) {
-        this.classificationTypeCodeName = classificationTypeCodeName;
+    public void setClassificationType(ClassificationType classificationType) {
+        if (null != classificationType) {
+            this.classificationTypeCode = classificationType.getCode();
+            this.classificationTypeCodeName = classificationType.getCodeName();
+        } else {
+            this.classificationTypeCode = null;
+            this.classificationTypeCodeName = null;
+        }
     }
 
     @Override

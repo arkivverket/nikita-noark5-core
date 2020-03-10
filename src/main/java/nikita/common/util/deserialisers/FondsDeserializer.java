@@ -69,14 +69,13 @@ public class FondsDeserializer
         CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(fonds, objectNode, errors);
 
         // Deserialize seriesStatus
-        IMetadataEntity entity =
+        FondsStatus fondsStatus = (FondsStatus)
             CommonUtils.Hateoas.Deserialize.deserialiseMetadataValue(
                 objectNode,
                 FONDS_STATUS,
                 new FondsStatus(),
                 errors, false);
-	fonds.setFondsStatusCode(entity.getCode());
-	fonds.setFondsStatusCodeName(entity.getCodeName());
+        fonds.setFondsStatus(fondsStatus);
 
         JsonNode currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

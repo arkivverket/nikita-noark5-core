@@ -194,8 +194,6 @@ public final class Constants {
     public static final String DEFAULT_DESCRIPTION = "This object, if " +
             "persisted, will be associated with ";
     public static final String DEFAULT_CASE_STATUS_CODE = "R";
-    public static final String DEFAULT_CASE_STATUS_CODE_NAME =
-            "Opprettet av saksbehandler";
 
     // Some user identifiers used for testing
     public static final String TEST_USER_CASE_HANDLER_1 = "example test user case handler 1";
@@ -207,10 +205,8 @@ public final class Constants {
     public static final String TEST_TITLE = "example test title";
     public static final String TEST_DESCRIPTION = "example test description";
     public static final String TEST_ADMINISTRATIVE_UNIT = "example test administrative unit";
-    public static final String TEST_RECORD_STATUS = "Journalført";
-    public static final String TEST_RECORD_STATUS_CODE = "J";
+    public static final String TEST_REGISTRY_ENTRY_STATUS_CODE = "J";
     public static final String TEST_REGISTRY_ENTRY_TYPE_CODE = "I";
-    public static final String TEST_REGISTRY_ENTRY_TYPE = "Inngående dokument";
 
     public static final String NOARK_DATE_FORMAT_PATTERN = "yyyy-MM-dd+HH:mm";
     public static final String NOARK_ZONED_DATE_FORMAT_PATTERN = "yyyy-MM-ddZ";

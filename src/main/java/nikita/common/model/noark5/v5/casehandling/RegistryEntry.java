@@ -5,6 +5,8 @@ import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IRegistryEntryEntity;
+import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
+import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.model.noark5.v5.secondary.ElectronicSignature;
 import nikita.common.model.noark5.v5.secondary.Precedence;
@@ -83,7 +85,7 @@ public class RegistryEntry
     @NotNull
     @Column(name = "record_status_code", nullable = false)
     @Audited
-    private String recordStatusCode;
+    private String registryEntryStatusCode;
 
     /**
      * M053 - journalstatus code name (xs:string, nullable = false)
@@ -91,7 +93,7 @@ public class RegistryEntry
     @NotNull
     @Column(name = "record_status_code_name", nullable = false)
     @Audited
-    private String recordStatusCodeName;
+    private String registryEntryStatusCodeName;
 
     /**
      * M101 - journaldato (xs:date)
@@ -228,36 +230,42 @@ public class RegistryEntry
         this.registryEntryNumber = registryEntryNumber;
     }
 
-    public String getRegistryEntryTypeCode() {
-        return registryEntryTypeCode;
+    public RegistryEntryType getRegistryEntryType() {
+        if (null == registryEntryTypeCode)
+            return null;
+        RegistryEntryType registryEntryType = new RegistryEntryType();
+        registryEntryType.setCode(registryEntryTypeCode);
+        registryEntryType.setCodeName(registryEntryTypeCodeName);
+        return registryEntryType;
     }
 
-    public void setRegistryEntryTypeCode(String registryEntryTypeCode) {
-        this.registryEntryTypeCode = registryEntryTypeCode;
+    public void setRegistryEntryType(RegistryEntryType registryEntryType) {
+        if (null != registryEntryType) {
+            this.registryEntryTypeCode = registryEntryType.getCode();
+            this.registryEntryTypeCodeName = registryEntryType.getCodeName();
+        } else {
+            this.registryEntryTypeCode = null;
+            this.registryEntryTypeCodeName = null;
+        }
     }
 
-    public String getRegistryEntryTypeCodeName() {
-        return registryEntryTypeCodeName;
+    public RegistryEntryStatus getRegistryEntryStatus() {
+        if (null == registryEntryStatusCode)
+            return null;
+        RegistryEntryStatus registryEntryStatus = new RegistryEntryStatus();
+        registryEntryStatus.setCode(registryEntryStatusCode);
+        registryEntryStatus.setCodeName(registryEntryStatusCodeName);
+        return registryEntryStatus;
     }
 
-    public void setRegistryEntryTypeCodeName(String registryEntryTypeCodeName) {
-        this.registryEntryTypeCodeName = registryEntryTypeCodeName;
-    }
-
-    public String getRecordStatusCode() {
-        return recordStatusCode;
-    }
-
-    public void setRecordStatusCode(String recordStatusCode) {
-        this.recordStatusCode = recordStatusCode;
-    }
-
-    public String getRecordStatusCodeName() {
-        return recordStatusCodeName;
-    }
-
-    public void setRecordStatusCodeName(String recordStatusCodeName) {
-        this.recordStatusCodeName = recordStatusCodeName;
+    public void setRegistryEntryStatus(RegistryEntryStatus registryEntryStatus) {
+        if (null != registryEntryStatus) {
+            this.registryEntryStatusCode = registryEntryStatus.getCode();
+            this.registryEntryStatusCodeName = registryEntryStatus.getCodeName();
+        } else {
+            this.registryEntryStatusCode = null;
+            this.registryEntryStatusCodeName = null;
+        }
     }
 
     public OffsetDateTime getRecordDate() {
@@ -413,8 +421,8 @@ public class RegistryEntry
                 ", receivedDate=" + receivedDate +
                 ", documentDate=" + documentDate +
                 ", recordDate=" + recordDate +
-                ", recordStatusCode='" + recordStatusCode + '\'' +
-                ", recordStatusCodeName='" + recordStatusCodeName + '\'' +
+                ", registryEntryStatusCode='" + registryEntryStatusCode + '\'' +
+                ", registryEntryStatusCodeName='" + registryEntryStatusCodeName + '\'' +
                 ", registryEntryTypeCode='" + registryEntryTypeCode + '\'' +
                 ", registryEntryTypeCodeName='" + registryEntryTypeCodeName + '\'' +
                 ", registryEntryNumber=" + registryEntryNumber +
@@ -447,8 +455,8 @@ public class RegistryEntry
                 .append(receivedDate, rhs.receivedDate)
                 .append(documentDate, rhs.documentDate)
                 .append(recordDate, rhs.recordDate)
-                .append(recordStatusCode, rhs.recordStatusCode)
-                .append(recordStatusCodeName, rhs.recordStatusCodeName)
+                .append(registryEntryStatusCode, rhs.registryEntryStatusCode)
+                .append(registryEntryStatusCodeName, rhs.registryEntryStatusCodeName)
                 .append(registryEntryTypeCode, rhs.registryEntryTypeCode)
                 .append(registryEntryTypeCodeName, rhs.registryEntryTypeCodeName)
                 .append(registryEntryNumber, rhs.registryEntryNumber)
@@ -471,8 +479,8 @@ public class RegistryEntry
                 .append(receivedDate)
                 .append(documentDate)
                 .append(recordDate)
-                .append(recordStatusCode)
-                .append(recordStatusCodeName)
+                .append(registryEntryStatusCode)
+                .append(registryEntryStatusCodeName)
                 .append(registryEntryTypeCode)
                 .append(registryEntryTypeCodeName)
                 .append(registryEntryNumber)

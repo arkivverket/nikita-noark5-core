@@ -18,7 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN;
+import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN_CODE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -79,8 +79,8 @@ public class FondsTest
         // Make sure that there is an actual Fonds object embedded in the result
         // of a createNewFonds
         assertTrue(noarkEntity instanceof Fonds);
-        assertEquals(((Fonds) noarkEntity).getFondsStatusCodeName(),
-		     FONDS_STATUS_OPEN);
+        assertEquals(((Fonds) noarkEntity).getFondsStatus().getCode(),
+                     FONDS_STATUS_OPEN_CODE);
     }
 
     /**

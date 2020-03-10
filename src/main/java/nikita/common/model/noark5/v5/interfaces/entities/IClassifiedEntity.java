@@ -1,5 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
+import nikita.common.model.noark5.v5.metadata.ClassifiedCode;
+
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
@@ -7,13 +9,9 @@ import java.time.OffsetDateTime;
  * Created by tsodring on 12/7/16.
  */
 public interface IClassifiedEntity extends Serializable {
-    String getClassificationCode();
+    ClassifiedCode getClassification();
 
-    void setClassificationCode(String classificationCode);
-
-    String getClassificationCodeName();
-
-    void setClassificationCodeName(String classificationCodeName);
+    void setClassification(ClassifiedCode classification);
 
     OffsetDateTime getClassificationDate();
 

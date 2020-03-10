@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.repository.n5v5.IFondsCreatorRepository;
 import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -25,8 +26,7 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_CREATOR_FONDS;
-import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN;
-import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN_CODE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
@@ -80,8 +80,10 @@ public class FondsCreatorService
         FondsCreator fondsCreator =
                 getFondsCreatorOrThrow(fondsCreatorSystemId);
         validateDocumentMedium(metadataService, fonds);
-        fonds.setFondsStatusCode(FONDS_STATUS_OPEN_CODE);
-        fonds.setFondsStatusCodeName(FONDS_STATUS_OPEN);
+        FondsStatus fondsStatus = (FondsStatus)
+            metadataService.findValidMetadataByEntityTypeOrThrow
+                (FONDS_STATUS, FONDS_STATUS_OPEN_CODE, null);
+        fonds.setFondsStatus(fondsStatus);
         setFinaliseEntityValues(fonds);
         fonds.getReferenceFondsCreator().add(fondsCreator);
         fondsCreator.getReferenceFonds().add(fonds);

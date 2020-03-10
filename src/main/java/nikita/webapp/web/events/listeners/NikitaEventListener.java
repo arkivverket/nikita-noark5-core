@@ -139,29 +139,29 @@ public class NikitaEventListener {
                 }
                 if (entityType.equals(FONDS)) {
                     body.put(TITLE, noarkEntity.getTitle());
-                    body.put(FONDS_STATUS, ((Fonds) entity).getFondsStatusCodeName());
+                    body.put(FONDS_STATUS, ((Fonds) entity).getFondsStatus().getCodeName());
                 } else if (entityType.equals(SERIES)) {
-                    body.put(SERIES_STATUS, ((Series) entity).getSeriesStatusCodeName());
+                    body.put(SERIES_STATUS, ((Series) entity).getSeriesStatus().getCodeName());
                 } else if (entityType.equals(CASE_FILE)) {
                     body.put(FILE_ID, ((CaseFile) entity).getFileId());
-                    body.put(CASE_STATUS, ((CaseFile) entity).getCaseStatusCode());
+                    body.put(CASE_STATUS, ((CaseFile) entity).getCaseStatus().getCode());
                 }
             } else if (entityType.equals(REGISTRY_ENTRY)) {
                 body.put(REGISTRY_ENTRY_NUMBER, ((RegistryEntry) entity).
                         getRegistryEntryNumber());
                 body.put(REGISTRY_ENTRY_TYPE, ((RegistryEntry) entity).
-                        getRegistryEntryTypeCodeName());
+                         getRegistryEntryType().getCodeName());
                 body.put(REGISTRY_ENTRY_STATUS, ((RegistryEntry) entity).
-                        getRecordStatusCodeName());
+                         getRegistryEntryStatus().getCodeName());
                 body.put(REGISTRY_ENTRY_DATE, ((RegistryEntry) entity).
                         getDocumentDate());
             } else if (entityType.equals(DOCUMENT_DESCRIPTION)) {
                 body.put(ASSOCIATED_WITH_RECORD_AS,
                         ((DocumentDescription) entity).
-                                getAssociatedWithRecordAsCodeName());
+                                getAssociatedWithRecordAs().getCodeName());
                 body.put(DOCUMENT_TYPE,
                         ((DocumentDescription) entity).
-                                getDocumentTypeCodeName());
+                                getDocumentType().getCodeName());
                 body.put(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
                         ((DocumentDescription) entity).
                                 getDocumentNumber());

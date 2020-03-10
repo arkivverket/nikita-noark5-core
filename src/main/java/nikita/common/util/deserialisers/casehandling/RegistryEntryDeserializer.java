@@ -116,21 +116,19 @@ public class RegistryEntryDeserializer
                                 objectNode, errors, false));
 
         // Deserialize registryEntryType
-        IMetadataEntity entity =
+        RegistryEntryType registryEntryType = (RegistryEntryType)
             deserialiseMetadataValue(objectNode,
                                      REGISTRY_ENTRY_TYPE,
                                      new RegistryEntryType(),
                                      errors, true);
-        registryEntry.setRegistryEntryTypeCode(entity.getCode());
-        registryEntry.setRegistryEntryTypeCodeName(entity.getCodeName());
-        // Deserialize recordStatus
-        entity =
+        registryEntry.setRegistryEntryType(registryEntryType);
+        // Deserialize RegistryEntryStatus
+        RegistryEntryStatus registryEntryStatus = (RegistryEntryStatus)
             deserialiseMetadataValue(objectNode,
                                      REGISTRY_ENTRY_STATUS,
                                      new RegistryEntryStatus(),
                                      errors, true);
-        registryEntry.setRecordStatusCode(entity.getCode());
-        registryEntry.setRecordStatusCodeName(entity.getCodeName());
+        registryEntry.setRegistryEntryStatus(registryEntryStatus);
         // Deserialize recordDate
         registryEntry.setRecordDate(
                 deserializeDate(REGISTRY_ENTRY_DATE, objectNode, errors));

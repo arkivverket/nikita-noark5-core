@@ -356,17 +356,14 @@ public class ClassificationSystemService
 
     private void validateClassificationType(
             ClassificationSystem classificationSystem) {
-        if (null != classificationSystem.getClassificationTypeCode()) {
-            ClassificationType classificationType =
-                    (ClassificationType) metadataService
-                            .findValidMetadataByEntityTypeOrThrow(
+        if (null != classificationSystem.getClassificationType()) {
+            ClassificationType classificationType = (ClassificationType)
+                    metadataService.findValidMetadataByEntityTypeOrThrow(
                                     CLASSIFICATION_TYPE,
                                     classificationSystem.
-                                            getClassificationTypeCode(),
-                                    classificationSystem.
-                                            getClassificationTypeCodeName());
-            classificationSystem.setClassificationTypeCodeName(
-                    classificationType.getCodeName());
+                                            getClassificationType());
+            classificationSystem
+                    .setClassificationType(classificationType);
         }
     }
 }
