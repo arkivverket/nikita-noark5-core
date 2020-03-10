@@ -8,8 +8,9 @@ Release 0.6 2020-XX-XX (commit X)
  * Changed internal URLs, replaced "hateoas-api" with "api".
  * Implemented storing of Precedence.
  * Corrected handling of screening.
- * Corrected _links collection returned for list of mixed entity
+ * Corrected \_links collection returned for list of mixed entity
    types to match the specific entity.
+ * Improved several internal structures.
 
 Release 0.5 2020-03-02 (commit bf83be0610b1fdc6b56b4c94ab07c3d1716940cb)
 ----------------------
