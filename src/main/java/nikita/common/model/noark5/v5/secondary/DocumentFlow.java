@@ -1,16 +1,19 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IDocumentFlowEntity;
 import nikita.common.model.noark5.v5.metadata.FlowStatus;
 import nikita.common.util.deserialisers.secondary.DocumentFlowDeserializer;
+import nikita.webapp.hateoas.secondary.DocumentFlowHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -26,6 +29,8 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Entity
 @Table(name = TABLE_DOCUMENT_FLOW)
 @JsonDeserialize(using = DocumentFlowDeserializer.class)
+@HateoasPacker(using = DocumentFlowHateoasHandler.class)
+@HateoasObject(using = DocumentFlowHateoas.class)
 public class DocumentFlow
         extends SystemIdEntity
         implements IDocumentFlowEntity  {

@@ -2,13 +2,10 @@ package nikita.webapp.hateoas.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IAuthorEntity;
 import nikita.common.model.noark5.v5.secondary.Author;
-import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.SystemIdHateoasHandler;
-import nikita.webapp.hateoas.interfaces.ISystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import org.springframework.stereotype.Component;
 

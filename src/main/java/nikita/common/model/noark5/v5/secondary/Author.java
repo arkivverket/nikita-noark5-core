@@ -2,13 +2,14 @@ package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.SystemIdEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IAuthorEntity;
 import nikita.common.util.deserialisers.secondary.AuthorDeserializer;
-import nikita.webapp.hateoas.interfaces.ISystemIdHateoasHandler;
+import nikita.webapp.hateoas.secondary.AuthorHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -21,6 +22,8 @@ import static nikita.common.config.N5ResourceMappings.AUTHOR;
 @Entity
 @Table(name = TABLE_CONTACT_AUTHOR)
 @JsonDeserialize(using = AuthorDeserializer.class)
+@HateoasPacker(using = AuthorHateoasHandler.class)
+@HateoasObject(using = AuthorHateoas.class)
 public class Author
         extends SystemIdEntity
         implements IAuthorEntity {
