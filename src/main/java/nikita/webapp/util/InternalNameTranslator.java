@@ -463,17 +463,13 @@ public class InternalNameTranslator {
                         DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG,
                         DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG_OBJECT);
         addNorToEnglishNameMap
+                (DOCUMENT_DESCRIPTION_ASSOCIATED_DATE,
+                        DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG,
+                        DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
                         DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS_ENG,
                         DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT);
-        addNorToEnglishNameMap
-                (DOCUMENT_DESCRIPTION_ASSOCIATION_BY,
-                        DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG,
-                        DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG_OBJECT);
-        addNorToEnglishNameMap
-                (DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
-                        DOCUMENT_DESCRIPTION_ASSOCIATION_DATE_ENG,
-                        DOCUMENT_DESCRIPTION_ASSOCIATION_DATE_ENG_OBJECT);
         addNorToEnglishNameMap
                 (DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
                         DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG,
