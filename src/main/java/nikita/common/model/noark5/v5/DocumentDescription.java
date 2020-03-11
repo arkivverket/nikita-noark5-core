@@ -151,18 +151,18 @@ public class DocumentDescription
      * M620 - tilknyttetDato (xs:date)
      */
     @NotNull
-    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATION_DATE_ENG, nullable = false)
+    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG, nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
-    @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATION_DATE)
+    @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_DATE)
     private OffsetDateTime associationDate;
 
     /**
      * M621 - tilknyttetAv (xs:string)
      */
-    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG)
+    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG)
     @Audited
-    @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATION_BY)
+    @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_BY)
     private String associatedBy;
 
     /**

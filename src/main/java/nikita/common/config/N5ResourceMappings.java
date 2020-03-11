@@ -192,13 +192,12 @@ public final class N5ResourceMappings {
     public static final String BUSINESS_ADDRESS = "forretningsadresse";
 
     // DocumentDescription
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_DATE = "tilknyttetDato";
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_BY = "tilknyttetAv";
+    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_DATE = "tilknyttetDato";
+    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY = "tilknyttetAv";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE = "dokumenttype";
     public static final String DOCUMENT_DESCRIPTION_STATUS = "dokumentstatus";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS = "tilknyttetRegistreringSom";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER = "dokumentnummer";
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY = "tilknyttetAv";
     public static final String DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE = "eksternReferanse";
 
     // DocumentObject
@@ -514,10 +513,9 @@ public final class N5ResourceMappings {
     public static final String DISPOSAL_UNDERTAKEN_DATE_ENG = "kassertDato";
     public static final String DISPOSAL_UNDERTAKEN_ENG = "utfoertKassasjon";
     public static final String D_NUMBER_FIELD_ENG = "d_number";
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG = "tilknyttetAv";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS_ENG = "tilknyttetRegistreringSom";
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG = "associated_by";
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_DATE_ENG = "association_date";
+    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG = "associated_by";
+    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG = "association_date";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG = "document_number";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG = "dokumenttype";
     public static final String DOCUMENT_DESCRIPTION_ENG = "documentDescrption";
@@ -746,10 +744,9 @@ public final class N5ResourceMappings {
     public static final String DISPOSAL_UNDERTAKEN_DATE_ENG_OBJECT = "kassertDato";
     public static final String DISPOSAL_UNDERTAKEN_ENG_OBJECT = "utfoertKassasjon";
     public static final String D_NUMBER_FIELD_ENG_OBJECT = "dNumber";
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG_OBJECT = "tilknyttetAv";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT = "tilknyttetRegistreringSom";
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_BY_ENG_OBJECT = "associatedBy";
-    public static final String DOCUMENT_DESCRIPTION_ASSOCIATION_DATE_ENG_OBJECT = "associationDate";
+    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG_OBJECT = "associatedBy";
+    public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG_OBJECT = "associationDate";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG_OBJECT = "documentNumber";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG_OBJECT = "dokumenttype";
     public static final String DOCUMENT_DESCRIPTION_ENG_OBJECT =

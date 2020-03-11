@@ -52,11 +52,11 @@ public class DocumentDescriptionHateoasSerializer
         printTitleAndDescription(jgen, documentDescription);
         printNullable(jgen, DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
                       documentDescription.getDocumentNumber());
-        printNullableDateTime(jgen, DOCUMENT_DESCRIPTION_ASSOCIATION_DATE,
+        printNullableDateTime(jgen, DOCUMENT_DESCRIPTION_ASSOCIATED_DATE,
                               documentDescription.getAssociationDate());
         // TODO why test on date when printing the 'by' value?
         if (documentDescription.getAssociationDate() != null) {
-            jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATION_BY,
+            jgen.writeStringField(DOCUMENT_DESCRIPTION_ASSOCIATED_BY,
                     documentDescription.getAssociatedBy());
         }
         printNullableMetadata(jgen,
