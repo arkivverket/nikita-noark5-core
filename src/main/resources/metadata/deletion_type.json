@@ -1,0 +1,20 @@
+{
+  "DeletionType": [
+    {
+      "code": "SP",
+      "codename": "Sletting av produksjonsformat"
+    },
+    {
+      "code": "SV",
+      "codename": "Sletting av tidligere versjon"
+    },
+    {
+      "code": "SS",
+      "codename": "Sletting av variant med sladdet informasjon"
+    },
+    {
+      "code": "SA",
+      "codename": "Sletting av hele innholdet i arkivdelen"
+    }
+  ]
+}
