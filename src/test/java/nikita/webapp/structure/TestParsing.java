@@ -1560,4 +1560,64 @@ public class TestParsing {
         assert ("G".equals(m.getCode()));
         assert ("Gjeldende".equals(m.getCodeName()));
     }
+
+    @Test
+    public void parseChangeLogComplete() throws Exception {
+        System.out.println("info: testing changelog parsing");
+        String systemID = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString();
+        String json = "{ "
+                + "  \"systemID\": \"" + systemID + "\" "
+                + ", \"referanseArkivenhet\": \"" + uuid + "\" "
+                + ", \"referanseMetadata\": \"metadata\" "
+                + ", \"endretDato\": \"1865-02-13T12:30:00+02:00\" "
+                + ", \"endretAv\": \"Some One\" "
+                + ", \"referanseEndretAv\": \"" + uuid + "\" "
+                + ", \"tidligereVerdi\": null "
+                + ", \"nyVerdi\": \"who would know\" "
+                + "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+                objectMapper.getFactory().createParser(json);
+        ChangeLogDeserializer changeLogDeserializer =
+            new ChangeLogDeserializer();
+        ChangeLog changeLog = changeLogDeserializer.deserialize
+                (jsonParser, null /* DeserializationContext */);
+        assert (null != changeLog);
+        assert (systemID.equals(changeLog.getSystemId()));
+        assert (uuid.equals(changeLog.getReferenceChangedBy()));
+    }
+
+    @Test
+    public void parseEventLogComplete() throws Exception {
+        System.out.println("info: testing eventlog parsing");
+        String systemID = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString();
+        String json = "{ "
+                + "  \"systemID\": \"" + systemID + "\" "
+                + ", \"referanseArkivenhet\": \"" + uuid + "\" "
+                + ", \"referanseMetadata\": \"metadata\" "
+                + ", \"endretDato\": \"1865-02-13T12:30:00+02:00\" "
+                + ", \"endretAv\": \"Some One\" "
+                + ", \"referanseEndretAv\": \"" + uuid + "\" "
+                + ", \"tidligereVerdi\": null "
+                + ", \"nyVerdi\": \"who would know\" "
+                + ", \"hendelsetype\": {\"kode\": \"C\", \"kodenavn\": \"Opprett\" } "
+                + ", \"beskrivelse\": \"beskrivelse\" "
+                + ", \"hendelseDato\": \"1865-02-13T12:30:00+02:00\" "
+                + "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonParser jsonParser =
+                objectMapper.getFactory().createParser(json);
+        EventLogDeserializer eventLogDeserializer =
+            new EventLogDeserializer();
+        EventLog eventLog = eventLogDeserializer.deserialize
+                (jsonParser, null /* DeserializationContext */);
+        assert (null != eventLog);
+        assert (systemID.equals(eventLog.getSystemId()));
+        assert (uuid.equals(eventLog.getReferenceChangedBy()));
+        EventType m = eventLog.getEventType();
+        assert ("C".equals(m.getCode()));
+        assert ("Opprett".equals(m.getCodeName()));
+    }
 }

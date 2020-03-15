@@ -612,9 +612,13 @@ public final class Constants {
 
     public static final String REL_LOGGING_CHANGE_LOG =
             REL_LOGGING + CHANGE_LOG + SLASH;
+    public static final String REL_LOGGING_NEW_CHANGE_LOG =
+            REL_LOGGING + NEW_CHANGE_LOG + SLASH;
 
     public static final String REL_LOGGING_EVENT_LOG =
             REL_LOGGING + EVENT_LOG + SLASH;
+    public static final String REL_LOGGING_NEW_EVENT_LOG =
+            REL_LOGGING + NEW_EVENT_LOG + SLASH;
 
     // Metadata RELS
     public static final String REL_METADATA_DOCUMENT_MEDIUM =
@@ -1063,6 +1067,9 @@ public final class Constants {
 
     public static final String HREF_BASE_CASE_HANDLING =
             HATEOAS_API_PATH + SLASH + NOARK_CASE_HANDLING_PATH;
+
+    public static final String HREF_BASE_LOGGING =
+            HATEOAS_API_PATH + SLASH + NOARK_LOGGING_PATH;
 
     public static final String HREF_SYSTEM_INFORMATION =
             HREF_BASE_ADMIN + SLASH + SYSTEM;

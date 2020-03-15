@@ -94,6 +94,10 @@ public class InternalNameTranslator {
                         ELECTRONIC_SIGNATURE_ENG,
                         ELECTRONIC_SIGNATURE_ENG_OBJECT);
         addNorToEnglishNameMap
+                (EVENT_DATE,
+                        EVENT_DATE_ENG,
+                        EVENT_DATE_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (EVENT_TYPE,
                         EVENT_TYPE_ENG,
                         EVENT_TYPE_ENG_OBJECT);
@@ -271,6 +275,14 @@ public class InternalNameTranslator {
                 (CASE_YEAR,
                         CASE_YEAR_ENG,
                         CASE_YEAR_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (CHANGED_BY,
+                        CHANGED_BY_ENG,
+                        CHANGED_BY_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (CHANGED_DATE,
+                        CHANGED_DATE_ENG,
+                        CHANGED_DATE_ENG_OBJECT);
         addNorToEnglishNameMap
                 (CLASS,
                         CLASS_ENG,
@@ -659,6 +671,14 @@ public class InternalNameTranslator {
                         NAME_ENG,
                         NAME_ENG_OBJECT);
         addNorToEnglishNameMap
+                (NEW_VALUE,
+                        NEW_VALUE_ENG,
+                        NEW_VALUE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (OLD_VALUE,
+                        OLD_VALUE_ENG,
+                        OLD_VALUE_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (ORGANISATION_NUMBER,
                         ORGANISATION_NUMBER_ENG,
                         ORGANISATION_NUMBER_ENG_OBJECT);
@@ -726,9 +746,21 @@ public class InternalNameTranslator {
                         REFERENCE_ADMINISTRATIVE_UNIT_ENG,
                         REFERENCE_ADMINISTRATIVE_UNIT_ENG_OBJECT);
         addNorToEnglishNameMap
+                (REFERENCE_ARCHIVE_UNIT,
+                        REFERENCE_ARCHIVE_UNIT_ENG,
+                        REFERENCE_ARCHIVE_UNIT_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (REFERENCE_CASE_HANDLER,
                         REFERENCE_CASE_HANDLER_ENG,
                         REFERENCE_CASE_HANDLER_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (REFERENCE_CHANGED_BY,
+                        REFERENCE_CHANGED_BY_ENG,
+                        REFERENCE_CHANGED_BY_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (REFERENCE_METADATA,
+                        REFERENCE_METADATA_ENG,
+                        REFERENCE_METADATA_ENG_OBJECT);
         addNorToEnglishNameMap
                 (REFERENCE_SERIES,
                         REFERENCE_SERIES_ENG,

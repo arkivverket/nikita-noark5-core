@@ -3,11 +3,11 @@ package nikita.common.model.noark5.v5;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-//import nikita.common.model.noark5.v5.hateoas.EventLogHateoas;
+import nikita.common.model.noark5.v5.hateoas.EventLogHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IEventLogEntity;
 import nikita.common.model.noark5.v5.metadata.EventType;
-//import nikita.common.util.deserialisers.EventLogDeserializer;
-//import nikita.webapp.hateoas.EventLogHateoasHandler;
+import nikita.common.util.deserialisers.EventLogDeserializer;
+import nikita.webapp.hateoas.EventLogHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -25,9 +25,9 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_EVENT_LOG)
-//@JsonDeserialize(using = EventLogDeserializer.class)
-//@HateoasPacker(using = EventLogHateoasHandler.class)
-//@HateoasObject(using = EventLogHateoas.class)
+@JsonDeserialize(using = EventLogDeserializer.class)
+@HateoasPacker(using = EventLogHateoasHandler.class)
+@HateoasObject(using = EventLogHateoas.class)
 public class EventLog
     extends ChangeLog
     implements IEventLogEntity
@@ -60,17 +60,11 @@ public class EventLog
     /**
      * M??? - hendelseDato (xs:datetime)
      */
-    @Column(name = "event_log_event_date")
+    @Column(name = EVENT_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(EVENT_DATE)
     private OffsetDateTime eventDate;
-
-    // Link to SystemIdEntity
-    @ManyToOne
-    @JoinColumn(name = SYSTEM_ID_ENTITY_ID,
-            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    private SystemIdEntity referenceSystemIdEntity;
 
     @Override
     public EventType getEventType() {
@@ -111,17 +105,6 @@ public class EventLog
     @Override
     public void setEventDate(OffsetDateTime eventDate) {
         this.eventDate = eventDate;
-    }
-
-    @Override
-    public SystemIdEntity getReferenceSystemIdEntity() {
-        return referenceSystemIdEntity;
-    }
-
-    @Override
-    public void setReferenceSystemIdEntity
-        (SystemIdEntity referenceSystemIdEntity) {
-        this.referenceSystemIdEntity = referenceSystemIdEntity;
     }
 
     @Override

@@ -469,6 +469,8 @@ public final class N5ResourceMappings {
     public static final String CASE_SEQUENCE_NUMBER_ENG = "case_sequence_number";
     public static final String CASE_STATUS_ENG = "saksstatus";
     public static final String CASE_YEAR_ENG = "case_year";
+    public static final String CHANGED_DATE_ENG = "changed_date";
+    public static final String CHANGED_BY_ENG = "changed_by";
     public static final String CLASS_ENG = "class";
     public static final String CLASS_ID_ENG = "class_id";
     public static final String CLASSIFICATION_BY_ENG = "gradertAv";
@@ -565,6 +567,7 @@ public final class N5ResourceMappings {
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG = "verified_date";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG = "electronic_signature_verified_name";
     public static final String EMAIL_ADDRESS_ENG = "epostadresse";
+    public static final String EVENT_DATE_ENG = "event_date";
     public static final String EVENT_TYPE_ENG = "hendelsetype";
     public static final String FILE_ENG = "file";
     public static final String FILE_ID_ENG = "file_id";
@@ -595,6 +598,8 @@ public final class N5ResourceMappings {
     public static final String MOBILE_TELEPHONE_NUMBER_ENG = "mobiltelefon";
     public static final String MUNICIPALITY_NUMBER_ENG = "municipality_number";
     public static final String NAME_ENG = "navn";
+    public static final String NEW_VALUE_ENG = "new_value";
+    public static final String OLD_VALUE_ENG = "old_value";
     public static final String ORGANISATION_NUMBER_ENG = "organisation_number";
     public static final String PARENT_CLASS_ENG = "overordnetklasse";
     public static final String PLAN_IDENTIFICATION_ENG = "plan_identification";
@@ -614,6 +619,9 @@ public final class N5ResourceMappings {
     public static final String RECORD_ARCHIVED_BY_ENG = "archived_by";
     public static final String RECORD_ARCHIVED_DATE_ENG = "archived_date";
     public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG = "referanseAdministratitivEnhet";
+    public static final String REFERENCE_ARCHIVE_UNIT_ENG = "reference_archive_unit";
+    public static final String REFERENCE_CHANGED_BY_ENG = "reference_changed_by";
+    public static final String REFERENCE_METADATA_ENG = "reference_metadata";
     public static final String REFERENCE_CASE_HANDLER_ENG = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG = "referanseArkivdel";
     public static final String REGISTRY_ENTRY_DATE_ENG = "journaldato";
@@ -700,6 +708,8 @@ public final class N5ResourceMappings {
     public static final String CASE_SEQUENCE_NUMBER_ENG_OBJECT = "caseSequenceNumber";
     public static final String CASE_STATUS_ENG_OBJECT = "saksstatus";
     public static final String CASE_YEAR_ENG_OBJECT = "caseYear";
+    public static final String CHANGED_DATE_ENG_OBJECT = "changedDate";
+    public static final String CHANGED_BY_ENG_OBJECT = "changedBy";
     public static final String CLASS_ENG_OBJECT = "Class";
     public static final String CLASS_ID_ENG_OBJECT = "classId";
     public static final String CLASSIFICATION_BY_ENG_OBJECT = "gradertAv";
@@ -794,6 +804,7 @@ public final class N5ResourceMappings {
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT = "verifiedDate";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT = "electronicSignatureVerifiedName";
     public static final String EMAIL_ADDRESS_ENG_OBJECT = "epostadresse";
+    public static final String EVENT_DATE_ENG_OBJECT = "eventDate";
     public static final String EVENT_TYPE_ENG_OBJECT = "hendelsetype";
     public static final String FILE_ENG_OBJECT = "File";
     public static final String FILE_ID_ENG_OBJECT = "fileId";
@@ -824,6 +835,8 @@ public final class N5ResourceMappings {
     public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
     public static final String MUNICIPALITY_NUMBER_ENG_OBJECT = "municipalityNumber";
     public static final String NAME_ENG_OBJECT = "navn";
+    public static final String NEW_VALUE_ENG_OBJECT = "newValue";
+    public static final String OLD_VALUE_ENG_OBJECT = "oldValue";
     public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisationNumber";
     public static final String PARENT_CLASS_ENG_OBJECT = "overklasse";
     public static final String PLAN_IDENTIFICATION_ENG_OBJECT = "planIdentification";
@@ -844,6 +857,9 @@ public final class N5ResourceMappings {
     public static final String RECORD_ARCHIVED_BY_ENG_OBJECT = "arkivertAv";
     public static final String RECORD_ARCHIVED_DATE_ENG_OBJECT = "archivedDate";
     public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG_OBJECT = "referanseAdministratitivEnhet";
+    public static final String REFERENCE_ARCHIVE_UNIT_ENG_OBJECT = "referenceArchiveUnit";
+    public static final String REFERENCE_CHANGED_BY_ENG_OBJECT = "referenceChangedBy";
+    public static final String REFERENCE_METADATA_ENG_OBJECT = "referenceMetadata";
     public static final String REFERENCE_CASE_HANDLER_ENG_OBJECT = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG_OBJECT = "referanseArkivdel";
     public static final String REGISTRY_ENTRY_DATE_ENG_OBJECT = "journaldato";
