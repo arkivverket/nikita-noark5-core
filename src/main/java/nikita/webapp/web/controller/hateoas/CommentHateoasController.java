@@ -1,4 +1,4 @@
-package nikita.webapp.web.controller.hateoas.casehandling;
+package nikita.webapp.web.controller.hateoas;
 
 import com.codahale.metrics.annotation.Counted;
 import io.swagger.annotations.ApiOperation;
@@ -9,7 +9,6 @@ import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
-import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
 
