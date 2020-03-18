@@ -5,6 +5,7 @@
  *
  *  Note: Because we have trouble getting
  *
+ *
  *  if ($scope.selectedDocumentMedium == 'Elektronisk arkiv '. Note the extra space. Needs to be removed later!
  *
  *  Note, if we load the page from a list, we are missing the etag to update the object. We could handle this by
@@ -324,8 +325,8 @@ var caseHandlerController = app.controller('CaseHandlerController',
                             kodenavn: documentStatusCodeName
                         },
                         'dokumenttype': {
-                            kode: 'B',
-                            kodenavn: 'Brev'
+                            kode: 'R',
+                            kodenavn: 'Rundskriv'
                         }
                     },
                 }).then(function successCallback(response) {
@@ -905,7 +906,7 @@ var caseHandlerController = app.controller('CaseHandlerController',
                     headers: {'Authorization': $scope.token}
                 }).then(function successCallback(response) {
                     $scope.documentDescription = response.data;
-                    $scope.selectedAssociatedWithRecordAs = $scope.documentDescription.tilknyttetRegistreringSom;
+                    $scope.selectedAssociatedWithRecordAs = $scope.documentDescription.tilknyttetRegistreringSom.kodenavn;
                     $scope.selectedDocumentStatus = $scope.documentDescription.dokumentstatus.kodenavn;
                     $scope.documentETag = response.headers('eTag');
                     $scope.fetchDocumentObjects();
