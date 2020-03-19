@@ -230,7 +230,7 @@ public final class Constants {
     public static final String NOARK_METADATA_PATH = "metadata";
     public static final String NOARK_ADMINISTRATION_PATH = "admin";
     public static final String NOARK_CASE_HANDLING_PATH = "sakarkiv";
-    public static final String NOARK_LOGGING_PATH = "loggingogpsoring";
+    public static final String NOARK_LOGGING_PATH = "loggingogsporing";
     public static final String ODATA_PATH = "/odata";
     public static final int ODATA_OFFSET_LENGTH =
             (NOARK_FONDS_STRUCTURE_PATH + SLASH).length();
@@ -378,6 +378,8 @@ public final class Constants {
             NOARK_BASE_REL + NOARK_FONDS_STRUCTURE_PATH + SLASH;
     public static final String REL_CASE_HANDLING =
             NOARK_BASE_REL + NOARK_CASE_HANDLING_PATH + SLASH;
+    public static final String REL_LOGGING =
+            NOARK_BASE_REL + NOARK_LOGGING_PATH + SLASH;
 
     public static final String REL_SYSTEM_INFORMATION =
             REL_ADMINISTRATION + SYSTEM + SLASH;
@@ -607,6 +609,12 @@ public final class Constants {
             REL_FONDS_STRUCTURE + NEW_SOCIAL_SECURITY_NUMBER + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_NI_UNIT =
             REL_FONDS_STRUCTURE + NEW_NI_UNIT + SLASH;
+
+    public static final String REL_LOGGING_CHANGE_LOG =
+            REL_LOGGING + CHANGE_LOG + SLASH;
+
+    public static final String REL_LOGGING_EVENT_LOG =
+            REL_LOGGING + EVENT_LOG + SLASH;
 
     // Metadata RELS
     public static final String REL_METADATA_DOCUMENT_MEDIUM =
@@ -914,6 +922,8 @@ public final class Constants {
     public static final String TABLE_SERIES_STATUS = "md_series_status";
     public static final String TABLE_SIGN_OFF_METHOD = "md_sign_off_method";
     public static final String TABLE_VARIANT_FORMAT = "md_variant_format";
+    public static final String TABLE_CHANGE_LOG = "as_changelog";
+    public static final String TABLE_EVENT_LOG = "as_event_log";
 
     // Column Constants
     // Foreign key names
@@ -979,6 +989,7 @@ public final class Constants {
     public static final String PRECEDENCE_APPROVED_BY_ID =
             "precedence_approved_by_id";
 
+    public static final String SYSTEM_ID_ENTITY_ID = "system_id_entity_id";
     public static final String RECORD_FILE_ID = "record_file_id";
     public static final String RECORD_CLASS_ID = "record_class_id";
     public static final String RECORD_CLASSIFIED_ID = "record_classified_id";

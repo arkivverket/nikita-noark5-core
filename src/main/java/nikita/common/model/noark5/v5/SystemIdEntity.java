@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -9,22 +10,29 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.N5ResourceMappings.*;
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 /**
  * Created by tsodring on 5/8/17.
  */
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = TABLE_PER_CLASS)
 @EntityListeners(AuditingEntityListener.class)
 @Table(indexes = @Index(name = "index_owned_by",
         columnList = "owned_by"))
+@Audited(targetAuditMode = NOT_AUDITED)
 public class SystemIdEntity
         extends NoarkEntity
         implements ISystemId, Comparable<SystemIdEntity> {
@@ -45,6 +53,11 @@ public class SystemIdEntity
     @Column(name = "system_id", updatable = false, nullable = false)
     @Type(type = "uuid-char")
     private UUID systemId;
+
+    // Links to EventLog
+    @OneToMany(mappedBy = "referenceSystemIdEntity")
+    @JsonIgnore
+    private List<EventLog> referenceEventLog = new ArrayList<>();
 
     @Override
     public String getSystemId() {
@@ -77,6 +90,18 @@ public class SystemIdEntity
     @Override
     public String getIdentifierType() {
         return SYSTEM_ID;
+    }
+
+    public List<EventLog> getEventLog() {
+        return referenceEventLog;
+    }
+
+    public void setEventLog(List<EventLog> referenceEventLog) {
+        this.referenceEventLog = referenceEventLog;
+    }
+
+    public void addEventLog(EventLog eventLog) {
+        this.referenceEventLog.add(eventLog);
     }
 
     // Most entities belong to arkivstruktur. These entities pick the value

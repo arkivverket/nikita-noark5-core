@@ -421,6 +421,20 @@ public final class N5ResourceMappings {
 
     public static final String SHORT_NAME = "kortnavn";
 
+    /* Logging and tracking */
+    public static final String CHANGE_LOG = "endringslogg";
+    public static final String NEW_CHANGE_LOG = NEW + CHANGE_LOG;
+    public static final String REFERENCE_ARCHIVE_UNIT = "referanseArkivenhet";
+    public static final String REFERENCE_METADATA = "referanseMetadata";
+    public static final String CHANGED_DATE = "endretDato";
+    public static final String CHANGED_BY = "endretAv";
+    public static final String REFERENCE_CHANGED_BY = "referanseEndretAv";
+    public static final String OLD_VALUE = "tidligereVerdi";
+    public static final String NEW_VALUE = "nyVerdi";
+
+    public static final String EVENT_LOG = "hendelseslogg";
+    public static final String NEW_EVENT_LOG = NEW + EVENT_LOG;
+    public static final String EVENT_DATE = "hendelseDato";
 
     // English version of above, sorted alphabetically. The following are the
     // table / column names within the Noark domain model
