@@ -77,10 +77,7 @@ public class Deletion
     public DeletionType getDeletionType() {
         if (null == deletionTypeCode)
             return null;
-        DeletionType deletionType = new DeletionType();
-        deletionType.setCode(deletionTypeCode);
-        deletionType.setCodeName(deletionTypeCodeName);
-        return deletionType;
+        return new DeletionType(deletionTypeCode, deletionTypeCodeName);
     }
 
     public void setDeletionType(DeletionType deletionType) {

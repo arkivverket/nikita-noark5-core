@@ -15,6 +15,17 @@ public class ElectronicSignatureVerified
 
     private static final long serialVersionUID = 1L;
 
+    public ElectronicSignatureVerified() {
+    }
+
+    public ElectronicSignatureVerified(String code, String codename) {
+        super(code, codename);
+    }
+
+    public ElectronicSignatureVerified(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return ELECTRONIC_SIGNATURE_VERIFIED;

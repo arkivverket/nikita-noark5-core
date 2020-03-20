@@ -254,10 +254,7 @@ public class DocumentDescription
     public DocumentType getDocumentType() {
         if (null == documentTypeCode)
             return null;
-        DocumentType documentType = new DocumentType();
-        documentType.setCode(documentTypeCode);
-        documentType.setCodeName(documentTypeCodeName);
-        return documentType;
+        return new DocumentType(documentTypeCode, documentTypeCodeName);
     }
 
     public void setDocumentType(DocumentType documentType) {
@@ -273,10 +270,7 @@ public class DocumentDescription
     public DocumentStatus getDocumentStatus() {
         if (null == documentStatusCode)
             return null;
-        DocumentStatus documentStatus = new DocumentStatus();
-        documentStatus.setCode(documentStatusCode);
-        documentStatus.setCodeName(documentStatusCodeName);
-        return documentStatus;
+        return new DocumentStatus(documentStatusCode, documentStatusCodeName);
     }
 
     public void setDocumentStatus(DocumentStatus documentStatus) {
@@ -324,10 +318,7 @@ public class DocumentDescription
     public DocumentMedium getDocumentMedium() {
         if (null == documentMediumCode)
             return null;
-        DocumentMedium documentMedium = new DocumentMedium();
-        documentMedium.setCode(documentMediumCode);
-        documentMedium.setCodeName(documentMediumCodeName);
-        return documentMedium;
+        return new DocumentMedium(documentMediumCode, documentMediumCodeName);
     }
 
     public void setDocumentMedium(DocumentMedium documentMedium) {
@@ -343,11 +334,8 @@ public class DocumentDescription
     public AssociatedWithRecordAs getAssociatedWithRecordAs() {
         if (null == associatedWithRecordAsCode)
             return null;
-        AssociatedWithRecordAs associatedWithRecordAs =
-            new AssociatedWithRecordAs();
-        associatedWithRecordAs.setCode(associatedWithRecordAsCode);
-        associatedWithRecordAs.setCodeName(associatedWithRecordAsCodeName);
-        return associatedWithRecordAs;
+        return new AssociatedWithRecordAs(associatedWithRecordAsCode,
+                                          associatedWithRecordAsCodeName);
     }
 
     public void setAssociatedWithRecordAs(AssociatedWithRecordAs associatedWithRecordAs) {

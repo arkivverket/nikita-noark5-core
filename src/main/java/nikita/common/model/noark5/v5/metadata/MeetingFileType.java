@@ -14,6 +14,17 @@ public class MeetingFileType
 
     private static final long serialVersionUID = 1L;
 
+    public MeetingFileType() {
+    }
+
+    public MeetingFileType(String code, String codename) {
+        super(code, codename);
+    }
+
+    public MeetingFileType(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return MEETING_FILE_TYPE;

@@ -15,6 +15,17 @@ public class AssociatedWithRecordAs
 
     private static final long serialVersionUID = 1L;
 
+    public AssociatedWithRecordAs() {
+    }
+
+    public AssociatedWithRecordAs(String code, String codename) {
+        super(code, codename);
+    }
+
+    public AssociatedWithRecordAs(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return ASSOCIATED_WITH_RECORD_AS;

@@ -15,6 +15,17 @@ public class CommentType
 
     private static final long serialVersionUID = 1L;
 
+    public CommentType() {
+    }
+
+    public CommentType(String code, String codename) {
+        super(code, codename);
+    }
+
+    public CommentType(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return COMMENT_TYPE;

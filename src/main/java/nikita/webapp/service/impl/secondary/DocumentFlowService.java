@@ -238,9 +238,7 @@ public class DocumentFlowService
 
         template.setFlowSentDate(OffsetDateTime.now());
 
-        FlowStatus flowStatus = new FlowStatus();
-        flowStatus.setCode(TEMPLATE_DOCUMENT_FLOW_FLOW_STATUS_CODE);
-        template.setFlowStatus(flowStatus);
+        template.setFlowStatus(new FlowStatus(TEMPLATE_DOCUMENT_FLOW_FLOW_STATUS_CODE));
         validateFlowStatus(template);
 
         // Propose current user as the sender / creator of the flow record

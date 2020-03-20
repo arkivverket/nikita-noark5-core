@@ -52,11 +52,8 @@ public class CorrespondencePart
     public CorrespondencePartType getCorrespondencePartType() {
         if (null == correspondencePartTypeCode)
             return null;
-        CorrespondencePartType correspondencePartType =
-            new CorrespondencePartType();
-        correspondencePartType.setCode(correspondencePartTypeCode);
-        correspondencePartType.setCodeName(correspondencePartTypeCodeName);
-        return correspondencePartType;
+        return new CorrespondencePartType(correspondencePartTypeCode,
+                                          correspondencePartTypeCodeName);
     }
 
     @Override

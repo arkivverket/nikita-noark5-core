@@ -15,6 +15,17 @@ public class ScreeningMetadata
 
     private static final long serialVersionUID = 1L;
 
+    public ScreeningMetadata() {
+    }
+
+    public ScreeningMetadata(String code, String codename) {
+        super(code, codename);
+    }
+
+    public ScreeningMetadata(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return SCREENING_METADATA;

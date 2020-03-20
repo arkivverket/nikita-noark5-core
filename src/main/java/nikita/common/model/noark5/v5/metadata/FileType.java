@@ -15,6 +15,17 @@ public class FileType
 
     private static final long serialVersionUID = 1L;
 
+    public FileType() {
+    }
+
+    public FileType(String code, String codename) {
+        super(code, codename);
+    }
+
+    public FileType(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return FILE_TYPE;

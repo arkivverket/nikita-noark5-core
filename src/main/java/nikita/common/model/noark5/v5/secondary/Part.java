@@ -71,10 +71,7 @@ public class Part
     public PartRole getPartRole() {
         if (null == partRoleCode)
             return null;
-        PartRole partRole = new PartRole();
-        partRole.setCode(partRoleCode);
-        partRole.setCodeName(partRoleCodeName);
-        return partRole;
+        return new PartRole(partRoleCode, partRoleCodeName);
     }
 
     public void setPartRole(PartRole partRole) {

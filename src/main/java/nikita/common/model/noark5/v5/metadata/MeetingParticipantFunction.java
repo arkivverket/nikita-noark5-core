@@ -14,6 +14,17 @@ public class MeetingParticipantFunction
 
     private static final long serialVersionUID = 1L;
 
+    public MeetingParticipantFunction() {
+    }
+
+    public MeetingParticipantFunction(String code, String codename) {
+        super(code, codename);
+    }
+
+    public MeetingParticipantFunction(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return MEETING_PARTICIPANT_FUNCTION;

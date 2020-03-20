@@ -104,10 +104,8 @@ public class Classified
     public ClassifiedCode getClassification() {
         if (null == classificationCode)
             return null;
-        ClassifiedCode classification = new ClassifiedCode();
-        classification.setCode(classificationCode);
-        classification.setCodeName(classificationCodeName);
-        return classification;
+        return new ClassifiedCode(classificationCode,
+                                  classificationCodeName);
     }
 
     public void setClassification(ClassifiedCode classification) {

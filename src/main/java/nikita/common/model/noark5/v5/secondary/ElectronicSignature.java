@@ -86,13 +86,9 @@ public class ElectronicSignature
     getElectronicSignatureSecurityLevel() {
         if (null == electronicSignatureSecurityLevelCode)
             return null;
-        ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel =
-            new ElectronicSignatureSecurityLevel();
-        electronicSignatureSecurityLevel
-            .setCode(electronicSignatureSecurityLevelCode);
-        electronicSignatureSecurityLevel
-            .setCodeName(electronicSignatureSecurityLevelCodeName);
-        return electronicSignatureSecurityLevel;
+        return new ElectronicSignatureSecurityLevel
+            (electronicSignatureSecurityLevelCode,
+             electronicSignatureSecurityLevelCodeName);
     }
 
     public void setElectronicSignatureSecurityLevel(
@@ -111,13 +107,9 @@ public class ElectronicSignature
     public ElectronicSignatureVerified getElectronicSignatureVerified() {
         if (null == electronicSignatureVerifiedCode)
             return null;
-        ElectronicSignatureVerified electronicSignatureVerified =
-            new ElectronicSignatureVerified();
-        electronicSignatureVerified
-            .setCode(electronicSignatureVerifiedCode);
-        electronicSignatureVerified
-            .setCodeName(electronicSignatureVerifiedCodeName);
-        return electronicSignatureVerified;
+        return new ElectronicSignatureVerified
+            (electronicSignatureVerifiedCode,
+             electronicSignatureVerifiedCodeName);
     }
 
     public void setElectronicSignatureVerified(

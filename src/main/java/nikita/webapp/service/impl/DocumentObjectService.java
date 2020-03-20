@@ -189,9 +189,7 @@ public class DocumentObjectService
                 logger.warn("Setting format for documentObject [" +
                             documentObject.toString() +
                             "] to UNKNOWN after upload.");
-                Format newFormat = new Format();
-                newFormat.setCode("UNKNOWN");
-                documentObject.setFormat(newFormat);
+                documentObject.setFormat(new Format("UNKNOWN"));
                 validateFormat(documentObject);
             }
 
@@ -218,9 +216,8 @@ public class DocumentObjectService
         DocumentObject defaultDocumentObject = new DocumentObject();
         // TODO This is just temporary code as this will have to be
         // replaced if this ever goes into production
-        VariantFormat variantFormat = new VariantFormat();
-        variantFormat.setCode(PRODUCTION_VERSION_CODE);
-        defaultDocumentObject.setVariantFormat(variantFormat);
+        defaultDocumentObject
+            .setVariantFormat(new VariantFormat(PRODUCTION_VERSION_CODE));
         validateVariantFormat(defaultDocumentObject);
         defaultDocumentObject.setVersionNumber(1);
 
@@ -375,17 +372,14 @@ public class DocumentObjectService
         // method. Consider the scenario where a file called .htaccess
         // is uploaded, or a file with no file extension
 
-        Format format = new Format();
-        format.setCode(FILE_EXTENSION_PDF_CODE);
-        archiveDocumentObject.setFormat(format);
+        archiveDocumentObject.setFormat(new Format(FILE_EXTENSION_PDF_CODE));
         validateFormat(archiveDocumentObject);
 
         archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
         archiveDocumentObject.setFormatDetails(FORMAT_PDF_DETAILS);
 
-        VariantFormat variantFormat = new VariantFormat();
-        variantFormat.setCode(ARCHIVE_VERSION_CODE);
-        archiveDocumentObject.setVariantFormat(variantFormat);
+        archiveDocumentObject
+            .setVariantFormat(new VariantFormat(ARCHIVE_VERSION_CODE));
         validateVariantFormat(archiveDocumentObject);
 
         setFilenameAndExtensionForArchiveDocument(

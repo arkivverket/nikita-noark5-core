@@ -100,10 +100,9 @@ public class Plan
 
     @Override
     public Country getCountry() {
-        Country country = new Country();
-        country.setCode(countryCode);
-        country.setCodeName(countryCodeName);
-        return country;
+        if (null == countryCode)
+            return null;
+        return new Country(countryCode, countryCodeName);
     }
 
     @Override

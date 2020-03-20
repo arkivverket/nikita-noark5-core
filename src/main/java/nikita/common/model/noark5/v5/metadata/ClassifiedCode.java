@@ -15,6 +15,17 @@ public class ClassifiedCode
 
     private static final long serialVersionUID = 1L;
 
+    public ClassifiedCode() {
+    }
+
+    public ClassifiedCode(String code, String codename) {
+        super(code, codename);
+    }
+
+    public ClassifiedCode(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return CLASSIFIED_CODE;

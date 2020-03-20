@@ -15,6 +15,17 @@ public class EventType
 
     private static final long serialVersionUID = 1L;
 
+    public EventType() {
+    }
+
+    public EventType(String code, String codename) {
+        super(code, codename);
+    }
+
+    public EventType(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return EVENT_TYPE;

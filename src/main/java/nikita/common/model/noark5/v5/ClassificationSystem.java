@@ -58,10 +58,8 @@ public class ClassificationSystem
     public ClassificationType getClassificationType() {
         if (null == classificationTypeCode)
             return null;
-        ClassificationType classificationType = new ClassificationType();
-        classificationType.setCode(classificationTypeCode);
-        classificationType.setCodeName(classificationTypeCodeName);
-        return classificationType;
+        return new ClassificationType(classificationTypeCode,
+                                      classificationTypeCodeName);
     }
 
     @Override

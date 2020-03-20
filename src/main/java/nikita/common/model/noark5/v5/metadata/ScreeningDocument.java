@@ -15,6 +15,17 @@ public class ScreeningDocument
 
     private static final long serialVersionUID = 1L;
 
+    public ScreeningDocument() {
+    }
+
+    public ScreeningDocument(String code, String codename) {
+        super(code, codename);
+    }
+
+    public ScreeningDocument(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return SCREENING_DOCUMENT;

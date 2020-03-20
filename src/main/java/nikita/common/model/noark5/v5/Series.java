@@ -194,10 +194,7 @@ public class Series
     public SeriesStatus getSeriesStatus() {
         if (null == seriesStatusCode)
             return null;
-        SeriesStatus seriesStatus = new SeriesStatus();
-        seriesStatus.setCode(seriesStatusCode);
-        seriesStatus.setCodeName(seriesStatusCodeName);
-        return seriesStatus;
+        return new SeriesStatus(seriesStatusCode, seriesStatusCodeName);
     }
 
     public void setSeriesStatus(SeriesStatus seriesStatus) {
@@ -213,10 +210,7 @@ public class Series
     public DocumentMedium getDocumentMedium() {
         if (null == documentMediumCode)
             return null;
-        DocumentMedium documentMedium = new DocumentMedium();
-        documentMedium.setCode(documentMediumCode);
-        documentMedium.setCodeName(documentMediumCodeName);
-        return documentMedium;
+        return new DocumentMedium(documentMediumCode, documentMediumCodeName);
     }
 
     public void setDocumentMedium(DocumentMedium documentMedium) {

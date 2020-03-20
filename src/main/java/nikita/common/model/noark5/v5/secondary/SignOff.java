@@ -120,6 +120,7 @@ public class SignOff
         this.signOffBy = signOffBy;
     }
 
+    // TODO get rid of ..Code() and ..CodeName().
     @Override
     public String getSignOffMethodCode() {
         return signOffMethodCode;
@@ -144,10 +145,7 @@ public class SignOff
     public SignOffMethod getSignOffMethod() {
         if (null == signOffMethodCode)
             return null;
-        SignOffMethod signOffMethod = new SignOffMethod();
-        signOffMethod.setCode(signOffMethodCode);
-        signOffMethod.setCodeName(signOffMethodCodeName);
-        return signOffMethod;
+        return new SignOffMethod(signOffMethodCode, signOffMethodCodeName);
     }
 
     @Override

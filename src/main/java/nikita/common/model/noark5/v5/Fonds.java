@@ -105,10 +105,7 @@ public class Fonds
     public FondsStatus getFondsStatus() {
         if (null == fondsStatusCode)
             return null;
-        FondsStatus fondsStatus = new FondsStatus();
-        fondsStatus.setCode(fondsStatusCode);
-        fondsStatus.setCodeName(fondsStatusCodeName);
-        return fondsStatus;
+        return new FondsStatus(fondsStatusCode, fondsStatusCodeName);
     }
 
     public void setFondsStatus(FondsStatus fondsStatus) {
@@ -124,10 +121,7 @@ public class Fonds
     public DocumentMedium getDocumentMedium() {
         if (null == documentMediumCode)
             return null;
-        DocumentMedium documentMedium = new DocumentMedium();
-        documentMedium.setCode(documentMediumCode);
-        documentMedium.setCodeName(documentMediumCodeName);
-        return documentMedium;
+        return new DocumentMedium(documentMediumCode, documentMediumCodeName);
     }
 
     public void setDocumentMedium(DocumentMedium documentMedium) {

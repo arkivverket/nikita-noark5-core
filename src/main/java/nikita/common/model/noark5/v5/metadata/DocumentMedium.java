@@ -15,6 +15,17 @@ public class DocumentMedium
 
     private static final long serialVersionUID = 1L;
 
+    public DocumentMedium() {
+    }
+
+    public DocumentMedium(String code, String codename) {
+        super(code, codename);
+    }
+
+    public DocumentMedium(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return DOCUMENT_MEDIUM;

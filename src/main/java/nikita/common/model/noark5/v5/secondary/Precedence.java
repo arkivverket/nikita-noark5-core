@@ -192,10 +192,8 @@ public class Precedence
     public PrecedenceStatus getPrecedenceStatus() {
         if (null == precedenceStatusCode)
             return null;
-        PrecedenceStatus precedenceStatus = new PrecedenceStatus();
-        precedenceStatus.setCode(precedenceStatusCode);
-        precedenceStatus.setCodeName(precedenceStatusCodeName);
-        return precedenceStatus;
+        return new PrecedenceStatus(precedenceStatusCode,
+                                    precedenceStatusCodeName);
     }
 
     @Override

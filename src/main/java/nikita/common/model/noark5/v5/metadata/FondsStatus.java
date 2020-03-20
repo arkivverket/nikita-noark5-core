@@ -16,6 +16,17 @@ public class FondsStatus
 
     private static final long serialVersionUID = 1L;
 
+    public FondsStatus() {
+    }
+
+    public FondsStatus(String code, String codename) {
+        super(code, codename);
+    }
+
+    public FondsStatus(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return FONDS_STATUS;

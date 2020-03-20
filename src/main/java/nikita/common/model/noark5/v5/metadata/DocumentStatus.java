@@ -15,6 +15,17 @@ public class DocumentStatus
 
     private static final long serialVersionUID = 1L;
 
+    public DocumentStatus() {
+    }
+
+    public DocumentStatus(String code, String codename) {
+        super(code, codename);
+    }
+
+    public DocumentStatus(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return DOCUMENT_STATUS;

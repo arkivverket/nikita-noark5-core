@@ -15,6 +15,17 @@ public class ElectronicSignatureSecurityLevel
 
     private static final long serialVersionUID = 1L;
 
+    public ElectronicSignatureSecurityLevel() {
+    }
+
+    public ElectronicSignatureSecurityLevel(String code, String codename) {
+        super(code, codename);
+    }
+
+    public ElectronicSignatureSecurityLevel(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return ELECTRONIC_SIGNATURE_SECURITY_LEVEL;

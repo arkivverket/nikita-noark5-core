@@ -15,6 +15,17 @@ public class CaseStatus
 
     private static final long serialVersionUID = 1L;
 
+    public CaseStatus() {
+    }
+
+    public CaseStatus(String code, String codename) {
+        super(code, codename);
+    }
+
+    public CaseStatus(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return CASE_STATUS;

@@ -81,10 +81,8 @@ public class Position
     public CoordinateSystem getCoordinateSystem() {
         if (null == coordinateSystemCode)
             return null;
-        CoordinateSystem coordinateSystem = new CoordinateSystem();
-        coordinateSystem.setCode(coordinateSystemCode);
-        coordinateSystem.setCodeName(coordinateSystemCodeName);
-        return coordinateSystem;
+        return new CoordinateSystem(coordinateSystemCode,
+                                    coordinateSystemCodeName);
     }
 
     @Override

@@ -15,6 +15,17 @@ public class VariantFormat
 
     private static final long serialVersionUID = 1L;
 
+    public VariantFormat() {
+    }
+
+    public VariantFormat(String code, String codename) {
+        super(code, codename);
+    }
+
+    public VariantFormat(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return VARIANT_FORMAT;

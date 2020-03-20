@@ -18,6 +18,17 @@ public class PartRole
 
     private static final long serialVersionUID = 1L;
 
+    public PartRole() {
+    }
+
+    public PartRole(String code, String codename) {
+        super(code, codename);
+    }
+
+    public PartRole(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return PART_ROLE;

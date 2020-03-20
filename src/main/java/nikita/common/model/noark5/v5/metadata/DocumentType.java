@@ -15,6 +15,17 @@ public class DocumentType
 
     private static final long serialVersionUID = 1L;
 
+    public DocumentType() {
+    }
+
+    public DocumentType(String code, String codename) {
+        super(code, codename);
+    }
+
+    public DocumentType(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return DOCUMENT_TYPE;

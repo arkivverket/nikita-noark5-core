@@ -15,6 +15,17 @@ public class SignOffMethod
 
     private static final long serialVersionUID = 1L;
 
+    public SignOffMethod() {
+    }
+
+    public SignOffMethod(String code, String codename) {
+        super(code, codename);
+    }
+
+    public SignOffMethod(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return SIGN_OFF_METHOD;

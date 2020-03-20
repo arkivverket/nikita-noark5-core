@@ -18,6 +18,17 @@ public class CorrespondencePartType
 
     private static final long serialVersionUID = 1L;
 
+    public CorrespondencePartType() {
+    }
+
+    public CorrespondencePartType(String code, String codename) {
+        super(code, codename);
+    }
+
+    public CorrespondencePartType(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return CORRESPONDENCE_PART_TYPE;

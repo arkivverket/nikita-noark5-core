@@ -15,6 +15,17 @@ public class FlowStatus
 
     private static final long serialVersionUID = 1L;
 
+    public FlowStatus() {
+    }
+
+    public FlowStatus(String code, String codename) {
+        super(code, codename);
+    }
+
+    public FlowStatus(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return FLOW_STATUS;

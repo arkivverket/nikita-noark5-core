@@ -15,6 +15,17 @@ public class Format
 
     private static final long serialVersionUID = 1L;
 
+    public Format() {
+    }
+
+    public Format(String code, String codename) {
+        super(code, codename);
+    }
+
+    public Format(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return FORMAT;

@@ -178,10 +178,7 @@ public class CaseFile
     public CaseStatus getCaseStatus() {
         if (null == caseStatusCode)
             return null;
-        CaseStatus caseStatus = new CaseStatus();
-        caseStatus.setCode(caseStatusCode);
-        caseStatus.setCodeName(caseStatusCodeName);
-        return caseStatus;
+        return new CaseStatus(caseStatusCode,caseStatusCodeName);
     }
 
     @Override

@@ -173,10 +173,7 @@ public class DocumentFlow
     public FlowStatus getFlowStatus() {
         if (null == flowStatusCode)
             return null;
-        FlowStatus flowStatus = new FlowStatus();
-        flowStatus.setCode(flowStatusCode);
-        flowStatus.setCodeName(flowStatusCodeName);
-        return flowStatus;
+        return new FlowStatus(flowStatusCode, flowStatusCodeName);
     }
 
     @Override

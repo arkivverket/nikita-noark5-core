@@ -15,6 +15,17 @@ public class RegistryEntryStatus
 
     private static final long serialVersionUID = 1L;
 
+    public RegistryEntryStatus() {
+    }
+
+    public RegistryEntryStatus(String code, String codename) {
+        super(code, codename);
+    }
+
+    public RegistryEntryStatus(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return REGISTRY_ENTRY_STATUS;

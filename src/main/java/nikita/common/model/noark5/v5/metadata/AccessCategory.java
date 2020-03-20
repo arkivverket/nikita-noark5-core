@@ -15,6 +15,17 @@ public class AccessCategory
 
     private static final long serialVersionUID = 1L;
 
+    public AccessCategory() {
+    }
+
+    public AccessCategory(String code, String codename) {
+        super(code, codename);
+    }
+
+    public AccessCategory(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return ACCESS_CATEGORY;

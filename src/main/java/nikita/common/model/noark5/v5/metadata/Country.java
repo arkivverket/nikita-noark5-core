@@ -14,6 +14,17 @@ public class Country extends Metadata {
 
     private static final long serialVersionUID = 1L;
 
+    public Country() {
+    }
+
+    public Country(String code, String codename) {
+        super(code, codename);
+    }
+
+    public Country(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return COUNTRY;

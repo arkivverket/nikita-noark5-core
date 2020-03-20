@@ -14,6 +14,17 @@ public class MeetingRegistrationStatus
 
     private static final long serialVersionUID = 1L;
 
+    public MeetingRegistrationStatus() {
+    }
+
+    public MeetingRegistrationStatus(String code, String codename) {
+        super(code, codename);
+    }
+
+    public MeetingRegistrationStatus(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return MEETING_REGISTRATION_STATUS;

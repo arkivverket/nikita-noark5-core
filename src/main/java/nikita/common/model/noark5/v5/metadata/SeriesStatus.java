@@ -15,6 +15,17 @@ public class SeriesStatus
 
     private static final long serialVersionUID = 1L;
 
+    public SeriesStatus() {
+    }
+
+    public SeriesStatus(String code, String codename) {
+        super(code, codename);
+    }
+
+    public SeriesStatus(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return SERIES_STATUS;

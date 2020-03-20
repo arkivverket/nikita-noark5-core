@@ -20,6 +20,7 @@ public class PostalCode
 
     private static final long serialVersionUID = 1L;
 
+    // TODO drop PostalCode specific values?
     /**
      * Kommunenummer (xs:string)
      */
@@ -40,6 +41,17 @@ public class PostalCode
     @Column(name = "category")
     @Audited
     protected String category;
+
+    public PostalCode() {
+    }
+
+    public PostalCode(String code, String codename) {
+        super(code, codename);
+    }
+
+    public PostalCode(String code) {
+        super(code, (String)null);
+    }
 
     public String getMunicipalitynumber() {
         return municipalitynumber;

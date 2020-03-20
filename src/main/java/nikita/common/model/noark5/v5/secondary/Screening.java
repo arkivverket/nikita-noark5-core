@@ -110,10 +110,8 @@ public class Screening
     public AccessRestriction getAccessRestriction() {
         if (null == accessRestrictionCode)
             return null;
-        AccessRestriction accessRestriction = new AccessRestriction();
-        accessRestriction.setCode(accessRestrictionCode);
-        accessRestriction.setCodeName(accessRestrictionCodeName);
-        return accessRestriction;
+        return new AccessRestriction(accessRestrictionCode,
+                                     accessRestrictionCodeName);
     }
 
     public void setAccessRestriction(AccessRestriction accessRestriction) {
@@ -145,10 +143,8 @@ public class Screening
     public ScreeningDocument getScreeningDocument() {
         if (null == screeningDocumentCode)
             return null;
-        ScreeningDocument screeningDocument = new ScreeningDocument();
-        screeningDocument.setCode(screeningDocumentCode);
-        screeningDocument.setCodeName(screeningDocumentCodeName);
-        return screeningDocument;
+        return new ScreeningDocument(screeningDocumentCode,
+                                     screeningDocumentCodeName);
     }
 
     public void setScreeningDocument(ScreeningDocument screeningDocument) {

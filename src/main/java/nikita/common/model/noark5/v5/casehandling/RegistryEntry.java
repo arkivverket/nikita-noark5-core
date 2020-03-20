@@ -233,10 +233,8 @@ public class RegistryEntry
     public RegistryEntryType getRegistryEntryType() {
         if (null == registryEntryTypeCode)
             return null;
-        RegistryEntryType registryEntryType = new RegistryEntryType();
-        registryEntryType.setCode(registryEntryTypeCode);
-        registryEntryType.setCodeName(registryEntryTypeCodeName);
-        return registryEntryType;
+        return new RegistryEntryType(registryEntryTypeCode,
+                                     registryEntryTypeCodeName);
     }
 
     public void setRegistryEntryType(RegistryEntryType registryEntryType) {
@@ -252,10 +250,8 @@ public class RegistryEntry
     public RegistryEntryStatus getRegistryEntryStatus() {
         if (null == registryEntryStatusCode)
             return null;
-        RegistryEntryStatus registryEntryStatus = new RegistryEntryStatus();
-        registryEntryStatus.setCode(registryEntryStatusCode);
-        registryEntryStatus.setCodeName(registryEntryStatusCodeName);
-        return registryEntryStatus;
+        return new RegistryEntryStatus(registryEntryStatusCode,
+                                       registryEntryStatusCodeName);
     }
 
     public void setRegistryEntryStatus(RegistryEntryStatus registryEntryStatus) {

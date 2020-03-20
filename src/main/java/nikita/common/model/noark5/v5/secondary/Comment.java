@@ -121,10 +121,7 @@ public class Comment
     public CommentType getCommentType() {
         if (null == commentTypeCode)
             return null;
-        CommentType commentType = new CommentType();
-        commentType.setCode(commentTypeCode);
-        commentType.setCodeName(commentTypeCodeName);
-        return commentType;
+        return new CommentType(commentTypeCode,commentTypeCodeName);
     }
 
     public void setCommentType(CommentType commentType) {

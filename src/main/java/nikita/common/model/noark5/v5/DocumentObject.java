@@ -172,10 +172,7 @@ public class DocumentObject
     public VariantFormat getVariantFormat() {
         if (null == variantFormatCode)
             return null;
-        VariantFormat variantFormat = new VariantFormat();
-        variantFormat.setCode(variantFormatCode);
-        variantFormat.setCodeName(variantFormatCodeName);
-        return variantFormat;
+        return new VariantFormat(variantFormatCode, variantFormatCodeName);
     }
 
     public void setVariantFormat(VariantFormat variantFormat) {
@@ -191,10 +188,7 @@ public class DocumentObject
    public Format getFormat() {
         if (null == formatCode)
             return null;
-        Format format = new Format();
-        format.setCode(formatCode);
-        format.setCodeName(formatCodeName);
-        return format;
+        return new Format(formatCode, formatCodeName);
     }
 
     public void setFormat(Format format) {

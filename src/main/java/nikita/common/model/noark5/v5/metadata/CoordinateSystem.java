@@ -14,6 +14,17 @@ public class CoordinateSystem extends Metadata {
 
     private static final long serialVersionUID = 1L;
 
+    public CoordinateSystem() {
+    }
+
+    public CoordinateSystem(String code, String codename) {
+        super(code, codename);
+    }
+
+    public CoordinateSystem(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return COORDINATE_SYSTEM;

@@ -15,6 +15,17 @@ public class DisposalDecision
 
     private static final long serialVersionUID = 1L;
 
+    public DisposalDecision() {
+    }
+
+    public DisposalDecision(String code, String codename) {
+        super(code, codename);
+    }
+
+    public DisposalDecision(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return DISPOSAL_DECISION;

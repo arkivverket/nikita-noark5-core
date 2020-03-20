@@ -15,6 +15,17 @@ public class RegistryEntryType
 
     private static final long serialVersionUID = 1L;
 
+    public RegistryEntryType() {
+    }
+
+    public RegistryEntryType(String code, String codename) {
+        super(code, codename);
+    }
+
+    public RegistryEntryType(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return REGISTRY_ENTRY_TYPE;

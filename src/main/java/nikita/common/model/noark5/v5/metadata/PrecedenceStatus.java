@@ -15,6 +15,17 @@ public class PrecedenceStatus
 
     private static final long serialVersionUID = 1L;
 
+    public PrecedenceStatus() {
+    }
+
+    public PrecedenceStatus(String code, String codename) {
+        super(code, codename);
+    }
+
+    public PrecedenceStatus(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return PRECEDENCE_STATUS;

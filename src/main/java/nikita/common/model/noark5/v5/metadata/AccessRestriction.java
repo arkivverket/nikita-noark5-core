@@ -15,6 +15,17 @@ public class AccessRestriction
 
     private static final long serialVersionUID = 1L;
 
+    public AccessRestriction() {
+    }
+
+    public AccessRestriction(String code, String codename) {
+        super(code, codename);
+    }
+
+    public AccessRestriction(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return ACCESS_RESTRICTION;

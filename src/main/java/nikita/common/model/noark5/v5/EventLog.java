@@ -76,10 +76,7 @@ public class EventLog
     public EventType getEventType() {
         if (null == eventTypeCode)
             return null;
-        EventType eventType = new EventType();
-        eventType.setCode(eventTypeCode);
-        eventType.setCodeName(eventTypeCodeName);
-        return eventType;
+        return new EventType(eventTypeCode, eventTypeCodeName);
     }
 
     @Override

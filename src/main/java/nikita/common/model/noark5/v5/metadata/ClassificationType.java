@@ -15,6 +15,17 @@ public class ClassificationType
 
     private static final long serialVersionUID = 1L;
 
+    public ClassificationType() {
+    }
+
+    public ClassificationType(String code, String codename) {
+        super(code, codename);
+    }
+
+    public ClassificationType(String code) {
+        super(code, (String)null);
+    }
+
     @Override
     public String getBaseTypeName() {
         return CLASSIFICATION_TYPE;

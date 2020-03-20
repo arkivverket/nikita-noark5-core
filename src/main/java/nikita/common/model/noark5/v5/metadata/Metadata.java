@@ -62,6 +62,19 @@ public class Metadata
     @JsonProperty(CODE_NAME)
     protected String codeName;
 
+    public Metadata() {
+    }
+
+    public Metadata(String code, String codename) {
+        setCode(code);
+        setCodeName(codename);
+    }
+
+    public Metadata(String code) {
+        setCode(code);
+        setCodeName(null);
+    }
+
     @Override
     public String getCode() {
         return code;
