@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST;
 import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST_COUNT;
@@ -201,6 +202,13 @@ public class HateoasSerializer
             jgen.writeNumberField(fieldName, value);
     }
 
+    protected void printNullable(JsonGenerator jgen,
+                                 String fieldName, UUID value)
+            throws IOException {
+        if (null != value)
+            jgen.writeStringField(fieldName, value.toString());
+    }
+
     protected void printNullableMetadata
             (JsonGenerator jgen, String fieldName, IMetadataEntity m)
             throws IOException {
@@ -254,6 +262,13 @@ public class HateoasSerializer
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeNumberField(fieldName, value);
+    }
+
+    protected void print(JsonGenerator jgen,
+                         String fieldName, UUID value)
+            throws IOException {
+        if (null != value)
+            jgen.writeStringField(fieldName, value.toString());
     }
 
     protected void printDate(JsonGenerator jgen,

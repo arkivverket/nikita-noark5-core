@@ -63,11 +63,12 @@ public class PrecedenceDeserializer
             objectNode.remove(PRECEDENCE_APPROVED_BY);
         }
         // Deserialize referansePresedensGodkjentAv
-        currentNode = objectNode.get(PRECEDENCE_REFERENCE_APPROVED_BY);
-        if (null != currentNode) {
+        UUID referencePrecedenceApprovedBy =
+            deserializeUUID(PRECEDENCE_REFERENCE_APPROVED_BY,
+                            objectNode, errors, false);
+        if (null != referencePrecedenceApprovedBy) {
             precedence.setReferencePrecedenceApprovedBySystemID
-                (UUID.fromString(currentNode.textValue()));
-            objectNode.remove(PRECEDENCE_REFERENCE_APPROVED_BY);
+                (referencePrecedenceApprovedBy);
         }
         // Deserialize presedensStatus
         PrecedenceStatus precedenceStatus = (PrecedenceStatus)

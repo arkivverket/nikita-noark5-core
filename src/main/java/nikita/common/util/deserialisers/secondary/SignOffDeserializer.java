@@ -59,21 +59,21 @@ public class SignOffDeserializer
         // TODO handle referanseAvskrevetAv
 
         // Deserialize referanseAvskrivesAvJournalpost
-        currentNode = objectNode.get(SIGN_OFF_REFERENCE_RECORD);
-        if (null != currentNode) {
+        UUID referenceSignedOffRecord =
+            deserializeUUID(SIGN_OFF_REFERENCE_RECORD,
+                            objectNode, errors, true);
+        if (null != referenceSignedOffRecord) {
             signOff.setReferenceSignedOffRecordSystemID
-                (UUID.fromString(currentNode.textValue()));
-            objectNode.remove(SIGN_OFF_REFERENCE_RECORD);
-        } else {
-            errors.append(SIGN_OFF_REFERENCE_RECORD + " is missing. ");
+                (referenceSignedOffRecord);
         }
 
         // Deserialize referanseAvskrivesAvKorrespondansepart.
-        currentNode = objectNode.get(SIGN_OFF_REFERENCE_CORRESPONDENCE_PART);
-        if (null != currentNode) {
+        UUID referenceSignedOffCorrespondencePart =
+            deserializeUUID(SIGN_OFF_REFERENCE_CORRESPONDENCE_PART,
+                            objectNode, errors, false);
+        if (null != referenceSignedOffCorrespondencePart) {
             signOff.setReferenceSignedOffCorrespondencePartSystemID
-                (UUID.fromString(currentNode.textValue()));
-            objectNode.remove(SIGN_OFF_REFERENCE_CORRESPONDENCE_PART);
+                (referenceSignedOffCorrespondencePart);
         }
 
         currentNode = objectNode.get(LINKS);

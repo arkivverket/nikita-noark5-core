@@ -45,11 +45,11 @@ public class SeriesHateoasSerializer
         printNullableDate(jgen, SERIES_END_DATE, series.getSeriesEndDate());
         if (null != series.getReferencePrecursorSystemID()) {
             print(jgen, SERIES_ASSOCIATE_AS_PRECURSOR,
-                  series.getReferencePrecursorSystemID().toString());
+                  series.getReferencePrecursorSystemID());
         }
         if (null != series.getReferenceSuccessorSystemID()) {
             print(jgen, SERIES_ASSOCIATE_AS_SUCCESSOR,
-                  series.getReferenceSuccessorSystemID().toString());
+                  series.getReferenceSuccessorSystemID());
         }
         printDisposal(jgen, series);
         printDisposalUndertaken(jgen, series);

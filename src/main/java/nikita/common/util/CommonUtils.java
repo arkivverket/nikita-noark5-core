@@ -430,6 +430,34 @@ public final class CommonUtils {
                 return null;
             }
 
+            public static UUID deserializeUUID(String fieldname,
+                                               ObjectNode objectNode,
+                                               StringBuilder errors,
+                                               boolean required) {
+                JsonNode currentNode = objectNode.get(fieldname);
+                if (null != currentNode) {
+                    objectNode.remove(fieldname);
+                    if (currentNode.isTextual()) {
+                        try {
+                            return UUID.fromString(currentNode.textValue());
+                        } catch (IllegalArgumentException e) {
+                            errors.append(fieldname + " (\"" +
+                                          currentNode.textValue() +
+                                          "\") is not valid UUID. ");
+                            return null;
+                        }
+                    } else {
+                        errors.append(fieldname + " (\"" +
+                                currentNode.textValue() +
+                                "\") is not UUID. ");
+                        return null;
+                    }
+                } else if (required) {
+                    errors.append(fieldname + " is missing. ");
+                }
+                return null;
+            }
+
             public static OffsetDateTime deserializeDate(String fieldname,
                                                          ObjectNode objectNode,
                                                          StringBuilder errors,

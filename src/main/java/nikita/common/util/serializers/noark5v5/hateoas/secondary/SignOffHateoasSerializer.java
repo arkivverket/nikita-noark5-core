@@ -50,11 +50,11 @@ public class SignOffHateoasSerializer
             // TODO handle referanseAvskrevetAv
             if (null != signOffEntity.getReferenceSignedOffRecordSystemID()) {
                 print(jgen, SIGN_OFF_REFERENCE_RECORD,
-                      signOffEntity.getReferenceSignedOffRecordSystemID().toString());
+                      signOffEntity.getReferenceSignedOffRecordSystemID());
             }
             if (null != signOffEntity.getReferenceSignedOffCorrespondencePartSystemID()) {
                 print(jgen, SIGN_OFF_REFERENCE_CORRESPONDENCE_PART,
-                      signOffEntity.getReferenceSignedOffCorrespondencePartSystemID().toString());
+                      signOffEntity.getReferenceSignedOffCorrespondencePartSystemID());
             }
         }
         printHateoasLinks(jgen, signOffHateoas.getLinks(signOffEntity));
