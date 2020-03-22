@@ -174,42 +174,42 @@ public class HateoasSerializer
     }
 
 
-    protected void printNullable(JsonGenerator jgen,
+    protected static void printNullable(JsonGenerator jgen,
                                  String fieldName, String value)
             throws IOException {
         if (null != value)
             jgen.writeStringField(fieldName, value);
     }
 
-    protected void printNullable(JsonGenerator jgen,
+    protected static void printNullable(JsonGenerator jgen,
                                  String fieldName, Integer value)
             throws IOException {
         if (null != value)
             jgen.writeNumberField(fieldName, value);
     }
 
-    protected void printNullable(JsonGenerator jgen,
+    protected static void printNullable(JsonGenerator jgen,
                                  String fieldName, Long value)
             throws IOException {
         if (null != value)
             jgen.writeNumberField(fieldName, value);
     }
 
-    protected void printNullable(JsonGenerator jgen,
+    protected static void printNullable(JsonGenerator jgen,
                                  String fieldName, Double value)
             throws IOException {
         if (null != value)
             jgen.writeNumberField(fieldName, value);
     }
 
-    protected void printNullable(JsonGenerator jgen,
+    protected static void printNullable(JsonGenerator jgen,
                                  String fieldName, UUID value)
             throws IOException {
         if (null != value)
             jgen.writeStringField(fieldName, value.toString());
     }
 
-    protected void printNullableMetadata
+    protected static void printNullableMetadata
             (JsonGenerator jgen, String fieldName, IMetadataEntity m)
             throws IOException {
         if (null != m && null != m.getCode()) {
@@ -219,14 +219,14 @@ public class HateoasSerializer
         }
     }
 
-    protected void printNullableDate(JsonGenerator jgen,
+    protected static void printNullableDate(JsonGenerator jgen,
                                      String fieldName, OffsetDateTime value)
             throws IOException {
         if (null != value)
             jgen.writeStringField(fieldName, Serialize.formatDate(value));
     }
 
-    protected void printNullableDateTime(JsonGenerator jgen,
+    protected static void printNullableDateTime(JsonGenerator jgen,
                                          String fieldName, OffsetDateTime value)
             throws IOException {
         if (null != value)
@@ -243,49 +243,49 @@ public class HateoasSerializer
      * @param value
      * @throws IOException
      */
-    protected void print(JsonGenerator jgen,
+    protected static void print(JsonGenerator jgen,
                          String fieldName, @NotNull String value)
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeStringField(fieldName, value);
     }
 
-    protected void print(JsonGenerator jgen,
+    protected static void print(JsonGenerator jgen,
                          String fieldName, @NotNull Integer value)
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeNumberField(fieldName, value);
     }
 
-    protected void print(JsonGenerator jgen,
+    protected static void print(JsonGenerator jgen,
                          String fieldName, @NotNull Double value)
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeNumberField(fieldName, value);
     }
 
-    protected void print(JsonGenerator jgen,
+    protected static void print(JsonGenerator jgen,
                          String fieldName, UUID value)
             throws IOException {
         if (null != value)
             jgen.writeStringField(fieldName, value.toString());
     }
 
-    protected void printDate(JsonGenerator jgen,
+    protected static void printDate(JsonGenerator jgen,
                              String fieldName, OffsetDateTime value)
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeStringField(fieldName, Serialize.formatDate(value));
     }
 
-    protected void printDateTime(JsonGenerator jgen,
+    protected static void printDateTime(JsonGenerator jgen,
                                  String fieldName, OffsetDateTime value)
             throws IOException {
         checkNull(fieldName, value);
         jgen.writeStringField(fieldName, Serialize.formatDateTime(value));
     }
 
-    private void checkNull(String fieldName, Object value) {
+    private static void checkNull(String fieldName, Object value) {
         if (null == value) {
             String msg = "When serialising [" + fieldName + "], there was no " +
                     "associated value. This field is mandatory";
