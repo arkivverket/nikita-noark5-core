@@ -24,7 +24,7 @@ public class ChangeLogDeserializer
         extends JsonDeserializer {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(ClassDeserializer.class);
+            LoggerFactory.getLogger(ChangeLogDeserializer.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
