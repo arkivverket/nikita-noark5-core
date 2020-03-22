@@ -21,16 +21,16 @@ noark5tester-runtest:
   - apt install -y git maven curl python python-mechanize
   - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
-  - atexit() { if [ "$serverpid" ]; then kill $serverpid; sleep 1; fi }
+  - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 nikita-run.log ; fi; fi }
   - trap atexit EXIT
-  - mvn spring-boot:run > build-run.log 2>&1 &
+  - mvn spring-boot:run > nikita-run.log 2>&1 &
   - serverpid=$!
   - echo "Waiting for nikita to start"
-  - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done
+  - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
   - (cd noark5-tester && LC_ALL=C.UTF-8 ./runtest --verbose --baseurl $baseurl)
   artifacts:
     paths:
-    - build-run.log
+    - nikita-run.log
 
 noark5tester-inoutin:
   stage: use
@@ -44,12 +44,12 @@ noark5tester-inoutin:
   - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
   - nikitastarted=false
-  - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 build-run.log ; fi; fi }
+  - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 nikita-run.log ; fi; fi }
   - trap atexit EXIT
-  - mvn spring-boot:run > build-run.log 2>&1 &
+  - mvn spring-boot:run > nikita-run.log 2>&1 &
   - serverpid=$!
   - echo "Waiting for nikita to start"
-  - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 11 -eq "$count" ]; then nikitastarted=true; fi
+  - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
   - cd noark5-tester
   - export LC_ALL=C.UTF-8
   - ./runtest  --baseurl $baseurl --keep
@@ -63,7 +63,7 @@ noark5tester-inoutin:
   - ./import-uttrekk  --baseurl $baseurl "$depotdir"
   artifacts:
     paths:
-    - build-run.log
+    - nikita-run.log
     - noark5-tester/json-dump-*/*
     - noark5-tester/uttrekk-*/*
 
