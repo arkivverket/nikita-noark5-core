@@ -104,7 +104,7 @@ public class NationalIdentifierSerializer
         printSystemIdEntity(jgen, plan);
         printNullable(jgen, MUNICIPALITY_NUMBER, plan.getMunicipalityNumber());
         printNullable(jgen, COUNTY_NUMBER, plan.getCountyNumber());
-        printNullable(jgen, COUNTRY, plan.getCountry().getCode());
+        printNullableMetadata(jgen, COUNTRY_CODE, plan.getCountry());
         printNullable(jgen, PLAN_IDENTIFICATION, plan.getPlanIdentification());
         printHateoasLinks(jgen, planHateoas.getLinks(plan));
         jgen.writeEndObject();

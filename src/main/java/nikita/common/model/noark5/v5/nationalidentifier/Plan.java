@@ -107,8 +107,13 @@ public class Plan
 
     @Override
     public void setCountry(Country country) {
-        countryCode = country.getCode();
-        countryCodeName = country.getCodeName();
+        if (null != country) {
+            this.countryCode = country.getCode();
+            this.countryCodeName = country.getCodeName();
+        } else {
+            this.countryCode = null;
+            this.countryCodeName = null;
+        }
     }
 
     @Override
