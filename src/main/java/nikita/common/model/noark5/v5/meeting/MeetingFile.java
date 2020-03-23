@@ -18,6 +18,7 @@ import static nikita.common.config.N5ResourceMappings.MEETING_FILE;
 @Entity
 @Table(name = TABLE_MEETING_FILE)
 @Inheritance(strategy = JOINED)
+@Audited(withModifiedFlag = true)
 public class MeetingFile
         extends File {
 
@@ -25,28 +26,24 @@ public class MeetingFile
      * M008 - moetenummer (xs:string)
      */
     @Column(name = "meeting_number")
-    @Audited
     private String meetingNumber;
 
     /**
      * M370 - utvalg (xs:string)
      */
     @Column(name = "committee")
-    @Audited
     private String committee;
 
     /**
      * M102 - moetedato (xs:date)
      */
     @Column(name = "loaned_date")
-    @Audited
     private OffsetDateTime meetingDate;
 
     /**
      * M371 - moetested (xs:string)
      */
     @Column(name = "meeting_place")
-    @Audited
     private String meetingPlace;
 
     /**

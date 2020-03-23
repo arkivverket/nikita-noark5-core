@@ -31,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = SocialSecurityNumberDeserializer.class)
 @HateoasPacker(using = SocialSecurityNumberHateoasHandler.class)
 @HateoasObject(using = SocialSecurityNumberHateoas.class)
+@Audited(withModifiedFlag = true)
 public class SocialSecurityNumber
         extends PersonIdentifier
         implements ISocialSecurityNumberEntity {
@@ -38,7 +39,6 @@ public class SocialSecurityNumber
      * M??? - foedselsnummer (xs:string)
      */
     @Column(name = SOCIAL_SECURITY_NUMBER_ENG)
-    @Audited
     @JsonProperty(SOCIAL_SECURITY_NUMBER)
     private String socialSecurityNumber;
 

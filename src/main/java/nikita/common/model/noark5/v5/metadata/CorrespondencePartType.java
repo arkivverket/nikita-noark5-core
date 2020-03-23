@@ -1,7 +1,5 @@
 package nikita.common.model.noark5.v5.metadata;
 
-import org.hibernate.envers.Audited;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -12,7 +10,6 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
 // Noark 5v5 korrespondanseparttype
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART_TYPE)
-@Audited
 public class CorrespondencePartType
         extends Metadata {
 

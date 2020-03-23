@@ -25,6 +25,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  * Created by tsodring on 5/8/17.
  */
 @MappedSuperclass
+@Audited(withModifiedFlag = true)
 public class NoarkEntity
         implements INoarkEntity {
 
@@ -32,7 +33,6 @@ public class NoarkEntity
 
     @CreatedBy
     @Column(name = "owned_by")
-    @Audited
     private String ownedBy;
 
     @Version
@@ -45,7 +45,6 @@ public class NoarkEntity
     @CreatedDate
     @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
@@ -54,7 +53,6 @@ public class NoarkEntity
      */
     @CreatedBy
     @Column(name = CREATED_BY_ENG)
-    @Audited
     @JsonProperty(CREATED_BY)
     private String createdBy;
 

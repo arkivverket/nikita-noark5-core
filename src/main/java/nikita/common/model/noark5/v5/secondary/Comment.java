@@ -29,6 +29,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = CommentDeserializer.class)
 @HateoasPacker(using = CommentHateoasHandler.class)
 @HateoasObject(using = CommentHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Comment
         extends SystemIdEntity
         implements ICommentEntity {
@@ -39,21 +40,18 @@ public class Comment
      * M310 - merknadstekst (xs:string)
      */
     @Column(name = "comment_text")
-    @Audited
     private String commentText;
 
     /**
      * M??? - merknadstype code (xs:string)
      */
     @Column(name = "comment_type_code")
-    @Audited
     private String commentTypeCode;
 
     /**
      * M084 - merknadstype code name (xs:string)
      */
     @Column(name = "comment_type_code_name")
-    @Audited
     private String commentTypeCodeName;
 
     /**
@@ -61,14 +59,12 @@ public class Comment
      */
     @Column(name = "comment_time")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     private OffsetDateTime commentDate;
 
     /**
      * M612 - merknadRegistrertAv (xs:string)
      */
     @Column(name = "comment_registered_by")
-    @Audited
     private String commentRegisteredBy;
 
     // Link to File
@@ -91,7 +87,6 @@ public class Comment
      * This can be used to save a potential lookup in the database.
      */
     @Column(name = "is_for_file")
-    @Audited
     private Boolean isForFile = false;
 
     /**
@@ -99,7 +94,6 @@ public class Comment
      * This can be used to save a potential lookup in the database.
      */
     @Column(name = "is_for_record")
-    @Audited
     private Boolean isForRecord = false;
 
     /**
@@ -107,7 +101,6 @@ public class Comment
      * description. This can be used to save a potential lookup in the database.
      */
     @Column(name = "is_for_document_description")
-    @Audited
     private Boolean isForDocumentDescription = false;
 
     public String getCommentText() {

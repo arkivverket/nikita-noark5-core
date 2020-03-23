@@ -33,6 +33,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = MetadataDeserializer.class)
 @HateoasPacker(using = MetadataHateoasHandler.class)
 @HateoasObject(using = MetadataHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Metadata
         extends NoarkEntity
         implements IMetadataEntity {
@@ -42,7 +43,6 @@ public class Metadata
      */
     @Id
     @Column(name = CODE_ENG)
-    @Audited
     @JsonProperty(CODE)
     protected String code;
 
@@ -50,7 +50,6 @@ public class Metadata
      * M??? - inaktiv (xs:boolean)
      */
     @Column(name = "inactive")
-    @Audited
     @JsonProperty(CODE_INACTIVE)
     protected Boolean inactive = false;
 
@@ -58,7 +57,6 @@ public class Metadata
      * M??? - kodenavn (xs:string)
      */
     @Column(name = CODE_NAME_ENG)
-    @Audited
     @JsonProperty(CODE_NAME)
     protected String codeName;
 

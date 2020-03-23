@@ -37,6 +37,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @JsonDeserialize(using = SeriesDeserializer.class)
 @HateoasPacker(using = SeriesHateoasHandler.class)
 @HateoasObject(using = SeriesHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Series
         extends NoarkGeneralEntity
         implements IStorageLocation, IDocumentMedium, IClassified, IScreening,
@@ -49,7 +50,6 @@ public class Series
      */
     @NotNull
     @Column(name = "series_status_code", nullable = false)
-    @Audited
     private String seriesStatusCode;
 
     /**
@@ -57,7 +57,6 @@ public class Series
      */
     @NotNull
     @Column(name = "series_status_code_name", nullable = false)
-    @Audited
     private String seriesStatusCodeName;
 
     /**
@@ -65,7 +64,6 @@ public class Series
      */
     @Column(name = SERIES_START_DATE_ENG)
     @DateTimeFormat(iso = DATE)
-    @Audited
     @JsonProperty(SERIES_START_DATE)
     private OffsetDateTime seriesStartDate;
 
@@ -74,7 +72,6 @@ public class Series
      */
     @Column(name = SERIES_END_DATE_ENG)
     @DateTimeFormat(iso = DATE)
-    @Audited
     @JsonProperty(SERIES_END_DATE)
     private OffsetDateTime seriesEndDate;
 
@@ -82,14 +79,12 @@ public class Series
      * M??? - dokumentmedium code (xs:string)
      */
     @Column(name = "document_medium_code")
-    @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
     @Column(name = "document_medium_code_name")
-    @Audited
     private String documentMediumCodeName;
 
     // Links to StorageLocations

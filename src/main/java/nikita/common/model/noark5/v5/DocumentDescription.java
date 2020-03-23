@@ -35,6 +35,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = DocumentDescriptionDeserializer.class)
 @HateoasPacker(using = DocumentDescriptionHateoasHandler.class)
 @HateoasObject(using = DocumentDescriptionHateoas.class)
+@Audited(withModifiedFlag = true)
 public class DocumentDescription
         extends SystemIdEntity
         implements ICreate, ITitleDescription,
@@ -49,7 +50,6 @@ public class DocumentDescription
      */
     @NotNull
     @Column(name = "document_type_code", nullable = false)
-    @Audited
     private String documentTypeCode;
 
     /**
@@ -57,21 +57,18 @@ public class DocumentDescription
      */
     @NotNull
     @Column(name = "document_type_code_name", nullable = false)
-    @Audited
     private String documentTypeCodeName;
 
     /**
      * M??? - dokumentstatus code (xs:string)
      */
     @Column(name = "document_status_code")
-    @Audited
     private String documentStatusCode;
 
     /**
      * M054 - dokumentstatus code name (xs:string)
      */
     @Column(name = "document_status_code_name")
-    @Audited
     private String documentStatusCodeName;
 
     /**
@@ -79,7 +76,6 @@ public class DocumentDescription
      */
     @NotNull
     @Column(name = TITLE_ENG, nullable = false, length = TITLE_LENGTH)
-    @Audited
     @JsonProperty(TITLE)
     private String title;
 
@@ -87,7 +83,6 @@ public class DocumentDescription
      * M021 - beskrivelse (xs:string)
      */
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
-    @Audited
     @JsonProperty(DESCRIPTION)
     private String description;
 
@@ -96,7 +91,6 @@ public class DocumentDescription
      */
     @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
@@ -104,7 +98,6 @@ public class DocumentDescription
      * M601 - opprettetAv (xs:string)
      */
     @Column(name = CREATED_BY_ENG)
-    @Audited
     @JsonProperty(CREATED_BY)
     private String createdBy;
 
@@ -112,14 +105,12 @@ public class DocumentDescription
      * M??? - dokumentmedium code (xs:string)
      */
     @Column(name = "document_medium_code")
-    @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
     @Column(name = "document_medium_code_name")
-    @Audited
     private String documentMediumCodeName;
 
     /**
@@ -127,7 +118,6 @@ public class DocumentDescription
      */
     @NotNull
     @Column(name = "associated_with_record_as_code", nullable = false)
-    @Audited
     private String associatedWithRecordAsCode;
 
     /**
@@ -135,7 +125,6 @@ public class DocumentDescription
      */
     @NotNull
     @Column(name = "associated_with_record_as_code_name", nullable = false)
-    @Audited
     private String associatedWithRecordAsCodeName;
 
     /**
@@ -143,7 +132,6 @@ public class DocumentDescription
      */
     @NotNull
     @Column(name = DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER)
     private Integer documentNumber;
 
@@ -153,7 +141,6 @@ public class DocumentDescription
     @NotNull
     @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG, nullable = false)
     @DateTimeFormat(iso = DATE)
-    @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_DATE)
     private OffsetDateTime associationDate;
 
@@ -161,7 +148,6 @@ public class DocumentDescription
      * M621 - tilknyttetAv (xs:string)
      */
     @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_BY)
     private String associatedBy;
 
@@ -169,7 +155,6 @@ public class DocumentDescription
      * M301 - oppbevaringssted (xs:string)
      */
     @Column(name = STORAGE_LOCATION_ENG)
-    @Audited
     @JsonProperty(STORAGE_LOCATION)
     private String storageLocation;
 
@@ -177,7 +162,6 @@ public class DocumentDescription
      * M??? - eksternReferanse (xs:string)
      */
     @Column(name = DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE)
     private String externalReference;
 

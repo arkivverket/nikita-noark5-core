@@ -31,6 +31,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @JsonDeserialize(using = SignOffDeserializer.class)
 @HateoasPacker(using = SignOffHateoasHandler.class)
 @HateoasObject(using = SignOffHateoas.class)
+@Audited(withModifiedFlag = true)
 public class SignOff
         extends SystemIdEntity
         implements ISignOffEntity {
@@ -40,7 +41,6 @@ public class SignOff
      */
     @Column(name = SIGN_OFF_DATE_ENG)
     @DateTimeFormat(iso = DATE)
-    @Audited
     @JsonProperty(SIGN_OFF_DATE)
     private OffsetDateTime signOffDate;
 
@@ -48,7 +48,6 @@ public class SignOff
      * M618 - avskrevetAv
      */
     @Column(name = SIGN_OFF_BY_ENG)
-    @Audited
     @JsonProperty(SIGN_OFF_BY)
     private String signOffBy;
 
@@ -56,21 +55,18 @@ public class SignOff
      * M??? - avskrivningsmaate code
      */
     @Column(name = "sign_off_method_code")
-    @Audited
     private String signOffMethodCode;
 
     /**
      * M619 - avskrivningsmaate code name
      */
     @Column(name = "sign_off_method_code_name")
-    @Audited
     private String signOffMethodCodeName;
 
     /**
      * M215 referanseAvskrivesAvJournalpost
      */
     @Column(name = "reference_record_id")
-    @Audited
     @JsonProperty(SIGN_OFF_REFERENCE_RECORD)
     private UUID referenceSignedOffRecordSystemID;
 
@@ -80,7 +76,6 @@ public class SignOff
      * See https://github.com/arkivverket/schemas/issues/21
      */
     @Column(name = "reference_correspondence_part_id")
-    @Audited
     @JsonProperty(SIGN_OFF_REFERENCE_CORRESPONDENCE_PART)
     private UUID referenceSignedOffCorrespondencePartSystemID;
 

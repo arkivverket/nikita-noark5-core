@@ -40,6 +40,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = DocumentObjectDeserializer.class)
 @HateoasPacker(using = DocumentObjectHateoasHandler.class)
 @HateoasObject(using = DocumentObjectHateoas.class)
+@Audited(withModifiedFlag = true)
 public class DocumentObject
         extends SystemIdEntity
         implements ICreate, IElectronicSignature, IConversion {
@@ -49,7 +50,6 @@ public class DocumentObject
      **/
     @NotNull
     @Column(name = DOCUMENT_OBJECT_VERSION_NUMBER_ENG, nullable = false)
-    @Audited
     private Integer versionNumber;
 
     /**
@@ -57,7 +57,6 @@ public class DocumentObject
      */
     @NotNull
     @Column(name = "variant_format_code", nullable = false)
-    @Audited
     private String variantFormatCode;
 
     /**
@@ -65,28 +64,24 @@ public class DocumentObject
      */
     @NotNull
     @Column(name = "variant_format_code_name", nullable = false)
-    @Audited
     private String variantFormatCodeName;
 
     /**
      * M??? - format code (xs:string)
      */
     @Column(name = "format_code")
-    @Audited
     private String formatCode;
 
     /**
      * M701 - format code name (xs:string)
      */
     @Column(name = "format_code_name")
-    @Audited
     private String formatCodeName;
 
     /**
      * M702 - formatDetaljer (xs:string)
      */
     @Column(name = DOCUMENT_OBJECT_FORMAT_DETAILS_ENG)
-    @Audited
     private String formatDetails;
 
     /**
@@ -94,56 +89,48 @@ public class DocumentObject
      */
     @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     private OffsetDateTime createdDate;
 
     /**
      * M601 - opprettetAv (xs:string)
      */
     @Column(name = CREATED_BY_ENG)
-    @Audited
     private String createdBy;
 
     /**
      * M218 - referanseDokumentfil (xs:string)
      */
     @Column(name = DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG)
-    @Audited
     private String referenceDocumentFile;
 
     /**
      * M705 - sjekksum (xs:string)
      */
     @Column(name = DOCUMENT_OBJECT_CHECKSUM_ENG)
-    @Audited
     private String checksum;
 
     /**
      * M706 - sjekksumAlgoritme (xs:string)
      */
     @Column(name = DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG)
-    @Audited
     private String checksumAlgorithm;
 
     /**
      * M707 - filstoerrelse (xs:string)
      */
     @Column(name = DOCUMENT_OBJECT_FILE_SIZE_ENG)
-    @Audited
     private Long fileSize;
 
     /**
      * M??? - filnavn (xs:string)
      */
     @Column(name = DOCUMENT_OBJECT_FILE_NAME_ENG)
-    @Audited
     private String originalFilename;
 
     /**
      * M??? - mimeType (xs:string)
      */
     @Column(name = DOCUMENT_OBJECT_MIME_TYPE_ENG)
-    @Audited
     private String mimeType;
 
     // Link to DocumentDescription

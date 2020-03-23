@@ -28,6 +28,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 //@JsonDeserialize(using = EventLogDeserializer.class)
 //@HateoasPacker(using = EventLogHateoasHandler.class)
 //@HateoasObject(using = EventLogHateoas.class)
+@Audited(withModifiedFlag = true)
 public class EventLog
     extends ChangeLog
     implements IEventLogEntity
@@ -39,21 +40,18 @@ public class EventLog
      * M??? - hendelsetype code (xs:string)
      */
     @Column(name = "event_log_event_type_code")
-    @Audited
     private String eventTypeCode;
 
     /**
      * M??? - hendelsetype code name (xs:string)
      */
     @Column(name = "event_log_event_type_code_name")
-    @Audited
     private String eventTypeCodeName;
 
     /**
      * M021 - beskrivelse (xs:string)
      */
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
-    @Audited
     @JsonProperty(DESCRIPTION)
     private String description;
 
@@ -62,7 +60,6 @@ public class EventLog
      */
     @Column(name = "event_log_event_date")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(EVENT_DATE)
     private OffsetDateTime eventDate;
 

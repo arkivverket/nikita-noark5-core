@@ -15,6 +15,7 @@ import static nikita.common.config.N5ResourceMappings.POSTAL_NUMBER;
 // Noark 5v5 postnummer
 @Entity
 @Table(name = TABLE_POSTAL_CODE)
+@Audited(withModifiedFlag = true)
 public class PostalCode
         extends Metadata {
 
@@ -25,21 +26,18 @@ public class PostalCode
      * Kommunenummer (xs:string)
      */
     @Column(name = "municipality_number")
-    @Audited
     protected String municipalitynumber;
 
     /**
      * Kommunenavn (xs:string")
      */
     @Column(name = "municipality_name")
-    @Audited
     protected String municipalityname;
 
     /**
      * kategori  (xs:string")
      */
     @Column(name = "category")
-    @Audited
     protected String category;
 
     public PostalCode() {

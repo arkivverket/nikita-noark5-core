@@ -31,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = DocumentFlowDeserializer.class)
 @HateoasPacker(using = DocumentFlowHateoasHandler.class)
 @HateoasObject(using = DocumentFlowHateoas.class)
+@Audited(withModifiedFlag = true)
 public class DocumentFlow
         extends SystemIdEntity
         implements IDocumentFlowEntity  {
@@ -39,7 +40,6 @@ public class DocumentFlow
      * M660 flytTil (xs:string)
      */
     @Column(name = DOCUMENT_FLOW_FLOW_TO_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_TO)
     private String flowTo;
 
@@ -47,7 +47,6 @@ public class DocumentFlow
      * M665 flytFra  (xs:string)
      */
     @Column(name = DOCUMENT_FLOW_FLOW_FROM_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_FROM)
     private String flowFrom;
 
@@ -55,7 +54,6 @@ public class DocumentFlow
      * M661 - flytMottattDato (xs:dateTime)
      */
     @Column(name = DOCUMENT_FLOW_FLOW_RECEIVED_DATE_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_RECEIVED_DATE)
     private OffsetDateTime flowReceivedDate;
 
@@ -63,7 +61,6 @@ public class DocumentFlow
      * M662 flytSendtDato (xs:dateTime)
      */
     @Column(name = DOCUMENT_FLOW_FLOW_SENT_DATE_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_SENT_DATE)
     private OffsetDateTime flowSentDate;
 
@@ -71,21 +68,18 @@ public class DocumentFlow
      * M??? flytStatus code (xs:string)
      */
     @Column(name = "flow_status_code")
-    @Audited
     private String flowStatusCode;
 
     /**
      * M663 flytStatus code name (xs:string)
      */
     @Column(name = "flow_status_code_name")
-    @Audited
     private String flowStatusCodeName;
 
     /**
      * M664 flytMerknad (xs:string)
      */
     @Column(name = DOCUMENT_FLOW_FLOW_COMMENT_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_COMMENT)
     private String flowComment;
 
@@ -93,7 +87,6 @@ public class DocumentFlow
      * M?? referanseflytTil (xs:string)
      */
     @Column(name = DOCUMENT_FLOW_REFERENCE_FLOW_TO_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_FLOW_REFERENCE_FLOW_TO)
     private UUID referenceFlowToSystemID;
 
@@ -101,7 +94,6 @@ public class DocumentFlow
      * M?? referanseflytFra (xs:string)
      */
     @Column(name = DOCUMENT_FLOW_REFERENCE_FLOW_FROM_ENG)
-    @Audited
     @JsonProperty(DOCUMENT_FLOW_REFERENCE_FLOW_FROM)
     private UUID referenceFlowFromSystemID;
 

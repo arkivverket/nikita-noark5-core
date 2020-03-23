@@ -36,6 +36,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = PlanDeserializer.class)
 @HateoasPacker(using = PlanHateoasHandler.class)
 @HateoasObject(using = PlanHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Plan
         extends NationalIdentifier
         implements IPlanEntity {
@@ -44,7 +45,6 @@ public class Plan
      * M??? - kommunenummer (xs:string)
      */
     @Column(name = MUNICIPALITY_NUMBER)
-    @Audited
     @JsonProperty(MUNICIPALITY_NUMBER)
     String municipalityNumber;
 
@@ -52,7 +52,6 @@ public class Plan
      * M??? - fylkenummer (xs:string)
      */
     @Column(name = COUNTY_NUMBER_ENG)
-    @Audited
     @JsonProperty(COUNTY_NUMBER)
     String countyNumber;
 
@@ -60,21 +59,18 @@ public class Plan
      * M??? - landkode code (xs:string)
      */
     @Column(name = "country_code")
-    @Audited
     String countryCode;
 
     /**
      * M??? - landkode code name (xs:string)
      */
     @Column(name = "country_code_name")
-    @Audited
     String countryCodeName;
 
     /**
      * M??? - planidentifikasjon (xs:string)
      */
     @Column(name = PLAN_IDENTIFICATION_ENG, nullable = false)
-    @Audited
     @JsonProperty(PLAN_IDENTIFICATION)
     String planIdentification;
 

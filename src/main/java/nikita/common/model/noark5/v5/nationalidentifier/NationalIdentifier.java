@@ -18,7 +18,7 @@ import static nikita.common.config.Constants.*;
 //@JsonDeserialize(using = NationalIdentifierDeserializer.class)
 //@HateoasPacker(using = NationalIdentifierHateoasHandler.class)
 //@HateoasObject(using = NationalIdentifierHateoas.class)
-@Audited
+@Audited(withModifiedFlag = true)
 public class NationalIdentifier
         extends SystemIdEntity {
 

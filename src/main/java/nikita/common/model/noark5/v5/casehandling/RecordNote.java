@@ -32,6 +32,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = RecordNoteDeserializer.class)
 @HateoasPacker(using = RecordNoteHateoasHandler.class)
 @HateoasObject(using = RecordNoteHateoas.class)
+@Audited(withModifiedFlag = true)
 public class RecordNote
         extends Record
         implements IRecordNoteEntity {
@@ -41,7 +42,6 @@ public class RecordNote
      */
     @Column(name = "document_date")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime documentDate;
 
     /**
@@ -49,7 +49,6 @@ public class RecordNote
      */
     @Column(name = "received_date")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     private OffsetDateTime receivedDate;
 
     /**
@@ -57,7 +56,6 @@ public class RecordNote
      */
     @Column(name = "sent_date")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     private OffsetDateTime sentDate;
 
     /**
@@ -65,7 +63,6 @@ public class RecordNote
      */
     @Column(name = "due_date")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime dueDate;
 
     /**
@@ -73,14 +70,12 @@ public class RecordNote
      */
     @Column(name = "freedom_assessment_date")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime freedomAssessmentDate;
 
     /**
      * M304 - antallVedlegg (xs:integer)
      */
     @Column(name = "number_of_attachments")
-    @Audited
     private Integer numberOfAttachments;
 
     /**
@@ -88,14 +83,12 @@ public class RecordNote
      */
     @Column(name = "loaned_date")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
      */
     @Column(name = "loaned_to")
-    @Audited
     private String loanedTo;
 
     // Links to DocumentFlow

@@ -27,6 +27,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = ConversionDeserializer.class)
 @HateoasPacker(using = ConversionHateoasHandler.class)
 @HateoasObject(using = ConversionHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Conversion
         extends SystemIdEntity
         implements IConversionEntity {
@@ -37,7 +38,6 @@ public class Conversion
      * M615 - konvertertDato (xs:dateTime)
      */
     @Column(name = CONVERTED_DATE_ENG)
-    @Audited
     @JsonProperty(CONVERTED_DATE)
     private OffsetDateTime convertedDate;
 
@@ -45,7 +45,6 @@ public class Conversion
      * M616 - konvertertAv (xs:string)
      */
     @Column(name = CONVERTED_BY_ENG)
-    @Audited
     @JsonProperty(CONVERTED_BY)
     private String convertedBy;
 
@@ -53,35 +52,30 @@ public class Conversion
      * M??? - konvertertFraFormat code (xs:string)
      */
     @Column(name = "converted_from_format_code")
-    @Audited
     private String convertedFromFormatCode;
 
     /**
      * M712 - konvertertFraFormat code name (xs:string)
      */
     @Column(name = "converted_from_format_code_name")
-    @Audited
     private String convertedFromFormatCodeName;
 
     /**
      * M??? - konvertertTilFormat code (xs:string)
      */
     @Column(name = "converted_to_format_code")
-    @Audited
     private String convertedToFormatCode;
 
     /**
      * M713 - konvertertTilFormat code name (xs:string)
      */
     @Column(name = "converted_to_format_code_name")
-    @Audited
     private String convertedToFormatCodeName;
 
     /**
      * M714 - konverteringsverktoey (xs:string)
      */
     @Column(name = CONVERSION_TOOL_ENG)
-    @Audited
     @JsonProperty(CONVERSION_TOOL)
     private String conversionTool;
 
@@ -89,7 +83,6 @@ public class Conversion
      * M715 - konverteringskommentar (xs:string)
      */
     @Column(name = CONVERSION_COMMENT_ENG)
-    @Audited
     @JsonProperty(CONVERSION_COMMENT)
     private String conversionComment;
 

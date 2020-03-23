@@ -12,6 +12,7 @@ import javax.persistence.*;
 
 //@Entity
 //@Table(name = TABLE_nikita_role")
+@Audited(withModifiedFlag = true)
 public class Role
         extends SystemIdEntity
         implements IRoleEntity {
@@ -26,56 +27,48 @@ public class Role
      * M??? - rolle (xs:string)
      */
     @Column(name = "role")
-    @Audited
     private String role;
 
     /**
      * M??? - tilgangskategori (xs:string)
      */
     @Column(name = N5ResourceMappings.ACCESS_CATEGORY_ENG)
-    @Audited
     private String accessCategory;
 
     /**
      * M??? - referanseArkivenhet (xs:string)
      */
     @Column(name = "reference_entity")
-    @Audited
     private String referenceEntity;
 
     /**
      * M??? - tilgangsrestriksjon (xs:string)
      */
     @Column(name = "access_restriction")
-    @Audited
     private String accessRestriction;
 
     /**
      * M??? - les (xs:string)
      */
     @Column(name = "read")
-    @Audited
     private Boolean read;
 
     /**
      * M??? - ny (xs:string)
      */
     @Column(name = "create")
-    @Audited
     private Boolean create;
 
     /**
      * M??? - endre (xs:string)
      */
     @Column(name = "update")
-    @Audited
     private Boolean update;
 
     /**
      * M??? - slett (xs:string)
      */
     @Column(name = "delete")
-    @Audited
     private Boolean delete;
 
     public String getRole() {

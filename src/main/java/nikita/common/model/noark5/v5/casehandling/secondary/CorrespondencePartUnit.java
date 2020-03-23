@@ -24,6 +24,7 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_UNIT;
 @JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
 @HateoasPacker(using = CorrespondencePartUnitHateoasHandler.class)
 @HateoasObject(using = CorrespondencePartUnitHateoas.class)
+@Audited(withModifiedFlag = true)
 public class CorrespondencePartUnit
         extends CorrespondencePart
         implements ICorrespondencePartUnitEntity {
@@ -32,21 +33,18 @@ public class CorrespondencePartUnit
      * M??? - organisasjonsnummer (xs:string)
      */
     @Column(name = "organisation_number")
-    @Audited
     private String organisationNumber;
 
     /**
      * M??? - navn (xs:string)
      */
     @Column(name = "name")
-    @Audited
     private String name;
 
     /**
      * M412 - kontaktperson  (xs:string)
      */
     @Column(name = "contact_person")
-    @Audited
     private String contactPerson;
 
     @OneToOne(mappedBy = "correspondencePartUnit", cascade = ALL)

@@ -23,6 +23,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  */
 @MappedSuperclass
 @HateoasPacker
+@Audited(withModifiedFlag = true)
 public class NoarkGeneralEntity
         extends SystemIdEntity
         implements INoarkGeneralEntity {
@@ -32,7 +33,6 @@ public class NoarkGeneralEntity
      */
     @NotNull
     @Column(name = TITLE_ENG, nullable = false, length = TITLE_LENGTH)
-    @Audited
     @JsonProperty(TITLE)
     private String title;
 
@@ -40,7 +40,6 @@ public class NoarkGeneralEntity
      * M021 - beskrivelse (xs:string)
      */
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
-    @Audited
     @JsonProperty(DESCRIPTION)
     private String description;
 
@@ -49,7 +48,6 @@ public class NoarkGeneralEntity
      */
     @Column(name = FINALISED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(FINALISED_DATE)
     private OffsetDateTime finalisedDate;
 
@@ -57,7 +55,6 @@ public class NoarkGeneralEntity
      * M603 - avsluttetAv (xs:string)
      */
     @Column(name = FINALISED_BY_ENG)
-    @Audited
     @JsonProperty(FINALISED_BY)
     private String finalisedBy;
 

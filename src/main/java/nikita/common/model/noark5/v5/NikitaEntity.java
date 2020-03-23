@@ -30,11 +30,11 @@ import static nikita.common.config.N5ResourceMappings.*;
 
 @MappedSuperclass
 @Table(indexes = @Index(name = "index_owned_by", columnList = "owned_by"))
+@Audited(withModifiedFlag = true)
 public class NikitaEntity {
 
     @CreatedBy
     @Column(name = "owned_by")
-    @Audited
     private String ownedBy;
 
     @Version
@@ -47,7 +47,6 @@ public class NikitaEntity {
     @CreatedDate
     @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
@@ -56,7 +55,6 @@ public class NikitaEntity {
      */
     @CreatedBy
     @Column(name = CREATED_BY_ENG)
-    @Audited
     @JsonProperty(CREATED_BY)
     private String createdBy;
 

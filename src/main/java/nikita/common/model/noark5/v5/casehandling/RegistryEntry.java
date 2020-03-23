@@ -38,6 +38,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = RegistryEntryDeserializer.class)
 @HateoasPacker(using = RegistryEntryHateoasHandler.class)
 @HateoasObject(using = RegistryEntryHateoas.class)
+@Audited(withModifiedFlag = true)
 public class RegistryEntry
         extends Record
         implements IRegistryEntryEntity {
@@ -46,21 +47,18 @@ public class RegistryEntry
      * M013 - journalaar (xs:integer)
      */
     @Column(name = "record_year", nullable = false)
-    @Audited
     private Integer recordYear;
 
     /**
      * M014 - journalsekvensnummer (xs:integer)
      */
     @Column(name = "record_sequence_number", nullable = false)
-    @Audited
     private Integer recordSequenceNumber;
 
     /**
      * M015 - journalpostnummer (xs:integer)
      */
     @Column(name = "registry_entry_number", nullable = false)
-    @Audited
     private Integer registryEntryNumber;
 
     /**
@@ -68,7 +66,6 @@ public class RegistryEntry
      */
     @NotNull
     @Column(name = "registry_entry_type_code", nullable = false)
-    @Audited
     private String registryEntryTypeCode;
 
     /**
@@ -76,7 +73,6 @@ public class RegistryEntry
      */
     @NotNull
     @Column(name = "registry_entry_type_code_name", nullable = false)
-    @Audited
     private String registryEntryTypeCodeName;
 
     /**
@@ -84,7 +80,6 @@ public class RegistryEntry
      */
     @NotNull
     @Column(name = "record_status_code", nullable = false)
-    @Audited
     private String registryEntryStatusCode;
 
     /**
@@ -92,7 +87,6 @@ public class RegistryEntry
      */
     @NotNull
     @Column(name = "record_status_code_name", nullable = false)
-    @Audited
     private String registryEntryStatusCodeName;
 
     /**
@@ -101,7 +95,6 @@ public class RegistryEntry
     @NotNull
     @Column(name = "record_date", nullable = false)
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime recordDate;
 
     /**
@@ -109,7 +102,6 @@ public class RegistryEntry
      */
     @Column(name = "document_date")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime documentDate;
 
     /**
@@ -117,7 +109,6 @@ public class RegistryEntry
      */
     @Column(name = "received_date")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     private OffsetDateTime receivedDate;
 
     /**
@@ -125,7 +116,6 @@ public class RegistryEntry
      */
     @Column(name = "sent_date")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     private OffsetDateTime sentDate;
 
     /**
@@ -133,7 +123,6 @@ public class RegistryEntry
      */
     @Column(name = "due_date")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime dueDate;
 
     /**
@@ -141,15 +130,12 @@ public class RegistryEntry
      */
     @Column(name = "freedom_assessment_date")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime freedomAssessmentDate;
 
     /**
      * M304 - antallVedlegg (xs:integer)
      */
     @Column(name = "number_of_attachments")
-    @Audited
-
     private Integer numberOfAttachments;
 
     /**
@@ -157,22 +143,18 @@ public class RegistryEntry
      */
     @Column(name = "loaned_date")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
      */
     @Column(name = "loaned_to")
-    @Audited
     private String loanedTo;
 
     /**
      * M308 - journalenhet (xs:string)
      */
     @Column(name = "records_management_unit")
-    @Audited
-
     private String recordsManagementUnit;
 
     // Links to DocumentFlow

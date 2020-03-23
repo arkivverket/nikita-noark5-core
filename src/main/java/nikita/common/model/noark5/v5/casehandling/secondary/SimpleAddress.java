@@ -15,6 +15,7 @@ import java.io.Serializable;
  * Created by tsodring on 5/14/17.
  */
 @Embeddable
+@Audited(withModifiedFlag = true)
 public class SimpleAddress
         implements ISimpleAddressEntity, Serializable {
 
@@ -30,34 +31,29 @@ public class SimpleAddress
      * M??? - adresselinje1 (xs:string)
      */
     @Column(name = "address_line_1")
-    @Audited
     private String addressLine1;
 
     /**
      * M??? - adresselinje2 (xs:string)
      */
     @Column(name = "address_line_2")
-    @Audited
     private String addressLine2;
 
     /**
      * M??? - adresselinje3 (xs:string)
      */
     @Column(name = "address_line_3")
-    @Audited
     private String addressLine3;
 
     /**
      * M408 - poststed (xs:string)
      */
-    @Audited
     @Column(name = "postal_town")
     private String postalTown;
 
     /**
      * M??? - landKode (xs:string)
      */
-    @Audited
     @Column(name = "country_code")
     private String countryCode;
 

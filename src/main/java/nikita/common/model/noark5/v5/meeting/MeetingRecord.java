@@ -16,6 +16,7 @@ import static nikita.common.config.N5ResourceMappings.MEETING_RECORD;
 @Entity
 @Table(name = TABLE_MEETING_RECORD)
 @Inheritance(strategy = JOINED)
+@Audited(withModifiedFlag = true)
 public class MeetingRecord
         extends Record {
 
@@ -23,35 +24,30 @@ public class MeetingRecord
      * M085 - moeteregistreringstype (xs:string)
      */
     @Column(name = "meeting_record_type")
-    @Audited
     private String meetingRecordType;
 
     /**
      * M088 - moetesakstype (xs:string)
      */
     @Column(name = "meeting_case_type")
-    @Audited
     private String meetingCaseType;
 
     /**
      * M305 - administrativEnhet (xs:string)
      */
     @Column(name = "meeting_record_status")
-    @Audited
     private String meetingRecordStatus;
 
     /**
      * M305 - administrativEnhet (xs:string)
      */
     @Column(name = "administrative_unit")
-    @Audited
     private String administrativeUnit;
 
     /**
      * M307 - saksbehandler
      */
     @Column(name = "case_handler")
-    @Audited
     private String caseHandler;
 
     /**

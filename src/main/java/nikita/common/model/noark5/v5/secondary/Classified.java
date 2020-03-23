@@ -29,6 +29,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_CONTACT_CLASSIFIED)
+@Audited(withModifiedFlag = true)
 public class Classified
         extends SystemIdEntity
         implements IClassifiedEntity {
@@ -40,14 +41,12 @@ public class Classified
      */
     @NotNull
     @Column(name = "classification_code", nullable = false)
-    @Audited
     private String classificationCode;
 
     /**
      * M506 - grad/graderingskode code name (xs:string)
      */
     @Column(name = CLASSIFICATION_ENG)
-    @Audited
     private String classificationCodeName;
 
     /**
@@ -55,14 +54,12 @@ public class Classified
      **/
     @Column(name = "classification_date")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     private OffsetDateTime classificationDate;
 
     /**
      * M629 - gradertAv (xs:string)
      */
     @Column(name = "classification_by")
-    @Audited
     private String classificationBy;
 
     /**
@@ -70,14 +67,12 @@ public class Classified
      **/
     @Column(name = "classification_downgraded_date")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     private OffsetDateTime classificationDowngradedDate;
 
     /**
      * M627 - nedgradertAv (xs:string)
      **/
     @Column(name = "classification_downgraded_by")
-    @Audited
     private String classificationDowngradedBy;
 
     // Links to Series

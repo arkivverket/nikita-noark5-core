@@ -23,7 +23,7 @@ import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART;
 @Table(name = TABLE_CORRESPONDENCE_PART)
 @Inheritance(strategy = JOINED)
 @JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
-@Audited
+@Audited(withModifiedFlag = true)
 public class CorrespondencePart
         extends SystemIdEntity
         implements ICorrespondencePartEntity {
@@ -33,14 +33,12 @@ public class CorrespondencePart
      */
     @NotNull
     @Column(name = "correspondence_part_type_code", nullable = false)
-    @Audited
     private String correspondencePartTypeCode;
 
     /**
      * M??? - korrespondansepartTypeKodenavn name (xs:string)
      */
     @Column(name = "correspondence_part_type_code_name")
-    @Audited
     private String correspondencePartTypeCodeName;
 
     // Link to Record

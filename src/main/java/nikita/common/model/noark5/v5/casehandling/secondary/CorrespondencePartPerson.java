@@ -23,6 +23,7 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_PERSON
 @JsonDeserialize(using = CorrespondencePartPersonDeserializer.class)
 @HateoasPacker(using = CorrespondencePartPersonHateoasHandler.class)
 @HateoasObject(using = CorrespondencePartPersonHateoas.class)
+@Audited(withModifiedFlag = true)
 public class CorrespondencePartPerson
         extends CorrespondencePart
         implements ICorrespondencePartPersonEntity {
@@ -31,14 +32,12 @@ public class CorrespondencePartPerson
      * M??? - fødselsnummer (xs:string)
      */
     @Column(name = "social_security_number")
-    @Audited
     private String socialSecurityNumber;
 
     /**
      * M??? - DNummer (xs:string)
      */
     @Column(name = "d_number")
-    @Audited
     private String dNumber;
 
     /**
@@ -46,7 +45,6 @@ public class CorrespondencePartPerson
      * Interface standard lists this as name. Using name until clarification
      * is provided
      */
-    @Audited
     @Column(name = "name")
     private String name;
 

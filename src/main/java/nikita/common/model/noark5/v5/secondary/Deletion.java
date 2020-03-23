@@ -26,6 +26,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_DELETION)
+@Audited(withModifiedFlag = true)
 public class Deletion
         extends SystemIdEntity
         implements IDeletionEntity {
@@ -36,21 +37,18 @@ public class Deletion
      * M??? - slettingstype code (xs:string)
      */
     @Column(name = "deletion_type_code")
-    @Audited
     private String deletionTypeCode;
 
     /**
      * M089 - slettingstype code name (xs:string)
      */
     @Column(name = "deletion_type_code_name")
-    @Audited
     private String deletionTypeCodeName;
 
     /**
      * M614 - slettetAv (xs:string)
      */
     @Column(name = DELETION_BY_ENG)
-    @Audited
     @JsonProperty(DELETION_BY)
     private String deletionBy;
 
@@ -59,7 +57,6 @@ public class Deletion
      */
     @Column(name = DELETION_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(DELETION_DATE)
     private OffsetDateTime deletionDate;
 

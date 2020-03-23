@@ -15,6 +15,7 @@ import static nikita.common.config.N5ResourceMappings.MEETING_PARTICIPANT;
 
 @Entity
 @Table(name = TABLE_MEETING_PARTICIPANT)
+@Audited(withModifiedFlag = true)
 public class MeetingParticipant
         extends SystemIdEntity {
 
@@ -22,14 +23,12 @@ public class MeetingParticipant
      * M372 - moetedeltakerNavn (xs:string)
      */
     @Column(name = "meeting_participant_name")
-    @Audited
     private String meetingParticipantName;
 
     /**
      * M373 - moetedeltakerFunksjon (xs:string)
      */
     @Column(name = "meeting_participant_function")
-    @Audited
     private String meetingParticipantFunction;
 
     // Link to MeetingFile

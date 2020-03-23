@@ -31,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = ClassDeserializer.class)
 @HateoasPacker(using = ClassHateoasHandler.class)
 @HateoasObject(using = ClassHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Class
         extends NoarkGeneralEntity
         implements IClassEntity {
@@ -39,7 +40,6 @@ public class Class
      * M002 - klasseID (xs:string)
      */
     @Column(name = CLASS_ID_ENG)
-    @Audited
     @JsonProperty(CLASS_ID)
     private String classId;
 

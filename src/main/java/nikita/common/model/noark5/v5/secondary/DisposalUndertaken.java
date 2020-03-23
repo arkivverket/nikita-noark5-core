@@ -22,6 +22,7 @@ import static nikita.common.config.N5ResourceMappings.DISPOSAL_UNDERTAKEN;
 
 @Entity
 @Table(name = TABLE_DISPOSAL_UNDERTAKEN)
+@Audited(withModifiedFlag = true)
 public class DisposalUndertaken
         extends SystemIdEntity
         implements IDisposalUndertakenEntity {
@@ -32,14 +33,12 @@ public class DisposalUndertaken
      * M631 - kassertAv (xs:string)
      */
     @Column(name = "disposal_by")
-    @Audited
     private String disposalBy;
 
     /**
      * M630 - kassertDato (xs:dateTime)
      */
     @Column(name = "disposal_date")
-    @Audited
     private OffsetDateTime disposalDate;
 
     // Links to Series

@@ -18,6 +18,7 @@ import static nikita.common.config.N5ResourceMappings.KEYWORD;
 
 @Entity
 @Table(name = TABLE_KEYWORD)
+@Audited(withModifiedFlag = true)
 public class Keyword
         extends SystemIdEntity {
 
@@ -25,7 +26,6 @@ public class Keyword
      * M022 - noekkelord (xs:string)
      */
     @Column(name = "keyword")
-    @Audited
     private String keyword;
 
     // Links to Class

@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
@@ -27,6 +28,7 @@ import static nikita.common.config.N5ResourceMappings.CROSS_REFERENCE;
  */
 @Entity
 @Table(name = TABLE_CROSS_REFERENCE)
+@Audited(withModifiedFlag = true)
 public class CrossReference
         extends SystemIdEntity
         implements ISystemId, ICrossReferenceEntity {

@@ -39,6 +39,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = RecordDeserializer.class)
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Record
         extends SystemIdEntity
         implements IRecordEntity, IPart, ICorrespondencePart {
@@ -48,7 +49,6 @@ public class Record
      */
     @Column(name = RECORD_ARCHIVED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(RECORD_ARCHIVED_DATE)
     private OffsetDateTime archivedDate;
 
@@ -56,7 +56,6 @@ public class Record
      * M605 - arkivertAv (xs:string)
      */
     @Column(name = RECORD_ARCHIVED_BY_ENG)
-    @Audited
     @JsonProperty(RECORD_ARCHIVED_BY)
     private String archivedBy;
 
@@ -64,7 +63,6 @@ public class Record
      * M004 - registreringsID (xs:string)
      */
     @Column(name = RECORD_ID_ENG)
-    @Audited
     @JsonProperty(RECORD_ID)
     private String recordId;
 
@@ -73,7 +71,6 @@ public class Record
      */
     @NotNull
     @Column(name = TITLE_ENG, nullable = false, length = TITLE_LENGTH)
-    @Audited
     @JsonProperty(TITLE)
     private String title;
 
@@ -81,7 +78,6 @@ public class Record
      * M025 - offentligTittel (xs:string)
      */
     @Column(name = FILE_PUBLIC_TITLE_ENG, length = TITLE_LENGTH)
-    @Audited
     @JsonProperty(FILE_PUBLIC_TITLE)
     private String publicTitle;
 
@@ -89,7 +85,6 @@ public class Record
      * M021 - beskrivelse (xs:string)
      */
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
-    @Audited
     @JsonProperty(DESCRIPTION)
     private String description;
 
@@ -97,14 +92,12 @@ public class Record
      * M??? - dokumentmedium code (xs:string)
      */
     @Column(name = "document_medium_code")
-    @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
     @Column(name = "document_medium_code_name")
-    @Audited
     private String documentMediumCodeName;
 
     // Link to File

@@ -22,6 +22,7 @@ import static nikita.common.config.Constants.TABLE_CONTACT_INFORMATION;
  */
 @Entity
 @Table(name = TABLE_CONTACT_INFORMATION)
+@Audited(withModifiedFlag = true)
 public class ContactInformation
         extends SystemIdEntity
         implements IContactInformationEntity {
@@ -29,7 +30,6 @@ public class ContactInformation
     /**
      * M410 - epostadresse (xs:string)
      */
-    @Audited
     @Column(name = "email_address")
     private String emailAddress;
 
@@ -37,14 +37,12 @@ public class ContactInformation
      * M??? - mobiltelefon (xs:string)
      */
     @Column(name = "mobile_telephone_number")
-    @Audited
     private String mobileTelephoneNumber;
 
     /**
      * M411 - telefonnummer (xs:string)
      */
     @Column(name = "telephone_number")
-    @Audited
     private String telephoneNumber;
 
     @OneToOne

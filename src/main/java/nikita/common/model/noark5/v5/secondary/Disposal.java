@@ -23,6 +23,7 @@ import static nikita.common.config.N5ResourceMappings.DISPOSAL;
  */
 @Entity
 @Table(name = TABLE_DISPOSAL)
+@Audited(withModifiedFlag = true)
 public class Disposal
         extends SystemIdEntity
         implements IDisposalEntity {
@@ -33,28 +34,24 @@ public class Disposal
      * M450 - kassasjonsvedtak (xs:string)
      */
     @Column(name = "disposal_decision")
-    @Audited
     private String disposalDecision;
 
     /**
      * M453 - kassasjonshjemmel (xs:string)
      */
     @Column(name = "disposal_authority")
-    @Audited
     private String disposalAuthority;
 
     /**
      * M451 - bevaringstid (xs:integer)
      */
     @Column(name = "preservation_time")
-    @Audited
     private Integer preservationTime;
 
     /**
      * M452 - kassasjonsdato (xs:date)
      */
     @Column(name = "disposal_date")
-    @Audited
     private OffsetDateTime disposalDate;
 
     // Links to Series

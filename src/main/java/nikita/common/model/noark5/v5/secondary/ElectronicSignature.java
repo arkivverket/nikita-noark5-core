@@ -21,6 +21,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
 @Table(name = TABLE_ELECTRONIC_SIGNATURE)
+@Audited(withModifiedFlag = true)
 public class ElectronicSignature
         extends SystemIdEntity {
 
@@ -28,28 +29,24 @@ public class ElectronicSignature
      * M??? - elektronisksignatursikkerhetsnivaa code (xs:string)
      */
     @Column(name = "electronic_signature_security_level_code")
-    @Audited
     private String electronicSignatureSecurityLevelCode;
 
     /**
      * M507 - elektronisksignatursikkerhetsnivaa code name (xs:string)
      */
     @Column(name = ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG)
-    @Audited
     private String electronicSignatureSecurityLevelCodeName;
 
     /**
      * M??? - elektronisksignaturverifisert code (xs:string)
      */
     @Column(name = "electronic_signature_verified_code")
-    @Audited
     private String electronicSignatureVerifiedCode;
 
     /**
      * M508 - elektronisksignaturverifisert code name (xs:string)
      */
     @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG)
-    @Audited
     private String electronicSignatureVerifiedCodeName;
 
     /**
@@ -57,14 +54,12 @@ public class ElectronicSignature
      */
     @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG)
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime verifiedDate;
 
     /**
      * M623 - verifisertAv (xs:string)
      */
     @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG)
-    @Audited
     private String verifiedBy;
 
     // Link to RegistryEntry

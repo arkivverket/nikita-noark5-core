@@ -37,6 +37,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = FileDeserializer.class)
 @HateoasPacker(using = FileHateoasHandler.class)
 @HateoasObject(using = FileHateoas.class)
+@Audited(withModifiedFlag = true)
 public class File
         extends NoarkGeneralEntity
         implements IFileEntity {
@@ -44,7 +45,6 @@ public class File
      * M003 - mappeID (xs:string)
      */
     @Column(name = FILE_ID_ENG)
-    @Audited
     @JsonProperty(FILE_ID)
     private String fileId;
 
@@ -52,7 +52,6 @@ public class File
      * M025 - offentligTittel (xs:string)
      */
     @Column(name = FILE_PUBLIC_TITLE_ENG, length = TITLE_LENGTH)
-    @Audited
     @JsonProperty(FILE_PUBLIC_TITLE)
     private String publicTitle;
 
@@ -60,14 +59,12 @@ public class File
      * M??? - dokumentmedium code (xs:string)
      */
     @Column(name = "document_medium_code")
-    @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
     @Column(name = "document_medium_code_name")
-    @Audited
     private String documentMediumCodeName;
 
     // Link to StorageLocation

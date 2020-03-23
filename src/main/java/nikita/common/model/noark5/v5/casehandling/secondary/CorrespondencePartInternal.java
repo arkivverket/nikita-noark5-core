@@ -28,6 +28,7 @@ import static nikita.common.config.N5ResourceMappings.ADMINISTRATIVE_UNIT_FIELD_
 @JsonDeserialize(using = CorrespondencePartInternalDeserializer.class)
 @HateoasPacker(using = CorrespondencePartInternalHateoasHandler.class)
 @HateoasObject(using = CorrespondencePartInternalHateoas.class)
+@Audited(withModifiedFlag = true)
 public class CorrespondencePartInternal
         extends CorrespondencePart
         implements ICorrespondencePartInternalEntity {
@@ -36,14 +37,12 @@ public class CorrespondencePartInternal
      * M305 - administrativEnhet (xs:string)
      */
     @Column(name = ADMINISTRATIVE_UNIT_FIELD_ENG)
-    @Audited
     private String administrativeUnit;
 
     /**
      * M307 - saksbehandler (xs:string)
      */
     @Column(name = "case_handler")
-    @Audited
     private String caseHandler;
 
     @ManyToOne

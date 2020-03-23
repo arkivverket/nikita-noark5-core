@@ -31,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.FONDS;
 @JsonDeserialize(using = FondsDeserializer.class)
 @HateoasPacker(using = FondsHateoasHandler.class)
 @HateoasObject(using = FondsHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Fonds
         extends NoarkGeneralEntity
         implements IStorageLocation, IDocumentMedium, IFondsCreator {
@@ -41,28 +42,24 @@ public class Fonds
      * M??? - arkivstatus code (xs:string)
      */
     @Column(name = "fonds_status_code")
-    @Audited
     private String fondsStatusCode;
 
     /**
      * M050 - arkivstatus code name (xs:string)
      */
     @Column(name = "fonds_status_code_name")
-    @Audited
     private String fondsStatusCodeName;
 
     /**
      * M??? - dokumentmedium code (xs:string)
      */
     @Column(name = "document_medium_code")
-    @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
     @Column(name = "document_medium_code_name")
-    @Audited
     private String documentMediumCodeName;
 
     // Links to Series

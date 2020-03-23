@@ -27,7 +27,7 @@ import static nikita.common.config.N5ResourceMappings.PART;
 @Entity
 @Table(name = TABLE_PART)
 @Inheritance(strategy = JOINED)
-@Audited
+@Audited(withModifiedFlag = true)
 public class Part
         extends NoarkGeneralEntity
         implements IPartEntity {
@@ -37,14 +37,12 @@ public class Part
      */
     @NotNull
     @Column(name = "part_role_code", nullable = false)
-    @Audited
     private String partRoleCode;
 
     /**
      * M303 - partRolle code name (xs:string)
      */
     @Column(name = "part_role_code_name")
-    @Audited
     private String partRoleCodeName;
 
     // Links to Files

@@ -28,6 +28,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = FondsCreatorDeserializer.class)
 @HateoasPacker(using = FondsCreatorHateoasHandler.class)
 @HateoasObject(using = FondsCreatorHateoas.class)
+@Audited(withModifiedFlag = true)
 public class FondsCreator
         extends SystemIdEntity
         implements IFondsCreatorEntity {
@@ -37,7 +38,6 @@ public class FondsCreator
      */
     @NotNull
     @Column(name = FONDS_CREATOR_ID_ENG, nullable = false)
-    @Audited
     @JsonProperty(FONDS_CREATOR_ID)
     private String fondsCreatorId;
 
@@ -46,7 +46,6 @@ public class FondsCreator
      */
     @NotNull
     @Column(name = FONDS_CREATOR_NAME_ENG, nullable = false)
-    @Audited
     @JsonProperty(FONDS_CREATOR_NAME)
     private String fondsCreatorName;
 
@@ -54,7 +53,6 @@ public class FondsCreator
      * M021 - beskrivelse (xs:string)
      */
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
-    @Audited
     @JsonProperty(DESCRIPTION)
     private String description;
 

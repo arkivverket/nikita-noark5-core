@@ -25,6 +25,7 @@ import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -32,6 +33,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = UserDeserializer.class)
 @HateoasPacker(using = UserHateoasHandler.class)
 @HateoasObject(using = UserHateoas.class)
+@Audited(withModifiedFlag = true)
 public class User
         extends SystemIdEntity
         implements IUserEntity {
@@ -58,7 +60,6 @@ public class User
      */
     @Column(name = CREATED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(CREATED_DATE)
     private OffsetDateTime createdDate;
 
@@ -66,7 +67,6 @@ public class User
      * M601 - opprettetAv (xs:string)
      */
     @Column(name = CREATED_BY_ENG)
-    @Audited
     @JsonProperty(CREATED_BY)
     private String createdBy;
 
@@ -75,7 +75,6 @@ public class User
      */
     @Column(name = FINALISED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(FINALISED_DATE)
     private OffsetDateTime finalisedDate;
 
@@ -83,7 +82,6 @@ public class User
      * M603 - avsluttetAv (xs:string)
      */
     @Column(name = FINALISED_BY_ENG)
-    @Audited
     @JsonProperty(FINALISED_BY)
     private String finalisedBy;
 
@@ -114,6 +112,7 @@ public class User
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)},
             inverseJoinColumns = {@JoinColumn(name = "authority_id",
                     referencedColumnName = "id")})
+    @Audited(targetAuditMode = NOT_AUDITED)
     private List<Authority> authorities = new ArrayList<>();
 
 

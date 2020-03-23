@@ -35,6 +35,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 @JsonDeserialize(using = CaseFileDeserializer.class)
 @HateoasPacker(using = CaseFileHateoasHandler.class)
 @HateoasObject(using = CaseFileHateoas.class)
+@Audited(withModifiedFlag = true)
 public class CaseFile
         extends File
         implements ICaseFileEntity {
@@ -45,7 +46,6 @@ public class CaseFile
      * M011 - saksaar (xs:integer)
      */
     @Column(name = CASE_YEAR_ENG)
-    @Audited
     @JsonProperty(CASE_YEAR)
     private Integer caseYear;
 
@@ -53,7 +53,6 @@ public class CaseFile
      * M012 - sakssekvensnummer (xs:integer)
      */
     @Column(name = CASE_SEQUENCE_NUMBER_ENG)
-    @Audited
     @JsonProperty(CASE_SEQUENCE_NUMBER)
     private Integer caseSequenceNumber;
 
@@ -63,7 +62,6 @@ public class CaseFile
     @NotNull
     @Column(name = CASE_DATE_ENG, nullable = false)
     @DateTimeFormat(iso = DATE)
-    @Audited
     @JsonProperty(CASE_DATE)
     private OffsetDateTime caseDate;
 
@@ -72,7 +70,6 @@ public class CaseFile
      */
     @NotNull
     @Column(name = CASE_RESPONSIBLE_ENG, nullable = false)
-    @Audited
     @JsonProperty(CASE_RESPONSIBLE)
     private String caseResponsible;
 
@@ -80,7 +77,6 @@ public class CaseFile
      * M308 - journalenhet (xs:string)
      */
     @Column(name = CASE_RECORDS_MANAGEMENT_UNIT_ENG)
-    @Audited
     @JsonProperty(CASE_RECORDS_MANAGEMENT_UNIT)
     private String recordsManagementUnit;
 
@@ -89,14 +85,12 @@ public class CaseFile
      */
     @NotNull
     @Column(name = "case_status_code", nullable = false)
-    @Audited
     private String caseStatusCode;
 
     /**
      * M??? - saksstatus name (xs:string)
      */
     @Column(name = "case_status_code_name")
-    @Audited
     private String caseStatusCodeName;
 
     /**
@@ -104,7 +98,6 @@ public class CaseFile
      */
     @Column(name = CASE_LOANED_DATE_ENG)
     @DateTimeFormat(iso = DATE)
-    @Audited
     @JsonProperty(CASE_LOANED_DATE)
     private OffsetDateTime loanedDate;
 
@@ -112,7 +105,6 @@ public class CaseFile
      * M309 - utlaantTil (xs:string)
      */
     @Column(name = CASE_LOANED_TO_ENG)
-    @Audited
     @JsonProperty(CASE_LOANED_TO)
     private String loanedTo;
 

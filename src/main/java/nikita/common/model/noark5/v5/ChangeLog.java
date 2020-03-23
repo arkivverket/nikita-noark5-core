@@ -26,6 +26,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 //@JsonDeserialize(using = ChangeLogDeserializer.class)
 //@HateoasPacker(using = ChangeLogHateoasHandler.class)
 //@HateoasObject(using = ChangeLogHateoas.class)
+@Audited(withModifiedFlag = true)
 public class ChangeLog
     extends SystemIdEntity
     implements IChangeLogEntity
@@ -37,7 +38,6 @@ public class ChangeLog
      * M680 - referanseArkivenhet (xs:string/SystemID/UUID)
      */
     @Column(name = "changelog_reference_archive_unit")
-    @Audited
     @JsonProperty(REFERENCE_ARCHIVE_UNIT)
     private String referenceArchiveUnit;
 
@@ -45,7 +45,6 @@ public class ChangeLog
      * M681 - referanseMetadata (xs:string)
      */
     @Column(name = "changelog_reference_metadata")
-    @Audited
     @JsonProperty(REFERENCE_METADATA)
     private String referenceMetadata;
 
@@ -54,7 +53,6 @@ public class ChangeLog
      */
     @Column(name = "changelog_changed_date")
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(CHANGED_DATE)
     private OffsetDateTime changedDate;
 
@@ -62,7 +60,6 @@ public class ChangeLog
      * M683 - endretAv (xs:string)
      */
     @Column(name = "changelog_changed_by")
-    @Audited
     @JsonProperty(CHANGED_BY)
     private String changedBy;
 
@@ -70,7 +67,6 @@ public class ChangeLog
      * M??? - referanseEndretAv (xs:string/SystemID/UUID)
      */
     @Column(name = "changelog_reference_changed_by")
-    @Audited
     @JsonProperty(REFERENCE_CHANGED_BY)
     private String referenceChangedBy;
 
@@ -78,7 +74,6 @@ public class ChangeLog
      * M684 - tidligereVerdi (xs:string)
      */
     @Column(name = "changelog_old_value")
-    @Audited
     @JsonProperty(OLD_VALUE)
     private String oldValue;
 
@@ -86,7 +81,6 @@ public class ChangeLog
      * M685 - nyVerdi (xs:string)
      */
     @Column(name = "changelog_new_value")
-    @Audited
     @JsonProperty(NEW_VALUE)
     private String newValue;
 

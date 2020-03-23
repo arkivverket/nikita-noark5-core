@@ -31,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = CadastralUnitDeserializer.class)
 @HateoasPacker(using = CadastralUnitHateoasHandler.class)
 @HateoasObject(using = CadastralUnitHateoas.class)
+@Audited(withModifiedFlag = true)
 public class CadastralUnit
         extends NationalIdentifier
         implements ICadastralUnitEntity {
@@ -39,7 +40,6 @@ public class CadastralUnit
      * M??? - kommunenummer (xs:string)
      */
     @Column(name = MUNICIPALITY_NUMBER_ENG, nullable = false)
-    @Audited
     @JsonProperty(MUNICIPALITY_NUMBER)
     String municipalityNumber;
 
@@ -47,7 +47,6 @@ public class CadastralUnit
      * M??? gaardsnummer - (xs:integer)
      */
     @Column(name = HOLDING_NUMBER_ENG, nullable = false)
-    @Audited
     @JsonProperty(HOLDING_NUMBER)
     Integer holdingNumber;
 
@@ -55,7 +54,6 @@ public class CadastralUnit
      * M??? bruksnummer - (xs:integer)
      */
     @Column(name = SUB_HOLDING_NUMBER_ENG, nullable = false)
-    @Audited
     @JsonProperty(SUB_HOLDING_NUMBER)
     Integer subHoldingNumber;
 
@@ -63,7 +61,6 @@ public class CadastralUnit
      * M??? festenummer - (xs:integer)
      */
     @Column(name = LEASE_NUMBER_ENG)
-    @Audited
     @JsonProperty(LEASE_NUMBER)
     Integer leaseNumber;
 
@@ -71,7 +68,6 @@ public class CadastralUnit
      * M??? seksjonsnummer - (xs:integer)
      */
     @Column(name = SECTION_NUMBER_ENG)
-    @Audited
     @JsonProperty(SECTION_NUMBER)
     Integer sectionNumber;
 

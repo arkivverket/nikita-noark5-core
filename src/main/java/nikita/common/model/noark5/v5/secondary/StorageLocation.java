@@ -19,6 +19,7 @@ import static nikita.common.config.N5ResourceMappings.STORAGE_LOCATION;
 @Entity
 @Table(name = TABLE_STORAGE_LOCATION)
 @JsonSerialize(using = StorageLocationSerializer.class)
+@Audited(withModifiedFlag = true)
 public class StorageLocation
         extends SystemIdEntity {
 
@@ -26,7 +27,6 @@ public class StorageLocation
      * M301 - oppbevaringssted (xs:string)
      */
     @Column(name = "storage_location")
-    @Audited
     private String storageLocation;
 
     // Links to Fonds

@@ -24,6 +24,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
 @Table(name = TABLE_SCREENING)
+@Audited(withModifiedFlag = true)
 public class Screening
         extends SystemIdEntity
         implements IScreeningEntity {
@@ -32,28 +33,24 @@ public class Screening
      * M??? - tilgangsrestriksjon code n4 (JP.TGKODE) (xs:string)
      */
     @Column(name = "access_restriction_code")
-    @Audited
     private String accessRestrictionCode;
 
     /**
      * M500 - tilgangsrestriksjon code name n4 (JP.TGKODE) (xs:string)
      */
     @Column(name = "access_restriction_code_name")
-    @Audited
     private String accessRestrictionCodeName;
 
     /**
      * M501 - skjermingshjemmel n4 (JP.UOFF)
      */
     @Column(name = "screening_authority")
-    @Audited
     private String screeningAuthority;
 
     /**
      * M502 - skjermingMetadata should be 1-M
      */
     @Column(name = "screening_metadata")
-    @Audited
     // TODO convert to list/entity
     private String screeningMetadata;
 
@@ -61,14 +58,12 @@ public class Screening
      * M??? - skjermingDokument code (xs:string)
      */
     @Column(name = "screening_document_code")
-    @Audited
     private String screeningDocumentCode;
 
     /**
      * M503 - skjermingDokument code name (xs:string)
      */
     @Column(name = "screening_document_code_name")
-    @Audited
     private String screeningDocumentCodeName;
 
     /**
@@ -76,14 +71,12 @@ public class Screening
      */
     @Column(name = "screening_expires")
     @DateTimeFormat(iso = DATE)
-    @Audited
     private OffsetDateTime screeningExpiresDate;
 
     /**
      * M504 - skjermingsvarighet (xs:integer)
      */
     @Column(name = "screening_duration")
-    @Audited
     private Integer screeningDuration;
 
     // Links to Series

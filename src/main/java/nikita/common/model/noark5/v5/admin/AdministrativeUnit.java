@@ -35,6 +35,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = AdministrativeUnitDeserializer.class)
 @HateoasPacker(using = AdministrativeUnitHateoasHandler.class)
 @HateoasObject(using = AdministrativeUnitHateoas.class)
+@Audited(withModifiedFlag = true)
 public class AdministrativeUnit
         extends SystemIdEntity
         implements IAdministrativeUnitEntity {
@@ -44,7 +45,6 @@ public class AdministrativeUnit
      */
     @Column(name = FINALISED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
-    @Audited
     @JsonProperty(FINALISED_DATE)
     private OffsetDateTime finalisedDate;
 
@@ -52,7 +52,6 @@ public class AdministrativeUnit
      * M603 - avsluttetAv (xs:string)
      */
     @Column(name = FINALISED_BY_ENG)
-    @Audited
     @JsonProperty(FINALISED_BY)
     private String finalisedBy;
 
@@ -60,7 +59,6 @@ public class AdministrativeUnit
      * M583 - kortnavn (xs:string)
      */
     @Column(name = SHORT_NAME_ENG)
-    @Audited
     @JsonProperty(SHORT_NAME)
     private String shortName;
 
@@ -68,19 +66,16 @@ public class AdministrativeUnit
      * M583 - administrativEnhetNavn (xs:string)
      */
     @Column(name = "administrative_unit_name")
-    @Audited
     private String administrativeUnitName;
 
     /**
      * M584 administrativEnhetsstatus (xs:string)
      */
     @Column(name = "administrative_unit_status")
-    @Audited
     private String administrativeUnitStatus;
 
     // Used identify as a default
     @Column(name = "default_administrative_unit")
-    @Audited
     private Boolean defaultAdministrativeUnit;
 
     // Links to SequenceNumberGenerator

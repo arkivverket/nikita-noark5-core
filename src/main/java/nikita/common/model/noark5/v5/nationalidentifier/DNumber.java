@@ -31,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = DNumberDeserializer.class)
 @HateoasPacker(using = DNumberHateoasHandler.class)
 @HateoasObject(using = DNumberHateoas.class)
+@Audited(withModifiedFlag = true)
 public class DNumber
         extends PersonIdentifier
         implements IDNumberEntity {
@@ -39,7 +40,6 @@ public class DNumber
      * M??? - DNummer (xs:string)
      */
     @Column(name = D_NUMBER_FIELD_ENG, nullable = false)
-    @Audited
     @JsonProperty(D_NUMBER_FIELD)
     private String dNumber;
 

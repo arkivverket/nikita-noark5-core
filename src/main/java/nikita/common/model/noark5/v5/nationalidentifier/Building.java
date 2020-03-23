@@ -31,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = BuildingDeserializer.class)
 @HateoasPacker(using = BuildingHateoasHandler.class)
 @HateoasObject(using = BuildingHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Building
         extends NationalIdentifier
         implements IBuildingEntity {
@@ -39,7 +40,6 @@ public class Building
      * M??? bygningsnummer - (xs:integer)
      */
     @Column(name = BUILDING_NUMBER_ENG, nullable = false)
-    @Audited
     @JsonProperty(BUILDING_NUMBER)
     Integer buildingNumber;
 
@@ -47,7 +47,6 @@ public class Building
      * M??? endringsloepenummer - (xs:integer)
      */
     @Column(name = BUILDING_CHANGE_NUMBER)
-    @Audited
     @JsonProperty(BUILDING_CHANGE_NUMBER)
     Integer runningChangeNumber;
 

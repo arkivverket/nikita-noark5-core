@@ -24,6 +24,7 @@ import static nikita.common.config.N5ResourceMappings.AUTHOR;
 @JsonDeserialize(using = AuthorDeserializer.class)
 @HateoasPacker(using = AuthorHateoasHandler.class)
 @HateoasObject(using = AuthorHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Author
         extends SystemIdEntity
         implements IAuthorEntity {
@@ -40,7 +41,6 @@ public class Author
      * M024 - forfatter (xs:string)
      */
     @Column(name = "author")
-    @Audited
     private String author;
 
     /**
@@ -48,7 +48,6 @@ public class Author
      * description. This can be used to save a potential lookup in the database.
      */
     @Column(name = "is_for_document_description")
-    @Audited
     private Boolean isForDocumentDescription = false;
 
     /**
@@ -56,7 +55,6 @@ public class Author
      * This can be used to save a potential lookup in the database.
      */
     @Column(name = "is_for_record")
-    @Audited
     private Boolean isForRecord = false;
 
     public String getAuthor() {

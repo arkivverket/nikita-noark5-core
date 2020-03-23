@@ -26,6 +26,7 @@ import static nikita.common.config.N5ResourceMappings.REFERENCE_CLASSIFICATION_S
 @JsonDeserialize(using = ClassificationSystemDeserializer.class)
 @HateoasPacker(using = ClassificationSystemHateoasHandler.class)
 @HateoasObject(using = ClassificationSystemHateoas.class)
+@Audited(withModifiedFlag = true)
 public class ClassificationSystem
         extends NoarkGeneralEntity
         implements IClassificationSystemEntity {
@@ -36,14 +37,12 @@ public class ClassificationSystem
      * M??? - klassifikasjonstype code (xs:string)
      */
     @Column(name = "classification_type_code")
-    @Audited
     private String classificationTypeCode;
 
     /**
      * M086 - klassifikasjonstype code name (xs:string)
      */
     @Column(name = "classification_type_code_name")
-    @Audited
     private String classificationTypeCodeName;
 
     // Links to Series

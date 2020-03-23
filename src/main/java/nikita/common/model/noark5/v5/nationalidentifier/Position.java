@@ -32,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = PositionDeserializer.class)
 @HateoasPacker(using = PositionHateoasHandler.class)
 @HateoasObject(using = PositionHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Position
         extends NationalIdentifier
         implements IPositionEntity {
@@ -40,14 +41,12 @@ public class Position
      * M??? - koordinatsystem code (xs:string)
      */
     @Column(name = "coordinate_system_code", nullable = false)
-    @Audited
     private String coordinateSystemCode;
 
     /**
      * M??? - koordinatsystem code name (xs:string)
      */
     @Column(name = "coordinate_system_code_name", nullable = false)
-    @Audited
     private String coordinateSystemCodeName;
 
     /**
@@ -55,7 +54,6 @@ public class Position
      * Comment: East-West / latitude
      */
     @Column(name = X_ENG, nullable = false)
-    @Audited
     @JsonProperty(X)
     private Double x;
 
@@ -64,7 +62,6 @@ public class Position
      * Comment: north-south / longitude
      */
     @Column(name = Y_ENG, nullable = false)
-    @Audited
     @JsonProperty(Y)
     private Double y;
 
@@ -73,7 +70,6 @@ public class Position
      * height
      */
     @Column(name = Z_ENG)
-    @Audited
     @JsonProperty(Z)
     private Double z;
 

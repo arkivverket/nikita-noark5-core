@@ -31,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = UnitDeserializer.class)
 @HateoasPacker(using = UnitHateoasHandler.class)
 @HateoasObject(using = UnitHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Unit
         extends NationalIdentifier
         implements IUnitEntity {
@@ -39,7 +40,6 @@ public class Unit
      * M??? - organisasjonsnummer (xs:string)
      */
     @Column(name = ORGANISATION_NUMBER_ENG, nullable = false)
-    @Audited
     @JsonProperty(ORGANISATION_NUMBER)
     private String organisationNumber;
 

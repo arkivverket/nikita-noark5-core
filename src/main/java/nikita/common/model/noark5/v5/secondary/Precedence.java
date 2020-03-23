@@ -33,6 +33,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = PrecedenceDeserializer.class)
 @HateoasPacker(using = PrecedenceHateoasHandler.class)
 @HateoasObject(using = PrecedenceHateoas.class)
+@Audited(withModifiedFlag = true)
 public class Precedence
         extends NoarkGeneralEntity
         implements IPrecedenceEntity {
@@ -41,7 +42,6 @@ public class Precedence
      * M111 - presedensDato (xs:date)
      */
     @Column(name = PRECEDENCE_DATE_ENG)
-    @Audited
     @JsonProperty(PRECEDENCE_DATE)
     private OffsetDateTime precedenceDate;
 
@@ -49,7 +49,6 @@ public class Precedence
      * M311 - presedensHjemmel (xs:string)
      */
     @Column(name = PRECEDENCE_AUTHORITY_ENG)
-    @Audited
     @JsonProperty(PRECEDENCE_AUTHORITY)
     private String precedenceAuthority;
 
@@ -57,7 +56,6 @@ public class Precedence
      * M312 - rettskildefaktor (xs:string)
      */
     @Column(name = PRECEDENCE_SOURCE_OF_LAW_ENG)
-    @Audited
     @JsonProperty(PRECEDENCE_SOURCE_OF_LAW)
     private String sourceOfLaw;
 
@@ -65,7 +63,6 @@ public class Precedence
      * M628 - presedensGodkjentDato (xs:datetime)
      */
     @Column(name = PRECEDENCE_APPROVED_DATE_ENG)
-    @Audited
     @JsonProperty(PRECEDENCE_APPROVED_DATE)
     private OffsetDateTime precedenceApprovedDate;
 
@@ -73,7 +70,6 @@ public class Precedence
      * M629 - presedensGodkjentAv (xs:string)
      */
     @Column(name = PRECEDENCE_APPROVED_BY_ENG)
-    @Audited
     @JsonProperty(PRECEDENCE_APPROVED_BY)
     private String precedenceApprovedBy;
 
@@ -81,7 +77,6 @@ public class Precedence
      * M?? referansePresedensGodkjentAv (xs:string)
      */
     @Column(name = PRECEDENCE_REFERENCE_APPROVED_BY_ENG)
-    @Audited
     @JsonProperty(PRECEDENCE_REFERENCE_APPROVED_BY)
     private UUID referencePrecedenceApprovedBySystemID;
 
@@ -89,14 +84,12 @@ public class Precedence
      * M056 - presedensStatus code (xs:string)
      */
     @Column(name = "precedence_status_code")
-    @Audited
     private String precedenceStatusCode;
 
     /**
      * M056 - presedensStatus code name (xs:string)
      */
     @Column(name = "precedence_status_code_name")
-    @Audited
     private String precedenceStatusCodeName;
 
     // Link to user to (if referencePrecedenceApprovedBySystemID refer

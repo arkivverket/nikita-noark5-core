@@ -30,6 +30,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = PartPersonDeserializer.class)
 @HateoasPacker(using = PartPersonHateoasHandler.class)
 @HateoasObject(using = PartPersonHateoas.class)
+@Audited(withModifiedFlag = true)
 public class PartPerson
         extends Part
         implements IPartPersonEntity {
@@ -38,7 +39,6 @@ public class PartPerson
      * M??? - foedselsnummer (xs:string)
      */
     @Column(name = SOCIAL_SECURITY_NUMBER_ENG)
-    @Audited
     @JsonProperty(SOCIAL_SECURITY_NUMBER)
     private String socialSecurityNumber;
 
@@ -46,7 +46,6 @@ public class PartPerson
      * M??? - DNummer (xs:string)
      */
     @Column(name = D_NUMBER_FIELD_ENG)
-    @Audited
     @JsonProperty(D_NUMBER_FIELD)
     private String dNumber;
 
@@ -56,7 +55,6 @@ public class PartPerson
      * is provided
      */
     @Column(name = CORRESPONDENCE_PART_NAME_ENG)
-    @Audited
     @JsonProperty(CORRESPONDENCE_PART_NAME)
     private String name;
 
