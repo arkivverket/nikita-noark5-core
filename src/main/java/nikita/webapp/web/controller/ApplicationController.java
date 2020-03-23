@@ -93,10 +93,9 @@ public class ApplicationController {
     @GetMapping(value = HREF_BASE_CASE_HANDLING)
     public ResponseEntity<CaseHandlingDetails> getCaseHandling(
             HttpServletRequest request) {
-        CaseHandlingDetails c1 = applicationService.getCaseHandlingDetails();
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(c1);
+                .body(applicationService.getCaseHandlingDetails());
     }
 
     @Counted
