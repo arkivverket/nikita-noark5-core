@@ -103,9 +103,8 @@ public class ApplicationController {
     @GetMapping(value = HREF_BASE_LOGGING)
     public ResponseEntity<LoggingDetails> getLogging(
             HttpServletRequest request) {
-        LoggingDetails c1 = applicationService.getLoggingDetails();
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(c1);
+                .body(applicationService.getLoggingDetails());
     }
 }
