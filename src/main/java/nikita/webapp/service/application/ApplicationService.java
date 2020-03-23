@@ -70,12 +70,9 @@ public class ApplicationService {
         // administrasjon
         addConformityLevel(conformityLevels, HREF_BASE_ADMIN + SLASH,
                 REL_ADMINISTRATION);
-        /*
-        // Will be introduced as project mature
         // loggingogsporing
         addConformityLevel(conformityLevels, HREF_BASE_LOGGING,
                 REL_LOGGING);
-        */
     }
 
     public ApplicationDetails getApplicationDetails() {
@@ -108,6 +105,10 @@ public class ApplicationService {
 
     public CaseHandlingDetails getCaseHandlingDetails() {
         return new CaseHandlingDetails(getOutgoingAddress());
+    }
+
+    public LoggingDetails getLoggingDetails() {
+        return new LoggingDetails(getOutgoingAddress());
     }
 
     public SystemInformation getSystemInformation() {

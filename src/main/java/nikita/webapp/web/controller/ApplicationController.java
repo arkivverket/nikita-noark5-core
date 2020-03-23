@@ -98,4 +98,13 @@ public class ApplicationController {
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(c1);
     }
+
+    @Counted
+    @GetMapping(value = HREF_BASE_LOGGING)
+    public ResponseEntity<LoggingDetails> getLogging(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(applicationService.getLoggingDetails());
+    }
 }

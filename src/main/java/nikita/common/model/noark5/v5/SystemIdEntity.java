@@ -54,10 +54,10 @@ public class SystemIdEntity
     @Type(type = "uuid-char")
     private UUID systemId;
 
-    // Links to EventLog
+    // Links to ChangeLog
     @OneToMany(mappedBy = "referenceSystemIdEntity")
     @JsonIgnore
-    private List<EventLog> referenceEventLog = new ArrayList<>();
+    private List<ChangeLog> referenceChangeLog = new ArrayList<>();
 
     @Override
     public String getSystemId() {
@@ -92,16 +92,16 @@ public class SystemIdEntity
         return SYSTEM_ID;
     }
 
-    public List<EventLog> getEventLog() {
-        return referenceEventLog;
+    public List<ChangeLog> getChangeLog() {
+        return referenceChangeLog;
     }
 
-    public void setEventLog(List<EventLog> referenceEventLog) {
-        this.referenceEventLog = referenceEventLog;
+    public void setChangeLog(List<ChangeLog> referenceChangeLog) {
+        this.referenceChangeLog = referenceChangeLog;
     }
 
-    public void addEventLog(EventLog eventLog) {
-        this.referenceEventLog.add(eventLog);
+    public void addChangeLog(ChangeLog eventLog) {
+        this.referenceChangeLog.add(eventLog);
     }
 
     // Most entities belong to arkivstruktur. These entities pick the value

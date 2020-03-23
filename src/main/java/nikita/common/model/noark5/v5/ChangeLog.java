@@ -3,10 +3,10 @@ package nikita.common.model.noark5.v5;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-//import nikita.common.model.noark5.v5.hateoas.ChangeLogHateoas;
+import nikita.common.model.noark5.v5.hateoas.ChangeLogHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IChangeLogEntity;
-//import nikita.common.util.deserialisers.ChangeLogDeserializer;
-//import nikita.webapp.hateoas.ChangeLogHateoasHandler;
+import nikita.common.util.deserialisers.ChangeLogDeserializer;
+import nikita.webapp.hateoas.ChangeLogHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -23,9 +24,9 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_CHANGE_LOG)
-//@JsonDeserialize(using = ChangeLogDeserializer.class)
-//@HateoasPacker(using = ChangeLogHateoasHandler.class)
-//@HateoasObject(using = ChangeLogHateoas.class)
+@JsonDeserialize(using = ChangeLogDeserializer.class)
+@HateoasPacker(using = ChangeLogHateoasHandler.class)
+@HateoasObject(using = ChangeLogHateoas.class)
 public class ChangeLog
     extends SystemIdEntity
     implements IChangeLogEntity
@@ -36,40 +37,23 @@ public class ChangeLog
     /**
      * M680 - referanseArkivenhet (xs:string/SystemID/UUID)
      */
-    @Column(name = "changelog_reference_archive_unit")
+    @Column(name = REFERENCE_ARCHIVE_UNIT_ENG)
     @Audited
     @JsonProperty(REFERENCE_ARCHIVE_UNIT)
-    private String referenceArchiveUnit;
+    private UUID referenceArchiveUnitSystemId;
 
     /**
      * M681 - referanseMetadata (xs:string)
      */
-    @Column(name = "changelog_reference_metadata")
+    @Column(name = REFERENCE_METADATA_ENG)
     @Audited
     @JsonProperty(REFERENCE_METADATA)
     private String referenceMetadata;
 
     /**
-     * M682 - endretDato (xs:datetime)
-     */
-    @Column(name = "changelog_changed_date")
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    @JsonProperty(CHANGED_DATE)
-    private OffsetDateTime changedDate;
-
-    /**
-     * M683 - endretAv (xs:string)
-     */
-    @Column(name = "changelog_changed_by")
-    @Audited
-    @JsonProperty(CHANGED_BY)
-    private String changedBy;
-
-    /**
      * M??? - referanseEndretAv (xs:string/SystemID/UUID)
      */
-    @Column(name = "changelog_reference_changed_by")
+    @Column(name = REFERENCE_CHANGED_BY_ENG)
     @Audited
     @JsonProperty(REFERENCE_CHANGED_BY)
     private String referenceChangedBy;
@@ -77,7 +61,7 @@ public class ChangeLog
     /**
      * M684 - tidligereVerdi (xs:string)
      */
-    @Column(name = "changelog_old_value")
+    @Column(name = OLD_VALUE_ENG)
     @Audited
     @JsonProperty(OLD_VALUE)
     private String oldValue;
@@ -85,19 +69,25 @@ public class ChangeLog
     /**
      * M685 - nyVerdi (xs:string)
      */
-    @Column(name = "changelog_new_value")
+    @Column(name = NEW_VALUE_ENG)
     @Audited
     @JsonProperty(NEW_VALUE)
     private String newValue;
 
+    // Link to Archive Unit (aka SystemIdEntity)
+    @ManyToOne
+    @JoinColumn(name = SYSTEM_ID_ENTITY_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
+    private SystemIdEntity referenceSystemIdEntity;
+
     @Override
-    public String getReferenceArchiveUnit() {
-        return referenceArchiveUnit;
+    public UUID getReferenceArchiveUnitSystemId() {
+        return referenceArchiveUnitSystemId;
     }
 
     @Override
-    public void setReferenceArchiveUnit(String referenceArchiveUnit) {
-        this.referenceArchiveUnit = referenceArchiveUnit;
+    public void setReferenceArchiveUnitSystemId(UUID referenceArchiveUnitSystemId) {
+        this.referenceArchiveUnitSystemId = referenceArchiveUnitSystemId;
     }
 
     @Override
@@ -112,22 +102,22 @@ public class ChangeLog
 
     @Override
     public OffsetDateTime getChangedDate() {
-        return changedDate;
+        return getLastModifiedDate();
     }
 
     @Override
     public void setChangedDate(OffsetDateTime changedDate) {
-        this.changedDate = changedDate;
+        setLastModifiedDate(changedDate);
     }
 
     @Override
     public String getChangedBy() {
-        return changedBy;
+        return getLastModifiedBy();
     }
 
     @Override
     public void setChangedBy(String changedBy) {
-        this.changedBy = changedBy;
+        setLastModifiedBy(changedBy);
     }
 
     @Override
@@ -161,6 +151,17 @@ public class ChangeLog
     }
 
     @Override
+    public SystemIdEntity getReferenceArchiveUnit() {
+        return referenceSystemIdEntity;
+    }
+
+    @Override
+    public void setReferenceArchiveUnit
+        (SystemIdEntity referenceSystemIdEntity) {
+        this.referenceSystemIdEntity = referenceSystemIdEntity;
+    }
+
+    @Override
     public String getBaseTypeName() {
         return CHANGE_LOG;
     }
@@ -173,10 +174,8 @@ public class ChangeLog
     @Override
     public String toString() {
         return "ChangeLog{" + super.toString() +
-                ", referenceArchiveUnit='" + referenceArchiveUnit + '\'' +
+                ", referenceArchiveUnitSystemId='" + referenceArchiveUnitSystemId + '\'' +
                 ", referenceMetadata='" + referenceMetadata + '\'' +
-                ", changedDate='" + changedDate + '\'' +
-                ", changedBy='" + changedBy + '\'' +
                 ", referenceChangedBy='" + referenceChangedBy + '\'' +
                 ", oldValue='" + oldValue + '\'' +
                 ", newValue='" + newValue + '\'' +
@@ -197,10 +196,8 @@ public class ChangeLog
         ChangeLog rhs = (ChangeLog) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(referenceArchiveUnit, rhs.referenceArchiveUnit)
+                .append(referenceArchiveUnitSystemId, rhs.referenceArchiveUnitSystemId)
                 .append(referenceMetadata, rhs.referenceMetadata)
-                .append(changedDate, rhs.changedDate)
-                .append(changedBy, rhs.changedBy)
                 .append(referenceChangedBy, rhs.referenceChangedBy)
                 .append(oldValue, rhs.oldValue)
                 .append(newValue, rhs.newValue)
@@ -211,10 +208,8 @@ public class ChangeLog
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(referenceArchiveUnit)
+                .append(referenceArchiveUnitSystemId)
                 .append(referenceMetadata)
-                .append(changedDate)
-                .append(changedBy)
                 .append(referenceChangedBy)
                 .append(oldValue)
                 .append(newValue)
