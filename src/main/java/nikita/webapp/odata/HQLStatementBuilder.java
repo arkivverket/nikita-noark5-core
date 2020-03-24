@@ -32,7 +32,7 @@ public class HQLStatementBuilder {
     private final Logger logger =
             LoggerFactory.getLogger(HQLStatementBuilder.class);
 
-    private final StringBuilder select;
+    private final StringBuilder statement;
     private final ArrayList<String> whereList = new ArrayList<>();
     private final Map<String, String> orderByMap = new HashMap<>();
     private final Map<String, String> startsWithMap = new HashMap<>();
@@ -46,25 +46,25 @@ public class HQLStatementBuilder {
     private String parentSystemId = "";
 
     public HQLStatementBuilder() {
-        select = new StringBuilder();
+        statement = new StringBuilder();
     }
 
     /**
      * Allows you to specify if the HQL statement you want to build is a
-     * 'delete' statement.Hibernate doesn't seem to want 'select' here. Only
+     * 'delete' statement. Hibernate doesn't seem to want 'select' here. Only
      * a delete is required if you intend to delete.
      *
-     * @param dmlStatementType can be delete, select is not required
+     * @param dmlStatementType can be delete, statement is not required
      */
     public HQLStatementBuilder(String dmlStatementType) {
-        select = new StringBuilder();
+        statement = new StringBuilder();
         if (null != dmlStatementType) {
-            select.append(dmlStatementType);
+            statement.append(dmlStatementType);
         }
     }
 
     /**
-     * Add the select part of the query.
+     * Add the statement part of the query.
      * <p>
      * This can handle something like
      * $top=1$skip=1$filter=contains(tittel,'Title')$orderby=tittel desc
@@ -78,20 +78,20 @@ public class HQLStatementBuilder {
      * @param entity
      */
     public void addSelect(String entity) {
-        select.append(" from ");
-        select.append(entity);
-        select.append(" where ");
-        logger.info(select.toString());
+        statement.append(" from ");
+        statement.append(entity);
+        statement.append(" where ");
+        logger.info(statement.toString());
     }
 
     public void addSelectWithForeignKey(String parentEntity, String entity) {
-        select.append(" from ");
-        select.append(getNameObject(entity));
-        select.append(" where reference");
-        select.append(getNameObject(parentEntity));
-        select.append(" = :parentSystemId)");
-        select.append("'");
-        logger.info(select.toString());
+        statement.append(" from ");
+        statement.append(getNameObject(entity));
+        statement.append(" where reference");
+        statement.append(getNameObject(parentEntity));
+        statement.append(" = :parentSystemId)");
+        statement.append("'");
+        logger.info(statement.toString());
     }
 
     /**
@@ -152,8 +152,8 @@ public class HQLStatementBuilder {
     }
 
     public Query buildHQLStatement(Session session) {
-        // take care of the select part
-        StringBuffer hqlStatement = new StringBuffer(select);
+        // take care of the statement part
+        StringBuffer hqlStatement = new StringBuffer(statement);
 
         // take care of the where part
         // Coding with 'and'. Will figure out how to handle this properly later
