@@ -54,7 +54,7 @@ public class NikitaODataToHQLWalker
 
     @Override
     public void processEntityBase(String entity) {
-        hqlStatement.addSelect(getNameObject(entity) + " x ");
+        hqlStatement.addFrom(getNameObject(entity) + " x ");
     }
 
     /**
@@ -84,7 +84,7 @@ public class NikitaODataToHQLWalker
     public void processEntityBase(String parentEntity, String entity,
                                   String systemId) {
         hqlStatement.setParentIdPrimaryKey(systemId);
-        hqlStatement.addSelectWithForeignKey(parentEntity, entity);
+        hqlStatement.addFromWithForeignKey(parentEntity, entity);
     }
 
     /**

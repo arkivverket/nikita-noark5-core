@@ -64,27 +64,20 @@ public class HQLStatementBuilder {
     }
 
     /**
-     * Add the statement part of the query.
+     * Add the from/where part of the query.
      * <p>
-     * This can handle something like
-     * $top=1$skip=1$filter=contains(tittel,'Title')$orderby=tittel desc
-     * <p>
-     * $filter=contains(tittel,'Title')$orderby=tittel desc
-     * <p>
-     * gets converted to:
-     * <p>
-     * where title LIKE '%Title%
+     * initialises the query with the entity name
      *
-     * @param entity
+     * @param entity Name of the entity
      */
-    public void addSelect(String entity) {
+    public void addFrom(String entity) {
         statement.append(" from ");
         statement.append(entity);
         statement.append(" where ");
         logger.info(statement.toString());
     }
 
-    public void addSelectWithForeignKey(String parentEntity, String entity) {
+    public void addFromWithForeignKey(String parentEntity, String entity) {
         statement.append(" from ");
         statement.append(getNameObject(entity));
         statement.append(" where reference");
@@ -108,7 +101,6 @@ public class HQLStatementBuilder {
      * @param comparator A comparator e.g. eq, nq, lt
      * @param value      the search query
      */
-
     public void addEqualsWhere(String attribute, String comparator,
                                String value) {
         whereList.add(attribute + translateComparator(comparator) + value);

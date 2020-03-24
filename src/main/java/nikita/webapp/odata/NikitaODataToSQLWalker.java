@@ -59,7 +59,7 @@ public class NikitaODataToSQLWalker {
      */
 
     public void processResource(String entity, String loggedInUser) {
-        // sqlStatementBuilder.addSelect(getNameDatabase(entity), DM_OWNED_BY,
+        // sqlStatementBuilder.addFrom(getNameDatabase(entity), DM_OWNED_BY,
         //         loggedInUser);
     }
 
