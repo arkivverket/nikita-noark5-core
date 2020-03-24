@@ -49,7 +49,6 @@ public class TestODataService {
         assertNotNull(oDataService);
     }
 
-    @Test
     public void testThis() {
         internalNameTranslator.populateTranslatedNames();
         String contains = "$filter=contains(tittel, 'bravo')";
