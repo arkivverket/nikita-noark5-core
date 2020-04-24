@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:tns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31"
+		   xmlns:felleskodelistens="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31"
+		   targetNamespace="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31"
+		   elementFormDefault="qualified" version="2012.01.31 - GeoIntegrasjon v1.1.0">
+	<xs:import namespace="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31"
+			   schemaLocation="giFellesKodeliste20120131.xsd"/>
+	<xs:element name="DokumentListe" type="tns:DokumentListe"/>
+	<xs:complexType name="DokumentListe">
+		<xs:sequence>
+			<xs:element name="liste" type="tns:Dokument" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Dokument" type="tns:Dokument"/>
+	<xs:complexType name="Dokument">
+		<xs:sequence>
+			<xs:element name="systemID" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="dokumentnummer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="tilknyttetRegistreringSom" type="tns:TilknyttetRegistreringSom" minOccurs="0"
+						maxOccurs="1"/>
+			<xs:element name="dokumenttype" type="tns:Dokumenttype" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="tittel" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="dokumentstatus" type="tns:Dokumentstatus" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="variantformat" type="tns:Variantformat" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="format" type="tns:Format" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="referanseJournalpostSystemID" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Fil" type="tns:Fil" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="DokumenttypeListe" type="tns:DokumenttypeListe"/>
+	<xs:complexType name="DokumenttypeListe">
+		<xs:sequence>
+			<xs:element name="liste" type="tns:Dokumenttype" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Dokumenttype" type="tns:Dokumenttype"/>
+	<xs:complexType name="Dokumenttype">
+		<xs:complexContent>
+			<xs:extension base="felleskodelistens:Kode">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Filinnhold" type="tns:Filinnhold"/>
+	<xs:complexType name="Filinnhold">
+		<xs:complexContent>
+			<xs:extension base="tns:Fil">
+				<xs:sequence>
+					<xs:element name="base64" type="xs:base64Binary" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Filreferanse" type="tns:Filreferanse"/>
+	<xs:complexType name="Filreferanse">
+		<xs:complexContent>
+			<xs:extension base="tns:Fil">
+				<xs:sequence>
+					<xs:element name="uri" type="xs:anyURI" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="kvitteringUri" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DokumentstatusListe" type="tns:DokumentstatusListe"/>
+	<xs:complexType name="DokumentstatusListe">
+		<xs:sequence>
+			<xs:element name="liste" type="tns:Dokumentstatus" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Dokumentstatus" type="tns:Dokumentstatus"/>
+	<xs:complexType name="Dokumentstatus">
+		<xs:complexContent>
+			<xs:extension base="felleskodelistens:Kode">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="FilListe" type="tns:FilListe"/>
+	<xs:complexType name="FilListe">
+		<xs:sequence>
+			<xs:element name="liste" type="tns:Fil" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Fil" type="tns:Fil"/>
+	<xs:complexType name="Fil">
+		<xs:sequence>
+			<xs:element name="filnavn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="mimeType" type="xs:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="FormatListe" type="tns:FormatListe"/>
+	<xs:complexType name="FormatListe">
+		<xs:sequence>
+			<xs:element name="liste" type="tns:Format" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Format" type="tns:Format"/>
+	<xs:complexType name="Format">
+		<xs:complexContent>
+			<xs:extension base="felleskodelistens:Kode">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="TilknyttetRegistreringSomListe" type="tns:TilknyttetRegistreringSomListe"/>
+	<xs:complexType name="TilknyttetRegistreringSomListe">
+		<xs:sequence>
+			<xs:element name="liste" type="tns:TilknyttetRegistreringSom" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="TilknyttetRegistreringSom" type="tns:TilknyttetRegistreringSom"/>
+	<xs:complexType name="TilknyttetRegistreringSom">
+		<xs:complexContent>
+			<xs:extension base="felleskodelistens:Kode">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="VariantformatListe" type="tns:VariantformatListe"/>
+	<xs:complexType name="VariantformatListe">
+		<xs:sequence>
+			<xs:element name="liste" type="tns:Variantformat" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Variantformat" type="tns:Variantformat"/>
+	<xs:complexType name="Variantformat">
+		<xs:complexContent>
+			<xs:extension base="felleskodelistens:Kode">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

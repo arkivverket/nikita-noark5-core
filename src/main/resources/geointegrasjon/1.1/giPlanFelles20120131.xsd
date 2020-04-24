@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://rep.geointegrasjon.no/Plan/Felles/xml.schema/2012.01.31"
+           targetNamespace="http://rep.geointegrasjon.no/Plan/Felles/xml.schema/2012.01.31"
+           elementFormDefault="qualified" version="2012.01.31 - GeoIntegrasjon v1.1.0">
+    <xs:element name="AdministrativenhetsnummerListe" type="tns:AdministrativenhetsnummerListe"/>
+    <xs:complexType name="AdministrativenhetsnummerListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:Administrativenhetsnummer" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Administrativenhetsnummer" type="tns:Administrativenhetsnummer"/>
+    <xs:complexType name="Administrativenhetsnummer">
+        <xs:sequence/>
+    </xs:complexType>
+    <xs:element name="Fylke" type="tns:Fylke"/>
+    <xs:complexType name="Fylke">
+        <xs:complexContent>
+            <xs:extension base="tns:Administrativenhetsnummer">
+                <xs:sequence>
+                    <xs:element name="fylkesnummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Kommune" type="tns:Kommune"/>
+    <xs:complexType name="Kommune">
+        <xs:complexContent>
+            <xs:extension base="tns:Administrativenhetsnummer">
+                <xs:sequence>
+                    <xs:element name="kommunenummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="NasjonalArealplanIdListe" type="tns:NasjonalArealplanIdListe"/>
+    <xs:complexType name="NasjonalArealplanIdListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:NasjonalArealplanId" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="NasjonalArealplanId" type="tns:NasjonalArealplanId"/>
+    <xs:complexType name="NasjonalArealplanId">
+        <xs:sequence>
+            <xs:element name="nummer" type="tns:Administrativenhetsnummer" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="planidentifikasjon" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Stat" type="tns:Stat"/>
+    <xs:complexType name="Stat">
+        <xs:complexContent>
+            <xs:extension base="tns:Administrativenhetsnummer">
+                <xs:sequence>
+                    <xs:element name="landskode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

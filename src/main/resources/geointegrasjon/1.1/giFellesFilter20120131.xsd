@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://rep.geointegrasjon.no/Felles/Filter/xml.schema/2012.01.31"
+           xmlns:fellesgeometrins="http://rep.geointegrasjon.no/Felles/Geometri/xml.schema/2012.01.31"
+           targetNamespace="http://rep.geointegrasjon.no/Felles/Filter/xml.schema/2012.01.31"
+           elementFormDefault="qualified" version="2012.01.31 - GeoIntegrasjon v1.1.0">
+    <xs:import namespace="http://rep.geointegrasjon.no/Felles/Geometri/xml.schema/2012.01.31"
+               schemaLocation="giFellesGeometri20120131.xsd"/>
+    <xs:element name="AnsvarligEnumListe" type="tns:AnsvarligEnumListe"/>
+    <xs:complexType name="AnsvarligEnumListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:AnsvarligEnum" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="AnsvarligEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EGEN"/>
+            <xs:enumeration value="EGENENHET"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="SoekeOperatorEnumListe" type="tns:SoekeOperatorEnumListe"/>
+    <xs:complexType name="SoekeOperatorEnumListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:SoekeOperatorEnum" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="SoekeOperatorEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="LT"/>
+            <xs:enumeration value="LE"/>
+            <xs:enumeration value="EQ"/>
+            <xs:enumeration value="GE"/>
+            <xs:enumeration value="GT"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="BboxKriterie" type="tns:BboxKriterie"/>
+    <xs:complexType name="BboxKriterie">
+        <xs:complexContent>
+            <xs:extension base="tns:Kriterie">
+                <xs:sequence>
+                    <xs:element name="bbox" type="fellesgeometrins:Bbox" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Ansvarlig" type="tns:Ansvarlig"/>
+    <xs:complexType name="Ansvarlig">
+        <xs:complexContent>
+            <xs:extension base="tns:Kriterie">
+                <xs:sequence>
+                    <xs:element name="eier" type="tns:AnsvarligEnum" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="KriterieListe" type="tns:KriterieListe"/>
+    <xs:complexType name="KriterieListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:Kriterie" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Kriterie" type="tns:Kriterie"/>
+    <xs:complexType name="Kriterie">
+        <xs:sequence/>
+    </xs:complexType>
+    <xs:element name="Soekefelt" type="tns:Soekefelt"/>
+    <xs:complexType name="Soekefelt">
+        <xs:complexContent>
+            <xs:extension base="tns:Kriterie">
+                <xs:sequence>
+                    <xs:element name="feltnavn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="feltverdi" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="SoekskriterieListe" type="tns:SoekskriterieListe"/>
+    <xs:complexType name="SoekskriterieListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:Soekskriterie" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Soekskriterie" type="tns:Soekskriterie"/>
+    <xs:complexType name="Soekskriterie">
+        <xs:sequence>
+            <xs:element name="operator" type="tns:SoekeOperatorEnum" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="Kriterie" type="tns:Kriterie" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

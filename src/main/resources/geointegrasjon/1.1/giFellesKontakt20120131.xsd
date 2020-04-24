@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://rep.geointegrasjon.no/Felles/Kontakt/xml.schema/2012.01.31"
+           xmlns:fellesadressens="http://rep.geointegrasjon.no/Felles/Adresse/xml.schema/2012.01.31"
+           xmlns:felleskodelistens="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31"
+           targetNamespace="http://rep.geointegrasjon.no/Felles/Kontakt/xml.schema/2012.01.31"
+           elementFormDefault="qualified" version="2012.01.31 - GeoIntegrasjon v1.1.0">
+    <xs:import namespace="http://rep.geointegrasjon.no/Felles/Adresse/xml.schema/2012.01.31"
+               schemaLocation="giFellesAdresse20120131.xsd"/>
+    <xs:import namespace="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31"
+               schemaLocation="giFellesKodeliste20120131.xsd"/>
+    <xs:element name="PersonidentifikatorTypeListe" type="tns:PersonidentifikatorTypeListe"/>
+    <xs:complexType name="PersonidentifikatorTypeListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:PersonidentifikatorType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PersonidentifikatorType" type="tns:PersonidentifikatorType"/>
+    <xs:complexType name="PersonidentifikatorType">
+        <xs:complexContent>
+            <xs:extension base="felleskodelistens:Kode">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="KontaktListe" type="tns:KontaktListe"/>
+    <xs:complexType name="KontaktListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:Kontakt" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Kontakt" type="tns:Kontakt"/>
+    <xs:complexType name="Kontakt">
+        <xs:sequence>
+            <xs:element name="navn" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="adresser" type="fellesadressens:EnkelAdresseListe" minOccurs="0" maxOccurs="1">
+
+            </xs:element>
+            <xs:element name="elektroniskeAdresser" type="fellesadressens:ElektroniskAdresseListe" minOccurs="0"
+                        maxOccurs="1">
+
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Organisasjon" type="tns:Organisasjon"/>
+    <xs:complexType name="Organisasjon">
+        <xs:complexContent>
+            <xs:extension base="tns:Kontakt">
+                <xs:sequence>
+                    <xs:element name="organisasjonsnummer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Person" type="tns:Person"/>
+    <xs:complexType name="Person">
+        <xs:complexContent>
+            <xs:extension base="tns:Kontakt">
+                <xs:sequence>
+                    <xs:element name="personid" type="tns:Personidentifikator" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="etternavn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="fornavn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="PersonidentifikatorListe" type="tns:PersonidentifikatorListe"/>
+    <xs:complexType name="PersonidentifikatorListe">
+        <xs:sequence>
+            <xs:element name="liste" type="tns:Personidentifikator" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Personidentifikator" type="tns:Personidentifikator"/>
+    <xs:complexType name="Personidentifikator">
+        <xs:sequence>
+            <xs:element name="personidentifikatorNr" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="personidentifikatorType" type="tns:PersonidentifikatorType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

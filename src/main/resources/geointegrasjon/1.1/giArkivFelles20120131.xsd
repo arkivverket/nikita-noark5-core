@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:tns="http://rep.geointegrasjon.no/Arkiv/Felles/xml.schema/2012.01.31"
+		   targetNamespace="http://rep.geointegrasjon.no/Arkiv/Felles/xml.schema/2012.01.31"
+		   elementFormDefault="qualified" version="2012.01.31 - GeoIntegrasjon v1.1.0">
+	<xs:element name="Saksnoekkel" type="tns:Saksnoekkel"/>
+	<xs:complexType name="Saksnoekkel">
+		<xs:sequence/>
+	</xs:complexType>
+	<xs:element name="SaksnummerListe" type="tns:SaksnummerListe"/>
+	<xs:complexType name="SaksnummerListe">
+		<xs:sequence>
+			<xs:element name="liste" type="tns:Saksnummer" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Saksnummer" type="tns:Saksnummer"/>
+	<xs:complexType name="Saksnummer">
+		<xs:complexContent>
+			<xs:extension base="tns:Saksnoekkel">
+				<xs:sequence>
+					<xs:element name="saksaar" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="sakssekvensnummer" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
