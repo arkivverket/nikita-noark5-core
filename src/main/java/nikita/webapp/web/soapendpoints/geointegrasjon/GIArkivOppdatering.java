@@ -13,6 +13,12 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigInteger;
+import java.time.OffsetDateTime;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 @Endpoint
@@ -33,7 +39,8 @@ public class GIArkivOppdatering {
     @ResponsePayload
     @SuppressWarnings("unused")
     public NySaksmappeResponse createCaseFile(
-            @RequestPayload NySaksmappe incomingCaseFile) {
+            @RequestPayload NySaksmappe incomingCaseFile)
+            throws DatatypeConfigurationException {
         return toNySaksmappeResponse(seriesService
                 .createCaseFileAssociatedWithSeries(
                         getSeriesUUIDOrThrow(incomingCaseFile),
@@ -50,10 +57,22 @@ public class GIArkivOppdatering {
         return caseFile;
     }
 
-    private NySaksmappeResponse toNySaksmappeResponse(CaseFile caseFile) {
+    private NySaksmappeResponse toNySaksmappeResponse(CaseFile caseFile) throws DatatypeConfigurationException {
         NySaksmappeResponse saksmappeResponse = new NySaksmappeResponse();
         Saksmappe saksmappe = new Saksmappe();
         saksmappe.setSystemID(caseFile.getSystemId());
+        XMLGregorianCalendar caseDate = DatatypeFactory.newInstance().
+                newXMLGregorianCalendar(caseFile.getCaseDate().toString());
+        saksmappe.setSaksdato(caseDate);
+        Saksnummer saksnummer = new Saksnummer();
+        saksnummer.setSaksaar(new BigInteger(
+                String.valueOf(caseFile.getCaseYear())));
+        saksnummer.setSakssekvensnummer(new BigInteger(
+                String.valueOf(caseFile.getCaseSequenceNumber())));
+        saksmappe.setSaksnr(saksnummer);
+        saksmappe.setAdministrativEnhet(caseFile
+                .getReferenceAdministrativeUnit()
+                .getAdministrativeUnitName());
         saksmappe.setTittel(caseFile.getTitle());
         saksmappe.setOffentligTittel(caseFile.getPublicTitle());
         saksmappe.setAdministrativEnhet(caseFile.getRecordsManagementUnit());
