@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.lang.Integer.parseInt;
+import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameObject;
 import static nikita.webapp.odata.base.ODataParser.*;
 
 /**
@@ -237,7 +238,7 @@ public abstract class NikitaODataWalker
     }
 
     /**
-     * getNameDatabase
+     * getInternalNameAttribute
      * <p>
      * Helper mechanism to convert Norwegian entity / attribute names to
      * English as English is used in classes and tables. Interacting with the
@@ -255,7 +256,7 @@ public abstract class NikitaODataWalker
      * @return the English version of the Norwegian name if it exists, otherwise
      * the original Norwegian name.
      */
-    protected String getNameDatabase(String norwegianName) {
+    protected String getInternalNameAttribute(String norwegianName) {
         String englishName = CommonUtils.WebUtils
                 .getEnglishNameDatabase(norwegianName);
 
@@ -266,7 +267,7 @@ public abstract class NikitaODataWalker
     }
 
     /**
-     * getNameObject
+     * getInternalNameObject
      * <p>
      * Helper mechanism to convert Norwegian entity / attribute names to
      * English as English is used in classes and tables. Interacting with the
@@ -284,9 +285,8 @@ public abstract class NikitaODataWalker
      * @return the English version of the Norwegian name if it exists, otherwise
      * the original Norwegian name.
      */
-    protected String getNameObject(String norwegianName) {
-        String englishName = CommonUtils.WebUtils
-                .getEnglishNameObject(norwegianName);
+    protected String getInternalNameObject(String norwegianName) {
+        String englishName = getEnglishNameObject(norwegianName);
         if (englishName == null)
             return norwegianName;
         else
@@ -300,4 +300,5 @@ public abstract class NikitaODataWalker
     private String getValue(ParserRuleContext context, Class klass, int count) {
         return context.getChild(klass, count).getText();
     }
+
 }

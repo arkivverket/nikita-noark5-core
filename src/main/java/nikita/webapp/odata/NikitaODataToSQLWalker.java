@@ -59,7 +59,7 @@ public class NikitaODataToSQLWalker {
      */
 
     public void processResource(String entity, String loggedInUser) {
-        // sqlStatementBuilder.addFrom(getNameDatabase(entity), DM_OWNED_BY,
+        // sqlStatementBuilder.addFrom(getInternalNameAttribute(entity), DM_OWNED_BY,
         //         loggedInUser);
     }
 
@@ -84,7 +84,7 @@ public class NikitaODataToSQLWalker {
      */
 
     public void processContains(String attribute, String value) {
-        //sqlStatementBuilder.addWhere(getNameDatabase(attribute) +
+        //sqlStatementBuilder.addWhere(getInternalNameAttribute(attribute) +
         //        " LIKE '%" + value + "%'");
     }
 
@@ -107,7 +107,7 @@ public class NikitaODataToSQLWalker {
 
     public void processStartsWith(String attribute, String value) {
         //sqlStatementBuilder.addWhere(
-        //        getNameDatabase(attribute) + " LIKE '" + value + "%'");
+        //        getInternalNameAttribute(attribute) + " LIKE '" + value + "%'");
     }
 
     /**
@@ -133,7 +133,7 @@ public class NikitaODataToSQLWalker {
 
     public void processComparatorCommand(String attribute, String comparator,
                                          String value) {
-        //sqlStatementBuilder.addWhere(getNameDatabase(attribute) + " " +
+        //sqlStatementBuilder.addWhere(getInternalNameAttribute(attribute) + " " +
         //        getSQLComparator(comparator) + " '" +
         //        value + "'");
     }
@@ -159,7 +159,7 @@ public class NikitaODataToSQLWalker {
      */
 
     public void processOrderByCommand(String attribute, String sortOrder) {
-        //sqlStatementBuilder.addOrderby(getNameDatabase(attribute), sortOrder);
+        //sqlStatementBuilder.addOrderBy(getInternalNameAttribute(attribute), sortOrder);
     }
 
     /**

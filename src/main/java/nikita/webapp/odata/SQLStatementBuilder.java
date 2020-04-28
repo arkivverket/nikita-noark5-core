@@ -40,7 +40,7 @@ public class SQLStatementBuilder {
         whereList.add(where);
     }
 
-    public void addOrderby(String attribute, String sortOrder) {
+    public void addOrderBy(String attribute, String sortOrder) {
         orderByList.add(attribute + " " + sortOrder);
     }
 

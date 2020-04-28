@@ -2,10 +2,13 @@ package nikita.webapp.odata;
 
 
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import nikita.webapp.odata.model.HQLStatement;
 import nikita.webapp.odata.model.Ref;
 import nikita.webapp.odata.model.RefBuilder;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static nikita.common.config.ODataConstants.*;
 
@@ -18,19 +21,15 @@ public class NikitaODataToHQLWalker
         extends NikitaODataWalker
         implements IODataWalker {
 
-    private HQLStatementBuilder hqlStatement;
+    private final HQLStatement statement;
     private Ref ref;
 
     public NikitaODataToHQLWalker(String dmlStatementType) {
-        this.hqlStatement = new HQLStatementBuilder(dmlStatementType);
+        statement = new HQLStatement(dmlStatementType);
     }
 
     public NikitaODataToHQLWalker() {
-        this.hqlStatement = new HQLStatementBuilder();
-    }
-
-    public void setParentIdPrimaryKey(String primaryKey) {
-        hqlStatement.setParentIdPrimaryKey(primaryKey);
+        statement = new HQLStatement();
     }
 
     /**
@@ -54,7 +53,7 @@ public class NikitaODataToHQLWalker
 
     @Override
     public void processEntityBase(String entity) {
-        hqlStatement.addFrom(getNameObject(entity) + " x ");
+        statement.addFrom(getInternalNameObject(entity) + " x ");
     }
 
     /**
@@ -79,12 +78,11 @@ public class NikitaODataToHQLWalker
      *                     *                       then casefile is the entity.
      * @param systemId     systemId of the parent entity
      */
-
     @Override
     public void processEntityBase(String parentEntity, String entity,
                                   String systemId) {
-        hqlStatement.setParentIdPrimaryKey(systemId);
-        hqlStatement.addFromWithForeignKey(parentEntity, entity);
+        statement.addFromWithForeignKey(getInternalNameObject(parentEntity),
+                getInternalNameObject(entity), systemId);
     }
 
     /**
@@ -110,8 +108,10 @@ public class NikitaODataToHQLWalker
     @Override
     public void processComparatorCommand(String attribute, String comparator,
                                          String value) {
-        hqlStatement.addEqualsWhere("x." + getNameObject(attribute), comparator,
-                value);
+        // TODO: Why using "x." here???
+        statement.addAttribute("x." + getInternalNameAttribute(attribute));
+        statement.addComparator(translateComparator(comparator));
+        statement.addValue(value);
     }
 
     /**
@@ -131,11 +131,14 @@ public class NikitaODataToHQLWalker
     public void processStringCompare(String type, String attribute,
                                      String value) {
         if (type.equalsIgnoreCase(STARTS_WITH)) {
-            hqlStatement.addStartsWith(attribute, value);
+            statement.addStartsWith("x." +
+                    getInternalNameAttribute(attribute), value);
         } else if (type.equalsIgnoreCase(ENDS_WITH)) {
-            hqlStatement.addEndsWith(attribute, value);
+            statement.addEndsWith("x." +
+                    getInternalNameAttribute(attribute), value);
         } else if (type.equalsIgnoreCase(CONTAINS)) {
-            hqlStatement.addContains(attribute, value);
+            statement.addContains("x." +
+                    getInternalNameAttribute(attribute), value);
         } else {
             throw new NikitaMalformedInputDataException(
                     "OData string contains content that can't be processed."
@@ -147,7 +150,9 @@ public class NikitaODataToHQLWalker
     @Override
     public void processIntegerCompare(String type, String attribute,
                                       String comparisonOperator, String value) {
-
+        statement.addAttribute(getInternalNameAttribute(attribute));
+        statement.addComparator(translateComparator(comparisonOperator));
+        statement.addValue(value);
     }
 
     @Override
@@ -158,26 +163,28 @@ public class NikitaODataToHQLWalker
 
     @Override
     public void processSkipCommand(Integer skip) {
-        hqlStatement.addLimitby_skip(skip);
+        statement.setLimitOffset(new AtomicInteger(skip));
     }
 
     @Override
     public void processTopCommand(Integer top) {
-        hqlStatement.addLimitby_top(top);
+        statement.setLimitHowMany(new AtomicInteger(top));
     }
 
     @Override
     public void processOrderByCommand(String attribute, String sortOrder) {
-        hqlStatement.addOrderby(attribute, sortOrder);
+        statement.addOrderBy(attribute, sortOrder);
     }
 
     public Query getHqlStatment(Session session) {
-        return hqlStatement.buildHQLStatement(session);
+        return statement.getQuery(session);
     }
 
     /**
      * /arkivstruktur/mappe/1234/ny-kryssreferanse/$ref?$id=
      * arkivstruktur/basisregistrering/4321
+     * <p>
+     * This will likely be taken out!
      *
      * @param fromEntity   mappe
      * @param fromSystemId 1234
@@ -190,14 +197,49 @@ public class NikitaODataToHQLWalker
             String fromEntity, String fromSystemId, String entity,
             String toEntity, String toSystemId) {
         ref = new RefBuilder().
-                setFromEntity(fromEntity).
+                setFromEntity(getInternalNameObject(fromEntity)).
                 setFromSystemId(fromSystemId).
-                setEntity(entity).
-                setToEntity(toEntity).
-                setToSystemId(toSystemId).createRef();
+                setEntity(getInternalNameObject(entity)).
+                setToEntity(getInternalNameObject(toEntity)).
+                setToSystemId(toSystemId)
+                .createRef();
     }
 
     public Ref getRef() {
         return ref;
+    }
+
+    /**
+     * Convert a OData comparator to a HQL comparator
+     * - "eq" -> "="
+     * - "gt" -> ">"
+     * - "ge" -> ">="
+     * - "lt" -> "<"
+     * - "le" -> "<="
+     * - "ne" -> "!="
+     *
+     * @param comparator The OData comparator
+     * @return comparator used in HQL
+     */
+    private String translateComparator(String comparator)
+            throws NikitaMalformedInputDataException {
+
+        switch (comparator) {
+            case ODATA_EQ:
+                return HQL_EQ;
+            case ODATA_GT:
+                return HQL_GT;
+            case ODATA_GE:
+                return HQL_GE;
+            case ODATA_LT:
+                return HQL_LT;
+            case ODATA_LE:
+                return HQL_LE;
+            case ODATA_NE:
+                return HQL_NE;
+        }
+        throw new NikitaMalformedInputDataException(
+                "Unrecognised comparator used in OData query (" +
+                        comparator + ")");
     }
 }

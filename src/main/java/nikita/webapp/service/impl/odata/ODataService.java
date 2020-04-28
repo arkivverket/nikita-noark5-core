@@ -220,7 +220,7 @@ public class ODataService
         // This is a OData query on a child e.g.
         // arkivdel/8628ae60-7d50-474e-82e0-74a348a99647/mappe?
         if (matcher.find()) {
-            hqlWalker.setParentIdPrimaryKey(matcher.group());
+            //hqlWalker.setParentIdPrimaryKey(matcher.group());
         }
 
         Query query = hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
@@ -261,7 +261,7 @@ public class ODataService
         // This is a OData query on a child e.g.
         // arkivdel/8628ae60-7d50-474e-82e0-74a348a99647/mappe?
         if (matcher.find()) {
-            hqlWalker.setParentIdPrimaryKey(matcher.group());
+            //hqlWalker.setParentIdPrimaryKey(matcher.group());
         }
         return hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
     }

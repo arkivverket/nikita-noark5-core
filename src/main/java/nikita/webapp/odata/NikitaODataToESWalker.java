@@ -119,10 +119,10 @@ public class NikitaODataToESWalker {
         JSONObject prefix = (JSONObject) query.get(QUERY_PREFIX);
         if (prefix == null) {
             prefix = new JSONObject();
-            //prefix.put(getNameObject(attribute), value);
+            //prefix.put(getInternalNameObject(attribute), value);
             query.put(QUERY_PREFIX, prefix);
         } else {
-            // prefix.put(getNameObject(attribute), value);
+            // prefix.put(getInternalNameObject(attribute), value);
         }
     }
 
@@ -164,10 +164,10 @@ public class NikitaODataToESWalker {
         JSONObject matchPhrase = (JSONObject) query.get(QUERY_MATCH_PHRASE);
         if (matchPhrase == null) {
             matchPhrase = new JSONObject();
-            //matchPhrase.put(getNameObject(attribute), value);
+            //matchPhrase.put(getInternalNameObject(attribute), value);
             query.put(QUERY_MATCH_PHRASE, matchPhrase);
         } else {
-            //matchPhrase.put(getNameObject(attribute), value);
+            //matchPhrase.put(getInternalNameObject(attribute), value);
         }
     }
 

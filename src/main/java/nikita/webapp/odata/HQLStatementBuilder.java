@@ -1,6 +1,5 @@
 package nikita.webapp.odata;
 
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -13,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static nikita.common.config.ODataConstants.*;
+import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameDatabase;
+import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameObject;
 
 /**
  * HQLStatementBuilder
@@ -79,9 +80,9 @@ public class HQLStatementBuilder {
 
     public void addFromWithForeignKey(String parentEntity, String entity) {
         statement.append(" from ");
-        statement.append(getNameObject(entity));
+        statement.append(getInternalNameObject(entity));
         statement.append(" where reference");
-        statement.append(getNameObject(parentEntity));
+        statement.append(getInternalNameObject(parentEntity));
         statement.append(" = :parentSystemId)");
         statement.append("'");
         logger.info(statement.toString());
@@ -109,21 +110,21 @@ public class HQLStatementBuilder {
     public void addStartsWith(String attribute, String value) {
         String parameter = ":startsWithParameter_" + startsWithMap.size();
         startsWithMap.put(parameter, value);
-        whereList.add(" " + getNameDatabase(attribute) + " like " +
+        whereList.add(" " + getInternalNameAttribute(attribute) + " like " +
                 parameter + " ");
     }
 
     public void addContains(String attribute, String value) {
         String parameter = ":containsParameter_" + containsMap.size();
         containsMap.put(parameter, value);
-        whereList.add(" " + getNameDatabase(attribute) + " like " +
+        whereList.add(" " + getInternalNameAttribute(attribute) + " like " +
                 parameter + " ");
     }
 
     public void addEndsWith(String attribute, String value) {
         String parameter = ":endsWithParameter_" + endsWithMap.size();
         endsWithMap.put(parameter, value);
-        whereList.add(" " + getNameDatabase(attribute) + " like " +
+        whereList.add(" " + getInternalNameAttribute(attribute) + " like " +
                 parameter + " ");
     }
 
@@ -131,7 +132,7 @@ public class HQLStatementBuilder {
         whereList.add(where);
     }
 
-    public void addOrderby(String attribute, String sortOrder) {
+    public void addOrderBy(String attribute, String sortOrder) {
         orderByMap.put(attribute, sortOrder);
     }
 
@@ -226,7 +227,7 @@ public class HQLStatementBuilder {
     }
 
     /**
-     * getNameDatabase
+     * getInternalNameAttribute
      * <p>
      * Helper mechanism to convert Norwegian entity / attribute names to
      * English as English is used in classes and tables. Interacting with the
@@ -244,10 +245,8 @@ public class HQLStatementBuilder {
      * @return the English version of the Norwegian name if it exists, otherwise
      * the original Norwegian name.
      */
-    protected String getNameDatabase(String norwegianName) {
-        String englishName = CommonUtils.WebUtils
-                .getEnglishNameDatabase(norwegianName);
-
+    protected String getInternalNameAttribute(String norwegianName) {
+        String englishName = getEnglishNameDatabase(norwegianName);
         if (englishName == null)
             return norwegianName;
         else
@@ -255,7 +254,7 @@ public class HQLStatementBuilder {
     }
 
     /**
-     * getNameObject
+     * getInternalNameObject
      * <p>
      * Helper mechanism to convert Norwegian entity / attribute names to
      * English as English is used in classes and tables. Interacting with the
@@ -273,9 +272,8 @@ public class HQLStatementBuilder {
      * @return the English version of the Norwegian name if it exists, otherwise
      * the original Norwegian name.
      */
-    protected String getNameObject(String norwegianName) {
-        String englishName = CommonUtils.WebUtils
-                .getEnglishNameObject(norwegianName);
+    protected String getInternalNameObject(String norwegianName) {
+        String englishName = getEnglishNameObject(norwegianName);
         if (englishName == null)
             return norwegianName;
         else
