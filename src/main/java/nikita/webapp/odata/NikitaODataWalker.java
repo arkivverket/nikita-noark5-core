@@ -300,5 +300,4 @@ public abstract class NikitaODataWalker
     private String getValue(ParserRuleContext context, Class klass, int count) {
         return context.getChild(klass, count).getText();
     }
-
 }
