@@ -23,3 +23,23 @@ The queries our OData implementation supports are documented in TestOData.java.
  
 ## Escaping
 The client will need to URL-encode the URL. This is outside the scope of the OData handling as spring gives the ODataController a decode URL. Our code does not handle URL-decode the URL. Our code does unescape some parts of the OData query where necessery  
+
+## Known problems in our implementation
+
+### Lexer problem
+
+The following OData query can be parsed:
+
+    arkivstruktur/mappe?$filter=klasse/klasseID eq '12'
+
+but this one causes a warning  / console message
+
+    arkivstruktur/mappe?$filter=klasse/klasseID eq 12
+
+The parser is picking 12 up as an INTEGER rather than as an *ID* or *QUOTED_STRING*
+
+    line 1:47 mismatched input '12' expecting {ID, QUOTED_STRING}
+    
+This is related to the way the lexer sees INTEGER defined first and passing 12 as an integer to the 
+parser rather than a literal og quoted literal. There is no point in spending days now trying to fix
+this so I am documenting this so we can revisit it later.     
