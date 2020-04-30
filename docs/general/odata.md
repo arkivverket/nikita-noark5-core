@@ -41,5 +41,5 @@ The parser is picking 12 up as an INTEGER rather than as an *ID* or *QUOTED_STRI
     line 1:47 mismatched input '12' expecting {ID, QUOTED_STRING}
     
 This is related to the way the lexer sees INTEGER defined first and passing 12 as an integer to the 
-parser rather than a literal og quoted literal. There is no point in spending days now trying to fix
+parser rather than a literal or quoted literal. There is no point in spending days now trying to fix
 this so I am documenting this so we can revisit it later.     
