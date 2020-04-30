@@ -119,4 +119,19 @@ public class TestOData {
         assertEquals(query.getQueryString(), SQL_EQUAL_HQL);
         assertEquals(parameter, "%Jennifer O'Malley%");
     }
+
+    /**
+     * Show problem with lexer
+     * <p>
+     * ODATA Input:
+     * arkivstruktur/saksmappe/?$filter=saksaar eq 2020
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEQInteger() {
+        String yearQuery = "arkivstruktur/saksmappe?$filter=saksaar eq 2020";
+        Query query = oDataService.convertODataToHQL(yearQuery, "");
+        String hqlEQ = "from CaseFile x where x.caseYear = 2020";
+        assertEquals(query.getQueryString(), hqlEQ);
+    }
 }
