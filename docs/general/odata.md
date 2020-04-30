@@ -22,7 +22,7 @@ The class NikitaODataWalker contains the main functionality for parsing. There a
 The queries our OData implementation supports are documented in TestOData.java.
  
 ## Escaping
-The client will need to URL-encode the URL. This is outside the scope of the OData handling as spring gives the ODataController a decode URL. Our code does not handle URL-decode the URL. Our code does unescape some parts of the OData query where necessery  
+The client will need to URL-encode the URL. This is outside the scope of the OData handling as spring gives the ODataController a decoded URL. Our code does not handle URL-decode the URL. Our code does unescape some parts of the OData query where necessary.  
 
 ## Known problems in our implementation
 
@@ -42,4 +42,4 @@ The parser is picking 12 up as an INTEGER rather than as an *ID* or *QUOTED_STRI
     
 This is related to the way the lexer sees INTEGER defined first and passing 12 as an integer to the 
 parser rather than a literal or quoted literal. There is no point in spending days now trying to fix
-this so I am documenting this so we can revisit it later.     
+this, so I am documenting this, so we can revisit it later.     
