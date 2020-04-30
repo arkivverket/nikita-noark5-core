@@ -109,7 +109,7 @@ public class NikitaODataToHQLWalker
     public void processComparatorCommand(String attribute, String comparator,
                                          String value) {
         // TODO: Why using "x." here???
-        statement.addAttribute("x." + getInternalNameAttribute(attribute));
+        statement.addAttribute("x." + getInternalNameObject(attribute));
         statement.addComparator(translateComparator(comparator));
         statement.addValue(value);
     }
