@@ -7,7 +7,6 @@ package nikita.webapp.odata.base;
 }
 
 /*
-created by tsodring 25/05/2018
 Basic grammar to handle OData syntax for nikita. Note this grammar will require
 a lot more work to be complete.
 
@@ -16,13 +15,30 @@ https://github.com/antlr/grammars-v5/blob/master/url/url.g4. (C) as per BSD
 declaration
 
 totalseconds, based on a duration, but there are no duration fields in Noark
+
+Remember to set the output directory to:
+src/main/java/nikita/webapp/odata/base
 */
+
+// 1. TODO: Note it looks like we really need to replace integerComparatorExpression with a
+//  queryFunctionComparatorExpression as this can catch a lot more and make coding simpler.
+// As per: https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_BuiltinQueryFunctions
+// 2. Better error handling. Also we see that neq rather than ne did not throw
+// an error. We need to throw 400 Bad request quicker when things are
+// inncorrect. This will be an ODataParseExecption that is caught and rethrown
+// as a 400 BR.
+// 3. Better handling of JOINFunction. Now JOIN is a manual call for
+// complextype. This should be done via parsing likely, reduce code and
+// complexity
+// 4. ManyToMany join needs to be implemented
+// 5. Rename classes:
+//   NikitaODataWalker -> ODataWalker
+//   NikitaODataToHQLWalker -> ODataToHQL
+// 6. Introduce NikitaODataToHQL to capture problem where  metadata/kode needs to be  metadata.kode
 
 
 // arkivstruktur/dokumentobjekt?$filter=contains(filnavn, '<20190803045988.RT234511@mail.redemash.com>')
 // arkivstruktur/dokumentbeskrivelse/cf8e1d0d-e94d-4d07-b5ed-46ba2df0465e/dokumentobjekt?$filter=contains(filnavn, '<20190803045988.RT234511@mail.redemash.com>')
-
-
 
 referenceStatement
     :
@@ -76,7 +92,7 @@ filterExpression
     : (boolExpressionLeft filterExpression boolExpressionRight)
       (logicalOperator filterExpression)?
     |
-      (stringCompareExpression | comparisonExpression |
+      (stringCompareExpression | inComparisonExpression | comparisonExpression |
        integerComparatorExpression | floatComparatorExpression |
        substringExpression | indexOfExpression | lengthExpression |
        stringModifierExpression | timeExpression | concatExpression)
@@ -92,8 +108,18 @@ boolExpressionRight
     ;
 
 stringCompareExpression
-    : stringCompareCommand '(' entityName ',' singleQuotedString ')'
+    : stringCompareCommand '(' (attributeName | joinEntities) ',' singleQuotedString ')'
     ;
+
+inComparisonExpression
+   :
+   joinEntities comparisonOperator value
+   ;
+
+joinEntities
+   :
+   (entityName '/')+ attributeName
+   ;
 
 stringCompareCommand
     : CONTAINS | STARTSWITH | ENDSWITH
@@ -136,7 +162,7 @@ concatExpression
     ;
 
 comparisonExpression
-    : attributeName comparisonOperator value
+    : (joinEntities | attributeName) comparisonOperator value
     ;
 /*
 $filter=year(DateTime) eq 2010
@@ -147,7 +173,7 @@ $filter=minute(DateTime) eq 42 // start at 0 or 1? Assuming 0
 $filter=second(DateTime) eq 55 // what is after 59? 60 or 0?
 */
 integerComparatorExpression
-    : integerCompareCommand '(' entityName  ')' comparisonOperator integerValue
+    : integerCompareCommand '(' (attributeName | joinEntities)  ')' comparisonOperator integerValue
     ;
 
 integerCompareCommand
@@ -239,7 +265,7 @@ packageName
     ;
 
 value
-    : ID | STRING_LITERAL
+    : ID | QUOTED_STRING
     ;
 
 singleQuotedString

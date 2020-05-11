@@ -28,7 +28,7 @@ The client will need to URL-encode the URL. This is outside the scope of the ODa
 
 The API spec identifies the following query as a valid query it should be possible to search with:
 
-    ../api/arkivstruktur/Mappe?$filter=klasse/klasseID eq '12/2' and klasse/klassifikasjonssystem/klassifikasjonstype/kode eq 'GBNR' 
+    ../api/arkivstruktur/mappe?$filter=klasse/klasseID eq '12/2' and klasse/klassifikasjonssystem/klassifikasjonstype/kode eq 'GBNR' 
 
 I am unsure if the second part is a valid OData query
 
@@ -51,6 +51,7 @@ SQL (Norwegian Noark names) :
 
 SQL (English nikita names) :
 
+   
     select * from as_file where as_file.file_class_id IN     
           (select system_id from as_class where class_id = '12/2') 
 
@@ -71,11 +72,93 @@ The previous part is also difficult to solve
    
     select * from as_file where as_file.file_class_id IN
 
-How can I tell what the foreign key between the as_file table, and the 
- as_class table are. Perhaps it can be solved with reflection or hibernate/JPA
- might be able to give me that information. 
- 
-While the above OData query is relevant another more relevant query perhaps to 
+The @Entity class does not contain any useful methods that can help solve this
+issue. So reflection is used. To find the foreign key from as_file to
+as_class reflection can be used to identify the @OneToMany, @ManyToOne, @OneToOne and
+@ManyToMany relationships. 
+
+```
+  Field[] allFields = klass.getDeclaredFields();
+  for (Field field : allFields) {
+    if (field.getAnnotation(Id.class) != null) {
+       // Found the primary key
+    }
+    if (field.getAnnotation(ManyToOne.class) != null) {
+       // Found a Many to One relationship
+    }
+    if (field.getAnnotation(OneToMany.class) != null) {
+       // Found a One To Many relationship
+    }
+
+```
+
+Note. This approach requires that foreign keys are annotated. That limitation 
+makes sense in a hibernate world, but might limit the approach in other 
+contexts.
+
+```
+    if (field.getAnnotation(OneToMany.class) != null) {
+      Class[] interfaces = field.getType().getInterfaces();
+      for (Class iface : interfaces) {
+        if (iface.isAssignableFrom(Collection.class)) {
+          // The variable type has Collection as base class
+        }
+      }
+    }
+```
+
+The next step involves getting the signature class of the collection. Due to
+*type erasure*, this information is not available. However, it is possible to
+find it by looking at the getter method for the variable.
+
+```
+  Type genericReturnType = method.getGenericReturnType();
+  if (genericReturnType instanceof ParameterizedType) {
+      for (Type type :
+              ((ParameterizedType) genericReturnType)
+                      .getActualTypeArguments()) {
+          java.lang.Class returnType = (java.lang.Class) type;
+          if (returnType.getSimpleName()
+                  .equals(className)) {
+              return variableName;
+          }
+      }
+  }
+```
+
+There are two caveats to this approach. The first is that it requires that the
+getter exists and that is uses the same name as the variable after the get
+part of the method name (getSeries). Nikita generally uses an approach 
+getReferenceVariableName, but in some cases we might have used getVariableName.
+As such, both approaches must be supported. These are not really caveats as I 
+think we can reasonably expect the getters exist and follow a standardised
+approach to naming.  
+
+This approach is a little excessive as we could just make sure all nikita 
+@Entity class with a @OneToMany foreign name the variable reference'Object'. I think that 
+approach is too simple and starts creating requirements on the domain model.
+However, the same can be argued about using the @OneToMany. So this is just an
+exploration of possible approaches to solving this issue.
+
+It is likely however that we do need to be able to pick out primary keys so 
+using reflection to find the primary key is required. But most of our primary 
+keys are called systemId and annoted with @Id. This is not the case for the
+metadata entities that have a 'code' name for the primary key.  
+
+```
+    public String getPrimaryKey() {
+        Field[] allFields = FieldUtils.getAllFields(this.getClass());
+        for (Field field : allFields) {
+            if (field.getAnnotation(Id.class) != null) {
+                System.out.println("Id class is: " + field.getName());
+                return field.getName();
+            }
+        }
+        return "";
+    }
+```
+
+While the previous OData query example is relevant, other more relevant query perhaps to 
 explore is based on the national identifiers. Some example national identifier queries:
 
        api/arkivstruktur/Mappe?$filter=bygning/bygningsnummer eq 10 and bygning/endringsloepenummer eq 20

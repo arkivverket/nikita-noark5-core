@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import static java.lang.Integer.parseInt;
 import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameObject;
 import static nikita.webapp.odata.base.ODataParser.*;
@@ -45,6 +47,7 @@ public abstract class NikitaODataWalker
 
     private final Logger logger =
             LoggerFactory.getLogger(NikitaODataWalker.class);
+    protected String entity = "";
 
     /**
      * This is the part that picks up the start of the OData command of a
@@ -97,10 +100,22 @@ public abstract class NikitaODataWalker
         super.enterStringCompareExpression(ctx);
         logger.debug("Entering enterStringCompareExpression. Found [" +
                 ctx.getText() + "]");
-        processStringCompare(
-                getValue(ctx, StringCompareCommandContext.class),
-                getValue(ctx, EntityNameContext.class),
-                getValue(ctx, SingleQuotedStringContext.class));
+        if (null != ctx.getChild(AttributeNameContext.class, 0)) {
+            processStringCompare(
+                    this.entity.toLowerCase() + "_1",
+                    getValue(ctx, StringCompareCommandContext.class),
+                    getValue(ctx, AttributeNameContext.class),
+                    getValue(ctx, SingleQuotedStringContext.class));
+        } else if (null != ctx.getChild(JoinEntitiesContext.class, 0)) {
+            JoinEntitiesContext joinEntitiesContext =
+                    ctx.getChild(JoinEntitiesContext.class, 0);
+            processJoinEntitiesContext(joinEntitiesContext);
+            String entity = getFinalEntityFromJoin(joinEntitiesContext);
+            processStringCompare(entity.toLowerCase() + "_1",
+                    getValue(ctx, StringCompareCommandContext.class),
+                    getValue(joinEntitiesContext, AttributeNameContext.class),
+                    getValue(ctx, SingleQuotedStringContext.class));
+        }
     }
 
     /**
@@ -124,11 +139,31 @@ public abstract class NikitaODataWalker
         super.enterIntegerComparatorExpression(ctx);
         logger.debug("Entering enterIntegerComparatorExpression. Found [" +
                 ctx.getText() + "]");
-        processIntegerCompare(
-                getValue(ctx, IntegerCompareCommandContext.class),
-                getValue(ctx, EntityNameContext.class),
-                getValue(ctx, ComparisonOperatorContext.class),
-                getValue(ctx, IntegerValueContext.class));
+
+        if (null != ctx.getChild(AttributeNameContext.class, 0)) {
+            processIntegerCompare(
+                    getValue(ctx, IntegerCompareCommandContext.class),
+                    getAliasAndAttribute(this.entity,
+                            getInternalNameObject(getValue(ctx,
+                                    AttributeNameContext.class))),
+                    getValue(ctx, ComparisonOperatorContext.class),
+                    getValue(ctx, IntegerValueContext.class));
+        } else if (null != ctx.getChild(JoinEntitiesContext.class, 0)) {
+            JoinEntitiesContext joinEntitiesContext =
+                    ctx.getChild(JoinEntitiesContext.class, 0);
+            processJoinEntitiesContext(joinEntitiesContext);
+            processIntegerCompare(
+                    getValue(ctx, IntegerCompareCommandContext.class),
+                    getAliasAndAttribute(
+                            getFinalEntityFromJoin(joinEntitiesContext),
+                            getInternalNameObject(getValue(joinEntitiesContext,
+                                    AttributeNameContext.class))),
+                    getValue(ctx,
+                            ComparisonOperatorContext.class),
+                    getValue(ctx, IntegerValueContext.class));
+        }
+
+
     }
 
     /**
@@ -161,10 +196,26 @@ public abstract class NikitaODataWalker
         super.enterComparisonExpression(ctx);
         logger.debug("Entering enterComparisonExpression. Found [" +
                 ctx.getText() + "]");
-        processComparatorCommand(
-                getValue(ctx, AttributeNameContext.class),
-                getValue(ctx, ComparisonOperatorContext.class),
-                getValue(ctx, ValueContext.class));
+
+        JoinEntitiesContext joinEntitiesContext =
+                ctx.getChild(JoinEntitiesContext.class, 0);
+        if (null != joinEntitiesContext) {
+            processJoinEntitiesContext(joinEntitiesContext);
+            processComparatorCommand(
+                    getAliasAndAttribute(this.entity,
+                            getEnglishNameObject(
+                                    getValue(joinEntitiesContext,
+                                            AttributeNameContext.class))),
+                    getValue(ctx, ComparisonOperatorContext.class),
+                    getValue(ctx, ValueContext.class));
+        } else {
+            processComparatorCommand(
+                    getAliasAndAttribute(this.entity,
+                            getEnglishNameObject(
+                                    getValue(ctx, AttributeNameContext.class))),
+                    getValue(ctx, ComparisonOperatorContext.class),
+                    getValue(ctx, ValueContext.class));
+        }
     }
 
     @Override
@@ -198,19 +249,24 @@ public abstract class NikitaODataWalker
         super.enterEntityBase(ctx);
         logger.debug("Entering enterEntityBase. Found [" +
                 ctx.getText() + "]");
+
+        this.entity = getInternalNameObject(getValue(
+                ctx, EntityNameContext.class));
         // Process a join filter example e.g.
         // arkivstruktur/dokumentbeskrivelse/cf8e1d0d-e94d-4d07-b5ed
         // -46ba2df0465e/dokumentobjekt?$filter=contains(filnavn, 'fubar')
         if (null != ctx.getChild(SystemIdValueContext.class, 0)) {
             processEntityBase(
-                    getValue(ctx, EntityNameContext.class),
-                    getValue(ctx, EntityNameContext.class, 1),
-                    getValue(ctx, SystemIdValueContext.class));
+                    this.entity,
+                    getInternalNameObject(
+                            getValue(ctx, EntityNameContext.class, 1)),
+                    getInternalNameObject(
+                            getValue(ctx, SystemIdValueContext.class)));
         }
         // Process a basic filter example e.g.
         // arkivstruktur/dokumentobjekt?$filter=contains(filnavn, 'fubar')
         else {
-            processEntityBase(getValue(ctx, EntityNameContext.class));
+            processEntityBase(this.entity);
         }
     }
 
@@ -225,16 +281,92 @@ public abstract class NikitaODataWalker
                 getValue(ctx, SystemIdValueContext.class, 1));
     }
 
+    /**
+     * handle a IN clause:
+     * <p>
+     * arkivstruktur/mappe?$filter=klasse/klasseID eq '12/2'
+     * arkivstruktur/mappe?$filter=klasse/klassifikasjonssystem/tittel eq 'GBNR'
+     * <p>
+     * The first one is straight forward to handle, while the second is handled
+     * by retrieving the list of EntityNameContext and resolving as many joins
+     * as required. Currently the approach is based on list but perhaps this
+     * should be pushed back to the parser to be handled recursively.
+     *
+     * @param ctx the context (InComparisonExpressionContext)
+     */
+    @Override
+    public void enterInComparisonExpression(
+            InComparisonExpressionContext ctx) {
+        super.enterInComparisonExpression(ctx);
+        JoinEntitiesContext joinEntitiesContext =
+                ctx.getChild(JoinEntitiesContext.class, 0);
+        if (null != joinEntitiesContext) {
+            processJoinEntitiesContext(joinEntitiesContext);
+            AttributeNameContext attributeNameContext =
+                    joinEntitiesContext.getChild(AttributeNameContext.class, 0);
+            String attributeName = attributeNameContext.getText();
+            processINCompare(getFinalEntityFromJoin(joinEntitiesContext),
+                    getInternalNameObject(attributeName),
+                    getValue(ctx, ComparisonOperatorContext.class),
+                    getValue(ctx, ValueContext.class));
+        } else {
+            processINCompare(this.entity,
+                    getInternalNameObject(
+                            getValue(ctx, AttributeNameContext.class)),
+                    getValue(ctx, ComparisonOperatorContext.class),
+                    getValue(ctx, ValueContext.class));
+
+        }
+    }
+
+    // joinEntities
+    //   :
+    //   (entityName '/')+ attributeName
+    //   ;
+
+    protected String getFinalEntityFromJoin(JoinEntitiesContext ctx) {
+        List<EntityNameContext> entityNameContexts =
+                ctx.getRuleContexts(EntityNameContext.class);
+        return getInternalNameObject(
+                getValue(ctx, EntityNameContext.class,
+                        entityNameContexts.size() - 1));
+    }
+
+    protected void processJoinEntitiesContext(JoinEntitiesContext ctx) {
+        List<EntityNameContext> entityNameContexts =
+                ctx.getRuleContexts(EntityNameContext.class);
+        // Join the from the entity applying the filter on e.g
+        // mappe?$filter=klasse/klassifikasjonssystem ....
+        // You have to first join mappe (File) to klasse (Class)
+        String toEntity = getInternalNameObject(getValue(ctx,
+                EntityNameContext.class));
+        addEntityToEntityJoin(this.entity, toEntity);
+        if (entityNameContexts.size() > 1) {
+            for (int i = 0; i < entityNameContexts.size(); i++) {
+                if (i < entityNameContexts.size() - 1) {
+                    String fromEntity = getInternalNameObject(getValue(ctx,
+                            EntityNameContext.class, i));
+                    toEntity = getInternalNameObject(getValue(ctx,
+                            EntityNameContext.class, i + 1));
+                    addEntityToEntityJoin(fromEntity, toEntity);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void enterLogicalOperator(LogicalOperatorContext ctx) {
+        super.enterLogicalOperator(ctx);
+        processLogicalOperator(ctx.getText());
+    }
 
     @Override
     public void processEntityBase(String entity) {
-
     }
 
     @Override
     public void processEntityBase(String parentEntity, String entity,
                                   String systemId) {
-
     }
 
     /**
@@ -299,5 +431,9 @@ public abstract class NikitaODataWalker
 
     private String getValue(ParserRuleContext context, Class klass, int count) {
         return context.getChild(klass, count).getText();
+    }
+
+    private String getAliasAndAttribute(String entity, String attribute) {
+        return entity.toLowerCase() + "_1." + attribute;
     }
 }

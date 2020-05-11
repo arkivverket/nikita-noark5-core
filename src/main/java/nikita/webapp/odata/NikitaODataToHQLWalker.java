@@ -5,10 +5,26 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.webapp.odata.model.HQLStatement;
 import nikita.webapp.odata.model.Ref;
 import nikita.webapp.odata.model.RefBuilder;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.InternalServerErrorException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static nikita.common.config.ODataConstants.*;
 
@@ -16,16 +32,20 @@ import static nikita.common.config.ODataConstants.*;
  * Extending NikitaODataWalker to handle events so we can convert OData filter
  * command to SQL.
  */
-
 public class NikitaODataToHQLWalker
         extends NikitaODataWalker
         implements IODataWalker {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(NikitaODataToHQLWalker.class);
+
     private final HQLStatement statement;
     private Ref ref;
+    private Map<String, Class<?>> entityMap = new HashMap<>();
 
     public NikitaODataToHQLWalker(String dmlStatementType) {
         statement = new HQLStatement(dmlStatementType);
+        constructEntityList();
     }
 
     public NikitaODataToHQLWalker() {
@@ -53,7 +73,8 @@ public class NikitaODataToHQLWalker
 
     @Override
     public void processEntityBase(String entity) {
-        statement.addFrom(getInternalNameObject(entity) + " x ");
+        super.processEntityBase(entity);
+        statement.addQueryEntity(entity);
     }
 
     /**
@@ -81,6 +102,8 @@ public class NikitaODataToHQLWalker
     @Override
     public void processEntityBase(String parentEntity, String entity,
                                   String systemId) {
+        this.entity = entity;
+        statement.addQueryEntity(parentEntity);
         statement.addFromWithForeignKey(getInternalNameObject(parentEntity),
                 getInternalNameObject(entity), systemId);
     }
@@ -106,12 +129,10 @@ public class NikitaODataToHQLWalker
      * @param value      The value you wish to filter on
      */
     @Override
-    public void processComparatorCommand(String attribute, String comparator,
-                                         String value) {
-        // TODO: Why using "x." here???
-        statement.addAttribute("x." + getInternalNameObject(attribute));
-        statement.addComparator(translateComparator(comparator));
-        statement.addValue(value);
+    public void processComparatorCommand(String aliasAndAttribute,
+                                         String comparator, String value) {
+        statement.addCompareValue(aliasAndAttribute,
+                translateComparator(comparator), value);
     }
 
     /**
@@ -128,17 +149,17 @@ public class NikitaODataToHQLWalker
      * @param value     The value to compare against
      */
     @Override
-    public void processStringCompare(String type, String attribute,
-                                     String value) {
+    public void processStringCompare(String entityAlias, String type,
+                                     String attribute, String value) {
         if (type.equalsIgnoreCase(STARTS_WITH)) {
-            statement.addStartsWith("x." +
-                    getInternalNameAttribute(attribute), value);
+            statement.addStartsWith(entityAlias,
+                    getInternalNameObject(attribute), value);
         } else if (type.equalsIgnoreCase(ENDS_WITH)) {
-            statement.addEndsWith("x." +
-                    getInternalNameAttribute(attribute), value);
+            statement.addEndsWith(entityAlias,
+                    getInternalNameObject(attribute), value);
         } else if (type.equalsIgnoreCase(CONTAINS)) {
-            statement.addContains("x." +
-                    getInternalNameAttribute(attribute), value);
+            statement.addContains(entityAlias,
+                    getInternalNameObject(attribute), value);
         } else {
             throw new NikitaMalformedInputDataException(
                     "OData string contains content that can't be processed."
@@ -148,11 +169,41 @@ public class NikitaODataToHQLWalker
     }
 
     @Override
-    public void processIntegerCompare(String type, String attribute,
+    public void processIntegerCompare(String function, String aliasAndAttribute,
                                       String comparisonOperator, String value) {
-        statement.addAttribute(getInternalNameAttribute(attribute));
-        statement.addComparator(translateComparator(comparisonOperator));
-        statement.addValue(value);
+        statement.addCompareValue(function, aliasAndAttribute,
+                translateComparator(comparisonOperator), value);
+    }
+
+    // from File file where
+    // XXXX
+    // IN (select systemId from Class class where class.referenceClassificationSystem IN
+    //   ( file.referenceClass IN (select systemId from Class class where
+    //  class.title = 'Oslo') ) file.referenceClass IN (select systemId from Class class where class.title = 'Oslo')
+    @Override
+    public void addEntityToEntityJoin(String fromEntity, String toEntity) {
+        String foreignKey = getForeignKey(fromEntity, toEntity);
+        statement.addEntityToEntityJoin(fromEntity, foreignKey, toEntity);
+    }
+
+    @Override
+    public void processINCompare(String entity, String attribute,
+                                 String comparisonOperator, String value) {
+        statement.addCompare(entity.toLowerCase() + "_1." + attribute,
+                translateComparator(comparisonOperator), value);
+    }
+
+    @Override
+    public void processINCompareForeignKey(
+            String entity, String attribute,
+            String comparisonOperator, String value) {
+        statement.addCompare(entity + "." + attribute,
+                translateComparator(comparisonOperator), value);
+    }
+
+    @Override
+    public void processLogicalOperator(String logicalOperator) {
+        statement.addAnd();
     }
 
     @Override
@@ -205,6 +256,7 @@ public class NikitaODataToHQLWalker
                 .createRef();
     }
 
+
     public Ref getRef() {
         return ref;
     }
@@ -241,5 +293,108 @@ public class NikitaODataToHQLWalker
         throw new NikitaMalformedInputDataException(
                 "Unrecognised comparator used in OData query (" +
                         comparator + ")");
+    }
+
+    private String getForeignKey(String fromClassName, String toClassName) {
+
+        Class klass = Optional.ofNullable(entityMap.get(fromClassName))
+                .orElseThrow(() -> new BadRequestException(
+                        "Unsupported Noark class: " + fromClassName));
+
+        String foreignKeyName = "";
+        Field[] allFields = FieldUtils.getAllFields(klass);
+        for (Field field : allFields) {
+            String variableName = field.getName();
+            // If the field is not a potential match for what we are looking
+            // for simply continue
+            if (!variableName.contains(toClassName)) {
+                continue;
+            }
+
+            if (field.getAnnotation(ManyToOne.class) != null) {
+                String type = field.getType().getSimpleName();
+                if (toClassName.equals(type)) {
+                    foreignKeyName = field.getName();
+                }
+            }
+
+            if (field.getAnnotation(OneToMany.class) != null) {
+                for (java.lang.Class iface : field.getType().getInterfaces()) {
+                    if (iface.isAssignableFrom(Collection.class)) {
+                        Method method;
+                        try {
+                            method = klass.getMethod("get" +
+                                    variableName.substring(0, 1).toUpperCase() +
+                                    variableName.substring(1), null);
+                            if (null == method) {
+                                method = klass.getMethod("getReference" +
+                                        variableName.substring(0, 1)
+                                                .toUpperCase() +
+                                        variableName.substring(1), null);
+                            }
+                        } catch (NoSuchMethodException e) {
+                            String error = klass.getName() + "has no foreign" +
+                                    " key for " + toClassName;
+                            logger.error(error);
+                            throw new InternalServerErrorException(error);
+                        }
+
+                        Type genericReturnType = method.getGenericReturnType();
+                        if (genericReturnType instanceof ParameterizedType) {
+                            for (Type type :
+                                    ((ParameterizedType) genericReturnType)
+                                            .getActualTypeArguments()) {
+                                java.lang.Class returnType = (java.lang.Class) type;
+                                if (returnType.getSimpleName()
+                                        .equals(toClassName)) {
+                                    foreignKeyName = variableName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return foreignKeyName;
+    }
+
+    public String getPrimaryKey(String className) {
+
+        Class klass = Optional.ofNullable(entityMap.get(className))
+                .orElseThrow(() -> new BadRequestException(
+                        "Unsupported Noark class: " + className));
+
+        Field[] allFields = FieldUtils.getAllFields(klass);
+        for (Field field : allFields) {
+            if (field.getAnnotation(Id.class) != null) {
+                System.out.println("Id class is: " + field.getName());
+                return field.getName();
+            }
+        }
+        return "";
+    }
+
+    private String getAlias(String entity) {
+        return entity.toLowerCase() + "_1";
+    }
+
+    private String getEntityAndAlias(String entity) {
+        return entity + "." + entity.toLowerCase() + "_1";
+    }
+
+    private void constructEntityList() {
+        Reflections ref = new Reflections("nikita.common.model.noark5.v5");
+        Set<String> entities1 =
+                ref.getTypesAnnotatedWith(
+                        javax.persistence.Entity.class)
+                        .stream().map(Class::getName).collect(Collectors.toSet());
+
+        Iterator<Class<?>> itr =
+                ref.getTypesAnnotatedWith(Entity.class).iterator();
+        while (itr.hasNext()) {
+            Class klass = itr.next();
+            String simpleName = klass.getSimpleName();
+            entityMap.put(simpleName, klass);
+        }
     }
 }

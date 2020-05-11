@@ -212,8 +212,8 @@ public class ODataService
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // Make the HQL Statement
-        NikitaODataToHQLWalker hqlWalker = new NikitaODataToHQLWalker(
-                dmlStatementType);
+        NikitaODataToHQLWalker hqlWalker = new
+                NikitaODataToHQLWalker(dmlStatementType);
         walker.walk(hqlWalker, tree);
 
         Matcher matcher = pairRegex.matcher(request);
@@ -253,8 +253,8 @@ public class ODataService
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // Make the HQL Statement
-        NikitaODataToHQLWalker hqlWalker = new NikitaODataToHQLWalker(
-                dmlStatementType);
+        NikitaODataToHQLWalker hqlWalker = new
+                NikitaODataToHQLWalker(dmlStatementType);
         walker.walk(hqlWalker, parser.referenceStatement());
 
         Matcher matcher = pairRegex.matcher(request);

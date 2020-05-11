@@ -6,6 +6,7 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkConcurrencyException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +16,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.time.OffsetDateTime;
+import java.util.Collection;
 
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -173,6 +179,69 @@ public class NoarkEntity
         // am not overriden as nikita is unable to process this
         throw new NikitaMalformedInputDataException("Error when trying to " +
                 "create a reference between entities");
+    }
+
+    public String getPrimaryKey() {
+        Field[] allFields = FieldUtils.getAllFields(this.getClass());
+        for (Field field : allFields) {
+            if (field.getAnnotation(Id.class) != null) {
+                System.out.println("Id class is: " + field.getName());
+                return field.getName();
+            }
+        }
+        return "";
+    }
+
+    public String getForeignKeyObjectName(String className)
+            throws NoSuchMethodException {
+        java.lang.Class klass = this.getClass();
+        // FieldUtils.getAllFields, to get all superclass fields
+        Field[] allFields = FieldUtils.getAllFields(klass);
+        for (Field field : allFields) {
+            String variableName = field.getName();
+            // If the field is not a potential match for what we are looking
+            // for simply continue
+            if (!variableName.contains(className)) {
+                continue;
+            }
+
+            if (field.getAnnotation(ManyToOne.class) != null) {
+            }
+
+            if (field.getAnnotation(OneToMany.class) != null) {
+                for (java.lang.Class iface : field.getType().getInterfaces()) {
+                    if (iface.isAssignableFrom(Collection.class)) {
+                        Method method = klass.getMethod("get" +
+                                variableName.substring(0, 1).toUpperCase() +
+                                variableName.substring(1), null);
+                        if (null == method) {
+                            method = klass.getMethod("getReference" +
+                                    variableName.substring(0, 1)
+                                            .toUpperCase() +
+                                    variableName.substring(1), null);
+                        }
+                        // There is no foreign key associated with variable
+                        if (null == method) {
+                            return "";
+                        }
+
+                        Type genericReturnType = method.getGenericReturnType();
+                        if (genericReturnType instanceof ParameterizedType) {
+                            for (Type type :
+                                    ((ParameterizedType) genericReturnType)
+                                            .getActualTypeArguments()) {
+                                java.lang.Class returnType = (java.lang.Class) type;
+                                if (returnType.getSimpleName()
+                                        .equals(className)) {
+                                    return variableName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return "";
     }
 
     @Override

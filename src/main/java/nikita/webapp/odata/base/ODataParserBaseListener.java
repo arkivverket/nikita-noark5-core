@@ -1,5 +1,7 @@
-// Generated from /home/tsodring/tmp/nikita-noark5-core/src/main/antlr4/ODataParser.g4 by ANTLR 4.7.2
+// Generated from /home/tsodring/git/nikita-noark5-core/src/main/antlr4/ODataParser.g4 by ANTLR 4.8
+
 package nikita.webapp.odata.base;
+
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -243,6 +245,42 @@ public class ODataParserBaseListener implements ODataParserListener {
      */
     @Override
     public void exitStringCompareExpression(ODataParser.StringCompareExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterInComparisonExpression(ODataParser.InComparisonExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitInComparisonExpression(ODataParser.InComparisonExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterJoinEntities(ODataParser.JoinEntitiesContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitJoinEntities(ODataParser.JoinEntitiesContext ctx) {
     }
 
     /**
