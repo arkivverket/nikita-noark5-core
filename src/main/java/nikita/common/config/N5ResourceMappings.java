@@ -478,7 +478,8 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_DOWNGRADED_BY_ENG = "nedgradertAv";
     public static final String CLASSIFICATION_DOWNGRADED_DATE_ENG = "nedgraderingsdato";
     public static final String CLASSIFICATION_ENG = "classification_name"; // property node
-    public static final String CLASSIFICATION_SYSTEM_ENG = "klassifikasjonssystem";
+    public static final String CLASSIFICATION_SYSTEM_ENG =
+            "classification_system";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG = "klassifikasjonstype";
     public static final String CLASSIFICATION_TYPE_ENG = "klassifikasjonstype";
     public static final String CLASSIFIED_CODE_ENG = "classifiedcode";
@@ -717,7 +718,8 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_DOWNGRADED_BY_ENG_OBJECT = "nedgradertAv";
     public static final String CLASSIFICATION_DOWNGRADED_DATE_ENG_OBJECT = "nedgraderingsdato";
     public static final String CLASSIFICATION_ENG_OBJECT = "classificationName"; // property node
-    public static final String CLASSIFICATION_SYSTEM_ENG_OBJECT = "klassifikasjonssystem";
+    public static final String CLASSIFICATION_SYSTEM_ENG_OBJECT =
+            "ClassificationSystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG_OBJECT = "klassifikasjonstype";
     public static final String CLASSIFICATION_TYPE_ENG_OBJECT = "klassifikasjonstype";
     public static final String CLASSIFIED_CODE_ENG_OBJECT = "classifiedcode";
