@@ -85,9 +85,8 @@ public class ODataService
     @Override
     public ResponseEntity<HateoasNoarkObject> processODataQueryGet
             (HttpServletRequest request) throws Exception {
-        List<NoarkEntity> listResults = convertODataToHQL(request,
-                null).getResultList();
-
+        List<NoarkEntity> listResults =
+                convertODataToHQL(request, "").getResultList();
         return packAsHateoasObject(listResults);
     }
 
