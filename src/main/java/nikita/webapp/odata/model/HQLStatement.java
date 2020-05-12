@@ -133,7 +133,7 @@ public class HQLStatement {
 
     public void addCompareValue(String aliasAndAttribute, String comparator,
                                 String value) {
-        String parameter = COMPARISON_PARAMETER + containsParameters.size();
+        String parameter = CONTAINS_PARAMETER + containsParameters.size();
         comparisonParameters.put(parameter, desanitiseValue(value));
         addAttribute(aliasAndAttribute);
         addComparator(comparator);
@@ -206,7 +206,7 @@ public class HQLStatement {
 
     public void addCompare(String aliasAndAttribute, String comparator,
                            String value) {
-        String parameter = COMPARISON_PARAMETER + containsParameters.size();
+        String parameter = CONTAINS_PARAMETER + containsParameters.size();
         comparisonParameters.put(parameter, desanitiseValue(value));
         addAttribute(aliasAndAttribute);
         addComparator(comparator);
