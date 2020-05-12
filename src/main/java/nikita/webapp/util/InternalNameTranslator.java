@@ -142,6 +142,10 @@ public class InternalNameTranslator {
                         RECORD_ENG,
                         RECORD_ENG_OBJECT);
         addNorToEnglishNameMap
+                (RECORD_ID,
+                        RECORD_ID_ENG,
+                        RECORD_ID_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (REGISTRY_ENTRY,
                         REGISTRY_ENTRY_ENG,
                         REGISTRY_ENTRY_ENG_OBJECT);
