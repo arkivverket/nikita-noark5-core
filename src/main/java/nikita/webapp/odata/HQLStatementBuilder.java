@@ -65,30 +65,6 @@ public class HQLStatementBuilder {
     }
 
     /**
-     * Add the from/where part of the query.
-     * <p>
-     * initialises the query with the entity name
-     *
-     * @param entity Name of the entity
-     */
-    public void addFrom(String entity) {
-        statement.append(" from ");
-        statement.append(entity);
-        statement.append(" where ");
-        logger.info(statement.toString());
-    }
-
-    public void addFromWithForeignKey(String parentEntity, String entity) {
-        statement.append(" from ");
-        statement.append(getInternalNameObject(entity));
-        statement.append(" where reference");
-        statement.append(getInternalNameObject(parentEntity));
-        statement.append(" = :parentSystemId)");
-        statement.append("'");
-        logger.info(statement.toString());
-    }
-
-    /**
      * Currently the parser is passing in a value with a single quote.
      * <p>
      * .... $filter=tittel eq 'Oppføring av bygg på eksempelvei 1' ....
@@ -200,8 +176,7 @@ public class HQLStatementBuilder {
 
         query.setFirstResult(limitOffset.get());
         query.setMaxResults(limitHowMany.get());
-
-        logger.info("HQL Query string is " + query.getQueryString());
+        logger.trace("HQL Query string is " + query.getQueryString());
         return query;
     }
 
