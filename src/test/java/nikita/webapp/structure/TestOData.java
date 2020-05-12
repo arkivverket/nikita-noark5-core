@@ -81,6 +81,40 @@ public class TestOData {
     }
 
     /**
+     * Check that it is possible to do a eq query with a quoted string. This
+     * test is here to remind us that it creates a warning in the logfile that
+     * should be addressed.
+     * <p>
+     * Entity: arkiv
+     * Attribute: tittel
+     * ODATA Input:
+     * arkivstruktur/dokumentobjekt?$filter=filnavn eq '<9aqr221f34c.hsr@diskless
+     * .uio
+     * .no>'
+     * <p>
+     * Expected HQL:
+     * FROM DocumentObject AS documentobject_1
+     * WHERE
+     * documentobject_1.originalFilename = :comparisonParameter_0
+     * <p>
+     * Additionally the comparisonParameter_0 parameter value should be:
+     * <9aqr221f34c.hsr@diskless.uio.no>
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEQQueryStringWithChars() {
+        String yearQuery = "arkivstruktur/dokumentobjekt?$filter=filnavn eq " +
+                "'<9aqr221f34c.hsr@diskless.uio.no>'";
+        Query query = oDataService.convertODataToHQL(yearQuery, "");
+        String hql = "FROM DocumentObject AS documentobject_1 " +
+                "WHERE " +
+                "documentobject_1.originalFilename = :comparisonParameter_0";
+        assertEquals(query.getParameterValue("comparisonParameter_0"),
+                "<9aqr221f34c.hsr@address.udn.com>");
+        assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
      * Check that it is possible to do a eq query with a quoted string and
      * nested join
      * Entity: arkivdel->arkiv
