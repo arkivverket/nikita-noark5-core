@@ -76,12 +76,27 @@ var searchController = app.controller('SearchController',
           return;
         }
 
-        var encodedQuery = encodeURIComponent($scope.odataQuery);
-        // The question mark cannot be encoded because the server can't distinguish the entity string
 
-        var queryPart = encodedQuery.replace("%3F", "?");
-        queryPart = queryPart.replace(/'/g, "%27");
-        var httpRequest = $scope.baseUrlForOdataSearch + "/" + queryPart;
+        var odataQuery = "mappe?$filter=contains(tittel, 'Oslo')&$top=2$skip=4$orderby=tittel desc";
+
+        document.write(odataQuery);
+        document.write("<br>");
+
+        const query = $scope.odataQuery.split("?");
+        const queryParameters = query[1].split("$");
+        let finalQuery = query[0] + "?";
+        for (let i = 0; i < queryParameters.length; i++) {
+          if (queryParameters[i] !== "") {
+            let parameterCommand = queryParameters[i].split("=");
+            finalQuery += "$" + parameterCommand[0] + "=" +
+                encodeURIComponent(parameterCommand[1]);
+            if (!parameterCommand[1].endsWith("&")) {
+              finalQuery += encodeURIComponent("&");
+            }
+          }
+        }
+        finalQuery = finalQuery.substring(0, finalQuery.length - 3);
+        var httpRequest = $scope.baseUrlForOdataSearch + "/" + finalQuery;
         httpRequest = httpRequest.replace("api", "odata");
         $http({
           method: 'GET',
