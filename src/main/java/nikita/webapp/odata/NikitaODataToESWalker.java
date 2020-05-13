@@ -8,7 +8,7 @@ import static nikita.common.config.Constants.DM_OWNED_BY;
 import static nikita.common.config.ESConstants.*;
 
 /**
- * Extending NikitaODataWalker to handle events so we can convert OData filter
+ * Extending ODataWalker to handle events so we can convert OData filter
  * command to an ElasticSearch query.
  * <p>
  * We will just attempt to keep this code in sync with SQL/HQL. We're not even

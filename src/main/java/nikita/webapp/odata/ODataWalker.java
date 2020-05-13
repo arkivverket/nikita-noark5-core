@@ -41,12 +41,12 @@ import static nikita.webapp.odata.base.ODataParser.*;
  * a production environment!
  */
 
-public abstract class NikitaODataWalker
+public abstract class ODataWalker
         extends ODataParserBaseListener
         implements IODataWalker {
 
     private final Logger logger =
-            LoggerFactory.getLogger(NikitaODataWalker.class);
+            LoggerFactory.getLogger(ODataWalker.class);
     protected String entity = "";
 
     /**

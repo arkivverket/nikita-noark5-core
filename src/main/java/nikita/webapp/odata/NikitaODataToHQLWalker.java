@@ -29,11 +29,11 @@ import java.util.stream.Collectors;
 import static nikita.common.config.ODataConstants.*;
 
 /**
- * Extending NikitaODataWalker to handle events so we can convert OData filter
+ * Extending ODataWalker to handle events so we can convert OData filter
  * command to SQL.
  */
 public class NikitaODataToHQLWalker
-        extends NikitaODataWalker
+        extends ODataWalker
         implements IODataWalker {
 
     private static final Logger logger =

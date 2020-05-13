@@ -9,7 +9,7 @@ import java.util.Map;
 import static nikita.common.config.ODataConstants.*;
 
 /**
- * Extending NikitaODataWalker to handle events so we can convert OData filter
+ * Extending ODataWalker to handle events so we can convert OData filter
  * command to SQL.
  */
 
