@@ -173,10 +173,6 @@ public class HQLStatementBuilder {
         addWithSpace(attribute);
     }
 
-    public void addAliasAndAttribute(String entityAlias, String attribute) {
-        addWithSpace(entityAlias + "." + attribute);
-    }
-
     public void addComparator(String comparator) {
         addWithSpace(comparator);
     }
@@ -215,7 +211,8 @@ public class HQLStatementBuilder {
         // Add orderBy values
         if (orderByMap.size() > 0) {
             StringJoiner join = new StringJoiner(",");
-            for (Map.Entry entry : orderByMap.entrySet()) {
+            for (Map.Entry<String, String> entry :
+                    orderByMap.entrySet()) {
                 join.add(entry.getKey() + " " + entry.getValue());
             }
             orderby.append(join.toString());
@@ -224,9 +221,8 @@ public class HQLStatementBuilder {
         // Add list of entities in query
         if (entityList.size() > 0) {
             StringJoiner join = new StringJoiner(",");
-            Iterator<String> it = entityList.iterator();
-            while (it.hasNext()) {
-                join.add(it.next());
+            for (String s : entityList) {
+                join.add(s);
             }
             from.insert(0, join.toString() + " ");
         }
@@ -264,25 +260,29 @@ public class HQLStatementBuilder {
         }
 
         // Resolve all startsWith parameters
-        for (Map.Entry entry : startsWithParameters.entrySet()) {
-            query.setParameter(entry.getKey().toString(),
+        for (Map.Entry<String, String> entry :
+                startsWithParameters.entrySet()) {
+            query.setParameter(entry.getKey(),
                     entry.getValue() + "%");
         }
 
         // Resolve all startsWith parameters
-        for (Map.Entry entry : comparisonParameters.entrySet()) {
-            query.setParameter(entry.getKey().toString(), entry.getValue());
+        for (Map.Entry<String, Object> entry :
+                comparisonParameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
 
         // Resolve all contains parameters
-        for (Map.Entry entry : containsParameters.entrySet()) {
-            query.setParameter(entry.getKey().toString(),
+        for (Map.Entry<String, String> entry :
+                containsParameters.entrySet()) {
+            query.setParameter(entry.getKey(),
                     "%" + entry.getValue() + "%");
         }
 
         // Resolve all endsWith parameters
-        for (Map.Entry entry : endsWithParameters.entrySet()) {
-            query.setParameter(entry.getKey().toString(),
+        for (Map.Entry<String, String> entry :
+                endsWithParameters.entrySet()) {
+            query.setParameter(entry.getKey(),
                     "%" + entry.getValue());
         }
 
@@ -299,16 +299,12 @@ public class HQLStatementBuilder {
     }
 
     private String unescape(String original) {
-        String unescaped = original.replaceAll("\'\'", "'");
-        return unescaped;
+        return original.replaceAll("''", "'");
     }
 
     private boolean quotedString(String value) {
-        if ((value.charAt(0) == '\'' &&
-                value.charAt(value.length() - 1) == '\'')) {
-            return true;
-        }
-        return false;
+        return value.charAt(0) == '\'' &&
+                value.charAt(value.length() - 1) == '\'';
     }
 
     private String dequote(String original) {
@@ -323,11 +319,13 @@ public class HQLStatementBuilder {
     public void addEntityToEntityJoin(String fromEntity, String foreignKey,
                                       String toEntity) {
         from.append("JOIN ");
-        from.append(fromEntity.toLowerCase() + "_1");
+        from.append(fromEntity.toLowerCase());
+        from.append("_1");
         from.append(".");
         from.append(foreignKey);
         from.append(" AS ");
-        from.append(toEntity.toLowerCase() + "_1");
+        from.append(toEntity.toLowerCase());
+        from.append("_1");
         from.append(" ");
     }
 }
