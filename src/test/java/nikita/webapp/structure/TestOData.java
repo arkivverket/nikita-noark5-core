@@ -61,20 +61,20 @@ public class TestOData {
      * arkivstruktur/arkiv?$filter=tittel eq 'The fonds'
      * <p>
      * Expected HQL:
-     * FROM Fonds AS fonds_1
+     * SELECT fonds_1 FROM Fonds AS fonds_1
      * WHERE
-     *   fonds_1.title = :comparisonParameter_0
+     * fonds_1.title = :comparisonParameter_0
      * <p>
      * Additionally the comparisonParameter_0 parameter value should be:
-     *   The fonds
+     * The fonds
      */
     @Test
     @Transactional
     public void shouldReturnValidHQLEQQueryString() {
         String yearQuery = "arkivstruktur/arkiv?$filter=tittel eq 'The fonds'";
         Query query = oDataService.convertODataToHQL(yearQuery, "");
-        String hql = "FROM Fonds AS fonds_1 WHERE fonds_1.title = " +
-                ":comparisonParameter_0";
+        String hql = "SELECT fonds_1 FROM Fonds AS fonds_1 " +
+                "WHERE fonds_1.title = :comparisonParameter_0";
         assertEquals(query.getParameterValue("comparisonParameter_0"),
                 "The fonds");
         assertEquals(query.getQueryString(), hql);
@@ -93,7 +93,7 @@ public class TestOData {
      * .no>'
      * <p>
      * Expected HQL:
-     * FROM DocumentObject AS documentobject_1
+     * SELECT documentobject_1 FROM DocumentObject AS documentobject_1
      * WHERE
      * documentobject_1.originalFilename = :comparisonParameter_0
      * <p>
@@ -104,10 +104,10 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQLEQQueryStringWithChars() {
         String yearQuery = "arkivstruktur/dokumentobjekt?$filter=filnavn eq " +
-                "'<9aqr221f34c.hsr@diskless.uio.no>'";
+                "'<9aqr221f34c.hsr@address.udn.com>'";
         Query query = oDataService.convertODataToHQL(yearQuery, "");
-        String hql = "FROM DocumentObject AS documentobject_1 " +
-                "WHERE " +
+        String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
+                "documentobject_1 WHERE " +
                 "documentobject_1.originalFilename = :comparisonParameter_0";
         assertEquals(query.getParameterValue("comparisonParameter_0"),
                 "<9aqr221f34c.hsr@address.udn.com>");
@@ -125,7 +125,7 @@ public class TestOData {
      * description'
      * <p>
      * Expected HQL:
-     * FROM Series AS series_1
+     * SELECT series_1 FROM Series AS series_1
      *   JOIN
      *     series_1.referenceFonds AS fonds_1
      * WHERE fonds_1.description = :comparisonParameter_0
@@ -139,8 +139,9 @@ public class TestOData {
         String yearQuery = "arkivstruktur/arkivdel?$filter=arkiv/beskrivelse " +
                 "eq 'The fonds description'";
         Query query = oDataService.convertODataToHQL(yearQuery, "");
-        String hql = "FROM Series AS series_1 JOIN series_1.referenceFonds " +
-                "AS fonds_1 WHERE fonds_1.description = :comparisonParameter_0";
+        String hql = "SELECT series_1 FROM Series AS series_1 " +
+                "JOIN series_1.referenceFonds AS fonds_1 " +
+                "WHERE fonds_1.description = :comparisonParameter_0";
         assertEquals(query.getParameterValue("comparisonParameter_0"),
                 "The fonds description");
         assertEquals(query.getQueryString(), hql);
@@ -155,7 +156,7 @@ public class TestOData {
      * arkivstruktur/journalpost?$filter=registreringsID ne '2020/000234-23'
      * <p>
      * Expected HQL:
-     * FROM RegistryEntry AS registryentry_1
+     * SELECT registryentry_1 FROM RegistryEntry AS registryentry_1
      * WHERE registryentry_1.recordId != :comparisonParameter_0
      * <p>
      * Additionally the comparisonParameter_0 parameter value should be:
@@ -167,7 +168,8 @@ public class TestOData {
         String yearQuery = "arkivstruktur/journalpost?$filter=registreringsID " +
                 "ne '2020/000234-23'";
         Query query = oDataService.convertODataToHQL(yearQuery, "");
-        String hql = "FROM RegistryEntry AS registryentry_1 WHERE " +
+        String hql = "SELECT registryentry_1 FROM RegistryEntry AS " +
+                "registryentry_1 WHERE " +
                 "registryentry_1.recordId != :comparisonParameter_0";
         assertEquals(query.getParameterValue("comparisonParameter_0"),
                 "2020/000234-23");
@@ -183,11 +185,11 @@ public class TestOData {
      * arkivstruktur/dokumentobjekt?$filter=year(opprettetDato) eq 2020
      * <p>
      * Expected HQL:
-     * FROM RegistryEntry AS registryentry_1
-     * WHERE registryentry_1.recordId != :comparisonParameter_0
+     * SELECT documentobject_1 FROM DocumentObject AS documentobject_1
+     * WHERE year(documentobject_1.createdDate) = :comparisonParameter_0
      * <p>
      * Additionally the comparisonParameter_0 parameter value should be:
-     *   2020/000234-23
+     *   2020
      */
     @Test
     @Transactional
@@ -195,8 +197,9 @@ public class TestOData {
         String yearQuery = "arkivstruktur/dokumentobjekt?$filter=" +
                 "year(opprettetDato) eq 2020";
         Query query = oDataService.convertODataToHQL(yearQuery, "");
-        String hql = "FROM DocumentObject AS documentobject_1 WHERE year" +
-                "(documentobject_1.createdDate) = :comparisonParameter_0";
+        String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
+                "documentobject_1 WHERE " +
+                "year(documentobject_1.createdDate) = :comparisonParameter_0";
         assertEquals(query.getParameterValue("comparisonParameter_0"),
                 2020);
         assertEquals(query.getQueryString(), hql);
@@ -213,7 +216,7 @@ public class TestOData {
      * month(opprettetDato) lt 9
      * <p>
      * Expected HQL:
-     * FROM DocumentObject AS documentobject_1
+     * SELECT documentobject_1 FROM DocumentObject AS documentobject_1
      * WHERE
      *   month(documentobject_1.createdDate) > :comparisonParameter_0 and
      *   month(documentobject_1.createdDate) < :comparisonParameter_1
@@ -230,7 +233,8 @@ public class TestOData {
         String yearQuery = "arkivstruktur/dokumentobjekt?$filter=" +
                 "month(opprettetDato) gt 5 and month(opprettetDato) lt 9";
         Query query = oDataService.convertODataToHQL(yearQuery, "");
-        String hql = "FROM DocumentObject AS documentobject_1 WHERE " +
+        String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
+                "documentobject_1 WHERE " +
                 "month(documentobject_1.createdDate) > :comparisonParameter_0" +
                 " and " +
                 "month(documentobject_1.createdDate) < :comparisonParameter_1";
@@ -250,7 +254,7 @@ public class TestOData {
      * month(opprettetDato) lt 9
      * <p>
      * Expected HQL:
-     * FROM DocumentObject AS documentobject_1
+     * SELECT documentobject_1 FROM DocumentObject AS documentobject_1
      *   JOIN
      *      documentobject_1.referenceDocumentDescription AS documentdescription_1
      * WHERE
@@ -270,7 +274,8 @@ public class TestOData {
                 "month(dokumentbeskrivelse/opprettetDato) gt 5 and " +
                 "month(opprettetDato) le 9";
         Query query = oDataService.convertODataToHQL(yearQuery, "");
-        String hql = "FROM DocumentObject AS documentobject_1 JOIN " +
+        String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
+                "documentobject_1 JOIN " +
                 "documentobject_1.referenceDocumentDescription AS " +
                 "documentdescription_1 WHERE " +
                 "month(documentdescription_1.createdDate) " +
@@ -291,7 +296,7 @@ public class TestOData {
      * arkivstruktur/dokumentobjekt?$filter=day(opprettetDato) ge 4
      * <p>
      * Expected HQL:
-     * FROM DocumentObject AS documentobject_1
+     * SELECT documentobject_1 FROM DocumentObject AS documentobject_1
      * WHERE
      *    day(documentobject_1.createdDate) > :comparisonParameter_0
      * <p>
@@ -305,8 +310,9 @@ public class TestOData {
         String yearQuery = "arkivstruktur/dokumentobjekt?$filter=" +
                 "day(opprettetDato) ge 4";
         Query query = oDataService.convertODataToHQL(yearQuery, "");
-        String hql = "FROM DocumentObject AS documentobject_1 WHERE day" +
-                "(documentobject_1.createdDate) >= :comparisonParameter_0";
+        String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
+                "documentobject_1 WHERE " +
+                "day(documentobject_1.createdDate) >= :comparisonParameter_0";
         assertEquals(query.getParameterValue("comparisonParameter_0"), 4);
         assertEquals(query.getQueryString(), hql);
     }
@@ -319,7 +325,7 @@ public class TestOData {
      * ODATA Input:
      * arkivstruktur/arkivskaper?$filter=contains(tittel, 'Eksempel kommune')
      * Expected HQL:
-     * FROM FondsCreator AS fondscreator_1
+     * SELECT fondscreator_1 FROM FondsCreator AS fondscreator_1
      * WHERE fondscreator_1.title like :containsParameter_0
      * Additionally the parameter value should be:
      *    %Eksempel kommune%
@@ -329,7 +335,8 @@ public class TestOData {
     public void shouldReturnValidHQLContainsQuotedString() {
         String containsQuery = "arkivstruktur/arkivskaper?$filter=contains" +
                 "(arkivskaperID, 'Eksempel kommune')";
-        String hql = "FROM FondsCreator AS fondscreator_1 WHERE " +
+        String hql = "SELECT fondscreator_1 FROM FondsCreator AS " +
+                "fondscreator_1 WHERE " +
                 "fondscreator_1.fondsCreatorId like :containsParameter_0";
         Query query = oDataService.convertODataToHQL(containsQuery, "");
         assertEquals(query.getParameterValue("containsParameter_0"),
@@ -346,7 +353,7 @@ public class TestOData {
      * ODATA Input:
      * arkivstruktur/arkiv?$filter=contains(tittel, 'Jennifer O''Malley')
      * Expected HQL:
-     * FROM 
+     * SELECT fonds_1 FROM
      *    Fonds AS fonds_1
      * WHERE 
      *   fonds_1.title like :containsParameter_0";
@@ -358,7 +365,7 @@ public class TestOData {
     public void shouldReturnValidHQLContainsQuotedStringWithEscapedQuote() {
         String FILTER_CONTAINS = "arkivstruktur/arkiv?$filter=contains(tittel, "
                 + "'Jennifer O''Malley')";
-        String SQL_EQUAL_HQL = "FROM Fonds AS fonds_1 " +
+        String SQL_EQUAL_HQL = "SELECT fonds_1 FROM Fonds AS fonds_1 " +
                 "WHERE fonds_1.title like :containsParameter_0";
         Query query = oDataService.convertODataToHQL(FILTER_CONTAINS, "");
         String parameter = (String) query.getParameterValue("containsParameter_0");
@@ -375,7 +382,7 @@ public class TestOData {
      * ODATA Input:
      * arkivstruktur/mappe?$filter=klasse/klasseID eq '12/2'
      * Expected HQL:
-     * FROM File AS file_1
+     * SELECT file_1 FROM File AS file_1
      * JOIN
      * file_1.referenceClass AS class_1
      * WHERE
@@ -389,7 +396,8 @@ public class TestOData {
         String joinQuery = "arkivstruktur/mappe?$filter=" +
                 "klasse/klasseID eq '12/2'";
         Query query = oDataService.convertODataToHQL(joinQuery, "");
-        String hqlJoin = "FROM File AS file_1 JOIN file_1.referenceClass AS " +
+        String hqlJoin = "SELECT file_1 FROM File AS file_1 JOIN file_1" +
+                ".referenceClass AS " +
                 "class_1 WHERE class_1.classId = :comparisonParameter_0";
         assertEquals(query.getParameterValue("comparisonParameter_0"), "12/2");
         assertEquals(query.getQueryString(), hqlJoin);
@@ -403,7 +411,7 @@ public class TestOData {
      * ODATA Input:
      * arkivstruktur/mappe?$filter=contains(klasse/klasseID, '12/2')
      * Expected HQL:
-     * FROM File AS file_1
+     * SELECT file_1 FROM File AS file_1
      * JOIN file_1.referenceClass AS class_1
      * WHERE
      * class_1.classId = :containsParameter_0
@@ -416,7 +424,7 @@ public class TestOData {
         String joinQuery = "arkivstruktur/mappe?$filter=" +
                 "contains(klasse/klasseID, '12/2')";
         Query query = oDataService.convertODataToHQL(joinQuery, "");
-        String hqlJoin = "FROM File AS file_1 JOIN " +
+        String hqlJoin = "SELECT file_1 FROM File AS file_1 JOIN " +
                 "file_1.referenceClass AS class_1 " +
                 "WHERE " +
                 "class_1.classId like :containsParameter_0";
@@ -441,8 +449,7 @@ public class TestOData {
      * arkivstruktur/mappe?$filter=
      * contains(foedselsnummer/foedselsnummer, '050282')
      * Expected HQL:
-     * FROM
-     * File AS file_1
+     * SELECT file_1 FROM File AS file_1
      * JOIN
      * file_1.referenceSocialSecurityNumber AS socialSecurityNumber
      * WHERE
@@ -456,7 +463,7 @@ public class TestOData {
         String joinQuery = "arkivstruktur/mappe?$filter=" +
                 "contains(foedselsnummer/foedselsnummer, '050282')";
         Query query = oDataService.convertODataToHQL(joinQuery, "");
-        String hqlJoin = "FROM File AS file_1 JOIN " +
+        String hqlJoin = "SELECT file_1 FROM File AS file_1 JOIN " +
                 "file_1.referenceSocialSecurityNumber AS socialSecurityNumber" +
                 "WHERE " +
                 "class_1.classId like : containsParameter_0";
@@ -474,8 +481,7 @@ public class TestOData {
      * arkivstruktur/mappe?$filter=startswith(
      * klasse/klassifikasjonssystem/tittel, 'Gårds- og bruksnummer')
      * Expected HQL:
-     * FROM
-     * File AS file_1
+     * SELECT file_1 FROM File AS file_1
      * JOIN file_1.referenceClass AS class_1
      * JOIN class_1.referenceClassificationSystem AS classificationsystem_1
      * WHERE
@@ -490,7 +496,8 @@ public class TestOData {
                 "startswith(klasse/klassifikasjonssystem/tittel, " +
                 "'Gårds- og bruksnummer')";
         Query query = oDataService.convertODataToHQL(joinQuery, "");
-        String hqlJoin = "FROM File AS file_1 JOIN file_1.referenceClass AS " +
+        String hqlJoin = "SELECT file_1 FROM File AS file_1 " +
+                "JOIN file_1.referenceClass AS " +
                 "class_1 JOIN class_1.referenceClassificationSystem AS " +
                 "classificationsystem_1 WHERE classificationsystem_1.title " +
                 "like :startsWithParameter_0";
@@ -510,8 +517,7 @@ public class TestOData {
      * arkivstruktur/mappe?$filter=klasse/klasseID eq '12/2' and
      * contains(tittel, 'Oslo') and registrering/tittel ne 'Brev fra dept.'
      * Expected HQL:
-     * FROM
-     * File AS file_1
+     * SELECT file_1 FROM File AS file_1
      * JOIN
      * file_1.referenceClass AS class_1
      * JOIN file_1.referenceRecord AS record_1
@@ -534,8 +540,9 @@ public class TestOData {
                 "klasse/klasseID eq '12/2' and contains(tittel, 'Oslo') and " +
                 "registrering/tittel ne 'Brev fra dept.'";
         Query query = oDataService.convertODataToHQL(joinQuery, "");
-        String hqlJoin = "FROM File AS file_1 JOIN file_1.referenceClass AS " +
-                "class_1 JOIN file_1.referenceRecord AS record_1 WHERE " +
+        String hqlJoin = "SELECT file_1 FROM File AS file_1 " +
+                "JOIN file_1.referenceClass AS class_1 " +
+                "JOIN file_1.referenceRecord AS record_1 WHERE " +
                 "class_1.classId = :comparisonParameter_0 and " +
                 "file_1.title like :containsParameter_0 and " +
                 "record_1.title != :comparisonParameter_1";
