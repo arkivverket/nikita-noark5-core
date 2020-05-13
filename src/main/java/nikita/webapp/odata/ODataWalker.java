@@ -162,8 +162,6 @@ public abstract class ODataWalker
                             ComparisonOperatorContext.class),
                     getValue(ctx, IntegerValueContext.class));
         }
-
-
     }
 
     /**

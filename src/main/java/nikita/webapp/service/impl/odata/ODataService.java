@@ -6,7 +6,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.odata.NikitaObjectWorker;
 import nikita.webapp.odata.ODataRefHandler;
-import nikita.webapp.odata.ODataToHQLWalker;
+import nikita.webapp.odata.ODataToHQL;
 import nikita.webapp.odata.base.ODataLexer;
 import nikita.webapp.odata.base.ODataParser;
 import nikita.webapp.odata.model.Ref;
@@ -211,8 +211,8 @@ public class ODataService
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // Make the HQL Statement
-        ODataToHQLWalker hqlWalker = new
-                ODataToHQLWalker(dmlStatementType);
+        ODataToHQL hqlWalker = new
+                ODataToHQL(dmlStatementType);
         walker.walk(hqlWalker, tree);
 
         Matcher matcher = pairRegex.matcher(request);
@@ -230,17 +230,17 @@ public class ODataService
     }
 
     public Ref retrieveRefValues(String request) {
-        ODataToHQLWalker hqlWalker = getWalker(request);
+        ODataToHQL hqlWalker = getWalker(request);
         return hqlWalker.getRef();
     }
 
-    private ODataToHQLWalker getWalker(String request) {
+    private ODataToHQL getWalker(String request) {
         CommonTokenStream tokens =
                 new CommonTokenStream(new ODataLexer(fromString(request)));
         ODataParser parser = new ODataParser(tokens);
         ParseTreeWalker walker = new ParseTreeWalker();
         // Make the HQL Statement
-        ODataToHQLWalker hqlWalker = new ODataToHQLWalker();
+        ODataToHQL hqlWalker = new ODataToHQL();
         walker.walk(hqlWalker, parser.referenceStatement());
         return hqlWalker;
     }
@@ -252,8 +252,8 @@ public class ODataService
         ParseTreeWalker walker = new ParseTreeWalker();
 
         // Make the HQL Statement
-        ODataToHQLWalker hqlWalker = new
-                ODataToHQLWalker(dmlStatementType);
+        ODataToHQL hqlWalker = new
+                ODataToHQL(dmlStatementType);
         walker.walk(hqlWalker, parser.referenceStatement());
 
         Matcher matcher = pairRegex.matcher(request);

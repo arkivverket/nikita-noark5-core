@@ -2,7 +2,6 @@ package nikita.webapp.odata;
 
 
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
-import nikita.webapp.odata.model.HQLStatement;
 import nikita.webapp.odata.model.Ref;
 import nikita.webapp.odata.model.RefBuilder;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 import static nikita.common.config.ODataConstants.*;
 
 /**
- * Extending ODataWalker to handle events so we can convert OData filter
+ * Extending ODataWalker to handle events to convert OData filter
  * command to SQL.
  */
 public class ODataToHQL
@@ -39,17 +38,17 @@ public class ODataToHQL
     private static final Logger logger =
             LoggerFactory.getLogger(ODataToHQL.class);
 
-    private final HQLStatement statement;
+    private final HQLStatementBuilder statement;
     private Ref ref;
     private Map<String, Class<?>> entityMap = new HashMap<>();
 
     public ODataToHQL(String dmlStatementType) {
-        statement = new HQLStatement(dmlStatementType);
+        statement = new HQLStatementBuilder(dmlStatementType);
         constructEntityList();
     }
 
     public ODataToHQL() {
-        statement = new HQLStatement();
+        statement = new HQLStatementBuilder();
     }
 
     /**

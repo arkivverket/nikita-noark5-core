@@ -1,293 +1,335 @@
 package nikita.webapp.odata;
 
-import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static nikita.common.config.ODataConstants.*;
-import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameDatabase;
-import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameObject;
-
 /**
- * HQLStatementBuilder
+ * Methods like addValue, addAttribute, addComparator (that call addWithSpace)
+ * are there for readability. We may decide to replace them with addWithSpace
+ * later, but currently use them to make things a little clearer during
+ * development.
  * <p>
- * Handle the process of building an HQL statement. The potential statement
- * is derived for a number of parts. The select part is straight forward. The
- * where part is an ArrayList of various clauses that are currently joined
- * together with an 'and'. We need a better way to handle this. But this is
- * experimental, prototyping the solution as we go along.
  * <p>
- * Note. When implementing paging, make sure there is a sort order. Remember
- * the fetch order is unpredictable.
+ * Some consideration of note:
+ * Avoid problem when alias of entity is a reserved HQL keyword e.g "class" or
+ * "order".  To achieve this a "_1" is added to the alias of an an entity
+ * entity.toLowerCase()+"_1".
  */
-
 public class HQLStatementBuilder {
 
-    private final Logger logger =
-            LoggerFactory.getLogger(HQLStatementBuilder.class);
+    private final String COMPARISON_PARAMETER = "comparisonParameter_";
+    // Parameter values
+    private final Map<String, String> startsWithParameters = new HashMap<>();
+    private final Map<String, String> endsWithParameters = new HashMap<>();
+    private final Map<String, String> containsParameters = new HashMap<>();
+    private final Map<String, Object> comparisonParameters = new HashMap<>();
 
-    private final StringBuilder statement;
-    private final ArrayList<String> whereList = new ArrayList<>();
+    // query options
+    // List of order by options
     private final Map<String, String> orderByMap = new HashMap<>();
-    private final Map<String, String> startsWithMap = new HashMap<>();
-    private final Map<String, String> endsWithMap = new HashMap<>();
-    private final Map<String, String> containsMap = new HashMap<>();
 
-    // Setting a hard limit of 1000 unless overridden
-    private final AtomicInteger limitHowMany = new AtomicInteger(1000);
-    // Always start at offset 0 unless overridden
-    private final AtomicInteger limitOffset = new AtomicInteger(0);
+    private final StringBuilder select = new StringBuilder();
+    private final StringBuilder from = new StringBuilder();
+    private final StringBuilder where = new StringBuilder();
+    private final StringBuilder orderby = new StringBuilder();
+
+    // Foreign key reference
     private String parentSystemId = "";
+    // Setting a hard limit of 1000 unless overridden
+    private AtomicInteger limitHowMany = new AtomicInteger(1000);
+    // Always start at offset 0 unless overridden
+    private AtomicInteger limitOffset = new AtomicInteger(0);
+
+    private final Set<String> entityList = new TreeSet<>();
+    private String fromEntity = "";
+    private String fromEntityAlias = "";
 
     public HQLStatementBuilder() {
-        statement = new StringBuilder();
     }
 
     /**
-     * Allows you to specify if the HQL statement you want to build is a
-     * 'delete' statement. Hibernate doesn't seem to want 'select' here. Only
-     * a delete is required if you intend to delete.
+     * Construct HQLStatementBuilder object identifying the statement type
      *
-     * @param dmlStatementType can be delete, statement is not required
+     * @param statementType Can be delete. insert is not required
      */
-    public HQLStatementBuilder(String dmlStatementType) {
-        statement = new StringBuilder();
-        if (null != dmlStatementType) {
-            statement.append(dmlStatementType);
+    public HQLStatementBuilder(String statementType) {
+        if (!statementType.isEmpty()) {
+            select.append(statementType);
+            select.append(" ");
         }
     }
 
+    public void addQueryEntity(String fromEntity) {
+        this.fromEntity = fromEntity;
+        this.fromEntityAlias = fromEntity.toLowerCase() + "_1";
+    }
+
+    public void addFromWithForeignKey(String parentEntity, String fromEntity,
+                                      String systemId) {
+        where.append(" where reference");
+        where.append(parentEntity);
+        where.append(" = :parentSystemId)");
+        where.append("'");
+        parentSystemId = systemId;
+        addQueryEntity(fromEntity);
+    }
+
+    public void addStartsWith(String entityAlias, String attribute,
+                              String value) {
+        String STARTS_WITH_PARAMETER = "startsWithParameter_";
+        String parameter = STARTS_WITH_PARAMETER + startsWithParameters.size();
+        value = desanitiseValue(value);
+        startsWithParameters.put(parameter, value);
+        addAttribute(entityAlias + "." + attribute);
+        addComparator("like");
+        addValue(":" + parameter);
+    }
+
+    public void addEndsWith(String entityAlias, String attribute,
+                            String value) {
+        String ENDS_WITH_PARAMETER = "endsWithParameter_";
+        String parameter = ENDS_WITH_PARAMETER + endsWithParameters.size();
+        value = desanitiseValue(value);
+        endsWithParameters.put(parameter, value);
+        addAttribute(entityAlias + "." + attribute);
+        addComparator("like");
+        addValue(":" + parameter);
+    }
+
+    public void addContains(String entityAlias, String attribute,
+                            String value) {
+        String CONTAINS_PARAMETER = "containsParameter_";
+        String parameter = CONTAINS_PARAMETER + containsParameters.size();
+        value = desanitiseValue(value);
+        containsParameters.put(parameter, value);
+        addAttribute(entityAlias + "." + attribute);
+        addComparator("like");
+        addValue(":" + parameter);
+    }
+
+    public void addCompareValue(String aliasAndAttribute, String comparator,
+                                String value) {
+        String parameter = COMPARISON_PARAMETER + comparisonParameters.size();
+        comparisonParameters.put(parameter, desanitiseValue(value));
+        addAttribute(aliasAndAttribute);
+        addComparator(comparator);
+        addValue(":" + parameter);
+    }
+
     /**
-     * Currently the parser is passing in a value with a single quote.
+     * add a function to the where clause
      * <p>
-     * .... $filter=tittel eq 'Oppføring av bygg på eksempelvei 1' ....
-     * <p>
-     * attribute = tittel
-     * comparator = eq
-     * value = 'Oppføring av bygg på eksempelvei 1'
+     * Note the aliasAndAttribute parameter contains both the alias as well
+     * as the attribute with a "." between them
      *
-     * @param attribute  Noark attribute in english e.g. title (must be
-     *                   translated before passing in)
-     * @param comparator A comparator e.g. eq, nq, lt
-     * @param value      the search query
+     * @param function          function to use e.g. year or month
+     * @param aliasAndAttribute e.g file.createdDate
+     * @param comparator        The comparator operator
+     * @param value             The value to compare against
      */
-    public void addEqualsWhere(String attribute, String comparator,
-                               String value) {
-        whereList.add(attribute + translateComparator(comparator) + value);
+    public void addCompareValue(String function, String aliasAndAttribute,
+                                String comparator, String value) {
+        String parameter = COMPARISON_PARAMETER + comparisonParameters.size();
+        comparisonParameters.put(parameter, Integer.parseInt(value));
+        where.append(function);
+        where.append("(");
+        where.append(aliasAndAttribute);
+        where.append(") ");
+        addComparator(comparator);
+        addValue(":" + parameter);
     }
 
-    public void addStartsWith(String attribute, String value) {
-        String parameter = ":startsWithParameter_" + startsWithMap.size();
-        startsWithMap.put(parameter, value);
-        whereList.add(" " + getInternalNameAttribute(attribute) + " like " +
-                parameter + " ");
+    public void addLeftBracket() {
+        where.append("( ");
     }
 
-    public void addContains(String attribute, String value) {
-        String parameter = ":containsParameter_" + containsMap.size();
-        containsMap.put(parameter, value);
-        whereList.add(" " + getInternalNameAttribute(attribute) + " like " +
-                parameter + " ");
+    public void addRightBracket() {
+        where.append(" ) ");
     }
 
-    public void addEndsWith(String attribute, String value) {
-        String parameter = ":endsWithParameter_" + endsWithMap.size();
-        endsWithMap.put(parameter, value);
-        whereList.add(" " + getInternalNameAttribute(attribute) + " like " +
-                parameter + " ");
+    public void addOr() {
+        where.append("or ");
     }
 
-    public void addWhere(String where) {
-        whereList.add(where);
+    public void addAnd() {
+        where.append("and ");
+    }
+
+    public void addIsNull() {
+        where.append("is null ");
+    }
+
+
+    public void addIsNotNull() {
+        where.append("is not null ");
+    }
+
+    private void addValue(String value) {
+        addWithSpace(value);
+    }
+
+    public void addAttribute(String attribute) {
+        addWithSpace(attribute);
+    }
+
+    public void addAliasAndAttribute(String entityAlias, String attribute) {
+        addWithSpace(entityAlias + "." + attribute);
+    }
+
+    public void addComparator(String comparator) {
+        addWithSpace(comparator);
+    }
+
+    public void addCompare(String aliasAndAttribute, String comparator,
+                           String value) {
+        String parameter = COMPARISON_PARAMETER + comparisonParameters.size();
+        comparisonParameters.put(parameter, desanitiseValue(value));
+        addAttribute(aliasAndAttribute);
+        addComparator(comparator);
+        addValue(":" + parameter);
+    }
+
+    private void addWithSpace(String value) {
+        where.append(value);
+        where.append(" ");
+    }
+
+    // Methods relating to query options top, skip, orderby
+    public void setLimitHowMany(AtomicInteger limitHowMany) {
+        this.limitHowMany = limitHowMany;
+    }
+
+    public void setLimitOffset(AtomicInteger limitOffset) {
+        this.limitOffset = limitOffset;
     }
 
     public void addOrderBy(String attribute, String sortOrder) {
         orderByMap.put(attribute, sortOrder);
     }
 
-    public void addLimitby_skip(Integer skip) {
-        limitOffset.set(skip);
-    }
+    // Methods relating to generating and returning the query
+    // Remove the trailing space if it is there
+    private String processQuery() {
 
-    public void addLimitby_top(Integer top) {
-        limitHowMany.set(top);
-    }
-
-    public Query buildHQLStatement(Session session) {
-        // take care of the statement part
-        StringBuffer hqlStatement = new StringBuffer(statement);
-
-        // take care of the where part
-        // Coding with 'and'. Will figure out how to handle this properly later
-        // We always start limiting based on logged in person, so we have to
-        // add an 'and' here.
-
-        for (int i = 0; i < whereList.size(); i++) {
-            if (i != 0) {
-                hqlStatement.append(" and ");
+        // Add orderBy values
+        if (orderByMap.size() > 0) {
+            StringJoiner join = new StringJoiner(",");
+            for (Map.Entry entry : orderByMap.entrySet()) {
+                join.add(entry.getKey() + " " + entry.getValue());
             }
-            hqlStatement.append(whereList.get(i));
-            hqlStatement.append(" ");
+            orderby.append(join.toString());
         }
 
+        // Add list of entities in query
+        if (entityList.size() > 0) {
+            StringJoiner join = new StringJoiner(",");
+            Iterator<String> it = entityList.iterator();
+            while (it.hasNext()) {
+                join.add(it.next());
+            }
+            from.insert(0, join.toString() + " ");
+        }
 
-        hqlStatement.append(" ");
-        Query query = session.createQuery(hqlStatement.toString());
-        if (!parentSystemId.equals("")) {
+        // For JOIN queries it is important to state the entity you want to
+        // retrieve, otherwise you get a List of Objects with all entities that
+        // are part of the JOIN.
+        if (select.length() < 1) {
+            select.append("SELECT ");
+            select.append(fromEntityAlias);
+        }
+
+        String query = select.toString() + " FROM " + fromEntity + " AS " +
+                fromEntityAlias + " " + from.toString();
+
+        if (where.length() > 0) {
+            query += "WHERE " + where.toString();
+        }
+        if (orderby.length() > 0) {
+            query += orderby.toString();
+        }
+
+        return query.stripTrailing().stripLeading();
+    }
+
+    public String getQuery() {
+        return processQuery();
+    }
+
+    public Query getQuery(Session session) {
+        Query query = session.createQuery(processQuery());
+
+        if (!parentSystemId.isEmpty()) {
             query.setParameter("parentId", parentSystemId);
         }
 
         // Resolve all startsWith parameters
-        for (Map.Entry entry : startsWithMap.entrySet()) {
+        for (Map.Entry entry : startsWithParameters.entrySet()) {
             query.setParameter(entry.getKey().toString(),
                     entry.getValue() + "%");
         }
 
+        // Resolve all startsWith parameters
+        for (Map.Entry entry : comparisonParameters.entrySet()) {
+            query.setParameter(entry.getKey().toString(), entry.getValue());
+        }
+
         // Resolve all contains parameters
-        for (Map.Entry entry : containsMap.entrySet()) {
+        for (Map.Entry entry : containsParameters.entrySet()) {
             query.setParameter(entry.getKey().toString(),
                     "%" + entry.getValue() + "%");
         }
 
         // Resolve all endsWith parameters
-        for (Map.Entry entry : endsWithMap.entrySet()) {
+        for (Map.Entry entry : endsWithParameters.entrySet()) {
             query.setParameter(entry.getKey().toString(),
                     "%" + entry.getValue());
         }
 
-        // take care of the orderBy part
-        boolean firstOrderBy = false;
-        for (Map.Entry entry : orderByMap.entrySet()) {
-            if (firstOrderBy) {
-                hqlStatement.append(", ");
-            } else {
-                hqlStatement.append(" order by ");
-                firstOrderBy = true;
-            }
-            hqlStatement.append(entry.getKey() + " " + entry.getValue());
-        }
-
         query.setFirstResult(limitOffset.get());
         query.setMaxResults(limitHowMany.get());
-        logger.trace("HQL Query string is " + query.getQueryString());
         return query;
     }
 
-    /**
-     * To avoid potential sql injection problems, the systemId is added to the
-     * query using query.setParameter(). This means we need the value at a
-     * different time than is nice, code wise, when parsing. So the value is
-     * added here. Note: this really is done to avoid analysis tools
-     * falsely telling us that we have an sql injection problem. If the value
-     * here isn't a UUID, it won't get parsed and it won't end up being
-     * handled in this class.
-     *
-     * @param systemId
-     */
-    public void setParentIdPrimaryKey(String systemId) {
-        parentSystemId = systemId;
-    }
-
-    public void referenceStatement(
-            String fromEntity, String fromSystemId, String entity,
-            String toEntity, String toSystemId) {
-
-    }
-
-    /**
-     * getInternalNameAttribute
-     * <p>
-     * Helper mechanism to convert Norwegian entity / attribute names to
-     * English as English is used in classes and tables. Interacting with the
-     * core is done in Norwegian but things have then to be translated to
-     * English naming conventions.
-     * <p>
-     * Note, this will return the name of the database column
-     * <p>
-     * If we don't have a corresponding object, we choose just to return the
-     * original object. This should force a database query error and expose
-     * any missing objects. This strategy is OK in development, but later we
-     * need a better way of handling it.
-     *
-     * @param norwegianName The name in Norwegian
-     * @return the English version of the Norwegian name if it exists, otherwise
-     * the original Norwegian name.
-     */
-    protected String getInternalNameAttribute(String norwegianName) {
-        String englishName = getEnglishNameDatabase(norwegianName);
-        if (englishName == null)
-            return norwegianName;
-        else
-            return englishName;
-    }
-
-    /**
-     * getInternalNameObject
-     * <p>
-     * Helper mechanism to convert Norwegian entity / attribute names to
-     * English as English is used in classes and tables. Interacting with the
-     * core is done in Norwegian but things have then to be translated to
-     * English naming conventions.
-     * <p>
-     * Note, this will return the name of the class variable
-     * <p>
-     * If we don't have a corresponding object, we choose just to return the
-     * original object. This should force a database query error and expose
-     * any missing objects. This strategy is OK in development, but later we
-     * need a better way of handling it.
-     *
-     * @param norwegianName The name in Norwegian
-     * @return the English version of the Norwegian name if it exists, otherwise
-     * the original Norwegian name.
-     */
-    protected String getInternalNameObject(String norwegianName) {
-        String englishName = getEnglishNameObject(norwegianName);
-        if (englishName == null)
-            return norwegianName;
-        else
-            return englishName;
-    }
-
-    /**
-     * Convert a OData comparator to a HQL comparator
-     * - "eq" -> "="
-     * - "gt" -> ">"
-     * - "ge" -> ">="
-     * - "lt" -> "<"
-     * - "le" -> "<="
-     * - "ne" -> "!="
-     *
-     * @param comparator The OData comparator
-     * @return comparator used in HQL
-     */
-    private String translateComparator(String comparator)
-            throws NikitaMalformedInputDataException {
-
-        switch (comparator) {
-            case ODATA_EQ:
-                return HQL_EQ;
-            case ODATA_GT:
-                return HQL_GT;
-            case ODATA_GE:
-                return HQL_GE;
-            case ODATA_LT:
-                return HQL_LT;
-            case ODATA_LE:
-                return HQL_LE;
-            case ODATA_NE:
-                return HQL_NE;
+    protected String desanitiseValue(String value) {
+        if (quotedString(value)) {
+            value = dequote(value);
         }
-        throw new NikitaMalformedInputDataException(
-                "Unrecognised comparator used in OData query (" +
-                        comparator + ")");
+        return unescape(value);
     }
 
+    private String unescape(String original) {
+        String unescaped = original.replaceAll("\'\'", "'");
+        return unescaped;
+    }
 
+    private boolean quotedString(String value) {
+        if ((value.charAt(0) == '\'' &&
+                value.charAt(value.length() - 1) == '\'')) {
+            return true;
+        }
+        return false;
+    }
+
+    private String dequote(String original) {
+        if (original != null && original.length() > 1) {
+            if (quotedString(original)) {
+                return original.substring(1, original.length() - 1);
+            }
+        }
+        return original;
+    }
+
+    public void addEntityToEntityJoin(String fromEntity, String foreignKey,
+                                      String toEntity) {
+        from.append("JOIN ");
+        from.append(fromEntity.toLowerCase() + "_1");
+        from.append(".");
+        from.append(foreignKey);
+        from.append(" AS ");
+        from.append(toEntity.toLowerCase() + "_1");
+        from.append(" ");
+    }
 }
