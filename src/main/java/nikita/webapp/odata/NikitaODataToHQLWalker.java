@@ -96,7 +96,7 @@ public class NikitaODataToHQLWalker
      * @param parentEntity the parent entity e.g. series->casefile query
      *                     then series is the parent entity.
      * @param entity       the entity to retreve e.g. series->casefile query
-     *                     *                       then casefile is the entity.
+     *                     then casefile is the entity.
      * @param systemId     systemId of the parent entity
      */
     @Override

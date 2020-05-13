@@ -133,7 +133,7 @@ public class HQLStatement {
 
     public void addCompareValue(String aliasAndAttribute, String comparator,
                                 String value) {
-        String parameter = CONTAINS_PARAMETER + containsParameters.size();
+        String parameter = COMPARISON_PARAMETER + comparisonParameters.size();
         comparisonParameters.put(parameter, desanitiseValue(value));
         addAttribute(aliasAndAttribute);
         addComparator(comparator);
@@ -206,7 +206,7 @@ public class HQLStatement {
 
     public void addCompare(String aliasAndAttribute, String comparator,
                            String value) {
-        String parameter = CONTAINS_PARAMETER + containsParameters.size();
+        String parameter = COMPARISON_PARAMETER + comparisonParameters.size();
         comparisonParameters.put(parameter, desanitiseValue(value));
         addAttribute(aliasAndAttribute);
         addComparator(comparator);
@@ -252,6 +252,14 @@ public class HQLStatement {
                 join.add(it.next());
             }
             from.insert(0, join.toString() + " ");
+        }
+
+        // For JOIN queries it is important to state the entity you want to
+        // retrieve, otherwise you get a List of Objects with all entities that
+        // are part of the JOIN.
+        if (select.length() < 1) {
+            select.append("SELECT ");
+            select.append(this.entity.toLowerCase() + "_1");
         }
 
         String query = select.toString() + " FROM " +
