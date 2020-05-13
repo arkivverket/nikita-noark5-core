@@ -13,7 +13,7 @@ import static nikita.common.config.ODataConstants.*;
  * command to SQL.
  */
 
-public class ODataToSQLWalker {
+public class ODataToSQL {
     // There is not time right now to get this code also in place. The 
     // concept is definitely nice, to convert OData to HQL, SQL and ES, but HQL
     // is all we require at the moment. Leaving it in the repo commented out
@@ -21,12 +21,12 @@ public class ODataToSQLWalker {
     // now and again
 
     private static final Logger logger =
-            LoggerFactory.getLogger(ODataToSQLWalker.class);
+            LoggerFactory.getLogger(ODataToSQL.class);
 
     private SQLStatementBuilder sqlStatementBuilder;
     private Map<String, String> comparatorMap;
 
-    public ODataToSQLWalker() {
+    public ODataToSQL() {
         comparatorMap = new HashMap<>();
         comparatorMap.put(ODATA_EQ, SQL_EQ);
         comparatorMap.put(ODATA_GT, SQL_GT);

@@ -18,14 +18,14 @@ import static nikita.common.config.ESConstants.*;
  * MAY NOT DO ANYTHING.
  */
 
-public class ODataToESWalker {
+public class ODataToES {
     // There is not time right now to get this code also in place. The
     // concept is definitely nice, to convert OData to HQL, SQL and ES, but HQL
     // is all we require at the moment. Leaving it in the repo commented out
     // so the we may try and piece it together when we have some extra time
     // now and again
     private static final Logger logger =
-            LoggerFactory.getLogger(ODataToESWalker.class);
+            LoggerFactory.getLogger(ODataToES.class);
 
 
     private JSONObject query;
