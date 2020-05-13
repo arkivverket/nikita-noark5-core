@@ -32,23 +32,23 @@ import static nikita.common.config.ODataConstants.*;
  * Extending ODataWalker to handle events so we can convert OData filter
  * command to SQL.
  */
-public class NikitaODataToHQLWalker
+public class ODataToHQLWalker
         extends ODataWalker
         implements IODataWalker {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(NikitaODataToHQLWalker.class);
+            LoggerFactory.getLogger(ODataToHQLWalker.class);
 
     private final HQLStatement statement;
     private Ref ref;
     private Map<String, Class<?>> entityMap = new HashMap<>();
 
-    public NikitaODataToHQLWalker(String dmlStatementType) {
+    public ODataToHQLWalker(String dmlStatementType) {
         statement = new HQLStatement(dmlStatementType);
         constructEntityList();
     }
 
-    public NikitaODataToHQLWalker() {
+    public ODataToHQLWalker() {
         statement = new HQLStatement();
     }
 
