@@ -123,7 +123,8 @@ public class NikitaODataToHQLWalker
      * attribute (in this case 'tittel'), the comparator (in this case eq) and
      * value (in this case 'hello').
      *
-     * @param attribute  The attribute/column you wish to filter on
+     * @param aliasAndAttribute The alias and attribute you wish to
+     *                          filter on
      * @param comparator The type of comparison you want to undertake e.g eq,
      *                   lt etc
      * @param value      The value you wish to filter on
@@ -176,10 +177,6 @@ public class NikitaODataToHQLWalker
     }
 
     // from File file where
-    // XXXX
-    // IN (select systemId from Class class where class.referenceClassificationSystem IN
-    //   ( file.referenceClass IN (select systemId from Class class where
-    //  class.title = 'Oslo') ) file.referenceClass IN (select systemId from Class class where class.title = 'Oslo')
     @Override
     public void addEntityToEntityJoin(String fromEntity, String toEntity) {
         String foreignKey = getForeignKey(fromEntity, toEntity);
@@ -356,6 +353,12 @@ public class NikitaODataToHQLWalker
             }
         }
         return foreignKeyName;
+    }
+
+    public Class getClass(String className) {
+        return Optional.ofNullable(entityMap.get(className))
+                .orElseThrow(() -> new BadRequestException(
+                        "Unsupported Noark class: " + className));
     }
 
     public String getPrimaryKey(String className) {
