@@ -34,6 +34,14 @@ an instance of `HQLStatementBuilder` that can be used to construct the HQL comma
 
 There are partial implementations for SQL and ElasticSearch query language, but these are not under active development. 
 
+
+https://docs.microsoft.com/en-us/aspnet/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/complex-type-inheritance-in-odata-v4
+https://github.com/simple-odata-client/Simple.OData.Client/issues/622
+https://docs.microsoft.com/en-us/odata/webapi/abstract-entity-types
+https://me.zhuoyue.me/2016/10/28/odata-v4-web-api/
+https://www.odata.org/getting-started/basic-tutorial/
+https://docs.microsoft.com/en-us/dotnet/api/overview/odata-dotnet/
+
 ## Handling IN queries
 
 The API spec identifies the following query as a valid query it should be possible to search with:

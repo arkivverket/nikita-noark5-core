@@ -1,9 +1,7 @@
 package nikita.webapp.odata;
 
-
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
-import nikita.webapp.odata.model.Ref;
-import nikita.webapp.odata.model.RefBuilder;
+import nikita.webapp.odata.model.Comparison;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -11,10 +9,7 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 import java.lang.reflect.Field;
@@ -39,8 +34,9 @@ public class ODataToHQL
             LoggerFactory.getLogger(ODataToHQL.class);
 
     private final HQLStatementBuilder statement;
-    private Ref ref;
     private Map<String, Class<?>> entityMap = new HashMap<>();
+    private Comparison comparison = new Comparison();
+    private boolean right = false;
 
     public ODataToHQL(String dmlStatementType) {
         statement = new HQLStatementBuilder(dmlStatementType);
@@ -71,40 +67,17 @@ public class ODataToHQL
      */
 
     @Override
-    public void processEntityBase(String entity) {
-        super.processEntityBase(entity);
+    public void processQueryEntity(String entity) {
         statement.addQueryEntity(entity);
     }
 
-    /**
-     * processNikitaObjects
-     * <p>
-     * When dealing with the following example URL:
-     * <p>
-     * [contextPath][api]/arkivstruktur/arkiv?$filter=startsWith(tittel,'hello')
-     * <p>
-     * The 'arkiv' entity is identified as a resource and picked out and is
-     * identified as the 'from' part. We always add to the where clause to
-     * filter out rows that actually belong to the user first and then can add
-     * extra filtering as the walker progresses.
-     * <p>
-     * Note this will cause some problems when dealing with ownership of objects
-     * via groups. Probably have to some lookup or something. But we are
-     * currently just dealing with getting OData2HQL to work.
-     *
-     * @param parentEntity the parent entity e.g. series->casefile query
-     *                     then series is the parent entity.
-     * @param entity       the entity to retreve e.g. series->casefile query
-     *                     then casefile is the entity.
-     * @param systemId     systemId of the parent entity
-     */
     @Override
-    public void processEntityBase(String parentEntity, String entity,
-                                  String systemId) {
-        this.entity = entity;
-        statement.addQueryEntity(parentEntity);
-        statement.addFromWithForeignKey(getInternalNameObject(parentEntity),
-                getInternalNameObject(entity), systemId);
+    public void processAttribute(String attribute) {
+        if (!right) {
+            comparison.setLeft(attribute);
+        } else {
+            comparison.setRight(attribute);
+        }
     }
 
     /**
@@ -124,58 +97,40 @@ public class ODataToHQL
      *
      * @param aliasAndAttribute The alias and attribute you wish to
      *                          filter on
-     * @param comparator The type of comparison you want to undertake e.g eq,
-     *                   lt etc
-     * @param value      The value you wish to filter on
+     * @param comparator        The type of comparison you want to undertake e.g eq,
+     *                          lt etc
+     * @param value             The value you wish to filter on
      */
     @Override
     public void processComparatorCommand(String aliasAndAttribute,
-                                         String comparator, String value) {
+                                         String comparator, Object value) {
         statement.addCompareValue(aliasAndAttribute,
                 translateComparator(comparator), value);
     }
 
-    /**
-     * $filter=startsWith(tittel,'hello')
-     * $filter=endsWith(tittel,'hello')
-     * $filter=contains(tittel,'hello')
-     * <p>
-     * The attribute is tittel
-     * The value is hello
-     * Type is startsWith | endsWith | contains
-     *
-     * @param type      the command
-     * @param attribute The name of the column / attribute
-     * @param value     The value to compare against
-     */
     @Override
-    public void processStringCompare(String entityAlias, String type,
-                                     String attribute, String value) {
-        if (type.equalsIgnoreCase(STARTS_WITH)) {
-            statement.addStartsWith(entityAlias,
-                    getInternalNameObject(attribute), value);
-        } else if (type.equalsIgnoreCase(ENDS_WITH)) {
-            statement.addEndsWith(entityAlias,
-                    getInternalNameObject(attribute), value);
-        } else if (type.equalsIgnoreCase(CONTAINS)) {
-            statement.addContains(entityAlias,
-                    getInternalNameObject(attribute), value);
+    public void processCompareMethod(String methodName, Object value) {
+        if (methodName.equals("contains")) {
+            comparison.setRight("%" + value + "%");
+            comparison.setComparator("like");
+        } else if (methodName.equals("startswith")) {
+            comparison.setRight(value + "%");
+            comparison.setComparator("like");
+        } else if (methodName.equals("endswith")) {
+            comparison.setRight("%" + value);
+            comparison.setComparator("like");
         } else {
-            throw new NikitaMalformedInputDataException(
-                    "OData string contains content that can't be processed."
-                            + " values are type [" + type + "], attributte [" +
-                            attribute + "], value [" + value + "]");
+            comparison.setRight(value);
         }
     }
 
     @Override
-    public void processIntegerCompare(String function, String aliasAndAttribute,
-                                      String comparisonOperator, String value) {
-        statement.addCompareValue(function, aliasAndAttribute,
+    public void processCompare(String aliasAndAttribute,
+                               String comparisonOperator, Object value) {
+        statement.addCompareValue(aliasAndAttribute,
                 translateComparator(comparisonOperator), value);
     }
 
-    // from File file where
     @Override
     public void addEntityToEntityJoin(String fromEntity, String toEntity) {
         String foreignKey = getForeignKey(fromEntity, toEntity);
@@ -183,78 +138,100 @@ public class ODataToHQL
     }
 
     @Override
-    public void processINCompare(String entity, String attribute,
-                                 String comparisonOperator, String value) {
-        statement.addCompare(entity.toLowerCase() + "_1." + attribute,
-                translateComparator(comparisonOperator), value);
-    }
-
-    @Override
-    public void processINCompareForeignKey(
-            String entity, String attribute,
-            String comparisonOperator, String value) {
-        statement.addCompare(entity + "." + attribute,
-                translateComparator(comparisonOperator), value);
+    public void processParenthesis(String bracket) {
+        statement.addBracket(bracket);
     }
 
     @Override
     public void processLogicalOperator(String logicalOperator) {
-        statement.addAnd();
+        statement.addLogicalOperator(logicalOperator);
     }
 
     @Override
-    public void processFloatCompare(String type, String attribute,
-                                    String comparisonOperator, String value) {
-
+    public void processComparator(String comparator) {
+        comparison.setComparator(translateComparator(comparator));
     }
 
     @Override
-    public void processSkipCommand(Integer skip) {
+    public void processStartRight() {
+        right = true;
+    }
+
+    @Override
+    public void processMethodExpression(String methodName) {
+        if (methodName.equalsIgnoreCase("tolower")) {
+            methodName = "lower";
+        } else if (methodName.equalsIgnoreCase("toupper")) {
+            methodName = "upper";
+        }
+
+        if (!right) {
+            comparison.addLeftMethod(methodName);
+        } else {
+            comparison.addRightMethod(methodName);
+        }
+    }
+
+
+    @Override
+    public void processSkip(Integer skip) {
         statement.setLimitOffset(new AtomicInteger(skip));
     }
 
     @Override
-    public void processTopCommand(Integer top) {
+    public void processTop(Integer top) {
         statement.setLimitHowMany(new AtomicInteger(top));
     }
 
     @Override
-    public void processOrderByCommand(String attribute, String sortOrder) {
+    public void startBoolComparison() {
+        comparison = new Comparison();
+        right = false;
+    }
+
+    @Override
+    public void endBoolComparison() {
+        String leftFunctionNames = "", leftFunctionClose = "";
+        for (Object function : comparison.getLeftMethods()) {
+            leftFunctionNames += function + "(";
+            leftFunctionClose += ")";
+        }
+        String rightFunctionNames = "", rightFunctionClose = "";
+        for (Object function : comparison.getRightMethods()) {
+            rightFunctionNames += function + "(";
+            rightFunctionClose += ")";
+        }
+        StringJoiner concatValues = comparison.getConcatValues();
+        // 8 is the number of characters in concat()
+        if (concatValues.length() > 8) {
+            statement.addCompareValueFunction(concatValues.toString(), "",
+                    comparison.getLeft(), comparison.getComparator(),
+                    comparison.getRight(), rightFunctionNames, rightFunctionClose);
+        } else {
+            statement.addCompareValueFunction(leftFunctionNames, leftFunctionClose,
+                    comparison.getLeft(), comparison.getComparator(),
+                    comparison.getRight(), rightFunctionNames, rightFunctionClose);
+        }
+        processEndConcat();
+    }
+
+    @Override
+    public void processStartConcat() {
+        comparison.startConcat();
+    }
+
+    @Override
+    public void processEndConcat() {
+        comparison.endConcat();
+    }
+
+    @Override
+    public void processOrderBy(String attribute, String sortOrder) {
         statement.addOrderBy(attribute, sortOrder);
     }
 
-    public Query getHqlStatment(Session session) {
+    public Query getHqlStatement(Session session) {
         return statement.getQuery(session);
-    }
-
-    /**
-     * /arkivstruktur/mappe/1234/ny-kryssreferanse/$ref?$id=
-     * arkivstruktur/basisregistrering/4321
-     * <p>
-     * This will likely be taken out!
-     *
-     * @param fromEntity   mappe
-     * @param fromSystemId 1234
-     * @param entity       ny-kryssreferanse
-     * @param toEntity     basisregistrering
-     * @param toSystemId   4321
-     */
-    @Override
-    public void processReferenceStatement(
-            String fromEntity, String fromSystemId, String entity,
-            String toEntity, String toSystemId) {
-        ref = new RefBuilder().
-                setFromEntity(getInternalNameObject(fromEntity)).
-                setFromSystemId(fromSystemId).
-                setEntity(getInternalNameObject(entity)).
-                setToEntity(getInternalNameObject(toEntity)).
-                setToSystemId(toSystemId)
-                .createRef();
-    }
-
-
-    public Ref getRef() {
-        return ref;
     }
 
     /**
@@ -291,11 +268,22 @@ public class ODataToHQL
                         comparator + ")");
     }
 
-    private String getForeignKey(String fromClassName, String toClassName) {
+    public void processPrimitive(Object value) {
+        if (comparison.getProcessConcat()) {
+            value = "'" + value + "'";
+        }
+        if (!right) {
+            comparison.setLeft(value);
+        } else {
+            comparison.setRight(value);
+        }
+    }
+
+    protected String getForeignKey(String fromClassName, String toClassName) {
 
         Class klass = Optional.ofNullable(entityMap.get(fromClassName))
                 .orElseThrow(() -> new BadRequestException(
-                        "Unsupported Noark class: " + fromClassName));
+                        "Unsupported Entity class: " + fromClassName));
 
         String foreignKeyName = "";
         Field[] allFields = FieldUtils.getAllFields(klass);
@@ -314,7 +302,8 @@ public class ODataToHQL
                 }
             }
 
-            if (field.getAnnotation(OneToMany.class) != null) {
+            if (field.getAnnotation(OneToMany.class) != null ||
+                    field.getAnnotation(ManyToMany.class) != null) {
                 for (java.lang.Class iface : field.getType().getInterfaces()) {
                     if (iface.isAssignableFrom(Collection.class)) {
                         Method method;
@@ -369,22 +358,14 @@ public class ODataToHQL
         Field[] allFields = FieldUtils.getAllFields(klass);
         for (Field field : allFields) {
             if (field.getAnnotation(Id.class) != null) {
-                System.out.println("Id class is: " + field.getName());
                 return field.getName();
             }
         }
         return "";
     }
 
-    private String getAlias(String entity) {
-        return entity.toLowerCase() + "_1";
-    }
 
-    private String getEntityAndAlias(String entity) {
-        return entity + "." + entity.toLowerCase() + "_1";
-    }
-
-    private void constructEntityList() {
+    protected void constructEntityList() {
         Reflections ref = new Reflections("nikita.common.model.noark5.v5");
         Set<String> entities1 =
                 ref.getTypesAnnotatedWith(

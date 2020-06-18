@@ -1,45 +1,20 @@
 package nikita.webapp.odata;
 
-import nikita.common.util.CommonUtils;
-import nikita.webapp.odata.base.ODataParser;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.webapp.odata.base.ODataParserBaseListener;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.UUID;
 
-import static java.lang.Integer.parseInt;
+import static java.util.UUID.fromString;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameDatabase;
 import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameObject;
 import static nikita.webapp.odata.base.ODataParser.*;
-
-/**
- * Extending ODataBaseListener to capture the required events for processing
- * OData syntax so that it can be converted to SQL or HQL.
- * <p>
- * The code here might be a little ugly in terms of interfaces, perhaps an
- * abstract class should be used, throws on method calls that should only be
- * called by sub-classes etc. But this code is a compromise of sorts as I learn
- * about parsing and how to walk through parse trees. Right now I don't know
- * what the best practice is, but I have to solve a particular a problem and
- * will discover a best practice as I work on that problem.
- * <p>
- * This class captures the enter/exit*Command and calls a
- * 'process enter/exit*Command' that is implemented in a sub class. The reason
- * the sub-class itself does not just implement the enter/exit*Command is that
- * there may be instances where we have to do some checks on siblings or
- * parents and then it's handy to have the ability to do that common for all
- * before calling all sub-classes. If we find that we don't need this, then
- * we will change the code to ignore this extra level of complexity.
- * <p>
- * We have to support OData2HQL, but perhaps someone out there might find an
- * implementation of OData2SQL useful. We will also support OData2
- * ElasticSearch query.
- * <p>
- * Note, as we start this, we do not know how deep the rabbit hole is or how
- * much OData we will support. So DO NOT RELY on copying this and using it in
- * a production environment!
- */
 
 public abstract class ODataWalker
         extends ODataParserBaseListener
@@ -48,6 +23,7 @@ public abstract class ODataWalker
     private final Logger logger =
             LoggerFactory.getLogger(ODataWalker.class);
     protected String entity = "";
+    protected String joinEntity = "";
 
     /**
      * This is the part that picks up the start of the OData command of a
@@ -64,273 +40,88 @@ public abstract class ODataWalker
      *
      * @param ctx ODataParser.OdataCommandContext
      */
-
     @Override
-    public void enterOdataCommand(ODataParser.OdataCommandContext ctx) {
-        super.enterOdataCommand(ctx);
+    public void enterOdataRelativeUri(OdataRelativeUriContext ctx) {
+        super.enterOdataRelativeUri(ctx);
         logger.debug("Entering enterOdataCommand. Found [" +
                 ctx.getText() + "]");
-        // processEnterOdataCommand(ctx);
-    }
-
-    /**
-     * enterStringCompareExpression
-     * <p>*
-     * Used by sub-classes to convert the following OData queries to relevant
-     * queries:
-     * - contains
-     * - startswith
-     * - endswith
-     * <p>
-     * arkiv?$filter=contains(tittel, 'hello')
-     * arkiv?$filter=startsWith(tittel, 'hello')
-     * arkiv?$filter=endsWith(tittel, 'hello')
-     * <p>
-     * The string comparison expression contains(tittel, 'hello') is parsed and
-     * the command e.g. startsWith and the attribute (in this case  'tittel')
-     * and value (in this case) 'hello' are identified and passed
-     * to the calling sub-class that will decide how it should be handled
-     * according to their syntax.
-     *
-     * @param ctx The StringCompareExpressionContext
-     */
-    @Override
-    public void enterStringCompareExpression(
-            StringCompareExpressionContext ctx) {
-        super.enterStringCompareExpression(ctx);
-        logger.debug("Entering enterStringCompareExpression. Found [" +
-                ctx.getText() + "]");
-        if (null != ctx.getChild(AttributeNameContext.class, 0)) {
-            processStringCompare(
-                    this.entity.toLowerCase() + "_1",
-                    getValue(ctx, StringCompareCommandContext.class),
-                    getValue(ctx, AttributeNameContext.class),
-                    getValue(ctx, SingleQuotedStringContext.class));
-        } else if (null != ctx.getChild(JoinEntitiesContext.class, 0)) {
-            JoinEntitiesContext joinEntitiesContext =
-                    ctx.getChild(JoinEntitiesContext.class, 0);
-            processJoinEntitiesContext(joinEntitiesContext);
-            String entity = getFinalEntityFromJoin(joinEntitiesContext);
-            processStringCompare(entity.toLowerCase() + "_1",
-                    getValue(ctx, StringCompareCommandContext.class),
-                    getValue(joinEntitiesContext, AttributeNameContext.class),
-                    getValue(ctx, SingleQuotedStringContext.class));
-        }
-    }
-
-    /**
-     * enterIntegerComparatorExpression
-     * <p>
-     * Used by sub-classes to convert the following OData queries to relevant
-     * queries:
-     * <p>
-     * $filter=year(DateTime) eq 2010
-     * $filter=month(DateTime) eq 2 // February (month of year)
-     * $filter=day(DateTime) eq 21 // 21st day of the month
-     * $filter=hour(DateTime) eq 1 // start at 0 or 1? Assuming 0
-     * $filter=minute(DateTime) eq 42 // start at 0 or 1? Assuming 0
-     * $filter=second(DateTime) eq 55 // what is after 59? 60 or 0?
-     *
-     * @param ctx
-     */
-    @Override
-    public void enterIntegerComparatorExpression(
-            IntegerComparatorExpressionContext ctx) {
-        super.enterIntegerComparatorExpression(ctx);
-        logger.debug("Entering enterIntegerComparatorExpression. Found [" +
-                ctx.getText() + "]");
-
-        if (null != ctx.getChild(AttributeNameContext.class, 0)) {
-            processIntegerCompare(
-                    getValue(ctx, IntegerCompareCommandContext.class),
-                    getAliasAndAttribute(this.entity,
-                            getInternalNameObject(getValue(ctx,
-                                    AttributeNameContext.class))),
-                    getValue(ctx, ComparisonOperatorContext.class),
-                    getValue(ctx, IntegerValueContext.class));
-        } else if (null != ctx.getChild(JoinEntitiesContext.class, 0)) {
-            JoinEntitiesContext joinEntitiesContext =
-                    ctx.getChild(JoinEntitiesContext.class, 0);
-            processJoinEntitiesContext(joinEntitiesContext);
-            processIntegerCompare(
-                    getValue(ctx, IntegerCompareCommandContext.class),
-                    getAliasAndAttribute(
-                            getFinalEntityFromJoin(joinEntitiesContext),
-                            getInternalNameObject(getValue(joinEntitiesContext,
-                                    AttributeNameContext.class))),
-                    getValue(ctx,
-                            ComparisonOperatorContext.class),
-                    getValue(ctx, IntegerValueContext.class));
-        }
-    }
-
-    /**
-     * enterFloatComparatorExpression
-     * <p>
-     * Used by sub-classes to convert the following OData queries to relevant
-     * queries:
-     * <p>
-     * $filter=round(Decimal) eq 100
-     * $filter=floor(Decimal) eq 0
-     * $filter=ceiling(Decimal) eq 1
-     *
-     * @param ctx
-     */
-    @Override
-    public void enterFloatComparatorExpression(
-            FloatComparatorExpressionContext ctx) {
-        super.enterFloatComparatorExpression(ctx);
-        logger.debug("Entering exitIntegerComparatorExpression. Found [" +
-                ctx.getText() + "]");
-        processIntegerCompare(
-                getValue(ctx, FloatCommandContext.class),
-                getValue(ctx, AttributeNameContext.class),
-                getValue(ctx, ComparisonOperatorContext.class),
-                getValue(ctx, FloatOrIntegerValueContext.class));
     }
 
     @Override
-    public void enterComparisonExpression(ComparisonExpressionContext ctx) {
-        super.enterComparisonExpression(ctx);
-        logger.debug("Entering enterComparisonExpression. Found [" +
-                ctx.getText() + "]");
-
-        JoinEntitiesContext joinEntitiesContext =
-                ctx.getChild(JoinEntitiesContext.class, 0);
-        if (null != joinEntitiesContext) {
-            processJoinEntitiesContext(joinEntitiesContext);
-            processComparatorCommand(
-                    getAliasAndAttribute(this.entity,
-                            getEnglishNameObject(
-                                    getValue(joinEntitiesContext,
-                                            AttributeNameContext.class))),
-                    getValue(ctx, ComparisonOperatorContext.class),
-                    getValue(ctx, ValueContext.class));
-        } else {
-            processComparatorCommand(
-                    getAliasAndAttribute(this.entity,
-                            getEnglishNameObject(
-                                    getValue(ctx, AttributeNameContext.class))),
-                    getValue(ctx, ComparisonOperatorContext.class),
-                    getValue(ctx, ValueContext.class));
-        }
+    public void enterMethodCallExpr(MethodCallExprContext ctx) {
+        super.enterMethodCallExpr(ctx);
+        processMethodExpression(ctx.getChild(0).getText());
     }
 
     @Override
-    public void enterTopStatement(TopStatementContext ctx) {
-        super.enterTopStatement(ctx);
-        logger.debug("Entering enterTopStatement. Found [" +
-                ctx.getText() + "]");
-        processTopCommand(parseInt(getValue(ctx, IntegerValueContext.class)));
+    public void enterCompareMethodExpr(CompareMethodExprContext ctx) {
+        super.enterCompareMethodExpr(ctx);
+        processCompareMethod(ctx.getChild(0).getText(),
+                getPrimitiveTypeObject((PrimitiveLiteralContext)
+                        ctx.getChild(4).getChild(0)));
     }
 
     @Override
-    public void enterSkipStatement(SkipStatementContext ctx) {
-        super.enterSkipStatement(ctx);
-        logger.debug("Entering enterSkipStatement. Found [" +
-                ctx.getText() + "]");
-        processSkipCommand(parseInt(getValue(ctx, IntegerValueContext.class)));
+    public void enterCalenderMethodExp(CalenderMethodExpContext ctx) {
+        super.enterCalenderMethodExp(ctx);
+        processMethodExpression(ctx.getChild(0).getText());
     }
 
     @Override
-    public void enterOrderByClause(OrderByClauseContext ctx) {
-        super.enterOrderByClause(ctx);
-        logger.debug("Entering enterOrderByClause. Found [" +
-                ctx.getText() + "]");
-        processOrderByCommand(
-                getValue(ctx, AttributeNameContext.class),
-                getValue(ctx, OrderAscDescContext.class));
+    public void enterJoinEntities(JoinEntitiesContext ctx) {
+        super.enterJoinEntities(ctx);
+        this.joinEntity = processJoinEntitiesContext(ctx);
     }
 
     @Override
-    public void enterEntityBase(EntityBaseContext ctx) {
-        super.enterEntityBase(ctx);
-        logger.debug("Entering enterEntityBase. Found [" +
-                ctx.getText() + "]");
-
-        this.entity = getInternalNameObject(getValue(
-                ctx, EntityNameContext.class));
-        // Process a join filter example e.g.
-        // arkivstruktur/dokumentbeskrivelse/cf8e1d0d-e94d-4d07-b5ed
-        // -46ba2df0465e/dokumentobjekt?$filter=contains(filnavn, 'fubar')
-        if (null != ctx.getChild(SystemIdValueContext.class, 0)) {
-            processEntityBase(
-                    this.entity,
-                    getInternalNameObject(
-                            getValue(ctx, EntityNameContext.class, 1)),
-                    getInternalNameObject(
-                            getValue(ctx, SystemIdValueContext.class)));
-        }
-        // Process a basic filter example e.g.
-        // arkivstruktur/dokumentobjekt?$filter=contains(filnavn, 'fubar')
-        else {
-            processEntityBase(this.entity);
-        }
+    public void enterAttributeName(AttributeNameContext ctx) {
+        super.enterAttributeName(ctx);
+        processAttribute(getAliasAndAttribute(
+                this.joinEntity.isEmpty() == true ?
+                        this.entity : this.joinEntity,
+                getInternalNameObject(ctx.getText())));
     }
 
     @Override
-    public void enterReferenceStatement(ReferenceStatementContext ctx) {
-        super.enterReferenceStatement(ctx);
-        processReferenceStatement(
-                getValue(ctx, EntityNameContext.class),
-                getValue(ctx, SystemIdValueContext.class),
-                getValue(ctx, EntityNameContext.class, 1),
-                getValue(ctx, EntityNameContext.class, 2),
-                getValue(ctx, SystemIdValueContext.class, 1));
+    public void enterRightComparatorExpr(RightComparatorExprContext ctx) {
+        super.enterRightComparatorExpr(ctx);
+        processStartRight();
     }
 
-    /**
-     * handle a IN clause:
-     * <p>
-     * arkivstruktur/mappe?$filter=klasse/klasseID eq '12/2'
-     * arkivstruktur/mappe?$filter=klasse/klassifikasjonssystem/tittel eq 'GBNR'
-     * <p>
-     * The first one is straight forward to handle, while the second is handled
-     * by retrieving the list of EntityNameContext and resolving as many joins
-     * as required. Currently the approach is based on list but perhaps this
-     * should be pushed back to the parser to be handled recursively.
-     *
-     * @param ctx the context (InComparisonExpressionContext)
-     */
     @Override
-    public void enterInComparisonExpression(
-            InComparisonExpressionContext ctx) {
-        super.enterInComparisonExpression(ctx);
-        JoinEntitiesContext joinEntitiesContext =
-                ctx.getChild(JoinEntitiesContext.class, 0);
-        if (null != joinEntitiesContext) {
-            processJoinEntitiesContext(joinEntitiesContext);
-            AttributeNameContext attributeNameContext =
-                    joinEntitiesContext.getChild(AttributeNameContext.class, 0);
-            String attributeName = attributeNameContext.getText();
-            processINCompare(getFinalEntityFromJoin(joinEntitiesContext),
-                    getInternalNameObject(attributeName),
-                    getValue(ctx, ComparisonOperatorContext.class),
-                    getValue(ctx, ValueContext.class));
-        } else {
-            processINCompare(this.entity,
-                    getInternalNameObject(
-                            getValue(ctx, AttributeNameContext.class)),
-                    getValue(ctx, ComparisonOperatorContext.class),
-                    getValue(ctx, ValueContext.class));
-
-        }
+    public void enterComparisonOperator(ComparisonOperatorContext ctx) {
+        super.enterComparisonOperator(ctx);
+        processComparator(ctx.getChild(0).getText());
     }
 
-    // joinEntities
-    //   :
-    //   (entityName '/')+ attributeName
-    //   ;
+    @Override
+    public void enterConcatMethodExpr(ConcatMethodExprContext ctx) {
+        super.enterConcatMethodExpr(ctx);
+        processStartConcat();
 
-    protected String getFinalEntityFromJoin(JoinEntitiesContext ctx) {
-        List<EntityNameContext> entityNameContexts =
-                ctx.getRuleContexts(EntityNameContext.class);
-        return getInternalNameObject(
-                getValue(ctx, EntityNameContext.class,
-                        entityNameContexts.size() - 1));
     }
 
-    protected void processJoinEntitiesContext(JoinEntitiesContext ctx) {
+    @Override
+    public void enterBoolExpression(BoolExpressionContext ctx) {
+        super.enterBoolExpression(ctx);
+        startBoolComparison();
+    }
+
+    @Override
+    public void enterPrimitiveLiteral(PrimitiveLiteralContext ctx) {
+        super.enterPrimitiveLiteral(ctx);
+        processPrimitive(getPrimitiveTypeObject(ctx));
+    }
+
+    @Override
+    public void exitBoolExpression(BoolExpressionContext ctx) {
+        super.exitBoolExpression(ctx);
+        endBoolComparison();
+        this.joinEntity = "";
+
+    }
+
+    protected String processJoinEntitiesContext(JoinEntitiesContext ctx) {
         List<EntityNameContext> entityNameContexts =
                 ctx.getRuleContexts(EntityNameContext.class);
         // Join the from the entity applying the filter on e.g
@@ -342,14 +133,20 @@ public abstract class ODataWalker
         if (entityNameContexts.size() > 1) {
             for (int i = 0; i < entityNameContexts.size(); i++) {
                 if (i < entityNameContexts.size() - 1) {
-                    String fromEntity = getInternalNameObject(getValue(ctx,
-                            EntityNameContext.class, i));
-                    toEntity = getInternalNameObject(getValue(ctx,
-                            EntityNameContext.class, i + 1));
+                    String fromEntity = getInternalNameObject
+                            (getValue(ctx, EntityNameContext.class, i));
+                    toEntity = getInternalNameObject(
+                            getValue(ctx, EntityNameContext.class, i + 1));
                     addEntityToEntityJoin(fromEntity, toEntity);
                 }
             }
         }
+        return toEntity;
+    }
+
+    @Override
+    public void enterBinaryExpression(BinaryExpressionContext ctx) {
+        super.enterBinaryExpression(ctx);
     }
 
     @Override
@@ -359,12 +156,94 @@ public abstract class ODataWalker
     }
 
     @Override
-    public void processEntityBase(String entity) {
+    public void enterOpenPar(OpenParContext ctx) {
+        super.enterOpenPar(ctx);
+        processParenthesis(ctx.getText());
     }
 
     @Override
-    public void processEntityBase(String parentEntity, String entity,
-                                  String systemId) {
+    public void enterClosePar(CloseParContext ctx) {
+        super.enterClosePar(ctx);
+        processParenthesis(ctx.getText());
+    }
+
+    @Override
+    public void enterResourcePath(ResourcePathContext ctx) {
+        super.enterResourcePath(ctx);
+        logger.debug("Entering ResourcePathContext. Found [" +
+                ctx.getText() + "]");
+
+        if (null != ctx.getChild(EntityContext.class, 0)) {
+            this.entity = getInternalNameObject(getValue(
+                    ctx.getChild(EntityContext.class, 0),
+                    EntityNameContext.class));
+        } else if (null != ctx.getChild(EntityCastContext.class, 0)) {
+            this.entity = getInternalNameObject(getValue(
+                    ctx, EntityCastContext.class));
+        } else if (null != ctx.getChild(EntityUUIDContext.class, 0)) {
+            this.entity = getInternalNameObject(getValue(
+                    ctx, EntityNameContext.class));
+            processEntityUUID(ctx.getChild(EntityUUIDContext.class, 0));
+        } else if (null != ctx.getChild(EmbeddedEntitySetContext.class, 0)) {
+            this.entity = processResourcePathJoin(
+                    ctx.getChild(EmbeddedEntitySetContext.class, 0));
+            processLogicalOperator("and");
+        }
+        processQueryEntity(this.entity);
+    }
+
+    private void processEntityUUID(EntityUUIDContext ctx) {
+        UUID systemID = fromString(
+                getValue(ctx, UuidIdValueContext.class));
+        String aliasAndAttribute = getAliasAndAttribute(
+                this.entity, getInternalNameObject(SYSTEM_ID));
+        processComparatorCommand(aliasAndAttribute, "eq", systemID);
+    }
+
+    private String processResourcePathJoin(EmbeddedEntitySetContext ctx) {
+        // Identify the last entity so we can use it as the starting point for
+        // JOINs HERE!!!
+        String entity = getFinalEntity(
+                ctx.getRuleContexts(EntityContext.class));
+
+        List<EntityUUIDContext> uuidContexts =
+                ctx.getRuleContexts(EntityUUIDContext.class);
+
+        if (uuidContexts.size() > 0) {
+            String toEntity = getInternalNameObject(
+                    uuidContexts.get(uuidContexts.size() - 1)
+                            .getChild(0).getText());
+            addEntityToEntityJoin(entity, toEntity);
+            String toEntityUUID = uuidContexts.get(uuidContexts.size() - 1)
+                    .getChild(2).getText();
+            processCompare(getAliasAndAttribute(toEntity,
+                    getInternalNameObject(SYSTEM_ID)),
+                    "eq", fromString(toEntityUUID));
+            for (int i = uuidContexts.size() - 1; i > 0; i--) {
+                String fromEntity = getInternalNameObject(
+                        uuidContexts.get(i).getChild(0).getText());
+                toEntity = getInternalNameObject(
+                        uuidContexts.get(i - 1).getChild(0).getText());
+                toEntityUUID = uuidContexts.get(i - 1)
+                        .getChild(2).getText();
+                addEntityToEntityJoin(fromEntity, toEntity);
+                processLogicalOperator("and");
+                processCompare(getAliasAndAttribute(toEntity,
+                        getInternalNameObject(SYSTEM_ID)),
+                        "eq", fromString(toEntityUUID));
+            }
+        }
+        return entity;
+    }
+
+    protected String getFinalEntity(
+            List<EntityContext> entityContexts) {
+        if (entityContexts.size() > 0) {
+            return getInternalNameObject(entityContexts.get(
+                    entityContexts.size() - 1).getText());
+        }
+        // Consider making this throw a 500 internal or 400 bad request
+        return "";
     }
 
     /**
@@ -387,9 +266,7 @@ public abstract class ODataWalker
      * the original Norwegian name.
      */
     protected String getInternalNameAttribute(String norwegianName) {
-        String englishName = CommonUtils.WebUtils
-                .getEnglishNameDatabase(norwegianName);
-
+        String englishName = getEnglishNameDatabase(norwegianName);
         if (englishName == null)
             return norwegianName;
         else
@@ -423,15 +300,58 @@ public abstract class ODataWalker
             return englishName;
     }
 
-    private String getValue(ParserRuleContext context, Class klass) {
-        return context.getChild(klass, 0).getText();
+    @Override
+    public void enterTopStatement(TopStatementContext ctx) {
+        super.enterTopStatement(ctx);
+        processTop(Integer.valueOf(ctx.getChild(1).getText()));
     }
 
-    private String getValue(ParserRuleContext context, Class klass, int count) {
-        return context.getChild(klass, count).getText();
+    @Override
+    public void enterSkipStatement(SkipStatementContext ctx) {
+        super.enterSkipStatement(ctx);
+        processSkip(Integer.valueOf(ctx.getChild(1).getText()));
     }
 
-    private String getAliasAndAttribute(String entity, String attribute) {
+    String getValue(ParserRuleContext context, Class klass) {
+        ParseTree pContext = context.getChild(klass, 0);
+        return pContext.getText();
+    }
+
+    String getValue(ParserRuleContext context, Class klass, int count) {
+        ParserRuleContext context1 = (ParserRuleContext) context.getChild(klass, count);
+        String value = context1.getText();
+        return value;
+    }
+
+    String getAliasAndAttribute(String entity, String attribute) {
         return entity.toLowerCase() + "_1." + attribute;
+    }
+
+    private Object getPrimitiveTypeObject(PrimitiveLiteralContext context) {
+        if (null != context.getChild(IntegerValueContext.class, 0)) {
+            return Integer.valueOf(context
+                    .getChild(IntegerValueContext.class, 0).getText());
+        } else if (null != context.getChild(FloatValueContext.class, 0)) {
+            return Float.valueOf(context
+                    .getChild(FloatValueContext.class, 0).getText());
+        } else if (null != context.getChild(DecimalLiteralContext.class, 0)) {
+            return Double.valueOf(context
+                    .getChild(DecimalLiteralContext.class, 0).getText());
+        } else if (null != context.getChild(BooleanValueContext.class, 0)) {
+            return Boolean.valueOf(context
+                    .getChild(BooleanValueContext.class, 0).getText());
+        } else if (null != context.getChild(QuotedStringContext.class, 0)) {
+            String quotedString =
+                    context.getChild(QuotedStringContext.class, 0).getText();
+            return quotedString.substring(1, quotedString.length() - 1);
+        } else if (null != context.getChild(NullTokenContext.class, 0) ||
+                null != context.getChild(NullSpecLiteralContext.class, 0)) {
+            return null;
+        } else {
+            String error = "Unknown primitive literal for context "
+                    + context.getText();
+            logger.error(error);
+            throw new NikitaMalformedInputDataException(error);
+        }
     }
 }

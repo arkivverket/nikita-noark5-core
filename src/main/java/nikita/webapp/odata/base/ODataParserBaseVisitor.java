@@ -20,7 +20,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitReferenceStatement(ODataParser.ReferenceStatementContext ctx) {
+    public T visitOdataRelativeUri(ODataParser.OdataRelativeUriContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -31,7 +31,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitOdataQuery(ODataParser.OdataQueryContext ctx) {
+    public T visitResourcePath(ODataParser.ResourcePathContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -42,7 +42,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitEntityBase(ODataParser.EntityBaseContext ctx) {
+    public T visitEntity(ODataParser.EntityContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -53,7 +53,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitOdataCommand(ODataParser.OdataCommandContext ctx) {
+    public T visitEntityCast(ODataParser.EntityCastContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -64,7 +64,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitPredicate(ODataParser.PredicateContext ctx) {
+    public T visitEntityUUID(ODataParser.EntityUUIDContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -75,7 +75,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitFilterStatement(ODataParser.FilterStatementContext ctx) {
+    public T visitEmbeddedEntitySet(ODataParser.EmbeddedEntitySetContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -86,7 +86,150 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitCountStatement(ODataParser.CountStatementContext ctx) {
+    public T visitQueryOptions(ODataParser.QueryOptionsContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitQueryOption(ODataParser.QueryOptionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitFilter(ODataParser.FilterContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitExpand(ODataParser.ExpandContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitBinaryExpression(ODataParser.BinaryExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitBoolExpression(ODataParser.BoolExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitParenExpression(ODataParser.ParenExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitComparatorExpression(ODataParser.ComparatorExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitCountComparatorExpression(ODataParser.CountComparatorExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitCompareMethodExpression(ODataParser.CompareMethodExpressionContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitLeftComparatorExpr(ODataParser.LeftComparatorExprContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitRightComparatorExpr(ODataParser.RightComparatorExprContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitOrderby(ODataParser.OrderbyContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitOrderbyItem(ODataParser.OrderbyItemContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -119,61 +262,6 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitFilterExpression(ODataParser.FilterExpressionContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitBoolExpressionLeft(ODataParser.BoolExpressionLeftContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitBoolExpressionRight(ODataParser.BoolExpressionRightContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitStringCompareExpression(ODataParser.StringCompareExpressionContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitInComparisonExpression(ODataParser.InComparisonExpressionContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
     public T visitJoinEntities(ODataParser.JoinEntitiesContext ctx) {
         return visitChildren(ctx);
     }
@@ -185,7 +273,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitStringCompareCommand(ODataParser.StringCompareCommandContext ctx) {
+    public T visitCommonExpr(ODataParser.CommonExprContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -196,7 +284,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitSubstringExpression(ODataParser.SubstringExpressionContext ctx) {
+    public T visitMathExpr(ODataParser.MathExprContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -207,7 +295,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitIndexOfExpression(ODataParser.IndexOfExpressionContext ctx) {
+    public T visitMethodExpr(ODataParser.MethodExprContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -218,7 +306,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitLengthExpression(ODataParser.LengthExpressionContext ctx) {
+    public T visitCompareMethodExpr(ODataParser.CompareMethodExprContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -229,7 +317,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitTimeExpression(ODataParser.TimeExpressionContext ctx) {
+    public T visitMethodCallExpr(ODataParser.MethodCallExprContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -240,7 +328,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitStringModifierExpression(ODataParser.StringModifierExpressionContext ctx) {
+    public T visitCalenderMethodExp(ODataParser.CalenderMethodExpContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -251,7 +339,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitConcatExpression(ODataParser.ConcatExpressionContext ctx) {
+    public T visitConcatMethodExpr(ODataParser.ConcatMethodExprContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -262,7 +350,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitComparisonExpression(ODataParser.ComparisonExpressionContext ctx) {
+    public T visitSingleMethodCallExpr(ODataParser.SingleMethodCallExprContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -273,84 +361,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitIntegerComparatorExpression(ODataParser.IntegerComparatorExpressionContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitIntegerCompareCommand(ODataParser.IntegerCompareCommandContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitFloatComparatorExpression(ODataParser.FloatComparatorExpressionContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitFloatCommand(ODataParser.FloatCommandContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitFloatOrIntegerValue(ODataParser.FloatOrIntegerValueContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitOrderByClause(ODataParser.OrderByClauseContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitOrderByExpression(ODataParser.OrderByExpressionContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitOrderAscDesc(ODataParser.OrderAscDescContext ctx) {
+    public T visitSubstringMethodCallExpr(ODataParser.SubstringMethodCallExprContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -372,7 +383,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitLogicalOperator(ODataParser.LogicalOperatorContext ctx) {
+    public T visitCompareMethodName(ODataParser.CompareMethodNameContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -383,7 +394,73 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitColumnName(ODataParser.ColumnNameContext ctx) {
+    public T visitMethodName(ODataParser.MethodNameContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitCalenderMethodName(ODataParser.CalenderMethodNameContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitNumber(ODataParser.NumberContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitPrimitiveLiteral(ODataParser.PrimitiveLiteralContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitOpenPar(ODataParser.OpenParContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitClosePar(ODataParser.CloseParContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitLogicalOperator(ODataParser.LogicalOperatorContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -416,7 +493,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitPackageName(ODataParser.PackageNameContext ctx) {
+    public T visitUuidIdValue(ODataParser.UuidIdValueContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -427,7 +504,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitValue(ODataParser.ValueContext ctx) {
+    public T visitQuotedString(ODataParser.QuotedStringContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -438,7 +515,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitSingleQuotedString(ODataParser.SingleQuotedStringContext ctx) {
+    public T visitNullSpecLiteral(ODataParser.NullSpecLiteralContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -449,7 +526,73 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitIntegerValue(ODataParser.IntegerValueContext ctx) {
+    public T visitNullToken(ODataParser.NullTokenContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitBooleanValue(ODataParser.BooleanValueContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDurationValue(ODataParser.DurationValueContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDateValue(ODataParser.DateValueContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDateTimeOffsetValue(ODataParser.DateTimeOffsetValueContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitTimeOfDayValue(ODataParser.TimeOfDayValueContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitDecimalLiteral(ODataParser.DecimalLiteralContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -471,7 +614,18 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitSystemIdValue(ODataParser.SystemIdValueContext ctx) {
+    public T visitIntegerValue(ODataParser.IntegerValueContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitCountStatement(ODataParser.CountStatementContext ctx) {
         return visitChildren(ctx);
     }
 }

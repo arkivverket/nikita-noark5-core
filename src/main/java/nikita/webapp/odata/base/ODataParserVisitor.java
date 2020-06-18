@@ -13,60 +13,170 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     /**
-     * Visit a parse tree produced by {@link ODataParser#referenceStatement}.
+     * Visit a parse tree produced by {@link ODataParser#odataRelativeUri}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitReferenceStatement(ODataParser.ReferenceStatementContext ctx);
+    T visitOdataRelativeUri(ODataParser.OdataRelativeUriContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#odataQuery}.
+     * Visit a parse tree produced by {@link ODataParser#resourcePath}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitOdataQuery(ODataParser.OdataQueryContext ctx);
+    T visitResourcePath(ODataParser.ResourcePathContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#entityBase}.
+     * Visit a parse tree produced by {@link ODataParser#entity}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitEntityBase(ODataParser.EntityBaseContext ctx);
+    T visitEntity(ODataParser.EntityContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#odataCommand}.
+     * Visit a parse tree produced by {@link ODataParser#entityCast}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitOdataCommand(ODataParser.OdataCommandContext ctx);
+    T visitEntityCast(ODataParser.EntityCastContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#predicate}.
+     * Visit a parse tree produced by {@link ODataParser#entityUUID}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitPredicate(ODataParser.PredicateContext ctx);
+    T visitEntityUUID(ODataParser.EntityUUIDContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#filterStatement}.
+     * Visit a parse tree produced by {@link ODataParser#embeddedEntitySet}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitFilterStatement(ODataParser.FilterStatementContext ctx);
+    T visitEmbeddedEntitySet(ODataParser.EmbeddedEntitySetContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#countStatement}.
+     * Visit a parse tree produced by {@link ODataParser#queryOptions}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitCountStatement(ODataParser.CountStatementContext ctx);
+    T visitQueryOptions(ODataParser.QueryOptionsContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#queryOption}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitQueryOption(ODataParser.QueryOptionContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#filter}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitFilter(ODataParser.FilterContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#expand}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitExpand(ODataParser.ExpandContext ctx);
+
+    /**
+     * Visit a parse tree produced by the {@code binaryExpression}
+     * labeled alternative in {@link ODataParser#filterExpression}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitBinaryExpression(ODataParser.BinaryExpressionContext ctx);
+
+    /**
+     * Visit a parse tree produced by the {@code boolExpression}
+     * labeled alternative in {@link ODataParser#filterExpression}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitBoolExpression(ODataParser.BoolExpressionContext ctx);
+
+    /**
+     * Visit a parse tree produced by the {@code parenExpression}
+     * labeled alternative in {@link ODataParser#filterExpression}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitParenExpression(ODataParser.ParenExpressionContext ctx);
+
+    /**
+     * Visit a parse tree produced by the {@code comparatorExpression}
+     * labeled alternative in {@link ODataParser#boolCommonExpr}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitComparatorExpression(ODataParser.ComparatorExpressionContext ctx);
+
+    /**
+     * Visit a parse tree produced by the {@code countComparatorExpression}
+     * labeled alternative in {@link ODataParser#boolCommonExpr}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCountComparatorExpression(ODataParser.CountComparatorExpressionContext ctx);
+
+    /**
+     * Visit a parse tree produced by the {@code compareMethodExpression}
+     * labeled alternative in {@link ODataParser#boolCommonExpr}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCompareMethodExpression(ODataParser.CompareMethodExpressionContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#leftComparatorExpr}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitLeftComparatorExpr(ODataParser.LeftComparatorExprContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#rightComparatorExpr}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitRightComparatorExpr(ODataParser.RightComparatorExprContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#orderby}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitOrderby(ODataParser.OrderbyContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#orderbyItem}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitOrderbyItem(ODataParser.OrderbyItemContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ODataParser#topStatement}.
@@ -85,46 +195,6 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitSkipStatement(ODataParser.SkipStatementContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#filterExpression}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitFilterExpression(ODataParser.FilterExpressionContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#boolExpressionLeft}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitBoolExpressionLeft(ODataParser.BoolExpressionLeftContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#boolExpressionRight}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitBoolExpressionRight(ODataParser.BoolExpressionRightContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#stringCompareExpression}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitStringCompareExpression(ODataParser.StringCompareExpressionContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#inComparisonExpression}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitInComparisonExpression(ODataParser.InComparisonExpressionContext ctx);
-
-    /**
      * Visit a parse tree produced by {@link ODataParser#joinEntities}.
      *
      * @param ctx the parse tree
@@ -133,132 +203,76 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitJoinEntities(ODataParser.JoinEntitiesContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#stringCompareCommand}.
+     * Visit a parse tree produced by {@link ODataParser#commonExpr}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitStringCompareCommand(ODataParser.StringCompareCommandContext ctx);
+    T visitCommonExpr(ODataParser.CommonExprContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#substringExpression}.
+     * Visit a parse tree produced by {@link ODataParser#mathExpr}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitSubstringExpression(ODataParser.SubstringExpressionContext ctx);
+    T visitMathExpr(ODataParser.MathExprContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#indexOfExpression}.
+     * Visit a parse tree produced by {@link ODataParser#methodExpr}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitIndexOfExpression(ODataParser.IndexOfExpressionContext ctx);
+    T visitMethodExpr(ODataParser.MethodExprContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#lengthExpression}.
+     * Visit a parse tree produced by {@link ODataParser#compareMethodExpr}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitLengthExpression(ODataParser.LengthExpressionContext ctx);
+    T visitCompareMethodExpr(ODataParser.CompareMethodExprContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#timeExpression}.
+     * Visit a parse tree produced by {@link ODataParser#methodCallExpr}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitTimeExpression(ODataParser.TimeExpressionContext ctx);
+    T visitMethodCallExpr(ODataParser.MethodCallExprContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#stringModifierExpression}.
+     * Visit a parse tree produced by {@link ODataParser#calenderMethodExp}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitStringModifierExpression(ODataParser.StringModifierExpressionContext ctx);
+    T visitCalenderMethodExp(ODataParser.CalenderMethodExpContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#concatExpression}.
+     * Visit a parse tree produced by {@link ODataParser#concatMethodExpr}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitConcatExpression(ODataParser.ConcatExpressionContext ctx);
+    T visitConcatMethodExpr(ODataParser.ConcatMethodExprContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#comparisonExpression}.
+     * Visit a parse tree produced by {@link ODataParser#singleMethodCallExpr}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitComparisonExpression(ODataParser.ComparisonExpressionContext ctx);
+    T visitSingleMethodCallExpr(ODataParser.SingleMethodCallExprContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#integerComparatorExpression}.
+     * Visit a parse tree produced by {@link ODataParser#substringMethodCallExpr}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitIntegerComparatorExpression(ODataParser.IntegerComparatorExpressionContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#integerCompareCommand}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitIntegerCompareCommand(ODataParser.IntegerCompareCommandContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#floatComparatorExpression}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitFloatComparatorExpression(ODataParser.FloatComparatorExpressionContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#floatCommand}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitFloatCommand(ODataParser.FloatCommandContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#floatOrIntegerValue}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitFloatOrIntegerValue(ODataParser.FloatOrIntegerValueContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#orderByClause}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitOrderByClause(ODataParser.OrderByClauseContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#orderByExpression}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitOrderByExpression(ODataParser.OrderByExpressionContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#orderAscDesc}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitOrderAscDesc(ODataParser.OrderAscDescContext ctx);
+    T visitSubstringMethodCallExpr(ODataParser.SubstringMethodCallExprContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ODataParser#comparisonOperator}.
@@ -269,20 +283,68 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitComparisonOperator(ODataParser.ComparisonOperatorContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ODataParser#compareMethodName}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCompareMethodName(ODataParser.CompareMethodNameContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#methodName}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitMethodName(ODataParser.MethodNameContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#calenderMethodName}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCalenderMethodName(ODataParser.CalenderMethodNameContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#number}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitNumber(ODataParser.NumberContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#primitiveLiteral}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitPrimitiveLiteral(ODataParser.PrimitiveLiteralContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#openPar}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitOpenPar(ODataParser.OpenParContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#closePar}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitClosePar(ODataParser.CloseParContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ODataParser#logicalOperator}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
     T visitLogicalOperator(ODataParser.LogicalOperatorContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#columnName}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitColumnName(ODataParser.ColumnNameContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ODataParser#entityName}.
@@ -301,36 +363,84 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitAttributeName(ODataParser.AttributeNameContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#packageName}.
+     * Visit a parse tree produced by {@link ODataParser#uuidIdValue}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitPackageName(ODataParser.PackageNameContext ctx);
+    T visitUuidIdValue(ODataParser.UuidIdValueContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#value}.
+     * Visit a parse tree produced by {@link ODataParser#quotedString}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitValue(ODataParser.ValueContext ctx);
+    T visitQuotedString(ODataParser.QuotedStringContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#singleQuotedString}.
+     * Visit a parse tree produced by {@link ODataParser#nullSpecLiteral}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitSingleQuotedString(ODataParser.SingleQuotedStringContext ctx);
+    T visitNullSpecLiteral(ODataParser.NullSpecLiteralContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#integerValue}.
+     * Visit a parse tree produced by {@link ODataParser#nullToken}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitIntegerValue(ODataParser.IntegerValueContext ctx);
+    T visitNullToken(ODataParser.NullTokenContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#booleanValue}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitBooleanValue(ODataParser.BooleanValueContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#durationValue}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDurationValue(ODataParser.DurationValueContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#dateValue}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDateValue(ODataParser.DateValueContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#dateTimeOffsetValue}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDateTimeOffsetValue(ODataParser.DateTimeOffsetValueContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#timeOfDayValue}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitTimeOfDayValue(ODataParser.TimeOfDayValueContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#decimalLiteral}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitDecimalLiteral(ODataParser.DecimalLiteralContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ODataParser#floatValue}.
@@ -341,10 +451,18 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitFloatValue(ODataParser.FloatValueContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#systemIdValue}.
+     * Visit a parse tree produced by {@link ODataParser#integerValue}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitSystemIdValue(ODataParser.SystemIdValueContext ctx);
+    T visitIntegerValue(ODataParser.IntegerValueContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#countStatement}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCountStatement(ODataParser.CountStatementContext ctx);
 }

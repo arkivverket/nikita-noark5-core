@@ -4,12 +4,12 @@ import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.webapp.hateoas.HateoasHandler;
+import nikita.webapp.odata.NikitaODataToHQL;
 import nikita.webapp.odata.NikitaObjectWorker;
 import nikita.webapp.odata.ODataRefHandler;
 import nikita.webapp.odata.ODataToHQL;
 import nikita.webapp.odata.base.ODataLexer;
 import nikita.webapp.odata.base.ODataParser;
-import nikita.webapp.odata.model.Ref;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.spring.ODataRedirectFilter;
@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
 import static java.net.URLDecoder.decode;
 import static nikita.common.config.Constants.DELETE_RESPONSE;
 import static nikita.common.config.Constants.REGEX_UUID;
-import static nikita.common.config.ODataConstants.DOLLAR_ID;
 import static nikita.common.config.ODataConstants.ODATA_DELETE_REF;
 import static org.antlr.v4.runtime.CharStreams.fromString;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -178,13 +177,14 @@ public class ODataService
         String queryString = request.getQueryString();
         logger.info("Request has following query string: " + queryString);
         logger.info("Request has following URL: " + url);
-
+/*
         Ref ref = retrieveRefValues(url + "?" + DOLLAR_ID + "=" + queryString);
         NoarkEntity fromEntity = refHandler.getFromEntity(ref);
         NoarkEntity toEntity = refHandler.getToEntity(ref);
         objectWorker.handleCreateReference(fromEntity, toEntity, ref
                 .getEntity());
         logger.info(ref.toString());
+ */
         return null;
     }
 
@@ -203,35 +203,15 @@ public class ODataService
     }
 
     public Query convertODataToHQL(String request, String dmlStatementType) {
-        ODataLexer lexer = new ODataLexer(
-                fromString(request));
+        ODataLexer lexer = new ODataLexer(fromString(request));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ODataParser parser = new ODataParser(tokens);
-        ParseTree tree = parser.odataQuery();
+        ParseTree tree = parser.odataRelativeUri();
         ParseTreeWalker walker = new ParseTreeWalker();
-
         // Make the HQL Statement
-        ODataToHQL hqlWalker = new
-                ODataToHQL(dmlStatementType);
+        ODataToHQL hqlWalker = new NikitaODataToHQL(dmlStatementType);
         walker.walk(hqlWalker, tree);
-
-        Matcher matcher = pairRegex.matcher(request);
-        // This is a OData query on a child e.g.
-        // arkivdel/8628ae60-7d50-474e-82e0-74a348a99647/mappe?
-        if (matcher.find()) {
-            //hqlWalker.setParentIdPrimaryKey(matcher.group());
-        }
-
-        Query query = hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
-        String queryS = query.getQueryString();
-        logger.info(queryS);
-        return query;
-        //return hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
-    }
-
-    public Ref retrieveRefValues(String request) {
-        ODataToHQL hqlWalker = getWalker(request);
-        return hqlWalker.getRef();
+        return hqlWalker.getHqlStatement(entityManager.unwrap(Session.class));
     }
 
     private ODataToHQL getWalker(String request) {
@@ -241,7 +221,7 @@ public class ODataService
         ParseTreeWalker walker = new ParseTreeWalker();
         // Make the HQL Statement
         ODataToHQL hqlWalker = new ODataToHQL();
-        walker.walk(hqlWalker, parser.referenceStatement());
+        walker.walk(hqlWalker, parser.odataRelativeUri());
         return hqlWalker;
     }
 
@@ -254,7 +234,7 @@ public class ODataService
         // Make the HQL Statement
         ODataToHQL hqlWalker = new
                 ODataToHQL(dmlStatementType);
-        walker.walk(hqlWalker, parser.referenceStatement());
+        walker.walk(hqlWalker, parser.odataRelativeUri());
 
         Matcher matcher = pairRegex.matcher(request);
         // This is a OData query on a child e.g.
@@ -262,7 +242,7 @@ public class ODataService
         if (matcher.find()) {
             //hqlWalker.setParentIdPrimaryKey(matcher.group());
         }
-        return hqlWalker.getHqlStatment(entityManager.unwrap(Session.class));
+        return hqlWalker.getHqlStatement(entityManager.unwrap(Session.class));
     }
 
     protected String getUser() {

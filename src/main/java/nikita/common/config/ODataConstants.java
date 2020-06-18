@@ -29,6 +29,9 @@ public class ODataConstants {
     public static final String STARTS_WITH = "startsWith";
     public static final String ENDS_WITH = "endsWith";
     public static final String CONTAINS = "contains";
+    public static final String INDEX_OF = "indexof";
+    public static final String GEO_INTERSECTS = "geo.intersects";
+    public static final String GEO_DISTANCE = "geo.distance";
 
     public static final String DOLLAR_ID = "$id";
     public static final String DOLLAR_ORDER_BY = "$orderby";

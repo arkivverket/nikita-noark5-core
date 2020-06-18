@@ -2,43 +2,43 @@ package nikita.webapp.odata;
 
 public interface IODataWalker {
 
-    void processEntityBase(String entity);
+    void processSkip(Integer skip);
 
-    void processEntityBase(String parentEntity, String entity, String systemId);
+    void processTop(Integer top);
 
-    void processStringCompare(String entityAlias, String type, String attribute,
-                              String value);
+    void processOrderBy(String attribute, String sortOrder);
 
-    void processIntegerCompare(String function, String attribute,
-                               String comparisonOperator, String value);
+    void processQueryEntity(String entity);
 
-    void processFloatCompare(String type, String attribute,
-                             String comparisonOperator, String value);
+    void processCompare(String aliasAndAttribute,
+                        String comparisonOperator, Object value);
 
-    void processINCompare(String entity, String attribute,
-                          String comparisonOperator, String value);
-
-    void processSkipCommand(Integer skip);
-
-    void processTopCommand(Integer top);
-
-    void processOrderByCommand(String attribute, String sortOrder);
-
-    void processINCompareForeignKey(String entity,
-                                    String attribute,
-                                    String comparisonOperator, String value);
+    void processComparatorCommand(String aliasAndAttribute,
+                                  String comparator, Object value);
 
     void addEntityToEntityJoin(String fromEntity, String toEntity);
 
+    void processParenthesis(String bracket);
+
     void processLogicalOperator(String logicalOperator);
 
-    void processComparatorCommand(String attribute, String comparator,
-                                  String value);
+    void processMethodExpression(String methodName);
 
-    void processReferenceStatement(
-            String fromEntity, String fromSystemId,
-            String entity, String toEntity,
-            String toSystemId);
+    void processAttribute(String attribute);
 
+    void processComparator(String comparator);
 
+    void processStartConcat();
+
+    void processEndConcat();
+
+    void startBoolComparison();
+
+    void processStartRight();
+
+    void endBoolComparison();
+
+    void processPrimitive(Object value);
+
+    void processCompareMethod(String methodName, Object value);
 }

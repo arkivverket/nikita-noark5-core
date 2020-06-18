@@ -2,6 +2,7 @@ package nikita.webapp.structure;
 
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Series;
+import nikita.webapp.odata.AnalyseEntity;
 import org.junit.jupiter.api.Test;
 
 public class TestReflection {
@@ -10,9 +11,13 @@ public class TestReflection {
     public void testReflection() throws NoSuchMethodException {
         TestReflection ref = new TestReflection();
         Fonds fonds = new Fonds();
-        System.out.println("fonds: " + fonds.getForeignKeyObjectName("Series"));
-        System.out.println("fonds: " + fonds.getForeignKeyObjectName("Record"));
-        System.out.println("fonds PK: " + fonds.getPrimaryKey());
+        AnalyseEntity analyseEntity = new AnalyseEntity();
+
+        System.out.println("fonds: " + analyseEntity.
+                getForeignKeyObjectName("Series", Fonds.class));
+        System.out.println("fonds: " + analyseEntity.
+                getForeignKeyObjectName("Record", Fonds.class));
+        System.out.println("fonds PK: " + analyseEntity.getPrimaryKey(Fonds.class));
 
         Series series = new Series();
         System.out.println("series: " + series.getForeignKeyObjectName(

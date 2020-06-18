@@ -7,12 +7,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Methods like addValue, addAttribute, addComparator (that call addWithSpace)
- * are there for readability. We may decide to replace them with addWithSpace
- * later, but currently use them to make things a little clearer during
- * development.
- * <p>
- * <p>
  * Some consideration of note:
  * Avoid problem when alias of entity is a reserved HQL keyword e.g "class" or
  * "order".  To achieve this a "_1" is added to the alias of an an entity
@@ -20,24 +14,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class HQLStatementBuilder {
 
-    private final String COMPARISON_PARAMETER = "comparisonParameter_";
-    // Parameter values
-    private final Map<String, String> startsWithParameters = new HashMap<>();
-    private final Map<String, String> endsWithParameters = new HashMap<>();
-    private final Map<String, String> containsParameters = new HashMap<>();
-    private final Map<String, Object> comparisonParameters = new HashMap<>();
-
-    // query options
-    // List of order by options
+    private final String PARAMETER = "parameter_";
+    private final Map<String, Object> parameters = new HashMap<>();
     private final Map<String, String> orderByMap = new HashMap<>();
-
     private final StringBuilder select = new StringBuilder();
     private final StringBuilder from = new StringBuilder();
     private final StringBuilder where = new StringBuilder();
-    private final StringBuilder orderby = new StringBuilder();
+    private final StringBuilder orderBy = new StringBuilder();
     private final Set<String> entityList = new TreeSet<>();
-    // Foreign key reference
-    private String parentSystemId = "";
+
     // Setting a hard limit of 1000 unless overridden
     private AtomicInteger limitHowMany = new AtomicInteger(1000);
     // Always start at offset 0 unless overridden
@@ -65,107 +50,80 @@ public class HQLStatementBuilder {
         this.fromEntityAlias = fromEntity.toLowerCase() + "_1";
     }
 
-    public void addFromWithForeignKey(String parentEntity, String fromEntity,
-                                      String systemId) {
-        where.append(" where reference");
-        where.append(parentEntity);
-        where.append(" = :parentSystemId)");
-        where.append("'");
-        parentSystemId = systemId;
-        addQueryEntity(fromEntity);
-    }
-
-    public void addStartsWith(String entityAlias, String attribute,
-                              String value) {
-        String STARTS_WITH_PARAMETER = "startsWithParameter_";
-        String parameter = STARTS_WITH_PARAMETER + startsWithParameters.size();
-        value = desanitiseValue(value);
-        startsWithParameters.put(parameter, value);
-        addAttribute(entityAlias + "." + attribute);
-        addComparator("like");
-        addValue(":" + parameter);
-    }
-
-    public void addEndsWith(String entityAlias, String attribute,
-                            String value) {
-        String ENDS_WITH_PARAMETER = "endsWithParameter_";
-        String parameter = ENDS_WITH_PARAMETER + endsWithParameters.size();
-        value = desanitiseValue(value);
-        endsWithParameters.put(parameter, value);
-        addAttribute(entityAlias + "." + attribute);
-        addComparator("like");
-        addValue(":" + parameter);
-    }
-
-    public void addContains(String entityAlias, String attribute,
-                            String value) {
-        String CONTAINS_PARAMETER = "containsParameter_";
-        String parameter = CONTAINS_PARAMETER + containsParameters.size();
-        value = desanitiseValue(value);
-        containsParameters.put(parameter, value);
-        addAttribute(entityAlias + "." + attribute);
-        addComparator("like");
-        addValue(":" + parameter);
+    public void addCompareValueFunction(
+            String leftFunctionNames, String leftFunctionClose,
+            Object aliasAndAttribute, String comparator, Object value,
+            String rightFunctionNames, String rightFunctionClose) {
+        String parameter = PARAMETER + parameters.size();
+        if (value instanceof String) {
+            value = desanitiseValue((String) value);
+        }
+        if (value != null) {
+            parameters.put(parameter, value);
+        }
+        where.append(leftFunctionNames);
+        if (aliasAndAttribute != null) {
+            where.append(aliasAndAttribute);
+        }
+        where.append(leftFunctionClose);
+        where.append(" ");
+        addComparator(comparator, value);
+        if (null == value) {
+            where.append("null");
+        }
+        where.append(rightFunctionNames);
+        if (value != null) {
+            where.append(":" + parameter);
+        }
+        where.append(rightFunctionClose);
+        where.append(" ");
     }
 
     public void addCompareValue(String aliasAndAttribute, String comparator,
-                                String value) {
-        String parameter = COMPARISON_PARAMETER + comparisonParameters.size();
-        comparisonParameters.put(parameter, desanitiseValue(value));
+                                Object value) {
+        String parameter = PARAMETER + parameters.size();
+        if (value instanceof String) {
+            parameters.put(parameter, desanitiseValue((String) value));
+        } else {
+            parameters.put(parameter, value);
+        }
         addAttribute(aliasAndAttribute);
         addComparator(comparator);
         addValue(":" + parameter);
     }
 
-    /**
-     * add a function to the where clause
-     * <p>
-     * Note the aliasAndAttribute parameter contains both the alias as well
-     * as the attribute with a "." between them
-     *
-     * @param function          function to use e.g. year or month
-     * @param aliasAndAttribute e.g file.createdDate
-     * @param comparator        The comparator operator
-     * @param value             The value to compare against
-     */
-    public void addCompareValue(String function, String aliasAndAttribute,
-                                String comparator, String value) {
-        String parameter = COMPARISON_PARAMETER + comparisonParameters.size();
-        comparisonParameters.put(parameter, Integer.parseInt(value));
-        where.append(function);
-        where.append("(");
-        where.append(aliasAndAttribute);
-        where.append(") ");
-        addComparator(comparator);
-        addValue(":" + parameter);
+    private void addComparator(String comparator, Object value) {
+        if (null == value) {
+            if (comparator.equals("=")) {
+                addComparator("is");
+            } else if (comparator.equals("!=") || comparator.equals("<>")) {
+                addComparator("is not");
+            }
+        } else {
+            addComparator(comparator);
+        }
     }
 
-    public void addLeftBracket() {
-        where.append("( ");
+    public void addBracket(String bracket) {
+        // For cosmetic reasons to deal with too many spaces. The HQL
+        // syntax tests are a little too rigid on spaces. Later when we test on
+        // database rather than syntax, we can remove this code that deletes
+        // a redundant space
+        if (bracket.equals(")") && where.charAt(where.length() - 1) == ' ') {
+            where.delete(where.length() - 1, where.length());
+        }
+        where.append(bracket);
     }
 
-    public void addRightBracket() {
-        where.append(" ) ");
+    public void addLogicalOperator(String logicalOperator) {
+        if (where.charAt(where.length() - 1) != ' ') {
+            where.append(" ");
+        }
+        where.append(logicalOperator);
+        where.append(" ");
     }
 
-    public void addOr() {
-        where.append("or ");
-    }
-
-    public void addAnd() {
-        where.append("and ");
-    }
-
-    public void addIsNull() {
-        where.append("is null ");
-    }
-
-
-    public void addIsNotNull() {
-        where.append("is not null ");
-    }
-
-    private void addValue(String value) {
+    public void addValue(String value) {
         addWithSpace(value);
     }
 
@@ -179,8 +137,8 @@ public class HQLStatementBuilder {
 
     public void addCompare(String aliasAndAttribute, String comparator,
                            String value) {
-        String parameter = COMPARISON_PARAMETER + comparisonParameters.size();
-        comparisonParameters.put(parameter, desanitiseValue(value));
+        String parameter = PARAMETER + parameters.size();
+        parameters.put(parameter, desanitiseValue(value));
         addAttribute(aliasAndAttribute);
         addComparator(comparator);
         addValue(":" + parameter);
@@ -191,7 +149,6 @@ public class HQLStatementBuilder {
         where.append(" ");
     }
 
-    // Methods relating to query options top, skip, orderby
     public void setLimitHowMany(AtomicInteger limitHowMany) {
         this.limitHowMany = limitHowMany;
     }
@@ -215,7 +172,7 @@ public class HQLStatementBuilder {
                     orderByMap.entrySet()) {
                 join.add(entry.getKey() + " " + entry.getValue());
             }
-            orderby.append(join.toString());
+            orderBy.append(join.toString());
         }
 
         // Add list of entities in query
@@ -232,58 +189,32 @@ public class HQLStatementBuilder {
         // are part of the JOIN.
         if (select.length() < 1) {
             select.append("SELECT ");
-            select.append(fromEntityAlias);
+            select.append(this.fromEntityAlias);
         }
 
-        String query = select.toString() + " FROM " + fromEntity + " AS " +
-                fromEntityAlias + " " + from.toString();
+        String query = select.toString() + " FROM " + this.fromEntity + " AS " +
+                this.fromEntityAlias + " " + from.toString();
 
         if (where.length() > 0) {
             query += "WHERE " + where.toString();
         }
-        if (orderby.length() > 0) {
-            query += orderby.toString();
+        if (orderBy.length() > 0) {
+            query += orderBy.toString();
         }
 
         return query.stripTrailing().stripLeading();
     }
 
     public String getQuery() {
-        return processQuery();
+        return processQuery().stripTrailing();
     }
 
     public Query getQuery(Session session) {
         Query query = session.createQuery(processQuery());
 
-        if (!parentSystemId.isEmpty()) {
-            query.setParameter("parentId", parentSystemId);
-        }
-
-        // Resolve all startsWith parameters
-        for (Map.Entry<String, String> entry :
-                startsWithParameters.entrySet()) {
-            query.setParameter(entry.getKey(),
-                    entry.getValue() + "%");
-        }
-
-        // Resolve all startsWith parameters
         for (Map.Entry<String, Object> entry :
-                comparisonParameters.entrySet()) {
+                parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
-        }
-
-        // Resolve all contains parameters
-        for (Map.Entry<String, String> entry :
-                containsParameters.entrySet()) {
-            query.setParameter(entry.getKey(),
-                    "%" + entry.getValue() + "%");
-        }
-
-        // Resolve all endsWith parameters
-        for (Map.Entry<String, String> entry :
-                endsWithParameters.entrySet()) {
-            query.setParameter(entry.getKey(),
-                    "%" + entry.getValue());
         }
 
         query.setFirstResult(limitOffset.get());
