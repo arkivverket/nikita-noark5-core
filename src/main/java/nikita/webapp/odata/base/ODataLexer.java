@@ -1,4 +1,3 @@
-// Generated from /home/tsodring/git/nikita-noark5-core/src/main/antlr4/ODataLexer.g4 by ANTLR 4.8
 package nikita.webapp.odata.base;
 
 import org.antlr.v4.runtime.*;
@@ -34,8 +33,155 @@ public class ODataLexer extends Lexer {
 		SECOND_DEF=126, ZERO_TO_FIFTY_NINE=127, ONE_TO_NINE=128, YEAR_DEF=129,
 		MONTH_DEF=130, DAY_DEF=131, HEX=132, SINGLE_CHAR_SMALL=133, SINGLE_CHAR=134,
 		NEGATIVE=135, DEC_OCTECT=136, HEX_NUMBER=137, BIN_NUMBER=138, ERROR_RECONGNIGION=139;
+	public static final String[] ruleNames = makeRuleNames();
+	/**
+	 * @deprecated Use {@link #VOCABULARY} instead.
+	 */
+	@Deprecated
+	public static final String[] tokenNames;
+	protected static final DFA[] _decisionToDFA;
 	public static final int
 		ERRORCHANNEL=2;
+	protected static final PredictionContextCache _sharedContextCache =
+		new PredictionContextCache();
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
+	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+	public static String[] channelNames = {
+		"DEFAULT_TOKEN_CHANNEL", "HIDDEN", "ERRORCHANNEL"
+	};
+	public static String[] modeNames = {
+		"DEFAULT_MODE"
+	};
+
+	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
+
+	static {
+		tokenNames = new String[_SYMBOLIC_NAMES.length];
+		for (int i = 0; i < tokenNames.length; i++) {
+			tokenNames[i] = VOCABULARY.getLiteralName(i);
+			if (tokenNames[i] == null) {
+				tokenNames[i] = VOCABULARY.getSymbolicName(i);
+			}
+
+			if (tokenNames[i] == null) {
+				tokenNames[i] = "<INVALID>";
+			}
+		}
+	}
+	public ODataLexer(CharStream input) {
+		super(input);
+		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
+	}
+
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"SPACE", "FILTER", "TOP", "SKIPRULE", "SKIPTOKEN", "ORDERBY", "REF",
+			"EXPAND", "COUNT", "SELECT", "DOLLARID", "CONTAINS", "STARTSWITH", "ENDSWITH",
+			"SUBSTRINGOF", "LENGTH", "INDEXOF", "REPLACE", "SUBSTRING", "TOLOWER",
+			"TOUPPER", "TRIM", "CONCAT", "DAY", "MONTH", "YEAR", "HOUR", "MINUTE",
+			"SECOND", "NOW", "TIME", "MAX_DATE_TIME", "MIN_DATE_TIME", "TOTAL_OFFSET_MINUTES",
+			"FRACTIONAL_SECONDS", "TOTAL_SECONDS", "GEO_INTERSECTS", "GEO_DISTANCE",
+			"GEO_LENGTH", "ROUND", "FLOOR", "CEILING", "CAST", "ISOF", "EQUAL", "EQ",
+			"GT", "LT", "GE", "LE", "NE", "ADD", "SUB", "MUL", "DIV", "MOD", "ORDER",
+			"BY", "DESC", "ASC", "OR", "AND", "NOT", "SEPERATOR", "HTTP", "HTTPS",
+			"OPEN", "CLOSE", "COMMA", "QUESTION", "DOLLAR", "SEMI", "AT_SIGN", "BAR",
+			"SINGLE_QUOTE_SYMB", "DOUBLE_QUOTE_SYMB", "REVERSE_QUOTE_SYMB", "COLON_SYMB",
+			"AMPERSAND", "NULL_TOKEN", "NULL_SPEC_LITERAL", "DOT", "SLASH", "UNDERSCORE",
+			"EDM", "COLLECTION", "GEOGRAPHY", "GEOMETRY", "BINARY", "BOOLEAN", "BYTE",
+			"DATE", "DATETIMEOFFSET", "DECIMAL", "DOUBLE", "DURATION", "GUID", "INT16",
+			"INT32", "INT64", "SBYTE", "SINGLE", "STREAM", "STRING", "TIMEOFDAY",
+			"LINESTRING", "MULTILINESTRING", "MULTIPOINT", "MULTIPOLYGON", "POINT",
+			"POLYGON", "BOOLEAN_VALUE", "UUID", "INTEGER", "FLOAT", "ID", "QUOTED_STRING",
+			"STRING_LITERAL", "DECIMAL_LITERAL", "TIME_OF_DAY_VALUE", "DURATION_VALUE",
+			"DATE_VALUE", "DATE_TIME_OFFSET_VALUE", "HOUR_DEF", "MINUTE_DEF", "SECOND_DEF",
+			"ZERO_TO_FIFTY_NINE", "ONE_TO_NINE", "YEAR_DEF", "MONTH_DEF", "DAY_DEF",
+			"HEX", "SINGLE_CHAR_SMALL", "SINGLE_CHAR", "NEGATIVE", "DEC_OCTECT",
+			"EXPONENT_NUM_PART", "ID_LITERAL", "DQUOTA_STRING", "SQUOTA_STRING",
+			"BQUOTA_STRING", "BLOCK", "A", "B", "C", "D", "E", "F", "G", "H", "I",
+			"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
+			"X", "Y", "Z", "DIGIT", "DIGITS", "HEXDIGIT", "HEX_NUMBER", "BIN_NUMBER",
+			"ERROR_RECONGNIGION"
+		};
+	}
+
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, null, null, null, null, "'$skiptoken'", "'$orderby'", "'$ref?$id='",
+			"'$expand'", "'$count'", "'$select='", "'$id='", null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, "'='", null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			"'://'", null, null, "'('", "')'", "','", "'?'", "'$'", "';'", "'@'",
+			"'|'", "'''", "'\"'", "'`'", "':'", "'&'", null, null, "'.'", "'/'",
+			"'_'", "'Edm'", "'Collection'", "'Geography'", "'Geometry'", "'Binary'",
+			"'Boolean'", "'Byte'", "'Date'", "'DateTimeOffset'", "'Decimal'", "'Double'",
+			"'Duration'", "'Guid'", "'Int16'", "'Int32'", "'Int64'", "'SByte'", "'Single'",
+			"'Stream'", "'String'", "'TimeOfDay'", null, "'MultiLineString'", "'MultiPoint'",
+			"'MultiPolygon'", "'Point'", "'Polygon'", null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, "'-'"
+		};
+	}
+
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, "SPACE", "FILTER", "TOP", "SKIPRULE", "SKIPTOKEN", "ORDERBY", "REF",
+			"EXPAND", "COUNT", "SELECT", "DOLLARID", "CONTAINS", "STARTSWITH", "ENDSWITH",
+			"SUBSTRINGOF", "LENGTH", "INDEXOF", "REPLACE", "SUBSTRING", "TOLOWER",
+			"TOUPPER", "TRIM", "CONCAT", "DAY", "MONTH", "YEAR", "HOUR", "MINUTE",
+			"SECOND", "NOW", "TIME", "MAX_DATE_TIME", "MIN_DATE_TIME", "TOTAL_OFFSET_MINUTES",
+			"FRACTIONAL_SECONDS", "TOTAL_SECONDS", "GEO_INTERSECTS", "GEO_DISTANCE",
+			"GEO_LENGTH", "ROUND", "FLOOR", "CEILING", "CAST", "ISOF", "EQUAL", "EQ",
+			"GT", "LT", "GE", "LE", "NE", "ADD", "SUB", "MUL", "DIV", "MOD", "ORDER",
+			"BY", "DESC", "ASC", "OR", "AND", "NOT", "SEPERATOR", "HTTP", "HTTPS",
+			"OPEN", "CLOSE", "COMMA", "QUESTION", "DOLLAR", "SEMI", "AT_SIGN", "BAR",
+			"SINGLE_QUOTE_SYMB", "DOUBLE_QUOTE_SYMB", "REVERSE_QUOTE_SYMB", "COLON_SYMB",
+			"AMPERSAND", "NULL_TOKEN", "NULL_SPEC_LITERAL", "DOT", "SLASH", "UNDERSCORE",
+			"EDM", "COLLECTION", "GEOGRAPHY", "GEOMETRY", "BINARY", "BOOLEAN", "BYTE",
+			"DATE", "DATETIMEOFFSET", "DECIMAL", "DOUBLE", "DURATION", "GUID", "INT16",
+			"INT32", "INT64", "SBYTE", "SINGLE", "STREAM", "STRING", "TIMEOFDAY",
+			"LINESTRING", "MULTILINESTRING", "MULTIPOINT", "MULTIPOLYGON", "POINT",
+			"POLYGON", "BOOLEAN_VALUE", "UUID", "INTEGER", "FLOAT", "ID", "QUOTED_STRING",
+			"STRING_LITERAL", "DECIMAL_LITERAL", "TIME_OF_DAY_VALUE", "DURATION_VALUE",
+			"DATE_VALUE", "DATE_TIME_OFFSET_VALUE", "HOUR_DEF", "MINUTE_DEF", "SECOND_DEF",
+			"ZERO_TO_FIFTY_NINE", "ONE_TO_NINE", "YEAR_DEF", "MONTH_DEF", "DAY_DEF",
+			"HEX", "SINGLE_CHAR_SMALL", "SINGLE_CHAR", "NEGATIVE", "DEC_OCTECT",
+			"HEX_NUMBER", "BIN_NUMBER", "ERROR_RECONGNIGION"
+		};
+	}
+
+	@Override
+	@Deprecated
+	public String[] getTokenNames() {
+		return tokenNames;
+	}
+
+	@Override
+
+	public Vocabulary getVocabulary() {
+		return VOCABULARY;
+	}
+
+	@Override
+	public String getGrammarFileName() { return "ODataLexer.g4"; }
+
+	@Override
+	public String[] getRuleNames() { return ruleNames; }
+
+	@Override
+	public String getSerializedATN() { return _serializedATN; }
+
+	@Override
+	public String[] getChannelNames() { return channelNames; }
+
+	@Override
+	public String[] getModeNames() { return modeNames; }
+
+	@Override
+	public ATN getATN() { return _ATN; }
+
 	public static final String _serializedATN =
 		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\u008d\u059f\b\1\4"+
 		"\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n"+
@@ -596,153 +742,6 @@ public class ODataLexer extends Lexer {
 		"\u052b\u052d\u0570\u057a\u0582\u0586\u058e\u0596\u0599\4\2\3\2\2\4\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
-	protected static final DFA[] _decisionToDFA;
-	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
-	private static final String[] _LITERAL_NAMES = makeLiteralNames();
-	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
-	public static final String[] ruleNames = makeRuleNames();
-	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
-	public static String[] channelNames = {
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN", "ERRORCHANNEL"
-	};
-	public static String[] modeNames = {
-		"DEFAULT_MODE"
-	};
-
-	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
-
-	static {
-		tokenNames = new String[_SYMBOLIC_NAMES.length];
-		for (int i = 0; i < tokenNames.length; i++) {
-			tokenNames[i] = VOCABULARY.getLiteralName(i);
-			if (tokenNames[i] == null) {
-				tokenNames[i] = VOCABULARY.getSymbolicName(i);
-			}
-
-			if (tokenNames[i] == null) {
-				tokenNames[i] = "<INVALID>";
-			}
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #VOCABULARY} instead.
-	 */
-	@Deprecated
-	public static final String[] tokenNames;
-	public ODataLexer(CharStream input) {
-		super(input);
-		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
-	}
-
-	private static String[] makeRuleNames() {
-		return new String[] {
-			"SPACE", "FILTER", "TOP", "SKIPRULE", "SKIPTOKEN", "ORDERBY", "REF",
-			"EXPAND", "COUNT", "SELECT", "DOLLARID", "CONTAINS", "STARTSWITH", "ENDSWITH",
-			"SUBSTRINGOF", "LENGTH", "INDEXOF", "REPLACE", "SUBSTRING", "TOLOWER",
-			"TOUPPER", "TRIM", "CONCAT", "DAY", "MONTH", "YEAR", "HOUR", "MINUTE",
-			"SECOND", "NOW", "TIME", "MAX_DATE_TIME", "MIN_DATE_TIME", "TOTAL_OFFSET_MINUTES",
-			"FRACTIONAL_SECONDS", "TOTAL_SECONDS", "GEO_INTERSECTS", "GEO_DISTANCE",
-			"GEO_LENGTH", "ROUND", "FLOOR", "CEILING", "CAST", "ISOF", "EQUAL", "EQ",
-			"GT", "LT", "GE", "LE", "NE", "ADD", "SUB", "MUL", "DIV", "MOD", "ORDER",
-			"BY", "DESC", "ASC", "OR", "AND", "NOT", "SEPERATOR", "HTTP", "HTTPS",
-			"OPEN", "CLOSE", "COMMA", "QUESTION", "DOLLAR", "SEMI", "AT_SIGN", "BAR",
-			"SINGLE_QUOTE_SYMB", "DOUBLE_QUOTE_SYMB", "REVERSE_QUOTE_SYMB", "COLON_SYMB",
-			"AMPERSAND", "NULL_TOKEN", "NULL_SPEC_LITERAL", "DOT", "SLASH", "UNDERSCORE",
-			"EDM", "COLLECTION", "GEOGRAPHY", "GEOMETRY", "BINARY", "BOOLEAN", "BYTE",
-			"DATE", "DATETIMEOFFSET", "DECIMAL", "DOUBLE", "DURATION", "GUID", "INT16",
-			"INT32", "INT64", "SBYTE", "SINGLE", "STREAM", "STRING", "TIMEOFDAY",
-			"LINESTRING", "MULTILINESTRING", "MULTIPOINT", "MULTIPOLYGON", "POINT",
-			"POLYGON", "BOOLEAN_VALUE", "UUID", "INTEGER", "FLOAT", "ID", "QUOTED_STRING",
-			"STRING_LITERAL", "DECIMAL_LITERAL", "TIME_OF_DAY_VALUE", "DURATION_VALUE",
-			"DATE_VALUE", "DATE_TIME_OFFSET_VALUE", "HOUR_DEF", "MINUTE_DEF", "SECOND_DEF",
-			"ZERO_TO_FIFTY_NINE", "ONE_TO_NINE", "YEAR_DEF", "MONTH_DEF", "DAY_DEF",
-			"HEX", "SINGLE_CHAR_SMALL", "SINGLE_CHAR", "NEGATIVE", "DEC_OCTECT",
-			"EXPONENT_NUM_PART", "ID_LITERAL", "DQUOTA_STRING", "SQUOTA_STRING",
-			"BQUOTA_STRING", "BLOCK", "A", "B", "C", "D", "E", "F", "G", "H", "I",
-			"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
-			"X", "Y", "Z", "DIGIT", "DIGITS", "HEXDIGIT", "HEX_NUMBER", "BIN_NUMBER",
-			"ERROR_RECONGNIGION"
-		};
-	}
-
-	private static String[] makeLiteralNames() {
-		return new String[] {
-			null, null, null, null, null, "'$skiptoken'", "'$orderby'", "'$ref?$id='",
-			"'$expand'", "'$count'", "'$select='", "'$id='", null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null, null, "'='", null, null, null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null, null, null,
-			"'://'", null, null, "'('", "')'", "','", "'?'", "'$'", "';'", "'@'",
-			"'|'", "'''", "'\"'", "'`'", "':'", "'&'", null, null, "'.'", "'/'",
-			"'_'", "'Edm'", "'Collection'", "'Geography'", "'Geometry'", "'Binary'",
-			"'Boolean'", "'Byte'", "'Date'", "'DateTimeOffset'", "'Decimal'", "'Double'",
-			"'Duration'", "'Guid'", "'Int16'", "'Int32'", "'Int64'", "'SByte'", "'Single'",
-			"'Stream'", "'String'", "'TimeOfDay'", null, "'MultiLineString'", "'MultiPoint'",
-			"'MultiPolygon'", "'Point'", "'Polygon'", null, null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null, null, null, "'-'"
-		};
-	}
-
-	private static String[] makeSymbolicNames() {
-		return new String[] {
-			null, "SPACE", "FILTER", "TOP", "SKIPRULE", "SKIPTOKEN", "ORDERBY", "REF",
-			"EXPAND", "COUNT", "SELECT", "DOLLARID", "CONTAINS", "STARTSWITH", "ENDSWITH",
-			"SUBSTRINGOF", "LENGTH", "INDEXOF", "REPLACE", "SUBSTRING", "TOLOWER",
-			"TOUPPER", "TRIM", "CONCAT", "DAY", "MONTH", "YEAR", "HOUR", "MINUTE",
-			"SECOND", "NOW", "TIME", "MAX_DATE_TIME", "MIN_DATE_TIME", "TOTAL_OFFSET_MINUTES",
-			"FRACTIONAL_SECONDS", "TOTAL_SECONDS", "GEO_INTERSECTS", "GEO_DISTANCE",
-			"GEO_LENGTH", "ROUND", "FLOOR", "CEILING", "CAST", "ISOF", "EQUAL", "EQ",
-			"GT", "LT", "GE", "LE", "NE", "ADD", "SUB", "MUL", "DIV", "MOD", "ORDER",
-			"BY", "DESC", "ASC", "OR", "AND", "NOT", "SEPERATOR", "HTTP", "HTTPS",
-			"OPEN", "CLOSE", "COMMA", "QUESTION", "DOLLAR", "SEMI", "AT_SIGN", "BAR",
-			"SINGLE_QUOTE_SYMB", "DOUBLE_QUOTE_SYMB", "REVERSE_QUOTE_SYMB", "COLON_SYMB",
-			"AMPERSAND", "NULL_TOKEN", "NULL_SPEC_LITERAL", "DOT", "SLASH", "UNDERSCORE",
-			"EDM", "COLLECTION", "GEOGRAPHY", "GEOMETRY", "BINARY", "BOOLEAN", "BYTE",
-			"DATE", "DATETIMEOFFSET", "DECIMAL", "DOUBLE", "DURATION", "GUID", "INT16",
-			"INT32", "INT64", "SBYTE", "SINGLE", "STREAM", "STRING", "TIMEOFDAY",
-			"LINESTRING", "MULTILINESTRING", "MULTIPOINT", "MULTIPOLYGON", "POINT",
-			"POLYGON", "BOOLEAN_VALUE", "UUID", "INTEGER", "FLOAT", "ID", "QUOTED_STRING",
-			"STRING_LITERAL", "DECIMAL_LITERAL", "TIME_OF_DAY_VALUE", "DURATION_VALUE",
-			"DATE_VALUE", "DATE_TIME_OFFSET_VALUE", "HOUR_DEF", "MINUTE_DEF", "SECOND_DEF",
-			"ZERO_TO_FIFTY_NINE", "ONE_TO_NINE", "YEAR_DEF", "MONTH_DEF", "DAY_DEF",
-			"HEX", "SINGLE_CHAR_SMALL", "SINGLE_CHAR", "NEGATIVE", "DEC_OCTECT",
-			"HEX_NUMBER", "BIN_NUMBER", "ERROR_RECONGNIGION"
-		};
-	}
-
-	@Override
-	@Deprecated
-	public String[] getTokenNames() {
-		return tokenNames;
-	}
-
-	@Override
-
-	public Vocabulary getVocabulary() {
-		return VOCABULARY;
-	}
-
-	@Override
-	public String getGrammarFileName() { return "ODataLexer.g4"; }
-
-	@Override
-	public String[] getRuleNames() { return ruleNames; }
-
-	@Override
-	public String getSerializedATN() { return _serializedATN; }
-
-	@Override
-	public String[] getChannelNames() { return channelNames; }
-
-	@Override
-	public String[] getModeNames() { return modeNames; }
-
-	@Override
-	public ATN getATN() { return _ATN; }
 	static {
 		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
 		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {

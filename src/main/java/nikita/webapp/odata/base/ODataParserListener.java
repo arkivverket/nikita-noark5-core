@@ -765,16 +765,20 @@ public interface ODataParserListener extends ParseTreeListener {
 
     /**
      * Enter a parse tree produced by {@link ODataParser#floatValue}.
-	 * @param ctx the parse tree
-	 */
-	void enterFloatValue(ODataParser.FloatValueContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ODataParser#floatValue}.
-	 * @param ctx the parse tree
-	 */
-	void exitFloatValue(ODataParser.FloatValueContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ODataParser#integerValue}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterFloatValue(ODataParser.FloatValueContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#floatValue}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitFloatValue(ODataParser.FloatValueContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ODataParser#integerValue}.
 	 * @param ctx the parse tree
 	 */
 	void enterIntegerValue(ODataParser.IntegerValueContext ctx);

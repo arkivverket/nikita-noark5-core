@@ -231,74 +231,6 @@ public class ODataParser extends Parser {
 		}
 	}
 
-	public ODataParser(TokenStream input) {
-		super(input);
-		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
-	}
-
-	private static String[] makeRuleNames() {
-		return new String[] {
-			"odataRelativeUri", "resourcePath", "entity", "entityCast", "entityUUID",
-			"embeddedEntitySet", "queryOptions", "queryOption", "filter", "expand",
-			"filterExpression", "boolCommonExpr", "leftComparatorExpr", "rightComparatorExpr",
-			"orderby", "orderbyItem", "topStatement", "skipStatement", "joinEntities",
-			"commonExpr", "mathExpr", "methodExpr", "compareMethodExpr", "methodCallExpr",
-			"calenderMethodExp", "concatMethodExpr", "singleMethodCallExpr", "substringMethodCallExpr",
-			"comparisonOperator", "compareMethodName", "methodName", "calenderMethodName",
-			"number", "primitiveLiteral", "openPar", "closePar", "logicalOperator",
-			"entityName", "attributeName", "uuidIdValue", "quotedString", "nullSpecLiteral",
-			"nullToken", "booleanValue", "durationValue", "dateValue", "dateTimeOffsetValue",
-			"timeOfDayValue", "decimalLiteral", "floatValue", "integerValue", "countStatement"
-		};
-	}
-
-	private static String[] makeLiteralNames() {
-		return new String[] {
-			null, null, null, null, null, "'$skiptoken'", "'$orderby'", "'$ref?$id='",
-			"'$expand'", "'$count'", "'$select='", "'$id='", null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null, null, "'='", null, null, null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null, null, null,
-			"'://'", null, null, "'('", "')'", "','", "'?'", "'$'", "';'", "'@'",
-			"'|'", "'''", "'\"'", "'`'", "':'", "'&'", null, null, "'.'", "'/'",
-			"'_'", "'Edm'", "'Collection'", "'Geography'", "'Geometry'", "'Binary'",
-			"'Boolean'", "'Byte'", "'Date'", "'DateTimeOffset'", "'Decimal'", "'Double'",
-			"'Duration'", "'Guid'", "'Int16'", "'Int32'", "'Int64'", "'SByte'", "'Single'",
-			"'Stream'", "'String'", "'TimeOfDay'", null, "'MultiLineString'", "'MultiPoint'",
-			"'MultiPolygon'", "'Point'", "'Polygon'", null, null, null, null, null,
-			null, null, null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null, null, null, "'-'"
-		};
-	}
-
-	private static String[] makeSymbolicNames() {
-		return new String[] {
-			null, "SPACE", "FILTER", "TOP", "SKIPRULE", "SKIPTOKEN", "ORDERBY", "REF",
-			"EXPAND", "COUNT", "SELECT", "DOLLARID", "CONTAINS", "STARTSWITH", "ENDSWITH",
-			"SUBSTRINGOF", "LENGTH", "INDEXOF", "REPLACE", "SUBSTRING", "TOLOWER",
-			"TOUPPER", "TRIM", "CONCAT", "DAY", "MONTH", "YEAR", "HOUR", "MINUTE",
-			"SECOND", "NOW", "TIME", "MAX_DATE_TIME", "MIN_DATE_TIME", "TOTAL_OFFSET_MINUTES",
-			"FRACTIONAL_SECONDS", "TOTAL_SECONDS", "GEO_INTERSECTS", "GEO_DISTANCE",
-			"GEO_LENGTH", "ROUND", "FLOOR", "CEILING", "CAST", "ISOF", "EQUAL", "EQ",
-			"GT", "LT", "GE", "LE", "NE", "ADD", "SUB", "MUL", "DIV", "MOD", "ORDER",
-			"BY", "DESC", "ASC", "OR", "AND", "NOT", "SEPERATOR", "HTTP", "HTTPS",
-			"OPEN", "CLOSE", "COMMA", "QUESTION", "DOLLAR", "SEMI", "AT_SIGN", "BAR",
-			"SINGLE_QUOTE_SYMB", "DOUBLE_QUOTE_SYMB", "REVERSE_QUOTE_SYMB", "COLON_SYMB",
-			"AMPERSAND", "NULL_TOKEN", "NULL_SPEC_LITERAL", "DOT", "SLASH", "UNDERSCORE",
-			"EDM", "COLLECTION", "GEOGRAPHY", "GEOMETRY", "BINARY", "BOOLEAN", "BYTE",
-			"DATE", "DATETIMEOFFSET", "DECIMAL", "DOUBLE", "DURATION", "GUID", "INT16",
-			"INT32", "INT64", "SBYTE", "SINGLE", "STREAM", "STRING", "TIMEOFDAY",
-			"LINESTRING", "MULTILINESTRING", "MULTIPOINT", "MULTIPOLYGON", "POINT",
-			"POLYGON", "BOOLEAN_VALUE", "UUID", "INTEGER", "FLOAT", "ID", "QUOTED_STRING",
-			"STRING_LITERAL", "DECIMAL_LITERAL", "TIME_OF_DAY_VALUE", "DURATION_VALUE",
-			"DATE_VALUE", "DATE_TIME_OFFSET_VALUE", "HOUR_DEF", "MINUTE_DEF", "SECOND_DEF",
-			"ZERO_TO_FIFTY_NINE", "ONE_TO_NINE", "YEAR_DEF", "MONTH_DEF", "DAY_DEF",
-			"HEX", "SINGLE_CHAR_SMALL", "SINGLE_CHAR", "NEGATIVE", "DEC_OCTECT",
-			"HEX_NUMBER", "BIN_NUMBER", "ERROR_RECONGNIGION"
-		};
-	}
-
 	@Override
 	@Deprecated
 	public String[] getTokenNames() {
@@ -322,6 +254,27 @@ public class ODataParser extends Parser {
 
 	@Override
 	public ATN getATN() { return _ATN; }
+
+	public ODataParser(TokenStream input) {
+		super(input);
+		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
+	}
+
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"odataRelativeUri", "resourcePath", "entity", "entityCast", "entityUUID",
+			"embeddedEntitySet", "queryOptions", "queryOption", "filter", "expand",
+			"filterExpression", "boolCommonExpr", "leftComparatorExpr", "rightComparatorExpr",
+			"orderby", "orderbyItem", "topStatement", "skipStatement", "joinEntities",
+			"commonExpr", "mathExpr", "methodExpr", "compareMethodExpr", "methodCallExpr",
+			"calenderMethodExp", "concatMethodExpr", "singleMethodCallExpr", "substringMethodCallExpr",
+			"comparisonOperator", "compareMethodName", "methodName", "calenderMethodName",
+			"number", "primitiveLiteral", "openPar", "closePar", "logicalOperator",
+			"entityName", "attributeName", "uuidIdValue", "quotedString", "nullSpecLiteral",
+			"nullToken", "booleanValue", "durationValue", "dateValue", "dateTimeOffsetValue",
+			"timeOfDayValue", "decimalLiteral", "floatValue", "integerValue", "countStatement"
+		};
+	}
 
 	public final OdataRelativeUriContext odataRelativeUri() throws RecognitionException {
 		OdataRelativeUriContext _localctx = new OdataRelativeUriContext(_ctx, getState());
@@ -355,6 +308,26 @@ public class ODataParser extends Parser {
 			exitRule();
 		}
 		return _localctx;
+	}
+
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, null, null, null, null, "'$skiptoken'", "'$orderby'", "'$ref?$id='",
+			"'$expand'", "'$count'", "'$select='", "'$id='", null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, "'='", null, null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			"'://'", null, null, "'('", "')'", "','", "'?'", "'$'", "';'", "'@'",
+			"'|'", "'''", "'\"'", "'`'", "':'", "'&'", null, null, "'.'", "'/'",
+			"'_'", "'Edm'", "'Collection'", "'Geography'", "'Geometry'", "'Binary'",
+			"'Boolean'", "'Byte'", "'Date'", "'DateTimeOffset'", "'Decimal'", "'Double'",
+			"'Duration'", "'Guid'", "'Int16'", "'Int32'", "'Int64'", "'SByte'", "'Single'",
+			"'Stream'", "'String'", "'TimeOfDay'", null, "'MultiLineString'", "'MultiPoint'",
+			"'MultiPolygon'", "'Point'", "'Polygon'", null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, "'-'"
+		};
 	}
 
 	public final ResourcePathContext resourcePath() throws RecognitionException {
@@ -409,6 +382,33 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, "SPACE", "FILTER", "TOP", "SKIPRULE", "SKIPTOKEN", "ORDERBY", "REF",
+			"EXPAND", "COUNT", "SELECT", "DOLLARID", "CONTAINS", "STARTSWITH", "ENDSWITH",
+			"SUBSTRINGOF", "LENGTH", "INDEXOF", "REPLACE", "SUBSTRING", "TOLOWER",
+			"TOUPPER", "TRIM", "CONCAT", "DAY", "MONTH", "YEAR", "HOUR", "MINUTE",
+			"SECOND", "NOW", "TIME", "MAX_DATE_TIME", "MIN_DATE_TIME", "TOTAL_OFFSET_MINUTES",
+			"FRACTIONAL_SECONDS", "TOTAL_SECONDS", "GEO_INTERSECTS", "GEO_DISTANCE",
+			"GEO_LENGTH", "ROUND", "FLOOR", "CEILING", "CAST", "ISOF", "EQUAL", "EQ",
+			"GT", "LT", "GE", "LE", "NE", "ADD", "SUB", "MUL", "DIV", "MOD", "ORDER",
+			"BY", "DESC", "ASC", "OR", "AND", "NOT", "SEPERATOR", "HTTP", "HTTPS",
+			"OPEN", "CLOSE", "COMMA", "QUESTION", "DOLLAR", "SEMI", "AT_SIGN", "BAR",
+			"SINGLE_QUOTE_SYMB", "DOUBLE_QUOTE_SYMB", "REVERSE_QUOTE_SYMB", "COLON_SYMB",
+			"AMPERSAND", "NULL_TOKEN", "NULL_SPEC_LITERAL", "DOT", "SLASH", "UNDERSCORE",
+			"EDM", "COLLECTION", "GEOGRAPHY", "GEOMETRY", "BINARY", "BOOLEAN", "BYTE",
+			"DATE", "DATETIMEOFFSET", "DECIMAL", "DOUBLE", "DURATION", "GUID", "INT16",
+			"INT32", "INT64", "SBYTE", "SINGLE", "STREAM", "STRING", "TIMEOFDAY",
+			"LINESTRING", "MULTILINESTRING", "MULTIPOINT", "MULTIPOLYGON", "POINT",
+			"POLYGON", "BOOLEAN_VALUE", "UUID", "INTEGER", "FLOAT", "ID", "QUOTED_STRING",
+			"STRING_LITERAL", "DECIMAL_LITERAL", "TIME_OF_DAY_VALUE", "DURATION_VALUE",
+			"DATE_VALUE", "DATE_TIME_OFFSET_VALUE", "HOUR_DEF", "MINUTE_DEF", "SECOND_DEF",
+			"ZERO_TO_FIFTY_NINE", "ONE_TO_NINE", "YEAR_DEF", "MONTH_DEF", "DAY_DEF",
+			"HEX", "SINGLE_CHAR_SMALL", "SINGLE_CHAR", "NEGATIVE", "DEC_OCTECT",
+			"HEX_NUMBER", "BIN_NUMBER", "ERROR_RECONGNIGION"
+		};
+	}
+
 	public final EntityContext entity() throws RecognitionException {
 		EntityContext _localctx = new EntityContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_entity);
@@ -430,56 +430,6 @@ public class ODataParser extends Parser {
 				entityCast();
 				}
 				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final EntityCastContext entityCast() throws RecognitionException {
-		EntityCastContext _localctx = new EntityCastContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_entityCast);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(121);
-			entityName();
-			setState(122);
-			match(SLASH);
-			setState(123);
-			entityName();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final EntityUUIDContext entityUUID() throws RecognitionException {
-		EntityUUIDContext _localctx = new EntityUUIDContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_entityUUID);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(125);
-			entityName();
-			setState(126);
-			match(SLASH);
-			setState(127);
-			uuidIdValue();
 			}
 		}
 		catch (RecognitionException re) {
@@ -563,31 +513,18 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
-	public final QueryOptionsContext queryOptions() throws RecognitionException {
-		QueryOptionsContext _localctx = new QueryOptionsContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_queryOptions);
-		int _la;
+	public final EntityCastContext entityCast() throws RecognitionException {
+		EntityCastContext _localctx = new EntityCastContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_entityCast);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(142);
-			queryOption();
-			setState(147);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==AMPERSAND) {
-				{
-				{
-				setState(143);
-				match(AMPERSAND);
-				setState(144);
-				queryOption();
-				}
-				}
-				setState(149);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
+			setState(121);
+			entityName();
+			setState(122);
+			match(SLASH);
+			setState(123);
+			entityName();
 			}
 		}
 		catch (RecognitionException re) {
@@ -671,18 +608,18 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
-	public final FilterContext filter() throws RecognitionException {
-		FilterContext _localctx = new FilterContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_filter);
+	public final EntityUUIDContext entityUUID() throws RecognitionException {
+		EntityUUIDContext _localctx = new EntityUUIDContext(_ctx, getState());
+		enterRule(_localctx, 8, RULE_entityUUID);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(164);
-			match(FILTER);
-			setState(165);
-			match(EQUAL);
-			setState(166);
-			filterExpression(0);
+			setState(125);
+			entityName();
+			setState(126);
+			match(SLASH);
+			setState(127);
+			uuidIdValue();
 			}
 		}
 		catch (RecognitionException re) {
@@ -696,62 +633,8 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
-	public final ExpandContext expand() throws RecognitionException {
-		ExpandContext _localctx = new ExpandContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_expand);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(168);
-			match(EXPAND);
-			setState(169);
-			match(EQUAL);
-			setState(173);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
-			case 1:
-				{
-				setState(170);
-				joinEntities();
-				}
-				break;
-			case 2:
-				{
-				setState(171);
-				attributeName();
-				}
-				break;
-			case 3:
-				{
-				setState(172);
-				boolCommonExpr();
-				}
-				break;
-			}
-			setState(177);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==SLASH) {
-				{
-				setState(175);
-				match(SLASH);
-				setState(176);
-				filter();
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
+	public final FilterExpressionContext filterExpression() throws RecognitionException {
+		return filterExpression(0);
 	}
 
 	private FilterExpressionContext filterExpression(int _p) throws RecognitionException {
@@ -880,316 +763,6 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
-	public final BoolCommonExprContext boolCommonExpr() throws RecognitionException {
-		BoolCommonExprContext _localctx = new BoolCommonExprContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_boolCommonExpr);
-		try {
-			setState(205);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
-			case 1:
-				_localctx = new ComparatorExpressionContext(_localctx);
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(196);
-				((ComparatorExpressionContext)_localctx).left = leftComparatorExpr();
-				setState(197);
-				((ComparatorExpressionContext)_localctx).op = comparisonOperator();
-				setState(198);
-				((ComparatorExpressionContext)_localctx).right = rightComparatorExpr();
-				}
-				break;
-			case 2:
-				_localctx = new CountComparatorExpressionContext(_localctx);
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(200);
-				((CountComparatorExpressionContext)_localctx).left = match(COUNT);
-				setState(201);
-				((CountComparatorExpressionContext)_localctx).op = comparisonOperator();
-				setState(202);
-				((CountComparatorExpressionContext)_localctx).right = primitiveLiteral();
-				}
-				break;
-			case 3:
-				_localctx = new CompareMethodExpressionContext(_localctx);
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(204);
-				compareMethodExpr();
-				}
-				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final LeftComparatorExprContext leftComparatorExpr() throws RecognitionException {
-		LeftComparatorExprContext _localctx = new LeftComparatorExprContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_leftComparatorExpr);
-		try {
-			setState(213);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(207);
-				methodCallExpr();
-				}
-				break;
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(208);
-				calenderMethodExp();
-				}
-				break;
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(209);
-				concatMethodExpr();
-				}
-				break;
-			case 4:
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(210);
-				joinEntities();
-				}
-				break;
-			case 5:
-				enterOuterAlt(_localctx, 5);
-				{
-				setState(211);
-				attributeName();
-				}
-				break;
-			case 6:
-				enterOuterAlt(_localctx, 6);
-				{
-				setState(212);
-				commonExpr();
-				}
-				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final RightComparatorExprContext rightComparatorExpr() throws RecognitionException {
-		RightComparatorExprContext _localctx = new RightComparatorExprContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_rightComparatorExpr);
-		try {
-			setState(221);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(215);
-				methodCallExpr();
-				}
-				break;
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(216);
-				calenderMethodExp();
-				}
-				break;
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(217);
-				concatMethodExpr();
-				}
-				break;
-			case 4:
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(218);
-				joinEntities();
-				}
-				break;
-			case 5:
-				enterOuterAlt(_localctx, 5);
-				{
-				setState(219);
-				attributeName();
-				}
-				break;
-			case 6:
-				enterOuterAlt(_localctx, 6);
-				{
-				setState(220);
-				commonExpr();
-				}
-				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final OrderbyContext orderby() throws RecognitionException {
-		OrderbyContext _localctx = new OrderbyContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_orderby);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(223);
-			match(ORDERBY);
-			setState(232);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CONTAINS) | (1L << STARTSWITH) | (1L << ENDSWITH) | (1L << LENGTH) | (1L << INDEXOF) | (1L << SUBSTRING) | (1L << TOLOWER) | (1L << TOUPPER) | (1L << TRIM) | (1L << CONCAT) | (1L << DAY) | (1L << MONTH) | (1L << YEAR) | (1L << HOUR) | (1L << MINUTE) | (1L << SECOND) | (1L << NOW) | (1L << TIME) | (1L << MAX_DATE_TIME) | (1L << MIN_DATE_TIME) | (1L << TOTAL_OFFSET_MINUTES) | (1L << FRACTIONAL_SECONDS) | (1L << TOTAL_SECONDS) | (1L << GEO_INTERSECTS) | (1L << GEO_DISTANCE) | (1L << GEO_LENGTH) | (1L << ROUND) | (1L << FLOOR) | (1L << CEILING) | (1L << ADD) | (1L << SUB) | (1L << MUL) | (1L << DIV) | (1L << MOD))) != 0) || ((((_la - 80)) & ~0x3f) == 0 && ((1L << (_la - 80)) & ((1L << (NULL_TOKEN - 80)) | (1L << (NULL_SPEC_LITERAL - 80)) | (1L << (DATE - 80)) | (1L << (BOOLEAN_VALUE - 80)) | (1L << (INTEGER - 80)) | (1L << (FLOAT - 80)) | (1L << (QUOTED_STRING - 80)) | (1L << (DECIMAL_LITERAL - 80)) | (1L << (TIME_OF_DAY_VALUE - 80)) | (1L << (DURATION_VALUE - 80)) | (1L << (DATE_VALUE - 80)) | (1L << (DATE_TIME_OFFSET_VALUE - 80)))) != 0)) {
-				{
-				setState(224);
-				orderbyItem();
-				setState(229);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				while (_la==COMMA) {
-					{
-					{
-					setState(225);
-					match(COMMA);
-					setState(226);
-					orderbyItem();
-					}
-					}
-					setState(231);
-					_errHandler.sync(this);
-					_la = _input.LA(1);
-				}
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final OrderbyItemContext orderbyItem() throws RecognitionException {
-		OrderbyItemContext _localctx = new OrderbyItemContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_orderbyItem);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(234);
-			commonExpr();
-			setState(236);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==DESC || _la==ASC) {
-				{
-				setState(235);
-				_la = _input.LA(1);
-				if ( !(_la==DESC || _la==ASC) ) {
-				_errHandler.recoverInline(this);
-				}
-				else {
-					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final TopStatementContext topStatement() throws RecognitionException {
-		TopStatementContext _localctx = new TopStatementContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_topStatement);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(238);
-			match(TOP);
-			setState(239);
-			integerValue();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final SkipStatementContext skipStatement() throws RecognitionException {
-		SkipStatementContext _localctx = new SkipStatementContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_skipStatement);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(241);
-			match(SKIPRULE);
-			setState(242);
-			integerValue();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
 	public final JoinEntitiesContext joinEntities() throws RecognitionException {
 		JoinEntitiesContext _localctx = new JoinEntitiesContext(_ctx, getState());
 		enterRule(_localctx, 36, RULE_joinEntities);
@@ -1234,551 +807,30 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
-	public final CommonExprContext commonExpr() throws RecognitionException {
-		CommonExprContext _localctx = new CommonExprContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_commonExpr);
-		try {
-			setState(256);
-			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case NULL_TOKEN:
-			case NULL_SPEC_LITERAL:
-			case BOOLEAN_VALUE:
-			case INTEGER:
-			case FLOAT:
-			case QUOTED_STRING:
-			case DECIMAL_LITERAL:
-			case TIME_OF_DAY_VALUE:
-			case DURATION_VALUE:
-			case DATE_VALUE:
-			case DATE_TIME_OFFSET_VALUE:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(253);
-				primitiveLiteral();
-				}
-				break;
-			case CONTAINS:
-			case STARTSWITH:
-			case ENDSWITH:
-			case LENGTH:
-			case INDEXOF:
-			case SUBSTRING:
-			case TOLOWER:
-			case TOUPPER:
-			case TRIM:
-			case CONCAT:
-			case DAY:
-			case MONTH:
-			case YEAR:
-			case HOUR:
-			case MINUTE:
-			case SECOND:
-			case NOW:
-			case TIME:
-			case MAX_DATE_TIME:
-			case MIN_DATE_TIME:
-			case TOTAL_OFFSET_MINUTES:
-			case FRACTIONAL_SECONDS:
-			case TOTAL_SECONDS:
-			case GEO_INTERSECTS:
-			case GEO_DISTANCE:
-			case GEO_LENGTH:
-			case ROUND:
-			case FLOOR:
-			case CEILING:
-			case DATE:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(254);
-				methodExpr();
-				}
-				break;
-			case ADD:
-			case SUB:
-			case MUL:
-			case DIV:
-			case MOD:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(255);
-				mathExpr();
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final MathExprContext mathExpr() throws RecognitionException {
-		MathExprContext _localctx = new MathExprContext(_ctx, getState());
-		enterRule(_localctx, 40, RULE_mathExpr);
+	public final QueryOptionsContext queryOptions() throws RecognitionException {
+		QueryOptionsContext _localctx = new QueryOptionsContext(_ctx, getState());
+		enterRule(_localctx, 12, RULE_queryOptions);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(258);
-			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADD) | (1L << SUB) | (1L << MUL) | (1L << DIV) | (1L << MOD))) != 0)) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
-			setState(259);
-			number();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final FilterExpressionContext filterExpression() throws RecognitionException {
-		return filterExpression(0);
-	}
-
-	public final MethodExprContext methodExpr() throws RecognitionException {
-		MethodExprContext _localctx = new MethodExprContext(_ctx, getState());
-		enterRule(_localctx, 42, RULE_methodExpr);
-		try {
-			setState(267);
+			setState(142);
+			queryOption();
+			setState(147);
 			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case LENGTH:
-			case TOLOWER:
-			case TOUPPER:
-			case TRIM:
-			case GEO_LENGTH:
-			case ROUND:
-			case FLOOR:
-			case CEILING:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(261);
-				methodCallExpr();
-				}
-				break;
-			case DAY:
-			case MONTH:
-			case YEAR:
-			case HOUR:
-			case MINUTE:
-			case SECOND:
-			case TIME:
-			case TOTAL_OFFSET_MINUTES:
-			case FRACTIONAL_SECONDS:
-			case TOTAL_SECONDS:
-			case DATE:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(262);
-				calenderMethodExp();
-				}
-				break;
-			case NOW:
-			case MAX_DATE_TIME:
-			case MIN_DATE_TIME:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(263);
-				singleMethodCallExpr();
-				}
-				break;
-			case CONCAT:
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(264);
-				concatMethodExpr();
-				}
-				break;
-			case SUBSTRING:
-				enterOuterAlt(_localctx, 5);
-				{
-				setState(265);
-				substringMethodCallExpr();
-				}
-				break;
-			case CONTAINS:
-			case STARTSWITH:
-			case ENDSWITH:
-			case INDEXOF:
-			case GEO_INTERSECTS:
-			case GEO_DISTANCE:
-				enterOuterAlt(_localctx, 6);
-				{
-				setState(266);
-				compareMethodExpr();
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final CompareMethodExprContext compareMethodExpr() throws RecognitionException {
-		CompareMethodExprContext _localctx = new CompareMethodExprContext(_ctx, getState());
-		enterRule(_localctx, 44, RULE_compareMethodExpr);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(269);
-			compareMethodName();
-			setState(270);
-			match(OPEN);
-			setState(274);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,23,_ctx) ) {
-			case 1:
-				{
-				setState(271);
-				joinEntities();
-				}
-				break;
-			case 2:
-				{
-				setState(272);
-				attributeName();
-				}
-				break;
-			case 3:
-				{
-				setState(273);
-				commonExpr();
-				}
-				break;
-			}
-			setState(276);
-			match(COMMA);
-			setState(277);
-			commonExpr();
-			setState(278);
-			match(CLOSE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final MethodCallExprContext methodCallExpr() throws RecognitionException {
-		MethodCallExprContext _localctx = new MethodCallExprContext(_ctx, getState());
-		enterRule(_localctx, 46, RULE_methodCallExpr);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(280);
-			methodName();
-			setState(281);
-			match(OPEN);
-			setState(285);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,24,_ctx) ) {
-			case 1:
-				{
-				setState(282);
-				methodCallExpr();
-				}
-				break;
-			case 2:
-				{
-				setState(283);
-				joinEntities();
-				}
-				break;
-			case 3:
-				{
-				setState(284);
-				attributeName();
-				}
-				break;
-			}
-			setState(287);
-			match(CLOSE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final CalenderMethodExpContext calenderMethodExp() throws RecognitionException {
-		CalenderMethodExpContext _localctx = new CalenderMethodExpContext(_ctx, getState());
-		enterRule(_localctx, 48, RULE_calenderMethodExp);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(289);
-			calenderMethodName();
-			setState(290);
-			match(OPEN);
-			setState(294);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,25,_ctx) ) {
-			case 1:
-				{
-				setState(291);
-				joinEntities();
-				}
-				break;
-			case 2:
-				{
-				setState(292);
-				attributeName();
-				}
-				break;
-			case 3:
-				{
-				setState(293);
-				primitiveLiteral();
-				}
-				break;
-			}
-			setState(296);
-			match(CLOSE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final ConcatMethodExprContext concatMethodExpr() throws RecognitionException {
-		ConcatMethodExprContext _localctx = new ConcatMethodExprContext(_ctx, getState());
-		enterRule(_localctx, 50, RULE_concatMethodExpr);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(298);
-			match(CONCAT);
-			setState(299);
-			match(OPEN);
-			setState(303);
-			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case CONCAT:
-				{
-				setState(300);
-				concatMethodExpr();
-				}
-				break;
-			case NULL_TOKEN:
-			case NULL_SPEC_LITERAL:
-			case BOOLEAN_VALUE:
-			case INTEGER:
-			case FLOAT:
-			case QUOTED_STRING:
-			case DECIMAL_LITERAL:
-			case TIME_OF_DAY_VALUE:
-			case DURATION_VALUE:
-			case DATE_VALUE:
-			case DATE_TIME_OFFSET_VALUE:
-				{
-				setState(301);
-				primitiveLiteral();
-				}
-				break;
-			case ID:
-				{
-				setState(302);
-				attributeName();
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-			setState(305);
-			match(COMMA);
-			setState(308);
-			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case NULL_TOKEN:
-			case NULL_SPEC_LITERAL:
-			case BOOLEAN_VALUE:
-			case INTEGER:
-			case FLOAT:
-			case QUOTED_STRING:
-			case DECIMAL_LITERAL:
-			case TIME_OF_DAY_VALUE:
-			case DURATION_VALUE:
-			case DATE_VALUE:
-			case DATE_TIME_OFFSET_VALUE:
-				{
-				setState(306);
-				primitiveLiteral();
-				}
-				break;
-			case ID:
-				{
-				setState(307);
-				attributeName();
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-			setState(310);
-			match(CLOSE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final SingleMethodCallExprContext singleMethodCallExpr() throws RecognitionException {
-		SingleMethodCallExprContext _localctx = new SingleMethodCallExprContext(_ctx, getState());
-		enterRule(_localctx, 52, RULE_singleMethodCallExpr);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(312);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << NOW) | (1L << MAX_DATE_TIME) | (1L << MIN_DATE_TIME))) != 0)) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
-			setState(313);
-			match(OPEN);
-			setState(314);
-			match(CLOSE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final SubstringMethodCallExprContext substringMethodCallExpr() throws RecognitionException {
-		SubstringMethodCallExprContext _localctx = new SubstringMethodCallExprContext(_ctx, getState());
-		enterRule(_localctx, 54, RULE_substringMethodCallExpr);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(316);
-			match(SUBSTRING);
-			setState(317);
-			match(OPEN);
-			setState(321);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,28,_ctx) ) {
-			case 1:
+			while (_la==AMPERSAND) {
 				{
-				setState(318);
-				joinEntities();
-				}
-				break;
-			case 2:
 				{
-				setState(319);
-				attributeName();
+				setState(143);
+				match(AMPERSAND);
+				setState(144);
+				queryOption();
 				}
-				break;
-			case 3:
-				{
-				setState(320);
-				commonExpr();
 				}
-				break;
-			}
-			setState(323);
-			match(COMMA);
-			setState(324);
-			commonExpr();
-			setState(325);
-			match(CLOSE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final ComparisonOperatorContext comparisonOperator() throws RecognitionException {
-		ComparisonOperatorContext _localctx = new ComparisonOperatorContext(_ctx, getState());
-		enterRule(_localctx, 56, RULE_comparisonOperator);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(327);
-			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQ) | (1L << GT) | (1L << LT) | (1L << GE) | (1L << LE) | (1L << NE))) != 0)) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
+				setState(149);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
 			}
 			}
 		}
@@ -1791,630 +843,6 @@ public class ODataParser extends Parser {
 			exitRule();
 		}
 		return _localctx;
-	}
-
-	public final CompareMethodNameContext compareMethodName() throws RecognitionException {
-		CompareMethodNameContext _localctx = new CompareMethodNameContext(_ctx, getState());
-		enterRule(_localctx, 58, RULE_compareMethodName);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(329);
-			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CONTAINS) | (1L << STARTSWITH) | (1L << ENDSWITH) | (1L << INDEXOF) | (1L << GEO_INTERSECTS) | (1L << GEO_DISTANCE))) != 0)) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final MethodNameContext methodName() throws RecognitionException {
-		MethodNameContext _localctx = new MethodNameContext(_ctx, getState());
-		enterRule(_localctx, 60, RULE_methodName);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(331);
-			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LENGTH) | (1L << TOLOWER) | (1L << TOUPPER) | (1L << TRIM) | (1L << GEO_LENGTH) | (1L << ROUND) | (1L << FLOOR) | (1L << CEILING))) != 0)) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final CalenderMethodNameContext calenderMethodName() throws RecognitionException {
-		CalenderMethodNameContext _localctx = new CalenderMethodNameContext(_ctx, getState());
-		enterRule(_localctx, 62, RULE_calenderMethodName);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(333);
-			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << DAY) | (1L << MONTH) | (1L << YEAR) | (1L << HOUR) | (1L << MINUTE) | (1L << SECOND) | (1L << TIME) | (1L << TOTAL_OFFSET_MINUTES) | (1L << FRACTIONAL_SECONDS) | (1L << TOTAL_SECONDS))) != 0) || _la==DATE) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final NumberContext number() throws RecognitionException {
-		NumberContext _localctx = new NumberContext(_ctx, getState());
-		enterRule(_localctx, 64, RULE_number);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(335);
-			_la = _input.LA(1);
-			if ( !(_la==INTEGER || _la==FLOAT) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final PrimitiveLiteralContext primitiveLiteral() throws RecognitionException {
-		PrimitiveLiteralContext _localctx = new PrimitiveLiteralContext(_ctx, getState());
-		enterRule(_localctx, 66, RULE_primitiveLiteral);
-		try {
-			setState(348);
-			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case QUOTED_STRING:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(337);
-				quotedString();
-				}
-				break;
-			case NULL_SPEC_LITERAL:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(338);
-				nullSpecLiteral();
-				}
-				break;
-			case NULL_TOKEN:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(339);
-				nullToken();
-				}
-				break;
-			case BOOLEAN_VALUE:
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(340);
-				booleanValue();
-				}
-				break;
-			case DURATION_VALUE:
-				enterOuterAlt(_localctx, 5);
-				{
-				setState(341);
-				durationValue();
-				}
-				break;
-			case DATE_VALUE:
-				enterOuterAlt(_localctx, 6);
-				{
-				setState(342);
-				dateValue();
-				}
-				break;
-			case DATE_TIME_OFFSET_VALUE:
-				enterOuterAlt(_localctx, 7);
-				{
-				setState(343);
-				dateTimeOffsetValue();
-				}
-				break;
-			case TIME_OF_DAY_VALUE:
-				enterOuterAlt(_localctx, 8);
-				{
-				setState(344);
-				timeOfDayValue();
-				}
-				break;
-			case DECIMAL_LITERAL:
-				enterOuterAlt(_localctx, 9);
-				{
-				setState(345);
-				decimalLiteral();
-				}
-				break;
-			case FLOAT:
-				enterOuterAlt(_localctx, 10);
-				{
-				setState(346);
-				floatValue();
-				}
-				break;
-			case INTEGER:
-				enterOuterAlt(_localctx, 11);
-				{
-				setState(347);
-				integerValue();
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final OpenParContext openPar() throws RecognitionException {
-		OpenParContext _localctx = new OpenParContext(_ctx, getState());
-		enterRule(_localctx, 68, RULE_openPar);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(350);
-			match(OPEN);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final CloseParContext closePar() throws RecognitionException {
-		CloseParContext _localctx = new CloseParContext(_ctx, getState());
-		enterRule(_localctx, 70, RULE_closePar);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(352);
-			match(CLOSE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final LogicalOperatorContext logicalOperator() throws RecognitionException {
-		LogicalOperatorContext _localctx = new LogicalOperatorContext(_ctx, getState());
-		enterRule(_localctx, 72, RULE_logicalOperator);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(354);
-			_la = _input.LA(1);
-			if ( !(_la==OR || _la==AND) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final EntityNameContext entityName() throws RecognitionException {
-		EntityNameContext _localctx = new EntityNameContext(_ctx, getState());
-		enterRule(_localctx, 74, RULE_entityName);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(356);
-			match(ID);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final AttributeNameContext attributeName() throws RecognitionException {
-		AttributeNameContext _localctx = new AttributeNameContext(_ctx, getState());
-		enterRule(_localctx, 76, RULE_attributeName);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(358);
-			match(ID);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final UuidIdValueContext uuidIdValue() throws RecognitionException {
-		UuidIdValueContext _localctx = new UuidIdValueContext(_ctx, getState());
-		enterRule(_localctx, 78, RULE_uuidIdValue);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(360);
-			match(UUID);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final QuotedStringContext quotedString() throws RecognitionException {
-		QuotedStringContext _localctx = new QuotedStringContext(_ctx, getState());
-		enterRule(_localctx, 80, RULE_quotedString);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(362);
-			match(QUOTED_STRING);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final NullSpecLiteralContext nullSpecLiteral() throws RecognitionException {
-		NullSpecLiteralContext _localctx = new NullSpecLiteralContext(_ctx, getState());
-		enterRule(_localctx, 82, RULE_nullSpecLiteral);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(364);
-			match(NULL_SPEC_LITERAL);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final NullTokenContext nullToken() throws RecognitionException {
-		NullTokenContext _localctx = new NullTokenContext(_ctx, getState());
-		enterRule(_localctx, 84, RULE_nullToken);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(366);
-			match(NULL_TOKEN);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final BooleanValueContext booleanValue() throws RecognitionException {
-		BooleanValueContext _localctx = new BooleanValueContext(_ctx, getState());
-		enterRule(_localctx, 86, RULE_booleanValue);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(368);
-			match(BOOLEAN_VALUE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final DurationValueContext durationValue() throws RecognitionException {
-		DurationValueContext _localctx = new DurationValueContext(_ctx, getState());
-		enterRule(_localctx, 88, RULE_durationValue);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(370);
-			match(DURATION_VALUE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final DateValueContext dateValue() throws RecognitionException {
-		DateValueContext _localctx = new DateValueContext(_ctx, getState());
-		enterRule(_localctx, 90, RULE_dateValue);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(372);
-			match(DATE_VALUE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final DateTimeOffsetValueContext dateTimeOffsetValue() throws RecognitionException {
-		DateTimeOffsetValueContext _localctx = new DateTimeOffsetValueContext(_ctx, getState());
-		enterRule(_localctx, 92, RULE_dateTimeOffsetValue);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(374);
-			match(DATE_TIME_OFFSET_VALUE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final TimeOfDayValueContext timeOfDayValue() throws RecognitionException {
-		TimeOfDayValueContext _localctx = new TimeOfDayValueContext(_ctx, getState());
-		enterRule(_localctx, 94, RULE_timeOfDayValue);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(376);
-			match(TIME_OF_DAY_VALUE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final DecimalLiteralContext decimalLiteral() throws RecognitionException {
-		DecimalLiteralContext _localctx = new DecimalLiteralContext(_ctx, getState());
-		enterRule(_localctx, 96, RULE_decimalLiteral);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(378);
-			match(DECIMAL_LITERAL);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final FloatValueContext floatValue() throws RecognitionException {
-		FloatValueContext _localctx = new FloatValueContext(_ctx, getState());
-		enterRule(_localctx, 98, RULE_floatValue);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(380);
-			match(FLOAT);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final IntegerValueContext integerValue() throws RecognitionException {
-		IntegerValueContext _localctx = new IntegerValueContext(_ctx, getState());
-		enterRule(_localctx, 100, RULE_integerValue);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(382);
-			match(INTEGER);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public final CountStatementContext countStatement() throws RecognitionException {
-		CountStatementContext _localctx = new CountStatementContext(_ctx, getState());
-		enterRule(_localctx, 102, RULE_countStatement);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(384);
-			match(SLASH);
-			setState(385);
-			match(COUNT);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
-		switch (ruleIndex) {
-		case 10:
-			return filterExpression_sempred((FilterExpressionContext)_localctx, predIndex);
-		}
-		return true;
-	}
-
-	private boolean filterExpression_sempred(FilterExpressionContext _localctx, int predIndex) {
-		switch (predIndex) {
-		case 0:
-			return precpred(_ctx, 2);
-		}
-		return true;
 	}
 
 	public static class OdataRelativeUriContext extends ParserRuleContext {
@@ -2514,6 +942,31 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final FilterContext filter() throws RecognitionException {
+		FilterContext _localctx = new FilterContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_filter);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(164);
+			match(FILTER);
+			setState(165);
+			match(EQUAL);
+			setState(166);
+			filterExpression(0);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class EntityCastContext extends ParserRuleContext {
 		public EntityCastContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2543,6 +996,64 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitEntityCast(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final ExpandContext expand() throws RecognitionException {
+		ExpandContext _localctx = new ExpandContext(_ctx, getState());
+		enterRule(_localctx, 18, RULE_expand);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(168);
+			match(EXPAND);
+			setState(169);
+			match(EQUAL);
+			setState(173);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
+			case 1:
+				{
+				setState(170);
+				joinEntities();
+				}
+				break;
+			case 2:
+				{
+				setState(171);
+				attributeName();
+				}
+				break;
+			case 3:
+				{
+				setState(172);
+				boolCommonExpr();
+				}
+				break;
+			}
+			setState(177);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==SLASH) {
+				{
+				setState(175);
+				match(SLASH);
+				setState(176);
+				filter();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class EntityUUIDContext extends ParserRuleContext {
@@ -2895,6 +1406,58 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final BoolCommonExprContext boolCommonExpr() throws RecognitionException {
+		BoolCommonExprContext _localctx = new BoolCommonExprContext(_ctx, getState());
+		enterRule(_localctx, 22, RULE_boolCommonExpr);
+		try {
+			setState(205);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+			case 1:
+				_localctx = new ComparatorExpressionContext(_localctx);
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(196);
+				((ComparatorExpressionContext)_localctx).left = leftComparatorExpr();
+				setState(197);
+				((ComparatorExpressionContext)_localctx).op = comparisonOperator();
+				setState(198);
+				((ComparatorExpressionContext)_localctx).right = rightComparatorExpr();
+				}
+				break;
+			case 2:
+				_localctx = new CountComparatorExpressionContext(_localctx);
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(200);
+				((CountComparatorExpressionContext)_localctx).left = match(COUNT);
+				setState(201);
+				((CountComparatorExpressionContext)_localctx).op = comparisonOperator();
+				setState(202);
+				((CountComparatorExpressionContext)_localctx).right = primitiveLiteral();
+				}
+				break;
+			case 3:
+				_localctx = new CompareMethodExpressionContext(_localctx);
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(204);
+				compareMethodExpr();
+				}
+				break;
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class BoolCommonExprContext extends ParserRuleContext {
 		public BoolCommonExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2906,6 +1469,68 @@ public class ODataParser extends Parser {
 		public void copyFrom(BoolCommonExprContext ctx) {
 			super.copyFrom(ctx);
 		}
+	}
+
+	public final LeftComparatorExprContext leftComparatorExpr() throws RecognitionException {
+		LeftComparatorExprContext _localctx = new LeftComparatorExprContext(_ctx, getState());
+		enterRule(_localctx, 24, RULE_leftComparatorExpr);
+		try {
+			setState(213);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
+			case 1:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(207);
+				methodCallExpr();
+				}
+				break;
+			case 2:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(208);
+				calenderMethodExp();
+				}
+				break;
+			case 3:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(209);
+				concatMethodExpr();
+				}
+				break;
+			case 4:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(210);
+				joinEntities();
+				}
+				break;
+			case 5:
+				enterOuterAlt(_localctx, 5);
+				{
+				setState(211);
+				attributeName();
+				}
+				break;
+			case 6:
+				enterOuterAlt(_localctx, 6);
+				{
+				setState(212);
+				commonExpr();
+				}
+				break;
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class CompareMethodExpressionContext extends BoolCommonExprContext {
@@ -2928,6 +1553,68 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCompareMethodExpression(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final RightComparatorExprContext rightComparatorExpr() throws RecognitionException {
+		RightComparatorExprContext _localctx = new RightComparatorExprContext(_ctx, getState());
+		enterRule(_localctx, 26, RULE_rightComparatorExpr);
+		try {
+			setState(221);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
+			case 1:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(215);
+				methodCallExpr();
+				}
+				break;
+			case 2:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(216);
+				calenderMethodExp();
+				}
+				break;
+			case 3:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(217);
+				concatMethodExpr();
+				}
+				break;
+			case 4:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(218);
+				joinEntities();
+				}
+				break;
+			case 5:
+				enterOuterAlt(_localctx, 5);
+				{
+				setState(219);
+				attributeName();
+				}
+				break;
+			case 6:
+				enterOuterAlt(_localctx, 6);
+				{
+				setState(220);
+				commonExpr();
+				}
+				break;
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class ComparatorExpressionContext extends BoolCommonExprContext {
@@ -2963,6 +1650,54 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final OrderbyContext orderby() throws RecognitionException {
+		OrderbyContext _localctx = new OrderbyContext(_ctx, getState());
+		enterRule(_localctx, 28, RULE_orderby);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(223);
+			match(ORDERBY);
+			setState(232);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CONTAINS) | (1L << STARTSWITH) | (1L << ENDSWITH) | (1L << LENGTH) | (1L << INDEXOF) | (1L << SUBSTRING) | (1L << TOLOWER) | (1L << TOUPPER) | (1L << TRIM) | (1L << CONCAT) | (1L << DAY) | (1L << MONTH) | (1L << YEAR) | (1L << HOUR) | (1L << MINUTE) | (1L << SECOND) | (1L << NOW) | (1L << TIME) | (1L << MAX_DATE_TIME) | (1L << MIN_DATE_TIME) | (1L << TOTAL_OFFSET_MINUTES) | (1L << FRACTIONAL_SECONDS) | (1L << TOTAL_SECONDS) | (1L << GEO_INTERSECTS) | (1L << GEO_DISTANCE) | (1L << GEO_LENGTH) | (1L << ROUND) | (1L << FLOOR) | (1L << CEILING) | (1L << ADD) | (1L << SUB) | (1L << MUL) | (1L << DIV) | (1L << MOD))) != 0) || ((((_la - 80)) & ~0x3f) == 0 && ((1L << (_la - 80)) & ((1L << (NULL_TOKEN - 80)) | (1L << (NULL_SPEC_LITERAL - 80)) | (1L << (DATE - 80)) | (1L << (BOOLEAN_VALUE - 80)) | (1L << (INTEGER - 80)) | (1L << (FLOAT - 80)) | (1L << (QUOTED_STRING - 80)) | (1L << (DECIMAL_LITERAL - 80)) | (1L << (TIME_OF_DAY_VALUE - 80)) | (1L << (DURATION_VALUE - 80)) | (1L << (DATE_VALUE - 80)) | (1L << (DATE_TIME_OFFSET_VALUE - 80)))) != 0)) {
+				{
+				setState(224);
+				orderbyItem();
+				setState(229);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				while (_la==COMMA) {
+					{
+					{
+					setState(225);
+					match(COMMA);
+					setState(226);
+					orderbyItem();
+					}
+					}
+					setState(231);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				}
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class CountComparatorExpressionContext extends BoolCommonExprContext {
 		public Token left;
 		public ComparisonOperatorContext op;
@@ -2992,6 +1727,46 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCountComparatorExpression(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final OrderbyItemContext orderbyItem() throws RecognitionException {
+		OrderbyItemContext _localctx = new OrderbyItemContext(_ctx, getState());
+		enterRule(_localctx, 30, RULE_orderbyItem);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(234);
+			commonExpr();
+			setState(236);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==DESC || _la==ASC) {
+				{
+				setState(235);
+				_la = _input.LA(1);
+				if ( !(_la==DESC || _la==ASC) ) {
+				_errHandler.recoverInline(this);
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
+					consume();
+				}
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class LeftComparatorExprContext extends ParserRuleContext {
@@ -3039,6 +1814,29 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final TopStatementContext topStatement() throws RecognitionException {
+		TopStatementContext _localctx = new TopStatementContext(_ctx, getState());
+		enterRule(_localctx, 32, RULE_topStatement);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(238);
+			match(TOP);
+			setState(239);
+			integerValue();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class RightComparatorExprContext extends ParserRuleContext {
 		public RightComparatorExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3082,6 +1880,29 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitRightComparatorExpr(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final SkipStatementContext skipStatement() throws RecognitionException {
+		SkipStatementContext _localctx = new SkipStatementContext(_ctx, getState());
+		enterRule(_localctx, 34, RULE_skipStatement);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(241);
+			match(SKIPRULE);
+			setState(242);
+			integerValue();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class OrderbyContext extends ParserRuleContext {
@@ -3177,6 +1998,92 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final CommonExprContext commonExpr() throws RecognitionException {
+		CommonExprContext _localctx = new CommonExprContext(_ctx, getState());
+		enterRule(_localctx, 38, RULE_commonExpr);
+		try {
+			setState(256);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case NULL_TOKEN:
+			case NULL_SPEC_LITERAL:
+			case BOOLEAN_VALUE:
+			case INTEGER:
+			case FLOAT:
+			case QUOTED_STRING:
+			case DECIMAL_LITERAL:
+			case TIME_OF_DAY_VALUE:
+			case DURATION_VALUE:
+			case DATE_VALUE:
+			case DATE_TIME_OFFSET_VALUE:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(253);
+				primitiveLiteral();
+				}
+				break;
+			case CONTAINS:
+			case STARTSWITH:
+			case ENDSWITH:
+			case LENGTH:
+			case INDEXOF:
+			case SUBSTRING:
+			case TOLOWER:
+			case TOUPPER:
+			case TRIM:
+			case CONCAT:
+			case DAY:
+			case MONTH:
+			case YEAR:
+			case HOUR:
+			case MINUTE:
+			case SECOND:
+			case NOW:
+			case TIME:
+			case MAX_DATE_TIME:
+			case MIN_DATE_TIME:
+			case TOTAL_OFFSET_MINUTES:
+			case FRACTIONAL_SECONDS:
+			case TOTAL_SECONDS:
+			case GEO_INTERSECTS:
+			case GEO_DISTANCE:
+			case GEO_LENGTH:
+			case ROUND:
+			case FLOOR:
+			case CEILING:
+			case DATE:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(254);
+				methodExpr();
+				}
+				break;
+			case ADD:
+			case SUB:
+			case MUL:
+			case DIV:
+			case MOD:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(255);
+				mathExpr();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class SkipStatementContext extends ParserRuleContext {
 		public SkipStatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3202,6 +2109,38 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitSkipStatement(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final MathExprContext mathExpr() throws RecognitionException {
+		MathExprContext _localctx = new MathExprContext(_ctx, getState());
+		enterRule(_localctx, 40, RULE_mathExpr);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(258);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADD) | (1L << SUB) | (1L << MUL) | (1L << DIV) | (1L << MOD))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(259);
+			number();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class JoinEntitiesContext extends ParserRuleContext {
@@ -3243,6 +2182,94 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final MethodExprContext methodExpr() throws RecognitionException {
+		MethodExprContext _localctx = new MethodExprContext(_ctx, getState());
+		enterRule(_localctx, 42, RULE_methodExpr);
+		try {
+			setState(267);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case LENGTH:
+			case TOLOWER:
+			case TOUPPER:
+			case TRIM:
+			case GEO_LENGTH:
+			case ROUND:
+			case FLOOR:
+			case CEILING:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(261);
+				methodCallExpr();
+				}
+				break;
+			case DAY:
+			case MONTH:
+			case YEAR:
+			case HOUR:
+			case MINUTE:
+			case SECOND:
+			case TIME:
+			case TOTAL_OFFSET_MINUTES:
+			case FRACTIONAL_SECONDS:
+			case TOTAL_SECONDS:
+			case DATE:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(262);
+				calenderMethodExp();
+				}
+				break;
+			case NOW:
+			case MAX_DATE_TIME:
+			case MIN_DATE_TIME:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(263);
+				singleMethodCallExpr();
+				}
+				break;
+			case CONCAT:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(264);
+				concatMethodExpr();
+				}
+				break;
+			case SUBSTRING:
+				enterOuterAlt(_localctx, 5);
+				{
+				setState(265);
+				substringMethodCallExpr();
+				}
+				break;
+			case CONTAINS:
+			case STARTSWITH:
+			case ENDSWITH:
+			case INDEXOF:
+			case GEO_INTERSECTS:
+			case GEO_DISTANCE:
+				enterOuterAlt(_localctx, 6);
+				{
+				setState(266);
+				compareMethodExpr();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class CommonExprContext extends ParserRuleContext {
 		public CommonExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3274,6 +2301,57 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCommonExpr(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final CompareMethodExprContext compareMethodExpr() throws RecognitionException {
+		CompareMethodExprContext _localctx = new CompareMethodExprContext(_ctx, getState());
+		enterRule(_localctx, 44, RULE_compareMethodExpr);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(269);
+			compareMethodName();
+			setState(270);
+			match(OPEN);
+			setState(274);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,23,_ctx) ) {
+			case 1:
+				{
+				setState(271);
+				joinEntities();
+				}
+				break;
+			case 2:
+				{
+				setState(272);
+				attributeName();
+				}
+				break;
+			case 3:
+				{
+				setState(273);
+				commonExpr();
+				}
+				break;
+			}
+			setState(276);
+			match(COMMA);
+			setState(277);
+			commonExpr();
+			setState(278);
+			match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class MathExprContext extends ParserRuleContext {
@@ -3309,6 +2387,53 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitMathExpr(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final MethodCallExprContext methodCallExpr() throws RecognitionException {
+		MethodCallExprContext _localctx = new MethodCallExprContext(_ctx, getState());
+		enterRule(_localctx, 46, RULE_methodCallExpr);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(280);
+			methodName();
+			setState(281);
+			match(OPEN);
+			setState(285);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,24,_ctx) ) {
+			case 1:
+				{
+				setState(282);
+				methodCallExpr();
+				}
+				break;
+			case 2:
+				{
+				setState(283);
+				joinEntities();
+				}
+				break;
+			case 3:
+				{
+				setState(284);
+				attributeName();
+				}
+				break;
+			}
+			setState(287);
+			match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class MethodExprContext extends ParserRuleContext {
@@ -3354,6 +2479,53 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitMethodExpr(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final CalenderMethodExpContext calenderMethodExp() throws RecognitionException {
+		CalenderMethodExpContext _localctx = new CalenderMethodExpContext(_ctx, getState());
+		enterRule(_localctx, 48, RULE_calenderMethodExp);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(289);
+			calenderMethodName();
+			setState(290);
+			match(OPEN);
+			setState(294);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,25,_ctx) ) {
+			case 1:
+				{
+				setState(291);
+				joinEntities();
+				}
+				break;
+			case 2:
+				{
+				setState(292);
+				attributeName();
+				}
+				break;
+			case 3:
+				{
+				setState(293);
+				primitiveLiteral();
+				}
+				break;
+			}
+			setState(296);
+			match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class CompareMethodExprContext extends ParserRuleContext {
@@ -3403,6 +2575,95 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final ConcatMethodExprContext concatMethodExpr() throws RecognitionException {
+		ConcatMethodExprContext _localctx = new ConcatMethodExprContext(_ctx, getState());
+		enterRule(_localctx, 50, RULE_concatMethodExpr);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(298);
+			match(CONCAT);
+			setState(299);
+			match(OPEN);
+			setState(303);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case CONCAT:
+				{
+				setState(300);
+				concatMethodExpr();
+				}
+				break;
+			case NULL_TOKEN:
+			case NULL_SPEC_LITERAL:
+			case BOOLEAN_VALUE:
+			case INTEGER:
+			case FLOAT:
+			case QUOTED_STRING:
+			case DECIMAL_LITERAL:
+			case TIME_OF_DAY_VALUE:
+			case DURATION_VALUE:
+			case DATE_VALUE:
+			case DATE_TIME_OFFSET_VALUE:
+				{
+				setState(301);
+				primitiveLiteral();
+				}
+				break;
+			case ID:
+				{
+				setState(302);
+				attributeName();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			setState(305);
+			match(COMMA);
+			setState(308);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case NULL_TOKEN:
+			case NULL_SPEC_LITERAL:
+			case BOOLEAN_VALUE:
+			case INTEGER:
+			case FLOAT:
+			case QUOTED_STRING:
+			case DECIMAL_LITERAL:
+			case TIME_OF_DAY_VALUE:
+			case DURATION_VALUE:
+			case DATE_VALUE:
+			case DATE_TIME_OFFSET_VALUE:
+				{
+				setState(306);
+				primitiveLiteral();
+				}
+				break;
+			case ID:
+				{
+				setState(307);
+				attributeName();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			setState(310);
+			match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class MethodCallExprContext extends ParserRuleContext {
 		public MethodCallExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3444,6 +2705,40 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final SingleMethodCallExprContext singleMethodCallExpr() throws RecognitionException {
+		SingleMethodCallExprContext _localctx = new SingleMethodCallExprContext(_ctx, getState());
+		enterRule(_localctx, 52, RULE_singleMethodCallExpr);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(312);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << NOW) | (1L << MAX_DATE_TIME) | (1L << MIN_DATE_TIME))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(313);
+			match(OPEN);
+			setState(314);
+			match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class CalenderMethodExpContext extends ParserRuleContext {
 		public CalenderMethodExpContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3483,6 +2778,57 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCalenderMethodExp(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final SubstringMethodCallExprContext substringMethodCallExpr() throws RecognitionException {
+		SubstringMethodCallExprContext _localctx = new SubstringMethodCallExprContext(_ctx, getState());
+		enterRule(_localctx, 54, RULE_substringMethodCallExpr);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(316);
+			match(SUBSTRING);
+			setState(317);
+			match(OPEN);
+			setState(321);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,28,_ctx) ) {
+			case 1:
+				{
+				setState(318);
+				joinEntities();
+				}
+				break;
+			case 2:
+				{
+				setState(319);
+				attributeName();
+				}
+				break;
+			case 3:
+				{
+				setState(320);
+				commonExpr();
+				}
+				break;
+			}
+			setState(323);
+			match(COMMA);
+			setState(324);
+			commonExpr();
+			setState(325);
+			match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class ConcatMethodExprContext extends ParserRuleContext {
@@ -3534,6 +2880,36 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final ComparisonOperatorContext comparisonOperator() throws RecognitionException {
+		ComparisonOperatorContext _localctx = new ComparisonOperatorContext(_ctx, getState());
+		enterRule(_localctx, 56, RULE_comparisonOperator);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(327);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQ) | (1L << GT) | (1L << LT) | (1L << GE) | (1L << LE) | (1L << NE))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class SingleMethodCallExprContext extends ParserRuleContext {
 		public SingleMethodCallExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3563,6 +2939,36 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitSingleMethodCallExpr(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final CompareMethodNameContext compareMethodName() throws RecognitionException {
+		CompareMethodNameContext _localctx = new CompareMethodNameContext(_ctx, getState());
+		enterRule(_localctx, 58, RULE_compareMethodName);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(329);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CONTAINS) | (1L << STARTSWITH) | (1L << ENDSWITH) | (1L << INDEXOF) | (1L << GEO_INTERSECTS) | (1L << GEO_DISTANCE))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class SubstringMethodCallExprContext extends ParserRuleContext {
@@ -3610,6 +3016,36 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final MethodNameContext methodName() throws RecognitionException {
+		MethodNameContext _localctx = new MethodNameContext(_ctx, getState());
+		enterRule(_localctx, 60, RULE_methodName);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(331);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LENGTH) | (1L << TOLOWER) | (1L << TOUPPER) | (1L << TRIM) | (1L << GEO_LENGTH) | (1L << ROUND) | (1L << FLOOR) | (1L << CEILING))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class ComparisonOperatorContext extends ParserRuleContext {
 		public ComparisonOperatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3643,6 +3079,36 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final CalenderMethodNameContext calenderMethodName() throws RecognitionException {
+		CalenderMethodNameContext _localctx = new CalenderMethodNameContext(_ctx, getState());
+		enterRule(_localctx, 62, RULE_calenderMethodName);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(333);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << DAY) | (1L << MONTH) | (1L << YEAR) | (1L << HOUR) | (1L << MINUTE) | (1L << SECOND) | (1L << TIME) | (1L << TOTAL_OFFSET_MINUTES) | (1L << FRACTIONAL_SECONDS) | (1L << TOTAL_SECONDS))) != 0) || _la==DATE) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class CompareMethodNameContext extends ParserRuleContext {
 		public CompareMethodNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3674,6 +3140,36 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCompareMethodName(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final NumberContext number() throws RecognitionException {
+		NumberContext _localctx = new NumberContext(_ctx, getState());
+		enterRule(_localctx, 64, RULE_number);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(335);
+			_la = _input.LA(1);
+			if ( !(_la==INTEGER || _la==FLOAT) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class MethodNameContext extends ParserRuleContext {
@@ -3711,6 +3207,105 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitMethodName(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final PrimitiveLiteralContext primitiveLiteral() throws RecognitionException {
+		PrimitiveLiteralContext _localctx = new PrimitiveLiteralContext(_ctx, getState());
+		enterRule(_localctx, 66, RULE_primitiveLiteral);
+		try {
+			setState(348);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case QUOTED_STRING:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(337);
+				quotedString();
+				}
+				break;
+			case NULL_SPEC_LITERAL:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(338);
+				nullSpecLiteral();
+				}
+				break;
+			case NULL_TOKEN:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(339);
+				nullToken();
+				}
+				break;
+			case BOOLEAN_VALUE:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(340);
+				booleanValue();
+				}
+				break;
+			case DURATION_VALUE:
+				enterOuterAlt(_localctx, 5);
+				{
+				setState(341);
+				durationValue();
+				}
+				break;
+			case DATE_VALUE:
+				enterOuterAlt(_localctx, 6);
+				{
+				setState(342);
+				dateValue();
+				}
+				break;
+			case DATE_TIME_OFFSET_VALUE:
+				enterOuterAlt(_localctx, 7);
+				{
+				setState(343);
+				dateTimeOffsetValue();
+				}
+				break;
+			case TIME_OF_DAY_VALUE:
+				enterOuterAlt(_localctx, 8);
+				{
+				setState(344);
+				timeOfDayValue();
+				}
+				break;
+			case DECIMAL_LITERAL:
+				enterOuterAlt(_localctx, 9);
+				{
+				setState(345);
+				decimalLiteral();
+				}
+				break;
+			case FLOAT:
+				enterOuterAlt(_localctx, 10);
+				{
+				setState(346);
+				floatValue();
+				}
+				break;
+			case INTEGER:
+				enterOuterAlt(_localctx, 11);
+				{
+				setState(347);
+				integerValue();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class CalenderMethodNameContext extends ParserRuleContext {
@@ -3756,6 +3351,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final OpenParContext openPar() throws RecognitionException {
+		OpenParContext _localctx = new OpenParContext(_ctx, getState());
+		enterRule(_localctx, 68, RULE_openPar);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(350);
+			match(OPEN);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class NumberContext extends ParserRuleContext {
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3779,6 +3395,27 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitNumber(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final CloseParContext closePar() throws RecognitionException {
+		CloseParContext _localctx = new CloseParContext(_ctx, getState());
+		enterRule(_localctx, 70, RULE_closePar);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(352);
+			match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class PrimitiveLiteralContext extends ParserRuleContext {
@@ -3846,6 +3483,36 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final LogicalOperatorContext logicalOperator() throws RecognitionException {
+		LogicalOperatorContext _localctx = new LogicalOperatorContext(_ctx, getState());
+		enterRule(_localctx, 72, RULE_logicalOperator);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(354);
+			_la = _input.LA(1);
+			if ( !(_la==OR || _la==AND) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class OpenParContext extends ParserRuleContext {
 		public OpenParContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3869,6 +3536,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final EntityNameContext entityName() throws RecognitionException {
+		EntityNameContext _localctx = new EntityNameContext(_ctx, getState());
+		enterRule(_localctx, 74, RULE_entityName);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(356);
+			match(ID);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class CloseParContext extends ParserRuleContext {
 		public CloseParContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3890,6 +3578,27 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitClosePar(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final AttributeNameContext attributeName() throws RecognitionException {
+		AttributeNameContext _localctx = new AttributeNameContext(_ctx, getState());
+		enterRule(_localctx, 76, RULE_attributeName);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(358);
+			match(ID);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class LogicalOperatorContext extends ParserRuleContext {
@@ -3917,6 +3626,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final UuidIdValueContext uuidIdValue() throws RecognitionException {
+		UuidIdValueContext _localctx = new UuidIdValueContext(_ctx, getState());
+		enterRule(_localctx, 78, RULE_uuidIdValue);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(360);
+			match(UUID);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class EntityNameContext extends ParserRuleContext {
 		public EntityNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3938,6 +3668,27 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitEntityName(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final QuotedStringContext quotedString() throws RecognitionException {
+		QuotedStringContext _localctx = new QuotedStringContext(_ctx, getState());
+		enterRule(_localctx, 80, RULE_quotedString);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(362);
+			match(QUOTED_STRING);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class AttributeNameContext extends ParserRuleContext {
@@ -3963,6 +3714,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final NullSpecLiteralContext nullSpecLiteral() throws RecognitionException {
+		NullSpecLiteralContext _localctx = new NullSpecLiteralContext(_ctx, getState());
+		enterRule(_localctx, 82, RULE_nullSpecLiteral);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(364);
+			match(NULL_SPEC_LITERAL);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class UuidIdValueContext extends ParserRuleContext {
 		public UuidIdValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3984,6 +3756,27 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitUuidIdValue(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final NullTokenContext nullToken() throws RecognitionException {
+		NullTokenContext _localctx = new NullTokenContext(_ctx, getState());
+		enterRule(_localctx, 84, RULE_nullToken);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(366);
+			match(NULL_TOKEN);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class QuotedStringContext extends ParserRuleContext {
@@ -4009,6 +3802,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final BooleanValueContext booleanValue() throws RecognitionException {
+		BooleanValueContext _localctx = new BooleanValueContext(_ctx, getState());
+		enterRule(_localctx, 86, RULE_booleanValue);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(368);
+			match(BOOLEAN_VALUE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class NullSpecLiteralContext extends ParserRuleContext {
 		public NullSpecLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4030,6 +3844,27 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitNullSpecLiteral(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final DurationValueContext durationValue() throws RecognitionException {
+		DurationValueContext _localctx = new DurationValueContext(_ctx, getState());
+		enterRule(_localctx, 88, RULE_durationValue);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(370);
+			match(DURATION_VALUE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class NullTokenContext extends ParserRuleContext {
@@ -4055,6 +3890,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final DateValueContext dateValue() throws RecognitionException {
+		DateValueContext _localctx = new DateValueContext(_ctx, getState());
+		enterRule(_localctx, 90, RULE_dateValue);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(372);
+			match(DATE_VALUE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class BooleanValueContext extends ParserRuleContext {
 		public BooleanValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4076,6 +3932,27 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitBooleanValue(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final DateTimeOffsetValueContext dateTimeOffsetValue() throws RecognitionException {
+		DateTimeOffsetValueContext _localctx = new DateTimeOffsetValueContext(_ctx, getState());
+		enterRule(_localctx, 92, RULE_dateTimeOffsetValue);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(374);
+			match(DATE_TIME_OFFSET_VALUE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class DurationValueContext extends ParserRuleContext {
@@ -4101,6 +3978,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final TimeOfDayValueContext timeOfDayValue() throws RecognitionException {
+		TimeOfDayValueContext _localctx = new TimeOfDayValueContext(_ctx, getState());
+		enterRule(_localctx, 94, RULE_timeOfDayValue);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(376);
+			match(TIME_OF_DAY_VALUE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class DateValueContext extends ParserRuleContext {
 		public DateValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4122,6 +4020,27 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitDateValue(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final DecimalLiteralContext decimalLiteral() throws RecognitionException {
+		DecimalLiteralContext _localctx = new DecimalLiteralContext(_ctx, getState());
+		enterRule(_localctx, 96, RULE_decimalLiteral);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(378);
+			match(DECIMAL_LITERAL);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
 	}
 
 	public static class DateTimeOffsetValueContext extends ParserRuleContext {
@@ -4147,6 +4066,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final FloatValueContext floatValue() throws RecognitionException {
+		FloatValueContext _localctx = new FloatValueContext(_ctx, getState());
+		enterRule(_localctx, 98, RULE_floatValue);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(380);
+			match(FLOAT);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class TimeOfDayValueContext extends ParserRuleContext {
 		public TimeOfDayValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4170,6 +4110,27 @@ public class ODataParser extends Parser {
 		}
 	}
 
+	public final IntegerValueContext integerValue() throws RecognitionException {
+		IntegerValueContext _localctx = new IntegerValueContext(_ctx, getState());
+		enterRule(_localctx, 100, RULE_integerValue);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(382);
+			match(INTEGER);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class DecimalLiteralContext extends ParserRuleContext {
 		public DecimalLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4191,6 +4152,44 @@ public class ODataParser extends Parser {
 			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitDecimalLiteral(this);
 			else return visitor.visitChildren(this);
 		}
+	}
+
+	public final CountStatementContext countStatement() throws RecognitionException {
+		CountStatementContext _localctx = new CountStatementContext(_ctx, getState());
+		enterRule(_localctx, 102, RULE_countStatement);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(384);
+			match(SLASH);
+			setState(385);
+			match(COUNT);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
+		switch (ruleIndex) {
+		case 10:
+			return filterExpression_sempred((FilterExpressionContext)_localctx, predIndex);
+		}
+		return true;
+	}
+	private boolean filterExpression_sempred(FilterExpressionContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 0:
+			return precpred(_ctx, 2);
+		}
+		return true;
 	}
 
 	public static class FloatValueContext extends ParserRuleContext {
