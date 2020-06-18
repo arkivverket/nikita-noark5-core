@@ -110,7 +110,9 @@ public class TestOData {
      * fonds_1.title = :parameter_0
      * <p>
      * Additionally the parameter_0 parameter value should be:
-     * The fonds
+     *   The fonds
+     * and query.getQueryOptions().getMaxRows() should be:
+     *   5
      */
     @Test
     @Transactional
@@ -122,6 +124,38 @@ public class TestOData {
 
         Integer maxRows = query.getQueryOptions().getMaxRows();
         assertEquals(maxRows, Integer.valueOf(5));
+        assertEquals(query.getParameterValue("parameter_0"),
+                "The fonds");
+        assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a eq query with a quoted string
+     * <p>
+     * Entity: arkiv
+     * Attribute: tittel
+     * ODATA Input:
+     * arkiv?$filter=tittel eq 'The fonds'$skip=10
+     * <p>
+     * Expected HQL:
+     * SELECT fonds_1 FROM Fonds AS fonds_1
+     * WHERE
+     * fonds_1.title = :parameter_0
+     * <p>
+     * Additionally the parameter_0 parameter value should be:
+     * The fonds
+     * and
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQSkip() {
+        String odata = "arkiv?$filter=tittel eq 'The fonds'$skip=10";
+        Query query = oDataService.convertODataToHQL(odata, "");
+        String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
+                " WHERE fonds_1.title = :parameter_0";
+
+        Integer firstRow = query.getQueryOptions().getFirstRow();
+        assertEquals(firstRow, Integer.valueOf(10));
         assertEquals(query.getParameterValue("parameter_0"),
                 "The fonds");
         assertEquals(query.getQueryString(), hql);
