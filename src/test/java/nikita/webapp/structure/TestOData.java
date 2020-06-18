@@ -119,6 +119,9 @@ public class TestOData {
         Query query = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE fonds_1.title = :parameter_0";
+
+        Integer maxRows = query.getQueryOptions().getMaxRows();
+        assertEquals(maxRows, Integer.valueOf(5));
         assertEquals(query.getParameterValue("parameter_0"),
                 "The fonds");
         assertEquals(query.getQueryString(), hql);
