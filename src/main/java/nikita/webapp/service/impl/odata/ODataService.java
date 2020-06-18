@@ -39,8 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.net.URLDecoder.decode;
-import static nikita.common.config.Constants.DELETE_RESPONSE;
-import static nikita.common.config.Constants.REGEX_UUID;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.ODataConstants.ODATA_DELETE_REF;
 import static org.antlr.v4.runtime.CharStreams.fromString;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -203,6 +202,16 @@ public class ODataService
     }
 
     public Query convertODataToHQL(String request, String dmlStatementType) {
+
+        if (request.startsWith(NOARK_FONDS_STRUCTURE_PATH + "/")) {
+            request = request.substring(
+                    (NOARK_FONDS_STRUCTURE_PATH + "/").length());
+        }
+        if (request.startsWith(NOARK_CASE_HANDLING_PATH + "/")) {
+            request = request.substring(
+                    (NOARK_CASE_HANDLING_PATH + "/").length());
+        }
+
         ODataLexer lexer = new ODataLexer(fromString(request));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ODataParser parser = new ODataParser(tokens);
