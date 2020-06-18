@@ -39,7 +39,7 @@ queryOptions:
 
 // Note: Listener must make sure only one of each is possible
 queryOption:
-    filter (expand | orderby | skipStatement | topStatement)*;
+    filter ('&'expand | '&'orderby | '&'skipStatement | '&'topStatement)*;
 
 filter:
     FILTER EQUAL filterExpression;

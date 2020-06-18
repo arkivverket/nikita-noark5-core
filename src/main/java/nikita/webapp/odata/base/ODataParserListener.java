@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * {@link ODataParser}.
  */
 public interface ODataParserListener extends ParseTreeListener {
-	/**
+    /**
      * Enter a parse tree produced by {@link ODataParser#odataRelativeUri}.
      *
      * @param ctx the parse tree
@@ -751,16 +751,20 @@ public interface ODataParserListener extends ParseTreeListener {
 
     /**
      * Enter a parse tree produced by {@link ODataParser#decimalLiteral}.
-	 * @param ctx the parse tree
-	 */
-	void enterDecimalLiteral(ODataParser.DecimalLiteralContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ODataParser#decimalLiteral}.
-	 * @param ctx the parse tree
-	 */
-	void exitDecimalLiteral(ODataParser.DecimalLiteralContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ODataParser#floatValue}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterDecimalLiteral(ODataParser.DecimalLiteralContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#decimalLiteral}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitDecimalLiteral(ODataParser.DecimalLiteralContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ODataParser#floatValue}.
 	 * @param ctx the parse tree
 	 */
 	void enterFloatValue(ODataParser.FloatValueContext ctx);
