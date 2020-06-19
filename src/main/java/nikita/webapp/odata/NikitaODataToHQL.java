@@ -43,30 +43,31 @@ public class NikitaODataToHQL
         codeValues.put("dokumenttype", DOCUMENT_TYPE_ENG_OBJECT);
         codeValues.put("elektronisksignatursikkerhetsnivaa",
                 ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT);
-        codeValues.put("elektronisksignaturverifisert", ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG);
+        codeValues.put("elektronisksignaturverifisert",
+                ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT);
         codeValues.put("flytstatus", FLOW_STATUS_ENG_OBJECT);
         codeValues.put("format", FORMAT_ENG_OBJECT);
         codeValues.put("graderingskode", CLASSIFICATION_ENG_OBJECT);
         codeValues.put("hendelsetype", EVENT_TYPE_ENG_OBJECT);
         codeValues.put("journalposttype", REGISTRY_ENTRY_TYPE_ENG_OBJECT);
-        codeValues.put("journalstatus", "registryEntryStatus");
-        codeValues.put("kassasjonsvedtak", "disposalDecision");
-        codeValues.put("klassifikasjonstype", "classificationType");
-        codeValues.put("koordinatsystem", "coordinateSystem");
-        codeValues.put("korrespondanseparttype", "correspondencePartType");
-        codeValues.put("land", "country");
-        codeValues.put("mappetype", "fileType");
-        codeValues.put("merknadstype", "commentType");
-        codeValues.put("partrolle", "partRole");
-        codeValues.put("presedensstatus", "precedenceStatus");
-        codeValues.put("saksstatus", "caseStatus");
-        codeValues.put("skjermingdokument", "screeningDocument");
-        codeValues.put("skjermingmetadata", "screeningMetadata");
-        codeValues.put("slettingstype", "deletionType");
-        codeValues.put("tilgangskategori", "accessCategory");
-        codeValues.put("tilgangsrestriksjon", "accessRestriction");
-        codeValues.put("tilknyttetregistreringsom", "associatedWithRecordAs");
-        codeValues.put("variantformat", "variantFormat");
+        codeValues.put("journalstatus", REGISTRY_ENTRY_STATUS_ENG_OBJECT);
+        codeValues.put("kassasjonsvedtak", DISPOSAL_DECISION_ENG_OBJECT);
+        codeValues.put("klassifikasjonstype", CLASSIFICATION_ENG_OBJECT);
+        codeValues.put("koordinatsystem", COORDINATE_SYSTEM);
+        codeValues.put("korrespondanseparttype", CORRESPONDENCE_PART_TYPE_ENG_OBJECT);
+        codeValues.put("land", COUNTRY_CODE_ENG_OBJECT);
+        codeValues.put("merknadstype", COMMENT_TEXT_ENG_OBJECT);
+        codeValues.put("partrolle", PART_ROLE_FIELD_ENG_OBJECT);
+        codeValues.put("presedensstatus", PRECEDENCE_PRECEDENCE_STATUS_ENG_OBJECT);
+        codeValues.put("saksstatus", CASE_STATUS_ENG_OBJECT);
+        codeValues.put("skjermingdokument", SCREENING_SCREENING_DOCUMENT_ENG_OBJECT);
+        codeValues.put("skjermingmetadata", SCREENING_SCREENING_METADATA_ENG_OBJECT);
+        codeValues.put("slettingstype", DELETION_TYPE_ENG_OBJECT);
+        codeValues.put("tilgangskategori", ACCESS_CATEGORY_ENG_OBJECT);
+        codeValues.put("tilgangsrestriksjon", ACCESS_RESTRICTION_ENG_OBJECT);
+        codeValues.put("tilknyttetregistreringsom",
+                ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT);
+        codeValues.put("variantformat", VARIANT_FORMAT_ENG);
     }
 
     protected String processJoinEntitiesContext(ODataParser.JoinEntitiesContext ctx) {
@@ -85,7 +86,7 @@ public class NikitaODataToHQL
             // e.g. dokumentobjekt?$filter=dokumentbeskrivelse/dokumentstatus/kode eq 'B'
             // but does no harm when run on non-metadata queries
             // e.g arkivstatus?$filter=kode eq 'O'
-            String codeValue = codeValues.get(entity);
+            String codeValue = getInternalNameObject(entity);
             String code = codeValue.substring(0, 1).toLowerCase() +
                     codeValue.substring(1);
             if (lastValue.equalsIgnoreCase("kode")) {
