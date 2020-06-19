@@ -323,6 +323,14 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitPrimitiveLiteral(ODataParser.PrimitiveLiteralContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ODataParser#countStatement}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitCountStatement(ODataParser.CountStatementContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ODataParser#openPar}.
      *
      * @param ctx the parse tree
@@ -457,12 +465,4 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitIntegerValue(ODataParser.IntegerValueContext ctx);
-
-    /**
-     * Visit a parse tree produced by {@link ODataParser#countStatement}.
-     *
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    T visitCountStatement(ODataParser.CountStatementContext ctx);
 }

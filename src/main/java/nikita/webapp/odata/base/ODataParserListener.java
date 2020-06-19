@@ -554,6 +554,20 @@ public interface ODataParserListener extends ParseTreeListener {
     void exitPrimitiveLiteral(ODataParser.PrimitiveLiteralContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ODataParser#countStatement}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterCountStatement(ODataParser.CountStatementContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#countStatement}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitCountStatement(ODataParser.CountStatementContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ODataParser#openPar}.
      *
      * @param ctx the parse tree
@@ -779,22 +793,15 @@ public interface ODataParserListener extends ParseTreeListener {
 
     /**
      * Enter a parse tree produced by {@link ODataParser#integerValue}.
-	 * @param ctx the parse tree
-	 */
-	void enterIntegerValue(ODataParser.IntegerValueContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ODataParser#integerValue}.
-	 * @param ctx the parse tree
-	 */
-	void exitIntegerValue(ODataParser.IntegerValueContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ODataParser#countStatement}.
-	 * @param ctx the parse tree
-	 */
-	void enterCountStatement(ODataParser.CountStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ODataParser#countStatement}.
-	 * @param ctx the parse tree
-	 */
-	void exitCountStatement(ODataParser.CountStatementContext ctx);
+     *
+     * @param ctx the parse tree
+     */
+    void enterIntegerValue(ODataParser.IntegerValueContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#integerValue}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitIntegerValue(ODataParser.IntegerValueContext ctx);
 }

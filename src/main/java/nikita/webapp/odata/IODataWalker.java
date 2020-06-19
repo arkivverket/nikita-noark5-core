@@ -8,6 +8,8 @@ public interface IODataWalker {
 
     void processOrderBy(String attribute, String sortOrder);
 
+    void processCountAsResource(Boolean includeResults);
+
     void processQueryEntity(String entity);
 
     void processCompare(String aliasAndAttribute,

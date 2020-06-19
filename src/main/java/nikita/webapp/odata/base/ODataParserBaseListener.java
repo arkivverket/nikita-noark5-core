@@ -703,6 +703,24 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterCountStatement(ODataParser.CountStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCountStatement(ODataParser.CountStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterOpenPar(ODataParser.OpenParContext ctx) {
     }
 
@@ -1001,24 +1019,6 @@ public class ODataParserBaseListener implements ODataParserListener {
      */
     @Override
     public void exitIntegerValue(ODataParser.IntegerValueContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterCountStatement(ODataParser.CountStatementContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitCountStatement(ODataParser.CountStatementContext ctx) {
     }
 
     /**

@@ -20,6 +20,8 @@ import static org.junit.Assert.assertEquals;
  * <p>
  * The following OData queries are tested here:
  * arkivstatus?$filter=kode eq 'O'
+ * arkiv/$count?$filter=tittel eq 'The fonds'
+ * arkiv/$count
  * arkiv?$filter=tittel eq 'The fonds'
  * arkiv?$filter=beskrivelse eq null
  * arkiv?$filter=beskrivelse ne null
@@ -98,6 +100,59 @@ public class TestOData {
                 " fondsstatus_1.code = :parameter_0";
         assertEquals(query.getParameterValue("parameter_0"),
                 "O");
+        assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with a $count
+     * <p>
+     * Entity: arkiv
+     * Attribute: tittel
+     * ODATA Input:
+     * arkiv/$count?$filter=tittel eq 'The fonds'
+     * <p>
+     * Expected HQL:
+     * SELECT count(*) FROM Fonds AS fonds_1
+     * WHERE
+     * fonds_1.title
+     * <p>
+     * Additionally the parameter_0 parameter value should be:
+     * O
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEQQueryCountWithFilter() {
+        String odata = "arkiv/$count?$filter=tittel eq 'The fonds'";
+        Query query = oDataService.convertODataToHQL(odata, "");
+        String hql = "SELECT count(*) FROM Fonds AS fonds_1" +
+                " WHERE" +
+                " fonds_1.title = :parameter_0";
+        assertEquals(query.getParameterValue("parameter_0"),
+                "The fonds");
+        assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with a $count
+     * <p>
+     * Entity: arkiv
+     * ODATA Input:
+     * arkiv/$count
+     * <p>
+     * Expected HQL:
+     * SELECT count(*) FROM Fonds AS fonds_1
+     * WHERE
+     * fonds_1.title
+     * <p>
+     * Additionally the parameter_0 parameter value should be:
+     * O
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEQQueryCount() {
+        String odata = "arkiv/$count";
+        Query query = oDataService.convertODataToHQL(odata, "");
+        String hql = "SELECT count(*) FROM Fonds AS fonds_1";
         assertEquals(query.getQueryString(), hql);
     }
 

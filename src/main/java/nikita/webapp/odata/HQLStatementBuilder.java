@@ -29,7 +29,7 @@ public class HQLStatementBuilder {
     private AtomicInteger limitOffset = new AtomicInteger(0);
     private String fromEntity = "";
     private String fromEntityAlias = "";
-
+    private Boolean selectCount = false;
     public HQLStatementBuilder() {
     }
 
@@ -181,7 +181,11 @@ public class HQLStatementBuilder {
         // are part of the JOIN.
         if (select.length() < 1) {
             select.append("SELECT ");
-            select.append(this.fromEntityAlias);
+            if (selectCount) {
+                select.append("count(*)");
+            } else {
+                select.append(this.fromEntityAlias);
+            }
         }
 
         String query = select.toString() + " FROM " + this.fromEntity + " AS " +
@@ -250,5 +254,11 @@ public class HQLStatementBuilder {
         from.append(toEntity.toLowerCase());
         from.append("_1");
         from.append(" ");
+    }
+
+    // currently not sure how to deal with $count=true so leaving it out for
+    // the moment
+    public void addCountAsResource(Boolean includeResults) {
+        selectCount = true;
     }
 }

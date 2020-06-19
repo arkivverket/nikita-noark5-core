@@ -80,6 +80,11 @@ public class ODataToHQL
         }
     }
 
+    @Override
+    public void processCountAsResource(Boolean includeResults) {
+        statement.addCountAsResource(includeResults);
+    }
+
     /**
      * processComparatorCommand
      * <p>

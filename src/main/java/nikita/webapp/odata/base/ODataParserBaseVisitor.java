@@ -438,6 +438,17 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
+    public T visitCountStatement(ODataParser.CountStatementContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
     public T visitOpenPar(ODataParser.OpenParContext ctx) {
         return visitChildren(ctx);
     }
@@ -615,17 +626,6 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      */
     @Override
     public T visitIntegerValue(ODataParser.IntegerValueContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public T visitCountStatement(ODataParser.CountStatementContext ctx) {
         return visitChildren(ctx);
     }
 }

@@ -39,7 +39,7 @@ queryOptions:
 
 // Note: Listener must make sure only one of each is possible
 queryOption:
-    filter ('&'expand | '&'orderby | '&'skipStatement | '&'topStatement)*;
+    filter ('&'expand | '&'orderby | '&'skipStatement | '&'topStatement | '&'topStatement)*;
 
 filter:
     FILTER EQUAL filterExpression;
@@ -149,6 +149,9 @@ primitiveLiteral:
     floatValue |
     integerValue;
 
+countStatement:
+    SLASH COUNT (EQUAL booleanValue)?;
+
 openPar: OPEN;
 closePar: CLOSE;
 logicalOperator: AND | OR;
@@ -166,4 +169,3 @@ timeOfDayValue: TIME_OF_DAY_VALUE ;
 decimalLiteral: DECIMAL_LITERAL ;
 floatValue: FLOAT ;
 integerValue: INTEGER;
-countStatement: SLASH COUNT;

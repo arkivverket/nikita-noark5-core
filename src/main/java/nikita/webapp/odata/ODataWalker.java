@@ -223,6 +223,12 @@ public abstract class ODataWalker
         return "";
     }
 
+    @Override
+    public void enterCountStatement(CountStatementContext ctx) {
+        super.enterCountStatement(ctx);
+        processCountAsResource(true);
+    }
+
     /**
      * getInternalNameAttribute
      * <p>
