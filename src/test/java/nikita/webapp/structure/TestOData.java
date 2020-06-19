@@ -86,7 +86,7 @@ public class TestOData {
      * fondsstatus_1.code = :parameter_0
      * <p>
      * Additionally the parameter_0 parameter value should be:
-     * The fonds
+     * O
      */
     @Test
     @Transactional

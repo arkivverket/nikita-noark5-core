@@ -2,30 +2,21 @@ package nikita.webapp.odata;
 
 import nikita.webapp.odata.base.ODataParser;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static nikita.common.config.N5ResourceMappings.CODE;
+import static nikita.common.config.N5ResourceMappings.CODE_NAME;
 
 /**
  * Class to handle special adaptions to ODataToHQL so that
- * particular interpretations e.g. complexTypes that are not
- * database tables are dealt with
+ * particular interpretations e.g., complexTypes that are not
+ * database tables, can be dealt with.
  * <p>
- * Code value queries e.g. arkiv/arkivstatus/kode has to be translated.
- * arkiv/arkivstatus/kode -> fonds/fondsStatusCode
- * arkiv/arkivstatus/kodenavn -> fonds/fondsStatusCodeName
- * <p>
- * arkiv/arkivstatus?$filter=kode eq 'O'
- * arkiv/arkivstatus?$filter=kodenavn eq 'Opprettet'
- * <p>
- * arkiv?$filter=arkivstatus/kode eq 'O'
- * arkiv?$filter=arkivstatus/kodenavn eq 'Opprettet'
+ * arkiv?$filter=arkivstatus/kode eq 'O' fonds/fondsStatusCode
+ * arkiv?$filter=arkivstatus/kodenavn eq 'Opprettet' fonds/fondsStatusCodeName
  */
-
 public class NikitaODataToHQL
         extends ODataToHQL {
-
-    private static final Map<String, String> codeValues = new HashMap<>();
 
     public NikitaODataToHQL(String dmlStatementType) {
         super(dmlStatementType);
@@ -35,8 +26,8 @@ public class NikitaODataToHQL
         List<ODataParser.EntityNameContext> entityNameContexts =
                 ctx.getRuleContexts(ODataParser.EntityNameContext.class);
         String lastValue = ctx.getChild(ctx.getChildCount() - 1).getText();
-        if (lastValue.equalsIgnoreCase("kode") ||
-                lastValue.equalsIgnoreCase("kodenavn")) {
+        if (lastValue.equalsIgnoreCase(CODE) ||
+                lastValue.equalsIgnoreCase(CODE_NAME)) {
             String entity = entityNameContexts
                     .get(entityNameContexts.size() - 1).getText();
             // Because codeValues are both entities and attributes e.g
@@ -50,9 +41,9 @@ public class NikitaODataToHQL
             String codeValue = getInternalNameObject(entity);
             String code = codeValue.substring(0, 1).toLowerCase() +
                     codeValue.substring(1);
-            if (lastValue.equalsIgnoreCase("kode")) {
+            if (lastValue.equalsIgnoreCase(CODE)) {
                 code += "Code";
-            } else if (lastValue.equalsIgnoreCase("kodenavn")) {
+            } else if (lastValue.equalsIgnoreCase(CODE_NAME)) {
                 code += "CodeName";
             }
             if (entityNameContexts.size() <= 1) {
@@ -85,8 +76,8 @@ public class NikitaODataToHQL
 
     @Override
     public void enterAttributeName(ODataParser.AttributeNameContext ctx) {
-        if (ctx.getText().equalsIgnoreCase("kode") ||
-                ctx.getText().equalsIgnoreCase("kodenavn")) {
+        if (ctx.getText().equalsIgnoreCase(CODE) ||
+                ctx.getText().equalsIgnoreCase(CODE_NAME)) {
             if (ctx.getParent() instanceof ODataParser.JoinEntitiesContext) {
                 return;
             }
