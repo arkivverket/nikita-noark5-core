@@ -1,5 +1,7 @@
-// Generated from /home/tsodring/tmp/nikita-noark5-core/src/main/antlr4/ODataParser.g4 by ANTLR 4.7.2
+// Generated from /home/tsodring/git/nikita-noark5-core/src/main/antlr4/ODataParser.g4 by ANTLR 4.8
+
 package nikita.webapp.odata.base;
+
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -17,7 +19,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterReferenceStatement(ODataParser.ReferenceStatementContext ctx) {
+    public void enterOdataRelativeUri(ODataParser.OdataRelativeUriContext ctx) {
     }
 
     /**
@@ -26,7 +28,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitReferenceStatement(ODataParser.ReferenceStatementContext ctx) {
+    public void exitOdataRelativeUri(ODataParser.OdataRelativeUriContext ctx) {
     }
 
     /**
@@ -35,7 +37,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterOdataQuery(ODataParser.OdataQueryContext ctx) {
+    public void enterResourcePath(ODataParser.ResourcePathContext ctx) {
     }
 
     /**
@@ -44,7 +46,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitOdataQuery(ODataParser.OdataQueryContext ctx) {
+    public void exitResourcePath(ODataParser.ResourcePathContext ctx) {
     }
 
     /**
@@ -53,7 +55,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterEntityBase(ODataParser.EntityBaseContext ctx) {
+    public void enterEntity(ODataParser.EntityContext ctx) {
     }
 
     /**
@@ -62,7 +64,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitEntityBase(ODataParser.EntityBaseContext ctx) {
+    public void exitEntity(ODataParser.EntityContext ctx) {
     }
 
     /**
@@ -71,7 +73,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterOdataCommand(ODataParser.OdataCommandContext ctx) {
+    public void enterEntityCast(ODataParser.EntityCastContext ctx) {
     }
 
     /**
@@ -80,7 +82,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitOdataCommand(ODataParser.OdataCommandContext ctx) {
+    public void exitEntityCast(ODataParser.EntityCastContext ctx) {
     }
 
     /**
@@ -89,7 +91,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterPredicate(ODataParser.PredicateContext ctx) {
+    public void enterEntityUUID(ODataParser.EntityUUIDContext ctx) {
     }
 
     /**
@@ -98,7 +100,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitPredicate(ODataParser.PredicateContext ctx) {
+    public void exitEntityUUID(ODataParser.EntityUUIDContext ctx) {
     }
 
     /**
@@ -107,7 +109,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterFilterStatement(ODataParser.FilterStatementContext ctx) {
+    public void enterEmbeddedEntitySet(ODataParser.EmbeddedEntitySetContext ctx) {
     }
 
     /**
@@ -116,7 +118,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitFilterStatement(ODataParser.FilterStatementContext ctx) {
+    public void exitEmbeddedEntitySet(ODataParser.EmbeddedEntitySetContext ctx) {
     }
 
     /**
@@ -125,7 +127,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterCountStatement(ODataParser.CountStatementContext ctx) {
+    public void enterQueryOptions(ODataParser.QueryOptionsContext ctx) {
     }
 
     /**
@@ -134,7 +136,241 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitCountStatement(ODataParser.CountStatementContext ctx) {
+    public void exitQueryOptions(ODataParser.QueryOptionsContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterQueryOption(ODataParser.QueryOptionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitQueryOption(ODataParser.QueryOptionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterFilter(ODataParser.FilterContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitFilter(ODataParser.FilterContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterExpand(ODataParser.ExpandContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitExpand(ODataParser.ExpandContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterBinaryExpression(ODataParser.BinaryExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitBinaryExpression(ODataParser.BinaryExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterBoolExpression(ODataParser.BoolExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitBoolExpression(ODataParser.BoolExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterParenExpression(ODataParser.ParenExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitParenExpression(ODataParser.ParenExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterComparatorExpression(ODataParser.ComparatorExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitComparatorExpression(ODataParser.ComparatorExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCountComparatorExpression(ODataParser.CountComparatorExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCountComparatorExpression(ODataParser.CountComparatorExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCompareMethodExpression(ODataParser.CompareMethodExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCompareMethodExpression(ODataParser.CompareMethodExpressionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterLeftComparatorExpr(ODataParser.LeftComparatorExprContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitLeftComparatorExpr(ODataParser.LeftComparatorExprContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterRightComparatorExpr(ODataParser.RightComparatorExprContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitRightComparatorExpr(ODataParser.RightComparatorExprContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterOrderBy(ODataParser.OrderByContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitOrderBy(ODataParser.OrderByContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterOrderByItem(ODataParser.OrderByItemContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitOrderByItem(ODataParser.OrderByItemContext ctx) {
     }
 
     /**
@@ -179,7 +415,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterFilterExpression(ODataParser.FilterExpressionContext ctx) {
+    public void enterJoinEntities(ODataParser.JoinEntitiesContext ctx) {
     }
 
     /**
@@ -188,7 +424,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitFilterExpression(ODataParser.FilterExpressionContext ctx) {
+    public void exitJoinEntities(ODataParser.JoinEntitiesContext ctx) {
     }
 
     /**
@@ -197,7 +433,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterBoolExpressionLeft(ODataParser.BoolExpressionLeftContext ctx) {
+    public void enterCommonExpr(ODataParser.CommonExprContext ctx) {
     }
 
     /**
@@ -206,7 +442,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitBoolExpressionLeft(ODataParser.BoolExpressionLeftContext ctx) {
+    public void exitCommonExpr(ODataParser.CommonExprContext ctx) {
     }
 
     /**
@@ -215,7 +451,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterBoolExpressionRight(ODataParser.BoolExpressionRightContext ctx) {
+    public void enterMathExpr(ODataParser.MathExprContext ctx) {
     }
 
     /**
@@ -224,7 +460,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitBoolExpressionRight(ODataParser.BoolExpressionRightContext ctx) {
+    public void exitMathExpr(ODataParser.MathExprContext ctx) {
     }
 
     /**
@@ -233,7 +469,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterStringCompareExpression(ODataParser.StringCompareExpressionContext ctx) {
+    public void enterMethodExpr(ODataParser.MethodExprContext ctx) {
     }
 
     /**
@@ -242,7 +478,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitStringCompareExpression(ODataParser.StringCompareExpressionContext ctx) {
+    public void exitMethodExpr(ODataParser.MethodExprContext ctx) {
     }
 
     /**
@@ -251,7 +487,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterStringCompareCommand(ODataParser.StringCompareCommandContext ctx) {
+    public void enterCompareMethodExpr(ODataParser.CompareMethodExprContext ctx) {
     }
 
     /**
@@ -260,7 +496,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitStringCompareCommand(ODataParser.StringCompareCommandContext ctx) {
+    public void exitCompareMethodExpr(ODataParser.CompareMethodExprContext ctx) {
     }
 
     /**
@@ -269,7 +505,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterSubstringExpression(ODataParser.SubstringExpressionContext ctx) {
+    public void enterMethodCallExpr(ODataParser.MethodCallExprContext ctx) {
     }
 
     /**
@@ -278,7 +514,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitSubstringExpression(ODataParser.SubstringExpressionContext ctx) {
+    public void exitMethodCallExpr(ODataParser.MethodCallExprContext ctx) {
     }
 
     /**
@@ -287,7 +523,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterIndexOfExpression(ODataParser.IndexOfExpressionContext ctx) {
+    public void enterCalenderMethodExp(ODataParser.CalenderMethodExpContext ctx) {
     }
 
     /**
@@ -296,7 +532,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitIndexOfExpression(ODataParser.IndexOfExpressionContext ctx) {
+    public void exitCalenderMethodExp(ODataParser.CalenderMethodExpContext ctx) {
     }
 
     /**
@@ -305,7 +541,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterLengthExpression(ODataParser.LengthExpressionContext ctx) {
+    public void enterConcatMethodExpr(ODataParser.ConcatMethodExprContext ctx) {
     }
 
     /**
@@ -314,7 +550,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitLengthExpression(ODataParser.LengthExpressionContext ctx) {
+    public void exitConcatMethodExpr(ODataParser.ConcatMethodExprContext ctx) {
     }
 
     /**
@@ -323,7 +559,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterTimeExpression(ODataParser.TimeExpressionContext ctx) {
+    public void enterSingleMethodCallExpr(ODataParser.SingleMethodCallExprContext ctx) {
     }
 
     /**
@@ -332,7 +568,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitTimeExpression(ODataParser.TimeExpressionContext ctx) {
+    public void exitSingleMethodCallExpr(ODataParser.SingleMethodCallExprContext ctx) {
     }
 
     /**
@@ -341,7 +577,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterStringModifierExpression(ODataParser.StringModifierExpressionContext ctx) {
+    public void enterSubstringMethodCallExpr(ODataParser.SubstringMethodCallExprContext ctx) {
     }
 
     /**
@@ -350,187 +586,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitStringModifierExpression(ODataParser.StringModifierExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterConcatExpression(ODataParser.ConcatExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitConcatExpression(ODataParser.ConcatExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterComparisonExpression(ODataParser.ComparisonExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitComparisonExpression(ODataParser.ComparisonExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterIntegerComparatorExpression(ODataParser.IntegerComparatorExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitIntegerComparatorExpression(ODataParser.IntegerComparatorExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterIntegerCompareCommand(ODataParser.IntegerCompareCommandContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitIntegerCompareCommand(ODataParser.IntegerCompareCommandContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterFloatComparatorExpression(ODataParser.FloatComparatorExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitFloatComparatorExpression(ODataParser.FloatComparatorExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterFloatCommand(ODataParser.FloatCommandContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitFloatCommand(ODataParser.FloatCommandContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterFloatOrIntegerValue(ODataParser.FloatOrIntegerValueContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitFloatOrIntegerValue(ODataParser.FloatOrIntegerValueContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterOrderByClause(ODataParser.OrderByClauseContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitOrderByClause(ODataParser.OrderByClauseContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterOrderByExpression(ODataParser.OrderByExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitOrderByExpression(ODataParser.OrderByExpressionContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void enterOrderAscDesc(ODataParser.OrderAscDescContext ctx) {
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>The default implementation does nothing.</p>
-     */
-    @Override
-    public void exitOrderAscDesc(ODataParser.OrderAscDescContext ctx) {
+    public void exitSubstringMethodCallExpr(ODataParser.SubstringMethodCallExprContext ctx) {
     }
 
     /**
@@ -557,6 +613,150 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterCompareMethodName(ODataParser.CompareMethodNameContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCompareMethodName(ODataParser.CompareMethodNameContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterMethodName(ODataParser.MethodNameContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitMethodName(ODataParser.MethodNameContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCalenderMethodName(ODataParser.CalenderMethodNameContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCalenderMethodName(ODataParser.CalenderMethodNameContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterNumber(ODataParser.NumberContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitNumber(ODataParser.NumberContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterPrimitiveLiteral(ODataParser.PrimitiveLiteralContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitPrimitiveLiteral(ODataParser.PrimitiveLiteralContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterCountStatement(ODataParser.CountStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitCountStatement(ODataParser.CountStatementContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterOpenPar(ODataParser.OpenParContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitOpenPar(ODataParser.OpenParContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterClosePar(ODataParser.CloseParContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitClosePar(ODataParser.CloseParContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterLogicalOperator(ODataParser.LogicalOperatorContext ctx) {
     }
 
@@ -575,7 +775,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterColumnName(ODataParser.ColumnNameContext ctx) {
+    public void enterSortOrder(ODataParser.SortOrderContext ctx) {
     }
 
     /**
@@ -584,7 +784,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitColumnName(ODataParser.ColumnNameContext ctx) {
+    public void exitSortOrder(ODataParser.SortOrderContext ctx) {
     }
 
     /**
@@ -629,7 +829,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterPackageName(ODataParser.PackageNameContext ctx) {
+    public void enterUuidIdValue(ODataParser.UuidIdValueContext ctx) {
     }
 
     /**
@@ -638,7 +838,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitPackageName(ODataParser.PackageNameContext ctx) {
+    public void exitUuidIdValue(ODataParser.UuidIdValueContext ctx) {
     }
 
     /**
@@ -647,7 +847,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterValue(ODataParser.ValueContext ctx) {
+    public void enterQuotedString(ODataParser.QuotedStringContext ctx) {
     }
 
     /**
@@ -656,7 +856,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitValue(ODataParser.ValueContext ctx) {
+    public void exitQuotedString(ODataParser.QuotedStringContext ctx) {
     }
 
     /**
@@ -665,7 +865,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterSingleQuotedString(ODataParser.SingleQuotedStringContext ctx) {
+    public void enterNullSpecLiteral(ODataParser.NullSpecLiteralContext ctx) {
     }
 
     /**
@@ -674,7 +874,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitSingleQuotedString(ODataParser.SingleQuotedStringContext ctx) {
+    public void exitNullSpecLiteral(ODataParser.NullSpecLiteralContext ctx) {
     }
 
     /**
@@ -683,7 +883,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterIntegerValue(ODataParser.IntegerValueContext ctx) {
+    public void enterNullToken(ODataParser.NullTokenContext ctx) {
     }
 
     /**
@@ -692,7 +892,115 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitIntegerValue(ODataParser.IntegerValueContext ctx) {
+    public void exitNullToken(ODataParser.NullTokenContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterBooleanValue(ODataParser.BooleanValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitBooleanValue(ODataParser.BooleanValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDurationValue(ODataParser.DurationValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDurationValue(ODataParser.DurationValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDateValue(ODataParser.DateValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDateValue(ODataParser.DateValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDateTimeOffsetValue(ODataParser.DateTimeOffsetValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDateTimeOffsetValue(ODataParser.DateTimeOffsetValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterTimeOfDayValue(ODataParser.TimeOfDayValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitTimeOfDayValue(ODataParser.TimeOfDayValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterDecimalLiteral(ODataParser.DecimalLiteralContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitDecimalLiteral(ODataParser.DecimalLiteralContext ctx) {
     }
 
     /**
@@ -719,7 +1027,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterSystemIdValue(ODataParser.SystemIdValueContext ctx) {
+    public void enterIntegerValue(ODataParser.IntegerValueContext ctx) {
     }
 
     /**
@@ -728,7 +1036,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitSystemIdValue(ODataParser.SystemIdValueContext ctx) {
+    public void exitIntegerValue(ODataParser.IntegerValueContext ctx) {
     }
 
     /**

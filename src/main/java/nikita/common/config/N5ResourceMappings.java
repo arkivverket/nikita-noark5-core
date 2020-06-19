@@ -351,6 +351,10 @@ public final class N5ResourceMappings {
     public static final String PLAN_IDENTIFICATION = "planidentifikasjon";
 
     public static final String COORDINATE_SYSTEM = "koordinatsystem";
+    public static final String COORDINATE_SYSTEM_ENG_OBJECT =
+            "CoordinateSystem";
+    public static final String COORDINATE_SYSTEM_ENG =
+            "coordinate_system";
     public static final String X = "x";
     public static final String Y = "y";
     public static final String Z = "z";
@@ -448,7 +452,7 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_NAME_ENG = "administrativEnhetNavn";
     public static final String ADMINISTRATIVE_UNIT_PARENT_REFERENCE_ENG = "referanseOverordnetEnhet";
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG = "administrativEnhetsstatus";
-    public static final String ASSOCIATED_WITH_RECORD_AS_ENG = "tilknyttetregistreringsom";
+    public static final String ASSOCIATED_WITH_RECORD_AS_ENG = "associated_with_record_as";
     public static final String AUTHOR_ENG = "forfatter";
     public static final String BUILDING_CHANGE_NUMBER_ENG = "building_change_number";
     public static final String BUILDING_NUMBER_ENG = "building_number";
@@ -462,12 +466,12 @@ public final class N5ResourceMappings {
     public static final String CASE_LOANED_TO_ENG = "loaned_to";
     public static final String PART_ENG = "part";
     public static final String PART_ID_ENG = "partID";
-    public static final String PART_NAME_ENG = "partNavn";
-    public static final String PART_ROLE_FIELD_ENG = "partrolle";
+    public static final String PART_NAME_ENG = "part_name";
+    public static final String PART_ROLE_FIELD_ENG = "part_roll";
     public static final String CASE_RECORDS_MANAGEMENT_UNIT_ENG = "records_management_unit";
     public static final String CASE_RESPONSIBLE_ENG = "case_responsible";
     public static final String CASE_SEQUENCE_NUMBER_ENG = "case_sequence_number";
-    public static final String CASE_STATUS_ENG = "saksstatus";
+    public static final String CASE_STATUS_ENG = "case_status";
     public static final String CASE_YEAR_ENG = "case_year";
     public static final String CHANGED_DATE_ENG = "changed_date";
     public static final String CHANGED_BY_ENG = "changed_by";
@@ -490,9 +494,9 @@ public final class N5ResourceMappings {
     public static final String COMMENT_DATE_ENG = "merknadsdato";
     public static final String COMMENT_ENG = "merknad";
     public static final String COMMENT_REGISTERED_BY_ENG = "merknadRegistrertAv";
-    public static final String COMMENT_TEXT_ENG = "merknadstekst";
-    public static final String COMMENT_TYPE_ENG = "merknadstype";
-    public static final String CONTACT_INFORMATION_ENG = "kontaktinformasjon";
+    public static final String COMMENT_TEXT_ENG = "comment_text";
+    public static final String COMMENT_TYPE_ENG = "comment_type";
+    public static final String CONTACT_INFORMATION_ENG = "contact_information";
     public static final String CONTACT_PERSON_ENG = "contact_person";
     public static final String CONVERSION_COMMENT_ENG = "conversion_comment";
     public static final String CONVERSION_ENG = "konvertering";
@@ -501,13 +505,13 @@ public final class N5ResourceMappings {
     public static final String CONVERTED_DATE_ENG = "converted_date";
     public static final String CONVERTED_FROM_FORMAT_ENG = "converted_from_format";
     public static final String CONVERTED_TO_FORMAT_ENG = "converted_to_format";
-    public static final String CORRESPONDENCE_PART_ENG = "korrespondansepart";
+    public static final String CORRESPONDENCE_PART_ENG = "correspondence_part";
     public static final String CORRESPONDENCE_PART_INTERNAL_ENG = "korrespondansepartintern";
     public static final String CORRESPONDENCE_PART_NAME_ENG = "name";
     public static final String CORRESPONDENCE_PART_PERSON_ENG = "korrespondansepartperson";
-    public static final String CORRESPONDENCE_PART_TYPE_ENG = "korrespondanseparttype";
-    public static final String CORRESPONDENCE_PART_UNIT_ENG = "korrespondansepartenhet";
-    public static final String COUNTRY_CODE_ENG = "landkode";
+    public static final String CORRESPONDENCE_PART_TYPE_ENG = "correspondence_part_type";
+    public static final String CORRESPONDENCE_PART_UNIT_ENG = "correspondence_part_unit";
+    public static final String COUNTRY_CODE_ENG = "land_code";
     public static final String COUNTRY_ENG = "land";
     public static final String COUNTY_NUMBER_ENG = "county_number";
     public static final String CREATED_BY_ENG = "created_by";
@@ -523,7 +527,7 @@ public final class N5ResourceMappings {
     public static final String DESCRIPTION_ENG = "description";
     public static final String DISPOSAL_AUTHORITY_ENG = "kassasjonshjemmel";
     public static final String DISPOSAL_DATE_ENG = "kassasjonsdato";
-    public static final String DISPOSAL_DECISION_ENG = "kassasjonsvedtak";
+    public static final String DISPOSAL_DECISION_ENG = "disposal_decision";
     public static final String DISPOSAL_ENG = "kassasjon";
     public static final String DISPOSAL_PRESERVATION_TIME_ENG = "bevaringstid";
     public static final String DISPOSAL_UNDERTAKEN_BY_ENG = "kassertAv";
@@ -534,7 +538,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG = "associated_by";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG = "association_date";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG = "document_number";
-    public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG = "dokumenttype";
+    public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG = "document_type";
     public static final String DOCUMENT_DESCRIPTION_ENG = "documentDescrption";
     public static final String DOCUMENT_DESCRIPTION_STATUS_ENG = "dokumentstatus";
     public static final String DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG = "external_reference";
@@ -547,7 +551,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_FLOW_FLOW_TO_ENG = "flow_to";
     public static final String DOCUMENT_FLOW_REFERENCE_FLOW_FROM_ENG = "reference_flow_from";
     public static final String DOCUMENT_FLOW_REFERENCE_FLOW_TO_ENG = "reference_flow_to";
-    public static final String DOCUMENT_MEDIUM_ENG = "dokumentmedium";
+    public static final String DOCUMENT_MEDIUM_ENG = "document_medium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG = "checksum_algorithm";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ENG = "checksum";
     public static final String DOCUMENT_OBJECT_ENG = "documentObject";
@@ -560,7 +564,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG = "reference_document_file";
     public static final String DOCUMENT_OBJECT_VARIANT_FORMAT_ENG = "variantformat";
     public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG = "version_number";
-    public static final String DOCUMENT_STATUS_ENG = "dokumentstatus";
+    public static final String DOCUMENT_STATUS_ENG = "document_status";
     public static final String DOCUMENT_TYPE_ENG = "dokumenttype";
     public static final String ELECTRONIC_SIGNATURE_ENG = "elektronisksignatur";
     public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG = "electronic_signature_security_level_name";
@@ -569,7 +573,7 @@ public final class N5ResourceMappings {
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG = "electronic_signature_verified_name";
     public static final String EMAIL_ADDRESS_ENG = "epostadresse";
     public static final String EVENT_DATE_ENG = "event_date";
-    public static final String EVENT_TYPE_ENG = "hendelsetype";
+    public static final String EVENT_TYPE_ENG = "event_type";
     public static final String FILE_ENG = "file";
     public static final String FILE_ID_ENG = "file_id";
     public static final String FILE_PUBLIC_TITLE_ENG = "public_title";
@@ -581,7 +585,7 @@ public final class N5ResourceMappings {
     public static final String FONDS_CREATOR_ID_ENG = "fonds_creator_id";
     public static final String FONDS_CREATOR_NAME_ENG = "fonds_creator_name";
     public static final String FONDS_ENG = "fonds";
-    public static final String FONDS_STATUS_ENG = "arkivstatus";
+    public static final String FONDS_STATUS_ENG = "fonds_status";
     public static final String FOREIGN_ADDRESS_ENG = "utenlandsadresse";
     public static final String FORMAT_ENG = "format";
     public static final String HOLDING_NUMBER_ENG = "holding_number";
@@ -615,7 +619,8 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_ENG = "precedence";
     public static final String PRECEDENCE_SOURCE_OF_LAW_ENG = "source_of_law";
     public static final String PRECEDENCE_REFERENCE_APPROVED_BY_ENG = "precedence_approved_by_reference";
-    public static final String PRECEDENCE_PRECEDENCE_STATUS_ENG = "precedenceStatus";
+    public static final String PRECEDENCE_PRECEDENCE_STATUS_ENG =
+            "precedence_status";
     public static final String PRODUCTION_VERSION_ENG = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG = "archived_by";
     public static final String RECORD_ARCHIVED_DATE_ENG = "archived_date";
@@ -635,8 +640,9 @@ public final class N5ResourceMappings {
     public static final String REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE_ENG = "offentlighetsvurdertDato";
     public static final String REGISTRY_ENTRY_SENT_DATE_ENG = "sendtDato";
     public static final String REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG = "journalsekvensnummer";
-    public static final String REGISTRY_ENTRY_STATUS_ENG = "journalstatus";
-    public static final String REGISTRY_ENTRY_TYPE_ENG = "journalposttype";
+    public static final String REGISTRY_ENTRY_STATUS_ENG =
+            "registry_entry_status";
+    public static final String REGISTRY_ENTRY_TYPE_ENG = "registry_entry_type";
     public static final String REGISTRY_ENTRY_YEAR_ENG = "journalaar";
     public static final String RESIDING_ADDRESS_ENG = "bostedsadresse";
     public static final String RIGHT_ENG = "rettighet";
@@ -645,8 +651,9 @@ public final class N5ResourceMappings {
     public static final String SCREENING_DURATION_ENG = "skjermingsvarighet";
     public static final String SCREENING_ENG = "skjerming";
     public static final String SCREENING_EXPIRES_DATE_ENG = "skjermingOpphoererDato";
-    public static final String SCREENING_SCREENING_DOCUMENT_ENG = "skjermingDokument";
-    public static final String SCREENING_SCREENING_METADATA_ENG = "skjermingMetadata";
+    public static final String SCREENING_SCREENING_DOCUMENT_ENG = "screening_document";
+    public static final String SCREENING_SCREENING_METADATA_ENG =
+            "screening_metadata";
     public static final String SECONDARY_CLASSIFICATION_ENG = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG = "sekundaerklassifikasjonssystem";
     public static final String SECTION_NUMBER_ENG = "section_number";
@@ -654,24 +661,24 @@ public final class N5ResourceMappings {
     public static final String SERIES_ENG = "series";
     public static final String SERIES_PRECURSOR_ENG = "forloeper";
     public static final String SERIES_START_DATE_ENG = "series_start_date";
-    public static final String SERIES_STATUS_ENG = "arkivdelstatus";
+    public static final String SERIES_STATUS_ENG = "series_status";
     public static final String SERIES_SUCCESSOR_ENG = "arvtager";
     public static final String SHORT_NAME_ENG = "short_name";
     public static final String SIGN_OFF_BY_ENG = "sign_off_by";
     public static final String SIGN_OFF_DATE_ENG = "sign_off_date";
     public static final String SIGN_OFF_ENG = "avskrivning";
     public static final String STORAGE_LOCATION_ENG = "storage_location";
-    public static final String SIGN_OFF_METHOD_ENG = "avskrivningsmaate";
-    public static final String SOCIAL_SECURITY_NUMBER_ENG = "social_security_number";
+    public static final String SIGN_OFF_METHOD_ENG = "sign_of_method";
+    public static final String SOCIAL_SECURITY_NUMBER_ENG = "SignOfMethod";
     public static final String SUB_CLASS_ENG = "underklasse";
     public static final String SUB_FONDS_ENG = "underarkiv";
     public static final String SUB_HOLDING_NUMBER_ENG = "sub_holding_number";
     public static final String SYSTEM_ID_ENG = "systemID";
     public static final String TELEPHONE_NUMBER_ENG = "telefonnummer";
     public static final String TITLE_ENG = "title";
-    public static final String USER_ENG = "bruker";
-    public static final String USER_NAME_ENG = "brukerNavn";
-    public static final String VARIANT_FORMAT_ENG = "variantformat";
+    public static final String USER_ENG = "user";
+    public static final String USER_NAME_ENG = "username";
+    public static final String VARIANT_FORMAT_ENG = "variant_format";
     public static final String X_ENG = "x";
     public static final String Y_ENG = "y";
     public static final String Z_ENG = "z";
@@ -679,8 +686,9 @@ public final class N5ResourceMappings {
     // English version of above, sorted alphabetically. The following are the
     // english object names as used within the Noark domain model
     // TODO: Do the actual translation job,
-    public static final String ACCESS_CATEGORY_ENG_OBJECT = "tilgangskategori";
-    public static final String ACCESS_RESTRICTION_ENG_OBJECT = "tilgangsrestriksjon";
+    public static final String ACCESS_CATEGORY_ENG_OBJECT = "AccessCategory";
+    public static final String ACCESS_RESTRICTION_ENG_OBJECT =
+            "AccessRestriction";
     public static final String ADDRESS_LINE_1_ENG_OBJECT = "adresselinje1";
     public static final String ADDRESS_LINE_2_ENG_OBJECT = "adresselinje2";
     public static final String ADDRESS_LINE_3_ENG_OBJECT = "adresselinje3";
@@ -688,7 +696,8 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_NAME_ENG_OBJECT = "administrativEnhetNavn";
     public static final String ADMINISTRATIVE_UNIT_PARENT_REFERENCE_ENG_OBJECT = "referanseOverordnetEnhet";
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG_OBJECT = "administrativEnhetsstatus";
-    public static final String ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT = "tilknyttetregistreringsom";
+    public static final String ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT =
+            "AssociatedWithRecordAs";
     public static final String AUTHOR_ENG_OBJECT = "forfatter";
     public static final String BUILDING_CHANGE_NUMBER_ENG_OBJECT = "continuousNumberingOfBuildingChange";
     public static final String BUILDING_NUMBER_ENG_OBJECT = "buildingNumber";
@@ -702,12 +711,12 @@ public final class N5ResourceMappings {
     public static final String CASE_LOANED_TO_ENG_OBJECT = "loanedTo";
     public static final String PART_ENG_OBJECT = "part";
     public static final String PART_ID_ENG_OBJECT = "partID";
-    public static final String PART_NAME_ENG_OBJECT = "partNavn";
-    public static final String PART_ROLE_FIELD_ENG_OBJECT = "partrolle";
+    public static final String PART_NAME_ENG_OBJECT = "PartName";
+    public static final String PART_ROLE_FIELD_ENG_OBJECT = "PartRoll";
     public static final String CASE_RECORDS_MANAGEMENT_UNIT_ENG_OBJECT = "recordsManagementUnit";
     public static final String CASE_RESPONSIBLE_ENG_OBJECT = "caseResponsible";
     public static final String CASE_SEQUENCE_NUMBER_ENG_OBJECT = "caseSequenceNumber";
-    public static final String CASE_STATUS_ENG_OBJECT = "saksstatus";
+    public static final String CASE_STATUS_ENG_OBJECT = "CaseStatus";
     public static final String CASE_YEAR_ENG_OBJECT = "caseYear";
     public static final String CHANGED_DATE_ENG_OBJECT = "changedDate";
     public static final String CHANGED_BY_ENG_OBJECT = "changedBy";
@@ -717,7 +726,8 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_DATE_ENG_OBJECT = "graderingsdato";
     public static final String CLASSIFICATION_DOWNGRADED_BY_ENG_OBJECT = "nedgradertAv";
     public static final String CLASSIFICATION_DOWNGRADED_DATE_ENG_OBJECT = "nedgraderingsdato";
-    public static final String CLASSIFICATION_ENG_OBJECT = "classificationName"; // property node
+    public static final String CLASSIFICATION_ENG_OBJECT =
+            "ClassificationName"; // property node
     public static final String CLASSIFICATION_SYSTEM_ENG_OBJECT =
             "ClassificationSystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG_OBJECT = "klassifikasjonstype";
@@ -730,8 +740,8 @@ public final class N5ResourceMappings {
     public static final String COMMENT_DATE_ENG_OBJECT = "merknadsdato";
     public static final String COMMENT_ENG_OBJECT = "merknad";
     public static final String COMMENT_REGISTERED_BY_ENG_OBJECT = "merknadRegistrertAv";
-    public static final String COMMENT_TEXT_ENG_OBJECT = "merknadstekst";
-    public static final String COMMENT_TYPE_ENG_OBJECT = "merknadstype";
+    public static final String COMMENT_TEXT_ENG_OBJECT = "CommentText";
+    public static final String COMMENT_TYPE_ENG_OBJECT = "CommentType";
     public static final String CONTACT_INFORMATION_ENG_OBJECT = "kontaktinformasjon";
     public static final String CONTACT_PERSON_ENG_OBJECT = "contactPerson";
     public static final String CONVERSION_COMMENT_ENG_OBJECT = "conversionComment";
@@ -745,9 +755,11 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_INTERNAL_ENG_OBJECT = "korrespondansepartintern";
     public static final String CORRESPONDENCE_PART_NAME_ENG_OBJECT = "name";
     public static final String CORRESPONDENCE_PART_PERSON_ENG_OBJECT = "korrespondansepartperson";
-    public static final String CORRESPONDENCE_PART_TYPE_ENG_OBJECT = "korrespondanseparttype";
-    public static final String CORRESPONDENCE_PART_UNIT_ENG_OBJECT = "korrespondansepartenhet";
-    public static final String COUNTRY_CODE_ENG_OBJECT = "landkode";
+    public static final String CORRESPONDENCE_PART_TYPE_ENG_OBJECT =
+            "CorrespondencePartType";
+    public static final String CORRESPONDENCE_PART_UNIT_ENG_OBJECT =
+            "CorrespondencePartUnit";
+    public static final String COUNTRY_CODE_ENG_OBJECT = "CountryCode";
     public static final String COUNTRY_ENG_OBJECT = "land";
     public static final String COUNTY_NUMBER_ENG_OBJECT = "countyNumber";
     public static final String CREATED_BY_ENG_OBJECT = "createdBy";
@@ -759,11 +771,13 @@ public final class N5ResourceMappings {
     public static final String DELETION_BY_ENG_OBJECT = "deletionBy";
     public static final String DELETION_DATE_ENG_OBJECT = "deletionDate";
     public static final String DELETION_ENG_OBJECT = "sletting";
-    public static final String DELETION_TYPE_ENG_OBJECT = "deletionType";
+    public static final String DELETION_TYPE_ENG_OBJECT = "DeletionType";
     public static final String DESCRIPTION_ENG_OBJECT = "description";
-    public static final String DISPOSAL_AUTHORITY_ENG_OBJECT = "kassasjonshjemmel";
-    public static final String DISPOSAL_DATE_ENG_OBJECT = "kassasjonsdato";
-    public static final String DISPOSAL_DECISION_ENG_OBJECT = "kassasjonsvedtak";
+    public static final String DISPOSAL_AUTHORITY_ENG_OBJECT =
+            "DisposalAuthority";
+    public static final String DISPOSAL_DATE_ENG_OBJECT = "DisposalDate";
+    public static final String DISPOSAL_DECISION_ENG_OBJECT =
+            "DisposalDecision";
     public static final String DISPOSAL_ENG_OBJECT = "kassasjon";
     public static final String DISPOSAL_PRESERVATION_TIME_ENG_OBJECT = "bevaringstid";
     public static final String DISPOSAL_UNDERTAKEN_BY_ENG_OBJECT = "kassertAv";
@@ -774,7 +788,8 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG_OBJECT = "associatedBy";
     public static final String DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG_OBJECT = "associationDate";
     public static final String DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER_ENG_OBJECT = "documentNumber";
-    public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG_OBJECT = "dokumenttype";
+    public static final String DOCUMENT_DESCRIPTION_DOCUMENT_TYPE_ENG_OBJECT
+            = "DocumentType";
     public static final String DOCUMENT_DESCRIPTION_ENG_OBJECT =
             "DocumentDescription";
     public static final String DOCUMENT_DESCRIPTION_STATUS_ENG_OBJECT = "dokumentstatus";
@@ -786,7 +801,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_FLOW_FLOW_SENT_DATE_ENG_OBJECT = "flowSentDate";
     public static final String DOCUMENT_FLOW_FLOW_STATUS_ENG_OBJECT = "flowStatus";
     public static final String DOCUMENT_FLOW_FLOW_TO_ENG_OBJECT = "flowTo";
-    public static final String DOCUMENT_MEDIUM_ENG_OBJECT = "dokumentmedium";
+    public static final String DOCUMENT_MEDIUM_ENG_OBJECT = "DocumentMedium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG_OBJECT = "checksumAlgorithm";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ENG_OBJECT = "checksum";
     public static final String DOCUMENT_OBJECT_ENG_OBJECT = "DocumentObject";
@@ -798,30 +813,32 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG_OBJECT = "referenceDocumentFile";
     public static final String DOCUMENT_OBJECT_VARIANT_FORMAT_ENG_OBJECT = "variantformat";
     public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG_OBJECT = "versionNumber";
-    public static final String DOCUMENT_STATUS_ENG_OBJECT = "dokumentstatus";
-    public static final String DOCUMENT_TYPE_ENG_OBJECT = "dokumenttype";
-    public static final String ELECTRONIC_SIGNATURE_ENG_OBJECT = "elektronisksignatur";
-    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT = "electronicSignatureSecurityLevelName";
+    public static final String DOCUMENT_STATUS_ENG_OBJECT = "DocumentStatus";
+    public static final String DOCUMENT_TYPE_ENG_OBJECT = "DocumentType";
+    public static final String ELECTRONIC_SIGNATURE_ENG_OBJECT =
+            "ElectronicSignature";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT
+            = "ElectronicSignatureSecurityLevelName";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG_OBJECT = "verifiedBy";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT = "verifiedDate";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT = "electronicSignatureVerifiedName";
     public static final String EMAIL_ADDRESS_ENG_OBJECT = "epostadresse";
     public static final String EVENT_DATE_ENG_OBJECT = "eventDate";
-    public static final String EVENT_TYPE_ENG_OBJECT = "hendelsetype";
+    public static final String EVENT_TYPE_ENG_OBJECT = "EventType";
     public static final String FILE_ENG_OBJECT = "File";
     public static final String FILE_ID_ENG_OBJECT = "fileId";
     public static final String FILE_PUBLIC_TITLE_ENG_OBJECT = "publicTitle";
     public static final String FILE_TYPE_ENG_OBJECT = "mappetype";
     public static final String FINALISED_BY_ENG_OBJECT = "finalisedBy";
     public static final String FINALISED_DATE_ENG_OBJECT = "finalisedDate";
-    public static final String FLOW_STATUS_ENG_OBJECT = "flytstatus";
+    public static final String FLOW_STATUS_ENG_OBJECT = "FlowStatus";
     public static final String FONDS_CREATOR_ENG_OBJECT = "FondsCreator";
     public static final String FONDS_CREATOR_ID_ENG_OBJECT = "fondsCreatorId";
     public static final String FONDS_CREATOR_NAME_ENG_OBJECT = "fondsCreatorName";
     public static final String FONDS_ENG_OBJECT = "Fonds";
-    public static final String FONDS_STATUS_ENG_OBJECT = "arkivstatus";
+    public static final String FONDS_STATUS_ENG_OBJECT = "FondsStatus";
     public static final String FOREIGN_ADDRESS_ENG_OBJECT = "utenlandsadresse";
-    public static final String FORMAT_ENG_OBJECT = "format";
+    public static final String FORMAT_ENG_OBJECT = "Format";
     public static final String HOLDING_NUMBER_ENG_OBJECT = "holdingNumber";
     public static final String KEYWORD_ENG_OBJECT = "noekkelord";
     public static final String LAST_MODIFIED_BY_ENG_OBJECT = "lastModifiedBy";
@@ -854,7 +871,7 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT = "sourceOfLaw";
     public static final String PRECEDENCE_REFERENCE_APPROVED_BY_ENG_OBJECT = "referencePrecedenceApprovedBySystemID";
     public static final String PRECEDENCE_PRECEDENCE_STATUS_ENG_OBJECT =
-            "precedenceStatus";
+            "PrecedenceStatus";
     public static final String PRODUCTION_VERSION_ENG_OBJECT = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG_OBJECT = "arkivertAv";
     public static final String RECORD_ARCHIVED_DATE_ENG_OBJECT = "archivedDate";
@@ -874,8 +891,10 @@ public final class N5ResourceMappings {
     public static final String REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE_ENG_OBJECT = "offentlighetsvurdertDato";
     public static final String REGISTRY_ENTRY_SENT_DATE_ENG_OBJECT = "sendtDato";
     public static final String REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG_OBJECT = "journalsekvensnummer";
-    public static final String REGISTRY_ENTRY_STATUS_ENG_OBJECT = "journalstatus";
-    public static final String REGISTRY_ENTRY_TYPE_ENG_OBJECT = "journalposttype";
+    public static final String REGISTRY_ENTRY_STATUS_ENG_OBJECT =
+            "RegistryEntryStatus";
+    public static final String REGISTRY_ENTRY_TYPE_ENG_OBJECT =
+            "RegistryEntryType";
     public static final String REGISTRY_ENTRY_YEAR_ENG_OBJECT = "journalaar";
     public static final String RESIDING_ADDRESS_ENG_OBJECT = "bostedsadresse";
     public static final String RIGHT_ENG_OBJECT = "rettighet";
@@ -884,8 +903,9 @@ public final class N5ResourceMappings {
     public static final String SCREENING_DURATION_ENG_OBJECT = "skjermingsvarighet";
     public static final String SCREENING_ENG_OBJECT = "skjerming";
     public static final String SCREENING_EXPIRES_DATE_ENG_OBJECT = "skjermingOpphoererDato";
-    public static final String SCREENING_SCREENING_DOCUMENT_ENG_OBJECT = "skjermingDokument";
-    public static final String SCREENING_SCREENING_METADATA_ENG_OBJECT = "skjermingMetadata";
+    public static final String SCREENING_SCREENING_DOCUMENT_ENG_OBJECT =
+            "ScreeningDocument";
+    public static final String SCREENING_SCREENING_METADATA_ENG_OBJECT = "ScreeningMetadata";
     public static final String SECONDARY_CLASSIFICATION_ENG_OBJECT = "sekundaerklassifikasjon";
     public static final String SECONDARY_CLASSIFICATION_SYSTEM_ENG_OBJECT = "sekundaerklassifikasjonssystem";
     public static final String SECTION_NUMBER_ENG_OBJECT = "sectionNumber";
@@ -893,7 +913,7 @@ public final class N5ResourceMappings {
     public static final String SERIES_ENG_OBJECT = "Series";
     public static final String SERIES_PRECURSOR_ENG_OBJECT = "forloeper";
     public static final String SERIES_START_DATE_ENG_OBJECT = "seriesStartDate";
-    public static final String SERIES_STATUS_ENG_OBJECT = "arkivdelstatus";
+    public static final String SERIES_STATUS_ENG_OBJECT = "Seriesstatus";
     public static final String SERIES_SUCCESSOR_ENG_OBJECT = "arvtager";
     public static final String SHORT_NAME_ENG_OBJECT = "shortName";
     public static final String SIGN_OFF_BY_ENG_OBJECT = "signOffBy";

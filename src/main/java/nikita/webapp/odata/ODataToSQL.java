@@ -9,11 +9,11 @@ import java.util.Map;
 import static nikita.common.config.ODataConstants.*;
 
 /**
- * Extending NikitaODataWalker to handle events so we can convert OData filter
+ * Extending ODataWalker to handle events so we can convert OData filter
  * command to SQL.
  */
 
-public class NikitaODataToSQLWalker {
+public class ODataToSQL {
     // There is not time right now to get this code also in place. The 
     // concept is definitely nice, to convert OData to HQL, SQL and ES, but HQL
     // is all we require at the moment. Leaving it in the repo commented out
@@ -21,12 +21,12 @@ public class NikitaODataToSQLWalker {
     // now and again
 
     private static final Logger logger =
-            LoggerFactory.getLogger(NikitaODataToSQLWalker.class);
+            LoggerFactory.getLogger(ODataToSQL.class);
 
     private SQLStatementBuilder sqlStatementBuilder;
     private Map<String, String> comparatorMap;
 
-    public NikitaODataToSQLWalker() {
+    public ODataToSQL() {
         comparatorMap = new HashMap<>();
         comparatorMap.put(ODATA_EQ, SQL_EQ);
         comparatorMap.put(ODATA_GT, SQL_GT);
@@ -59,7 +59,7 @@ public class NikitaODataToSQLWalker {
      */
 
     public void processResource(String entity, String loggedInUser) {
-        // sqlStatementBuilder.addSelect(getNameDatabase(entity), DM_OWNED_BY,
+        // sqlStatementBuilder.addFrom(getInternalNameAttribute(entity), DM_OWNED_BY,
         //         loggedInUser);
     }
 
@@ -84,7 +84,7 @@ public class NikitaODataToSQLWalker {
      */
 
     public void processContains(String attribute, String value) {
-        //sqlStatementBuilder.addWhere(getNameDatabase(attribute) +
+        //sqlStatementBuilder.addWhere(getInternalNameAttribute(attribute) +
         //        " LIKE '%" + value + "%'");
     }
 
@@ -107,7 +107,7 @@ public class NikitaODataToSQLWalker {
 
     public void processStartsWith(String attribute, String value) {
         //sqlStatementBuilder.addWhere(
-        //        getNameDatabase(attribute) + " LIKE '" + value + "%'");
+        //        getInternalNameAttribute(attribute) + " LIKE '" + value + "%'");
     }
 
     /**
@@ -133,7 +133,7 @@ public class NikitaODataToSQLWalker {
 
     public void processComparatorCommand(String attribute, String comparator,
                                          String value) {
-        //sqlStatementBuilder.addWhere(getNameDatabase(attribute) + " " +
+        //sqlStatementBuilder.addWhere(getInternalNameAttribute(attribute) + " " +
         //        getSQLComparator(comparator) + " '" +
         //        value + "'");
     }
@@ -159,7 +159,7 @@ public class NikitaODataToSQLWalker {
      */
 
     public void processOrderByCommand(String attribute, String sortOrder) {
-        //sqlStatementBuilder.addOrderby(getNameDatabase(attribute), sortOrder);
+        //sqlStatementBuilder.addOrderBy(getInternalNameAttribute(attribute), sortOrder);
     }
 
     /**

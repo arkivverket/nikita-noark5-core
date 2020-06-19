@@ -8,7 +8,7 @@ import static nikita.common.config.Constants.DM_OWNED_BY;
 import static nikita.common.config.ESConstants.*;
 
 /**
- * Extending NikitaODataWalker to handle events so we can convert OData filter
+ * Extending ODataWalker to handle events so we can convert OData filter
  * command to an ElasticSearch query.
  * <p>
  * We will just attempt to keep this code in sync with SQL/HQL. We're not even
@@ -18,14 +18,14 @@ import static nikita.common.config.ESConstants.*;
  * MAY NOT DO ANYTHING.
  */
 
-public class NikitaODataToESWalker {
+public class ODataToES {
     // There is not time right now to get this code also in place. The
     // concept is definitely nice, to convert OData to HQL, SQL and ES, but HQL
     // is all we require at the moment. Leaving it in the repo commented out
     // so the we may try and piece it together when we have some extra time
     // now and again
     private static final Logger logger =
-            LoggerFactory.getLogger(NikitaODataToESWalker.class);
+            LoggerFactory.getLogger(ODataToES.class);
 
 
     private JSONObject query;
@@ -119,10 +119,10 @@ public class NikitaODataToESWalker {
         JSONObject prefix = (JSONObject) query.get(QUERY_PREFIX);
         if (prefix == null) {
             prefix = new JSONObject();
-            //prefix.put(getNameObject(attribute), value);
+            //prefix.put(getInternalNameObject(attribute), value);
             query.put(QUERY_PREFIX, prefix);
         } else {
-            // prefix.put(getNameObject(attribute), value);
+            // prefix.put(getInternalNameObject(attribute), value);
         }
     }
 
@@ -164,10 +164,10 @@ public class NikitaODataToESWalker {
         JSONObject matchPhrase = (JSONObject) query.get(QUERY_MATCH_PHRASE);
         if (matchPhrase == null) {
             matchPhrase = new JSONObject();
-            //matchPhrase.put(getNameObject(attribute), value);
+            //matchPhrase.put(getInternalNameObject(attribute), value);
             query.put(QUERY_MATCH_PHRASE, matchPhrase);
         } else {
-            //matchPhrase.put(getNameObject(attribute), value);
+            //matchPhrase.put(getInternalNameObject(attribute), value);
         }
     }
 

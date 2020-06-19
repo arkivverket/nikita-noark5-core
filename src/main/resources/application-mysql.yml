@@ -47,6 +47,11 @@ spring:
   profiles:
     active: security-oauth2-authentication, mysql
 
+logging:
+  level:
+    org:
+      reflections: OFF
+
 security:
   oauth2:
     client:

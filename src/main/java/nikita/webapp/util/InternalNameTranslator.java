@@ -66,6 +66,10 @@ public class InternalNameTranslator {
                         CONVERSION_ENG,
                         CONVERSION_ENG_OBJECT);
         addNorToEnglishNameMap
+                (COORDINATE_SYSTEM,
+                        COORDINATE_SYSTEM_ENG,
+                        COORDINATE_SYSTEM_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (COUNTRY,
                         COUNTRY_ENG,
                         COUNTRY_ENG_OBJECT);

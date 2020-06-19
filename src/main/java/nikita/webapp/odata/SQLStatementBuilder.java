@@ -30,7 +30,7 @@ public class SQLStatementBuilder {
         orderByList = new ArrayList<>();
     }
 
-    public void addSelect(String entity, String ownerColumn, String
+    public void addFrom(String entity, String ownerColumn, String
             loggedInUser) {
         select = "select * from " + entity + " where " + ownerColumn + " ='" +
                 loggedInUser + "'";
@@ -40,7 +40,7 @@ public class SQLStatementBuilder {
         whereList.add(where);
     }
 
-    public void addOrderby(String attribute, String sortOrder) {
+    public void addOrderBy(String attribute, String sortOrder) {
         orderByList.add(attribute + " " + sortOrder);
     }
 

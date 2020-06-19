@@ -2,29 +2,45 @@ package nikita.webapp.odata;
 
 public interface IODataWalker {
 
-    void processEntityBase(String entity);
+    void processSkip(Integer skip);
 
-    void processEntityBase(String parentEntity, String entity, String systemId);
+    void processTop(Integer top);
 
-    void processStringCompare(String type, String attribute, String value);
+    void processOrderBy(String attribute, String sortOrder);
 
-    void processIntegerCompare(String type, String attribute,
-                               String comparisonOperator, String value);
+    void processCountAsResource(Boolean includeResults);
 
-    void processFloatCompare(String type, String attribute,
-                             String comparisonOperator, String value);
+    void processQueryEntity(String entity);
 
-    void processSkipCommand(Integer skip);
+    void processCompare(String aliasAndAttribute,
+                        String comparisonOperator, Object value);
 
-    void processTopCommand(Integer top);
+    void processComparatorCommand(String aliasAndAttribute,
+                                  String comparator, Object value);
 
-    void processOrderByCommand(String attribute, String sortOrder);
+    void addEntityToEntityJoin(String fromEntity, String toEntity);
 
-    void processComparatorCommand(String attribute, String comparator,
-                                  String value);
+    void processParenthesis(String bracket);
 
-    void processReferenceStatement(
-            String fromEntity, String fromSystemId,
-            String entity, String toEntity,
-            String toSystemId);
+    void processLogicalOperator(String logicalOperator);
+
+    void processMethodExpression(String methodName);
+
+    void processAttribute(String attribute);
+
+    void processComparator(String comparator);
+
+    void processStartConcat();
+
+    void processEndConcat();
+
+    void startBoolComparison();
+
+    void processStartRight();
+
+    void endBoolComparison();
+
+    void processPrimitive(Object value);
+
+    void processCompareMethod(String methodName, Object value);
 }
