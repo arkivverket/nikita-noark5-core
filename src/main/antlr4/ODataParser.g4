@@ -1,7 +1,7 @@
 parser grammar ODataParser;
 /**
  * Basic grammar to handle OData syntax for nikita. Note this grammar will
- * require work to be a complete OData implementation. Thos implementation
+ * require work to be a complete OData implementation. This implementation
  * may be of use to others developing an OData implementation.
  * Remember to set the output directory to:
  *  src/main/java/nikita/webapp/odata/base
