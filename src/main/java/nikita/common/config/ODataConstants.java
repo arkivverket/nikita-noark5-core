@@ -40,10 +40,4 @@ public class ODataConstants {
     public static final String DOLLAR_FILTER = "$filter";
     public static final String DOLLAR_REF = "$ref";
     public static final String DOLLAR_REF_URL = "%24ref";
-
-    public static final String ODATA_CREATE_REF = "CREATE";
-    public static final String ODATA_UPDATE_REF = "UPDATE";
-    public static final String ODATA_DELETE_REF = "DELETE";
-
-
 }
