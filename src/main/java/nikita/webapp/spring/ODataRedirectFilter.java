@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.util.Map;
 
@@ -66,9 +65,7 @@ public class ODataRedirectFilter
         if ((map.containsKey(DOLLAR_FILTER) ||
                 map.containsKey(DOLLAR_TOP) ||
                 map.containsKey(DOLLAR_SKIP) ||
-                map.containsKey(DOLLAR_ORDER_BY)) ||
-                (map.containsKey(DOLLAR_ID) &&
-                        urlString.contains(DOLLAR_REF_URL))) {
+                map.containsKey(DOLLAR_ORDER_BY))) {
             String urlVal = sanitiseUrlForOData(urlString);
             RequestDispatcher requestDispatcher = request.
                     getRequestDispatcher(urlVal);
@@ -79,60 +76,9 @@ public class ODataRedirectFilter
                 logger.error(message);
                 throw new NikitaMisconfigurationException(message);
             }
-            requestDispatcher.
-                    include(new ODataFilteredRequest(request), res);
+            requestDispatcher.include(request, res);
             return;
         }
         chain.doFilter(req, res);
-    }
-
-    /**
-     * When handling OData requests, we need to update the request so that the
-     * query parameter does not contain '//' as in http://.... as the use of
-     * '//' is a potential security issue. It is not possible to update the
-     * query parameter of the incoming request as modifying the parameter
-     * would not truly represent what the client sent. Therefore
-     * HttpServletRequest does not have a setParameter method. A solution as
-     * discussed in the following SO post details the approach we use here:
-     * <p>
-     * https://stackoverflow.com/questions/1413129/modify-request-parameter-with-servlet-filter
-     * <p>
-     * That is, to use the HttpServletRequestWrapper class, which allows you
-     * to wrap one request with another and subsequently subclassing the
-     * original request, overriding the getParameter method to return the
-     * sanitized value. This subclassed object is passed to the chain.doFilter
-     * instead of the original request.
-     */
-    public static class ODataFilteredRequest
-            extends HttpServletRequestWrapper {
-
-        private ODataFilteredRequest(ServletRequest request) {
-            super((HttpServletRequest) request);
-        }
-
-        @Override
-        public String getParameter(String paramName) {
-            return sanitiseUrlForOData(super.getParameter(paramName));
-        }
-
-        @Override
-        public String[] getParameterValues(String paramName) {
-            String[] values = super.getParameterValues(paramName);
-            if (values != null) {
-                for (int index = 0; index < values.length; index++) {
-                    values[index] = sanitiseUrlForOData(values[index]);
-                }
-            }
-            return values;
-        }
-
-        @Override
-        public String getQueryString() {
-            return sanitiseUrlForOData(super.getQueryString());
-        }
-
-        public String getURLSanitised() {
-            return sanitiseUrlForOData(super.getRequestURL().toString());
-        }
     }
 }
