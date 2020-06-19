@@ -38,6 +38,4 @@ public class ODataConstants {
     public static final String DOLLAR_SKIP = "$skio";
     public static final String DOLLAR_TOP = "$top";
     public static final String DOLLAR_FILTER = "$filter";
-    public static final String DOLLAR_REF = "$ref";
-    public static final String DOLLAR_REF_URL = "%24ref";
 }
