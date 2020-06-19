@@ -32,13 +32,13 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.net.URLDecoder.decode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.ODataConstants.ODATA_DELETE_REF;
 import static org.antlr.v4.runtime.CharStreams.fromString;
@@ -136,24 +136,27 @@ public class ODataService
      * @throws UnsupportedEncodingException
      */
     private Query convertODataToHQL(@NotNull HttpServletRequest request,
-                                    String dmlStatementType)
-            throws UnsupportedEncodingException {
+                                    String dmlStatementType) {
 
-        StringBuffer originalRequest = request.getRequestURL();
-        originalRequest.append("?");
-        originalRequest.append(decode(request.getQueryString(), StandardCharsets.UTF_8));
+        StringBuffer requestURL = request.getRequestURL();
+        StringBuilder queryString = new StringBuilder(
+                decode(request.getQueryString(), UTF_8));
+
+        //  remove everything up to api/packagename/
+        int apiLength = (HATEOAS_API_PATH + "/").length();
+        int startApi = requestURL.lastIndexOf(HATEOAS_API_PATH + "/");
+        int endPackageName = requestURL.indexOf("/", startApi + apiLength);
+        String odataQuery = requestURL.substring(endPackageName + 1);
         // Add owned by to the query as first parameter
-        addOwnedBy(originalRequest);
-        int start = originalRequest.indexOf("api/");
-        start += "api/".length();
-        String odataCommand = originalRequest.substring(start);
-        return convertODataToHQL(odataCommand, dmlStatementType);
+        addOwnedBy(queryString);
+        odataQuery += "?" + queryString;
+        return convertODataToHQL(odataQuery, dmlStatementType);
     }
 
-    private void addOwnedBy(StringBuffer originalRequest) {
+    private void addOwnedBy(StringBuilder originalRequest) {
         int start =
                 originalRequest.lastIndexOf("$filter=") + "$filter=".length();
-        originalRequest.insert(start, " eier eq '" + getUser() + "' and ");
+        originalRequest.insert(start, "eier eq '" + getUser() + "' and ");
     }
 
     @Override
@@ -172,7 +175,7 @@ public class ODataService
             (HttpServletRequest request) throws UnsupportedEncodingException {
 
         String url = decode(((ODataRedirectFilter.ODataFilteredRequest) request).
-                getURLSanitised(), StandardCharsets.UTF_8);
+                getURLSanitised(), UTF_8);
         String queryString = request.getQueryString();
         logger.info("Request has following query string: " + queryString);
         logger.info("Request has following URL: " + url);
@@ -192,7 +195,7 @@ public class ODataService
             (HttpServletRequest request) throws UnsupportedEncodingException {
 
         String url = decode(((ODataRedirectFilter.ODataFilteredRequest) request).
-                getURLSanitised(), StandardCharsets.UTF_8);
+                getURLSanitised(), UTF_8);
         String queryString = request.getQueryString();
         logger.info("Request has following query string: " + queryString);
         logger.info("Request has following URL: " + url);
@@ -202,16 +205,6 @@ public class ODataService
     }
 
     public Query convertODataToHQL(String request, String dmlStatementType) {
-
-        if (request.startsWith(NOARK_FONDS_STRUCTURE_PATH + "/")) {
-            request = request.substring(
-                    (NOARK_FONDS_STRUCTURE_PATH + "/").length());
-        }
-        if (request.startsWith(NOARK_CASE_HANDLING_PATH + "/")) {
-            request = request.substring(
-                    (NOARK_CASE_HANDLING_PATH + "/").length());
-        }
-
         ODataLexer lexer = new ODataLexer(fromString(request));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ODataParser parser = new ODataParser(tokens);
