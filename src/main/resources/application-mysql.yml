@@ -41,7 +41,7 @@ spring:
     database: mysql
     show-sql: false
     properties:
-      hibernate.hbm2ddl.auto: create
+      hibernate.hbm2ddl.auto: validate
       discriminator.ignore_explicit_for_joined: true
       org.hibernate.envers.audit_table_prefix: aud_
   profiles:
