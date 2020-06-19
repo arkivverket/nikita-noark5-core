@@ -34,7 +34,7 @@ public class ODataToHQL
             LoggerFactory.getLogger(ODataToHQL.class);
 
     private final HQLStatementBuilder statement;
-    private Map<String, Class<?>> entityMap = new HashMap<>();
+    private final Map<String, Class<?>> entityMap = new HashMap<>();
     private Comparison comparison = new Comparison();
     private boolean right = false;
 
@@ -248,7 +248,6 @@ public class ODataToHQL
      */
     private String translateComparator(String comparator)
             throws NikitaMalformedInputDataException {
-
         switch (comparator) {
             case ODATA_EQ:
                 return HQL_EQ;

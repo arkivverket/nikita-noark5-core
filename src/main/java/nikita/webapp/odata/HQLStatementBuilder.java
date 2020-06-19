@@ -73,7 +73,8 @@ public class HQLStatementBuilder {
         }
         where.append(rightFunctionNames);
         if (value != null) {
-            where.append(":" + parameter);
+            where.append(":");
+            where.append(parameter);
         }
         where.append(rightFunctionClose);
         where.append(" ");
@@ -133,15 +134,6 @@ public class HQLStatementBuilder {
 
     public void addComparator(String comparator) {
         addWithSpace(comparator);
-    }
-
-    public void addCompare(String aliasAndAttribute, String comparator,
-                           String value) {
-        String parameter = PARAMETER + parameters.size();
-        parameters.put(parameter, desanitiseValue(value));
-        addAttribute(aliasAndAttribute);
-        addComparator(comparator);
-        addValue(":" + parameter);
     }
 
     private void addWithSpace(String value) {

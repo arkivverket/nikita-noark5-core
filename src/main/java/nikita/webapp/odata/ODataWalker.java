@@ -25,28 +25,6 @@ public abstract class ODataWalker
     protected String entity = "";
     protected String joinEntity = "";
 
-    /**
-     * This is the part that picks up the start of the OData command of a
-     * OData URL. Given the following example:
-     * <p>
-     * [contextPath][api]/arkivstruktur/arkiv?$filter=contains(tittel, 'hello')
-     * <p>
-     * the ODataCommand part is $filter=contains(tittel, 'hello')
-     * <p>
-     * It can also be $top, $skip etc.
-     * <p>
-     * We don't do any processing on this set of tokens. This method can
-     * probably be removed. TODO: Take a look at this!
-     *
-     * @param ctx ODataParser.OdataCommandContext
-     */
-    @Override
-    public void enterOdataRelativeUri(OdataRelativeUriContext ctx) {
-        super.enterOdataRelativeUri(ctx);
-        logger.debug("Entering enterOdataCommand. Found [" +
-                ctx.getText() + "]");
-    }
-
     @Override
     public void enterMethodCallExpr(MethodCallExprContext ctx) {
         super.enterMethodCallExpr(ctx);
@@ -118,7 +96,6 @@ public abstract class ODataWalker
         super.exitBoolExpression(ctx);
         endBoolComparison();
         this.joinEntity = "";
-
     }
 
     protected String processJoinEntitiesContext(JoinEntitiesContext ctx) {

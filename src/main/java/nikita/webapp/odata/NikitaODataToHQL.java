@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Class to handle special adaptions to ODataToHQL so that
@@ -35,19 +35,20 @@ public class NikitaODataToHQL
     }
 
     public void initCodeValues() {
-        codeValues.put("arkivdelstatus", "seriesStatus");
-        codeValues.put("arkivstatus", "fondsStatus");
-        codeValues.put("avskrivningsmaate", "signOffMethod");
-        codeValues.put("dokumentmedium", "documentMedium");
-        codeValues.put("dokumentstatus", "documentStatus");
-        codeValues.put("dokumenttype", "documentType");
-        codeValues.put("elektronisksignatursikkerhetsnivaa", "electronicSignatureSecurityLevel");
+        codeValues.put("arkivdelstatus", SERIES_STATUS_ENG_OBJECT);
+        codeValues.put("arkivstatus", FONDS_STATUS_ENG_OBJECT);
+        codeValues.put("avskrivningsmaate", SIGN_OFF_METHOD_ENG_OBJECT);
+        codeValues.put("dokumentmedium", DOCUMENT_MEDIUM_ENG_OBJECT);
+        codeValues.put("dokumentstatus", DOCUMENT_STATUS_ENG_OBJECT);
+        codeValues.put("dokumenttype", DOCUMENT_TYPE_ENG_OBJECT);
+        codeValues.put("elektronisksignatursikkerhetsnivaa",
+                ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT);
         codeValues.put("elektronisksignaturverifisert", ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG);
-        codeValues.put("flytstatus", "flowStatus");
-        codeValues.put("format", "format");
-        codeValues.put("graderingskode", "classification");
-        codeValues.put("hendelsetype", "eventType");
-        codeValues.put("journalposttype", "registryEntryType");
+        codeValues.put("flytstatus", FLOW_STATUS_ENG_OBJECT);
+        codeValues.put("format", FORMAT_ENG_OBJECT);
+        codeValues.put("graderingskode", CLASSIFICATION_ENG_OBJECT);
+        codeValues.put("hendelsetype", EVENT_TYPE_ENG_OBJECT);
+        codeValues.put("journalposttype", REGISTRY_ENTRY_TYPE_ENG_OBJECT);
         codeValues.put("journalstatus", "registryEntryStatus");
         codeValues.put("kassasjonsvedtak", "disposalDecision");
         codeValues.put("klassifikasjonstype", "classificationType");
@@ -76,7 +77,17 @@ public class NikitaODataToHQL
                 lastValue.equalsIgnoreCase("kodenavn")) {
             String entity = entityNameContexts
                     .get(entityNameContexts.size() - 1).getText();
-            String code = codeValues.get(entity);
+            // Because codeValues are both entities and attributes e.g
+            // arkivstatus then we need to make sure to distinguish them as
+            // attribute/entity. So make sure to lowercase the first letter.
+            // The java code to use lowercase is only necessary when using
+            // non-metadata entity queries
+            // e.g. dokumentobjekt?$filter=dokumentbeskrivelse/dokumentstatus/kode eq 'B'
+            // but does no harm when run on non-metadata queries
+            // e.g arkivstatus?$filter=kode eq 'O'
+            String codeValue = codeValues.get(entity);
+            String code = codeValue.substring(0, 1).toLowerCase() +
+                    codeValue.substring(1);
             if (lastValue.equalsIgnoreCase("kode")) {
                 code += "Code";
             } else if (lastValue.equalsIgnoreCase("kodenavn")) {
@@ -114,7 +125,9 @@ public class NikitaODataToHQL
     public void enterAttributeName(ODataParser.AttributeNameContext ctx) {
         if (ctx.getText().equalsIgnoreCase("kode") ||
                 ctx.getText().equalsIgnoreCase("kodenavn")) {
-            return;
+            if (ctx.getParent() instanceof ODataParser.JoinEntitiesContext) {
+                return;
+            }
         }
         processAttribute(getAliasAndAttribute(
                 this.joinEntity.isEmpty() == true ?

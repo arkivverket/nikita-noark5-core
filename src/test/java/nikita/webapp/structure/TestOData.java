@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
  * Test OData queries that are supported
  * <p>
  * The following OData queries are tested here:
+ * arkivstatus?$filter=kode eq 'O'
  * arkiv?$filter=tittel eq 'The fonds'
  * arkiv?$filter=beskrivelse eq null
  * arkiv?$filter=beskrivelse ne null
@@ -70,6 +71,35 @@ public class TestOData {
 
     @Autowired
     private EntityManager emf;
+
+    /**
+     * Check that it is possible to do a eq query with a quoted string
+     * <p>
+     * Entity: arkivstatus
+     * Attribute: kode
+     * ODATA Input:
+     * arkivstatus?$filter=kode eq 'O'
+     * <p>
+     * Expected HQL:
+     * SELECT fondsstatus_1 FROM FondsStatus AS fondsstatus_1
+     * WHERE
+     * fondsstatus_1.code = :parameter_0
+     * <p>
+     * Additionally the parameter_0 parameter value should be:
+     * The fonds
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEQQueryMetadataEntity() {
+        String odata = "arkivstatus?$filter=kode eq 'O'";
+        Query query = oDataService.convertODataToHQL(odata, "");
+        String hql = "SELECT fondsstatus_1 FROM FondsStatus AS fondsstatus_1" +
+                " WHERE" +
+                " fondsstatus_1.code = :parameter_0";
+        assertEquals(query.getParameterValue("parameter_0"),
+                "O");
+        assertEquals(query.getQueryString(), hql);
+    }
 
     /**
      * Check that it is possible to do a eq query with a quoted string

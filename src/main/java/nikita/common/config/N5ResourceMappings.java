@@ -547,7 +547,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_FLOW_FLOW_TO_ENG = "flow_to";
     public static final String DOCUMENT_FLOW_REFERENCE_FLOW_FROM_ENG = "reference_flow_from";
     public static final String DOCUMENT_FLOW_REFERENCE_FLOW_TO_ENG = "reference_flow_to";
-    public static final String DOCUMENT_MEDIUM_ENG = "dokumentmedium";
+    public static final String DOCUMENT_MEDIUM_ENG = "document_medium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG = "checksum_algorithm";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ENG = "checksum";
     public static final String DOCUMENT_OBJECT_ENG = "documentObject";
@@ -560,7 +560,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG = "reference_document_file";
     public static final String DOCUMENT_OBJECT_VARIANT_FORMAT_ENG = "variantformat";
     public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG = "version_number";
-    public static final String DOCUMENT_STATUS_ENG = "dokumentstatus";
+    public static final String DOCUMENT_STATUS_ENG = "document_status";
     public static final String DOCUMENT_TYPE_ENG = "dokumenttype";
     public static final String ELECTRONIC_SIGNATURE_ENG = "elektronisksignatur";
     public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG = "electronic_signature_security_level_name";
@@ -569,7 +569,7 @@ public final class N5ResourceMappings {
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG = "electronic_signature_verified_name";
     public static final String EMAIL_ADDRESS_ENG = "epostadresse";
     public static final String EVENT_DATE_ENG = "event_date";
-    public static final String EVENT_TYPE_ENG = "hendelsetype";
+    public static final String EVENT_TYPE_ENG = "event_type";
     public static final String FILE_ENG = "file";
     public static final String FILE_ID_ENG = "file_id";
     public static final String FILE_PUBLIC_TITLE_ENG = "public_title";
@@ -581,7 +581,7 @@ public final class N5ResourceMappings {
     public static final String FONDS_CREATOR_ID_ENG = "fonds_creator_id";
     public static final String FONDS_CREATOR_NAME_ENG = "fonds_creator_name";
     public static final String FONDS_ENG = "fonds";
-    public static final String FONDS_STATUS_ENG = "arkivstatus";
+    public static final String FONDS_STATUS_ENG = "fonds_status";
     public static final String FOREIGN_ADDRESS_ENG = "utenlandsadresse";
     public static final String FORMAT_ENG = "format";
     public static final String HOLDING_NUMBER_ENG = "holding_number";
@@ -636,7 +636,7 @@ public final class N5ResourceMappings {
     public static final String REGISTRY_ENTRY_SENT_DATE_ENG = "sendtDato";
     public static final String REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG = "journalsekvensnummer";
     public static final String REGISTRY_ENTRY_STATUS_ENG = "journalstatus";
-    public static final String REGISTRY_ENTRY_TYPE_ENG = "journalposttype";
+    public static final String REGISTRY_ENTRY_TYPE_ENG = "registry_entry_type";
     public static final String REGISTRY_ENTRY_YEAR_ENG = "journalaar";
     public static final String RESIDING_ADDRESS_ENG = "bostedsadresse";
     public static final String RIGHT_ENG = "rettighet";
@@ -654,15 +654,15 @@ public final class N5ResourceMappings {
     public static final String SERIES_ENG = "series";
     public static final String SERIES_PRECURSOR_ENG = "forloeper";
     public static final String SERIES_START_DATE_ENG = "series_start_date";
-    public static final String SERIES_STATUS_ENG = "arkivdelstatus";
+    public static final String SERIES_STATUS_ENG = "series_status";
     public static final String SERIES_SUCCESSOR_ENG = "arvtager";
     public static final String SHORT_NAME_ENG = "short_name";
     public static final String SIGN_OFF_BY_ENG = "sign_off_by";
     public static final String SIGN_OFF_DATE_ENG = "sign_off_date";
     public static final String SIGN_OFF_ENG = "avskrivning";
     public static final String STORAGE_LOCATION_ENG = "storage_location";
-    public static final String SIGN_OFF_METHOD_ENG = "avskrivningsmaate";
-    public static final String SOCIAL_SECURITY_NUMBER_ENG = "social_security_number";
+    public static final String SIGN_OFF_METHOD_ENG = "sign_of_method";
+    public static final String SOCIAL_SECURITY_NUMBER_ENG = "SignOfMethod";
     public static final String SUB_CLASS_ENG = "underklasse";
     public static final String SUB_FONDS_ENG = "underarkiv";
     public static final String SUB_HOLDING_NUMBER_ENG = "sub_holding_number";
@@ -717,7 +717,8 @@ public final class N5ResourceMappings {
     public static final String CLASSIFICATION_DATE_ENG_OBJECT = "graderingsdato";
     public static final String CLASSIFICATION_DOWNGRADED_BY_ENG_OBJECT = "nedgradertAv";
     public static final String CLASSIFICATION_DOWNGRADED_DATE_ENG_OBJECT = "nedgraderingsdato";
-    public static final String CLASSIFICATION_ENG_OBJECT = "classificationName"; // property node
+    public static final String CLASSIFICATION_ENG_OBJECT =
+            "ClassificationName"; // property node
     public static final String CLASSIFICATION_SYSTEM_ENG_OBJECT =
             "ClassificationSystem";
     public static final String CLASSIFICATION_SYSTEM_TYPE_ENG_OBJECT = "klassifikasjonstype";
@@ -786,7 +787,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_FLOW_FLOW_SENT_DATE_ENG_OBJECT = "flowSentDate";
     public static final String DOCUMENT_FLOW_FLOW_STATUS_ENG_OBJECT = "flowStatus";
     public static final String DOCUMENT_FLOW_FLOW_TO_ENG_OBJECT = "flowTo";
-    public static final String DOCUMENT_MEDIUM_ENG_OBJECT = "dokumentmedium";
+    public static final String DOCUMENT_MEDIUM_ENG_OBJECT = "DocumentMedium";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG_OBJECT = "checksumAlgorithm";
     public static final String DOCUMENT_OBJECT_CHECKSUM_ENG_OBJECT = "checksum";
     public static final String DOCUMENT_OBJECT_ENG_OBJECT = "DocumentObject";
@@ -798,30 +799,32 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG_OBJECT = "referenceDocumentFile";
     public static final String DOCUMENT_OBJECT_VARIANT_FORMAT_ENG_OBJECT = "variantformat";
     public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG_OBJECT = "versionNumber";
-    public static final String DOCUMENT_STATUS_ENG_OBJECT = "dokumentstatus";
-    public static final String DOCUMENT_TYPE_ENG_OBJECT = "dokumenttype";
-    public static final String ELECTRONIC_SIGNATURE_ENG_OBJECT = "elektronisksignatur";
-    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT = "electronicSignatureSecurityLevelName";
+    public static final String DOCUMENT_STATUS_ENG_OBJECT = "DocumentStatus";
+    public static final String DOCUMENT_TYPE_ENG_OBJECT = "DocumentType";
+    public static final String ELECTRONIC_SIGNATURE_ENG_OBJECT =
+            "ElectronicSignature";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT
+            = "ElectronicSignatureSecurityLevelName";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG_OBJECT = "verifiedBy";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT = "verifiedDate";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT = "electronicSignatureVerifiedName";
     public static final String EMAIL_ADDRESS_ENG_OBJECT = "epostadresse";
     public static final String EVENT_DATE_ENG_OBJECT = "eventDate";
-    public static final String EVENT_TYPE_ENG_OBJECT = "hendelsetype";
+    public static final String EVENT_TYPE_ENG_OBJECT = "EventType";
     public static final String FILE_ENG_OBJECT = "File";
     public static final String FILE_ID_ENG_OBJECT = "fileId";
     public static final String FILE_PUBLIC_TITLE_ENG_OBJECT = "publicTitle";
     public static final String FILE_TYPE_ENG_OBJECT = "mappetype";
     public static final String FINALISED_BY_ENG_OBJECT = "finalisedBy";
     public static final String FINALISED_DATE_ENG_OBJECT = "finalisedDate";
-    public static final String FLOW_STATUS_ENG_OBJECT = "flytstatus";
+    public static final String FLOW_STATUS_ENG_OBJECT = "FlowStatus";
     public static final String FONDS_CREATOR_ENG_OBJECT = "FondsCreator";
     public static final String FONDS_CREATOR_ID_ENG_OBJECT = "fondsCreatorId";
     public static final String FONDS_CREATOR_NAME_ENG_OBJECT = "fondsCreatorName";
     public static final String FONDS_ENG_OBJECT = "Fonds";
-    public static final String FONDS_STATUS_ENG_OBJECT = "arkivstatus";
+    public static final String FONDS_STATUS_ENG_OBJECT = "FondsStatus";
     public static final String FOREIGN_ADDRESS_ENG_OBJECT = "utenlandsadresse";
-    public static final String FORMAT_ENG_OBJECT = "format";
+    public static final String FORMAT_ENG_OBJECT = "Format";
     public static final String HOLDING_NUMBER_ENG_OBJECT = "holdingNumber";
     public static final String KEYWORD_ENG_OBJECT = "noekkelord";
     public static final String LAST_MODIFIED_BY_ENG_OBJECT = "lastModifiedBy";
@@ -875,7 +878,8 @@ public final class N5ResourceMappings {
     public static final String REGISTRY_ENTRY_SENT_DATE_ENG_OBJECT = "sendtDato";
     public static final String REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG_OBJECT = "journalsekvensnummer";
     public static final String REGISTRY_ENTRY_STATUS_ENG_OBJECT = "journalstatus";
-    public static final String REGISTRY_ENTRY_TYPE_ENG_OBJECT = "journalposttype";
+    public static final String REGISTRY_ENTRY_TYPE_ENG_OBJECT =
+            "RegistryEntryType";
     public static final String REGISTRY_ENTRY_YEAR_ENG_OBJECT = "journalaar";
     public static final String RESIDING_ADDRESS_ENG_OBJECT = "bostedsadresse";
     public static final String RIGHT_ENG_OBJECT = "rettighet";
@@ -893,7 +897,7 @@ public final class N5ResourceMappings {
     public static final String SERIES_ENG_OBJECT = "Series";
     public static final String SERIES_PRECURSOR_ENG_OBJECT = "forloeper";
     public static final String SERIES_START_DATE_ENG_OBJECT = "seriesStartDate";
-    public static final String SERIES_STATUS_ENG_OBJECT = "arkivdelstatus";
+    public static final String SERIES_STATUS_ENG_OBJECT = "Seriesstatus";
     public static final String SERIES_SUCCESSOR_ENG_OBJECT = "arvtager";
     public static final String SHORT_NAME_ENG_OBJECT = "shortName";
     public static final String SIGN_OFF_BY_ENG_OBJECT = "signOffBy";
