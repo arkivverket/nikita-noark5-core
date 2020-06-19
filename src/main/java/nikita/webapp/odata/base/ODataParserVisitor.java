@@ -163,20 +163,20 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitRightComparatorExpr(ODataParser.RightComparatorExprContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#orderby}.
+     * Visit a parse tree produced by {@link ODataParser#orderBy}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitOrderby(ODataParser.OrderbyContext ctx);
+    T visitOrderBy(ODataParser.OrderByContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#orderbyItem}.
+     * Visit a parse tree produced by {@link ODataParser#orderByItem}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitOrderbyItem(ODataParser.OrderbyItemContext ctx);
+    T visitOrderByItem(ODataParser.OrderByItemContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ODataParser#topStatement}.
@@ -353,6 +353,14 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitLogicalOperator(ODataParser.LogicalOperatorContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#sortOrder}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitSortOrder(ODataParser.SortOrderContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ODataParser#entityName}.

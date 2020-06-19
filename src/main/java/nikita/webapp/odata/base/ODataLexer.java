@@ -1,3 +1,4 @@
+// Generated from /home/tsodring/git/nikita-noark5-core/src/main/antlr4/ODataLexer.g4 by ANTLR 4.8
 package nikita.webapp.odata.base;
 
 import org.antlr.v4.runtime.*;
@@ -33,6 +34,8 @@ public class ODataLexer extends Lexer {
 		SECOND_DEF=126, ZERO_TO_FIFTY_NINE=127, ONE_TO_NINE=128, YEAR_DEF=129,
 		MONTH_DEF=130, DAY_DEF=131, HEX=132, SINGLE_CHAR_SMALL=133, SINGLE_CHAR=134,
 		NEGATIVE=135, DEC_OCTECT=136, HEX_NUMBER=137, BIN_NUMBER=138, ERROR_RECONGNIGION=139;
+	public static final int
+		ERRORCHANNEL=2;
 	public static final String[] ruleNames = makeRuleNames();
 	/**
 	 * @deprecated Use {@link #VOCABULARY} instead.
@@ -40,24 +43,19 @@ public class ODataLexer extends Lexer {
 	@Deprecated
 	public static final String[] tokenNames;
 	protected static final DFA[] _decisionToDFA;
-	public static final int
-			ERRORCHANNEL = 2;
-	public static String[] channelNames = {
-			"DEFAULT_TOKEN_CHANNEL", "HIDDEN", "ERRORCHANNEL"
-	};
-
-	public static String[] modeNames = {
-			"DEFAULT_MODE"
-	};
 	protected static final PredictionContextCache _sharedContextCache =
-			new PredictionContextCache();
+		new PredictionContextCache();
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
+	public static String[] channelNames = {
+		"DEFAULT_TOKEN_CHANNEL", "HIDDEN", "ERRORCHANNEL"
+	};
+	public static String[] modeNames = {
+		"DEFAULT_MODE"
+	};
 
-	static {
-		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
-	}
+	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
@@ -118,37 +116,25 @@ public class ODataLexer extends Lexer {
 			null, null, null, null, null, null, null, null, null, null, null, null,
 			"'://'", null, null, "'('", "')'", "','", "'?'", "'$'", "';'", "'@'",
 			"'|'", "'''", "'\"'", "'`'", "':'", "'&'", null, null, "'.'", "'/'",
-				"'_'", "'Edm'", "'Collection'", "'Geography'", "'Geometry'", "'Binary'",
-				"'Boolean'", "'Byte'", "'Date'", "'DateTimeOffset'", "'Decimal'", "'Double'",
-				"'Duration'", "'Guid'", "'Int16'", "'Int32'", "'Int64'", "'SByte'", "'Single'",
-				"'Stream'", "'String'", "'TimeOfDay'", null, "'MultiLineString'", "'MultiPoint'",
-				"'MultiPolygon'", "'Point'", "'Polygon'", null, null, null, null, null,
-				null, null, null, null, null, null, null, null, null, null, null, null,
-				null, null, null, null, null, null, "'-'"
+			"'_'", "'Edm'", "'Collection'", "'Geography'", "'Geometry'", "'Binary'",
+			"'Boolean'", "'Byte'", "'Date'", "'DateTimeOffset'", "'Decimal'", "'Double'",
+			"'Duration'", "'Guid'", "'Int16'", "'Int32'", "'Int64'", "'SByte'", "'Single'",
+			"'Stream'", "'String'", "'TimeOfDay'", null, "'MultiLineString'", "'MultiPoint'",
+			"'MultiPolygon'", "'Point'", "'Polygon'", null, null, null, null, null,
+			null, null, null, null, null, null, null, null, null, null, null, null,
+			null, null, null, null, null, null, "'-'"
 		};
 	}
 
-	@Override
-	@Deprecated
-	public String[] getTokenNames() {
-		return tokenNames;
-	}
-
-	@Override
-
-	public Vocabulary getVocabulary() {
-		return VOCABULARY;
-	}
-
 	private static String[] makeSymbolicNames() {
-		return new String[]{
-				null, "SPACE", "FILTER", "TOP", "SKIPRULE", "SKIPTOKEN", "ORDERBY", "REF",
-				"EXPAND", "COUNT", "SELECT", "DOLLARID", "CONTAINS", "STARTSWITH", "ENDSWITH",
-				"SUBSTRINGOF", "LENGTH", "INDEXOF", "REPLACE", "SUBSTRING", "TOLOWER",
-				"TOUPPER", "TRIM", "CONCAT", "DAY", "MONTH", "YEAR", "HOUR", "MINUTE",
-				"SECOND", "NOW", "TIME", "MAX_DATE_TIME", "MIN_DATE_TIME", "TOTAL_OFFSET_MINUTES",
-				"FRACTIONAL_SECONDS", "TOTAL_SECONDS", "GEO_INTERSECTS", "GEO_DISTANCE",
-				"GEO_LENGTH", "ROUND", "FLOOR", "CEILING", "CAST", "ISOF", "EQUAL", "EQ",
+		return new String[] {
+			null, "SPACE", "FILTER", "TOP", "SKIPRULE", "SKIPTOKEN", "ORDERBY", "REF",
+			"EXPAND", "COUNT", "SELECT", "DOLLARID", "CONTAINS", "STARTSWITH", "ENDSWITH",
+			"SUBSTRINGOF", "LENGTH", "INDEXOF", "REPLACE", "SUBSTRING", "TOLOWER",
+			"TOUPPER", "TRIM", "CONCAT", "DAY", "MONTH", "YEAR", "HOUR", "MINUTE",
+			"SECOND", "NOW", "TIME", "MAX_DATE_TIME", "MIN_DATE_TIME", "TOTAL_OFFSET_MINUTES",
+			"FRACTIONAL_SECONDS", "TOTAL_SECONDS", "GEO_INTERSECTS", "GEO_DISTANCE",
+			"GEO_LENGTH", "ROUND", "FLOOR", "CEILING", "CAST", "ISOF", "EQUAL", "EQ",
 			"GT", "LT", "GE", "LE", "NE", "ADD", "SUB", "MUL", "DIV", "MOD", "ORDER",
 			"BY", "DESC", "ASC", "OR", "AND", "NOT", "SEPERATOR", "HTTP", "HTTPS",
 			"OPEN", "CLOSE", "COMMA", "QUESTION", "DOLLAR", "SEMI", "AT_SIGN", "BAR",
@@ -165,6 +151,18 @@ public class ODataLexer extends Lexer {
 			"HEX", "SINGLE_CHAR_SMALL", "SINGLE_CHAR", "NEGATIVE", "DEC_OCTECT",
 			"HEX_NUMBER", "BIN_NUMBER", "ERROR_RECONGNIGION"
 		};
+	}
+
+	@Override
+	@Deprecated
+	public String[] getTokenNames() {
+		return tokenNames;
+	}
+
+	@Override
+
+	public Vocabulary getVocabulary() {
+		return VOCABULARY;
 	}
 
 	@Override

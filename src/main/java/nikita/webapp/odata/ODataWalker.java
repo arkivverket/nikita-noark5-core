@@ -86,6 +86,20 @@ public abstract class ODataWalker
     }
 
     @Override
+    public void enterOrderByItem(OrderByItemContext ctx) {
+        super.enterOrderByItem(ctx);
+        String aliasAndAttribute =
+                getAliasAndAttribute(this.entity,
+                        getInternalNameObject(ctx.getChild(0).getText()));
+        if (ctx.getChild(1) instanceof SortOrderContext) {
+            processOrderBy(aliasAndAttribute,
+                    ctx.getChild(1).getChild(0).getText());
+        } else {
+            processOrderBy(aliasAndAttribute, "");
+        }
+    }
+
+    @Override
     public void enterPrimitiveLiteral(PrimitiveLiteralContext ctx) {
         super.enterPrimitiveLiteral(ctx);
         processPrimitive(getPrimitiveTypeObject(ctx));

@@ -39,7 +39,7 @@ queryOptions:
 
 // Note: Listener must make sure only one of each is possible
 queryOption:
-    filter ('&'expand | '&'orderby | '&'skipStatement | '&'topStatement | '&'topStatement)*;
+    filter ('&'expand | '&'orderBy | '&'skipStatement | '&'topStatement | '&'topStatement)*;
 
 filter:
     FILTER EQUAL filterExpression;
@@ -65,11 +65,11 @@ leftComparatorExpr:
 rightComparatorExpr:
     methodCallExpr | calenderMethodExp | concatMethodExpr | joinEntities | attributeName | commonExpr;
 
-orderby:
-    ORDERBY (orderbyItem ( COMMA orderbyItem )*)?;
+orderBy:
+    ORDERBY EQUAL orderByItem (COMMA orderByItem )*;
 
-orderbyItem:
-    commonExpr (ASC | DESC)?;
+orderByItem:
+    orderAttributeName (sortOrder)?;
 
 topStatement:
     TOP integerValue;
@@ -155,8 +155,10 @@ countStatement:
 openPar: OPEN;
 closePar: CLOSE;
 logicalOperator: AND | OR;
+sortOrder: ASC | DESC;
 entityName: ID;
 attributeName: ID;
+orderAttributeName: ID;
 uuidIdValue: UUID;
 quotedString: QUOTED_STRING;
 nullSpecLiteral: NULL_SPEC_LITERAL ;

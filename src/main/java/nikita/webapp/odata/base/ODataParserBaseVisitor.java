@@ -218,7 +218,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitOrderby(ODataParser.OrderbyContext ctx) {
+    public T visitOrderBy(ODataParser.OrderByContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -229,7 +229,7 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public T visitOrderbyItem(ODataParser.OrderbyItemContext ctx) {
+    public T visitOrderByItem(ODataParser.OrderByItemContext ctx) {
         return visitChildren(ctx);
     }
 
@@ -472,6 +472,17 @@ public class ODataParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
      */
     @Override
     public T visitLogicalOperator(ODataParser.LogicalOperatorContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation returns the result of calling
+     * {@link #visitChildren} on {@code ctx}.</p>
+     */
+    @Override
+    public T visitSortOrder(ODataParser.SortOrderContext ctx) {
         return visitChildren(ctx);
     }
 

@@ -343,7 +343,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterOrderby(ODataParser.OrderbyContext ctx) {
+    public void enterOrderBy(ODataParser.OrderByContext ctx) {
     }
 
     /**
@@ -352,7 +352,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitOrderby(ODataParser.OrderbyContext ctx) {
+    public void exitOrderBy(ODataParser.OrderByContext ctx) {
     }
 
     /**
@@ -361,7 +361,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterOrderbyItem(ODataParser.OrderbyItemContext ctx) {
+    public void enterOrderByItem(ODataParser.OrderByItemContext ctx) {
     }
 
     /**
@@ -370,7 +370,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitOrderbyItem(ODataParser.OrderbyItemContext ctx) {
+    public void exitOrderByItem(ODataParser.OrderByItemContext ctx) {
     }
 
     /**
@@ -767,6 +767,24 @@ public class ODataParserBaseListener implements ODataParserListener {
      */
     @Override
     public void exitLogicalOperator(ODataParser.LogicalOperatorContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterSortOrder(ODataParser.SortOrderContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitSortOrder(ODataParser.SortOrderContext ctx) {
     }
 
     /**

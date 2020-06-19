@@ -41,177 +41,174 @@ public class ODataParser extends Parser {
 		MONTH_DEF=130, DAY_DEF=131, HEX=132, SINGLE_CHAR_SMALL=133, SINGLE_CHAR=134,
 		NEGATIVE=135, DEC_OCTECT=136, HEX_NUMBER=137, BIN_NUMBER=138, ERROR_RECONGNIGION=139;
 	public static final int
-			RULE_odataRelativeUri = 0, RULE_resourcePath = 1, RULE_entity = 2, RULE_entityCast = 3,
-			RULE_entityUUID = 4, RULE_embeddedEntitySet = 5, RULE_queryOptions = 6,
-			RULE_queryOption = 7, RULE_filter = 8, RULE_expand = 9, RULE_filterExpression = 10,
-			RULE_boolCommonExpr = 11, RULE_leftComparatorExpr = 12, RULE_rightComparatorExpr = 13,
-			RULE_orderby = 14, RULE_orderbyItem = 15, RULE_topStatement = 16, RULE_skipStatement = 17,
-			RULE_joinEntities = 18, RULE_commonExpr = 19, RULE_mathExpr = 20, RULE_methodExpr = 21,
-			RULE_compareMethodExpr = 22, RULE_methodCallExpr = 23, RULE_calenderMethodExp = 24,
-			RULE_concatMethodExpr = 25, RULE_singleMethodCallExpr = 26, RULE_substringMethodCallExpr = 27,
-			RULE_comparisonOperator = 28, RULE_compareMethodName = 29, RULE_methodName = 30,
-			RULE_calenderMethodName = 31, RULE_number = 32, RULE_primitiveLiteral = 33,
-			RULE_countStatement = 34, RULE_openPar = 35, RULE_closePar = 36, RULE_logicalOperator = 37,
-			RULE_entityName = 38, RULE_attributeName = 39, RULE_uuidIdValue = 40,
-			RULE_quotedString = 41, RULE_nullSpecLiteral = 42, RULE_nullToken = 43,
-			RULE_booleanValue = 44, RULE_durationValue = 45, RULE_dateValue = 46,
-			RULE_dateTimeOffsetValue = 47, RULE_timeOfDayValue = 48, RULE_decimalLiteral = 49,
-			RULE_floatValue = 50, RULE_integerValue = 51;
+		RULE_odataRelativeUri = 0, RULE_resourcePath = 1, RULE_entity = 2, RULE_entityCast = 3,
+		RULE_entityUUID = 4, RULE_embeddedEntitySet = 5, RULE_queryOptions = 6,
+		RULE_queryOption = 7, RULE_filter = 8, RULE_expand = 9, RULE_filterExpression = 10,
+		RULE_boolCommonExpr = 11, RULE_leftComparatorExpr = 12, RULE_rightComparatorExpr = 13,
+		RULE_orderBy = 14, RULE_orderByItem = 15, RULE_topStatement = 16, RULE_skipStatement = 17,
+		RULE_joinEntities = 18, RULE_commonExpr = 19, RULE_mathExpr = 20, RULE_methodExpr = 21,
+		RULE_compareMethodExpr = 22, RULE_methodCallExpr = 23, RULE_calenderMethodExp = 24,
+		RULE_concatMethodExpr = 25, RULE_singleMethodCallExpr = 26, RULE_substringMethodCallExpr = 27,
+		RULE_comparisonOperator = 28, RULE_compareMethodName = 29, RULE_methodName = 30,
+		RULE_calenderMethodName = 31, RULE_number = 32, RULE_primitiveLiteral = 33,
+		RULE_countStatement = 34, RULE_openPar = 35, RULE_closePar = 36, RULE_logicalOperator = 37,
+		RULE_sortOrder = 38, RULE_entityName = 39, RULE_attributeName = 40, RULE_uuidIdValue = 41,
+		RULE_quotedString = 42, RULE_nullSpecLiteral = 43, RULE_nullToken = 44,
+		RULE_booleanValue = 45, RULE_durationValue = 46, RULE_dateValue = 47,
+		RULE_dateTimeOffsetValue = 48, RULE_timeOfDayValue = 49, RULE_decimalLiteral = 50,
+		RULE_floatValue = 51, RULE_integerValue = 52;
 	/**
 	 * @deprecated Use {@link #VOCABULARY} instead.
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
 	public static final String _serializedATN =
-			"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\u008d\u018b\4\2\t" +
-					"\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13" +
-					"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22" +
-					"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31" +
-					"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36\4\37\t\37\4 \t \4!" +
-					"\t!\4\"\t\"\4#\t#\4$\t$\4%\t%\4&\t&\4\'\t\'\4(\t(\4)\t)\4*\t*\4+\t+\4" +
-					",\t,\4-\t-\4.\t.\4/\t/\4\60\t\60\4\61\t\61\4\62\t\62\4\63\t\63\4\64\t" +
-					"\64\4\65\t\65\3\2\3\2\3\2\5\2n\n\2\3\3\3\3\3\3\5\3s\n\3\3\3\5\3v\n\3\3" +
-					"\4\3\4\5\4z\n\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3" +
-					"\7\5\7\u008a\n\7\7\7\u008c\n\7\f\7\16\7\u008f\13\7\3\b\3\b\3\b\7\b\u0094" +
-					"\n\b\f\b\16\b\u0097\13\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\7" +
-					"\t\u00a4\n\t\f\t\16\t\u00a7\13\t\3\n\3\n\3\n\3\n\3\13\3\13\3\13\3\13\3" +
-					"\13\5\13\u00b2\n\13\3\13\3\13\5\13\u00b6\n\13\3\f\3\f\3\f\3\f\3\f\3\f" +
-					"\5\f\u00be\n\f\3\f\3\f\3\f\3\f\7\f\u00c4\n\f\f\f\16\f\u00c7\13\f\3\r\3" +
-					"\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u00d2\n\r\3\16\3\16\3\16\3\16\3\16" +
-					"\3\16\5\16\u00da\n\16\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u00e2\n\17\3" +
-					"\20\3\20\3\20\3\20\7\20\u00e8\n\20\f\20\16\20\u00eb\13\20\5\20\u00ed\n" +
-					"\20\3\21\3\21\5\21\u00f1\n\21\3\22\3\22\3\22\3\23\3\23\3\23\3\24\3\24" +
-					"\3\24\6\24\u00fc\n\24\r\24\16\24\u00fd\3\24\3\24\3\25\3\25\3\25\5\25\u0105" +
-					"\n\25\3\26\3\26\3\26\3\27\3\27\3\27\3\27\3\27\3\27\5\27\u0110\n\27\3\30" +
-					"\3\30\3\30\3\30\3\30\5\30\u0117\n\30\3\30\3\30\3\30\3\30\3\31\3\31\3\31" +
-					"\3\31\3\31\5\31\u0122\n\31\3\31\3\31\3\32\3\32\3\32\3\32\3\32\5\32\u012b" +
-					"\n\32\3\32\3\32\3\33\3\33\3\33\3\33\3\33\5\33\u0134\n\33\3\33\3\33\3\33" +
-					"\5\33\u0139\n\33\3\33\3\33\3\34\3\34\3\34\3\34\3\35\3\35\3\35\3\35\3\35" +
-					"\5\35\u0146\n\35\3\35\3\35\3\35\3\35\3\36\3\36\3\37\3\37\3 \3 \3!\3!\3" +
-					"\"\3\"\3#\3#\3#\3#\3#\3#\3#\3#\3#\3#\3#\5#\u0161\n#\3$\3$\3$\3$\5$\u0167" +
-					"\n$\3%\3%\3&\3&\3\'\3\'\3(\3(\3)\3)\3*\3*\3+\3+\3,\3,\3-\3-\3.\3.\3/\3" +
-					"/\3\60\3\60\3\61\3\61\3\62\3\62\3\63\3\63\3\64\3\64\3\65\3\65\3\65\2\3" +
-					"\26\66\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<" +
-					">@BDFHJLNPRTVXZ\\^`bdfh\2\13\3\2=>\3\2\66:\4\2  \"#\3\2\60\65\5\2\16\20" +
-					"\23\23\'(\5\2\22\22\26\30),\6\2\32\37!!$&^^\3\2tu\3\2?@\2\u0196\2j\3\2" +
-					"\2\2\4r\3\2\2\2\6y\3\2\2\2\b{\3\2\2\2\n\177\3\2\2\2\f\u0083\3\2\2\2\16" +
-					"\u0090\3\2\2\2\20\u0098\3\2\2\2\22\u00a8\3\2\2\2\24\u00ac\3\2\2\2\26\u00bd" +
-					"\3\2\2\2\30\u00d1\3\2\2\2\32\u00d9\3\2\2\2\34\u00e1\3\2\2\2\36\u00e3\3" +
-					"\2\2\2 \u00ee\3\2\2\2\"\u00f2\3\2\2\2$\u00f5\3\2\2\2&\u00fb\3\2\2\2(\u0104" +
-					"\3\2\2\2*\u0106\3\2\2\2,\u010f\3\2\2\2.\u0111\3\2\2\2\60\u011c\3\2\2\2" +
-					"\62\u0125\3\2\2\2\64\u012e\3\2\2\2\66\u013c\3\2\2\28\u0140\3\2\2\2:\u014b" +
-					"\3\2\2\2<\u014d\3\2\2\2>\u014f\3\2\2\2@\u0151\3\2\2\2B\u0153\3\2\2\2D" +
-					"\u0160\3\2\2\2F\u0162\3\2\2\2H\u0168\3\2\2\2J\u016a\3\2\2\2L\u016c\3\2" +
-					"\2\2N\u016e\3\2\2\2P\u0170\3\2\2\2R\u0172\3\2\2\2T\u0174\3\2\2\2V\u0176" +
-					"\3\2\2\2X\u0178\3\2\2\2Z\u017a\3\2\2\2\\\u017c\3\2\2\2^\u017e\3\2\2\2" +
-					"`\u0180\3\2\2\2b\u0182\3\2\2\2d\u0184\3\2\2\2f\u0186\3\2\2\2h\u0188\3" +
-					"\2\2\2jm\5\4\3\2kl\7H\2\2ln\5\16\b\2mk\3\2\2\2mn\3\2\2\2n\3\3\2\2\2os" +
-					"\5\f\7\2ps\5\n\6\2qs\5\6\4\2ro\3\2\2\2rp\3\2\2\2rq\3\2\2\2su\3\2\2\2t" +
-					"v\5F$\2ut\3\2\2\2uv\3\2\2\2v\5\3\2\2\2wz\5N(\2xz\5\b\5\2yw\3\2\2\2yx\3" +
-					"\2\2\2z\7\3\2\2\2{|\5N(\2|}\7U\2\2}~\5N(\2~\t\3\2\2\2\177\u0080\5N(\2" +
-					"\u0080\u0081\7U\2\2\u0081\u0082\5R*\2\u0082\13\3\2\2\2\u0083\u008d\5\n" +
-					"\6\2\u0084\u0085\7U\2\2\u0085\u008c\5\n\6\2\u0086\u0089\7U\2\2\u0087\u008a" +
-					"\5\b\5\2\u0088\u008a\5\6\4\2\u0089\u0087\3\2\2\2\u0089\u0088\3\2\2\2\u008a" +
-					"\u008c\3\2\2\2\u008b\u0084\3\2\2\2\u008b\u0086\3\2\2\2\u008c\u008f\3\2" +
-					"\2\2\u008d\u008b\3\2\2\2\u008d\u008e\3\2\2\2\u008e\r\3\2\2\2\u008f\u008d" +
-					"\3\2\2\2\u0090\u0095\5\20\t\2\u0091\u0092\7Q\2\2\u0092\u0094\5\20\t\2" +
-					"\u0093\u0091\3\2\2\2\u0094\u0097\3\2\2\2\u0095\u0093\3\2\2\2\u0095\u0096" +
-					"\3\2\2\2\u0096\17\3\2\2\2\u0097\u0095\3\2\2\2\u0098\u00a5\5\22\n\2\u0099" +
-					"\u009a\7Q\2\2\u009a\u00a4\5\24\13\2\u009b\u009c\7Q\2\2\u009c\u00a4\5\36" +
-					"\20\2\u009d\u009e\7Q\2\2\u009e\u00a4\5$\23\2\u009f\u00a0\7Q\2\2\u00a0" +
-					"\u00a4\5\"\22\2\u00a1\u00a2\7Q\2\2\u00a2\u00a4\5\"\22\2\u00a3\u0099\3" +
-					"\2\2\2\u00a3\u009b\3\2\2\2\u00a3\u009d\3\2\2\2\u00a3\u009f\3\2\2\2\u00a3" +
-					"\u00a1\3\2\2\2\u00a4\u00a7\3\2\2\2\u00a5\u00a3\3\2\2\2\u00a5\u00a6\3\2" +
-					"\2\2\u00a6\21\3\2\2\2\u00a7\u00a5\3\2\2\2\u00a8\u00a9\7\4\2\2\u00a9\u00aa" +
-					"\7/\2\2\u00aa\u00ab\5\26\f\2\u00ab\23\3\2\2\2\u00ac\u00ad\7\n\2\2\u00ad" +
-					"\u00b1\7/\2\2\u00ae\u00b2\5&\24\2\u00af\u00b2\5P)\2\u00b0\u00b2\5\30\r" +
-					"\2\u00b1\u00ae\3\2\2\2\u00b1\u00af\3\2\2\2\u00b1\u00b0\3\2\2\2\u00b2\u00b5" +
-					"\3\2\2\2\u00b3\u00b4\7U\2\2\u00b4\u00b6\5\22\n\2\u00b5\u00b3\3\2\2\2\u00b5" +
-					"\u00b6\3\2\2\2\u00b6\25\3\2\2\2\u00b7\u00b8\b\f\1\2\u00b8\u00b9\5H%\2" +
-					"\u00b9\u00ba\5\26\f\2\u00ba\u00bb\5J&\2\u00bb\u00be\3\2\2\2\u00bc\u00be" +
-					"\5\30\r\2\u00bd\u00b7\3\2\2\2\u00bd\u00bc\3\2\2\2\u00be\u00c5\3\2\2\2" +
-					"\u00bf\u00c0\f\4\2\2\u00c0\u00c1\5L\'\2\u00c1\u00c2\5\26\f\5\u00c2\u00c4" +
-					"\3\2\2\2\u00c3\u00bf\3\2\2\2\u00c4\u00c7\3\2\2\2\u00c5\u00c3\3\2\2\2\u00c5" +
-					"\u00c6\3\2\2\2\u00c6\27\3\2\2\2\u00c7\u00c5\3\2\2\2\u00c8\u00c9\5\32\16" +
-					"\2\u00c9\u00ca\5:\36\2\u00ca\u00cb\5\34\17\2\u00cb\u00d2\3\2\2\2\u00cc" +
-					"\u00cd\7\13\2\2\u00cd\u00ce\5:\36\2\u00ce\u00cf\5D#\2\u00cf\u00d2\3\2" +
-					"\2\2\u00d0\u00d2\5.\30\2\u00d1\u00c8\3\2\2\2\u00d1\u00cc\3\2\2\2\u00d1" +
-					"\u00d0\3\2\2\2\u00d2\31\3\2\2\2\u00d3\u00da\5\60\31\2\u00d4\u00da\5\62" +
-					"\32\2\u00d5\u00da\5\64\33\2\u00d6\u00da\5&\24\2\u00d7\u00da\5P)\2\u00d8" +
-					"\u00da\5(\25\2\u00d9\u00d3\3\2\2\2\u00d9\u00d4\3\2\2\2\u00d9\u00d5\3\2" +
-					"\2\2\u00d9\u00d6\3\2\2\2\u00d9\u00d7\3\2\2\2\u00d9\u00d8\3\2\2\2\u00da" +
-					"\33\3\2\2\2\u00db\u00e2\5\60\31\2\u00dc\u00e2\5\62\32\2\u00dd\u00e2\5" +
-					"\64\33\2\u00de\u00e2\5&\24\2\u00df\u00e2\5P)\2\u00e0\u00e2\5(\25\2\u00e1" +
-					"\u00db\3\2\2\2\u00e1\u00dc\3\2\2\2\u00e1\u00dd\3\2\2\2\u00e1\u00de\3\2" +
-					"\2\2\u00e1\u00df\3\2\2\2\u00e1\u00e0\3\2\2\2\u00e2\35\3\2\2\2\u00e3\u00ec" +
-					"\7\b\2\2\u00e4\u00e9\5 \21\2\u00e5\u00e6\7G\2\2\u00e6\u00e8\5 \21\2\u00e7" +
-					"\u00e5\3\2\2\2\u00e8\u00eb\3\2\2\2\u00e9\u00e7\3\2\2\2\u00e9\u00ea\3\2" +
-					"\2\2\u00ea\u00ed\3\2\2\2\u00eb\u00e9\3\2\2\2\u00ec\u00e4\3\2\2\2\u00ec" +
-					"\u00ed\3\2\2\2\u00ed\37\3\2\2\2\u00ee\u00f0\5(\25\2\u00ef\u00f1\t\2\2" +
-					"\2\u00f0\u00ef\3\2\2\2\u00f0\u00f1\3\2\2\2\u00f1!\3\2\2\2\u00f2\u00f3" +
-					"\7\5\2\2\u00f3\u00f4\5h\65\2\u00f4#\3\2\2\2\u00f5\u00f6\7\6\2\2\u00f6" +
-					"\u00f7\5h\65\2\u00f7%\3\2\2\2\u00f8\u00f9\5N(\2\u00f9\u00fa\7U\2\2\u00fa" +
-					"\u00fc\3\2\2\2\u00fb\u00f8\3\2\2\2\u00fc\u00fd\3\2\2\2\u00fd\u00fb\3\2" +
-					"\2\2\u00fd\u00fe\3\2\2\2\u00fe\u00ff\3\2\2\2\u00ff\u0100\5P)\2\u0100\'" +
-					"\3\2\2\2\u0101\u0105\5D#\2\u0102\u0105\5,\27\2\u0103\u0105\5*\26\2\u0104" +
-					"\u0101\3\2\2\2\u0104\u0102\3\2\2\2\u0104\u0103\3\2\2\2\u0105)\3\2\2\2" +
-					"\u0106\u0107\t\3\2\2\u0107\u0108\5B\"\2\u0108+\3\2\2\2\u0109\u0110\5\60" +
-					"\31\2\u010a\u0110\5\62\32\2\u010b\u0110\5\66\34\2\u010c\u0110\5\64\33" +
-					"\2\u010d\u0110\58\35\2\u010e\u0110\5.\30\2\u010f\u0109\3\2\2\2\u010f\u010a" +
-					"\3\2\2\2\u010f\u010b\3\2\2\2\u010f\u010c\3\2\2\2\u010f\u010d\3\2\2\2\u010f" +
-					"\u010e\3\2\2\2\u0110-\3\2\2\2\u0111\u0112\5<\37\2\u0112\u0116\7E\2\2\u0113" +
-					"\u0117\5&\24\2\u0114\u0117\5P)\2\u0115\u0117\5(\25\2\u0116\u0113\3\2\2" +
-					"\2\u0116\u0114\3\2\2\2\u0116\u0115\3\2\2\2\u0117\u0118\3\2\2\2\u0118\u0119" +
-					"\7G\2\2\u0119\u011a\5(\25\2\u011a\u011b\7F\2\2\u011b/\3\2\2\2\u011c\u011d" +
-					"\5> \2\u011d\u0121\7E\2\2\u011e\u0122\5\60\31\2\u011f\u0122\5&\24\2\u0120" +
-					"\u0122\5P)\2\u0121\u011e\3\2\2\2\u0121\u011f\3\2\2\2\u0121\u0120\3\2\2" +
-					"\2\u0122\u0123\3\2\2\2\u0123\u0124\7F\2\2\u0124\61\3\2\2\2\u0125\u0126" +
-					"\5@!\2\u0126\u012a\7E\2\2\u0127\u012b\5&\24\2\u0128\u012b\5P)\2\u0129" +
-					"\u012b\5D#\2\u012a\u0127\3\2\2\2\u012a\u0128\3\2\2\2\u012a\u0129\3\2\2" +
-					"\2\u012b\u012c\3\2\2\2\u012c\u012d\7F\2\2\u012d\63\3\2\2\2\u012e\u012f" +
-					"\7\31\2\2\u012f\u0133\7E\2\2\u0130\u0134\5\64\33\2\u0131\u0134\5D#\2\u0132" +
-					"\u0134\5P)\2\u0133\u0130\3\2\2\2\u0133\u0131\3\2\2\2\u0133\u0132\3\2\2" +
-					"\2\u0134\u0135\3\2\2\2\u0135\u0138\7G\2\2\u0136\u0139\5D#\2\u0137\u0139" +
-					"\5P)\2\u0138\u0136\3\2\2\2\u0138\u0137\3\2\2\2\u0139\u013a\3\2\2\2\u013a" +
-					"\u013b\7F\2\2\u013b\65\3\2\2\2\u013c\u013d\t\4\2\2\u013d\u013e\7E\2\2" +
-					"\u013e\u013f\7F\2\2\u013f\67\3\2\2\2\u0140\u0141\7\25\2\2\u0141\u0145" +
-					"\7E\2\2\u0142\u0146\5&\24\2\u0143\u0146\5P)\2\u0144\u0146\5(\25\2\u0145" +
-					"\u0142\3\2\2\2\u0145\u0143\3\2\2\2\u0145\u0144\3\2\2\2\u0146\u0147\3\2" +
-					"\2\2\u0147\u0148\7G\2\2\u0148\u0149\5(\25\2\u0149\u014a\7F\2\2\u014a9" +
-					"\3\2\2\2\u014b\u014c\t\5\2\2\u014c;\3\2\2\2\u014d\u014e\t\6\2\2\u014e" +
-					"=\3\2\2\2\u014f\u0150\t\7\2\2\u0150?\3\2\2\2\u0151\u0152\t\b\2\2\u0152" +
-					"A\3\2\2\2\u0153\u0154\t\t\2\2\u0154C\3\2\2\2\u0155\u0161\5T+\2\u0156\u0161" +
-					"\5V,\2\u0157\u0161\5X-\2\u0158\u0161\5Z.\2\u0159\u0161\5\\/\2\u015a\u0161" +
-					"\5^\60\2\u015b\u0161\5`\61\2\u015c\u0161\5b\62\2\u015d\u0161\5d\63\2\u015e" +
-					"\u0161\5f\64\2\u015f\u0161\5h\65\2\u0160\u0155\3\2\2\2\u0160\u0156\3\2" +
-					"\2\2\u0160\u0157\3\2\2\2\u0160\u0158\3\2\2\2\u0160\u0159\3\2\2\2\u0160" +
-					"\u015a\3\2\2\2\u0160\u015b\3\2\2\2\u0160\u015c\3\2\2\2\u0160\u015d\3\2" +
-					"\2\2\u0160\u015e\3\2\2\2\u0160\u015f\3\2\2\2\u0161E\3\2\2\2\u0162\u0163" +
-					"\7U\2\2\u0163\u0166\7\13\2\2\u0164\u0165\7/\2\2\u0165\u0167\5Z.\2\u0166" +
-					"\u0164\3\2\2\2\u0166\u0167\3\2\2\2\u0167G\3\2\2\2\u0168\u0169\7E\2\2\u0169" +
-					"I\3\2\2\2\u016a\u016b\7F\2\2\u016bK\3\2\2\2\u016c\u016d\t\n\2\2\u016d" +
-					"M\3\2\2\2\u016e\u016f\7v\2\2\u016fO\3\2\2\2\u0170\u0171\7v\2\2\u0171Q" +
-					"\3\2\2\2\u0172\u0173\7s\2\2\u0173S\3\2\2\2\u0174\u0175\7w\2\2\u0175U\3" +
-					"\2\2\2\u0176\u0177\7S\2\2\u0177W\3\2\2\2\u0178\u0179\7R\2\2\u0179Y\3\2" +
-					"\2\2\u017a\u017b\7r\2\2\u017b[\3\2\2\2\u017c\u017d\7{\2\2\u017d]\3\2\2" +
-					"\2\u017e\u017f\7|\2\2\u017f_\3\2\2\2\u0180\u0181\7}\2\2\u0181a\3\2\2\2" +
-					"\u0182\u0183\7z\2\2\u0183c\3\2\2\2\u0184\u0185\7y\2\2\u0185e\3\2\2\2\u0186" +
-					"\u0187\7u\2\2\u0187g\3\2\2\2\u0188\u0189\7t\2\2\u0189i\3\2\2\2!mruy\u0089" +
-					"\u008b\u008d\u0095\u00a3\u00a5\u00b1\u00b5\u00bd\u00c5\u00d1\u00d9\u00e1" +
-					"\u00e9\u00ec\u00f0\u00fd\u0104\u010f\u0116\u0121\u012a\u0133\u0138\u0145" +
-					"\u0160\u0166";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\u008d\u018e\4\2\t"+
+		"\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
+		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
+		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
+		"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36\4\37\t\37\4 \t \4!"+
+		"\t!\4\"\t\"\4#\t#\4$\t$\4%\t%\4&\t&\4\'\t\'\4(\t(\4)\t)\4*\t*\4+\t+\4"+
+		",\t,\4-\t-\4.\t.\4/\t/\4\60\t\60\4\61\t\61\4\62\t\62\4\63\t\63\4\64\t"+
+		"\64\4\65\t\65\4\66\t\66\3\2\3\2\3\2\5\2p\n\2\3\3\3\3\3\3\5\3u\n\3\3\3"+
+		"\5\3x\n\3\3\4\3\4\5\4|\n\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7"+
+		"\3\7\3\7\3\7\5\7\u008c\n\7\7\7\u008e\n\7\f\7\16\7\u0091\13\7\3\b\3\b\3"+
+		"\b\7\b\u0096\n\b\f\b\16\b\u0099\13\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3"+
+		"\t\3\t\3\t\7\t\u00a6\n\t\f\t\16\t\u00a9\13\t\3\n\3\n\3\n\3\n\3\13\3\13"+
+		"\3\13\3\13\3\13\5\13\u00b4\n\13\3\13\3\13\5\13\u00b8\n\13\3\f\3\f\3\f"+
+		"\3\f\3\f\3\f\5\f\u00c0\n\f\3\f\3\f\3\f\3\f\7\f\u00c6\n\f\f\f\16\f\u00c9"+
+		"\13\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u00d4\n\r\3\16\3\16\3\16"+
+		"\3\16\3\16\3\16\5\16\u00dc\n\16\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u00e4"+
+		"\n\17\3\20\3\20\3\20\3\20\3\20\7\20\u00eb\n\20\f\20\16\20\u00ee\13\20"+
+		"\3\21\3\21\5\21\u00f2\n\21\3\22\3\22\3\22\3\23\3\23\3\23\3\24\3\24\3\24"+
+		"\6\24\u00fd\n\24\r\24\16\24\u00fe\3\24\3\24\3\25\3\25\3\25\5\25\u0106"+
+		"\n\25\3\26\3\26\3\26\3\27\3\27\3\27\3\27\3\27\3\27\5\27\u0111\n\27\3\30"+
+		"\3\30\3\30\3\30\3\30\5\30\u0118\n\30\3\30\3\30\3\30\3\30\3\31\3\31\3\31"+
+		"\3\31\3\31\5\31\u0123\n\31\3\31\3\31\3\32\3\32\3\32\3\32\3\32\5\32\u012c"+
+		"\n\32\3\32\3\32\3\33\3\33\3\33\3\33\3\33\5\33\u0135\n\33\3\33\3\33\3\33"+
+		"\5\33\u013a\n\33\3\33\3\33\3\34\3\34\3\34\3\34\3\35\3\35\3\35\3\35\3\35"+
+		"\5\35\u0147\n\35\3\35\3\35\3\35\3\35\3\36\3\36\3\37\3\37\3 \3 \3!\3!\3"+
+		"\"\3\"\3#\3#\3#\3#\3#\3#\3#\3#\3#\3#\3#\5#\u0162\n#\3$\3$\3$\3$\5$\u0168"+
+		"\n$\3%\3%\3&\3&\3\'\3\'\3(\3(\3)\3)\3*\3*\3+\3+\3,\3,\3-\3-\3.\3.\3/\3"+
+		"/\3\60\3\60\3\61\3\61\3\62\3\62\3\63\3\63\3\64\3\64\3\65\3\65\3\66\3\66"+
+		"\3\66\2\3\26\67\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62"+
+		"\64\668:<>@BDFHJLNPRTVXZ\\^`bdfhj\2\13\3\2\66:\4\2  \"#\3\2\60\65\5\2"+
+		"\16\20\23\23\'(\5\2\22\22\26\30),\6\2\32\37!!$&^^\3\2tu\3\2?@\3\2=>\2"+
+		"\u0197\2l\3\2\2\2\4t\3\2\2\2\6{\3\2\2\2\b}\3\2\2\2\n\u0081\3\2\2\2\f\u0085"+
+		"\3\2\2\2\16\u0092\3\2\2\2\20\u009a\3\2\2\2\22\u00aa\3\2\2\2\24\u00ae\3"+
+		"\2\2\2\26\u00bf\3\2\2\2\30\u00d3\3\2\2\2\32\u00db\3\2\2\2\34\u00e3\3\2"+
+		"\2\2\36\u00e5\3\2\2\2 \u00ef\3\2\2\2\"\u00f3\3\2\2\2$\u00f6\3\2\2\2&\u00fc"+
+		"\3\2\2\2(\u0105\3\2\2\2*\u0107\3\2\2\2,\u0110\3\2\2\2.\u0112\3\2\2\2\60"+
+		"\u011d\3\2\2\2\62\u0126\3\2\2\2\64\u012f\3\2\2\2\66\u013d\3\2\2\28\u0141"+
+		"\3\2\2\2:\u014c\3\2\2\2<\u014e\3\2\2\2>\u0150\3\2\2\2@\u0152\3\2\2\2B"+
+		"\u0154\3\2\2\2D\u0161\3\2\2\2F\u0163\3\2\2\2H\u0169\3\2\2\2J\u016b\3\2"+
+		"\2\2L\u016d\3\2\2\2N\u016f\3\2\2\2P\u0171\3\2\2\2R\u0173\3\2\2\2T\u0175"+
+		"\3\2\2\2V\u0177\3\2\2\2X\u0179\3\2\2\2Z\u017b\3\2\2\2\\\u017d\3\2\2\2"+
+		"^\u017f\3\2\2\2`\u0181\3\2\2\2b\u0183\3\2\2\2d\u0185\3\2\2\2f\u0187\3"+
+		"\2\2\2h\u0189\3\2\2\2j\u018b\3\2\2\2lo\5\4\3\2mn\7H\2\2np\5\16\b\2om\3"+
+		"\2\2\2op\3\2\2\2p\3\3\2\2\2qu\5\f\7\2ru\5\n\6\2su\5\6\4\2tq\3\2\2\2tr"+
+		"\3\2\2\2ts\3\2\2\2uw\3\2\2\2vx\5F$\2wv\3\2\2\2wx\3\2\2\2x\5\3\2\2\2y|"+
+		"\5P)\2z|\5\b\5\2{y\3\2\2\2{z\3\2\2\2|\7\3\2\2\2}~\5P)\2~\177\7U\2\2\177"+
+		"\u0080\5P)\2\u0080\t\3\2\2\2\u0081\u0082\5P)\2\u0082\u0083\7U\2\2\u0083"+
+		"\u0084\5T+\2\u0084\13\3\2\2\2\u0085\u008f\5\n\6\2\u0086\u0087\7U\2\2\u0087"+
+		"\u008e\5\n\6\2\u0088\u008b\7U\2\2\u0089\u008c\5\b\5\2\u008a\u008c\5\6"+
+		"\4\2\u008b\u0089\3\2\2\2\u008b\u008a\3\2\2\2\u008c\u008e\3\2\2\2\u008d"+
+		"\u0086\3\2\2\2\u008d\u0088\3\2\2\2\u008e\u0091\3\2\2\2\u008f\u008d\3\2"+
+		"\2\2\u008f\u0090\3\2\2\2\u0090\r\3\2\2\2\u0091\u008f\3\2\2\2\u0092\u0097"+
+		"\5\20\t\2\u0093\u0094\7Q\2\2\u0094\u0096\5\20\t\2\u0095\u0093\3\2\2\2"+
+		"\u0096\u0099\3\2\2\2\u0097\u0095\3\2\2\2\u0097\u0098\3\2\2\2\u0098\17"+
+		"\3\2\2\2\u0099\u0097\3\2\2\2\u009a\u00a7\5\22\n\2\u009b\u009c\7Q\2\2\u009c"+
+		"\u00a6\5\24\13\2\u009d\u009e\7Q\2\2\u009e\u00a6\5\36\20\2\u009f\u00a0"+
+		"\7Q\2\2\u00a0\u00a6\5$\23\2\u00a1\u00a2\7Q\2\2\u00a2\u00a6\5\"\22\2\u00a3"+
+		"\u00a4\7Q\2\2\u00a4\u00a6\5\"\22\2\u00a5\u009b\3\2\2\2\u00a5\u009d\3\2"+
+		"\2\2\u00a5\u009f\3\2\2\2\u00a5\u00a1\3\2\2\2\u00a5\u00a3\3\2\2\2\u00a6"+
+		"\u00a9\3\2\2\2\u00a7\u00a5\3\2\2\2\u00a7\u00a8\3\2\2\2\u00a8\21\3\2\2"+
+		"\2\u00a9\u00a7\3\2\2\2\u00aa\u00ab\7\4\2\2\u00ab\u00ac\7/\2\2\u00ac\u00ad"+
+		"\5\26\f\2\u00ad\23\3\2\2\2\u00ae\u00af\7\n\2\2\u00af\u00b3\7/\2\2\u00b0"+
+		"\u00b4\5&\24\2\u00b1\u00b4\5R*\2\u00b2\u00b4\5\30\r\2\u00b3\u00b0\3\2"+
+		"\2\2\u00b3\u00b1\3\2\2\2\u00b3\u00b2\3\2\2\2\u00b4\u00b7\3\2\2\2\u00b5"+
+		"\u00b6\7U\2\2\u00b6\u00b8\5\22\n\2\u00b7\u00b5\3\2\2\2\u00b7\u00b8\3\2"+
+		"\2\2\u00b8\25\3\2\2\2\u00b9\u00ba\b\f\1\2\u00ba\u00bb\5H%\2\u00bb\u00bc"+
+		"\5\26\f\2\u00bc\u00bd\5J&\2\u00bd\u00c0\3\2\2\2\u00be\u00c0\5\30\r\2\u00bf"+
+		"\u00b9\3\2\2\2\u00bf\u00be\3\2\2\2\u00c0\u00c7\3\2\2\2\u00c1\u00c2\f\4"+
+		"\2\2\u00c2\u00c3\5L\'\2\u00c3\u00c4\5\26\f\5\u00c4\u00c6\3\2\2\2\u00c5"+
+		"\u00c1\3\2\2\2\u00c6\u00c9\3\2\2\2\u00c7\u00c5\3\2\2\2\u00c7\u00c8\3\2"+
+		"\2\2\u00c8\27\3\2\2\2\u00c9\u00c7\3\2\2\2\u00ca\u00cb\5\32\16\2\u00cb"+
+		"\u00cc\5:\36\2\u00cc\u00cd\5\34\17\2\u00cd\u00d4\3\2\2\2\u00ce\u00cf\7"+
+		"\13\2\2\u00cf\u00d0\5:\36\2\u00d0\u00d1\5D#\2\u00d1\u00d4\3\2\2\2\u00d2"+
+		"\u00d4\5.\30\2\u00d3\u00ca\3\2\2\2\u00d3\u00ce\3\2\2\2\u00d3\u00d2\3\2"+
+		"\2\2\u00d4\31\3\2\2\2\u00d5\u00dc\5\60\31\2\u00d6\u00dc\5\62\32\2\u00d7"+
+		"\u00dc\5\64\33\2\u00d8\u00dc\5&\24\2\u00d9\u00dc\5R*\2\u00da\u00dc\5("+
+		"\25\2\u00db\u00d5\3\2\2\2\u00db\u00d6\3\2\2\2\u00db\u00d7\3\2\2\2\u00db"+
+		"\u00d8\3\2\2\2\u00db\u00d9\3\2\2\2\u00db\u00da\3\2\2\2\u00dc\33\3\2\2"+
+		"\2\u00dd\u00e4\5\60\31\2\u00de\u00e4\5\62\32\2\u00df\u00e4\5\64\33\2\u00e0"+
+		"\u00e4\5&\24\2\u00e1\u00e4\5R*\2\u00e2\u00e4\5(\25\2\u00e3\u00dd\3\2\2"+
+		"\2\u00e3\u00de\3\2\2\2\u00e3\u00df\3\2\2\2\u00e3\u00e0\3\2\2\2\u00e3\u00e1"+
+		"\3\2\2\2\u00e3\u00e2\3\2\2\2\u00e4\35\3\2\2\2\u00e5\u00e6\7\b\2\2\u00e6"+
+		"\u00e7\7/\2\2\u00e7\u00ec\5 \21\2\u00e8\u00e9\7G\2\2\u00e9\u00eb\5 \21"+
+		"\2\u00ea\u00e8\3\2\2\2\u00eb\u00ee\3\2\2\2\u00ec\u00ea\3\2\2\2\u00ec\u00ed"+
+		"\3\2\2\2\u00ed\37\3\2\2\2\u00ee\u00ec\3\2\2\2\u00ef\u00f1\5R*\2\u00f0"+
+		"\u00f2\5N(\2\u00f1\u00f0\3\2\2\2\u00f1\u00f2\3\2\2\2\u00f2!\3\2\2\2\u00f3"+
+		"\u00f4\7\5\2\2\u00f4\u00f5\5j\66\2\u00f5#\3\2\2\2\u00f6\u00f7\7\6\2\2"+
+		"\u00f7\u00f8\5j\66\2\u00f8%\3\2\2\2\u00f9\u00fa\5P)\2\u00fa\u00fb\7U\2"+
+		"\2\u00fb\u00fd\3\2\2\2\u00fc\u00f9\3\2\2\2\u00fd\u00fe\3\2\2\2\u00fe\u00fc"+
+		"\3\2\2\2\u00fe\u00ff\3\2\2\2\u00ff\u0100\3\2\2\2\u0100\u0101\5R*\2\u0101"+
+		"\'\3\2\2\2\u0102\u0106\5D#\2\u0103\u0106\5,\27\2\u0104\u0106\5*\26\2\u0105"+
+		"\u0102\3\2\2\2\u0105\u0103\3\2\2\2\u0105\u0104\3\2\2\2\u0106)\3\2\2\2"+
+		"\u0107\u0108\t\2\2\2\u0108\u0109\5B\"\2\u0109+\3\2\2\2\u010a\u0111\5\60"+
+		"\31\2\u010b\u0111\5\62\32\2\u010c\u0111\5\66\34\2\u010d\u0111\5\64\33"+
+		"\2\u010e\u0111\58\35\2\u010f\u0111\5.\30\2\u0110\u010a\3\2\2\2\u0110\u010b"+
+		"\3\2\2\2\u0110\u010c\3\2\2\2\u0110\u010d\3\2\2\2\u0110\u010e\3\2\2\2\u0110"+
+		"\u010f\3\2\2\2\u0111-\3\2\2\2\u0112\u0113\5<\37\2\u0113\u0117\7E\2\2\u0114"+
+		"\u0118\5&\24\2\u0115\u0118\5R*\2\u0116\u0118\5(\25\2\u0117\u0114\3\2\2"+
+		"\2\u0117\u0115\3\2\2\2\u0117\u0116\3\2\2\2\u0118\u0119\3\2\2\2\u0119\u011a"+
+		"\7G\2\2\u011a\u011b\5(\25\2\u011b\u011c\7F\2\2\u011c/\3\2\2\2\u011d\u011e"+
+		"\5> \2\u011e\u0122\7E\2\2\u011f\u0123\5\60\31\2\u0120\u0123\5&\24\2\u0121"+
+		"\u0123\5R*\2\u0122\u011f\3\2\2\2\u0122\u0120\3\2\2\2\u0122\u0121\3\2\2"+
+		"\2\u0123\u0124\3\2\2\2\u0124\u0125\7F\2\2\u0125\61\3\2\2\2\u0126\u0127"+
+		"\5@!\2\u0127\u012b\7E\2\2\u0128\u012c\5&\24\2\u0129\u012c\5R*\2\u012a"+
+		"\u012c\5D#\2\u012b\u0128\3\2\2\2\u012b\u0129\3\2\2\2\u012b\u012a\3\2\2"+
+		"\2\u012c\u012d\3\2\2\2\u012d\u012e\7F\2\2\u012e\63\3\2\2\2\u012f\u0130"+
+		"\7\31\2\2\u0130\u0134\7E\2\2\u0131\u0135\5\64\33\2\u0132\u0135\5D#\2\u0133"+
+		"\u0135\5R*\2\u0134\u0131\3\2\2\2\u0134\u0132\3\2\2\2\u0134\u0133\3\2\2"+
+		"\2\u0135\u0136\3\2\2\2\u0136\u0139\7G\2\2\u0137\u013a\5D#\2\u0138\u013a"+
+		"\5R*\2\u0139\u0137\3\2\2\2\u0139\u0138\3\2\2\2\u013a\u013b\3\2\2\2\u013b"+
+		"\u013c\7F\2\2\u013c\65\3\2\2\2\u013d\u013e\t\3\2\2\u013e\u013f\7E\2\2"+
+		"\u013f\u0140\7F\2\2\u0140\67\3\2\2\2\u0141\u0142\7\25\2\2\u0142\u0146"+
+		"\7E\2\2\u0143\u0147\5&\24\2\u0144\u0147\5R*\2\u0145\u0147\5(\25\2\u0146"+
+		"\u0143\3\2\2\2\u0146\u0144\3\2\2\2\u0146\u0145\3\2\2\2\u0147\u0148\3\2"+
+		"\2\2\u0148\u0149\7G\2\2\u0149\u014a\5(\25\2\u014a\u014b\7F\2\2\u014b9"+
+		"\3\2\2\2\u014c\u014d\t\4\2\2\u014d;\3\2\2\2\u014e\u014f\t\5\2\2\u014f"+
+		"=\3\2\2\2\u0150\u0151\t\6\2\2\u0151?\3\2\2\2\u0152\u0153\t\7\2\2\u0153"+
+		"A\3\2\2\2\u0154\u0155\t\b\2\2\u0155C\3\2\2\2\u0156\u0162\5V,\2\u0157\u0162"+
+		"\5X-\2\u0158\u0162\5Z.\2\u0159\u0162\5\\/\2\u015a\u0162\5^\60\2\u015b"+
+		"\u0162\5`\61\2\u015c\u0162\5b\62\2\u015d\u0162\5d\63\2\u015e\u0162\5f"+
+		"\64\2\u015f\u0162\5h\65\2\u0160\u0162\5j\66\2\u0161\u0156\3\2\2\2\u0161"+
+		"\u0157\3\2\2\2\u0161\u0158\3\2\2\2\u0161\u0159\3\2\2\2\u0161\u015a\3\2"+
+		"\2\2\u0161\u015b\3\2\2\2\u0161\u015c\3\2\2\2\u0161\u015d\3\2\2\2\u0161"+
+		"\u015e\3\2\2\2\u0161\u015f\3\2\2\2\u0161\u0160\3\2\2\2\u0162E\3\2\2\2"+
+		"\u0163\u0164\7U\2\2\u0164\u0167\7\13\2\2\u0165\u0166\7/\2\2\u0166\u0168"+
+		"\5\\/\2\u0167\u0165\3\2\2\2\u0167\u0168\3\2\2\2\u0168G\3\2\2\2\u0169\u016a"+
+		"\7E\2\2\u016aI\3\2\2\2\u016b\u016c\7F\2\2\u016cK\3\2\2\2\u016d\u016e\t"+
+		"\t\2\2\u016eM\3\2\2\2\u016f\u0170\t\n\2\2\u0170O\3\2\2\2\u0171\u0172\7"+
+		"v\2\2\u0172Q\3\2\2\2\u0173\u0174\7v\2\2\u0174S\3\2\2\2\u0175\u0176\7s"+
+		"\2\2\u0176U\3\2\2\2\u0177\u0178\7w\2\2\u0178W\3\2\2\2\u0179\u017a\7S\2"+
+		"\2\u017aY\3\2\2\2\u017b\u017c\7R\2\2\u017c[\3\2\2\2\u017d\u017e\7r\2\2"+
+		"\u017e]\3\2\2\2\u017f\u0180\7{\2\2\u0180_\3\2\2\2\u0181\u0182\7|\2\2\u0182"+
+		"a\3\2\2\2\u0183\u0184\7}\2\2\u0184c\3\2\2\2\u0185\u0186\7z\2\2\u0186e"+
+		"\3\2\2\2\u0187\u0188\7y\2\2\u0188g\3\2\2\2\u0189\u018a\7u\2\2\u018ai\3"+
+		"\2\2\2\u018b\u018c\7t\2\2\u018ck\3\2\2\2 otw{\u008b\u008d\u008f\u0097"+
+		"\u00a5\u00a7\u00b3\u00b7\u00bf\u00c7\u00d3\u00db\u00e3\u00ec\u00f1\u00fe"+
+		"\u0105\u0110\u0117\u0122\u012b\u0134\u0139\u0146\u0161\u0167";
 	public static final ATN _ATN =
-			new ATNDeserializer().deserialize(_serializedATN.toCharArray());
+		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	protected static final DFA[] _decisionToDFA;
 	public static final String[] ruleNames = makeRuleNames();
 	protected static final PredictionContextCache _sharedContextCache =
-			new PredictionContextCache();
+		new PredictionContextCache();
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 
-	static {
-		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
-	}
-
+	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -221,7 +218,6 @@ public class ODataParser extends Parser {
 			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
 		}
 	}
-
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -266,54 +262,20 @@ public class ODataParser extends Parser {
 	}
 
 	private static String[] makeRuleNames() {
-		return new String[]{
-				"odataRelativeUri", "resourcePath", "entity", "entityCast", "entityUUID",
-				"embeddedEntitySet", "queryOptions", "queryOption", "filter", "expand",
-				"filterExpression", "boolCommonExpr", "leftComparatorExpr", "rightComparatorExpr",
-				"orderby", "orderbyItem", "topStatement", "skipStatement", "joinEntities",
-				"commonExpr", "mathExpr", "methodExpr", "compareMethodExpr", "methodCallExpr",
-				"calenderMethodExp", "concatMethodExpr", "singleMethodCallExpr", "substringMethodCallExpr",
-				"comparisonOperator", "compareMethodName", "methodName", "calenderMethodName",
-				"number", "primitiveLiteral", "countStatement", "openPar", "closePar",
-				"logicalOperator", "entityName", "attributeName", "uuidIdValue", "quotedString",
-				"nullSpecLiteral", "nullToken", "booleanValue", "durationValue", "dateValue",
-				"dateTimeOffsetValue", "timeOfDayValue", "decimalLiteral", "floatValue",
-				"integerValue"
+		return new String[] {
+			"odataRelativeUri", "resourcePath", "entity", "entityCast", "entityUUID",
+			"embeddedEntitySet", "queryOptions", "queryOption", "filter", "expand",
+			"filterExpression", "boolCommonExpr", "leftComparatorExpr", "rightComparatorExpr",
+			"orderBy", "orderByItem", "topStatement", "skipStatement", "joinEntities",
+			"commonExpr", "mathExpr", "methodExpr", "compareMethodExpr", "methodCallExpr",
+			"calenderMethodExp", "concatMethodExpr", "singleMethodCallExpr", "substringMethodCallExpr",
+			"comparisonOperator", "compareMethodName", "methodName", "calenderMethodName",
+			"number", "primitiveLiteral", "countStatement", "openPar", "closePar",
+			"logicalOperator", "sortOrder", "entityName", "attributeName", "uuidIdValue",
+			"quotedString", "nullSpecLiteral", "nullToken", "booleanValue", "durationValue",
+			"dateValue", "dateTimeOffsetValue", "timeOfDayValue", "decimalLiteral",
+			"floatValue", "integerValue"
 		};
-	}
-
-	public final OdataRelativeUriContext odataRelativeUri() throws RecognitionException {
-		OdataRelativeUriContext _localctx = new OdataRelativeUriContext(_ctx, getState());
-		enterRule(_localctx, 0, RULE_odataRelativeUri);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(104);
-			resourcePath();
-			setState(107);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==QUESTION) {
-				{
-				setState(105);
-				match(QUESTION);
-				setState(106);
-				queryOptions();
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
 	}
 
 	private static String[] makeLiteralNames() {
@@ -334,58 +296,6 @@ public class ODataParser extends Parser {
 			null, null, null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, "'-'"
 		};
-	}
-
-	public final ResourcePathContext resourcePath() throws RecognitionException {
-		ResourcePathContext _localctx = new ResourcePathContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_resourcePath);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(112);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
-			case 1:
-				{
-				setState(109);
-				embeddedEntitySet();
-				}
-				break;
-			case 2:
-				{
-				setState(110);
-				entityUUID();
-				}
-				break;
-			case 3:
-				{
-				setState(111);
-				entity();
-				}
-				break;
-			}
-			setState(115);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==SLASH) {
-				{
-				setState(114);
-				countStatement();
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
 	}
 
 	private static String[] makeSymbolicNames() {
@@ -415,24 +325,110 @@ public class ODataParser extends Parser {
 		};
 	}
 
+	public final OdataRelativeUriContext odataRelativeUri() throws RecognitionException {
+		OdataRelativeUriContext _localctx = new OdataRelativeUriContext(_ctx, getState());
+		enterRule(_localctx, 0, RULE_odataRelativeUri);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(106);
+			resourcePath();
+			setState(109);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==QUESTION) {
+				{
+				setState(107);
+				match(QUESTION);
+				setState(108);
+				queryOptions();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public final ResourcePathContext resourcePath() throws RecognitionException {
+		ResourcePathContext _localctx = new ResourcePathContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_resourcePath);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(114);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
+			case 1:
+				{
+				setState(111);
+				embeddedEntitySet();
+				}
+				break;
+			case 2:
+				{
+				setState(112);
+				entityUUID();
+				}
+				break;
+			case 3:
+				{
+				setState(113);
+				entity();
+				}
+				break;
+			}
+			setState(117);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==SLASH) {
+				{
+				setState(116);
+				countStatement();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public final EntityContext entity() throws RecognitionException {
 		EntityContext _localctx = new EntityContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_entity);
 		try {
-			setState(119);
+			setState(121);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(117);
+				setState(119);
 				entityName();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(118);
+				setState(120);
 				entityCast();
 				}
 				break;
@@ -442,7 +438,8 @@ public class ODataParser extends Parser {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -454,18 +451,20 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(121);
-				entityName();
-				setState(122);
-				match(SLASH);
-				setState(123);
-				entityName();
+			setState(123);
+			entityName();
+			setState(124);
+			match(SLASH);
+			setState(125);
+			entityName();
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -477,18 +476,20 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(125);
-				entityName();
-				setState(126);
-				match(SLASH);
-				setState(127);
-				uuidIdValue();
+			setState(127);
+			entityName();
+			setState(128);
+			match(SLASH);
+			setState(129);
+			uuidIdValue();
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -501,42 +502,42 @@ public class ODataParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(129);
-				entityUUID();
-			setState(139);
+			setState(131);
+			entityUUID();
+			setState(141);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
-					setState(137);
+					setState(139);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 					case 1:
 						{
-						setState(130);
+						setState(132);
 						match(SLASH);
-						setState(131);
+						setState(133);
 						entityUUID();
 						}
 						break;
 					case 2:
 						{
 						{
-						setState(132);
+						setState(134);
 						match(SLASH);
-						setState(135);
+						setState(137);
 						_errHandler.sync(this);
 						switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
 						case 1:
 							{
-							setState(133);
+							setState(135);
 							entityCast();
 							}
 							break;
 						case 2:
 							{
-							setState(134);
+							setState(136);
 							entity();
 							}
 							break;
@@ -547,7 +548,7 @@ public class ODataParser extends Parser {
 					}
 					}
 				}
-				setState(141);
+				setState(143);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 			}
@@ -557,7 +558,8 @@ public class ODataParser extends Parser {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -570,24 +572,24 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(142);
+			setState(144);
+			queryOption();
+			setState(149);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==AMPERSAND) {
+				{
+				{
+				setState(145);
+				match(AMPERSAND);
+				setState(146);
 				queryOption();
-				setState(147);
+				}
+				}
+				setState(151);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				while (_la == AMPERSAND) {
-					{
-						{
-							setState(143);
-							match(AMPERSAND);
-							setState(144);
-							queryOption();
-						}
-					}
-					setState(149);
-					_errHandler.sync(this);
-					_la = _input.LA(1);
-				}
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -608,60 +610,63 @@ public class ODataParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(150);
-				filter();
-				setState(163);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input, 9, _ctx);
-				while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
-					if (_alt == 1) {
-						{
-							setState(161);
-							_errHandler.sync(this);
-							switch (getInterpreter().adaptivePredict(_input, 8, _ctx)) {
-								case 1: {
-									setState(151);
-									match(AMPERSAND);
-									setState(152);
-									expand();
-								}
-								break;
-					case 2:
+			setState(152);
+			filter();
+			setState(165);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					{
+					setState(163);
+					_errHandler.sync(this);
+					switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
+					case 1:
 						{
 						setState(153);
 						match(AMPERSAND);
 						setState(154);
-						orderby();
+						expand();
 						}
 						break;
-					case 3:
+					case 2:
 						{
 						setState(155);
 						match(AMPERSAND);
 						setState(156);
+						orderBy();
+						}
+						break;
+					case 3:
+						{
+						setState(157);
+						match(AMPERSAND);
+						setState(158);
 						skipStatement();
 						}
-					break;
-								case 4: {
-									setState(157);
-									match(AMPERSAND);
-									setState(158);
-									topStatement();
-								}
-								break;
-								case 5: {
-									setState(159);
-									match(AMPERSAND);
-									setState(160);
-									topStatement();
-								}
-								break;
-							}
+						break;
+					case 4:
+						{
+						setState(159);
+						match(AMPERSAND);
+						setState(160);
+						topStatement();
 						}
+						break;
+					case 5:
+						{
+						setState(161);
+						match(AMPERSAND);
+						setState(162);
+						topStatement();
+						}
+						break;
 					}
-					setState(165);
-					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input, 9, _ctx);
+					}
+				}
+				setState(167);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 			}
 			}
 		}
@@ -669,7 +674,8 @@ public class ODataParser extends Parser {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -681,18 +687,20 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(166);
-				match(FILTER);
-				setState(167);
-				match(EQUAL);
-				setState(168);
-				filterExpression(0);
+			setState(168);
+			match(FILTER);
+			setState(169);
+			match(EQUAL);
+			setState(170);
+			filterExpression(0);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -705,40 +713,43 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(170);
-				match(EXPAND);
-				setState(171);
-				match(EQUAL);
+			setState(172);
+			match(EXPAND);
+			setState(173);
+			match(EQUAL);
+			setState(177);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
+			case 1:
+				{
+				setState(174);
+				joinEntities();
+				}
+				break;
+			case 2:
+				{
 				setState(175);
-				_errHandler.sync(this);
-				switch (getInterpreter().adaptivePredict(_input, 10, _ctx)) {
-					case 1: {
-						setState(172);
-						joinEntities();
-					}
-					break;
-					case 2: {
-						setState(173);
-						attributeName();
-					}
-					break;
-					case 3: {
-						setState(174);
-						boolCommonExpr();
-					}
-					break;
+				attributeName();
 				}
+				break;
+			case 3:
+				{
+				setState(176);
+				boolCommonExpr();
+				}
+				break;
+			}
+			setState(181);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==SLASH) {
+				{
 				setState(179);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				if (_la == SLASH) {
-					{
-						setState(177);
-						match(SLASH);
-						setState(178);
-						filter();
-					}
+				match(SLASH);
+				setState(180);
+				filter();
 				}
+			}
 
 			}
 		}
@@ -753,6 +764,10 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
+	public final FilterExpressionContext filterExpression() throws RecognitionException {
+		return filterExpression(0);
+	}
+
 	private FilterExpressionContext filterExpression(int _p) throws RecognitionException {
 		ParserRuleContext _parentctx = _ctx;
 		int _parentState = getState();
@@ -764,20 +779,21 @@ public class ODataParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(187);
-				_errHandler.sync(this);
-				switch (_input.LA(1)) {
-					case OPEN: {
-						_localctx = new ParenExpressionContext(_localctx);
-						_ctx = _localctx;
-						_prevctx = _localctx;
+			setState(189);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case OPEN:
+				{
+				_localctx = new ParenExpressionContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 
-						setState(182);
-						openPar();
-						setState(183);
-						filterExpression(0);
-						setState(184);
-						closePar();
+				setState(184);
+				openPar();
+				setState(185);
+				filterExpression(0);
+				setState(186);
+				closePar();
 				}
 				break;
 			case COUNT:
@@ -827,43 +843,43 @@ public class ODataParser extends Parser {
 			case TIME_OF_DAY_VALUE:
 			case DURATION_VALUE:
 			case DATE_VALUE:
-			case DATE_TIME_OFFSET_VALUE: {
+			case DATE_TIME_OFFSET_VALUE:
+				{
 				_localctx = new BoolExpressionContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(186);
+				setState(188);
 				boolCommonExpr();
-			}
-			break;
-					default:
-						throw new NoViableAltException(this);
 				}
-				_ctx.stop = _input.LT(-1);
-				setState(195);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input, 13, _ctx);
-				while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
-					if (_alt == 1) {
-						if (_parseListeners != null) triggerExitRuleEvent();
-						_prevctx = _localctx;
-						{
-							{
-								_localctx = new BinaryExpressionContext(new FilterExpressionContext(_parentctx, _parentState));
-								((BinaryExpressionContext) _localctx).left = _prevctx;
-								pushNewRecursionContext(_localctx, _startState, RULE_filterExpression);
-								setState(189);
-								if (!(precpred(_ctx, 2)))
-									throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-								setState(190);
-								((BinaryExpressionContext) _localctx).op = logicalOperator();
-								setState(191);
-								((BinaryExpressionContext) _localctx).right = filterExpression(3);
-							}
-						}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			_ctx.stop = _input.LT(-1);
+			setState(197);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					if ( _parseListeners!=null ) triggerExitRuleEvent();
+					_prevctx = _localctx;
+					{
+					{
+					_localctx = new BinaryExpressionContext(new FilterExpressionContext(_parentctx, _parentState));
+					((BinaryExpressionContext)_localctx).left = _prevctx;
+					pushNewRecursionContext(_localctx, _startState, RULE_filterExpression);
+					setState(191);
+					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+					setState(192);
+					((BinaryExpressionContext)_localctx).op = logicalOperator();
+					setState(193);
+					((BinaryExpressionContext)_localctx).right = filterExpression(3);
 					}
-					setState(197);
-					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input, 13, _ctx);
+					}
+				}
+				setState(199);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
 			}
 			}
 		}
@@ -882,38 +898,38 @@ public class ODataParser extends Parser {
 		BoolCommonExprContext _localctx = new BoolCommonExprContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_boolCommonExpr);
 		try {
-			setState(207);
+			setState(209);
 			_errHandler.sync(this);
-			switch (getInterpreter().adaptivePredict(_input, 14, _ctx)) {
-				case 1:
-					_localctx = new ComparatorExpressionContext(_localctx);
-					enterOuterAlt(_localctx, 1);
+			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+			case 1:
+				_localctx = new ComparatorExpressionContext(_localctx);
+				enterOuterAlt(_localctx, 1);
 				{
-					setState(198);
-					((ComparatorExpressionContext) _localctx).left = leftComparatorExpr();
-					setState(199);
-					((ComparatorExpressionContext) _localctx).op = comparisonOperator();
-					setState(200);
-					((ComparatorExpressionContext) _localctx).right = rightComparatorExpr();
+				setState(200);
+				((ComparatorExpressionContext)_localctx).left = leftComparatorExpr();
+				setState(201);
+				((ComparatorExpressionContext)_localctx).op = comparisonOperator();
+				setState(202);
+				((ComparatorExpressionContext)_localctx).right = rightComparatorExpr();
 				}
 				break;
 			case 2:
 				_localctx = new CountComparatorExpressionContext(_localctx);
 				enterOuterAlt(_localctx, 2);
-			{
-				setState(202);
-				((CountComparatorExpressionContext) _localctx).left = match(COUNT);
-				setState(203);
-				((CountComparatorExpressionContext) _localctx).op = comparisonOperator();
+				{
 				setState(204);
-				((CountComparatorExpressionContext) _localctx).right = primitiveLiteral();
+				((CountComparatorExpressionContext)_localctx).left = match(COUNT);
+				setState(205);
+				((CountComparatorExpressionContext)_localctx).op = comparisonOperator();
+				setState(206);
+				((CountComparatorExpressionContext)_localctx).right = primitiveLiteral();
 				}
 				break;
 			case 3:
 				_localctx = new CompareMethodExpressionContext(_localctx);
 				enterOuterAlt(_localctx, 3);
-			{
-				setState(206);
+				{
+				setState(208);
 				compareMethodExpr();
 				}
 				break;
@@ -934,48 +950,48 @@ public class ODataParser extends Parser {
 		LeftComparatorExprContext _localctx = new LeftComparatorExprContext(_ctx, getState());
 		enterRule(_localctx, 24, RULE_leftComparatorExpr);
 		try {
-			setState(215);
+			setState(217);
 			_errHandler.sync(this);
-			switch (getInterpreter().adaptivePredict(_input, 15, _ctx)) {
-				case 1:
-					enterOuterAlt(_localctx, 1);
+			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
+			case 1:
+				enterOuterAlt(_localctx, 1);
 				{
-					setState(209);
-					methodCallExpr();
+				setState(211);
+				methodCallExpr();
 				}
 				break;
-				case 2:
+			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-					setState(210);
-					calenderMethodExp();
+				setState(212);
+				calenderMethodExp();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
-			{
-				setState(211);
+				{
+				setState(213);
 				concatMethodExpr();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
-			{
-				setState(212);
+				{
+				setState(214);
 				joinEntities();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
-			{
-				setState(213);
+				{
+				setState(215);
 				attributeName();
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
-			{
-				setState(214);
+				{
+				setState(216);
 				commonExpr();
 				}
 				break;
@@ -996,48 +1012,48 @@ public class ODataParser extends Parser {
 		RightComparatorExprContext _localctx = new RightComparatorExprContext(_ctx, getState());
 		enterRule(_localctx, 26, RULE_rightComparatorExpr);
 		try {
-			setState(223);
+			setState(225);
 			_errHandler.sync(this);
-			switch (getInterpreter().adaptivePredict(_input, 16, _ctx)) {
-				case 1:
-					enterOuterAlt(_localctx, 1);
+			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
+			case 1:
+				enterOuterAlt(_localctx, 1);
 				{
-					setState(217);
-					methodCallExpr();
+				setState(219);
+				methodCallExpr();
 				}
 				break;
-				case 2:
+			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-					setState(218);
-					calenderMethodExp();
+				setState(220);
+				calenderMethodExp();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
-			{
-				setState(219);
+				{
+				setState(221);
 				concatMethodExpr();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
-			{
-				setState(220);
+				{
+				setState(222);
 				joinEntities();
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
-			{
-				setState(221);
+				{
+				setState(223);
 				attributeName();
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
-			{
-				setState(222);
+				{
+				setState(224);
 				commonExpr();
 				}
 				break;
@@ -1054,41 +1070,35 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
-	public final OrderbyContext orderby() throws RecognitionException {
-		OrderbyContext _localctx = new OrderbyContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_orderby);
+	public final OrderByContext orderBy() throws RecognitionException {
+		OrderByContext _localctx = new OrderByContext(_ctx, getState());
+		enterRule(_localctx, 28, RULE_orderBy);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(225);
-				match(ORDERBY);
-				setState(234);
+			setState(227);
+			match(ORDERBY);
+			setState(228);
+			match(EQUAL);
+			setState(229);
+			orderByItem();
+			setState(234);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==COMMA) {
+				{
+				{
+				setState(230);
+				match(COMMA);
+				setState(231);
+				orderByItem();
+				}
+				}
+				setState(236);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CONTAINS) | (1L << STARTSWITH) | (1L << ENDSWITH) | (1L << LENGTH) | (1L << INDEXOF) | (1L << SUBSTRING) | (1L << TOLOWER) | (1L << TOUPPER) | (1L << TRIM) | (1L << CONCAT) | (1L << DAY) | (1L << MONTH) | (1L << YEAR) | (1L << HOUR) | (1L << MINUTE) | (1L << SECOND) | (1L << NOW) | (1L << TIME) | (1L << MAX_DATE_TIME) | (1L << MIN_DATE_TIME) | (1L << TOTAL_OFFSET_MINUTES) | (1L << FRACTIONAL_SECONDS) | (1L << TOTAL_SECONDS) | (1L << GEO_INTERSECTS) | (1L << GEO_DISTANCE) | (1L << GEO_LENGTH) | (1L << ROUND) | (1L << FLOOR) | (1L << CEILING) | (1L << ADD) | (1L << SUB) | (1L << MUL) | (1L << DIV) | (1L << MOD))) != 0) || ((((_la - 80)) & ~0x3f) == 0 && ((1L << (_la - 80)) & ((1L << (NULL_TOKEN - 80)) | (1L << (NULL_SPEC_LITERAL - 80)) | (1L << (DATE - 80)) | (1L << (BOOLEAN_VALUE - 80)) | (1L << (INTEGER - 80)) | (1L << (FLOAT - 80)) | (1L << (QUOTED_STRING - 80)) | (1L << (DECIMAL_LITERAL - 80)) | (1L << (TIME_OF_DAY_VALUE - 80)) | (1L << (DURATION_VALUE - 80)) | (1L << (DATE_VALUE - 80)) | (1L << (DATE_TIME_OFFSET_VALUE - 80)))) != 0)) {
-					{
-						setState(226);
-						orderbyItem();
-						setState(231);
-						_errHandler.sync(this);
-						_la = _input.LA(1);
-						while (_la == COMMA) {
-							{
-								{
-									setState(227);
-									match(COMMA);
-									setState(228);
-									orderbyItem();
-								}
-							}
-							setState(233);
-							_errHandler.sync(this);
-							_la = _input.LA(1);
-				}
-				}
 			}
-
 			}
 		}
 		catch (RecognitionException re) {
@@ -1102,29 +1112,22 @@ public class ODataParser extends Parser {
 		return _localctx;
 	}
 
-	public final OrderbyItemContext orderbyItem() throws RecognitionException {
-		OrderbyItemContext _localctx = new OrderbyItemContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_orderbyItem);
+	public final OrderByItemContext orderByItem() throws RecognitionException {
+		OrderByItemContext _localctx = new OrderByItemContext(_ctx, getState());
+		enterRule(_localctx, 30, RULE_orderByItem);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(236);
-				commonExpr();
+			setState(237);
+			attributeName();
+			setState(239);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==DESC || _la==ASC) {
+				{
 				setState(238);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				if (_la == DESC || _la == ASC) {
-					{
-						setState(237);
-						_la = _input.LA(1);
-						if (!(_la == DESC || _la == ASC)) {
-							_errHandler.recoverInline(this);
-						} else {
-							if (_input.LA(1) == Token.EOF) matchedEOF = true;
-							_errHandler.reportMatch(this);
-							consume();
-						}
+				sortOrder();
 				}
 			}
 
@@ -1147,10 +1150,10 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(240);
-				match(TOP);
-				setState(241);
-				integerValue();
+			setState(241);
+			match(TOP);
+			setState(242);
+			integerValue();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1170,17 +1173,18 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(243);
-				match(SKIPRULE);
-				setState(244);
-				integerValue();
+			setState(244);
+			match(SKIPRULE);
+			setState(245);
+			integerValue();
 			}
 		}
 		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -1193,35 +1197,38 @@ public class ODataParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(249);
-				_errHandler.sync(this);
-				_alt = 1;
-				do {
-					switch (_alt) {
-						case 1: {
-							{
-								setState(246);
-								entityName();
-								setState(247);
-								match(SLASH);
-							}
-						}
-						break;
-						default:
-							throw new NoViableAltException(this);
+			setState(250);
+			_errHandler.sync(this);
+			_alt = 1;
+			do {
+				switch (_alt) {
+				case 1:
+					{
+					{
+					setState(247);
+					entityName();
+					setState(248);
+					match(SLASH);
 					}
-					setState(251);
-					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input, 20, _ctx);
-				} while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER);
-				setState(253);
-				attributeName();
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
+				}
+				setState(252);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,19,_ctx);
+			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+			setState(254);
+			attributeName();
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -1231,23 +1238,23 @@ public class ODataParser extends Parser {
 		CommonExprContext _localctx = new CommonExprContext(_ctx, getState());
 		enterRule(_localctx, 38, RULE_commonExpr);
 		try {
-			setState(258);
+			setState(259);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-				case NULL_TOKEN:
-				case NULL_SPEC_LITERAL:
-				case BOOLEAN_VALUE:
-				case INTEGER:
-				case FLOAT:
-				case QUOTED_STRING:
-				case DECIMAL_LITERAL:
-				case TIME_OF_DAY_VALUE:
+			case NULL_TOKEN:
+			case NULL_SPEC_LITERAL:
+			case BOOLEAN_VALUE:
+			case INTEGER:
+			case FLOAT:
+			case QUOTED_STRING:
+			case DECIMAL_LITERAL:
+			case TIME_OF_DAY_VALUE:
 			case DURATION_VALUE:
 			case DATE_VALUE:
 			case DATE_TIME_OFFSET_VALUE:
 				enterOuterAlt(_localctx, 1);
-			{
-				setState(255);
+				{
+				setState(256);
 				primitiveLiteral();
 				}
 				break;
@@ -1282,8 +1289,8 @@ public class ODataParser extends Parser {
 			case CEILING:
 			case DATE:
 				enterOuterAlt(_localctx, 2);
-			{
-				setState(256);
+				{
+				setState(257);
 				methodExpr();
 				}
 				break;
@@ -1293,8 +1300,8 @@ public class ODataParser extends Parser {
 			case DIV:
 			case MOD:
 				enterOuterAlt(_localctx, 3);
-			{
-				setState(257);
+				{
+				setState(258);
 				mathExpr();
 				}
 				break;
@@ -1320,52 +1327,50 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(260);
-				_la = _input.LA(1);
-				if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADD) | (1L << SUB) | (1L << MUL) | (1L << DIV) | (1L << MOD))) != 0))) {
-					_errHandler.recoverInline(this);
-				} else {
-					if (_input.LA(1) == Token.EOF) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
-				setState(261);
-				number();
+			setState(261);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << ADD) | (1L << SUB) | (1L << MUL) | (1L << DIV) | (1L << MOD))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(262);
+			number();
 			}
 		}
 		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
-	}
-
-	public final FilterExpressionContext filterExpression() throws RecognitionException {
-		return filterExpression(0);
 	}
 
 	public final MethodExprContext methodExpr() throws RecognitionException {
 		MethodExprContext _localctx = new MethodExprContext(_ctx, getState());
 		enterRule(_localctx, 42, RULE_methodExpr);
 		try {
-			setState(269);
+			setState(270);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-				case LENGTH:
-				case TOLOWER:
-				case TOUPPER:
-				case TRIM:
-				case GEO_LENGTH:
-				case ROUND:
-				case FLOOR:
-				case CEILING:
+			case LENGTH:
+			case TOLOWER:
+			case TOUPPER:
+			case TRIM:
+			case GEO_LENGTH:
+			case ROUND:
+			case FLOOR:
+			case CEILING:
 				enterOuterAlt(_localctx, 1);
 				{
-					setState(263);
-					methodCallExpr();
+				setState(264);
+				methodCallExpr();
 				}
 				break;
 			case DAY:
@@ -1380,8 +1385,8 @@ public class ODataParser extends Parser {
 			case TOTAL_SECONDS:
 			case DATE:
 				enterOuterAlt(_localctx, 2);
-			{
-				setState(264);
+				{
+				setState(265);
 				calenderMethodExp();
 				}
 				break;
@@ -1389,22 +1394,22 @@ public class ODataParser extends Parser {
 			case MAX_DATE_TIME:
 			case MIN_DATE_TIME:
 				enterOuterAlt(_localctx, 3);
-			{
-				setState(265);
+				{
+				setState(266);
 				singleMethodCallExpr();
 				}
 				break;
 			case CONCAT:
 				enterOuterAlt(_localctx, 4);
-			{
-				setState(266);
+				{
+				setState(267);
 				concatMethodExpr();
 				}
 				break;
 			case SUBSTRING:
 				enterOuterAlt(_localctx, 5);
-			{
-				setState(267);
+				{
+				setState(268);
 				substringMethodCallExpr();
 				}
 				break;
@@ -1415,8 +1420,8 @@ public class ODataParser extends Parser {
 			case GEO_INTERSECTS:
 			case GEO_DISTANCE:
 				enterOuterAlt(_localctx, 6);
-			{
-				setState(268);
+				{
+				setState(269);
 				compareMethodExpr();
 				}
 				break;
@@ -1441,35 +1446,38 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(271);
-				compareMethodName();
-				setState(272);
-				match(OPEN);
-				setState(276);
-				_errHandler.sync(this);
-				switch (getInterpreter().adaptivePredict(_input, 23, _ctx)) {
-					case 1: {
-						setState(273);
-						joinEntities();
-					}
-					break;
-					case 2: {
-						setState(274);
-						attributeName();
-					}
-					break;
-					case 3: {
-						setState(275);
-						commonExpr();
-					}
-					break;
+			setState(272);
+			compareMethodName();
+			setState(273);
+			match(OPEN);
+			setState(277);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,22,_ctx) ) {
+			case 1:
+				{
+				setState(274);
+				joinEntities();
 				}
-				setState(278);
-				match(COMMA);
-				setState(279);
+				break;
+			case 2:
+				{
+				setState(275);
+				attributeName();
+				}
+				break;
+			case 3:
+				{
+				setState(276);
 				commonExpr();
-				setState(280);
-				match(CLOSE);
+				}
+				break;
+			}
+			setState(279);
+			match(COMMA);
+			setState(280);
+			commonExpr();
+			setState(281);
+			match(CLOSE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1489,31 +1497,34 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(282);
-				methodName();
-				setState(283);
-				match(OPEN);
-				setState(287);
-				_errHandler.sync(this);
-				switch (getInterpreter().adaptivePredict(_input, 24, _ctx)) {
-					case 1: {
-						setState(284);
-						methodCallExpr();
-					}
-					break;
-					case 2: {
-						setState(285);
-						joinEntities();
-					}
-					break;
-					case 3: {
-						setState(286);
-						attributeName();
-					}
-					break;
+			setState(283);
+			methodName();
+			setState(284);
+			match(OPEN);
+			setState(288);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,23,_ctx) ) {
+			case 1:
+				{
+				setState(285);
+				methodCallExpr();
 				}
-				setState(289);
-				match(CLOSE);
+				break;
+			case 2:
+				{
+				setState(286);
+				joinEntities();
+				}
+				break;
+			case 3:
+				{
+				setState(287);
+				attributeName();
+				}
+				break;
+			}
+			setState(290);
+			match(CLOSE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1533,31 +1544,34 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(291);
-				calenderMethodName();
-				setState(292);
-				match(OPEN);
-				setState(296);
-				_errHandler.sync(this);
-				switch (getInterpreter().adaptivePredict(_input, 25, _ctx)) {
-					case 1: {
-						setState(293);
-						joinEntities();
-					}
-					break;
-					case 2: {
-						setState(294);
-						attributeName();
-					}
-					break;
-					case 3: {
-						setState(295);
-						primitiveLiteral();
-					}
-					break;
+			setState(292);
+			calenderMethodName();
+			setState(293);
+			match(OPEN);
+			setState(297);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,24,_ctx) ) {
+			case 1:
+				{
+				setState(294);
+				joinEntities();
 				}
-				setState(298);
-				match(CLOSE);
+				break;
+			case 2:
+				{
+				setState(295);
+				attributeName();
+				}
+				break;
+			case 3:
+				{
+				setState(296);
+				primitiveLiteral();
+				}
+				break;
+			}
+			setState(299);
+			match(CLOSE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1577,20 +1591,21 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(300);
-				match(CONCAT);
-				setState(301);
-				match(OPEN);
-				setState(305);
-				_errHandler.sync(this);
-				switch (_input.LA(1)) {
-					case CONCAT: {
-						setState(302);
-						concatMethodExpr();
-					}
-					break;
-					case NULL_TOKEN:
-					case NULL_SPEC_LITERAL:
+			setState(301);
+			match(CONCAT);
+			setState(302);
+			match(OPEN);
+			setState(306);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case CONCAT:
+				{
+				setState(303);
+				concatMethodExpr();
+				}
+				break;
+			case NULL_TOKEN:
+			case NULL_SPEC_LITERAL:
 			case BOOLEAN_VALUE:
 			case INTEGER:
 			case FLOAT:
@@ -1599,49 +1614,53 @@ public class ODataParser extends Parser {
 			case TIME_OF_DAY_VALUE:
 			case DURATION_VALUE:
 			case DATE_VALUE:
-			case DATE_TIME_OFFSET_VALUE: {
-				setState(303);
+			case DATE_TIME_OFFSET_VALUE:
+				{
+				setState(304);
 				primitiveLiteral();
-			}
-			break;
-					case ID: {
-						setState(304);
-						attributeName();
-					}
-					break;
-					default:
-						throw new NoViableAltException(this);
 				}
-				setState(307);
-				match(COMMA);
-				setState(310);
-				_errHandler.sync(this);
-				switch (_input.LA(1)) {
-					case NULL_TOKEN:
-					case NULL_SPEC_LITERAL:
-					case BOOLEAN_VALUE:
-					case INTEGER:
-					case FLOAT:
-					case QUOTED_STRING:
-					case DECIMAL_LITERAL:
-					case TIME_OF_DAY_VALUE:
+				break;
+			case ID:
+				{
+				setState(305);
+				attributeName();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			setState(308);
+			match(COMMA);
+			setState(311);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case NULL_TOKEN:
+			case NULL_SPEC_LITERAL:
+			case BOOLEAN_VALUE:
+			case INTEGER:
+			case FLOAT:
+			case QUOTED_STRING:
+			case DECIMAL_LITERAL:
+			case TIME_OF_DAY_VALUE:
 			case DURATION_VALUE:
 			case DATE_VALUE:
-			case DATE_TIME_OFFSET_VALUE: {
-				setState(308);
+			case DATE_TIME_OFFSET_VALUE:
+				{
+				setState(309);
 				primitiveLiteral();
-			}
-			break;
-					case ID: {
-						setState(309);
-						attributeName();
-					}
-					break;
-					default:
-						throw new NoViableAltException(this);
 				}
-				setState(312);
-				match(CLOSE);
+				break;
+			case ID:
+				{
+				setState(310);
+				attributeName();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+			setState(313);
+			match(CLOSE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1662,19 +1681,20 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(314);
-				_la = _input.LA(1);
-				if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << NOW) | (1L << MAX_DATE_TIME) | (1L << MIN_DATE_TIME))) != 0))) {
-					_errHandler.recoverInline(this);
-				} else {
-					if (_input.LA(1) == Token.EOF) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
-				setState(315);
-				match(OPEN);
-				setState(316);
-				match(CLOSE);
+			setState(315);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << NOW) | (1L << MAX_DATE_TIME) | (1L << MIN_DATE_TIME))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(316);
+			match(OPEN);
+			setState(317);
+			match(CLOSE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1694,35 +1714,38 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(318);
-				match(SUBSTRING);
-				setState(319);
-				match(OPEN);
-				setState(323);
-				_errHandler.sync(this);
-				switch (getInterpreter().adaptivePredict(_input, 28, _ctx)) {
-					case 1: {
-						setState(320);
-						joinEntities();
-					}
-					break;
-					case 2: {
-						setState(321);
-						attributeName();
-					}
-					break;
-					case 3: {
-						setState(322);
-						commonExpr();
-					}
-					break;
+			setState(319);
+			match(SUBSTRING);
+			setState(320);
+			match(OPEN);
+			setState(324);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,27,_ctx) ) {
+			case 1:
+				{
+				setState(321);
+				joinEntities();
 				}
-				setState(325);
-				match(COMMA);
-				setState(326);
+				break;
+			case 2:
+				{
+				setState(322);
+				attributeName();
+				}
+				break;
+			case 3:
+				{
+				setState(323);
 				commonExpr();
-				setState(327);
-				match(CLOSE);
+				}
+				break;
+			}
+			setState(326);
+			match(COMMA);
+			setState(327);
+			commonExpr();
+			setState(328);
+			match(CLOSE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1743,15 +1766,16 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(329);
-				_la = _input.LA(1);
-				if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQ) | (1L << GT) | (1L << LT) | (1L << GE) | (1L << LE) | (1L << NE))) != 0))) {
-					_errHandler.recoverInline(this);
-				} else {
-					if (_input.LA(1) == Token.EOF) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
+			setState(330);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQ) | (1L << GT) | (1L << LT) | (1L << GE) | (1L << LE) | (1L << NE))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -1772,15 +1796,16 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(331);
-				_la = _input.LA(1);
-				if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CONTAINS) | (1L << STARTSWITH) | (1L << ENDSWITH) | (1L << INDEXOF) | (1L << GEO_INTERSECTS) | (1L << GEO_DISTANCE))) != 0))) {
-					_errHandler.recoverInline(this);
-				} else {
-					if (_input.LA(1) == Token.EOF) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
+			setState(332);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << CONTAINS) | (1L << STARTSWITH) | (1L << ENDSWITH) | (1L << INDEXOF) | (1L << GEO_INTERSECTS) | (1L << GEO_DISTANCE))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -1801,15 +1826,16 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(333);
-				_la = _input.LA(1);
-				if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LENGTH) | (1L << TOLOWER) | (1L << TOUPPER) | (1L << TRIM) | (1L << GEO_LENGTH) | (1L << ROUND) | (1L << FLOOR) | (1L << CEILING))) != 0))) {
-					_errHandler.recoverInline(this);
-				} else {
-					if (_input.LA(1) == Token.EOF) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
+			setState(334);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LENGTH) | (1L << TOLOWER) | (1L << TOUPPER) | (1L << TRIM) | (1L << GEO_LENGTH) | (1L << ROUND) | (1L << FLOOR) | (1L << CEILING))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -1830,15 +1856,16 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(335);
-				_la = _input.LA(1);
-				if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << DAY) | (1L << MONTH) | (1L << YEAR) | (1L << HOUR) | (1L << MINUTE) | (1L << SECOND) | (1L << TIME) | (1L << TOTAL_OFFSET_MINUTES) | (1L << FRACTIONAL_SECONDS) | (1L << TOTAL_SECONDS))) != 0) || _la == DATE)) {
-					_errHandler.recoverInline(this);
-				} else {
-					if (_input.LA(1) == Token.EOF) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
+			setState(336);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << DAY) | (1L << MONTH) | (1L << YEAR) | (1L << HOUR) | (1L << MINUTE) | (1L << SECOND) | (1L << TIME) | (1L << TOTAL_OFFSET_MINUTES) | (1L << FRACTIONAL_SECONDS) | (1L << TOTAL_SECONDS))) != 0) || _la==DATE) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -1859,15 +1886,16 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(337);
-				_la = _input.LA(1);
-				if (!(_la == INTEGER || _la == FLOAT)) {
-					_errHandler.recoverInline(this);
-				} else {
-					if (_input.LA(1) == Token.EOF) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
+			setState(338);
+			_la = _input.LA(1);
+			if ( !(_la==INTEGER || _la==FLOAT) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -1885,83 +1913,83 @@ public class ODataParser extends Parser {
 		PrimitiveLiteralContext _localctx = new PrimitiveLiteralContext(_ctx, getState());
 		enterRule(_localctx, 66, RULE_primitiveLiteral);
 		try {
-			setState(350);
+			setState(351);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-				case QUOTED_STRING:
-					enterOuterAlt(_localctx, 1);
+			case QUOTED_STRING:
+				enterOuterAlt(_localctx, 1);
 				{
-					setState(339);
-					quotedString();
+				setState(340);
+				quotedString();
 				}
 				break;
-				case NULL_SPEC_LITERAL:
+			case NULL_SPEC_LITERAL:
 				enterOuterAlt(_localctx, 2);
 				{
-					setState(340);
-					nullSpecLiteral();
+				setState(341);
+				nullSpecLiteral();
 				}
 				break;
 			case NULL_TOKEN:
 				enterOuterAlt(_localctx, 3);
-			{
-				setState(341);
+				{
+				setState(342);
 				nullToken();
 				}
 				break;
 			case BOOLEAN_VALUE:
 				enterOuterAlt(_localctx, 4);
-			{
-				setState(342);
+				{
+				setState(343);
 				booleanValue();
 				}
 				break;
 			case DURATION_VALUE:
 				enterOuterAlt(_localctx, 5);
-			{
-				setState(343);
+				{
+				setState(344);
 				durationValue();
 				}
 				break;
 			case DATE_VALUE:
 				enterOuterAlt(_localctx, 6);
-			{
-				setState(344);
+				{
+				setState(345);
 				dateValue();
 				}
 				break;
 			case DATE_TIME_OFFSET_VALUE:
 				enterOuterAlt(_localctx, 7);
-			{
-				setState(345);
+				{
+				setState(346);
 				dateTimeOffsetValue();
 				}
 				break;
 			case TIME_OF_DAY_VALUE:
 				enterOuterAlt(_localctx, 8);
-			{
-				setState(346);
+				{
+				setState(347);
 				timeOfDayValue();
 				}
 				break;
 			case DECIMAL_LITERAL:
 				enterOuterAlt(_localctx, 9);
-			{
-				setState(347);
+				{
+				setState(348);
 				decimalLiteral();
 				}
 				break;
 			case FLOAT:
 				enterOuterAlt(_localctx, 10);
-			{
-				setState(348);
+				{
+				setState(349);
 				floatValue();
 				}
 				break;
 			case INTEGER:
 				enterOuterAlt(_localctx, 11);
-			{
-				setState(349);
+				{
+				setState(350);
 				integerValue();
 				}
 				break;
@@ -1973,7 +2001,8 @@ public class ODataParser extends Parser {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -1986,21 +2015,21 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(352);
-				match(SLASH);
-				setState(353);
-				match(COUNT);
+			setState(353);
+			match(SLASH);
+			setState(354);
+			match(COUNT);
+			setState(357);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==EQUAL) {
+				{
+				setState(355);
+				match(EQUAL);
 				setState(356);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				if (_la == EQUAL) {
-					{
-						setState(354);
-						match(EQUAL);
-						setState(355);
-						booleanValue();
-					}
+				booleanValue();
 				}
+			}
 
 			}
 		}
@@ -2008,7 +2037,8 @@ public class ODataParser extends Parser {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2020,14 +2050,16 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(358);
-				match(OPEN);
+			setState(359);
+			match(OPEN);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2039,14 +2071,16 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(360);
-				match(CLOSE);
+			setState(361);
+			match(CLOSE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2059,22 +2093,54 @@ public class ODataParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(362);
-				_la = _input.LA(1);
-				if (!(_la == OR || _la == AND)) {
-					_errHandler.recoverInline(this);
-				} else {
-					if (_input.LA(1) == Token.EOF) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
+			setState(363);
+			_la = _input.LA(1);
+			if ( !(_la==OR || _la==AND) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public final SortOrderContext sortOrder() throws RecognitionException {
+		SortOrderContext _localctx = new SortOrderContext(_ctx, getState());
+		enterRule(_localctx, 76, RULE_sortOrder);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(365);
+			_la = _input.LA(1);
+			if ( !(_la==DESC || _la==ASC) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2082,18 +2148,20 @@ public class ODataParser extends Parser {
 
 	public final EntityNameContext entityName() throws RecognitionException {
 		EntityNameContext _localctx = new EntityNameContext(_ctx, getState());
-		enterRule(_localctx, 76, RULE_entityName);
+		enterRule(_localctx, 78, RULE_entityName);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(364);
-				match(ID);
+			setState(367);
+			match(ID);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2101,18 +2169,20 @@ public class ODataParser extends Parser {
 
 	public final AttributeNameContext attributeName() throws RecognitionException {
 		AttributeNameContext _localctx = new AttributeNameContext(_ctx, getState());
-		enterRule(_localctx, 78, RULE_attributeName);
+		enterRule(_localctx, 80, RULE_attributeName);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(366);
-				match(ID);
+			setState(369);
+			match(ID);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2120,18 +2190,20 @@ public class ODataParser extends Parser {
 
 	public final UuidIdValueContext uuidIdValue() throws RecognitionException {
 		UuidIdValueContext _localctx = new UuidIdValueContext(_ctx, getState());
-		enterRule(_localctx, 80, RULE_uuidIdValue);
+		enterRule(_localctx, 82, RULE_uuidIdValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(368);
-				match(UUID);
+			setState(371);
+			match(UUID);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2139,18 +2211,20 @@ public class ODataParser extends Parser {
 
 	public final QuotedStringContext quotedString() throws RecognitionException {
 		QuotedStringContext _localctx = new QuotedStringContext(_ctx, getState());
-		enterRule(_localctx, 82, RULE_quotedString);
+		enterRule(_localctx, 84, RULE_quotedString);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(370);
-				match(QUOTED_STRING);
+			setState(373);
+			match(QUOTED_STRING);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2158,18 +2232,20 @@ public class ODataParser extends Parser {
 
 	public final NullSpecLiteralContext nullSpecLiteral() throws RecognitionException {
 		NullSpecLiteralContext _localctx = new NullSpecLiteralContext(_ctx, getState());
-		enterRule(_localctx, 84, RULE_nullSpecLiteral);
+		enterRule(_localctx, 86, RULE_nullSpecLiteral);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(372);
-				match(NULL_SPEC_LITERAL);
+			setState(375);
+			match(NULL_SPEC_LITERAL);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2177,18 +2253,20 @@ public class ODataParser extends Parser {
 
 	public final NullTokenContext nullToken() throws RecognitionException {
 		NullTokenContext _localctx = new NullTokenContext(_ctx, getState());
-		enterRule(_localctx, 86, RULE_nullToken);
+		enterRule(_localctx, 88, RULE_nullToken);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(374);
-				match(NULL_TOKEN);
+			setState(377);
+			match(NULL_TOKEN);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2196,18 +2274,20 @@ public class ODataParser extends Parser {
 
 	public final BooleanValueContext booleanValue() throws RecognitionException {
 		BooleanValueContext _localctx = new BooleanValueContext(_ctx, getState());
-		enterRule(_localctx, 88, RULE_booleanValue);
+		enterRule(_localctx, 90, RULE_booleanValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(376);
-				match(BOOLEAN_VALUE);
+			setState(379);
+			match(BOOLEAN_VALUE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2215,18 +2295,20 @@ public class ODataParser extends Parser {
 
 	public final DurationValueContext durationValue() throws RecognitionException {
 		DurationValueContext _localctx = new DurationValueContext(_ctx, getState());
-		enterRule(_localctx, 90, RULE_durationValue);
+		enterRule(_localctx, 92, RULE_durationValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(378);
-				match(DURATION_VALUE);
+			setState(381);
+			match(DURATION_VALUE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2234,18 +2316,20 @@ public class ODataParser extends Parser {
 
 	public final DateValueContext dateValue() throws RecognitionException {
 		DateValueContext _localctx = new DateValueContext(_ctx, getState());
-		enterRule(_localctx, 92, RULE_dateValue);
+		enterRule(_localctx, 94, RULE_dateValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(380);
-				match(DATE_VALUE);
+			setState(383);
+			match(DATE_VALUE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2253,18 +2337,20 @@ public class ODataParser extends Parser {
 
 	public final DateTimeOffsetValueContext dateTimeOffsetValue() throws RecognitionException {
 		DateTimeOffsetValueContext _localctx = new DateTimeOffsetValueContext(_ctx, getState());
-		enterRule(_localctx, 94, RULE_dateTimeOffsetValue);
+		enterRule(_localctx, 96, RULE_dateTimeOffsetValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(382);
-				match(DATE_TIME_OFFSET_VALUE);
+			setState(385);
+			match(DATE_TIME_OFFSET_VALUE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2272,18 +2358,20 @@ public class ODataParser extends Parser {
 
 	public final TimeOfDayValueContext timeOfDayValue() throws RecognitionException {
 		TimeOfDayValueContext _localctx = new TimeOfDayValueContext(_ctx, getState());
-		enterRule(_localctx, 96, RULE_timeOfDayValue);
+		enterRule(_localctx, 98, RULE_timeOfDayValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(384);
-				match(TIME_OF_DAY_VALUE);
+			setState(387);
+			match(TIME_OF_DAY_VALUE);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2291,18 +2379,20 @@ public class ODataParser extends Parser {
 
 	public final DecimalLiteralContext decimalLiteral() throws RecognitionException {
 		DecimalLiteralContext _localctx = new DecimalLiteralContext(_ctx, getState());
-		enterRule(_localctx, 98, RULE_decimalLiteral);
+		enterRule(_localctx, 100, RULE_decimalLiteral);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(386);
-				match(DECIMAL_LITERAL);
+			setState(389);
+			match(DECIMAL_LITERAL);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2310,18 +2400,20 @@ public class ODataParser extends Parser {
 
 	public final FloatValueContext floatValue() throws RecognitionException {
 		FloatValueContext _localctx = new FloatValueContext(_ctx, getState());
-		enterRule(_localctx, 100, RULE_floatValue);
+		enterRule(_localctx, 102, RULE_floatValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(388);
-				match(FLOAT);
+			setState(391);
+			match(FLOAT);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2329,18 +2421,20 @@ public class ODataParser extends Parser {
 
 	public final IntegerValueContext integerValue() throws RecognitionException {
 		IntegerValueContext _localctx = new IntegerValueContext(_ctx, getState());
-		enterRule(_localctx, 102, RULE_integerValue);
+		enterRule(_localctx, 104, RULE_integerValue);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(390);
-				match(INTEGER);
+			setState(393);
+			match(INTEGER);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
@@ -2348,16 +2442,16 @@ public class ODataParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-			case 10:
-				return filterExpression_sempred((FilterExpressionContext) _localctx, predIndex);
+		case 10:
+			return filterExpression_sempred((FilterExpressionContext)_localctx, predIndex);
 		}
 		return true;
 	}
 
 	private boolean filterExpression_sempred(FilterExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
-			case 0:
-				return precpred(_ctx, 2);
+		case 0:
+			return precpred(_ctx, 2);
 		}
 		return true;
 	}
@@ -2368,38 +2462,27 @@ public class ODataParser extends Parser {
 		}
 
 		public ResourcePathContext resourcePath() {
-			return getRuleContext(ResourcePathContext.class, 0);
+			return getRuleContext(ResourcePathContext.class,0);
 		}
 
-		public TerminalNode QUESTION() {
-			return getToken(ODataParser.QUESTION, 0);
-		}
+		public TerminalNode QUESTION() { return getToken(ODataParser.QUESTION, 0); }
 
 		public QueryOptionsContext queryOptions() {
-			return getRuleContext(QueryOptionsContext.class, 0);
+			return getRuleContext(QueryOptionsContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_odataRelativeUri;
-		}
-
+		@Override public int getRuleIndex() { return RULE_odataRelativeUri; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterOdataRelativeUri(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterOdataRelativeUri(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitOdataRelativeUri(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitOdataRelativeUri(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitOdataRelativeUri(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitOdataRelativeUri(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2410,42 +2493,33 @@ public class ODataParser extends Parser {
 		}
 
 		public EmbeddedEntitySetContext embeddedEntitySet() {
-			return getRuleContext(EmbeddedEntitySetContext.class, 0);
+			return getRuleContext(EmbeddedEntitySetContext.class,0);
 		}
 
 		public EntityUUIDContext entityUUID() {
-			return getRuleContext(EntityUUIDContext.class, 0);
+			return getRuleContext(EntityUUIDContext.class,0);
 		}
 
 		public EntityContext entity() {
-			return getRuleContext(EntityContext.class, 0);
+			return getRuleContext(EntityContext.class,0);
 		}
 
 		public CountStatementContext countStatement() {
-			return getRuleContext(CountStatementContext.class, 0);
+			return getRuleContext(CountStatementContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_resourcePath;
-		}
-
+		@Override public int getRuleIndex() { return RULE_resourcePath; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterResourcePath(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterResourcePath(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitResourcePath(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitResourcePath(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitResourcePath(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitResourcePath(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2456,34 +2530,25 @@ public class ODataParser extends Parser {
 		}
 
 		public EntityNameContext entityName() {
-			return getRuleContext(EntityNameContext.class, 0);
+			return getRuleContext(EntityNameContext.class,0);
 		}
 
 		public EntityCastContext entityCast() {
-			return getRuleContext(EntityCastContext.class, 0);
+			return getRuleContext(EntityCastContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_entity;
-		}
-
+		@Override public int getRuleIndex() { return RULE_entity; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterEntity(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterEntity(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitEntity(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitEntity(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitEntity(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitEntity(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2498,34 +2563,23 @@ public class ODataParser extends Parser {
 		}
 
 		public EntityNameContext entityName(int i) {
-			return getRuleContext(EntityNameContext.class, i);
+			return getRuleContext(EntityNameContext.class,i);
 		}
 
-		public TerminalNode SLASH() {
-			return getToken(ODataParser.SLASH, 0);
-		}
+		public TerminalNode SLASH() { return getToken(ODataParser.SLASH, 0); }
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_entityCast;
-		}
-
+		@Override public int getRuleIndex() { return RULE_entityCast; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterEntityCast(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterEntityCast(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitEntityCast(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitEntityCast(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitEntityCast(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitEntityCast(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2536,38 +2590,27 @@ public class ODataParser extends Parser {
 		}
 
 		public EntityNameContext entityName() {
-			return getRuleContext(EntityNameContext.class, 0);
+			return getRuleContext(EntityNameContext.class,0);
 		}
 
-		public TerminalNode SLASH() {
-			return getToken(ODataParser.SLASH, 0);
-		}
+		public TerminalNode SLASH() { return getToken(ODataParser.SLASH, 0); }
 
 		public UuidIdValueContext uuidIdValue() {
-			return getRuleContext(UuidIdValueContext.class, 0);
+			return getRuleContext(UuidIdValueContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_entityUUID;
-		}
-
+		@Override public int getRuleIndex() { return RULE_entityUUID; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterEntityUUID(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterEntityUUID(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitEntityUUID(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitEntityUUID(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitEntityUUID(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitEntityUUID(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2582,12 +2625,10 @@ public class ODataParser extends Parser {
 		}
 
 		public EntityUUIDContext entityUUID(int i) {
-			return getRuleContext(EntityUUIDContext.class, i);
+			return getRuleContext(EntityUUIDContext.class,i);
 		}
 
-		public List<TerminalNode> SLASH() {
-			return getTokens(ODataParser.SLASH);
-		}
+		public List<TerminalNode> SLASH() { return getTokens(ODataParser.SLASH); }
 
 		public TerminalNode SLASH(int i) {
 			return getToken(ODataParser.SLASH, i);
@@ -2598,7 +2639,7 @@ public class ODataParser extends Parser {
 		}
 
 		public EntityCastContext entityCast(int i) {
-			return getRuleContext(EntityCastContext.class, i);
+			return getRuleContext(EntityCastContext.class,i);
 		}
 
 		public List<EntityContext> entity() {
@@ -2606,30 +2647,21 @@ public class ODataParser extends Parser {
 		}
 
 		public EntityContext entity(int i) {
-			return getRuleContext(EntityContext.class, i);
+			return getRuleContext(EntityContext.class,i);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_embeddedEntitySet;
-		}
-
+		@Override public int getRuleIndex() { return RULE_embeddedEntitySet; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterEmbeddedEntitySet(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterEmbeddedEntitySet(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitEmbeddedEntitySet(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitEmbeddedEntitySet(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitEmbeddedEntitySet(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitEmbeddedEntitySet(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2644,38 +2676,27 @@ public class ODataParser extends Parser {
 		}
 
 		public QueryOptionContext queryOption(int i) {
-			return getRuleContext(QueryOptionContext.class, i);
+			return getRuleContext(QueryOptionContext.class,i);
 		}
 
-		public List<TerminalNode> AMPERSAND() {
-			return getTokens(ODataParser.AMPERSAND);
-		}
+		public List<TerminalNode> AMPERSAND() { return getTokens(ODataParser.AMPERSAND); }
 
 		public TerminalNode AMPERSAND(int i) {
 			return getToken(ODataParser.AMPERSAND, i);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_queryOptions;
-		}
-
+		@Override public int getRuleIndex() { return RULE_queryOptions; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterQueryOptions(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterQueryOptions(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitQueryOptions(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitQueryOptions(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitQueryOptions(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitQueryOptions(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2686,12 +2707,10 @@ public class ODataParser extends Parser {
 		}
 
 		public FilterContext filter() {
-			return getRuleContext(FilterContext.class, 0);
+			return getRuleContext(FilterContext.class,0);
 		}
 
-		public List<TerminalNode> AMPERSAND() {
-			return getTokens(ODataParser.AMPERSAND);
-		}
+		public List<TerminalNode> AMPERSAND() { return getTokens(ODataParser.AMPERSAND); }
 
 		public TerminalNode AMPERSAND(int i) {
 			return getToken(ODataParser.AMPERSAND, i);
@@ -2702,15 +2721,15 @@ public class ODataParser extends Parser {
 		}
 
 		public ExpandContext expand(int i) {
-			return getRuleContext(ExpandContext.class, i);
+			return getRuleContext(ExpandContext.class,i);
 		}
 
-		public List<OrderbyContext> orderby() {
-			return getRuleContexts(OrderbyContext.class);
+		public List<OrderByContext> orderBy() {
+			return getRuleContexts(OrderByContext.class);
 		}
 
-		public OrderbyContext orderby(int i) {
-			return getRuleContext(OrderbyContext.class, i);
+		public OrderByContext orderBy(int i) {
+			return getRuleContext(OrderByContext.class,i);
 		}
 
 		public List<SkipStatementContext> skipStatement() {
@@ -2718,7 +2737,7 @@ public class ODataParser extends Parser {
 		}
 
 		public SkipStatementContext skipStatement(int i) {
-			return getRuleContext(SkipStatementContext.class, i);
+			return getRuleContext(SkipStatementContext.class,i);
 		}
 
 		public List<TopStatementContext> topStatement() {
@@ -2726,30 +2745,21 @@ public class ODataParser extends Parser {
 		}
 
 		public TopStatementContext topStatement(int i) {
-			return getRuleContext(TopStatementContext.class, i);
+			return getRuleContext(TopStatementContext.class,i);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_queryOption;
-		}
-
+		@Override public int getRuleIndex() { return RULE_queryOption; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterQueryOption(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterQueryOption(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitQueryOption(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitQueryOption(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitQueryOption(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitQueryOption(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2759,39 +2769,26 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode FILTER() {
-			return getToken(ODataParser.FILTER, 0);
-		}
+		public TerminalNode FILTER() { return getToken(ODataParser.FILTER, 0); }
 
-		public TerminalNode EQUAL() {
-			return getToken(ODataParser.EQUAL, 0);
-		}
+		public TerminalNode EQUAL() { return getToken(ODataParser.EQUAL, 0); }
 
 		public FilterExpressionContext filterExpression() {
-			return getRuleContext(FilterExpressionContext.class, 0);
+			return getRuleContext(FilterExpressionContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_filter;
-		}
-
+		@Override public int getRuleIndex() { return RULE_filter; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterFilter(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterFilter(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitFilter(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitFilter(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitFilter(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitFilter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2801,55 +2798,40 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode EXPAND() {
-			return getToken(ODataParser.EXPAND, 0);
-		}
+		public TerminalNode EXPAND() { return getToken(ODataParser.EXPAND, 0); }
 
-		public TerminalNode EQUAL() {
-			return getToken(ODataParser.EQUAL, 0);
-		}
+		public TerminalNode EQUAL() { return getToken(ODataParser.EQUAL, 0); }
 
 		public JoinEntitiesContext joinEntities() {
-			return getRuleContext(JoinEntitiesContext.class, 0);
+			return getRuleContext(JoinEntitiesContext.class,0);
 		}
 
 		public AttributeNameContext attributeName() {
-			return getRuleContext(AttributeNameContext.class, 0);
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
 		public BoolCommonExprContext boolCommonExpr() {
-			return getRuleContext(BoolCommonExprContext.class, 0);
+			return getRuleContext(BoolCommonExprContext.class,0);
 		}
 
-		public TerminalNode SLASH() {
-			return getToken(ODataParser.SLASH, 0);
-		}
+		public TerminalNode SLASH() { return getToken(ODataParser.SLASH, 0); }
 
 		public FilterContext filter() {
-			return getRuleContext(FilterContext.class, 0);
+			return getRuleContext(FilterContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_expand;
-		}
-
+		@Override public int getRuleIndex() { return RULE_expand; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterExpand(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterExpand(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitExpand(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitExpand(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitExpand(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitExpand(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2858,14 +2840,9 @@ public class ODataParser extends Parser {
 		public FilterExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		public FilterExpressionContext() { }
 
-		public FilterExpressionContext() {
-		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_filterExpression;
-		}
+		@Override public int getRuleIndex() { return RULE_filterExpression; }
 
 		public void copyFrom(FilterExpressionContext ctx) {
 			super.copyFrom(ctx);
@@ -2876,105 +2853,83 @@ public class ODataParser extends Parser {
 		public FilterExpressionContext left;
 		public LogicalOperatorContext op;
 		public FilterExpressionContext right;
-
-		public BinaryExpressionContext(FilterExpressionContext ctx) {
-			copyFrom(ctx);
-		}
+		public BinaryExpressionContext(FilterExpressionContext ctx) { copyFrom(ctx); }
 
 		public List<FilterExpressionContext> filterExpression() {
 			return getRuleContexts(FilterExpressionContext.class);
 		}
 
 		public FilterExpressionContext filterExpression(int i) {
-			return getRuleContext(FilterExpressionContext.class, i);
+			return getRuleContext(FilterExpressionContext.class,i);
 		}
 
 		public LogicalOperatorContext logicalOperator() {
-			return getRuleContext(LogicalOperatorContext.class, 0);
+			return getRuleContext(LogicalOperatorContext.class,0);
 		}
 
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterBinaryExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterBinaryExpression(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitBinaryExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitBinaryExpression(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitBinaryExpression(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitBinaryExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
 	public static class BoolExpressionContext extends FilterExpressionContext {
-		public BoolExpressionContext(FilterExpressionContext ctx) {
-			copyFrom(ctx);
-		}
+		public BoolExpressionContext(FilterExpressionContext ctx) { copyFrom(ctx); }
 
 		public BoolCommonExprContext boolCommonExpr() {
-			return getRuleContext(BoolCommonExprContext.class, 0);
+			return getRuleContext(BoolCommonExprContext.class,0);
 		}
 
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterBoolExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterBoolExpression(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitBoolExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitBoolExpression(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitBoolExpression(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitBoolExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
 	public static class ParenExpressionContext extends FilterExpressionContext {
-		public ParenExpressionContext(FilterExpressionContext ctx) {
-			copyFrom(ctx);
-		}
+		public ParenExpressionContext(FilterExpressionContext ctx) { copyFrom(ctx); }
 
 		public OpenParContext openPar() {
-			return getRuleContext(OpenParContext.class, 0);
+			return getRuleContext(OpenParContext.class,0);
 		}
 
 		public FilterExpressionContext filterExpression() {
-			return getRuleContext(FilterExpressionContext.class, 0);
+			return getRuleContext(FilterExpressionContext.class,0);
 		}
 
 		public CloseParContext closePar() {
-			return getRuleContext(CloseParContext.class, 0);
+			return getRuleContext(CloseParContext.class,0);
 		}
 
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterParenExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterParenExpression(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitParenExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitParenExpression(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitParenExpression(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitParenExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2983,14 +2938,9 @@ public class ODataParser extends Parser {
 		public BoolCommonExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
+		public BoolCommonExprContext() { }
 
-		public BoolCommonExprContext() {
-		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_boolCommonExpr;
-		}
+		@Override public int getRuleIndex() { return RULE_boolCommonExpr; }
 
 		public void copyFrom(BoolCommonExprContext ctx) {
 			super.copyFrom(ctx);
@@ -2998,30 +2948,23 @@ public class ODataParser extends Parser {
 	}
 
 	public static class CompareMethodExpressionContext extends BoolCommonExprContext {
-		public CompareMethodExpressionContext(BoolCommonExprContext ctx) {
-			copyFrom(ctx);
-		}
+		public CompareMethodExpressionContext(BoolCommonExprContext ctx) { copyFrom(ctx); }
 
 		public CompareMethodExprContext compareMethodExpr() {
-			return getRuleContext(CompareMethodExprContext.class, 0);
+			return getRuleContext(CompareMethodExprContext.class,0);
 		}
 
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterCompareMethodExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterCompareMethodExpression(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitCompareMethodExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitCompareMethodExpression(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitCompareMethodExpression(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCompareMethodExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3030,39 +2973,31 @@ public class ODataParser extends Parser {
 		public LeftComparatorExprContext left;
 		public ComparisonOperatorContext op;
 		public RightComparatorExprContext right;
-
-		public ComparatorExpressionContext(BoolCommonExprContext ctx) {
-			copyFrom(ctx);
-		}
+		public ComparatorExpressionContext(BoolCommonExprContext ctx) { copyFrom(ctx); }
 
 		public LeftComparatorExprContext leftComparatorExpr() {
-			return getRuleContext(LeftComparatorExprContext.class, 0);
+			return getRuleContext(LeftComparatorExprContext.class,0);
 		}
 
 		public ComparisonOperatorContext comparisonOperator() {
-			return getRuleContext(ComparisonOperatorContext.class, 0);
+			return getRuleContext(ComparisonOperatorContext.class,0);
 		}
 
 		public RightComparatorExprContext rightComparatorExpr() {
-			return getRuleContext(RightComparatorExprContext.class, 0);
+			return getRuleContext(RightComparatorExprContext.class,0);
 		}
 
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterComparatorExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterComparatorExpression(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitComparatorExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitComparatorExpression(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitComparatorExpression(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitComparatorExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3071,39 +3006,29 @@ public class ODataParser extends Parser {
 		public Token left;
 		public ComparisonOperatorContext op;
 		public PrimitiveLiteralContext right;
+		public CountComparatorExpressionContext(BoolCommonExprContext ctx) { copyFrom(ctx); }
 
-		public CountComparatorExpressionContext(BoolCommonExprContext ctx) {
-			copyFrom(ctx);
-		}
-
-		public TerminalNode COUNT() {
-			return getToken(ODataParser.COUNT, 0);
-		}
+		public TerminalNode COUNT() { return getToken(ODataParser.COUNT, 0); }
 
 		public ComparisonOperatorContext comparisonOperator() {
-			return getRuleContext(ComparisonOperatorContext.class, 0);
+			return getRuleContext(ComparisonOperatorContext.class,0);
 		}
 
 		public PrimitiveLiteralContext primitiveLiteral() {
-			return getRuleContext(PrimitiveLiteralContext.class, 0);
+			return getRuleContext(PrimitiveLiteralContext.class,0);
 		}
 
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterCountComparatorExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterCountComparatorExpression(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitCountComparatorExpression(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitCountComparatorExpression(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitCountComparatorExpression(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCountComparatorExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3114,50 +3039,41 @@ public class ODataParser extends Parser {
 		}
 
 		public MethodCallExprContext methodCallExpr() {
-			return getRuleContext(MethodCallExprContext.class, 0);
+			return getRuleContext(MethodCallExprContext.class,0);
 		}
 
 		public CalenderMethodExpContext calenderMethodExp() {
-			return getRuleContext(CalenderMethodExpContext.class, 0);
+			return getRuleContext(CalenderMethodExpContext.class,0);
 		}
 
 		public ConcatMethodExprContext concatMethodExpr() {
-			return getRuleContext(ConcatMethodExprContext.class, 0);
+			return getRuleContext(ConcatMethodExprContext.class,0);
 		}
 
 		public JoinEntitiesContext joinEntities() {
-			return getRuleContext(JoinEntitiesContext.class, 0);
+			return getRuleContext(JoinEntitiesContext.class,0);
 		}
 
 		public AttributeNameContext attributeName() {
-			return getRuleContext(AttributeNameContext.class, 0);
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
 		public CommonExprContext commonExpr() {
-			return getRuleContext(CommonExprContext.class, 0);
+			return getRuleContext(CommonExprContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_leftComparatorExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_leftComparatorExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterLeftComparatorExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterLeftComparatorExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitLeftComparatorExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitLeftComparatorExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitLeftComparatorExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitLeftComparatorExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3168,142 +3084,109 @@ public class ODataParser extends Parser {
 		}
 
 		public MethodCallExprContext methodCallExpr() {
-			return getRuleContext(MethodCallExprContext.class, 0);
+			return getRuleContext(MethodCallExprContext.class,0);
 		}
 
 		public CalenderMethodExpContext calenderMethodExp() {
-			return getRuleContext(CalenderMethodExpContext.class, 0);
+			return getRuleContext(CalenderMethodExpContext.class,0);
 		}
 
 		public ConcatMethodExprContext concatMethodExpr() {
-			return getRuleContext(ConcatMethodExprContext.class, 0);
+			return getRuleContext(ConcatMethodExprContext.class,0);
 		}
 
 		public JoinEntitiesContext joinEntities() {
-			return getRuleContext(JoinEntitiesContext.class, 0);
+			return getRuleContext(JoinEntitiesContext.class,0);
 		}
 
 		public AttributeNameContext attributeName() {
-			return getRuleContext(AttributeNameContext.class, 0);
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
 		public CommonExprContext commonExpr() {
-			return getRuleContext(CommonExprContext.class, 0);
+			return getRuleContext(CommonExprContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_rightComparatorExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_rightComparatorExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterRightComparatorExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterRightComparatorExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitRightComparatorExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitRightComparatorExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitRightComparatorExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitRightComparatorExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public static class OrderbyContext extends ParserRuleContext {
-		public OrderbyContext(ParserRuleContext parent, int invokingState) {
+	public static class OrderByContext extends ParserRuleContext {
+		public OrderByContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode ORDERBY() {
-			return getToken(ODataParser.ORDERBY, 0);
+		public TerminalNode ORDERBY() { return getToken(ODataParser.ORDERBY, 0); }
+
+		public TerminalNode EQUAL() { return getToken(ODataParser.EQUAL, 0); }
+
+		public List<OrderByItemContext> orderByItem() {
+			return getRuleContexts(OrderByItemContext.class);
 		}
 
-		public List<OrderbyItemContext> orderbyItem() {
-			return getRuleContexts(OrderbyItemContext.class);
+		public OrderByItemContext orderByItem(int i) {
+			return getRuleContext(OrderByItemContext.class,i);
 		}
 
-		public OrderbyItemContext orderbyItem(int i) {
-			return getRuleContext(OrderbyItemContext.class, i);
-		}
-
-		public List<TerminalNode> COMMA() {
-			return getTokens(ODataParser.COMMA);
-		}
+		public List<TerminalNode> COMMA() { return getTokens(ODataParser.COMMA); }
 
 		public TerminalNode COMMA(int i) {
 			return getToken(ODataParser.COMMA, i);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_orderby;
-		}
-
+		@Override public int getRuleIndex() { return RULE_orderBy; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterOrderby(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterOrderBy(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitOrderby(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitOrderBy(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitOrderby(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitOrderBy(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public static class OrderbyItemContext extends ParserRuleContext {
-		public OrderbyItemContext(ParserRuleContext parent, int invokingState) {
+	public static class OrderByItemContext extends ParserRuleContext {
+		public OrderByItemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 
-		public CommonExprContext commonExpr() {
-			return getRuleContext(CommonExprContext.class, 0);
+		public AttributeNameContext attributeName() {
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
-		public TerminalNode ASC() {
-			return getToken(ODataParser.ASC, 0);
+		public SortOrderContext sortOrder() {
+			return getRuleContext(SortOrderContext.class,0);
 		}
 
-		public TerminalNode DESC() {
-			return getToken(ODataParser.DESC, 0);
-		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_orderbyItem;
-		}
-
+		@Override public int getRuleIndex() { return RULE_orderByItem; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterOrderbyItem(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterOrderByItem(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitOrderbyItem(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitOrderByItem(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitOrderbyItem(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitOrderByItem(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3313,35 +3196,24 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode TOP() {
-			return getToken(ODataParser.TOP, 0);
-		}
+		public TerminalNode TOP() { return getToken(ODataParser.TOP, 0); }
 
 		public IntegerValueContext integerValue() {
-			return getRuleContext(IntegerValueContext.class, 0);
+			return getRuleContext(IntegerValueContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_topStatement;
-		}
-
+		@Override public int getRuleIndex() { return RULE_topStatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterTopStatement(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterTopStatement(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitTopStatement(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitTopStatement(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitTopStatement(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitTopStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3351,35 +3223,24 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode SKIPRULE() {
-			return getToken(ODataParser.SKIPRULE, 0);
-		}
+		public TerminalNode SKIPRULE() { return getToken(ODataParser.SKIPRULE, 0); }
 
 		public IntegerValueContext integerValue() {
-			return getRuleContext(IntegerValueContext.class, 0);
+			return getRuleContext(IntegerValueContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_skipStatement;
-		}
-
+		@Override public int getRuleIndex() { return RULE_skipStatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterSkipStatement(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterSkipStatement(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitSkipStatement(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitSkipStatement(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitSkipStatement(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitSkipStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3390,7 +3251,7 @@ public class ODataParser extends Parser {
 		}
 
 		public AttributeNameContext attributeName() {
-			return getRuleContext(AttributeNameContext.class, 0);
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
 		public List<EntityNameContext> entityName() {
@@ -3398,38 +3259,27 @@ public class ODataParser extends Parser {
 		}
 
 		public EntityNameContext entityName(int i) {
-			return getRuleContext(EntityNameContext.class, i);
+			return getRuleContext(EntityNameContext.class,i);
 		}
 
-		public List<TerminalNode> SLASH() {
-			return getTokens(ODataParser.SLASH);
-		}
+		public List<TerminalNode> SLASH() { return getTokens(ODataParser.SLASH); }
 
 		public TerminalNode SLASH(int i) {
 			return getToken(ODataParser.SLASH, i);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_joinEntities;
-		}
-
+		@Override public int getRuleIndex() { return RULE_joinEntities; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterJoinEntities(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterJoinEntities(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitJoinEntities(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitJoinEntities(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitJoinEntities(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitJoinEntities(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3440,38 +3290,29 @@ public class ODataParser extends Parser {
 		}
 
 		public PrimitiveLiteralContext primitiveLiteral() {
-			return getRuleContext(PrimitiveLiteralContext.class, 0);
+			return getRuleContext(PrimitiveLiteralContext.class,0);
 		}
 
 		public MethodExprContext methodExpr() {
-			return getRuleContext(MethodExprContext.class, 0);
+			return getRuleContext(MethodExprContext.class,0);
 		}
 
 		public MathExprContext mathExpr() {
-			return getRuleContext(MathExprContext.class, 0);
+			return getRuleContext(MathExprContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_commonExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_commonExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterCommonExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterCommonExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitCommonExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitCommonExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitCommonExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCommonExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3482,50 +3323,31 @@ public class ODataParser extends Parser {
 		}
 
 		public NumberContext number() {
-			return getRuleContext(NumberContext.class, 0);
+			return getRuleContext(NumberContext.class,0);
 		}
 
-		public TerminalNode ADD() {
-			return getToken(ODataParser.ADD, 0);
-		}
+		public TerminalNode ADD() { return getToken(ODataParser.ADD, 0); }
 
-		public TerminalNode SUB() {
-			return getToken(ODataParser.SUB, 0);
-		}
+		public TerminalNode SUB() { return getToken(ODataParser.SUB, 0); }
 
-		public TerminalNode MUL() {
-			return getToken(ODataParser.MUL, 0);
-		}
+		public TerminalNode MUL() { return getToken(ODataParser.MUL, 0); }
 
-		public TerminalNode DIV() {
-			return getToken(ODataParser.DIV, 0);
-		}
+		public TerminalNode DIV() { return getToken(ODataParser.DIV, 0); }
 
-		public TerminalNode MOD() {
-			return getToken(ODataParser.MOD, 0);
-		}
+		public TerminalNode MOD() { return getToken(ODataParser.MOD, 0); }
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_mathExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_mathExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterMathExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterMathExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitMathExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitMathExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitMathExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitMathExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3536,50 +3358,41 @@ public class ODataParser extends Parser {
 		}
 
 		public MethodCallExprContext methodCallExpr() {
-			return getRuleContext(MethodCallExprContext.class, 0);
+			return getRuleContext(MethodCallExprContext.class,0);
 		}
 
 		public CalenderMethodExpContext calenderMethodExp() {
-			return getRuleContext(CalenderMethodExpContext.class, 0);
+			return getRuleContext(CalenderMethodExpContext.class,0);
 		}
 
 		public SingleMethodCallExprContext singleMethodCallExpr() {
-			return getRuleContext(SingleMethodCallExprContext.class, 0);
+			return getRuleContext(SingleMethodCallExprContext.class,0);
 		}
 
 		public ConcatMethodExprContext concatMethodExpr() {
-			return getRuleContext(ConcatMethodExprContext.class, 0);
+			return getRuleContext(ConcatMethodExprContext.class,0);
 		}
 
 		public SubstringMethodCallExprContext substringMethodCallExpr() {
-			return getRuleContext(SubstringMethodCallExprContext.class, 0);
+			return getRuleContext(SubstringMethodCallExprContext.class,0);
 		}
 
 		public CompareMethodExprContext compareMethodExpr() {
-			return getRuleContext(CompareMethodExprContext.class, 0);
+			return getRuleContext(CompareMethodExprContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_methodExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_methodExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterMethodExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterMethodExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitMethodExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitMethodExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitMethodExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitMethodExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3590,58 +3403,43 @@ public class ODataParser extends Parser {
 		}
 
 		public CompareMethodNameContext compareMethodName() {
-			return getRuleContext(CompareMethodNameContext.class, 0);
+			return getRuleContext(CompareMethodNameContext.class,0);
 		}
 
-		public TerminalNode OPEN() {
-			return getToken(ODataParser.OPEN, 0);
-		}
+		public TerminalNode OPEN() { return getToken(ODataParser.OPEN, 0); }
 
-		public TerminalNode COMMA() {
-			return getToken(ODataParser.COMMA, 0);
-		}
+		public TerminalNode COMMA() { return getToken(ODataParser.COMMA, 0); }
 
 		public List<CommonExprContext> commonExpr() {
 			return getRuleContexts(CommonExprContext.class);
 		}
 
 		public CommonExprContext commonExpr(int i) {
-			return getRuleContext(CommonExprContext.class, i);
+			return getRuleContext(CommonExprContext.class,i);
 		}
 
-		public TerminalNode CLOSE() {
-			return getToken(ODataParser.CLOSE, 0);
-		}
+		public TerminalNode CLOSE() { return getToken(ODataParser.CLOSE, 0); }
 
 		public JoinEntitiesContext joinEntities() {
-			return getRuleContext(JoinEntitiesContext.class, 0);
+			return getRuleContext(JoinEntitiesContext.class,0);
 		}
 
 		public AttributeNameContext attributeName() {
-			return getRuleContext(AttributeNameContext.class, 0);
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_compareMethodExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_compareMethodExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterCompareMethodExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterCompareMethodExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitCompareMethodExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitCompareMethodExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitCompareMethodExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCompareMethodExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3652,50 +3450,37 @@ public class ODataParser extends Parser {
 		}
 
 		public MethodNameContext methodName() {
-			return getRuleContext(MethodNameContext.class, 0);
+			return getRuleContext(MethodNameContext.class,0);
 		}
 
-		public TerminalNode OPEN() {
-			return getToken(ODataParser.OPEN, 0);
-		}
+		public TerminalNode OPEN() { return getToken(ODataParser.OPEN, 0); }
 
-		public TerminalNode CLOSE() {
-			return getToken(ODataParser.CLOSE, 0);
-		}
+		public TerminalNode CLOSE() { return getToken(ODataParser.CLOSE, 0); }
 
 		public MethodCallExprContext methodCallExpr() {
-			return getRuleContext(MethodCallExprContext.class, 0);
+			return getRuleContext(MethodCallExprContext.class,0);
 		}
 
 		public JoinEntitiesContext joinEntities() {
-			return getRuleContext(JoinEntitiesContext.class, 0);
+			return getRuleContext(JoinEntitiesContext.class,0);
 		}
 
 		public AttributeNameContext attributeName() {
-			return getRuleContext(AttributeNameContext.class, 0);
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_methodCallExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_methodCallExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterMethodCallExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterMethodCallExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitMethodCallExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitMethodCallExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitMethodCallExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitMethodCallExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3706,50 +3491,37 @@ public class ODataParser extends Parser {
 		}
 
 		public CalenderMethodNameContext calenderMethodName() {
-			return getRuleContext(CalenderMethodNameContext.class, 0);
+			return getRuleContext(CalenderMethodNameContext.class,0);
 		}
 
-		public TerminalNode OPEN() {
-			return getToken(ODataParser.OPEN, 0);
-		}
+		public TerminalNode OPEN() { return getToken(ODataParser.OPEN, 0); }
 
-		public TerminalNode CLOSE() {
-			return getToken(ODataParser.CLOSE, 0);
-		}
+		public TerminalNode CLOSE() { return getToken(ODataParser.CLOSE, 0); }
 
 		public JoinEntitiesContext joinEntities() {
-			return getRuleContext(JoinEntitiesContext.class, 0);
+			return getRuleContext(JoinEntitiesContext.class,0);
 		}
 
 		public AttributeNameContext attributeName() {
-			return getRuleContext(AttributeNameContext.class, 0);
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
 		public PrimitiveLiteralContext primitiveLiteral() {
-			return getRuleContext(PrimitiveLiteralContext.class, 0);
+			return getRuleContext(PrimitiveLiteralContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_calenderMethodExp;
-		}
-
+		@Override public int getRuleIndex() { return RULE_calenderMethodExp; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterCalenderMethodExp(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterCalenderMethodExp(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitCalenderMethodExp(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitCalenderMethodExp(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitCalenderMethodExp(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCalenderMethodExp(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3759,24 +3531,16 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode OPEN() {
-			return getToken(ODataParser.OPEN, 0);
-		}
+		public TerminalNode CONCAT() { return getToken(ODataParser.CONCAT, 0); }
 
-		public TerminalNode COMMA() {
-			return getToken(ODataParser.COMMA, 0);
-		}
+		public TerminalNode OPEN() { return getToken(ODataParser.OPEN, 0); }
 
-		public TerminalNode CLOSE() {
-			return getToken(ODataParser.CLOSE, 0);
-		}
+		public TerminalNode COMMA() { return getToken(ODataParser.COMMA, 0); }
 
-		public TerminalNode CONCAT() {
-			return getToken(ODataParser.CONCAT, 0);
-		}
+		public TerminalNode CLOSE() { return getToken(ODataParser.CLOSE, 0); }
 
 		public ConcatMethodExprContext concatMethodExpr() {
-			return getRuleContext(ConcatMethodExprContext.class, 0);
+			return getRuleContext(ConcatMethodExprContext.class,0);
 		}
 
 		public List<PrimitiveLiteralContext> primitiveLiteral() {
@@ -3784,7 +3548,7 @@ public class ODataParser extends Parser {
 		}
 
 		public PrimitiveLiteralContext primitiveLiteral(int i) {
-			return getRuleContext(PrimitiveLiteralContext.class, i);
+			return getRuleContext(PrimitiveLiteralContext.class,i);
 		}
 
 		public List<AttributeNameContext> attributeName() {
@@ -3792,80 +3556,52 @@ public class ODataParser extends Parser {
 		}
 
 		public AttributeNameContext attributeName(int i) {
-			return getRuleContext(AttributeNameContext.class, i);
+			return getRuleContext(AttributeNameContext.class,i);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_concatMethodExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_concatMethodExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterConcatMethodExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterConcatMethodExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitConcatMethodExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitConcatMethodExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitConcatMethodExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitConcatMethodExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
 	public static class SingleMethodCallExprContext extends ParserRuleContext {
-		public TerminalNode OPEN() {
-			return getToken(ODataParser.OPEN, 0);
-		}
-
-		public TerminalNode CLOSE() {
-			return getToken(ODataParser.CLOSE, 0);
-		}
-
 		public SingleMethodCallExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode MIN_DATE_TIME() {
-			return getToken(ODataParser.MIN_DATE_TIME, 0);
-		}
+		public TerminalNode OPEN() { return getToken(ODataParser.OPEN, 0); }
 
-		public TerminalNode MAX_DATE_TIME() {
-			return getToken(ODataParser.MAX_DATE_TIME, 0);
-		}
+		public TerminalNode CLOSE() { return getToken(ODataParser.CLOSE, 0); }
 
-		public TerminalNode NOW() {
-			return getToken(ODataParser.NOW, 0);
-		}
+		public TerminalNode MIN_DATE_TIME() { return getToken(ODataParser.MIN_DATE_TIME, 0); }
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_singleMethodCallExpr;
-		}
+		public TerminalNode MAX_DATE_TIME() { return getToken(ODataParser.MAX_DATE_TIME, 0); }
 
+		public TerminalNode NOW() { return getToken(ODataParser.NOW, 0); }
+
+		@Override public int getRuleIndex() { return RULE_singleMethodCallExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterSingleMethodCallExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterSingleMethodCallExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitSingleMethodCallExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitSingleMethodCallExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitSingleMethodCallExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitSingleMethodCallExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3875,59 +3611,42 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode OPEN() {
-			return getToken(ODataParser.OPEN, 0);
-		}
+		public TerminalNode SUBSTRING() { return getToken(ODataParser.SUBSTRING, 0); }
 
-		public TerminalNode SUBSTRING() {
-			return getToken(ODataParser.SUBSTRING, 0);
-		}
+		public TerminalNode OPEN() { return getToken(ODataParser.OPEN, 0); }
 
-		public TerminalNode COMMA() {
-			return getToken(ODataParser.COMMA, 0);
-		}
+		public TerminalNode COMMA() { return getToken(ODataParser.COMMA, 0); }
 
 		public List<CommonExprContext> commonExpr() {
 			return getRuleContexts(CommonExprContext.class);
 		}
 
-		public TerminalNode CLOSE() {
-			return getToken(ODataParser.CLOSE, 0);
+		public CommonExprContext commonExpr(int i) {
+			return getRuleContext(CommonExprContext.class,i);
 		}
 
+		public TerminalNode CLOSE() { return getToken(ODataParser.CLOSE, 0); }
+
 		public JoinEntitiesContext joinEntities() {
-			return getRuleContext(JoinEntitiesContext.class, 0);
+			return getRuleContext(JoinEntitiesContext.class,0);
 		}
 
 		public AttributeNameContext attributeName() {
-			return getRuleContext(AttributeNameContext.class, 0);
+			return getRuleContext(AttributeNameContext.class,0);
 		}
 
-		public CommonExprContext commonExpr(int i) {
-			return getRuleContext(CommonExprContext.class, i);
-		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_substringMethodCallExpr;
-		}
-
+		@Override public int getRuleIndex() { return RULE_substringMethodCallExpr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterSubstringMethodCallExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterSubstringMethodCallExpr(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitSubstringMethodCallExpr(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitSubstringMethodCallExpr(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitSubstringMethodCallExpr(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitSubstringMethodCallExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3937,51 +3656,30 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode EQ() {
-			return getToken(ODataParser.EQ, 0);
-		}
+		public TerminalNode EQ() { return getToken(ODataParser.EQ, 0); }
 
-		public TerminalNode GT() {
-			return getToken(ODataParser.GT, 0);
-		}
+		public TerminalNode GT() { return getToken(ODataParser.GT, 0); }
 
-		public TerminalNode LT() {
-			return getToken(ODataParser.LT, 0);
-		}
+		public TerminalNode LT() { return getToken(ODataParser.LT, 0); }
 
-		public TerminalNode LE() {
-			return getToken(ODataParser.LE, 0);
-		}
+		public TerminalNode LE() { return getToken(ODataParser.LE, 0); }
 
-		public TerminalNode GE() {
-			return getToken(ODataParser.GE, 0);
-		}
+		public TerminalNode GE() { return getToken(ODataParser.GE, 0); }
 
-		public TerminalNode NE() {
-			return getToken(ODataParser.NE, 0);
-		}
+		public TerminalNode NE() { return getToken(ODataParser.NE, 0); }
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_comparisonOperator;
-		}
-
+		@Override public int getRuleIndex() { return RULE_comparisonOperator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterComparisonOperator(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterComparisonOperator(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitComparisonOperator(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitComparisonOperator(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitComparisonOperator(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitComparisonOperator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3991,51 +3689,30 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode CONTAINS() {
-			return getToken(ODataParser.CONTAINS, 0);
-		}
+		public TerminalNode CONTAINS() { return getToken(ODataParser.CONTAINS, 0); }
 
-		public TerminalNode STARTSWITH() {
-			return getToken(ODataParser.STARTSWITH, 0);
-		}
+		public TerminalNode STARTSWITH() { return getToken(ODataParser.STARTSWITH, 0); }
 
-		public TerminalNode ENDSWITH() {
-			return getToken(ODataParser.ENDSWITH, 0);
-		}
+		public TerminalNode ENDSWITH() { return getToken(ODataParser.ENDSWITH, 0); }
 
-		public TerminalNode INDEXOF() {
-			return getToken(ODataParser.INDEXOF, 0);
-		}
+		public TerminalNode INDEXOF() { return getToken(ODataParser.INDEXOF, 0); }
 
-		public TerminalNode GEO_INTERSECTS() {
-			return getToken(ODataParser.GEO_INTERSECTS, 0);
-		}
+		public TerminalNode GEO_INTERSECTS() { return getToken(ODataParser.GEO_INTERSECTS, 0); }
 
-		public TerminalNode GEO_DISTANCE() {
-			return getToken(ODataParser.GEO_DISTANCE, 0);
-		}
+		public TerminalNode GEO_DISTANCE() { return getToken(ODataParser.GEO_DISTANCE, 0); }
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_compareMethodName;
-		}
-
+		@Override public int getRuleIndex() { return RULE_compareMethodName; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterCompareMethodName(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterCompareMethodName(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitCompareMethodName(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitCompareMethodName(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitCompareMethodName(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCompareMethodName(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4045,59 +3722,34 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode LENGTH() {
-			return getToken(ODataParser.LENGTH, 0);
-		}
+		public TerminalNode LENGTH() { return getToken(ODataParser.LENGTH, 0); }
 
-		public TerminalNode TOLOWER() {
-			return getToken(ODataParser.TOLOWER, 0);
-		}
+		public TerminalNode TOLOWER() { return getToken(ODataParser.TOLOWER, 0); }
 
-		public TerminalNode TOUPPER() {
-			return getToken(ODataParser.TOUPPER, 0);
-		}
+		public TerminalNode TOUPPER() { return getToken(ODataParser.TOUPPER, 0); }
 
-		public TerminalNode TRIM() {
-			return getToken(ODataParser.TRIM, 0);
-		}
+		public TerminalNode TRIM() { return getToken(ODataParser.TRIM, 0); }
 
-		public TerminalNode ROUND() {
-			return getToken(ODataParser.ROUND, 0);
-		}
+		public TerminalNode ROUND() { return getToken(ODataParser.ROUND, 0); }
 
-		public TerminalNode FLOOR() {
-			return getToken(ODataParser.FLOOR, 0);
-		}
+		public TerminalNode FLOOR() { return getToken(ODataParser.FLOOR, 0); }
 
-		public TerminalNode CEILING() {
-			return getToken(ODataParser.CEILING, 0);
-		}
+		public TerminalNode CEILING() { return getToken(ODataParser.CEILING, 0); }
 
-		public TerminalNode GEO_LENGTH() {
-			return getToken(ODataParser.GEO_LENGTH, 0);
-		}
+		public TerminalNode GEO_LENGTH() { return getToken(ODataParser.GEO_LENGTH, 0); }
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_methodName;
-		}
-
+		@Override public int getRuleIndex() { return RULE_methodName; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterMethodName(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterMethodName(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitMethodName(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitMethodName(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitMethodName(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitMethodName(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4107,71 +3759,40 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode YEAR() {
-			return getToken(ODataParser.YEAR, 0);
-		}
+		public TerminalNode YEAR() { return getToken(ODataParser.YEAR, 0); }
 
-		public TerminalNode MONTH() {
-			return getToken(ODataParser.MONTH, 0);
-		}
+		public TerminalNode MONTH() { return getToken(ODataParser.MONTH, 0); }
 
-		public TerminalNode DAY() {
-			return getToken(ODataParser.DAY, 0);
-		}
+		public TerminalNode DAY() { return getToken(ODataParser.DAY, 0); }
 
-		public TerminalNode HOUR() {
-			return getToken(ODataParser.HOUR, 0);
-		}
+		public TerminalNode HOUR() { return getToken(ODataParser.HOUR, 0); }
 
-		public TerminalNode MINUTE() {
-			return getToken(ODataParser.MINUTE, 0);
-		}
+		public TerminalNode MINUTE() { return getToken(ODataParser.MINUTE, 0); }
 
-		public TerminalNode SECOND() {
-			return getToken(ODataParser.SECOND, 0);
-		}
+		public TerminalNode SECOND() { return getToken(ODataParser.SECOND, 0); }
 
-		public TerminalNode FRACTIONAL_SECONDS() {
-			return getToken(ODataParser.FRACTIONAL_SECONDS, 0);
-		}
+		public TerminalNode FRACTIONAL_SECONDS() { return getToken(ODataParser.FRACTIONAL_SECONDS, 0); }
 
-		public TerminalNode TOTAL_SECONDS() {
-			return getToken(ODataParser.TOTAL_SECONDS, 0);
-		}
+		public TerminalNode TOTAL_SECONDS() { return getToken(ODataParser.TOTAL_SECONDS, 0); }
 
-		public TerminalNode DATE() {
-			return getToken(ODataParser.DATE, 0);
-		}
+		public TerminalNode DATE() { return getToken(ODataParser.DATE, 0); }
 
-		public TerminalNode TIME() {
-			return getToken(ODataParser.TIME, 0);
-		}
+		public TerminalNode TIME() { return getToken(ODataParser.TIME, 0); }
 
-		public TerminalNode TOTAL_OFFSET_MINUTES() {
-			return getToken(ODataParser.TOTAL_OFFSET_MINUTES, 0);
-		}
+		public TerminalNode TOTAL_OFFSET_MINUTES() { return getToken(ODataParser.TOTAL_OFFSET_MINUTES, 0); }
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_calenderMethodName;
-		}
-
+		@Override public int getRuleIndex() { return RULE_calenderMethodName; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterCalenderMethodName(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterCalenderMethodName(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitCalenderMethodName(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitCalenderMethodName(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitCalenderMethodName(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCalenderMethodName(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4181,35 +3802,22 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode INTEGER() {
-			return getToken(ODataParser.INTEGER, 0);
-		}
+		public TerminalNode INTEGER() { return getToken(ODataParser.INTEGER, 0); }
 
-		public TerminalNode FLOAT() {
-			return getToken(ODataParser.FLOAT, 0);
-		}
+		public TerminalNode FLOAT() { return getToken(ODataParser.FLOAT, 0); }
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_number;
-		}
-
+		@Override public int getRuleIndex() { return RULE_number; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterNumber(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterNumber(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitNumber(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitNumber(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitNumber(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitNumber(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4220,70 +3828,61 @@ public class ODataParser extends Parser {
 		}
 
 		public QuotedStringContext quotedString() {
-			return getRuleContext(QuotedStringContext.class, 0);
+			return getRuleContext(QuotedStringContext.class,0);
 		}
 
 		public NullSpecLiteralContext nullSpecLiteral() {
-			return getRuleContext(NullSpecLiteralContext.class, 0);
+			return getRuleContext(NullSpecLiteralContext.class,0);
 		}
 
 		public NullTokenContext nullToken() {
-			return getRuleContext(NullTokenContext.class, 0);
+			return getRuleContext(NullTokenContext.class,0);
 		}
 
 		public BooleanValueContext booleanValue() {
-			return getRuleContext(BooleanValueContext.class, 0);
+			return getRuleContext(BooleanValueContext.class,0);
 		}
 
 		public DurationValueContext durationValue() {
-			return getRuleContext(DurationValueContext.class, 0);
+			return getRuleContext(DurationValueContext.class,0);
 		}
 
 		public DateValueContext dateValue() {
-			return getRuleContext(DateValueContext.class, 0);
+			return getRuleContext(DateValueContext.class,0);
 		}
 
 		public DateTimeOffsetValueContext dateTimeOffsetValue() {
-			return getRuleContext(DateTimeOffsetValueContext.class, 0);
+			return getRuleContext(DateTimeOffsetValueContext.class,0);
 		}
 
 		public TimeOfDayValueContext timeOfDayValue() {
-			return getRuleContext(TimeOfDayValueContext.class, 0);
+			return getRuleContext(TimeOfDayValueContext.class,0);
 		}
 
 		public DecimalLiteralContext decimalLiteral() {
-			return getRuleContext(DecimalLiteralContext.class, 0);
+			return getRuleContext(DecimalLiteralContext.class,0);
 		}
 
 		public FloatValueContext floatValue() {
-			return getRuleContext(FloatValueContext.class, 0);
+			return getRuleContext(FloatValueContext.class,0);
 		}
 
 		public IntegerValueContext integerValue() {
-			return getRuleContext(IntegerValueContext.class, 0);
+			return getRuleContext(IntegerValueContext.class,0);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_primitiveLiteral;
-		}
-
+		@Override public int getRuleIndex() { return RULE_primitiveLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterPrimitiveLiteral(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterPrimitiveLiteral(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitPrimitiveLiteral(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitPrimitiveLiteral(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitPrimitiveLiteral(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitPrimitiveLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4293,173 +3892,138 @@ public class ODataParser extends Parser {
 			super(parent, invokingState);
 		}
 
-		public TerminalNode SLASH() {
-			return getToken(ODataParser.SLASH, 0);
-		}
+		public TerminalNode SLASH() { return getToken(ODataParser.SLASH, 0); }
 
-		public TerminalNode COUNT() {
-			return getToken(ODataParser.COUNT, 0);
-		}
+		public TerminalNode COUNT() { return getToken(ODataParser.COUNT, 0); }
+
+		public TerminalNode EQUAL() { return getToken(ODataParser.EQUAL, 0); }
 
 		public BooleanValueContext booleanValue() {
-			return getRuleContext(BooleanValueContext.class, 0);
+			return getRuleContext(BooleanValueContext.class,0);
 		}
 
-		public TerminalNode EQUAL() {
-			return getToken(ODataParser.EQUAL, 0);
-		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_countStatement;
-		}
-
+		@Override public int getRuleIndex() { return RULE_countStatement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterCountStatement(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterCountStatement(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitCountStatement(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitCountStatement(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitCountStatement(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitCountStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
 	public static class OpenParContext extends ParserRuleContext {
-		public TerminalNode OPEN() {
-			return getToken(ODataParser.OPEN, 0);
-		}
-
 		public OpenParContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_openPar;
-		}
+		public TerminalNode OPEN() { return getToken(ODataParser.OPEN, 0); }
 
+		@Override public int getRuleIndex() { return RULE_openPar; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterOpenPar(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterOpenPar(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitOpenPar(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitOpenPar(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitOpenPar(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitOpenPar(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
 	public static class CloseParContext extends ParserRuleContext {
-		public TerminalNode CLOSE() {
-			return getToken(ODataParser.CLOSE, 0);
-		}
-
 		public CloseParContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_closePar;
-		}
+		public TerminalNode CLOSE() { return getToken(ODataParser.CLOSE, 0); }
 
+		@Override public int getRuleIndex() { return RULE_closePar; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterClosePar(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterClosePar(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitClosePar(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitClosePar(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitClosePar(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitClosePar(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
 	public static class LogicalOperatorContext extends ParserRuleContext {
-		public TerminalNode AND() {
-			return getToken(ODataParser.AND, 0);
-		}
-
-		public TerminalNode OR() {
-			return getToken(ODataParser.OR, 0);
-		}
-
 		public LogicalOperatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 
-		@Override
-		public int getRuleIndex() {
-			return RULE_logicalOperator;
-		}
+		public TerminalNode AND() { return getToken(ODataParser.AND, 0); }
 
+		public TerminalNode OR() { return getToken(ODataParser.OR, 0); }
+
+		@Override public int getRuleIndex() { return RULE_logicalOperator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterLogicalOperator(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterLogicalOperator(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).exitLogicalOperator(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitLogicalOperator(this);
 		}
-
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof ODataParserVisitor)
-				return ((ODataParserVisitor<? extends T>) visitor).visitLogicalOperator(this);
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitLogicalOperator(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public static class SortOrderContext extends ParserRuleContext {
+		public SortOrderContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+
+		public TerminalNode ASC() { return getToken(ODataParser.ASC, 0); }
+
+		public TerminalNode DESC() { return getToken(ODataParser.DESC, 0); }
+
+		@Override public int getRuleIndex() { return RULE_sortOrder; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterSortOrder(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitSortOrder(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ODataParserVisitor ) return ((ODataParserVisitor<? extends T>)visitor).visitSortOrder(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
 	public static class EntityNameContext extends ParserRuleContext {
-		public TerminalNode ID() {
-			return getToken(ODataParser.ID, 0);
-		}
-
+		public TerminalNode ID() { return getToken(ODataParser.ID, 0); }
 		public EntityNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_entityName;
-		}
-
+		@Override public int getRuleIndex() { return RULE_entityName; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterEntityName(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterEntityName(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitEntityName(this);
@@ -4472,25 +4036,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class AttributeNameContext extends ParserRuleContext {
-		public TerminalNode ID() {
-			return getToken(ODataParser.ID, 0);
-		}
-
+		public TerminalNode ID() { return getToken(ODataParser.ID, 0); }
 		public AttributeNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_attributeName;
-		}
-
+		@Override public int getRuleIndex() { return RULE_attributeName; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterAttributeName(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterAttributeName(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitAttributeName(this);
@@ -4503,25 +4057,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class UuidIdValueContext extends ParserRuleContext {
-		public TerminalNode UUID() {
-			return getToken(ODataParser.UUID, 0);
-		}
-
+		public TerminalNode UUID() { return getToken(ODataParser.UUID, 0); }
 		public UuidIdValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_uuidIdValue;
-		}
-
+		@Override public int getRuleIndex() { return RULE_uuidIdValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterUuidIdValue(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterUuidIdValue(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitUuidIdValue(this);
@@ -4534,25 +4078,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class QuotedStringContext extends ParserRuleContext {
-		public TerminalNode QUOTED_STRING() {
-			return getToken(ODataParser.QUOTED_STRING, 0);
-		}
-
+		public TerminalNode QUOTED_STRING() { return getToken(ODataParser.QUOTED_STRING, 0); }
 		public QuotedStringContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_quotedString;
-		}
-
+		@Override public int getRuleIndex() { return RULE_quotedString; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterQuotedString(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterQuotedString(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitQuotedString(this);
@@ -4565,25 +4099,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class NullSpecLiteralContext extends ParserRuleContext {
-		public TerminalNode NULL_SPEC_LITERAL() {
-			return getToken(ODataParser.NULL_SPEC_LITERAL, 0);
-		}
-
+		public TerminalNode NULL_SPEC_LITERAL() { return getToken(ODataParser.NULL_SPEC_LITERAL, 0); }
 		public NullSpecLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_nullSpecLiteral;
-		}
-
+		@Override public int getRuleIndex() { return RULE_nullSpecLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterNullSpecLiteral(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterNullSpecLiteral(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitNullSpecLiteral(this);
@@ -4596,25 +4120,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class NullTokenContext extends ParserRuleContext {
-		public TerminalNode NULL_TOKEN() {
-			return getToken(ODataParser.NULL_TOKEN, 0);
-		}
-
+		public TerminalNode NULL_TOKEN() { return getToken(ODataParser.NULL_TOKEN, 0); }
 		public NullTokenContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_nullToken;
-		}
-
+		@Override public int getRuleIndex() { return RULE_nullToken; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterNullToken(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterNullToken(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitNullToken(this);
@@ -4627,25 +4141,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class BooleanValueContext extends ParserRuleContext {
-		public TerminalNode BOOLEAN_VALUE() {
-			return getToken(ODataParser.BOOLEAN_VALUE, 0);
-		}
-
+		public TerminalNode BOOLEAN_VALUE() { return getToken(ODataParser.BOOLEAN_VALUE, 0); }
 		public BooleanValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_booleanValue;
-		}
-
+		@Override public int getRuleIndex() { return RULE_booleanValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterBooleanValue(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterBooleanValue(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitBooleanValue(this);
@@ -4658,25 +4162,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class DurationValueContext extends ParserRuleContext {
-		public TerminalNode DURATION_VALUE() {
-			return getToken(ODataParser.DURATION_VALUE, 0);
-		}
-
+		public TerminalNode DURATION_VALUE() { return getToken(ODataParser.DURATION_VALUE, 0); }
 		public DurationValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_durationValue;
-		}
-
+		@Override public int getRuleIndex() { return RULE_durationValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterDurationValue(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterDurationValue(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitDurationValue(this);
@@ -4689,25 +4183,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class DateValueContext extends ParserRuleContext {
-		public TerminalNode DATE_VALUE() {
-			return getToken(ODataParser.DATE_VALUE, 0);
-		}
-
+		public TerminalNode DATE_VALUE() { return getToken(ODataParser.DATE_VALUE, 0); }
 		public DateValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_dateValue;
-		}
-
+		@Override public int getRuleIndex() { return RULE_dateValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterDateValue(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterDateValue(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitDateValue(this);
@@ -4720,25 +4204,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class DateTimeOffsetValueContext extends ParserRuleContext {
-		public TerminalNode DATE_TIME_OFFSET_VALUE() {
-			return getToken(ODataParser.DATE_TIME_OFFSET_VALUE, 0);
-		}
-
+		public TerminalNode DATE_TIME_OFFSET_VALUE() { return getToken(ODataParser.DATE_TIME_OFFSET_VALUE, 0); }
 		public DateTimeOffsetValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_dateTimeOffsetValue;
-		}
-
+		@Override public int getRuleIndex() { return RULE_dateTimeOffsetValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterDateTimeOffsetValue(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterDateTimeOffsetValue(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitDateTimeOffsetValue(this);
@@ -4751,25 +4225,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class TimeOfDayValueContext extends ParserRuleContext {
-		public TerminalNode TIME_OF_DAY_VALUE() {
-			return getToken(ODataParser.TIME_OF_DAY_VALUE, 0);
-		}
-
+		public TerminalNode TIME_OF_DAY_VALUE() { return getToken(ODataParser.TIME_OF_DAY_VALUE, 0); }
 		public TimeOfDayValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_timeOfDayValue;
-		}
-
+		@Override public int getRuleIndex() { return RULE_timeOfDayValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterTimeOfDayValue(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterTimeOfDayValue(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitTimeOfDayValue(this);
@@ -4782,25 +4246,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class DecimalLiteralContext extends ParserRuleContext {
-		public TerminalNode DECIMAL_LITERAL() {
-			return getToken(ODataParser.DECIMAL_LITERAL, 0);
-		}
-
+		public TerminalNode DECIMAL_LITERAL() { return getToken(ODataParser.DECIMAL_LITERAL, 0); }
 		public DecimalLiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_decimalLiteral;
-		}
-
+		@Override public int getRuleIndex() { return RULE_decimalLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterDecimalLiteral(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterDecimalLiteral(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitDecimalLiteral(this);
@@ -4813,25 +4267,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class FloatValueContext extends ParserRuleContext {
-		public TerminalNode FLOAT() {
-			return getToken(ODataParser.FLOAT, 0);
-		}
-
+		public TerminalNode FLOAT() { return getToken(ODataParser.FLOAT, 0); }
 		public FloatValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_floatValue;
-		}
-
+		@Override public int getRuleIndex() { return RULE_floatValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterFloatValue(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterFloatValue(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitFloatValue(this);
@@ -4844,25 +4288,15 @@ public class ODataParser extends Parser {
 	}
 
 	public static class IntegerValueContext extends ParserRuleContext {
-		public TerminalNode INTEGER() {
-			return getToken(ODataParser.INTEGER, 0);
-		}
-
+		public TerminalNode INTEGER() { return getToken(ODataParser.INTEGER, 0); }
 		public IntegerValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_integerValue;
-		}
-
+		@Override public int getRuleIndex() { return RULE_integerValue; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof ODataParserListener)
-				((ODataParserListener) listener).enterIntegerValue(this);
+			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).enterIntegerValue(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof ODataParserListener ) ((ODataParserListener)listener).exitIntegerValue(this);

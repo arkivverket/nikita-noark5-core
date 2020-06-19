@@ -16,7 +16,7 @@ public class HQLStatementBuilder {
 
     private final String PARAMETER = "parameter_";
     private final Map<String, Object> parameters = new HashMap<>();
-    private final Map<String, String> orderByMap = new HashMap<>();
+    private final List<String> orderByList = new ArrayList<>();
     private final StringBuilder select = new StringBuilder();
     private final StringBuilder from = new StringBuilder();
     private final StringBuilder where = new StringBuilder();
@@ -150,7 +150,11 @@ public class HQLStatementBuilder {
     }
 
     public void addOrderBy(String attribute, String sortOrder) {
-        orderByMap.put(attribute, sortOrder);
+        if (sortOrder.isEmpty()) {
+            orderByList.add(attribute);
+        } else {
+            orderByList.add(attribute + " " + sortOrder);
+        }
     }
 
     // Methods relating to generating and returning the query
@@ -158,13 +162,17 @@ public class HQLStatementBuilder {
     private String processQuery() {
 
         // Add orderBy values
-        if (orderByMap.size() > 0) {
-            StringJoiner join = new StringJoiner(",");
-            for (Map.Entry<String, String> entry :
-                    orderByMap.entrySet()) {
-                join.add(entry.getKey() + " " + entry.getValue());
+        if (orderByList.size() > 0) {
+            orderBy.append("order by ");
+            orderByList.forEach(
+                    o -> {
+                        orderBy.append(o);
+                        orderBy.append(", ");
+                    });
+            if (orderBy.charAt(orderBy.length() - 1) == ' ') {
+                orderBy.deleteCharAt(orderBy.length() - 1);
+                orderBy.deleteCharAt(orderBy.length() - 1);
             }
-            orderBy.append(join.toString());
         }
 
         // Add list of entities in query
@@ -256,8 +264,8 @@ public class HQLStatementBuilder {
         from.append(" ");
     }
 
-    // currently not sure how to deal with $count=true so leaving it out for
-    // the moment
+    // currently not sure how to deal with $count=true so leaving its
+    // implementation out for the moment but leaving the signatures intact
     public void addCountAsResource(Boolean includeResults) {
         selectCount = true;
     }

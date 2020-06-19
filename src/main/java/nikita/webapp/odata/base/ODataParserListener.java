@@ -274,32 +274,32 @@ public interface ODataParserListener extends ParseTreeListener {
     void exitRightComparatorExpr(ODataParser.RightComparatorExprContext ctx);
 
     /**
-     * Enter a parse tree produced by {@link ODataParser#orderby}.
+     * Enter a parse tree produced by {@link ODataParser#orderBy}.
      *
      * @param ctx the parse tree
      */
-    void enterOrderby(ODataParser.OrderbyContext ctx);
+    void enterOrderBy(ODataParser.OrderByContext ctx);
 
     /**
-     * Exit a parse tree produced by {@link ODataParser#orderby}.
+     * Exit a parse tree produced by {@link ODataParser#orderBy}.
      *
      * @param ctx the parse tree
      */
-    void exitOrderby(ODataParser.OrderbyContext ctx);
+    void exitOrderBy(ODataParser.OrderByContext ctx);
 
     /**
-     * Enter a parse tree produced by {@link ODataParser#orderbyItem}.
+     * Enter a parse tree produced by {@link ODataParser#orderByItem}.
      *
      * @param ctx the parse tree
      */
-    void enterOrderbyItem(ODataParser.OrderbyItemContext ctx);
+    void enterOrderByItem(ODataParser.OrderByItemContext ctx);
 
     /**
-     * Exit a parse tree produced by {@link ODataParser#orderbyItem}.
+     * Exit a parse tree produced by {@link ODataParser#orderByItem}.
      *
      * @param ctx the parse tree
      */
-    void exitOrderbyItem(ODataParser.OrderbyItemContext ctx);
+    void exitOrderByItem(ODataParser.OrderByItemContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ODataParser#topStatement}.
@@ -608,6 +608,20 @@ public interface ODataParserListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitLogicalOperator(ODataParser.LogicalOperatorContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ODataParser#sortOrder}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterSortOrder(ODataParser.SortOrderContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#sortOrder}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitSortOrder(ODataParser.SortOrderContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ODataParser#entityName}.

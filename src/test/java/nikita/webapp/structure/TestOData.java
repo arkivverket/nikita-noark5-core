@@ -29,6 +29,9 @@ import static org.junit.Assert.assertEquals;
  * arkiv?$filter=tittel eq 'The fonds'&$top=5
  * arkiv?$filter=tittel eq 'The fonds'&$skip=10
  * arkiv?$filter=tittel eq 'The fonds'&$top=8&$skip=10
+ * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato
+ * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato ASC
+ * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato ASC, tittel DESC
  * dokumentobjekt?$filter=dokumentbeskrivelse/dokumentstatus/kode eq 'B'
  * dokumentbeskrivelse?$filter=dokumentstatus/kodenavn eq 'Dokumentet er under redigering'
  * klasse?$filter=(beskrivelse ne null and length(tittel) gt 4) or (tittel eq 'class number 1' and year(opprettetDato) eq 2019)
@@ -182,6 +185,98 @@ public class TestOData {
         assertEquals(query.getParameterValue("parameter_0"),
                 "The fonds");
         assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a simple query with a order by clause
+     * with sort order identified
+     * Entity: mappe
+     * Attribute: tittel
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato ASC
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * WHERE
+     * file_1.title like :parameter_0
+     * order by file_1.createdDate ASC
+     * Additionally the parameter_0 parameter value should be:
+     * %søknad%
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLOrderBySingleAttributeSortOrder() {
+        String joinQuery = "mappe?$filter=" +
+                "contains(tittel, 'søknad')&$orderby=opprettetDato ASC";
+        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        String hqlJoin = "SELECT file_1 FROM File AS file_1" +
+                " WHERE" +
+                " file_1.title like :parameter_0" +
+                " order by file_1.createdDate ASC";
+        assertEquals(query.getParameterValue("parameter_0"), "%søknad%");
+        assertEquals(query.getQueryString(), hqlJoin);
+    }
+
+    /**
+     * Check that it is possible to do a simple query with a order by clause
+     * with multiple attributes and where sort order is identified
+     * Entity: mappe
+     * Attribute: tittel
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato ASC,
+     * tittel DESC
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * WHERE
+     * file_1.title like :parameter_0
+     * order by file_1.createdDate ASC, file_1.title DESC,
+     * Additionally the parameter_0 parameter value should be:
+     * %søknad%
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLOrderBySingleAttributeMultipleSortOrder() {
+        String joinQuery = "mappe?$filter=" +
+                "contains(tittel, 'søknad')" +
+                "&$orderby=opprettetDato ASC, tittel DESC";
+        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        String hqlJoin = "SELECT file_1 FROM File AS file_1" +
+                " WHERE" +
+                " file_1.title like :parameter_0" +
+                " order by file_1.createdDate ASC, file_1.title DESC";
+        assertEquals(query.getParameterValue("parameter_0"), "%søknad%");
+        assertEquals(query.getQueryString(), hqlJoin);
+    }
+
+    /**
+     * Check that it is possible to do a simple query with a order by clause
+     * <p>
+     * Entity: mappe
+     * Attribute: tittel
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * WHERE
+     * file_1.title like :parameter_0
+     * order by file_1.createdDate
+     * Additionally the parameter_0 parameter value should be:
+     * %søknad%
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLOrderBySingleAttribute() {
+        String joinQuery = "mappe?$filter=" +
+                "contains(tittel, 'søknad')&$orderby=opprettetDato";
+        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        String hqlJoin = "SELECT file_1 FROM File AS file_1" +
+                " WHERE" +
+                " file_1.title like :parameter_0" +
+                " order by file_1.createdDate";
+        assertEquals(query.getParameterValue("parameter_0"), "%søknad%");
+        assertEquals(query.getQueryString(), hqlJoin);
     }
 
     /**
