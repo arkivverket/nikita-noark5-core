@@ -29,6 +29,7 @@ import static org.junit.Assert.assertEquals;
  * arkiv?$filter=tittel eq 'The fonds'&$top=5
  * arkiv?$filter=tittel eq 'The fonds'&$skip=10
  * arkiv?$filter=tittel eq 'The fonds'&$top=8&$skip=10
+ * mappe?$filter=contains(tittel, 'søknad')&$top=8&$skip=10&$orderby=opprettetDato
  * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato
  * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato ASC
  * mappe?$filter=contains(tittel, 'søknad')&$orderby=opprettetDato ASC, tittel DESC
@@ -377,6 +378,43 @@ public class TestOData {
         assertEquals(query.getQueryOptions().getFirstRow(), Integer.valueOf(10));
         assertEquals(query.getParameterValue("parameter_0"),
                 "The fonds");
+        assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a eq query with $top and $skip
+     * <p>
+     * Entity: arkiv
+     * Attribute: tittel
+     * ODATA Input:
+     * arkiv?$filter=tittel eq 'The fonds'&$top=8&$skip=10
+     * <p>
+     * Expected HQL:
+     * SELECT fonds_1 FROM Fonds AS fonds_1
+     * WHERE
+     * fonds_1.title = :parameter_0
+     * <p>
+     * Additionally the parameter_0 parameter value should be:
+     * The fonds
+     * and
+     * maxRows = 8
+     * and
+     * firstRow = 10
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQTopSkipOrderBy() {
+        String odata = "mappe?$filter=contains(tittel, 'søknad')" +
+                "&$top=23&$skip=49&$orderby=opprettetDato";
+        Query query = oDataService.convertODataToHQL(odata, "");
+        String hql = "SELECT file_1 FROM Fonds AS file_1" +
+                " WHERE file_1.title like :parameter_0" +
+                " order by file_1.createdDate";
+
+        assertEquals(query.getQueryOptions().getMaxRows(), Integer.valueOf(23));
+        assertEquals(query.getQueryOptions().getFirstRow(), Integer.valueOf(49));
+        assertEquals(query.getParameterValue("parameter_0"),
+                "%søknad%");
         assertEquals(query.getQueryString(), hql);
     }
 
