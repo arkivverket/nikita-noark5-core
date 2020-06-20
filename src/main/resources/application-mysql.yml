@@ -47,6 +47,8 @@ spring:
   profiles:
     active: security-oauth2-authentication, mysql
 
+# Used to avoid filling the log file up with INFO messages
+# about time used when performing reflection for OData queries
 logging:
   level:
     org:

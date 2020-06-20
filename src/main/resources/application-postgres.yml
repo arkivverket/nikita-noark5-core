@@ -5,14 +5,14 @@
 # ===================================================================
 
 # ===================================================================
-#
-# To get the database working right, be administrator in mysql and
-#
+# Notes for postgres (if any)
 #
 #
 #
 #
-# Or whatever variation you use to create a user
+#
+#
+#
 # ===================================================================
 # Leaving logging here so you can quickly turn it on when required
 #logging:
@@ -47,6 +47,8 @@ spring:
   profiles:
     active: security-oauth2-authentication, postgres
 
+# Used to avoid filling the log file up with INFO messages
+# about time used when performing reflection for OData queries
 logging:
   level:
     org:
