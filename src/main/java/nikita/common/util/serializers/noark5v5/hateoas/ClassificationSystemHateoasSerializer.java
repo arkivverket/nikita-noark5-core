@@ -28,6 +28,7 @@ public class ClassificationSystemHateoasSerializer
         jgen.writeStartObject();
         printClassificationSystemEntity(jgen, classificationSystem);
         printFinaliseEntity(jgen, classificationSystem);
+        printCreateEntity(jgen, classificationSystem);
         printModifiedEntity(jgen, classificationSystem);
         printHateoasLinks(jgen, classificationSystemHateoas.
                 getLinks(classificationSystem));

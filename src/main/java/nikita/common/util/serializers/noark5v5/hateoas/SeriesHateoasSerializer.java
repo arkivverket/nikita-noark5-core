@@ -40,6 +40,7 @@ public class SeriesHateoasSerializer
         printDocumentMedium(jgen, series);
         printStorageLocation(jgen, series);
         printFinaliseEntity(jgen, series);
+        printCreateEntity(jgen, series);
         printModifiedEntity(jgen, series);
         printNullableDate(jgen, SERIES_START_DATE, series.getSeriesStartDate());
         printNullableDate(jgen, SERIES_END_DATE, series.getSeriesEndDate());

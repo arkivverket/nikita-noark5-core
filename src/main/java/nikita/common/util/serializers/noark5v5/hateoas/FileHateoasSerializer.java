@@ -42,6 +42,7 @@ public class FileHateoasSerializer
         printDocumentMedium(jgen, file);
         printKeyword(jgen, file);
         printFinaliseEntity(jgen, file);
+        printCreateEntity(jgen, file);
         printModifiedEntity(jgen, file);
         printCrossReferences(jgen, file);
         printDisposal(jgen, file);

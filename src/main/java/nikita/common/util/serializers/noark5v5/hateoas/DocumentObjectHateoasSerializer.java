@@ -49,6 +49,7 @@ public class DocumentObjectHateoasSerializer
                       documentObject.getOriginalFilename());
         printNullable(jgen, DOCUMENT_OBJECT_MIME_TYPE,
                       documentObject.getMimeType());
+        printCreateEntity(jgen, documentObject);
         printModifiedEntity(jgen, documentObject);
         printElectronicSignature(jgen, documentObject);
         printHateoasLinks(jgen, documentObjectHateoas.getLinks(documentObject));

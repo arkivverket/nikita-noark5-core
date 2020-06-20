@@ -31,6 +31,7 @@ public class ClassHateoasSerializer
         printTitleAndDescription(jgen, klass);
         printKeyword(jgen, klass);
         printFinaliseEntity(jgen, klass);
+        printCreateEntity(jgen, klass);
         printModifiedEntity(jgen, klass);
         // TODO: Fix this! Add printCrossReference(jgen, klass);
         printDisposal(jgen, klass);
