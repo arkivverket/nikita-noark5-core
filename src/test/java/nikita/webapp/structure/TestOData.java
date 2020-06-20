@@ -407,7 +407,7 @@ public class TestOData {
         String odata = "mappe?$filter=contains(tittel, 'søknad')" +
                 "&$top=23&$skip=49&$orderby=opprettetDato";
         Query query = oDataService.convertODataToHQL(odata, "");
-        String hql = "SELECT file_1 FROM Fonds AS file_1" +
+        String hql = "SELECT file_1 FROM File AS file_1" +
                 " WHERE file_1.title like :parameter_0" +
                 " order by file_1.createdDate";
 
