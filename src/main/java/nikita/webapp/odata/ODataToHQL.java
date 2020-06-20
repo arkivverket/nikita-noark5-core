@@ -47,25 +47,6 @@ public class ODataToHQL
         statement = new HQLStatementBuilder();
     }
 
-    /**
-     * processResource
-     * <p>
-     * When dealing with the following example URL:
-     * <p>
-     * [contextPath][api]/arkivstruktur/arkiv?$filter=startsWith(tittel,'hello')
-     * <p>
-     * The 'arkiv' entity is identified as a entity and picked out and is
-     * identified as the 'from' part. We always add to the where clause to
-     * filter out rows that actually belong to the user first and then can add
-     * extra filtering as the walker progresses.
-     * <p>
-     * Note this will cause some problems when dealing with ownership of objects
-     * via groups. Probably have to some lookup or something. But we are
-     * currently just dealing with getting OData2HQL to work.
-     *
-     * @param entity The entity/table you wish to search
-     */
-
     @Override
     public void processQueryEntity(String entity) {
         statement.addQueryEntity(entity);
