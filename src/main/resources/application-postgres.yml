@@ -1,7 +1,27 @@
-# Spring Boot configuration for the "postgres" profile.
+# ===================================================================
+# Spring Boot configuration for the "postrges" profile.
 #
 # This configuration overrides the application.yml file.
 # ===================================================================
+
+# ===================================================================
+# Notes for postgres (if any)
+#
+#
+#
+#
+#
+#
+#
+# ===================================================================
+# Leaving logging here so you can quickly turn it on when required
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+#      hibernate:
+#        SQL: DEBUG
 
 server:
   servlet:
@@ -27,6 +47,13 @@ spring:
   profiles:
     active: security-oauth2-authentication, postgres
 
+# Used to avoid filling the log file up with INFO messages
+# about time used when performing reflection for OData queries
+logging:
+  level:
+    org:
+      reflections: OFF
+
 security:
   oauth2:
     client:
@@ -47,7 +74,7 @@ nikita:
       version: Noark 5.5.0
     build: 2019-08-07+0200
   startup:
-    create-demo-users: false # Populate database with some users
+    create-demo-users: true # Populate database with some users
     create-directory-store: true # If not created, attempt to create
     directory-store-name: /data/nikita/storage/ # Where to store documents
     incoming-directory: /data/nikita/storage/incoming/ # Temporary storage area
