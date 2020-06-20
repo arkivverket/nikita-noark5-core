@@ -33,6 +33,7 @@ public class FondsHateoasSerializer
         printDocumentMedium(jgen, fonds);
         printStorageLocation(jgen, fonds);
         printFinaliseEntity(jgen, fonds);
+        printCreateEntity(jgen, fonds);
         printModifiedEntity(jgen, fonds);
         printHateoasLinks(jgen, fondsHateoas.getLinks(fonds));
         jgen.writeEndObject();

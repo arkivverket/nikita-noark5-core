@@ -62,6 +62,7 @@ public class DocumentDescriptionHateoasSerializer
         printNullableMetadata(jgen,
              DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
              documentDescription.getAssociatedWithRecordAs());
+        printCreateEntity(jgen, documentDescription);
         printModifiedEntity(jgen, documentDescription);
         printDisposal(jgen, documentDescription);
         printDisposalUndertaken(jgen, documentDescription);
