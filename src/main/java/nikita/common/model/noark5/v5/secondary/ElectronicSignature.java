@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.metadata.ElectronicSignatureSecurityLevel;
@@ -15,7 +14,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
+import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
@@ -68,12 +68,14 @@ public class ElectronicSignature
     private String verifiedBy;
 
     // Link to RegistryEntry
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private RegistryEntry referenceRegistryEntry;
 
     // Link to DocumentObject
     @OneToOne
+    @MapsId
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentObject referenceDocumentObject;
 
@@ -87,17 +89,17 @@ public class ElectronicSignature
         if (null == electronicSignatureSecurityLevelCode)
             return null;
         return new ElectronicSignatureSecurityLevel
-            (electronicSignatureSecurityLevelCode,
-             electronicSignatureSecurityLevelCodeName);
+                (electronicSignatureSecurityLevelCode,
+                        electronicSignatureSecurityLevelCodeName);
     }
 
     public void setElectronicSignatureSecurityLevel(
             ElectronicSignatureSecurityLevel electronicSignatureSecurityLevel) {
         if (null != electronicSignatureSecurityLevel) {
             this.electronicSignatureSecurityLevelCode =
-                electronicSignatureSecurityLevel.getCode();
+                    electronicSignatureSecurityLevel.getCode();
             this.electronicSignatureSecurityLevelCodeName =
-                electronicSignatureSecurityLevel.getCodeName();
+                    electronicSignatureSecurityLevel.getCodeName();
         } else {
             this.electronicSignatureSecurityLevelCode = null;
             this.electronicSignatureSecurityLevelCodeName = null;
@@ -108,22 +110,22 @@ public class ElectronicSignature
         if (null == electronicSignatureVerifiedCode)
             return null;
         return new ElectronicSignatureVerified
-            (electronicSignatureVerifiedCode,
-             electronicSignatureVerifiedCodeName);
+                (electronicSignatureVerifiedCode,
+                        electronicSignatureVerifiedCodeName);
     }
 
     public void setElectronicSignatureVerified(
             ElectronicSignatureVerified electronicSignatureVerified) {
-         if (null != electronicSignatureVerified) {
+        if (null != electronicSignatureVerified) {
             this.electronicSignatureVerifiedCode =
-                electronicSignatureVerified.getCode();
+                    electronicSignatureVerified.getCode();
             this.electronicSignatureVerifiedCodeName =
-                electronicSignatureVerified.getCodeName();
+                    electronicSignatureVerified.getCodeName();
         } else {
             this.electronicSignatureVerifiedCode = null;
             this.electronicSignatureVerifiedCodeName = null;
         }
-   }
+    }
 
     public OffsetDateTime getVerifiedDate() {
         return verifiedDate;
