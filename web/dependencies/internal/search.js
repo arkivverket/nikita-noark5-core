@@ -6,8 +6,8 @@ var searchController = app.controller('SearchController',
     ['$scope', '$http', 'loginService',
         function ($scope, $http, loginService) {
 
-            $scope.odataQuery = "mappe?$filter=contains(tittel, 'file')&$top=2&$orderby=tittel desc";
-            $scope.baseUrlForOdataSearch = "https://nikita.oslomet.no/noark5v5/api/arkivstruktur";
+            $scope.odataQuery = "arkivstruktur/mappe?$filter=contains(tittel, 'file')&$top=2&$orderby=tittel desc";
+            $scope.baseUrlForOdataSearch = "https://nikita.oslomet.no/noark5v5/api/";
 
             // It's not a secret
             $scope.emailAddress = "admin@example.com";
