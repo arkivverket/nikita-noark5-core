@@ -70,8 +70,7 @@ public class ODataController {
      * @throws Exception, parsing, SQL exception
      */
     @SuppressWarnings("unused")
-    @GetMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "**",
-            params = "!" + DOLLAR_ID)
+    @GetMapping(value = "**")
     public ResponseEntity<HateoasNoarkObject>
     retrieveOData(HttpServletRequest request,
                   @RequestParam(value = DOLLAR_FILTER, required = false)
