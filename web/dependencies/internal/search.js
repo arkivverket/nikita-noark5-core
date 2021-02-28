@@ -8,6 +8,7 @@ var searchController = app.controller('SearchController',
 
             $scope.odataQuery = "arkivstruktur/mappe?$filter=contains(tittel, 'file')&$top=2&$orderby=tittel desc";
             $scope.baseUrlForOdataSearch = "https://nikita.oslomet.no/noark5v5/api/";
+            //$scope.baseUrlForOdataSearch = "http://localhost:8092/noark5v5/api";
 
             // It's not a secret
             $scope.emailAddress = "admin@example.com";
@@ -28,6 +29,7 @@ var searchController = app.controller('SearchController',
                     try {
                         $scope.tokenInfo = await loginService.doLogin(
                             "https://nikita.oslomet.no/noark5v5/oauth/token",
+                            //"http://localhost:8092/noark5v5/oauth/token",
                             $scope.emailAddress, $scope.password);
                         $scope.token = "Bearer " + $scope.tokenInfo[OAUTH_ACCESS_TOKEN];
                         console.log("Token is " + $scope.token);

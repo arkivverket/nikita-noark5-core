@@ -1,16 +1,15 @@
 package nikita.common.util.serializers.noark5v5.hateoas.secondary;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
 import java.io.IOException;
 
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.printPartPerson;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
  * Serialise an outgoing PartPerson object as JSON.
@@ -33,6 +32,7 @@ public class PartPersonHateoasSerializer
         PartPerson partPerson = (PartPerson) noarkSystemIdEntity;
         jgen.writeStartObject();
         printPartPerson(jgen, partPerson);
+        printBSM(jgen, partPerson);
         printHateoasLinks(jgen, partPersonHateoas.getLinks(partPerson));
         jgen.writeEndObject();
     }

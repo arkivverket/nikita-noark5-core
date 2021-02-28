@@ -18,10 +18,10 @@ public class ODataToHQL
         extends ODataWalker
         implements IODataWalker {
 
-    private final HQLStatementBuilder statement;
+    protected final HQLStatementBuilder statement;
     private final HibernateEntityReflections reflections;
-    private Comparison comparison = new Comparison();
-    private boolean right = false;
+    protected Comparison comparison = new Comparison();
+    protected boolean right = false;
 
     public ODataToHQL(String dmlStatementType) {
         statement = new HQLStatementBuilder(dmlStatementType);

@@ -1,16 +1,17 @@
 package nikita.common.model.noark5.v5;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.interfaces.ICrossReference;
 import nikita.common.model.noark5.v5.interfaces.entities.IFileEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.secondary.*;
+import nikita.common.util.deserialisers.BSMDeserialiser;
 import nikita.common.util.deserialisers.FileDeserializer;
 import nikita.webapp.hateoas.FileHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
@@ -24,8 +25,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
@@ -157,6 +157,12 @@ public class File
     @OneToMany(mappedBy = "referenceFile")
     private List<NationalIdentifier> referenceNationalIdentifier =
             new ArrayList<>();
+
+    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+    @OneToMany(mappedBy = "referenceFile", cascade = {PERSIST, MERGE})
+    @JsonDeserialize(using = BSMDeserialiser.class)
+    @JsonProperty(BSM_DEF)
+    private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     public String getFileId() {
         return fileId;
@@ -377,6 +383,29 @@ public class File
     public void addNationalIdentifier(
             NationalIdentifier referenceNationalIdentifier) {
         this.referenceNationalIdentifier.add(referenceNationalIdentifier);
+    }
+
+    public List<BSMBase> getReferenceBSMBase() {
+        return referenceBSMBase;
+    }
+
+    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
+        this.referenceBSMBase = referenceBSMBase;
+        for (BSMBase bsm : referenceBSMBase) {
+            bsm.setReferenceFile(this);
+        }
+    }
+
+    public void addBSMBaseList(List<BSMBase> referenceBSMBase) {
+        this.referenceBSMBase.addAll(referenceBSMBase);
+        for (BSMBase bsm : referenceBSMBase) {
+            bsm.setReferenceFile(this);
+        }
+    }
+
+    public void addBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.add(bsmBase);
+        bsmBase.setReferenceFile(this);
     }
 
     @Override

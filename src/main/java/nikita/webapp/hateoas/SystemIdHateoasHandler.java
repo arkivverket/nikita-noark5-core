@@ -2,21 +2,20 @@ package nikita.webapp.hateoas;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.ISystemIdHateoasHandler;
 import nikita.webapp.security.IAuthorisation;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
-import static org.apache.poi.hslf.record.RecordTypes.List;
 
+@Component
 public class SystemIdHateoasHandler
         extends HateoasHandler
         implements ISystemIdHateoasHandler {
-
 
     /**
      * Create a self link and self pointing entity link. Allows a client to be
@@ -47,7 +46,7 @@ public class SystemIdHateoasHandler
         this.authorisation = authorisation;
 
         Iterable<ISystemId> entities = (List<ISystemId>) (List)
-        hateoasNoarkObject.getList();
+                hateoasNoarkObject.getList();
         for (ISystemId entity : entities) {
             addSelfLink(entity, hateoasNoarkObject);
             addEntityLinks(entity, hateoasNoarkObject);

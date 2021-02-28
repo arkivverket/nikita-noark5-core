@@ -74,7 +74,7 @@ public class SeriesHateoasController
 
 
     // Create a new file
-    // POST [contextPath][api]/arkivstruktur/arkivdel/ny-mappe/
+    // POST [contextPath][api]/arkivstruktur/arkivdel/ny-klassifikasjonsystem/
     @ApiOperation(value = "Persists a File object associated with the given Series systemId", notes = "Returns the " +
             "newly created file object after it was associated with a Series object and persisted to the database",
             response = FileHateoas.class)

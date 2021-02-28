@@ -48,6 +48,7 @@ public class FileHateoasSerializer
         printDisposal(jgen, file);
         printScreening(jgen, file);
         printClassified(jgen, file);
+        printBSM(jgen, file);
         printHateoasLinks(jgen, fileHateoas.getLinks(file));
         jgen.writeEndObject();
     }

@@ -19,9 +19,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.REL_CASE_HANDLING_SIGN_OFF;
+import static nikita.common.config.Constants.TABLE_SIGN_OFF;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
@@ -85,20 +88,18 @@ public class SignOff
     private UUID referenceSignedOffCorrespondencePartSystemID;
 
     // Link to reference registry entry if present
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "fk_record_id")
     private RegistryEntry referenceSignedOffRecord;
 
     // Link to reference correspondence part if present
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "pk_correspondence_part_id")
     private CorrespondencePart referenceSignedOffCorrespondencePart;
 
     // Links to RegistryEntry
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sign_off_registry_entry_id",
-                referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    private RegistryEntry referenceRecord;
+    @ManyToMany(mappedBy = "referenceSignOff")
+    private Set<RegistryEntry> referenceRecord = new TreeSet<>();
 
     @Override
     public OffsetDateTime getSignOffDate() {
@@ -217,13 +218,18 @@ public class SignOff
     }
 
     @Override
-    public RegistryEntry getReferenceRecord() {
+    public Set<RegistryEntry> getReferenceRecord() {
         return referenceRecord;
     }
 
     @Override
-    public void setReferenceRecord(RegistryEntry referenceRecord) {
+    public void setReferenceRecord(Set<RegistryEntry> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+    @Override
+    public void addRecord(RegistryEntry record) {
+        this.referenceRecord.add(record);
     }
 
     @Override

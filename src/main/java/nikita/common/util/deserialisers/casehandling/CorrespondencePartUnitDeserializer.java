@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
+import static nikita.common.config.N5ResourceMappings.BSM_DEF;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
@@ -51,7 +53,16 @@ public class CorrespondencePartUnitDeserializer
         deserialiseCorrespondencePartUnitEntity(correspondencePartUnit,
                 objectNode, errors);
 
-        JsonNode currentNode = objectNode.get(LINKS);
+        // Deserialize businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+        JsonNode currentNode = objectNode.get(BSM_DEF);
+        if (null != currentNode) {
+            BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
+            correspondencePartUnit.setReferenceBSMBase(
+                    base.getReferenceBSMBase());
+            objectNode.remove(BSM_DEF);
+        }
+
+        currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.debug("Payload contains " + LINKS + ". " +
                     "This value is being ignored.");
@@ -61,10 +72,11 @@ public class CorrespondencePartUnitDeserializer
         // Check that there are no additional values left after processing
         // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The korrespondansepartenhet you tried to create " +
-                          "is malformed. The following fields are not " +
-                          "recognised as korrespondansepartenhet fields " +
-                          "[" + checkNodeObjectEmpty(objectNode) + "].");
+            errors.append("The korrespondansepartenhet you tried to create ");
+            errors.append("is malformed. The following fields are not ");
+            errors.append("recognised as korrespondansepartenhet fields [");
+            errors.append(checkNodeObjectEmpty(objectNode));
+            errors.append("].");
         }
 
         if (0 < errors.length())

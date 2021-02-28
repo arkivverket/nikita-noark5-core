@@ -5,9 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
@@ -24,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -272,6 +275,43 @@ public class CorrespondencePartHateoasController
                 .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedCorrespondencePartInternal.getVersion().toString())
                 .body(correspondencePartInternalHateoas);
+    }
+
+    // Update a CorrespondencePart with given values
+    // PATCH [contextPath][api]/arkivstruktur/korrespondansepartperson/{systemId}
+    @ApiOperation(value = "Updates a CorrespondencePart identified by a given" +
+            " systemId",
+            notes = "Returns the newly updated correspondencePart",
+            response = CorrespondencePartHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "CorrespondencePart OK",
+                    response = CorrespondencePartHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type CorrespondencePart"),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PatchMapping(value =
+            SLASH + CORRESPONDENCE_PART_PERSON + SLASH + SYSTEM_ID_PARAMETER,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<CorrespondencePartHateoas> patchCorrespondencePart(
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemId of correspondencePart to update",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @ApiParam(name = "CorrespondencePart",
+                    value = "Incoming correspondencePart object",
+                    required = true)
+            @RequestBody PatchObjects patchObjects) throws NikitaException {
+        return correspondencePartService.handleUpdate(systemID, patchObjects);
     }
 
     // Delete a correspondencePartUnit identified by systemID

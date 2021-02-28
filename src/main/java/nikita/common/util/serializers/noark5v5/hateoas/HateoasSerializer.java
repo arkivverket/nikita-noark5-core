@@ -175,21 +175,28 @@ public class HateoasSerializer
 
 
     protected static void printNullable(JsonGenerator jgen,
-                                 String fieldName, String value)
+                                        String fieldName, String value)
             throws IOException {
         if (null != value)
             jgen.writeStringField(fieldName, value);
     }
 
     protected static void printNullable(JsonGenerator jgen,
-                                 String fieldName, Integer value)
+                                        String fieldName, Boolean value)
+            throws IOException {
+        if (null != value)
+            jgen.writeBooleanField(fieldName, value);
+    }
+
+    protected static void printNullable(JsonGenerator jgen,
+                                        String fieldName, Integer value)
             throws IOException {
         if (null != value)
             jgen.writeNumberField(fieldName, value);
     }
 
     protected static void printNullable(JsonGenerator jgen,
-                                 String fieldName, Long value)
+                                        String fieldName, Long value)
             throws IOException {
         if (null != value)
             jgen.writeNumberField(fieldName, value);

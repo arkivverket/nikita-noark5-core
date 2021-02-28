@@ -48,7 +48,7 @@ public class RecordHateoasSerializer
 
         } else if (record instanceof RecordNote) {
         }
-
+        printBSM(jgen, record);
         printHateoasLinks(jgen, recordHateoas.getLinks(record));
         jgen.writeEndObject();
     }

@@ -1,9 +1,6 @@
 package nikita.webapp.hateoas;
 
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 import nikita.webapp.security.IAuthorisation;
 import nikita.webapp.util.AddressComponent;
@@ -16,10 +13,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
-import static nikita.common.config.Constants.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.HATEOASConstants.SELF;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
 
 /**
  * Created by tsodring on 2/6/17.
@@ -152,5 +151,13 @@ public class HateoasHandler
 
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
+    }
+
+    protected String urlEncode(String value) {
+        try {
+            return URLEncoder.encode(value, UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
     }
 }

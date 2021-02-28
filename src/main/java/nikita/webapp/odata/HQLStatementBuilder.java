@@ -5,6 +5,7 @@ import org.hibernate.query.Query;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 /**
  * Some consideration of note:
@@ -23,6 +24,7 @@ public class HQLStatementBuilder {
     private final StringBuilder orderBy = new StringBuilder();
     private final Set<String> entityList = new TreeSet<>();
 
+    public Map<String, StringBuilder> bsmParameters = new HashMap<>();
     // Setting a hard limit of 1000 unless overridden
     private AtomicInteger limitHowMany = new AtomicInteger(1000);
     // Always start at offset 0 unless overridden
@@ -30,6 +32,10 @@ public class HQLStatementBuilder {
     private String fromEntity = "";
     private String fromEntityAlias = "";
     private Boolean selectCount = false;
+
+    Pattern uuidPattern = Pattern.compile(
+            "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+
     public HQLStatementBuilder() {
     }
 
@@ -57,6 +63,9 @@ public class HQLStatementBuilder {
         String parameter = PARAMETER + parameters.size();
         if (value instanceof String) {
             value = desanitiseValue((String) value);
+            if (uuidPattern.matcher(value.toString()).matches()) {
+                value = UUID.fromString(value.toString());
+            }
         }
         if (value != null) {
             parameters.put(parameter, value);
@@ -82,6 +91,9 @@ public class HQLStatementBuilder {
 
     public void addCompareValue(String aliasAndAttribute, String comparator,
                                 Object value) {
+        if (uuidPattern.matcher(value.toString()).matches()) {
+            value = UUID.fromString(value.toString());
+        }
         String parameter = PARAMETER + parameters.size();
         if (value instanceof String) {
             parameters.put(parameter, desanitiseValue((String) value));
@@ -200,8 +212,15 @@ public class HQLStatementBuilder {
                 this.fromEntityAlias + " " + from.toString();
 
         if (where.length() > 0) {
-            query += "WHERE " + where.toString();
+            String whereString = where.toString();
+            // Check if there is any BSM values that need to be tidied up
+            for (Map.Entry<String, StringBuilder> entry : bsmParameters.entrySet()) {
+                String colName = entry.getValue().toString().toLowerCase() + "Value";
+                whereString = whereString.replaceAll(entry.getKey(), colName);
+            }
+            query += "WHERE " + whereString;
         }
+
         if (orderBy.length() > 0) {
             query += orderBy.toString();
         }

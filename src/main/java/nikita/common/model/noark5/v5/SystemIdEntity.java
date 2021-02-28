@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 /**
@@ -30,8 +30,6 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @Entity
 @Inheritance(strategy = TABLE_PER_CLASS)
 @EntityListeners(AuditingEntityListener.class)
-@Table(indexes = @Index(name = "index_owned_by",
-        columnList = "owned_by"))
 @Audited(targetAuditMode = NOT_AUDITED)
 public class SystemIdEntity
         extends NoarkEntity

@@ -39,7 +39,7 @@ queryOptions:
 
 // Note: Listener must make sure only one of each is possible
 queryOption:
-    filter ('&'expand | '&'orderBy | '&'skipStatement | '&'topStatement | '&'topStatement)*;
+    filter ('&'expand | '&'orderBy | '&'skipStatement | '&'topStatement)*;
 
 filter:
     FILTER EQUAL filterExpression;
@@ -137,6 +137,7 @@ number:
     INTEGER | FLOAT;
 
 primitiveLiteral:
+    quotedUUID |
     quotedString |
     nullSpecLiteral |
     nullToken |
@@ -152,14 +153,16 @@ primitiveLiteral:
 countStatement:
     SLASH COUNT (EQUAL booleanValue)?;
 
+attributeName: BSM_ID | ID;
+
 openPar: OPEN;
 closePar: CLOSE;
 logicalOperator: AND | OR;
 sortOrder: ASC | DESC;
 entityName: ID;
-attributeName: ID;
 orderAttributeName: ID;
 uuidIdValue: UUID;
+quotedUUID: QUOTED_UUID;
 quotedString: QUOTED_STRING;
 nullSpecLiteral: NULL_SPEC_LITERAL ;
 nullToken: NULL_TOKEN;

@@ -568,6 +568,20 @@ public interface ODataParserListener extends ParseTreeListener {
     void exitCountStatement(ODataParser.CountStatementContext ctx);
 
     /**
+     * Enter a parse tree produced by {@link ODataParser#attributeName}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterAttributeName(ODataParser.AttributeNameContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#attributeName}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitAttributeName(ODataParser.AttributeNameContext ctx);
+
+    /**
      * Enter a parse tree produced by {@link ODataParser#openPar}.
      *
      * @param ctx the parse tree
@@ -638,18 +652,18 @@ public interface ODataParserListener extends ParseTreeListener {
     void exitEntityName(ODataParser.EntityNameContext ctx);
 
     /**
-     * Enter a parse tree produced by {@link ODataParser#attributeName}.
+     * Enter a parse tree produced by {@link ODataParser#orderAttributeName}.
      *
      * @param ctx the parse tree
      */
-    void enterAttributeName(ODataParser.AttributeNameContext ctx);
+    void enterOrderAttributeName(ODataParser.OrderAttributeNameContext ctx);
 
     /**
-     * Exit a parse tree produced by {@link ODataParser#attributeName}.
+     * Exit a parse tree produced by {@link ODataParser#orderAttributeName}.
      *
      * @param ctx the parse tree
      */
-    void exitAttributeName(ODataParser.AttributeNameContext ctx);
+    void exitOrderAttributeName(ODataParser.OrderAttributeNameContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ODataParser#uuidIdValue}.
@@ -664,6 +678,20 @@ public interface ODataParserListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void exitUuidIdValue(ODataParser.UuidIdValueContext ctx);
+
+    /**
+     * Enter a parse tree produced by {@link ODataParser#quotedUUID}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterQuotedUUID(ODataParser.QuotedUUIDContext ctx);
+
+    /**
+     * Exit a parse tree produced by {@link ODataParser#quotedUUID}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitQuotedUUID(ODataParser.QuotedUUIDContext ctx);
 
     /**
      * Enter a parse tree produced by {@link ODataParser#quotedString}.

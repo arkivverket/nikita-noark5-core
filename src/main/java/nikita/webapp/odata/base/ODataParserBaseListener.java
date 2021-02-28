@@ -721,6 +721,24 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
+    public void enterAttributeName(ODataParser.AttributeNameContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitAttributeName(ODataParser.AttributeNameContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
     public void enterOpenPar(ODataParser.OpenParContext ctx) {
     }
 
@@ -811,7 +829,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void enterAttributeName(ODataParser.AttributeNameContext ctx) {
+    public void enterOrderAttributeName(ODataParser.OrderAttributeNameContext ctx) {
     }
 
     /**
@@ -820,7 +838,7 @@ public class ODataParserBaseListener implements ODataParserListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitAttributeName(ODataParser.AttributeNameContext ctx) {
+    public void exitOrderAttributeName(ODataParser.OrderAttributeNameContext ctx) {
     }
 
     /**
@@ -839,6 +857,24 @@ public class ODataParserBaseListener implements ODataParserListener {
      */
     @Override
     public void exitUuidIdValue(ODataParser.UuidIdValueContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterQuotedUUID(ODataParser.QuotedUUIDContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitQuotedUUID(ODataParser.QuotedUUIDContext ctx) {
     }
 
     /**

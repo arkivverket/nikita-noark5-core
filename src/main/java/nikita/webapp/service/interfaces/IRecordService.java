@@ -1,5 +1,6 @@
 package nikita.webapp.service.interfaces;
 
+import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
@@ -11,11 +12,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInte
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
-import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.model.noark5.v5.secondary.Comment;
@@ -25,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 public interface IRecordService {
 
@@ -154,4 +152,7 @@ public interface IRecordService {
     SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber();
 
     UnitHateoas generateDefaultUnit();
+
+    ResponseEntity<RecordHateoas> handleUpdate(
+            UUID systemID, PatchObjects patchObjects);
 }

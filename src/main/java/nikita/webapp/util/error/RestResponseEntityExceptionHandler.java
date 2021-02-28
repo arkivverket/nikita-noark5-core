@@ -68,7 +68,7 @@ public class RestResponseEntityExceptionHandler
     }
 
     // 400
-    @ExceptionHandler({ DataIntegrityViolationException.class })
+    @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleBadRequest(
             final DataIntegrityViolationException ex,
             final WebRequest request) {
@@ -76,10 +76,19 @@ public class RestResponseEntityExceptionHandler
                 new HttpHeaders(), BAD_REQUEST, request);
     }
 
+    // 400
+    @ExceptionHandler(PatchMisconfigurationException.class)
+    public ResponseEntity<Object> handleBadRequestPatch(
+            final PatchMisconfigurationException ex,
+            final WebRequest request) {
+        return handleExceptionInternal(ex, message(BAD_REQUEST, ex),
+                new HttpHeaders(), BAD_REQUEST, request);
+    }
+
     // 409
-    @ExceptionHandler({NoarkConcurrencyException.class})
+    @ExceptionHandler(NoarkConcurrencyException.class)
     public ResponseEntity<Object> handleETAGException(
-            final DataIntegrityViolationException ex,
+            final NoarkConcurrencyException ex,
             final WebRequest request) {
         return handleExceptionInternal(ex, message(CONFLICT, ex),
                 new HttpHeaders(), CONFLICT, request);

@@ -8,7 +8,7 @@ import nikita.common.model.noark5.v5.interfaces.*;
 public interface IFileEntity
         extends INoarkGeneralEntity, IDocumentMedium, IStorageLocation,
         IKeyword, IClassified, IDisposal, IScreening, IComment,
-        ICrossReference {
+        ICrossReference, IBSM {
 
     String getFileId();
 

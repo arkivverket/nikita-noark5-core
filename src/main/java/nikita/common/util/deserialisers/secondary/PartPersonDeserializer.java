@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
+import static nikita.common.config.N5ResourceMappings.BSM_DEF;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
@@ -41,7 +43,15 @@ public class PartPersonDeserializer
         deserialiseNoarkSystemIdEntity(part, objectNode, errors);
         deserialisePartPersonEntity(part, objectNode, errors);
 
-        JsonNode currentNode = objectNode.get(LINKS);
+        // Deserialize businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+        JsonNode currentNode = objectNode.get(BSM_DEF);
+        if (null != currentNode) {
+            BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
+            part.setReferenceBSMBase(base.getReferenceBSMBase());
+            objectNode.remove(BSM_DEF);
+        }
+
+        currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.debug("Payload contains " + LINKS + ". " +
                     "This value is being ignored.");

@@ -12,6 +12,10 @@ import java.util.UUID;
 
 import static java.util.UUID.fromString;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.util.CommonUtils.DB_DATE_PATTERN;
+import static nikita.common.util.CommonUtils.DB_DATE_TIME_PATTERN;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDate;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
 import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameDatabase;
 import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameObject;
 import static nikita.webapp.odata.base.ODataParser.*;
@@ -53,7 +57,6 @@ public abstract class ODataWalker
 
     @Override
     public void enterAttributeName(AttributeNameContext ctx) {
-        super.enterAttributeName(ctx);
         processAttribute(getAliasAndAttribute(
                 this.joinEntity.isEmpty() == true ?
                         this.entity : this.joinEntity,
@@ -329,7 +332,7 @@ public abstract class ODataWalker
             return Integer.valueOf(context
                     .getChild(IntegerValueContext.class, 0).getText());
         } else if (null != context.getChild(FloatValueContext.class, 0)) {
-            return Float.valueOf(context
+            return Double.valueOf(context
                     .getChild(FloatValueContext.class, 0).getText());
         } else if (null != context.getChild(DecimalLiteralContext.class, 0)) {
             return Double.valueOf(context
@@ -340,7 +343,20 @@ public abstract class ODataWalker
         } else if (null != context.getChild(QuotedStringContext.class, 0)) {
             String quotedString =
                     context.getChild(QuotedStringContext.class, 0).getText();
-            return quotedString.substring(1, quotedString.length() - 1);
+            String string = quotedString.substring(1,
+                    quotedString.length() - 1);
+            if (DB_DATE_TIME_PATTERN.matcher(string).matches()) {
+                return deserializeDateTime(string);
+            } else if (DB_DATE_PATTERN.matcher(string).matches()) {
+                return deserializeDate(string);
+            } else {
+                return quotedString.substring(1, quotedString.length() - 1);
+            }
+        } else if (null != context.getChild(QuotedUUIDContext.class, 0)) {
+            String quotedUuidString =
+                    context.getChild(QuotedUUIDContext.class, 0).getText();
+            return fromString(quotedUuidString.substring(1,
+                    quotedUuidString.length() - 1));
         } else if (null != context.getChild(NullTokenContext.class, 0) ||
                 null != context.getChild(NullSpecLiteralContext.class, 0)) {
             return null;

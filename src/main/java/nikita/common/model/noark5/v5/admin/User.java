@@ -2,10 +2,8 @@ package nikita.common.model.noark5.v5.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.admin.IUserEntity;
 import nikita.common.util.deserialisers.admin.UserDeserializer;
 import nikita.webapp.hateoas.admin.UserHateoasHandler;
@@ -52,23 +50,6 @@ public class User
     @Column(name = "lastname", length = 50)
     @Size(min = 1, max = 50)
     private String lastname;
-
-    /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @Column(name = CREATED_DATE_ENG)
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    @JsonProperty(CREATED_DATE)
-    private OffsetDateTime createdDate;
-
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @Column(name = CREATED_BY_ENG)
-    @Audited
-    @JsonProperty(CREATED_BY)
-    private String createdBy;
 
     /**
      * M602 - avsluttetDato (xs:dateTime)
@@ -119,16 +100,6 @@ public class User
 
     @ManyToMany(mappedBy = "users")
     private List<AdministrativeUnit> administrativeUnits = new ArrayList<>();
-
-    @Override
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    @Override
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
 
     @Override
     public OffsetDateTime getFinalisedDate() {
@@ -188,14 +159,6 @@ public class User
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public OffsetDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(OffsetDateTime createdDate) {
-        this.createdDate = createdDate;
     }
 
     public boolean isAccountNonExpired() {
@@ -273,8 +236,6 @@ public class User
     public String toString() {
         return "User{" + super.toString() +
                 "username='" + username + '\'' +
-                ", createdDate=" + createdDate +
-                ", createdBy='" + createdBy + '\'' +
                 ", finalisedDate=" + finalisedDate +
                 ", finalisedBy='" + finalisedBy + '\'' +
                 ", accountNonExpired=" + accountNonExpired +
@@ -302,8 +263,6 @@ public class User
         User rhs = (User) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(createdDate, rhs.createdDate)
-                .append(createdBy, rhs.createdBy)
                 .append(finalisedBy, rhs.finalisedBy)
                 .append(finalisedDate, rhs.finalisedDate)
                 .append(accountNonExpired, rhs.accountNonExpired)
@@ -321,8 +280,6 @@ public class User
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(createdDate)
-                .append(createdBy)
                 .append(finalisedBy)
                 .append(finalisedDate)
                 .append(accountNonExpired)

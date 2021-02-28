@@ -8,6 +8,7 @@ import nikita.webapp.odata.ODataToHQL;
 import nikita.webapp.odata.base.ODataLexer;
 import nikita.webapp.odata.base.ODataParser;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.util.AddressComponent;
 import nikita.webapp.util.annotation.HateoasObject;
@@ -19,8 +20,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Service
 @Transactional
 public class ODataService
+        extends NoarkService
         implements IODataService {
 
     private final Logger logger =
@@ -49,7 +51,9 @@ public class ODataService
     private final AddressComponent address;
 
     public ODataService(EntityManager entityManager,
+                        ApplicationEventPublisher applicationEventPublisher,
                         AddressComponent address) {
+        super(entityManager, applicationEventPublisher);
         this.entityManager = entityManager;
         this.address = address;
     }
@@ -99,28 +103,38 @@ public class ODataService
         }
         handler.addLinks(noarkObject, new Authorisation());
         return ResponseEntity.status(OK)
+                // TODO: Revisit this. You can GET everything you see in the
+                // list but you may not be able to PATCH or DELETE various
+                // objects.
                 .body(noarkObject);
     }
 
     private Query convertODataToHQL(@NotNull HttpServletRequest request,
                                     String dmlStatementType) {
         StringBuffer requestURL = request.getRequestURL();
-        StringBuilder queryString = new StringBuilder(
-                decode(request.getQueryString(), UTF_8));
+        /*int val = requestURLComplete.lastIndexOf("/odata/");
+        StringBuffer requestURL = new StringBuffer(
+                requestURLComplete.substring(val));*/
         //  remove everything up to api/packagename/
         int apiLength = (HATEOAS_API_PATH + "/").length();
         int startApi = requestURL.lastIndexOf(HATEOAS_API_PATH + "/");
         int endPackageName = requestURL.indexOf("/", startApi + apiLength);
         String odataQuery = requestURL.substring(endPackageName + 1);
         // Add owned by to the query as first parameter
+        String qS = decode(request.getQueryString(), UTF_8);
+        // TODO: Find out why decode is not working
+        qS = qS.replaceAll("%20", " ");
+        qS = qS.replaceAll("%2B", "+");
+        StringBuilder queryString = new StringBuilder(qS);
         addOwnedBy(queryString);
         odataQuery += "?" + queryString;
-        return convertODataToHQL(odataQuery, dmlStatementType);
+        Query query = convertODataToHQL(odataQuery, dmlStatementType);
+        return query;
     }
 
     private void addOwnedBy(StringBuilder originalRequest) {
         int start =
-                originalRequest.lastIndexOf("$filter=") + "$filter=".length();
+                originalRequest.lastIndexOf("$filter=") + "$filter=" .length();
         originalRequest.insert(start, "eier eq '" + getUser() + "' and ");
     }
 
@@ -134,9 +148,5 @@ public class ODataService
         ODataToHQL hqlWalker = new NikitaODataToHQL(dmlStatementType);
         walker.walk(hqlWalker, tree);
         return hqlWalker.getHqlStatement(entityManager.unwrap(Session.class));
-    }
-
-    protected String getUser() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

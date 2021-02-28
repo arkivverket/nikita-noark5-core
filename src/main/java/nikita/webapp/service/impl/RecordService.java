@@ -1,5 +1,7 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.PatchObjects;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
@@ -13,6 +15,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnit
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.model.noark5.v5.secondary.Comment;
@@ -20,6 +23,7 @@ import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
+import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
@@ -37,6 +41,7 @@ import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
+import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -48,6 +53,7 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
@@ -69,6 +75,7 @@ public class RecordService
 
     private DocumentDescriptionService documentDescriptionService;
     private IRecordRepository recordRepository;
+    private IBSMMetadataRepository bsmMetadataRepository;
     private IRecordHateoasHandler recordHateoasHandler;
     private IFileHateoasHandler fileHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
@@ -93,6 +100,7 @@ public class RecordService
             ApplicationEventPublisher applicationEventPublisher,
             DocumentDescriptionService documentDescriptionService,
             IRecordRepository recordRepository,
+            IBSMMetadataRepository bsmMetadataRepository,
             IRecordHateoasHandler recordHateoasHandler,
             IFileHateoasHandler fileHateoasHandler,
             ISeriesHateoasHandler seriesHateoasHandler,
@@ -114,6 +122,7 @@ public class RecordService
         super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
+        this.bsmMetadataRepository = bsmMetadataRepository;
         this.entityManager = entityManager;
         this.recordHateoasHandler = recordHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
@@ -631,9 +640,6 @@ public class RecordService
         return recordRepository.save(record);
     }
 
-
-    // All UPDATE operations
-
     /**
      * Updates a Record object in the database. First we try to locate the
      * Record object. If the Record object does not exist a
@@ -676,6 +682,20 @@ public class RecordService
         existingRecord.setVersion(version);
         recordRepository.save(existingRecord);
         return existingRecord;
+    }
+
+    @Override
+    public ResponseEntity<RecordHateoas> handleUpdate(
+            UUID systemID, PatchObjects patchObjects) {
+        Record record = (Record) handlePatch(systemID, patchObjects);
+        RecordHateoas recordHateoas = new RecordHateoas(record);
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, record));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(recordHateoas.getEntityVersion().toString())
+                .body(recordHateoas);
     }
 
     // All DELETE operations
@@ -737,6 +757,27 @@ public class RecordService
     // All HELPER operations
 
     /**
+     * Used to retrieve a BSMBase object so parent can can check that the
+     * BSMMetadata object exists and is not outdated.
+     * Done to simplify coding.
+     *
+     * @param name Name of the BSM parameter to check
+     * @return BSMMetadata object corresponding to the name
+     */
+    @Override
+    protected Optional<BSMMetadata> getBSMByName(String name) {
+        return bsmMetadataRepository.findByName(name);
+    }
+
+    @Override
+    public Object associateBSM(@NotNull UUID systemId,
+                               @NotNull List<BSMBase> bsm) {
+        Record record = getRecordOrThrow(systemId);
+        record.setReferenceBSMBase(bsm);
+        return record;
+    }
+
+    /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. If you call this, be aware
      * that you will only ever get a valid Record back. If there is no valid
@@ -746,8 +787,21 @@ public class RecordService
      * @return the record
      */
     protected Record getRecordOrThrow(@NotNull String systemID) {
+        return getRecordOrThrow(UUID.fromString(systemID));
+    }
+
+    /**
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid Record back. If there is no valid
+     * Record, an exception is thrown
+     *
+     * @param systemID the systemId of the record you want to retrieve
+     * @return the record
+     */
+    protected Record getRecordOrThrow(@NotNull UUID systemID) {
         Record record =
-                recordRepository.findBySystemId(UUID.fromString(systemID));
+                recordRepository.findBySystemId(systemID);
         if (record == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " Record, using systemId " + systemID;

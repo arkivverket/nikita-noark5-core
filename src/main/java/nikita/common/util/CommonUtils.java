@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
@@ -33,7 +34,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,6 +43,7 @@ import static java.time.OffsetDateTime.parse;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static java.time.temporal.ChronoField.HOUR_OF_DAY;
+import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -74,6 +75,32 @@ public final class CommonUtils {
      */
     private static Map<String, FileExtensionAndMimeType> archiveVersion =
             new HashMap<>();
+
+    // Example 2020-06-30+02:00
+    public static final Pattern DATE_PATTERN = Pattern.compile(
+            "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])" +
+                    "\\+?\\d{2}:\\d{2}$");
+
+    // Example 2020-06-30 02:00
+    public static final Pattern DB_DATE_PATTERN = Pattern.compile(
+            "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])" +
+                    "(\\s|\\-|\\+)?\\d{2}:\\d{2}$");
+
+    // Example 2020-06-30T16:25:50.041651+02:00
+    public static final Pattern DATE_TIME_PATTERN = Pattern.compile(
+            "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])T" +
+                    "(00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):" +
+                    "([0-9]|[0-5][0-9])" +
+                    "\\.?[0-9]*" +
+                    "(\\+|\\-)\\d{2}:\\d{2}$");
+
+    // Example 2020-06-30T16:25:50.041651+02:00
+    // Does not require T and drops ms part
+    public static final Pattern DB_DATE_TIME_PATTERN = Pattern.compile(
+            "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])T" +
+                    "(00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):" +
+                    "([0-9]|[0-5][0-9])" + "(\\.\\d\\d?\\d?\\d?\\d)?" +
+                    "(\\+|\\-)\\d{2}:\\d{2}$");
 
     // You shall not instantiate me!
     private CommonUtils() {
@@ -248,6 +275,19 @@ public final class CommonUtils {
 
         public static String getEnglishNameObject(String norwegianName) {
             ModelNames names = nor2engEntityMap.get(norwegianName);
+            if (null != names) {
+                return names.getEnglishNameObject();
+            } else
+                return norwegianName;
+        }
+
+        public static String getEnglishNameObjectOrThrow(String norwegianName) {
+            ModelNames names = nor2engEntityMap.get(norwegianName);
+            if (null == names) {
+                String error = norwegianName + " is not recognised attribute";
+                logger.error(error);
+                throw new NikitaMalformedInputDataException(error);
+            }
             return names.getEnglishNameObject();
         }
 
@@ -307,7 +347,7 @@ public final class CommonUtils {
             HttpMethod[] methods = getMethodsForRequest(servletPath);
             if (null == methods) {
                 String msg = "Error servletPath [" + servletPath
-                    + "] has no known HTTP methods.";
+                        + "] has no known HTTP methods.";
                 logger.error(msg);
                 throw new NikitaException(msg);
             }
@@ -329,7 +369,7 @@ public final class CommonUtils {
             HttpMethod[] methods = getMethodsForRequest(servletPath);
             if (null == methods) {
                 String msg = "Error servletPath [" +
-                    servletPath + "] has no known HTTP methods.";
+                        servletPath + "] has no known HTTP methods.";
                 logger.error(msg);
                 throw new NikitaException(msg);
             }
@@ -442,8 +482,8 @@ public final class CommonUtils {
                             return UUID.fromString(currentNode.textValue());
                         } catch (IllegalArgumentException e) {
                             errors.append(fieldname + " (\"" +
-                                          currentNode.textValue() +
-                                          "\") is not valid UUID. ");
+                                    currentNode.textValue() +
+                                    "\") is not valid UUID. ");
                             return null;
                         }
                     } else {
@@ -458,6 +498,31 @@ public final class CommonUtils {
                 return null;
             }
 
+            public static OffsetDateTime deserializeDate(String date) {
+                DateTimeFormatter dateFormatter;
+                if (date.endsWith("Z")) {
+                    dateFormatter = new DateTimeFormatterBuilder().appendPattern(
+                            "yyyy-MM-ddX")
+                            .parseDefaulting(HOUR_OF_DAY, 0)
+                            .toFormatter();
+                } else {
+                    dateFormatter = new DateTimeFormatterBuilder()
+                            .append(ISO_OFFSET_DATE)
+                            // default values for hour and minute
+                            .parseDefaulting(HOUR_OF_DAY, 0)
+                            .parseDefaulting(MINUTE_OF_HOUR, 0)
+                            .toFormatter();
+                }
+                return ZonedDateTime.parse(date, dateFormatter)
+                        .toOffsetDateTime();
+            }
+
+            public static OffsetDateTime deserializeDate(String fieldname,
+                                                         ObjectNode objectNode,
+                                                         StringBuilder errors) {
+                return deserializeDate(fieldname, objectNode, errors, false);
+            }
+
             public static OffsetDateTime deserializeDate(String fieldname,
                                                          ObjectNode objectNode,
                                                          StringBuilder errors,
@@ -466,26 +531,7 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        String date = currentNode.textValue();
-                        if (date.endsWith("Z")) {
-                            DateTimeFormatter dateFormatter =
-                                    new DateTimeFormatterBuilder().appendPattern(
-                                            "yyyy-MM-ddX")
-                                            .parseDefaulting(HOUR_OF_DAY, 0)
-                                            .toFormatter();
-                            d = ZonedDateTime.parse(currentNode.textValue(),
-                                    dateFormatter).toOffsetDateTime();
-                        } else {
-                            DateTimeFormatter dateFormatter =
-                                    new DateTimeFormatterBuilder()
-                                            .append(DateTimeFormatter.ISO_OFFSET_DATE)
-                                            // default values for hour and minute
-                                            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-                                            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
-                                            .toFormatter();
-                            d = ZonedDateTime.parse(currentNode.textValue(),
-                                    dateFormatter).toOffsetDateTime();
-                        }
+                        d = deserializeDate(currentNode.textValue());
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
                         errors.append(fieldname);
@@ -503,11 +549,10 @@ public final class CommonUtils {
                 return d;
             }
 
-            public static OffsetDateTime deserializeDate(String fieldname,
-                                                         ObjectNode objectNode,
-                                                         StringBuilder errors) {
-                return deserializeDate(fieldname, objectNode, errors, false);
+            public static OffsetDateTime deserializeDateTime(String dateTime) {
+                return parse(dateTime, ISO_OFFSET_DATE_TIME);
             }
+
 
             public static OffsetDateTime deserializeDateTime(String fieldname,
                                                              ObjectNode objectNode,
@@ -517,8 +562,7 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(fieldname);
                 if (null != currentNode) {
                     try {
-                        d = parse(currentNode.textValue(),
-                                ISO_OFFSET_DATE_TIME);
+                        d = deserializeDateTime(currentNode.textValue());
                     } catch (DateTimeParseException e) {
                         errors.append("Malformed ");
                         errors.append(fieldname);
@@ -676,7 +720,7 @@ public final class CommonUtils {
                                 new ClassificationType(),
                                 errors, false);
                 classificationSystem
-                    .setClassificationType(classificationType);
+                        .setClassificationType(classificationType);
             }
 
             public static void deserialiseStorageLocation(IStorageLocation storageLocationEntity,
@@ -780,7 +824,6 @@ public final class CommonUtils {
                 deserialiseSystemIdEntity(noarkGeneralEntity, objectNode, errors);
                 deserialiseNoarkFinaliseEntity(noarkGeneralEntity, objectNode, errors);
                 deserialiseNoarkTitleDescriptionEntity(noarkGeneralEntity, objectNode, errors);
-
             }
 
             public static String checkNodeObjectEmpty(JsonNode objectNode) {
@@ -932,11 +975,11 @@ public final class CommonUtils {
                 Deletion deletion = null;
                 JsonNode currentNode = objectNode.get(DELETION);
                 if (null != currentNode
-                    && !currentNode.equals(NullNode.getInstance())) {
+                        && !currentNode.equals(NullNode.getInstance())) {
                     deletion = new Deletion();
                     ObjectNode deletionObjectNode = currentNode.deepCopy();
                     deserialiseDeletionEntity(deletion, deletionObjectNode,
-                                              errors);
+                            errors);
                     if (0 == deletionObjectNode.size()) {
                         objectNode.remove(DELETION);
                     }
@@ -950,7 +993,7 @@ public final class CommonUtils {
                 // Deserialize deletionBy
                 JsonNode currentNode = objectNode.get(DELETION_BY);
                 if (null != currentNode
-                    && !currentNode.equals(NullNode.getInstance())) {
+                        && !currentNode.equals(NullNode.getInstance())) {
                     deletionEntity.setDeletionBy(currentNode.textValue());
                     objectNode.remove(DELETION_BY);
                 } else {
@@ -961,10 +1004,10 @@ public final class CommonUtils {
 
                 // Deserialize deletionType
                 DeletionType entity = (DeletionType)
-                    deserialiseMetadataValue(objectNode,
-                                             DELETION_TYPE,
-                                             new DeletionType(),
-                                             errors, true);
+                        deserialiseMetadataValue(objectNode,
+                                DELETION_TYPE,
+                                new DeletionType(),
+                                errors, true);
                 deletionEntity.setDeletionType(entity);
 
                 // Deserialize deletionDate
@@ -1311,15 +1354,7 @@ public final class CommonUtils {
                     if (null != node) {
                         person.setdNumber(node.textValue());
                     }
-                    // Only one of these are allowed, report error otherwise.
-                    if (null != person.getSocialSecurityNumber() &&
-                            null != person.getdNumber()) {
-                        errors.append("Only one of " + SOCIAL_SECURITY_NUMBER
-                                + " and " + D_NUMBER_FIELD
-                                + " can be set at the time. ");
-                    } else {
-                        objectNode.remove(PERSON_IDENTIFIER);
-                    }
+                    objectNode.remove(PERSON_IDENTIFIER);
                 }
 
                 // Deserialize navn
@@ -1492,11 +1527,11 @@ public final class CommonUtils {
                 Screening screening = null;
                 JsonNode screeningNode = objectNode.get(SCREENING);
                 if (null != screeningNode
-                    && !screeningNode.equals(NullNode.getInstance())) {
+                        && !screeningNode.equals(NullNode.getInstance())) {
                     screening = new Screening();
                     ObjectNode screeningObjectNode = screeningNode.deepCopy();
                     deserialiseScreeningEntity(screening, screeningObjectNode,
-                                               errors);
+                            errors);
                     if (0 == screeningObjectNode.size()) {
                         objectNode.remove(SCREENING);
                     }
@@ -1548,11 +1583,11 @@ public final class CommonUtils {
                 Classified classified = null;
                 JsonNode classifiedNode = objectNode.get(CLASSIFIED);
                 if (null != classifiedNode
-                    && !classifiedNode.equals(NullNode.getInstance())) {
+                        && !classifiedNode.equals(NullNode.getInstance())) {
                     classified = new Classified();
                     ObjectNode classifiedObjectNode = classifiedNode.deepCopy();
                     deserialiseClassifiedEntity(classified,
-                                                classifiedObjectNode, errors);
+                            classifiedObjectNode, errors);
                     if (0 == classifiedObjectNode.size()) {
                         objectNode.remove(CLASSIFIED);
                     }
@@ -1598,7 +1633,7 @@ public final class CommonUtils {
                 ElectronicSignature es = null;
                 JsonNode esNode = objectNode.get(ELECTRONIC_SIGNATURE);
                 if (null != esNode
-                    && !esNode.equals(NullNode.getInstance())) {
+                        && !esNode.equals(NullNode.getInstance())) {
                     es = new ElectronicSignature();
                     ObjectNode esObjectNode = esNode.deepCopy();
                     deserialiseElectronicSignatureEntity(es, esObjectNode,
@@ -1617,21 +1652,21 @@ public final class CommonUtils {
                     ObjectNode objectNode, StringBuilder errors) {
                 // Deserialise elektroniskSignaturSikkerhetsnivaa
                 ElectronicSignatureSecurityLevel essLevel =
-                    (ElectronicSignatureSecurityLevel)
-                        deserialiseMetadataValue(objectNode,
-                                ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
-                                new ElectronicSignatureSecurityLevel(),
-                                errors, true);
+                        (ElectronicSignatureSecurityLevel)
+                                deserialiseMetadataValue(objectNode,
+                                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                                        new ElectronicSignatureSecurityLevel(),
+                                        errors, true);
                 electronicSignature
-                    .setElectronicSignatureSecurityLevel(essLevel);
+                        .setElectronicSignatureSecurityLevel(essLevel);
 
                 // Deserialise elektroniskSignaturVerifisert
                 ElectronicSignatureVerified esVerified =
-                    (ElectronicSignatureVerified)
-                        deserialiseMetadataValue(objectNode,
-                                ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
-                                new ElectronicSignatureVerified(),
-                                errors, true);
+                        (ElectronicSignatureVerified)
+                                deserialiseMetadataValue(objectNode,
+                                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                                        new ElectronicSignatureVerified(),
+                                        errors, true);
                 electronicSignature.setElectronicSignatureVerified(esVerified);
 
                 // Deserialise verifisertDato
@@ -1675,7 +1710,7 @@ public final class CommonUtils {
             public static void printNullable(JsonGenerator jgen,
                                              String fieldName,
                                              String value)
-                throws IOException {
+                    throws IOException {
                 if (null != value)
                     jgen.writeStringField(fieldName, value);
             }
@@ -1683,15 +1718,31 @@ public final class CommonUtils {
             public static void printNullable(JsonGenerator jgen,
                                              String fieldName,
                                              Integer value)
-                throws IOException {
+                    throws IOException {
                 if (null != value)
                     jgen.writeNumberField(fieldName, value);
             }
 
+            public static void printNullable(JsonGenerator jgen,
+                                             String fieldName,
+                                             Double value)
+                    throws IOException {
+                if (null != value)
+                    jgen.writeNumberField(fieldName, value);
+            }
+
+            public static void printNullable(JsonGenerator jgen,
+                                             String fieldName,
+                                             Boolean value)
+                    throws IOException {
+                if (null != value)
+                    jgen.writeBooleanField(fieldName, value);
+            }
+
             public static void printNullableDate(JsonGenerator jgen,
-                                                     String fieldName,
-                                                     OffsetDateTime value)
-                throws IOException {
+                                                 String fieldName,
+                                                 OffsetDateTime value)
+                    throws IOException {
                 if (null != value)
                     jgen.writeStringField(fieldName, formatDate(value));
             }
@@ -1699,7 +1750,7 @@ public final class CommonUtils {
             public static void printNullableDateTime(JsonGenerator jgen,
                                                      String fieldName,
                                                      OffsetDateTime value)
-                throws IOException {
+                    throws IOException {
                 if (null != value)
                     jgen.writeStringField(fieldName, formatDateTime(value));
             }
@@ -1710,9 +1761,9 @@ public final class CommonUtils {
 
                 if (titleDescriptionEntity != null) {
                     printNullable(jgen, TITLE,
-                                  titleDescriptionEntity.getTitle());
+                            titleDescriptionEntity.getTitle());
                     printNullable(jgen, DESCRIPTION,
-                                  titleDescriptionEntity.getDescription());
+                            titleDescriptionEntity.getDescription());
                 }
             }
 
@@ -1721,9 +1772,9 @@ public final class CommonUtils {
                     throws IOException {
                 if (createEntity != null) {
                     printNullableDateTime(jgen, CREATED_DATE,
-                                          createEntity.getCreatedDate());
+                            createEntity.getCreatedDate());
                     printNullable(jgen, CREATED_BY,
-                                  createEntity.getCreatedBy());
+                            createEntity.getCreatedBy());
                 }
             }
 
@@ -1734,8 +1785,8 @@ public final class CommonUtils {
                 printSystemIdEntity(jgen, classificationSystem);
                 printTitleAndDescription(jgen, classificationSystem);
                 printNullableMetadata
-                    (jgen, CLASSIFICATION_SYSTEM_TYPE,
-                     classificationSystem.getClassificationType());
+                        (jgen, CLASSIFICATION_SYSTEM_TYPE,
+                                classificationSystem.getClassificationType());
             }
 
             public static void printFileEntity(JsonGenerator jgen,
@@ -1763,15 +1814,15 @@ public final class CommonUtils {
                 }
                 printNullableDate(jgen, CASE_DATE, caseFile.getCaseDate());
                 printNullable(jgen, CASE_RESPONSIBLE,
-                              caseFile.getCaseResponsible());
+                        caseFile.getCaseResponsible());
                 printNullable(jgen, CASE_RECORDS_MANAGEMENT_UNIT,
-                              caseFile.getRecordsManagementUnit());
+                        caseFile.getRecordsManagementUnit());
                 printNullableMetadata(jgen, CASE_STATUS,
-                                      caseFile.getCaseStatus());
+                        caseFile.getCaseStatus());
                 printNullableDate(jgen, CASE_LOANED_DATE,
-                                  caseFile.getLoanedDate());
+                        caseFile.getLoanedDate());
                 printNullable(jgen, CASE_LOANED_TO,
-                              caseFile.getLoanedTo());
+                        caseFile.getLoanedTo());
             }
 
             public static void printCode(
@@ -1784,18 +1835,18 @@ public final class CommonUtils {
             }
 
             public static void printCode
-                (JsonGenerator jgen, IMetadataEntity metadataEntity)
+                    (JsonGenerator jgen, IMetadataEntity metadataEntity)
                     throws IOException {
                 jgen.writeStringField(CODE, metadataEntity.getCode());
                 if (null != metadataEntity.getCodeName()) {
                     jgen.writeStringField(CODE_NAME,
-                                          metadataEntity.getCodeName());
+                            metadataEntity.getCodeName());
                 }
             }
 
             public static void printNullableMetadata
-                (JsonGenerator jgen, String fieldName, IMetadataEntity m)
-                throws IOException {
+                    (JsonGenerator jgen, String fieldName, IMetadataEntity m)
+                    throws IOException {
                 if (null != m && null != m.getCode()) {
                     jgen.writeObjectFieldStart(fieldName);
                     printCode(jgen, m);
@@ -1809,18 +1860,18 @@ public final class CommonUtils {
                 if (record != null) {
                     printSystemIdEntity(jgen, record);
                     printNullableDateTime(jgen, RECORD_ARCHIVED_DATE,
-                                          record.getArchivedDate());
+                            record.getArchivedDate());
                     printNullable(jgen, RECORD_ARCHIVED_BY,
-                                  record.getArchivedBy());
+                            record.getArchivedBy());
                     printNullableDateTime(jgen, RECORD_ARCHIVED_DATE,
-                                          record.getArchivedDate());
+                            record.getArchivedDate());
                     printNullable(jgen, RECORD_ARCHIVED_BY,
-                                  record.getArchivedBy());
+                            record.getArchivedBy());
                     printNullable(jgen, RECORD_ID,
-                                  record.getRecordId());
+                            record.getRecordId());
                     printTitleAndDescription(jgen, record);
                     printNullable(jgen, FILE_PUBLIC_TITLE,
-                                  record.getPublicTitle());
+                            record.getPublicTitle());
                 }
             }
 
@@ -1829,24 +1880,24 @@ public final class CommonUtils {
                     throws IOException {
                 if (recordNote != null) {
                     printNullableDate(jgen, REGISTRY_ENTRY_DOCUMENT_DATE,
-                                      recordNote.getDocumentDate());
+                            recordNote.getDocumentDate());
                     printNullableDateTime(jgen, REGISTRY_ENTRY_RECEIVED_DATE,
-                                          recordNote.getReceivedDate());
+                            recordNote.getReceivedDate());
                     printNullableDate(jgen, REGISTRY_ENTRY_SENT_DATE,
-                                      recordNote.getSentDate());
+                            recordNote.getSentDate());
                     printNullableDate(jgen, REGISTRY_ENTRY_DUE_DATE,
-                                      recordNote.getDueDate());
+                            recordNote.getDueDate());
                     printNullableDate
-                        (jgen, REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
-                         recordNote.getFreedomAssessmentDate());
+                            (jgen, REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
+                                    recordNote.getFreedomAssessmentDate());
                     if (recordNote.getNumberOfAttachments() != null) {
                         jgen.writeNumberField(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS,
                                 recordNote.getNumberOfAttachments());
                     }
                     printNullableDate(jgen, CASE_LOANED_DATE,
-                                      recordNote.getLoanedDate());
+                            recordNote.getLoanedDate());
                     printNullable(jgen, CASE_LOANED_TO,
-                                  recordNote.getLoanedTo());
+                            recordNote.getLoanedTo());
                 }
             }
 
@@ -1867,13 +1918,13 @@ public final class CommonUtils {
                                 registryEntry.getRegistryEntryNumber());
                     }
                     printNullableMetadata(jgen, REGISTRY_ENTRY_TYPE,
-                              registryEntry.getRegistryEntryType());
+                            registryEntry.getRegistryEntryType());
                     printNullableMetadata(jgen, REGISTRY_ENTRY_STATUS,
-                              registryEntry.getRegistryEntryStatus());
+                            registryEntry.getRegistryEntryStatus());
                     printNullableDate(jgen, REGISTRY_ENTRY_DATE,
-                                      registryEntry.getRecordDate());
+                            registryEntry.getRecordDate());
                     printNullable(jgen, CASE_RECORDS_MANAGEMENT_UNIT,
-                                  registryEntry.getRecordsManagementUnit());
+                            registryEntry.getRecordsManagementUnit());
                 }
             }
 
@@ -1881,26 +1932,26 @@ public final class CommonUtils {
                                                    IDocumentMedium documentMedium)
                     throws IOException {
                 printNullableMetadata
-                    (jgen, DOCUMENT_MEDIUM,
-                     documentMedium.getDocumentMedium());
+                        (jgen, DOCUMENT_MEDIUM,
+                                documentMedium.getDocumentMedium());
             }
 
             public static void printFinaliseEntity(JsonGenerator jgen,
                                                    IFinalise finaliseEntity)
                     throws IOException {
                 printNullable(jgen, FINALISED_BY,
-                              finaliseEntity.getFinalisedBy());
+                        finaliseEntity.getFinalisedBy());
                 printNullableDateTime(jgen, FINALISED_DATE,
-                                      finaliseEntity.getFinalisedDate());
+                        finaliseEntity.getFinalisedDate());
             }
 
             public static void printModifiedEntity(JsonGenerator jgen,
                                                    ILastModified lastModified)
                     throws IOException {
                 printNullableDateTime(jgen, LAST_MODIFIED_DATE,
-                                      lastModified.getLastModifiedDate());
+                        lastModified.getLastModifiedDate());
                 printNullable(jgen, LAST_MODIFIED_BY,
-                            lastModified.getLastModifiedBy());
+                        lastModified.getLastModifiedBy());
             }
 
             public static void printSystemIdEntity(
@@ -1993,8 +2044,8 @@ public final class CommonUtils {
                 if (correspondencePart != null) {
                     printSystemIdEntity(jgen, correspondencePart);
                     printNullableMetadata
-                        (jgen, CORRESPONDENCE_PART_TYPE,
-                         correspondencePart.getCorrespondencePartType());
+                            (jgen, CORRESPONDENCE_PART_TYPE,
+                                    correspondencePart.getCorrespondencePartType());
                 }
             }
 
@@ -2005,11 +2056,11 @@ public final class CommonUtils {
                     jgen.writeFieldName(CONTACT_INFORMATION);
                     jgen.writeStartObject();
                     printNullable(jgen, EMAIL_ADDRESS,
-                                  contactInformation.getEmailAddress());
+                            contactInformation.getEmailAddress());
                     printNullable(jgen, MOBILE_TELEPHONE_NUMBER,
-                                  contactInformation.getMobileTelephoneNumber());
+                            contactInformation.getMobileTelephoneNumber());
                     printNullable(jgen, TELEPHONE_NUMBER,
-                                  contactInformation.getTelephoneNumber());
+                            contactInformation.getTelephoneNumber());
                     jgen.writeEndObject();
                 }
             }
@@ -2023,11 +2074,11 @@ public final class CommonUtils {
                     jgen.writeStartObject();
 
                     printNullable(jgen, ADDRESS_LINE_1,
-                                  address.getAddressLine1());
+                            address.getAddressLine1());
                     printNullable(jgen, ADDRESS_LINE_2,
-                                  address.getAddressLine2());
+                            address.getAddressLine2());
                     printNullable(jgen, ADDRESS_LINE_3,
-                                  address.getAddressLine3());
+                            address.getAddressLine3());
                     if (null != address.getPostalNumber()) {
                         PostalNumber postalNumber = address.getPostalNumber();
                         if (null != postalNumber &&
@@ -2037,9 +2088,9 @@ public final class CommonUtils {
                         }
                     }
                     printNullable(jgen, POSTAL_TOWN,
-                                  address.getPostalTown());
+                            address.getPostalTown());
                     printNullable(jgen, COUNTRY_CODE,
-                                  address.getCountryCode());
+                            address.getCountryCode());
                     jgen.writeEndObject();
                 }
             }
@@ -2081,7 +2132,7 @@ public final class CommonUtils {
                 if (part != null) {
                     printSystemIdEntity(jgen, part);
                     printNullableMetadata(jgen, PART_ROLE_FIELD,
-                                          part.getPartRole());
+                            part.getPartRole());
                 }
             }
 
@@ -2112,7 +2163,7 @@ public final class CommonUtils {
                                 unit.getContactInformation());
                     }
                     printNullable(jgen, CONTACT_PERSON,
-                                  unit.getContactPerson());
+                            unit.getContactPerson());
                 }
             }
 
@@ -2155,8 +2206,8 @@ public final class CommonUtils {
                 if (null != correspondencePartInternal) {
                     printCorrespondencePart(jgen, correspondencePartInternal);
                     printNullable
-                        (jgen, ADMINISTRATIVE_UNIT_FIELD,
-                         correspondencePartInternal.getAdministrativeUnit());
+                            (jgen, ADMINISTRATIVE_UNIT_FIELD,
+                                    correspondencePartInternal.getAdministrativeUnit());
 //                    if (null != correspondencePartInternal.getReferenceAdministrativeUnit()) {
 //                        String systemID = correspondencePartInternal.getReferenceAdministrativeUnit().getSystemId();
 //                        if (null != systemID) {
@@ -2164,8 +2215,8 @@ public final class CommonUtils {
 //                        }
 //                    }
                     printNullable
-                        (jgen, CASE_HANDLER,
-                         correspondencePartInternal.getCaseHandler());
+                            (jgen, CASE_HANDLER,
+                                    correspondencePartInternal.getCaseHandler());
 //                    if (null != correspondencePartInternal.getReferenceUser()) {
 //                        String systemID = correspondencePartInternal
 //                                .getReferenceUser().getSystemId();
@@ -2230,13 +2281,13 @@ public final class CommonUtils {
                     throws IOException {
                 if (fondsCreatorEntity != null) {
                     printNullable(jgen, SYSTEM_ID,
-                                  fondsCreatorEntity.getSystemId());
+                            fondsCreatorEntity.getSystemId());
                     printNullable(jgen, FONDS_CREATOR_ID,
-                                  fondsCreatorEntity.getFondsCreatorId());
+                            fondsCreatorEntity.getFondsCreatorId());
                     printNullable(jgen, FONDS_CREATOR_NAME,
-                                  fondsCreatorEntity.getFondsCreatorName());
+                            fondsCreatorEntity.getFondsCreatorName());
                     printNullable(jgen, DESCRIPTION,
-                                  fondsCreatorEntity.getDescription());
+                            fondsCreatorEntity.getDescription());
                 }
             }
 
@@ -2248,18 +2299,52 @@ public final class CommonUtils {
                 if (es != null) {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
                     printNullableMetadata
-                        (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
-                         es.getElectronicSignatureSecurityLevel());
+                            (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                                    es.getElectronicSignatureSecurityLevel());
                     printNullableMetadata
-                        (jgen, ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
-                         es.getElectronicSignatureVerified());
+                            (jgen, ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                                    es.getElectronicSignatureVerified());
                     printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
-                                      es.getVerifiedDate());
+                            es.getVerifiedDate());
                     printNullable(jgen, ELECTRONIC_SIGNATURE_VERIFIED_BY,
-                                  es.getVerifiedBy());
+                            es.getVerifiedBy());
                     jgen.writeEndObject();
                 }
             }
+
+            public static void printBSM(JsonGenerator jgen, IBSM bsm)
+                    throws IOException {
+                if (bsm != null && bsm.getReferenceBSMBase() != null
+                        && bsm.getReferenceBSMBase().size() > 0) {
+                    jgen.writeObjectFieldStart(BSM_DEF);
+                    for (BSMBase bsmBase : bsm.getReferenceBSMBase()) {
+                        if (bsmBase.getDataType().equals(TYPE_STRING)) {
+                            printNullable(jgen, bsmBase.getValueName(),
+                                    bsmBase.getStringValue());
+                        } else if (bsmBase.getDataType().equals(TYPE_URI)) {
+                            printNullable(jgen, bsmBase.getValueName(),
+                                    bsmBase.getUriValue());
+                        } else if (bsmBase.getDataType().equals(TYPE_INTEGER)) {
+                            printNullable(jgen, bsmBase.getValueName(),
+                                    bsmBase.getIntegerValue());
+                        } else if (bsmBase.getDataType().equals(TYPE_DOUBLE)) {
+                            printNullable(jgen, bsmBase.getValueName(),
+                                    bsmBase.getDoubleValue());
+                        } else if (bsmBase.getDataType().equals(TYPE_BOOLEAN)) {
+                            printNullable(jgen, bsmBase.getValueName(),
+                                    bsmBase.getBooleanValue());
+                        } else if (bsmBase.getDataType().equals(TYPE_DATE)) {
+                            printNullableDate(jgen, bsmBase.getValueName(),
+                                    bsmBase.getDateTimeValue());
+                        } else if (bsmBase.getDataType().equals(TYPE_DATE_TIME)) {
+                            printNullableDateTime(jgen, bsmBase.getValueName(),
+                                    bsmBase.getDateTimeValue());
+                        }
+                    }
+                    jgen.writeEndObject();
+                }
+            }
+
 
             public static void printClassified(JsonGenerator jgen, IClassified classifiedEntity)
                     throws IOException {
@@ -2268,19 +2353,19 @@ public final class CommonUtils {
                     if (classified != null) {
                         jgen.writeObjectFieldStart(CLASSIFIED);
                         printNullableMetadata
-                            (jgen, CLASSIFICATION,
-                             classified.getClassification());
+                                (jgen, CLASSIFICATION,
+                                        classified.getClassification());
                         printNullableDateTime
-                            (jgen, CLASSIFICATION_DATE,
-                             classified.getClassificationDate());
+                                (jgen, CLASSIFICATION_DATE,
+                                        classified.getClassificationDate());
                         printNullable(jgen, CLASSIFICATION_BY,
-                                      classified.getClassificationBy());
+                                classified.getClassificationBy());
                         printNullableDateTime
-                            (jgen, CLASSIFICATION_DOWNGRADED_DATE,
-                             classified.getClassificationDowngradedDate());
+                                (jgen, CLASSIFICATION_DOWNGRADED_DATE,
+                                        classified.getClassificationDowngradedDate());
                         printNullable
-                            (jgen, CLASSIFICATION_DOWNGRADED_BY,
-                             classified.getClassificationDowngradedBy());
+                                (jgen, CLASSIFICATION_DOWNGRADED_BY,
+                                        classified.getClassificationDowngradedBy());
                         jgen.writeEndObject();
                     }
                 }
@@ -2293,13 +2378,13 @@ public final class CommonUtils {
                     if (disposal != null) {
                         jgen.writeObjectFieldStart(DISPOSAL);
                         printNullable(jgen, DISPOSAL_DECISION,
-                                      disposal.getDisposalDecision());
+                                disposal.getDisposalDecision());
                         printNullable(jgen, DISPOSAL_AUTHORITY,
-                                      disposal.getDisposalAuthority());
+                                disposal.getDisposalAuthority());
                         printNullable(jgen, DISPOSAL_PRESERVATION_TIME,
-                                      disposal.getPreservationTime());
+                                disposal.getPreservationTime());
                         printNullableDate(jgen, DISPOSAL_DATE,
-                                          disposal.getDisposalDate());
+                                disposal.getDisposalDate());
                         jgen.writeEndObject();
                     }
                 }
@@ -2312,10 +2397,10 @@ public final class CommonUtils {
                     if (disposalUndertaken != null) {
                         jgen.writeObjectFieldStart(DISPOSAL_UNDERTAKEN);
                         printNullable(jgen, DISPOSAL_UNDERTAKEN_BY,
-                                      disposalUndertaken.getDisposalBy());
+                                disposalUndertaken.getDisposalBy());
                         printNullableDate
-                            (jgen, DISPOSAL_UNDERTAKEN_DATE,
-                             disposalUndertaken.getDisposalDate());
+                                (jgen, DISPOSAL_UNDERTAKEN_DATE,
+                                        disposalUndertaken.getDisposalDate());
                         jgen.writeEndObject();
                     }
                 }
@@ -2328,11 +2413,11 @@ public final class CommonUtils {
                     if (deletion != null) {
                         jgen.writeObjectFieldStart(DELETION);
                         printNullable(jgen, DELETION_BY,
-                                      deletion.getDeletionBy());
+                                deletion.getDeletionBy());
                         printNullableMetadata(jgen, DELETION_TYPE,
-                                              deletion.getDeletionType());
+                                deletion.getDeletionType());
                         printNullableDateTime(jgen, DELETION_DATE,
-                                              deletion.getDeletionDate());
+                                deletion.getDeletionDate());
                         jgen.writeEndObject();
                     }
                 }
@@ -2345,17 +2430,17 @@ public final class CommonUtils {
                     if (screening != null) {
                         jgen.writeObjectFieldStart(SCREENING);
                         printNullableMetadata(jgen, SCREENING_ACCESS_RESTRICTION,
-                                              screening.getAccessRestriction());
+                                screening.getAccessRestriction());
                         printNullable(jgen, SCREENING_AUTHORITY,
-                                    screening.getScreeningAuthority());
+                                screening.getScreeningAuthority());
                         printNullable(jgen, SCREENING_SCREENING_METADATA,
-                                    screening.getScreeningMetadata());
+                                screening.getScreeningMetadata());
                         printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
-                                              screening.getScreeningDocument());
+                                screening.getScreeningDocument());
                         printNullableDate(jgen, SCREENING_EXPIRES_DATE,
-                                          screening.getScreeningExpiresDate());
+                                screening.getScreeningExpiresDate());
                         printNullable(jgen, SCREENING_DURATION,
-                                      screening.getScreeningDuration());
+                                screening.getScreeningDuration());
                         jgen.writeEndObject();
                     }
                 }

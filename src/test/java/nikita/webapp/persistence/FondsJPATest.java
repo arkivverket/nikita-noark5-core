@@ -2,18 +2,18 @@ package nikita.webapp.persistence;
 
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.repository.n5v5.IFondsRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
-import javax.validation.ConstraintViolationException;
-
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
  * <p>
  * Created by tsodring on 2019/04/08
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class FondsJPATest {
 
@@ -36,7 +36,7 @@ public class FondsJPATest {
     // Does not exist
     private String fonds3SystemId;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         fonds1SystemId = "3318a63f-11a7-4ec9-8bf1-4144b7f281cf";
         fonds2SystemId = "f1677c47-99e1-42a7-bda2-b0bbc64841b7";
@@ -47,12 +47,14 @@ public class FondsJPATest {
      * When an invalid fonds is created (missing title, @NotNull in @Entity), a
      * ConstraintViolationException should be thrown.
      */
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void whenInvalidEntityIsCreated_thenDataException() {
-        Fonds fonds = new Fonds();
-        fonds = fondsRepository.save(fonds);
-        entityManager.flush();
-        assertThat(fondsRepository.save(fonds)).isNotNull();
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            Fonds fonds = new Fonds();
+            fonds = fondsRepository.save(fonds);
+            entityManager.flush();
+            assertThat(fondsRepository.save(fonds)).isNotNull();
+        });
     }
 
     /**
@@ -106,10 +108,12 @@ public class FondsJPATest {
      * An attempt to delete a non-existent fonds should result in an exception.
      * It probably does not make sense to have such a test, as fonds is null.
      */
-    @Test(expected = InvalidDataAccessApiUsageException.class)
+    @Test
     public void whenDeleteNonExistingFondsEntity_thenIsNull() {
-        Fonds fonds = fondsRepository.findBySystemId(
-                UUID.fromString(fonds3SystemId));
-        fondsRepository.delete(fonds);
+        Assertions.assertThrows(InvalidDataAccessApiUsageException.class, () -> {
+            Fonds fonds = fondsRepository.findBySystemId(
+                    UUID.fromString(fonds3SystemId));
+            fondsRepository.delete(fonds);
+        });
     }
 }

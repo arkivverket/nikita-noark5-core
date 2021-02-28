@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.util.CommonUtils;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
+import static nikita.common.config.N5ResourceMappings.BSM_DEF;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -91,6 +93,15 @@ public class FileDeserializer
             }
             file.setReferenceSeries(series);
             objectNode.remove(N5ResourceMappings.REFERENCE_SERIES);
+        }
+
+        // Deserialize businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+        currentNode = objectNode.get(BSM_DEF);
+        if (null != currentNode) {
+            nikita.common.model.noark5.bsm.BSM base =
+                    mapper.readValue(currentNode.traverse(), BSM.class);
+            file.setReferenceBSMBase(base.getReferenceBSMBase());
+            objectNode.remove(BSM_DEF);
         }
 
         currentNode = objectNode.get(LINKS);

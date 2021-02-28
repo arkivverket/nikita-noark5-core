@@ -6,7 +6,10 @@ import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
 import nikita.common.model.noark5.v5.interfaces.entities.ITitleDescription;
-import nikita.common.model.noark5.v5.metadata.*;
+import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
+import nikita.common.model.noark5.v5.metadata.DocumentStatus;
+import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.DocumentDescriptionDeserializer;
 import nikita.webapp.hateoas.DocumentDescriptionHateoasHandler;
@@ -28,7 +31,6 @@ import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_DOCUMENT_DESCRIPTION)
@@ -90,23 +92,6 @@ public class DocumentDescription
     @Audited
     @JsonProperty(DESCRIPTION)
     private String description;
-
-    /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @Column(name = CREATED_DATE_ENG)
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    @JsonProperty(CREATED_DATE)
-    private OffsetDateTime createdDate;
-
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @Column(name = CREATED_BY_ENG)
-    @Audited
-    @JsonProperty(CREATED_BY)
-    private String createdBy;
 
     /**
      * M??? - dokumentmedium code (xs:string)
@@ -297,22 +282,6 @@ public class DocumentDescription
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public OffsetDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(OffsetDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 
     public DocumentMedium getDocumentMedium() {
@@ -540,8 +509,6 @@ public class DocumentDescription
                 ", associatedWithRecordAsCodeName='" + associatedWithRecordAsCodeName + '\'' +
                 ", documentMediumCode='" + documentMediumCode + '\'' +
                 ", documentMediumCodeName='" + documentMediumCodeName + '\'' +
-                ", createdBy='" + createdBy + '\'' +
-                ", createdDate=" + createdDate +
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 "  externalReference='" + externalReference + '\'' +
@@ -578,8 +545,6 @@ public class DocumentDescription
                 .append(documentTypeCode, rhs.documentTypeCode)
                 .append(documentTypeCodeName, rhs.documentTypeCodeName)
                 .append(description, rhs.description)
-                .append(createdDate, rhs.createdDate)
-                .append(createdBy, rhs.createdBy)
                 .append(title, rhs.title)
                 .append(externalReference, rhs.externalReference)
                 .isEquals();
@@ -601,8 +566,6 @@ public class DocumentDescription
                 .append(documentTypeCode)
                 .append(documentTypeCodeName)
                 .append(description)
-                .append(createdDate)
-                .append(createdBy)
                 .append(title)
                 .append(externalReference)
                 .toHashCode();

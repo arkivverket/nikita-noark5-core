@@ -1,15 +1,19 @@
 package nikita.webapp.service.interfaces.secondary;
 
+import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface ICorrespondencePartService {
 
@@ -59,4 +63,6 @@ public interface ICorrespondencePartService {
             String recordSystemId);
 
 
+    ResponseEntity<CorrespondencePartHateoas> handleUpdate(
+            UUID systemID, PatchObjects patchObjects);
 }

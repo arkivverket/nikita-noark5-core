@@ -12,6 +12,7 @@ public final class N5ResourceMappings {
     public static final String REFERENCE_SERIES = "referanseArkivdel";
     public static final String REFERENCE_ADMINISTRATIVE_UNIT = "referanseAdministratitivEnhet";
     public static final String REFERENCE_CASE_HANDLER = "referanseSaksbehandler";
+    public static final String BSM_DEF = "virksomhetsspesifikkeMetadata";
     public static final String FILE = "mappe";
     public static final String CASE_FILE = "saksmappe";
     public static final String MEETING_FILE = "moetemappe";
@@ -48,6 +49,9 @@ public final class N5ResourceMappings {
     //Common to many entities column/attribute names
     public static final String TITLE = "tittel";
     public static final String DESCRIPTION = "beskrivelse";
+    public static final String SOURCE = "kilde";
+    public static final String SOURCE_ENG = "source";
+    public static final String SOURCE_ENG_OBJECT = "Source";
     public static final String SYSTEM_ID = "systemID";
     public static final String SUB_SYSTEM_ID = "subSystemID";
     public static final String CREATED_DATE = "opprettetDato";
@@ -177,6 +181,13 @@ public final class N5ResourceMappings {
     public static final String CASE_HANDLER = "saksbehandler";
     // This is probably CORRESPONDENCE_PART_NAME. Waiting for clarification
     public static final String NAME = "navn";
+    public static final String NAME_ENG = "attribute_name";
+    public static final String TYPE = "datatype";
+    public static final String TYPE_ENG = "datatype";
+    public static final String TYPE_ENG_OBJECT = "Datatype";
+    public static final String OUTDATED = "utdatert";
+    public static final String OUTDATED_ENG = "outdated";
+    public static final String OUTDATED_ENG_OBJECT = "Outdated";
     public static final String ADDRESS_LINE_1 = "adresselinje1";
     public static final String ADDRESS_LINE_2 = "adresselinje2";
     public static final String ADDRESS_LINE_3 = "adresselinje3";
@@ -411,6 +422,7 @@ public final class N5ResourceMappings {
     public static final String FIRST_NAME = "fornavn";
     public static final String SECOND_NAME = "etternavn";
     public static final String PASSWORD = "passord";
+    public static final String PASSWORD_ENG = "password";
 
     public static final String RIGHT = "rettighet";
     public static final String NEW_RIGHT = NEW + DASH + RIGHT;
@@ -602,7 +614,6 @@ public final class N5ResourceMappings {
     public static final String MEETING_REGISTRATION_TYPE_ENG = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG = "mobiltelefon";
     public static final String MUNICIPALITY_NUMBER_ENG = "municipality_number";
-    public static final String NAME_ENG = "navn";
     public static final String NEW_VALUE_ENG = "new_value";
     public static final String OLD_VALUE_ENG = "old_value";
     public static final String ORGANISATION_NUMBER_ENG = "organisation_number";
@@ -666,7 +677,7 @@ public final class N5ResourceMappings {
     public static final String SHORT_NAME_ENG = "short_name";
     public static final String SIGN_OFF_BY_ENG = "sign_off_by";
     public static final String SIGN_OFF_DATE_ENG = "sign_off_date";
-    public static final String SIGN_OFF_ENG = "avskrivning";
+    public static final String SIGN_OFF_ENG = "sign_off";
     public static final String STORAGE_LOCATION_ENG = "storage_location";
     public static final String SIGN_OFF_METHOD_ENG = "sign_of_method";
     public static final String SOCIAL_SECURITY_NUMBER_ENG = "SignOfMethod";
@@ -853,7 +864,7 @@ public final class N5ResourceMappings {
     public static final String MEETING_REGISTRATION_TYPE_ENG_OBJECT = "moeteregistreringstype";
     public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
     public static final String MUNICIPALITY_NUMBER_ENG_OBJECT = "municipalityNumber";
-    public static final String NAME_ENG_OBJECT = "navn";
+    public static final String NAME_ENG_OBJECT = "name";
     public static final String NEW_VALUE_ENG_OBJECT = "newValue";
     public static final String OLD_VALUE_ENG_OBJECT = "oldValue";
     public static final String ORGANISATION_NUMBER_ENG_OBJECT = "organisationNumber";
@@ -919,7 +930,7 @@ public final class N5ResourceMappings {
     public static final String SIGN_OFF_BY_ENG_OBJECT = "signOffBy";
     public static final String SIGN_OFF_DATE_ENG_OBJECT = "signOffDate";
     public static final String SOCIAL_SECURITY_NUMBER_ENG_OBJECT = "socialSecurityNumber";
-    public static final String SIGN_OFF_ENG_OBJECT = "avskrivning";
+    public static final String SIGN_OFF_ENG_OBJECT = "SignOff";
     public static final String STORAGE_LOCATION_ENG_OBJECT = "storageLocation";
     public static final String SIGN_OFF_METHOD_ENG_OBJECT = "avskrivningsmaate";
     public static final String SUB_CLASS_ENG_OBJECT = "underklasse";

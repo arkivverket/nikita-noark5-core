@@ -1,26 +1,33 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.PatchObjects;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.nationalidentifier.*;
-import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.md_other.BSMMetadata;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IFileRepository;
+import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
@@ -29,21 +36,22 @@ import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
+import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
+import static java.util.UUID.fromString;
+import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
@@ -60,6 +68,7 @@ public class FileService
 
     private IRecordService recordService;
     private IFileRepository fileRepository;
+    private IBSMMetadataRepository bsmMetadataRepository;
     private IFileHateoasHandler fileHateoasHandler;
     private ISeriesHateoasHandler seriesHateoasHandler;
     private IClassHateoasHandler classHateoasHandler;
@@ -75,6 +84,7 @@ public class FileService
                        ApplicationEventPublisher applicationEventPublisher,
                        IRecordService recordService,
                        IFileRepository fileRepository,
+                       IBSMMetadataRepository bsmMetadataRepository,
                        IFileHateoasHandler fileHateoasHandler,
                        ISeriesHateoasHandler seriesHateoasHandler,
                        IClassHateoasHandler classHateoasHandler,
@@ -88,6 +98,7 @@ public class FileService
         super(entityManager, applicationEventPublisher);
         this.recordService = recordService;
         this.fileRepository = fileRepository;
+        this.bsmMetadataRepository = bsmMetadataRepository;
         this.fileHateoasHandler = fileHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
@@ -137,9 +148,9 @@ public class FileService
 
     @Override
     public CommentHateoas createCommentAssociatedWithFile
-        (String systemID, Comment comment) {
+            (String systemID, Comment comment) {
         return commentService.createNewComment(comment,
-                                               getFileOrThrow(systemID));
+                getFileOrThrow(systemID));
     }
 
     @Override
@@ -208,11 +219,11 @@ public class FileService
     @Override
     public SocialSecurityNumberHateoas
     createSocialSecurityNumberAssociatedWithFile
-        (@NotNull String systemID,
-         @NotNull SocialSecurityNumber socialSecurityNumber) {
+            (@NotNull String systemID,
+             @NotNull SocialSecurityNumber socialSecurityNumber) {
         return nationalIdentifierService.
                 createNewSocialSecurityNumber(socialSecurityNumber,
-                                              getFileOrThrow(systemID));
+                        getFileOrThrow(systemID));
     }
 
     @Override
@@ -290,13 +301,40 @@ public class FileService
                 (List<INoarkEntity>) (List) getFileOrThrow(systemID).
                         getReferenceNationalIdentifier());
         nationalIdentifierHateoasHandler
-	    .addLinks(niHateoas, new Authorisation());
+                .addLinks(niHateoas, new Authorisation());
         return niHateoas;
     }
 
     // All UPDATE operations
-    public File update(File file) {
-        return fileRepository.save(file);
+    public FileHateoas update(File file) {
+        FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, file));
+        return fileHateoas;
+    }
+
+    @Override
+    public ResponseEntity<FileHateoas> handleUpdate(
+            UUID systemID, PatchObjects patchObjects) {
+        File file = (File) handlePatch(systemID, patchObjects);
+        FileHateoas fileHateoas = new FileHateoas(file);
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, file));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(fileHateoas.getEntityVersion().toString())
+                .body(fileHateoas);
+    }
+
+    // Wrap an existing file object as a FileHateoas object
+    public FileHateoas getHateoas(File file) {
+        FileHateoas fileHateoas = new FileHateoas(file);
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, file));
+        return fileHateoas;
     }
 
     // systemId
@@ -316,7 +354,7 @@ public class FileService
     public ResponseEntity<ClassHateoas>
     findClassAssociatedWithFile(@NotNull final String systemId) {
         ClassHateoas classHateoas = new ClassHateoas(
-                fileRepository.findBySystemId(UUID.fromString(systemId)).
+                fileRepository.findBySystemId(fromString(systemId)).
                         getReferenceClass());
 
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
@@ -337,7 +375,7 @@ public class FileService
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithFile(@NotNull final String systemId) {
         SeriesHateoas seriesHateoas = new SeriesHateoas(
-                fileRepository.findBySystemId(UUID.fromString(systemId)).
+                fileRepository.findBySystemId(fromString(systemId)).
                         getReferenceSeries());
 
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
@@ -381,7 +419,7 @@ public class FileService
         updateTitleAndDescription(incomingFile, existingFile);
         if (null != incomingFile.getDocumentMedium()) {
             existingFile.setDocumentMedium(
-                incomingFile.getDocumentMedium());
+                    incomingFile.getDocumentMedium());
         }
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
@@ -454,6 +492,14 @@ public class FileService
     }
 
     @Override
+    public Object associateBSM(@NotNull UUID systemId,
+                               @NotNull List<BSMBase> bsm) {
+        File file = getFileOrThrow(systemId);
+        file.setReferenceBSMBase(bsm);
+        return file;
+    }
+
+    @Override
     public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
         return nationalIdentifierService.generateDefaultSocialSecurityNumber();
     }
@@ -466,6 +512,19 @@ public class FileService
     // All HELPER operations
 
     /**
+     * Used to retrieve a BSMBase object so parent can can check that the
+     * BSMMetadata object exists and is not outdated.
+     * Done to simplify coding.
+     *
+     * @param name Name of the BSM parameter to check
+     * @return BSMMetadata object corresponding to the name
+     */
+    @Override
+    protected Optional<BSMMetadata> getBSMByName(String name) {
+        return bsmMetadataRepository.findByName(name);
+    }
+
+    /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. Note. If you call this, be aware
      * that you will only ever get a valid File back. If there is no valid
@@ -474,9 +533,21 @@ public class FileService
      * @param systemId systemId of the file object you are looking for
      * @return the newly found file object or null if it does not exist
      */
-    private File getFileOrThrow(@NotNull String systemId) {
-        File file =
-                fileRepository.findBySystemId(UUID.fromString(systemId));
+    public File getFileOrThrow(@NotNull String systemId) {
+        return getFileOrThrow(fromString(systemId));
+    }
+
+    /**
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. Note. If you call this, be aware
+     * that you will only ever get a valid File back. If there is no valid
+     * File, an exception is thrown
+     *
+     * @param systemId systemId of the file object you are looking for
+     * @return the newly found file object or null if it does not exist
+     */
+    public File getFileOrThrow(@NotNull UUID systemId) {
+        File file = fileRepository.findBySystemId(systemId);
         if (file == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " File, using systemId " +
                     systemId;

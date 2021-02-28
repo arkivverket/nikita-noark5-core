@@ -1,13 +1,17 @@
 package nikita.webapp.service.impl.secondary;
 
+import nikita.common.model.nikita.PatchObjects;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
+import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
-import nikita.common.repository.n5v5.metadata.ICorrespondencePartTypeRepository;
+import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.repository.n5v5.secondary.ICorrespondencePartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
@@ -16,20 +20,26 @@ import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
+import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_CORRESPONDENCE_PART;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
@@ -41,24 +51,22 @@ public class CorrespondencePartService
             LoggerFactory.getLogger(CorrespondencePartService.class);
 
     private final ICorrespondencePartRepository correspondencePartRepository;
-    private final ICorrespondencePartTypeRepository
-            correspondencePartTypeRepository;
     private final ICorrespondencePartHateoasHandler
             correspondencePartHateoasHandler;
     private final IMetadataService metadataService;
+    private final IBSMMetadataRepository bsmMetadataRepository;
 
     public CorrespondencePartService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             ICorrespondencePartRepository correspondencePartRepository,
-            ICorrespondencePartTypeRepository correspondencePartTypeRepository,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
-            IMetadataService metadataService) {
+            IMetadataService metadataService, IBSMMetadataRepository bsmMetadataRepository) {
         super(entityManager, applicationEventPublisher);
         this.correspondencePartRepository = correspondencePartRepository;
-        this.correspondencePartTypeRepository = correspondencePartTypeRepository;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.metadataService = metadataService;
+        this.bsmMetadataRepository = bsmMetadataRepository;
     }
 
     @Override
@@ -122,10 +130,10 @@ public class CorrespondencePartService
             CorrespondencePart existingCorrespondencePart) {
         // Only copy if changed, in case it has an historical value
         if (existingCorrespondencePart.getCorrespondencePartType()
-            != incomingCorrespondencePart.getCorrespondencePartType()) {
+                != incomingCorrespondencePart.getCorrespondencePartType()) {
             validateCorrespondencePartType(incomingCorrespondencePart);
             existingCorrespondencePart.setCorrespondencePartType
-                (incomingCorrespondencePart.getCorrespondencePartType());
+                    (incomingCorrespondencePart.getCorrespondencePartType());
         }
     }
 
@@ -194,6 +202,24 @@ public class CorrespondencePartService
     }
 
     @Override
+    public ResponseEntity<CorrespondencePartHateoas>
+    handleUpdate(UUID systemID, PatchObjects patchObjects) {
+        CorrespondencePart correspondencePart = (CorrespondencePart)
+                handlePatch(systemID, patchObjects);
+        CorrespondencePartHateoas correspondencePartHateoas =
+                new CorrespondencePartHateoas(correspondencePart);
+        correspondencePartHateoasHandler.addLinks(correspondencePartHateoas,
+                new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this,
+                        correspondencePart));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(correspondencePartHateoas.getEntityVersion().toString())
+                .body(correspondencePartHateoas);
+    }
+
+    @Override
     public CorrespondencePartPersonHateoas
     createNewCorrespondencePartPerson(
             CorrespondencePartPerson correspondencePart,
@@ -220,10 +246,9 @@ public class CorrespondencePartService
         record.addCorrespondencePart(correspondencePart);
         correspondencePart.setReferenceRecord(record);
 
-        correspondencePartRepository.save(correspondencePart);
-
         CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
-                new CorrespondencePartPersonHateoas(correspondencePart);
+                new CorrespondencePartPersonHateoas(
+                        correspondencePartRepository.save(correspondencePart));
         correspondencePartHateoasHandler.addLinks(
                 correspondencePartPersonHateoas,
                 new Authorisation());
@@ -235,9 +260,9 @@ public class CorrespondencePartService
 
     private void createTemplateCorrespondencePartType(
             CorrespondencePart correspondencePart) {
-	CorrespondencePartType correspondencePartType = (CorrespondencePartType)
-	    metadataService.findValidMetadataByEntityTypeOrThrow
-	    (CORRESPONDENCE_PART_TYPE, CORRESPONDENCE_PART_CODE_EA, null);
+        CorrespondencePartType correspondencePartType = (CorrespondencePartType)
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (CORRESPONDENCE_PART_TYPE, CORRESPONDENCE_PART_CODE_EA, null);
         correspondencePart.setCorrespondencePartType(correspondencePartType);
 
     }
@@ -336,31 +361,8 @@ public class CorrespondencePartService
     public long deleteAllByOwnedBy() {
         return correspondencePartRepository.deleteByOwnedBy(getUser());
     }
-    // Internal helper methods
 
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid CorrespondencePart back. If there
-     * is no valid CorrespondencePart, an exception is thrown
-     *
-     * @param correspondencePartSystemId systemId of correspondencePart to
-     *                                   retrieve
-     * @return the retrieved CorrespondencePart
-     */
-    private CorrespondencePart getCorrespondencePartOrThrow(
-            @NotNull String correspondencePartSystemId) {
-        CorrespondencePart correspondencePart =
-                correspondencePartRepository.findBySystemId(
-                        UUID.fromString(correspondencePartSystemId));
-        if (correspondencePart == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " CorrespondencePart, " +
-                    "using systemId " + correspondencePartSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return correspondencePart;
-    }
+    // Internal helper methods
 
     /**
      * Update BusinessAddress if it exists. If none exists, create a
@@ -505,7 +507,7 @@ public class CorrespondencePartService
      * like this does not have scope for that kind of functionality.
      *
      * @param recordSystemId The systemId of the record object
-     *                              you wish to create a templated object for
+     *                       you wish to create a templated object for
      * @return the CorrespondencePartUnit object wrapped as a
      * CorrespondencePartUnitHateoas object
      */
@@ -534,7 +536,7 @@ public class CorrespondencePartService
      * like this does not have scope for that kind of functionality.
      *
      * @param recordSystemId The systemId of the record object
-     *                              you wish to create a templated object for
+     *                       you wish to create a templated object for
      * @return the CorrespondencePartPerson object wrapped as a
      * CorrespondencePartPersonHateoas object
      */
@@ -562,7 +564,7 @@ public class CorrespondencePartService
      * like this does not have scope for that kind of functionality.
      *
      * @param recordSystemId The systemId of the record object
-     *                              you wish to create a templated object for
+     *                       you wish to create a templated object for
      * @return the CorrespondencePartInternal object wrapped as a
      * CorrespondencePartInternalHateoas object
      */
@@ -627,7 +629,7 @@ public class CorrespondencePartService
     }
 
     private void validateCorrespondencePartType(
-                CorrespondencePart correspondencePart) {
+            CorrespondencePart correspondencePart) {
         // Assume value already set, as the deserialiser will enforce it.
         CorrespondencePartType correspondencePartType =
                 (CorrespondencePartType) metadataService
@@ -635,6 +637,60 @@ public class CorrespondencePartService
                                 CORRESPONDENCE_PART_TYPE,
                                 correspondencePart.getCorrespondencePartType());
         correspondencePart.setCorrespondencePartType
-	    (correspondencePartType);
+                (correspondencePartType);
+    }
+
+    @Override
+    protected Optional<BSMMetadata> getBSMByName(String name) {
+        return bsmMetadataRepository.findByName(name);
+    }
+
+    @Override
+    public Object associateBSM(@NotNull UUID systemId,
+                               @NotNull List<BSMBase> bsm) {
+        CorrespondencePart correspondencePart =
+                getCorrespondencePartOrThrow(systemId);
+        correspondencePart.setReferenceBSMBase(bsm);
+        return correspondencePart;
+    }
+
+    /**
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid CorrespondencePart back. If there
+     * is no valid CorrespondencePart, an exception is thrown
+     *
+     * @param correspondencePartSystemId systemId of correspondencePart to
+     *                                   retrieve
+     * @return the retrieved CorrespondencePart
+     */
+    private CorrespondencePart getCorrespondencePartOrThrow(
+            @NotNull String correspondencePartSystemId) {
+        return getCorrespondencePartOrThrow(
+                UUID.fromString(correspondencePartSystemId));
+    }
+
+    /**
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid CorrespondencePart back. If there
+     * is no valid CorrespondencePart, an exception is thrown
+     *
+     * @param correspondencePartSystemId systemId of correspondencePart to
+     *                                   retrieve
+     * @return the retrieved CorrespondencePart
+     */
+    private CorrespondencePart getCorrespondencePartOrThrow(
+            @NotNull UUID correspondencePartSystemId) {
+        CorrespondencePart correspondencePart =
+                correspondencePartRepository
+                        .findBySystemId(correspondencePartSystemId);
+        if (correspondencePart == null) {
+            String info = INFO_CANNOT_FIND_OBJECT + " CorrespondencePart, " +
+                    "using systemId " + correspondencePartSystemId;
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        return correspondencePart;
     }
 }
