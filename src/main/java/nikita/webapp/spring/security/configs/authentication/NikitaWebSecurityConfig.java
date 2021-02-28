@@ -1,7 +1,6 @@
 package nikita.webapp.spring.security.configs.authentication;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,16 +8,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.stereotype.Component;
 
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.ROLE_RECORDS_MANAGER;
+import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.N5ResourceMappings.FONDS;
 import static nikita.common.config.PATHPatterns.PATTERN_METADATA_PATH;
 import static nikita.common.config.PATHPatterns.PATTERN_NEW_FONDS_STRUCTURE_ALL;
 import static org.springframework.http.HttpMethod.GET;
 
 @Component
+/*
 @Profile({"security-oauth2-jwt-authentication",
            "security-oauth2-authentication",
-             "security-http-basic-authentication"})
+             "security-http-basic-authentication"})*/
 public class NikitaWebSecurityConfig
         extends WebSecurityConfigurerAdapter {
 

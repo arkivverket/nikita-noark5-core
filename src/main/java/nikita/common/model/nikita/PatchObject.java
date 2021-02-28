@@ -1,20 +1,11 @@
-package nikita.common.util.patch;
+package nikita.common.model.nikita;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Created by tsodring on 29/03/18.
- * <p>
- * Testing code on how to handle PATCH
- * <p>
- */
 public class PatchObject {
 
-    private String op;
-    private String path;
-    private String value;
-    private List<String> from = new ArrayList<>();
+    private String op = "";
+    private String path = "";
+    private Object value = "";
+    private String from = "";
 
     public PatchObject() {
     }
@@ -35,19 +26,19 @@ public class PatchObject {
         this.path = path;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
-    public List<String> getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(List<String> from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
@@ -57,7 +48,7 @@ public class PatchObject {
                 "op='" + op + '\'' +
                 ", path='" + path + '\'' +
                 ", value='" + value + '\'' +
-                ", from=" + from.toString() +
+                ", from=" + from +
                 '}';
     }
 }

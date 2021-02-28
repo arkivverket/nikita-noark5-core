@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import nikita.common.model.nikita.PatchObjects;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -178,6 +181,43 @@ public class PartHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedPartPerson.getVersion().toString())
                 .body(partPersonHateoas);
+    }
+
+    // Update a Part with given values
+    // PATCH [contextPath][api]/arkivstruktur/partperson/{systemId}
+    @ApiOperation(value = "Updates a Part identified by a given" +
+            " systemId",
+            notes = "Returns the newly updated part",
+            response = PartHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Part OK",
+                    response = PartHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Part"),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PatchMapping(value =
+            SLASH + PART_PERSON + SLASH + SYSTEM_ID_PARAMETER,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<PartHateoas> patchPart(
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemId of part to update",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @ApiParam(name = "Part",
+                    value = "Incoming part object",
+                    required = true)
+            @RequestBody PatchObjects patchObjects) throws NikitaException {
+        return partService.handleUpdate(systemID, patchObjects);
     }
 
     // DELETE [contextPath][api]/arkivstruktur/partenhet/{systemID}/

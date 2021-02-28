@@ -5,7 +5,6 @@ import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.interfaces.IConversion;
 import nikita.common.model.noark5.v5.interfaces.IElectronicSignature;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.Format;
 import nikita.common.model.noark5.v5.metadata.VariantFormat;
 import nikita.common.model.noark5.v5.secondary.Conversion;
@@ -17,26 +16,19 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_DOCUMENT_OBJECT,
-        indexes = {
-                @Index(name = "index_filname",
-                        columnList = "original_filename"),
-                @Index(name = "index_owned_by",
-                        columnList = "owned_by")})
+        indexes = @Index(name = "index_filname",
+                columnList = "original_filename"))
 @JsonDeserialize(using = DocumentObjectDeserializer.class)
 @HateoasPacker(using = DocumentObjectHateoasHandler.class)
 @HateoasObject(using = DocumentObjectHateoas.class)
@@ -90,21 +82,6 @@ public class DocumentObject
     private String formatDetails;
 
     /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @Column(name = CREATED_DATE_ENG)
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    private OffsetDateTime createdDate;
-
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @Column(name = CREATED_BY_ENG)
-    @Audited
-    private String createdBy;
-
-    /**
      * M218 - referanseDokumentfil (xs:string)
      */
     @Column(name = DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG)
@@ -147,7 +124,7 @@ public class DocumentObject
     private String mimeType;
 
     // Link to DocumentDescription
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = DOCUMENT_OBJECT_DOCUMENT_DESCRIPTION_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DocumentDescription referenceDocumentDescription;
@@ -185,7 +162,7 @@ public class DocumentObject
         }
     }
 
-   public Format getFormat() {
+    public Format getFormat() {
         if (null == formatCode)
             return null;
         return new Format(formatCode, formatCodeName);
@@ -207,22 +184,6 @@ public class DocumentObject
 
     public void setFormatDetails(String formatDetails) {
         this.formatDetails = formatDetails;
-    }
-
-    public OffsetDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(OffsetDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 
     public String getReferenceDocumentFile() {
@@ -320,8 +281,6 @@ public class DocumentObject
                 ", checksumAlgorithm='" + checksumAlgorithm + '\'' +
                 ", checksum='" + checksum + '\'' +
                 ", referenceDocumentFile='" + referenceDocumentFile + '\'' +
-                ", createdBy='" + createdBy + '\'' +
-                ", createdDate=" + createdDate +
                 ", formatDetails='" + formatDetails + '\'' +
                 ", formatCode='" + formatCode + '\'' +
                 ", formatCodeName='" + formatCodeName + '\'' +
@@ -351,8 +310,6 @@ public class DocumentObject
                 .append(checksumAlgorithm, rhs.checksumAlgorithm)
                 .append(checksum, rhs.checksum)
                 .append(referenceDocumentFile, rhs.referenceDocumentFile)
-                .append(createdBy, rhs.createdBy)
-                .append(createdDate, rhs.createdDate)
                 .append(formatDetails, rhs.formatDetails)
                 .append(formatCode, rhs.formatCode)
                 .append(formatCodeName, rhs.formatCodeName)
@@ -372,8 +329,6 @@ public class DocumentObject
                 .append(checksumAlgorithm)
                 .append(checksum)
                 .append(referenceDocumentFile)
-                .append(createdBy)
-                .append(createdDate)
                 .append(formatDetails)
                 .append(formatCode)
                 .append(formatCodeName)

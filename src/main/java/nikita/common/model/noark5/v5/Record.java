@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.interfaces.IPart;
@@ -25,8 +26,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
@@ -217,6 +217,10 @@ public class Record
     @OneToMany(mappedBy = "referenceRecord")
     private List<NationalIdentifier> referenceNationalIdentifier =
             new ArrayList<>();
+
+    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+    @OneToMany(mappedBy = "referenceRecord", cascade = {PERSIST, MERGE})
+    private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     public OffsetDateTime getArchivedDate() {
         return archivedDate;
@@ -478,6 +482,29 @@ public class Record
     public void addNationalIdentifier(
             NationalIdentifier referenceNationalIdentifier) {
         this.referenceNationalIdentifier.add(referenceNationalIdentifier);
+    }
+
+    public List<BSMBase> getReferenceBSMBase() {
+        return referenceBSMBase;
+    }
+
+    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
+        this.referenceBSMBase = referenceBSMBase;
+        for (BSMBase bsmBase : referenceBSMBase) {
+            bsmBase.setReferenceRecord(this);
+        }
+    }
+
+    public void addBSMBaseList(List<BSMBase> referenceBSMBase) {
+        this.referenceBSMBase.addAll(referenceBSMBase);
+        for (BSMBase bsm : referenceBSMBase) {
+            bsm.setReferenceRecord(this);
+        }
+    }
+
+    public void addBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.add(bsmBase);
+        bsmBase.setReferenceRecord(this);
     }
 
     @Override

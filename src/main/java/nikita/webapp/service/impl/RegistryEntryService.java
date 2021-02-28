@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
@@ -16,6 +15,7 @@ import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
 import nikita.common.model.noark5.v5.metadata.SignOffMethod;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.repository.n5v5.IRegistryEntryRepository;
 import nikita.common.repository.n5v5.secondary.ISignOffRepository;
@@ -217,7 +217,7 @@ public class RegistryEntryService
             throw new NikitaMalformedInputDataException(info);
         }
 
-        signOff.setReferenceRecord(registryEntry);
+        signOff.addRecord(registryEntry);
         signOff = signOffRepository.save(signOff);
         registryEntry.addReferenceSignOff(signOff);
         SignOffHateoas signOffHateoas = new SignOffHateoas(signOff);

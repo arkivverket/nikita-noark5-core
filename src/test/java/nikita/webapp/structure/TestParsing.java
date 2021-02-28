@@ -1,50 +1,39 @@
 package nikita.webapp.structure;
 
-import java.time.OffsetDateTime;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import nikita.N5CoreApp;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.context.WebApplicationContext;
-
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import nikita.common.model.noark5.v5.*;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.Class;
-import nikita.common.model.noark5.v5.admin.*;
-import nikita.common.model.noark5.v5.casehandling.*;
-import nikita.common.model.noark5.v5.casehandling.secondary.*;
+import nikita.common.model.noark5.v5.*;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
+import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RecordNote;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.casehandling.secondary.ContactInformation;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.metadata.*;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.*;
-import nikita.common.util.deserialisers.admin.*;
+import nikita.common.util.deserialisers.admin.AdministrativeUnitDeserializer;
+import nikita.common.util.deserialisers.admin.UserDeserializer;
 import nikita.common.util.deserialisers.casehandling.*;
 import nikita.common.util.deserialisers.nationalidentifier.*;
 import nikita.common.util.deserialisers.secondary.*;
+import org.junit.jupiter.api.Test;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest(classes = N5CoreApp.class)
-//@AutoConfigureRestDocs(outputDir = "target/snippets")
-public class TestParsing {
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDate;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDate;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDateTime;
 
-    @BeforeEach
-    public void setUp(WebApplicationContext webApplicationContext,
-                      RestDocumentationContextProvider restDocumentation) {
-    }
+public class TestParsing {
 
     @Test
     public void validdates() throws Exception {
@@ -66,6 +55,7 @@ public class TestParsing {
                 "1864-10-09T00:00:00+00:00",
         };
         String[] datetimereject = {
+                "2014-11-22 15:15:02.956+01:00",
                 "1997-07-16T19:20+0100",
                 "1997-07-16T19:20-0100",
                 "1997-07-16T19:20+01",

@@ -9,8 +9,7 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 
 import java.io.IOException;
 
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.printCorrespondencePartPerson;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
  * Serialise an outgoing CorrespondencePart object as JSON.
@@ -38,8 +37,9 @@ public class CorrespondencePartPersonHateoasSerializer
 
         jgen.writeStartObject();
         printCorrespondencePartPerson(jgen, correspondencePart);
-        printHateoasLinks(jgen
-                , correspondencePartHateoas.getLinks(correspondencePart));
+        printBSM(jgen, correspondencePart);
+        printHateoasLinks(jgen,
+                correspondencePartHateoas.getLinks(correspondencePart));
         jgen.writeEndObject();
     }
 }

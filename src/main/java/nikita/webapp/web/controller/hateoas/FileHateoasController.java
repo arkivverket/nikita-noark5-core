@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -1051,6 +1053,41 @@ public class FileHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedFile.getVersion().toString())
                 .body(fileHateoas);
+    }
+
+    // Update a File with given values
+    // PATCH [contextPath][api]/arkivstruktur/mappe/{systemId}
+    @ApiOperation(value = "Updates a File identified by a given systemId",
+            notes = "Returns the newly updated file",
+            response = FileHateoas.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "File OK",
+                    response = FileHateoas.class),
+            @ApiResponse(code = 401,
+                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(code = 403,
+                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(code = 404,
+                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type File"),
+            @ApiResponse(code = 409,
+                    message = API_MESSAGE_CONFLICT),
+            @ApiResponse(code = 500,
+                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @Counted
+    @PatchMapping(value = SLASH + SYSTEM_ID_PARAMETER,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<FileHateoas> patchFile(
+            HttpServletRequest request,
+            @ApiParam(name = SYSTEM_ID,
+                    value = "systemId of file to update",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @ApiParam(name = "File",
+                    value = "Incoming file object",
+                    required = true)
+            @RequestBody PatchObjects patchObjects) throws NikitaException {
+        return fileService.handleUpdate(systemID, patchObjects);
     }
 
     // Finalise a File

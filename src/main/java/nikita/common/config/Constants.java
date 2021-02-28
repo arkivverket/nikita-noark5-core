@@ -48,6 +48,14 @@ public final class Constants {
     public static final String NEW_ANYTHING = NEW + DASH + "**";
     public static final String ANYTHING = "*";
 
+    public static final String TYPE_STRING = "string";
+    public static final String TYPE_BOOLEAN = "boolean";
+    public static final String TYPE_DATE = "date";
+    public static final String TYPE_DATE_TIME = "datetime";
+    public static final String TYPE_INTEGER = "integer";
+    public static final String TYPE_DOUBLE = "double";
+    public static final String TYPE_URI = "uri";
+
     public static final String DELETE_RESPONSE = "{}";
 
     // Create for new arkivstruktur objects
@@ -246,6 +254,8 @@ public final class Constants {
 
     public static final String NOARK5_V5_CONTENT_TYPE_JSON =
             "application/vnd.noark5+json";
+    public static final String CONTENT_TYPE_JSON_MERGE_PATCH =
+            "application/merge-patch+json";
 
     public static final String CONTENT_TYPE_JSON = "application/json";
 
@@ -666,6 +676,9 @@ public final class Constants {
     public static final String REL_METADATA_ACCESS_CATEGORY = REL_METADATA +
             ACCESS_CATEGORY + SLASH;
 
+    public static final String REL_METADATA_BSM = REL_METADATA +
+            BSM_DEF + SLASH;
+
     public static final String REL_METADATA_ACCESS_RESTRICTION = REL_METADATA +
             ACCESS_RESTRICTION + SLASH;
 
@@ -738,6 +751,7 @@ public final class Constants {
     public static final String TABLE_AUTHORITY = "ad_authority";
 
     // Table Constants
+    public static final String TABLE_BSM_BASE = "bsm_base";
     public static final String TABLE_FONDS = "as_fonds";
     public static final String TABLE_SERIES = "as_series";
     public static final String TABLE_RECORD = "as_record";
@@ -877,9 +891,10 @@ public final class Constants {
 
     // Metadata tablenames
     public static final String TABLE_ACCESS_CATEGORY = "md_access_category";
-    public static final String TABLE_ACCESS_RESTRICTION = 
+    public static final String TABLE_BSM_METDATA = "md_bsm";
+    public static final String TABLE_ACCESS_RESTRICTION =
             "md_access_restriction";
-    public static final String TABLE_ASSOCIATED_WITH_RECORD_AS = 
+    public static final String TABLE_ASSOCIATED_WITH_RECORD_AS =
             "md_associated_with_record_as";
     public static final String TABLE_CASE_STATUS = "md_case_status";
     public static final String TABLE_CLASSIFICATION_TYPE =
@@ -1046,6 +1061,13 @@ public final class Constants {
             "national_identifier_record_id";
     public static final String NATIONAL_IDENTIFIER_FILE_ID =
             "national_identifier_file_id";
+    public static final String BSM_FILE_ID = "fk_bsm_file_id";
+    public static final String BSM_RECORD_ID = "fk_bsm_record_id";
+    public static final String BSM_CORRESPONDENCE_PART_ID = "" +
+            "fk_bsm_correspondence_part_id";
+    public static final String BSM_PART_ID = "fk_bsm_part_id";
+    public static final String BSM_ADMINISTRATIVE_UNIT_ID =
+            "fk_bsm_administrative_unit_id";
 
     // Primary key names
     public static final String PRIMARY_KEY_SYSTEM_ID = "system_id";

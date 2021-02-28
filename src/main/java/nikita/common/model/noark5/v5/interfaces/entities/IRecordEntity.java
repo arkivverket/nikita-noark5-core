@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
  */
 public interface IRecordEntity
         extends ICreate, INoarkEntity, ISystemId, IClassified, IScreening,
-        IDisposal, IDocumentMedium, ITitleDescription,
+        IDisposal, IDocumentMedium, ITitleDescription, IBSM,
         IStorageLocation, IKeyword, IComment, ICrossReference, IAuthor {
 
     OffsetDateTime getArchivedDate();

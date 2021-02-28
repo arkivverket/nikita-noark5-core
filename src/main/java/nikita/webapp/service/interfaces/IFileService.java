@@ -1,9 +1,14 @@
 package nikita.webapp.service.interfaces;
 
 
+import nikita.common.model.nikita.PatchObjects;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.hateoas.*;
+import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
+import nikita.common.model.noark5.v5.hateoas.FileHateoas;
+import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
+import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
@@ -17,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 public interface IFileService {
 
@@ -68,8 +74,8 @@ public interface IFileService {
 
     SocialSecurityNumberHateoas
     createSocialSecurityNumberAssociatedWithFile
-        (@NotNull String systemID,
-         @NotNull SocialSecurityNumber socialSecurityNumber);
+            (@NotNull String systemID,
+             @NotNull SocialSecurityNumber socialSecurityNumber);
 
     UnitHateoas
     createUnitAssociatedWithFile(
@@ -80,6 +86,12 @@ public interface IFileService {
     FileHateoas findAllChildren(@NotNull String systemId);
 
     File findBySystemId(String systemId);
+
+    File getFileOrThrow(@NotNull String systemId);
+
+    File getFileOrThrow(@NotNull UUID systemId);
+
+    FileHateoas getHateoas(File file);
 
     List<File> findByOwnedBy(String ownedBy);
 
@@ -109,6 +121,9 @@ public interface IFileService {
 
     PositionHateoas generateDefaultPosition();
 
+    Object associateBSM(@NotNull UUID systemId,
+                        @NotNull List<BSMBase> bsm);
+
     SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber();
 
     UnitHateoas generateDefaultUnit();
@@ -124,4 +139,7 @@ public interface IFileService {
     FileHateoas generateDefaultFile();
 
     long deleteAllByOwnedBy();
+
+    ResponseEntity<FileHateoas> handleUpdate(
+            UUID systemID, PatchObjects patchObjects);
 }

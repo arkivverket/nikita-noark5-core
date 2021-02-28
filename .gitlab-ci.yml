@@ -1,14 +1,17 @@
 image: docker:latest
 services:
-- docker:dind
+  - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay
 
 stages:
-- build
-- test
-- use
+  - build
+  - test
+  - use
+
+include:
+  - template: Code-Quality.gitlab-ci.yml
 
 noark5tester-runtest:
   stage: test
@@ -17,20 +20,20 @@ noark5tester-runtest:
   image: debian:buster
   allow_failure: false
   before_script:
-  - apt update
-  - apt install -y git maven curl python python-mechanize
-  - git clone https://github.com/petterreinholdtsen/noark5-tester
+    - apt update
+    - apt install -y git maven curl python python-mechanize
+    - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
-  - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 nikita-run.log ; fi; fi }
-  - trap atexit EXIT
-  - mvn spring-boot:run > nikita-run.log 2>&1 &
-  - serverpid=$!
-  - echo "Waiting for nikita to start"
-  - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
-  - (cd noark5-tester && LC_ALL=C.UTF-8 ./runtest --verbose --baseurl $baseurl)
+    - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 nikita-run.log ; fi; fi }
+    - trap atexit EXIT
+    - mvn spring-boot:run > nikita-run.log 2>&1 &
+    - serverpid=$!
+    - echo "Waiting for nikita to start"
+    - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
+    - (cd noark5-tester && LC_ALL=C.UTF-8 ./runtest --verbose --baseurl $baseurl)
   artifacts:
     paths:
-    - nikita-run.log
+      - nikita-run.log
 
 noark5tester-inoutin:
   stage: use
@@ -39,57 +42,50 @@ noark5tester-inoutin:
   image: debian:buster
   allow_failure: false
   before_script:
-  - apt update
-  - apt install -y git maven curl python python-mechanize python-tz python-lxml jq python-dateutil python-stdnum
-  - git clone https://github.com/petterreinholdtsen/noark5-tester
+    - apt update
+    - apt install -y git maven curl python python-mechanize python-tz python-lxml jq python-dateutil python-stdnum
+    - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
-  - nikitastarted=false
-  - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 nikita-run.log ; fi; fi }
-  - trap atexit EXIT
-  - mvn spring-boot:run > nikita-run.log 2>&1 &
-  - serverpid=$!
-  - echo "Waiting for nikita to start"
-  - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
-  - cd noark5-tester
-  - export LC_ALL=C.UTF-8
-  - ./runtest  --baseurl $baseurl --keep
-  - ./export-all --baseurl $baseurl --verbose
-  - firstseries=$(jq -r '.results []._links.self.href' json-dump-*/api/arkivstruktur/arkivdel.json | head -1)
-  - ./import-email --baseurl $baseurl --saksmappe --mbox testdata/nikita-noark.mbox --storageurl "$firstseries" --maxinserts 10
-  - ./export-all --baseurl $baseurl --xml --verbose
-  - find uttrekk-*
-  - depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
-  - echo "Trying to load data from $depotdir"
-  - ./import-uttrekk  --baseurl $baseurl "$depotdir"
+    - nikitastarted=false
+    - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 nikita-run.log ; fi; fi }
+    - trap atexit EXIT
+    - mvn spring-boot:run > nikita-run.log 2>&1 &
+    - serverpid=$!
+    - echo "Waiting for nikita to start"
+    - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
+    - cd noark5-tester
+    - export LC_ALL=C.UTF-8
+    - ./runtest  --baseurl $baseurl --keep
+    - ./export-all --baseurl $baseurl --verbose
+    - firstseries=$(jq -r '.results []._links.self.href' json-dump-*/api/arkivstruktur/arkivdel.json | head -1)
+    - ./import-email --baseurl $baseurl --saksmappe --mbox testdata/nikita-noark.mbox --storageurl "$firstseries" --maxinserts 10
+    - ./export-all --baseurl $baseurl --xml --verbose
+    - find uttrekk-*
+    - depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
+    - echo "Trying to load data from $depotdir"
+    - ./import-uttrekk  --baseurl $baseurl "$depotdir"
   artifacts:
     paths:
-    - nikita-run.log
-    - noark5-tester/json-dump-*/*
-    - noark5-tester/uttrekk-*/*
+      - nikita-run.log
+      - noark5-tester/json-dump-*/*
+      - noark5-tester/uttrekk-*/*
 
 maven-build:
   before_script:
-  - apt-get update
+    - apt-get update
   # - apt-get install mvn
   #  - apt-get install -y openjfx
   image: maven:3.6.1-jdk-11
   stage: build
   script:
-  - "mvn package -B"
-  - "mvn test"
+    - "mvn package -B"
+    - "mvn test"
   artifacts:
     paths:
-    - target/*.jar
+      - target/*.jar
 
-dependency_scanning:
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  allow_failure: true
-  services:
-    - docker:stable-dind
-  script:
-    - docker run --rm --volume "$PWD":/code   --volume /var/run/docker.sock:/var/run/docker.sock "registry.gitlab.com/gitlab-org/security-products/dependency-scanning:latest" /code
+code_quality:
+  stage: test
   artifacts:
-    reports:
-      dependency_scanning: gl-dependency-scanning-report.json
+    expose_as: 'Code Quality Report'
+    paths: [ gl-code-quality-report.json ]

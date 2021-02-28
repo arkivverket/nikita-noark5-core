@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
@@ -15,6 +16,8 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.Constants.TABLE_PART;
@@ -59,6 +62,10 @@ public class Part
     @ManyToMany(mappedBy = "referencePart")
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
+
+    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+    @OneToMany(mappedBy = "referencePart", cascade = {PERSIST, MERGE})
+    private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     public List<File> getReferenceFile() {
         return referenceFile;
@@ -112,6 +119,29 @@ public class Part
     public void addReferenceDocumentDescription(
             DocumentDescription documentDescription) {
         this.referenceDocumentDescription.add(documentDescription);
+    }
+
+
+    public List<BSMBase> getReferenceBSMBase() {
+        return referenceBSMBase;
+    }
+
+    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
+        this.referenceBSMBase = referenceBSMBase;
+        for (BSMBase base : referenceBSMBase) {
+            base.setReferencePart(this);
+        }
+    }
+
+    public void addReferenceBSMBase(List<BSMBase> referenceBSMBase) {
+        this.referenceBSMBase.addAll(referenceBSMBase);
+        for (BSMBase base : referenceBSMBase) {
+            base.setReferencePart(this);
+        }
+    }
+
+    public void addBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.add(bsmBase);
     }
 
     @Override

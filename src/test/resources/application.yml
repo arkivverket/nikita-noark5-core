@@ -1,0 +1,81 @@
+# ===================================================================
+# Spring Boot configuration for the default profile.
+#
+# ===================================================================
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+
+server:
+  servlet:
+    context-path: /noark5v5
+  port: 8092
+
+
+spring:
+  h2:
+    console:
+      path: /h2-console
+  application:
+    name: OsloMet Noark 5 Core (Test mode)
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:n5DemoDb
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    database: h2
+    show-sql: false
+    properties:
+      hibernate.hbm2ddl.auto: create-drop
+      hibernate.discriminator.ignore_explicit_for_joined: true
+      org.hibernate.envers.audit_table_prefix: aud_
+  profiles:
+    active: test
+
+logging:
+  level:
+    org:
+      reflections: OFF
+
+security:
+  oauth2:
+    client:
+      client-id: nikita-client
+      client-secret: $2a$10$52VgSTgNvk4ROc8YNYdTUesHhQTm2r5oeH1aiCtIgu3rfPQZQzswa
+      token-expiry: 28800 # seconds
+info:
+  app.name: OsloMet Noark 5 Core
+  build.version: ${project.version}
+
+nikita:
+  system:
+    vendor:
+      name: OsloMet
+      version: 0.4
+    protocol:
+      version: Noark 5.5.0
+    build: 2019-08-07+0200
+  startup:
+    create-demo-users: true # Populate database with some users
+    create-directory-store: true # If not created, attempt to create
+    directory-store-name: /data/nikita/storage/ # Where to store documents
+    incoming-directory: /data/nikita/storage/incoming/ # Temporary storage area
+  application:
+    pagination:
+      max-page-size: 10 # Set number of results per page. Currently not used
+    checksum-algorithm: SHA-256
+  server:
+    hateoas:
+      publicAddress: http://localhost:8092
+    details:
+      conformity-levels:
+        official: arkivstruktur, casehandling, metadata
+        non-official: gui, import-api
+  # Only used if eventhandling profile is enabled
+  simplechain:
+    # Address to post a block to the chain.
+    address: http://localhost:9792:/simplechain/block

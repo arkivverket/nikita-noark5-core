@@ -331,6 +331,14 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitCountStatement(ODataParser.CountStatementContext ctx);
 
     /**
+     * Visit a parse tree produced by {@link ODataParser#attributeName}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitAttributeName(ODataParser.AttributeNameContext ctx);
+
+    /**
      * Visit a parse tree produced by {@link ODataParser#openPar}.
      *
      * @param ctx the parse tree
@@ -371,12 +379,12 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
     T visitEntityName(ODataParser.EntityNameContext ctx);
 
     /**
-     * Visit a parse tree produced by {@link ODataParser#attributeName}.
+     * Visit a parse tree produced by {@link ODataParser#orderAttributeName}.
      *
      * @param ctx the parse tree
      * @return the visitor result
      */
-    T visitAttributeName(ODataParser.AttributeNameContext ctx);
+    T visitOrderAttributeName(ODataParser.OrderAttributeNameContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ODataParser#uuidIdValue}.
@@ -385,6 +393,14 @@ public interface ODataParserVisitor<T> extends ParseTreeVisitor<T> {
      * @return the visitor result
      */
     T visitUuidIdValue(ODataParser.UuidIdValueContext ctx);
+
+    /**
+     * Visit a parse tree produced by {@link ODataParser#quotedUUID}.
+     *
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    T visitQuotedUUID(ODataParser.QuotedUUIDContext ctx);
 
     /**
      * Visit a parse tree produced by {@link ODataParser#quotedString}.

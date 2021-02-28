@@ -1,13 +1,19 @@
 package nikita.webapp.service.interfaces.secondary;
 
-import nikita.common.model.noark5.v5.*;
+import nikita.common.model.nikita.PatchObjects;
+import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.secondary.Part;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IPartService {
 
@@ -22,6 +28,9 @@ public interface IPartService {
     PartUnitHateoas createNewPartUnit(
             @NotNull PartUnit partUnit,
             @NotNull Record record);
+
+    ResponseEntity<PartHateoas>
+    handleUpdate(UUID systemID, PatchObjects patchObjects);
 
     PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson partPerson,

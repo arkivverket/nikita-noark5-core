@@ -27,7 +27,7 @@ import static org.springframework.http.HttpMethod.GET;
  * The security of the API-endpoints are defined in the
  * configure(HttpSecurity http) method.
  */
-@Profile("security-oauth2-authentication")
+@Profile("!test")
 @EnableResourceServer
 @EnableWebSecurity
 @Configuration

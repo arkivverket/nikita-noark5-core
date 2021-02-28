@@ -1,9 +1,9 @@
 package nikita.common.model.noark5.v5.admin;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.*;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -118,6 +118,10 @@ public class AdministrativeUnit
             fetch = FetchType.LAZY)
     private List<AdministrativeUnit> referenceChildAdministrativeUnit =
             new ArrayList<>();
+
+    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+    @OneToMany(mappedBy = "referenceAdministrativeUnit", cascade = {PERSIST, MERGE})
+    private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     @Override
     public OffsetDateTime getFinalisedDate() {
@@ -233,6 +237,18 @@ public class AdministrativeUnit
             AdministrativeUnit referenceParentAdministrativeUnit) {
         this.referenceParentAdministrativeUnit =
                 referenceParentAdministrativeUnit;
+    }
+
+    public List<BSMBase> getReferenceBSMBase() {
+        return referenceBSMBase;
+    }
+
+    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
+        this.referenceBSMBase = referenceBSMBase;
+    }
+
+    public void addBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.add(bsmBase);
     }
 
     @Override

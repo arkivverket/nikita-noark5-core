@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
@@ -100,11 +101,19 @@ public class RecordDeserializer
         deserialiseDocumentMedium(record, objectNode, errors);
         deserialiseKeyword(record, objectNode, errors);
         record.setReferenceClassified(
-		deserialiseClassified(objectNode, errors));
+                deserialiseClassified(objectNode, errors));
 
         record.setReferenceDisposal(deserialiseDisposal(objectNode, errors));
         record.setReferenceScreening(
                 deserialiseScreening(objectNode, errors));
+
+        // Deserialize businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+        currentNode = objectNode.get(BSM_DEF);
+        if (null != currentNode) {
+            BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
+            record.setReferenceBSMBase(base.getReferenceBSMBase());
+            objectNode.remove(BSM_DEF);
+        }
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

@@ -691,6 +691,10 @@ public class InternalNameTranslator {
                         ORGANISATION_NUMBER_ENG,
                         ORGANISATION_NUMBER_ENG_OBJECT);
         addNorToEnglishNameMap
+                (OUTDATED,
+                        OUTDATED_ENG,
+                        OUTDATED_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (PARENT_CLASS,
                         PARENT_CLASS_ENG,
                         PARENT_CLASS_ENG_OBJECT);
@@ -906,6 +910,10 @@ public class InternalNameTranslator {
                         SOCIAL_SECURITY_NUMBER_ENG,
                         SOCIAL_SECURITY_NUMBER_ENG_OBJECT);
         addNorToEnglishNameMap
+                (SOURCE,
+                        SOURCE_ENG,
+                        SOURCE_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (SUB_CLASS,
                         SUB_CLASS_ENG,
                         SUB_CLASS_ENG_OBJECT);
@@ -925,6 +933,10 @@ public class InternalNameTranslator {
                 (TITLE,
                         TITLE_ENG,
                         TITLE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (TYPE,
+                        TYPE_ENG,
+                        TYPE_ENG_OBJECT);
         addNorToEnglishNameMap
                 (USER_NAME,
                         USER_NAME_ENG,

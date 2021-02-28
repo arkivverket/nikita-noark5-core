@@ -5,14 +5,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
+import static nikita.common.config.Constants.NOARK5_V5_CONTENT_TYPE_JSON;
 import static nikita.common.config.ODataConstants.*;
 import static nikita.common.util.CommonUtils.WebUtils.sanitiseUrlForOData;
+import static org.springframework.http.HttpHeaders.ALLOW;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 /**
  * Created by tsodring on 05/13/19.
@@ -77,6 +83,10 @@ public class ODataRedirectFilter
                 logger.error(message);
                 throw new NikitaMisconfigurationException(message);
             }
+            HttpServletResponse response = ((ServletRequestAttributes)
+                    RequestContextHolder.getRequestAttributes()).getResponse();
+            response.addHeader(ALLOW, "GET");
+            response.addHeader(CONTENT_TYPE, NOARK5_V5_CONTENT_TYPE_JSON);
             requestDispatcher.include(request, res);
             return;
         }

@@ -54,6 +54,8 @@ public class CorrespondencePartHateoasSerializer
             //printCorrespondencePartInterna(jgen, correspondencePart);
         }
 
+        printBSM(jgen, correspondencePart);
+
         printHateoasLinks(jgen, correspondencePartHateoas.
                 getLinks(correspondencePart));
         jgen.writeEndObject();

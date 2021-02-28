@@ -1,8 +1,12 @@
 package nikita.webapp.odata;
 
+import nikita.common.model.noark5.bsm.BSMBase;
+import nikita.webapp.odata.base.ODataLexer;
 import nikita.webapp.odata.base.ODataParser;
+import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
 import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.CODE_NAME;
@@ -17,6 +21,13 @@ import static nikita.common.config.N5ResourceMappings.CODE_NAME;
  */
 public class NikitaODataToHQL
         extends ODataToHQL {
+
+    // The following are used to keep track of the current BSM value. We
+    // don't know the datatype of the BSM value in the query so we need to
+    // pick this up so we can call correct BSMBase derived class and set the
+    // right value
+    Boolean processingBSM = false;
+    String currentBSMId = "";
 
     public NikitaODataToHQL(String dmlStatementType) {
         super(dmlStatementType);
@@ -82,9 +93,51 @@ public class NikitaODataToHQL
                 return;
             }
         }
-        processAttribute(getAliasAndAttribute(
-                this.joinEntity.isEmpty() == true ?
-                        this.entity : this.joinEntity,
-                getInternalNameObject(ctx.getText())));
+
+        TerminalNodeImpl terminalNode = (TerminalNodeImpl) ctx.getChild(0);
+        int tokenId = terminalNode.getSymbol().getType();
+
+        if (tokenId == ODataLexer.BSM_ID) {
+            processingBSM = true;
+            // JOIN file_1.referenceBSM as BSM_1
+            // where BSM_1.name
+            // file_1.ownedBy = :parameter_0 and BSM_1.ppt-v1:skolekontakt like :parameter_1
+            addEntityToEntityJoin(entity, BSMBase.class.getSimpleName());
+            statement.addCompareValue("bsmbase_1.valueName",
+                    "=", ctx.getText());
+            statement.addLogicalOperator("and");
+            currentBSMId = UUID.randomUUID().toString();
+            statement.bsmParameters.putIfAbsent(currentBSMId, new StringBuilder());
+            processAttribute("bsmbase_1." + currentBSMId);
+        } else {
+            processAttribute(getAliasAndAttribute(
+                    this.joinEntity.isEmpty() == true ?
+                            this.entity : this.joinEntity,
+                    getInternalNameObject(ctx.getText())));
+        }
+    }
+
+    @Override
+    public void exitBoolExpression(ODataParser.BoolExpressionContext ctx) {
+        super.exitBoolExpression(ctx);
+        // Reset BSM variable for any further processing of other
+        processingBSM = false;
+    }
+
+    public void processPrimitive(Object value) {
+        if (comparison.getProcessConcat()) {
+            value = "'" + value + "'";
+        }
+        if (!right) {
+            comparison.setLeft(value);
+        } else {
+            comparison.setRight(value);
+        }
+
+        if (processingBSM) {
+            StringBuilder currentBSM =
+                    statement.bsmParameters.get(currentBSMId);
+            currentBSM.append(value.getClass().getSimpleName().toLowerCase());
+        }
     }
 }

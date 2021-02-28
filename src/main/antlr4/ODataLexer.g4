@@ -138,7 +138,9 @@ UUID: BLOCK BLOCK '-' BLOCK '-' BLOCK '-' BLOCK '-' BLOCK BLOCK BLOCK;
 
 INTEGER:                             DIGIT+;
 FLOAT:                               NEGATIVE? DIGIT+ DOT DIGIT+;
+BSM_ID:                              BSM_LITERAL; // Business specific Metdata
 ID:                                  ID_LITERAL;
+QUOTED_UUID:                         '\'' UUID '\'';
 QUOTED_STRING:                       SQUOTA_STRING;
 STRING_LITERAL:                      DQUOTA_STRING;
 DECIMAL_LITERAL:                     FLOAT (E NEGATIVE? DIGIT+);
@@ -174,6 +176,7 @@ NEGATIVE:                            '-';
 DEC_OCTECT :                         [1][0-9][0-9] | [2][0-4][0-9] | [2][5][0-5] | [1-9][0-9] | [0-9];
 
 fragment EXPONENT_NUM_PART:          'E' [-+]? DIGIT+;
+fragment BSM_LITERAL:                [a-zA-Z_$0-9]*?'-'*?[a-zA-Z_$0-9]*?':'+[a-zA-Z_$]+?[a-zA-Z_$0-9]*;
 fragment ID_LITERAL:                 [a-zA-Z_$0-9]*?[a-zA-Z_$]+?[a-zA-Z_$0-9]*;
 fragment DQUOTA_STRING:              '"' ( '\\'.| '""'| ~('"'| '\\') )* '"';
 fragment SQUOTA_STRING:              '\'' ('\\'.| '\'\''| ~('\''| '\\'))* '\'';
