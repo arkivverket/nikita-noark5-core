@@ -1,14 +1,17 @@
 package nikita.common.model.noark5.v5.metadata;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static nikita.common.config.Constants.REL_METADATA_COMMENT_TYPE;
 import static nikita.common.config.Constants.TABLE_COMMENT_TYPE;
 import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
 
 // Noark 5v5 Merknadstype
 @Entity
+@Inheritance(strategy = SINGLE_TABLE)
 @Table(name = TABLE_COMMENT_TYPE)
 public class CommentType
         extends Metadata {

@@ -3,14 +3,17 @@ package nikita.common.model.noark5.v5.metadata;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static nikita.common.config.Constants.REL_METADATA_CORRESPONDENCE_PART_TYPE;
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_TYPE;
 import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_TYPE;
 
 // Noark 5v5 korrespondanseparttype
 @Entity
+@Inheritance(strategy = SINGLE_TABLE)
 @Table(name = TABLE_CORRESPONDENCE_PART_TYPE)
 @Audited
 public class CorrespondencePartType

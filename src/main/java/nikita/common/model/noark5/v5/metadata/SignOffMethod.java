@@ -1,14 +1,17 @@
 package nikita.common.model.noark5.v5.metadata;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static nikita.common.config.Constants.REL_METADATA_SIGN_OFF_METHOD;
 import static nikita.common.config.Constants.TABLE_SIGN_OFF_METHOD;
 import static nikita.common.config.N5ResourceMappings.SIGN_OFF_METHOD;
 
 // Noark 5v5 Avskrivningsmaate
 @Entity
+@Inheritance(strategy = SINGLE_TABLE)
 @Table(name = TABLE_SIGN_OFF_METHOD)
 public class SignOffMethod
         extends Metadata {

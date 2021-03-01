@@ -1,14 +1,17 @@
 package nikita.common.model.noark5.v5.metadata;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static nikita.common.config.Constants.REL_METADATA_CLASSIFICATION_TYPE;
 import static nikita.common.config.Constants.TABLE_CLASSIFICATION_TYPE;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
 
 // Noark 5v5 Klassifikasjonstype
 @Entity
+@Inheritance(strategy = SINGLE_TABLE)
 @Table(name = TABLE_CLASSIFICATION_TYPE)
 public class ClassificationType
         extends Metadata {

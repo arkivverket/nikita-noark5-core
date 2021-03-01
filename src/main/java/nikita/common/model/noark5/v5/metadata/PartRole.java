@@ -3,14 +3,17 @@ package nikita.common.model.noark5.v5.metadata;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static nikita.common.config.Constants.REL_METADATA_PART_ROLE;
 import static nikita.common.config.Constants.TABLE_PART_ROLE;
 import static nikita.common.config.N5ResourceMappings.PART_ROLE;
 
 // Noark 5v5 Partrolle
 @Entity
+@Inheritance(strategy = SINGLE_TABLE)
 @Table(name = TABLE_PART_ROLE)
 @Audited
 public class PartRole

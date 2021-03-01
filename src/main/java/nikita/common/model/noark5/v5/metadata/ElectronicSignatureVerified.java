@@ -1,14 +1,17 @@
 package nikita.common.model.noark5.v5.metadata;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static nikita.common.config.Constants.REL_METADATA_ELECTRONIC_SIGNATURE_VERIFIED;
 import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE_VERIFIED;
 import static nikita.common.config.N5ResourceMappings.ELECTRONIC_SIGNATURE_VERIFIED;
 
 // Noark 5v5 elektroniskSignaturVerifisert
 @Entity
+@Inheritance(strategy = SINGLE_TABLE)
 @Table(name = TABLE_ELECTRONIC_SIGNATURE_VERIFIED)
 public class ElectronicSignatureVerified
         extends Metadata {
