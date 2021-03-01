@@ -6,14 +6,17 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static nikita.common.config.Constants.REL_METADATA_POSTAL_NUMBER;
 import static nikita.common.config.Constants.TABLE_POSTAL_CODE;
 import static nikita.common.config.N5ResourceMappings.POSTAL_NUMBER;
 
 // Noark 5v5 postnummer
 @Entity
+@Inheritance(strategy = SINGLE_TABLE)
 @Table(name = TABLE_POSTAL_CODE)
 public class PostalCode
         extends Metadata {

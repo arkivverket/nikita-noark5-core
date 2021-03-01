@@ -1,5 +1,7 @@
 package nikita.common.model.noark5.v5.metadata;
 
+//Can we make a different ID, but require code to be indexed and unique?
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.NoarkEntity;
@@ -15,21 +17,18 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 import static nikita.common.config.Constants.NOARK_METADATA_PATH;
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Created by tsodring on 3/23/17.
  */
-@Entity
-@Inheritance(strategy = TABLE_PER_CLASS)
+@MappedSuperclass
 @JsonDeserialize(using = MetadataDeserializer.class)
 @HateoasPacker(using = MetadataHateoasHandler.class)
 @HateoasObject(using = MetadataHateoas.class)
