@@ -1,6 +1,5 @@
-package nikita.webapp.spring.security.configs.authentication.oauth;
+package nikita.webapp.spring.security;
 
-import nikita.webapp.spring.security.NikitaUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

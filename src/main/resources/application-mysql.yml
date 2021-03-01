@@ -44,8 +44,6 @@ spring:
       hibernate.hbm2ddl.auto: create
       discriminator.ignore_explicit_for_joined: true
       org.hibernate.envers.audit_table_prefix: aud_
-  profiles:
-    active: security-oauth2-authentication, mysql
 
 # Used to avoid filling the log file up with INFO messages
 # about time used when performing reflection for OData queries

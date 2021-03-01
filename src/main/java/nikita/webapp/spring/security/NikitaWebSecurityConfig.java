@@ -1,4 +1,4 @@
-package nikita.webapp.spring.security.configs.authentication;
+package nikita.webapp.spring.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
