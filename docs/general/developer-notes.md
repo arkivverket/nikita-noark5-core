@@ -69,8 +69,8 @@ and this is not a good thing. Our orginal CorsFilter:
     nikita.webapp.spring.SimpleCORSFilter
  
  and 
- 
-    nikita.webapp.spring.security.configs.authentication.NikitaWebSecurityConfig there 
+
+    nikita.webapp.spring.security.NikitaWebSecurityConfig there 
     
 contains a bean _corsFilterRegistrationBean_
 
