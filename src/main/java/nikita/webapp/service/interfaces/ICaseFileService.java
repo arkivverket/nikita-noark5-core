@@ -34,8 +34,7 @@ public interface ICaseFileService {
 
     CaseFile findBySystemId(@NotNull String systemId);
 
-    List<CaseFile> findCaseFileByOwnerPaginated(
-            Integer top, Integer skip);
+    List<CaseFile> findAllCaseFile();
 
     PrecedenceHateoas findAllPrecedenceForCaseFile(
             @NotNull final String systemID);
@@ -65,4 +64,5 @@ public interface ICaseFileService {
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
 }

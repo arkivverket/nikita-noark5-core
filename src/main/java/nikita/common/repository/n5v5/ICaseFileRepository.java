@@ -23,6 +23,8 @@ public interface ICaseFileRepository
 
     List<CaseFile> findByReferenceSeries(Series series);
 
+    List<CaseFile> findByOwnedBy(String ownedBy);
+
     Page<CaseFile> findByReferenceSeries(Series series, Pageable page);
 
     long deleteByOwnedBy(String ownedBy);

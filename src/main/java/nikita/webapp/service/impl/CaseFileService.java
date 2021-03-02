@@ -17,8 +17,8 @@ import nikita.common.repository.n5v5.ICaseFileRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
@@ -37,10 +37,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -48,7 +44,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.DEFAULT_CASE_STATUS_CODE;
+import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
@@ -275,18 +272,8 @@ public class CaseFileService
 
     // All READ operations
     @Override
-    public List<CaseFile> findCaseFileByOwnerPaginated(
-            Integer top, Integer skip) {
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<CaseFile> criteriaQuery =
-                criteriaBuilder.createQuery(CaseFile.class);
-        Root<CaseFile> from = criteriaQuery.from(CaseFile.class);
-        CriteriaQuery<CaseFile> select = criteriaQuery.select(from);
-
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
-        TypedQuery<CaseFile> typedQuery = entityManager.createQuery(select);
-        return typedQuery.getResultList();
+    public List<CaseFile> findAllCaseFile() {
+        return caseFileRepository.findByOwnedBy(getUser());
     }
 
     @Override

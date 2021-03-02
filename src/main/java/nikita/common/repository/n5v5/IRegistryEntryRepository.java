@@ -18,6 +18,8 @@ public interface IRegistryEntryRepository extends
 
     RegistryEntry findBySystemId(UUID systemId);
 
+    List<RegistryEntry> findByOwnedBy(String ownedBy);
+
     List<RegistryEntry> findByReferenceFile(File file);
 
     long deleteByOwnedBy(String ownedBy);

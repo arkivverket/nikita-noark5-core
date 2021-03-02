@@ -163,10 +163,7 @@ public class FondsCreatorHateoasController
 
     // Get all FondsCreator
     // GET [contextPath][api]/arkivstruktur/arkivskaper/
-    @ApiOperation(value = "Retrieves multiple FondsCreator entities limited by ownership rights", notes = "The field skip" +
-            "tells how many FondsCreator rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves multiple FondsCreator entities limited by ownership rights",
             response = FondsCreatorHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "FondsCreator found",
@@ -178,9 +175,7 @@ public class FondsCreatorHateoasController
 
     @GetMapping(value = FONDS_CREATOR)
     public ResponseEntity<FondsCreatorHateoas> findAllFondsCreator(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip) {
+            HttpServletRequest request) {
         String ownedBy = SecurityContextHolder.getContext().getAuthentication()
                 .getName();
         FondsCreatorHateoas fondsCreatorHateoas = new

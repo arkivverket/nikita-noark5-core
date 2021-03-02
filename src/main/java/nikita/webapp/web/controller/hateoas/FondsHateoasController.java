@@ -438,12 +438,6 @@ public class FondsHateoasController
     @ApiOperation(
             value = "Retrieves multiple Fonds entities limited by ownership  " +
                     "rights",
-            notes = "The field skip tells how many Fonds rows of the result " +
-                    "set to ignore (starting at 0), while  top tells how many" +
-                    " rows after skip to return. Note if the value of top is " +
-                    "greater than system value  nikita-noark5-core.pagination" +
-                    ".maxPageSize, then nikita-noark5-core.pagination" +
-                    ".maxPageSize  is used. ",
             response = FondsHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(
@@ -463,16 +457,10 @@ public class FondsHateoasController
     @Counted
     @GetMapping(value = FONDS)
     public ResponseEntity<FondsHateoas> findAllFonds(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip) {
-
-        FondsHateoas fondsHateoas = fondsService.
-                findFondsByOwnerPaginated(top, skip);
-
+            HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fondsHateoas);
+                .body(fondsService.findAllFonds());
     }
 
     // Create a suggested Fonds (like a template) object with default values

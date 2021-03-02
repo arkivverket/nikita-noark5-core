@@ -122,7 +122,7 @@ public interface IRecordService {
 
     Record findBySystemId(String systemId);
 
-    List<Record> findByOwnedBy(String ownedBy);
+    List<Record> findByOwnedBy();
 
     AuthorHateoas associateAuthorWithRecord(String systemId, Author author);
 

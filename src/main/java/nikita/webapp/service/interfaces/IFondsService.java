@@ -31,7 +31,7 @@ public interface IFondsService  {
     //StorageLocationHateoas findStorageLocationAssociatedWithFonds(String systemId);
     FondsHateoas findSingleFonds(String fondsSystemId);
 
-    FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip);
+    FondsHateoas findAllFonds();
 
     FondsHateoas findAllChildren(@NotNull String systemId);
 

@@ -383,10 +383,7 @@ public class RegistryEntryHateoasController
     // Get all registryEntry
     // GET [contextPath][api]/casehandling/journalpost/
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/journalpost/
-    @ApiOperation(value = "Retrieves multiple RegistryEntry entities limited by ownership rights", notes = "The field skip" +
-            "tells how many RegistryEntry rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves multiple RegistryEntry entities limited by ownership rights",
             response = RegistryEntryHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "RegistryEntry found",
@@ -397,12 +394,10 @@ public class RegistryEntryHateoasController
     @Counted
     @GetMapping
     public ResponseEntity<RegistryEntryHateoas> findAllRegistryEntry(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip) {
+            HttpServletRequest request) {
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas((List<INoarkEntity>) (List)
-                registryEntryService.findRegistryEntryByOwnerPaginated(top, skip));
+                registryEntryService.findAllRegistryEntry());
         registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
