@@ -35,7 +35,6 @@ import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1181,11 +1180,8 @@ public class RecordHateoasController
     // Retrieve all Records
     // GET [contextPath][api]/arkivstruktur/registrering
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/registrering/
-    @ApiOperation(value = "Retrieves multiple Record entities limited by ownership rights",
-            notes = "The field skip tells how many Record rows of the result set to ignore (starting at 0), " +
-                    "while top tells how many rows after skip to return. Note if the value of top is greater than " +
-                    "system value nikita-noark5-core.pagination.maxPageSize, then " +
-                    "nikita-noark5-core.pagination.maxPageSize is used.",
+    @ApiOperation(value = "Retrieves multiple Record entities limited by " +
+            "ownership rights",
             response = RecordHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "RecordHateoas found", response = RecordHateoas.class),
@@ -1195,14 +1191,10 @@ public class RecordHateoasController
     @Counted
     @GetMapping
     public ResponseEntity<RecordHateoas> findAllRecord(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip) {
-
-        String ownedBy = SecurityContextHolder.getContext().getAuthentication()
-                .getName();
-        RecordHateoas recordHateoas = new RecordHateoas((List<INoarkEntity>) (List)
-                recordService.findByOwnedBy(ownedBy));
+            HttpServletRequest request) {
+        RecordHateoas recordHateoas = new RecordHateoas(
+                (List<INoarkEntity>) (List)
+                        recordService.findByOwnedBy());
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))

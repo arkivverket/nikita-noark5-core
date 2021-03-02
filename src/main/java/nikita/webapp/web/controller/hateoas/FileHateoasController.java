@@ -644,10 +644,7 @@ public class FileHateoasController
 
     // Retrieves all files
     // GET [contextPath][api]/arkivstruktur/mappe
-    @ApiOperation(value = "Retrieves multiple File entities limited by ownership rights", notes = "The field skip" +
-            "tells how many File rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves multiple File entities limited by ownership rights",
             response = FileHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "File list found",

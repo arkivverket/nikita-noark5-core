@@ -45,10 +45,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.time.Year;
@@ -278,27 +274,8 @@ public class RegistryEntryService
     }
 
     // All READ operations
-    public List<RegistryEntry> findRegistryEntryByOwnerPaginated(Integer top,
-                                                                 Integer skip) {
-
-        int maxPageSize = 10;
-        if (top == null || top > maxPageSize) {
-            top = maxPageSize;
-        }
-        if (skip == null) {
-            skip = 0;
-        }
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<RegistryEntry> criteriaQuery = criteriaBuilder.createQuery(RegistryEntry.class);
-        Root<RegistryEntry> from = criteriaQuery.from(RegistryEntry.class);
-        CriteriaQuery<RegistryEntry> select = criteriaQuery.select(from);
-
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
-        TypedQuery<RegistryEntry> typedQuery = entityManager.createQuery(select);
-        typedQuery.setFirstResult(skip);
-        typedQuery.setMaxResults(top);
-        return typedQuery.getResultList();
+    public List<RegistryEntry> findAllRegistryEntry() {
+        return registryEntryRepository.findByOwnedBy(getUser());
     }
 
     // systemId

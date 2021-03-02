@@ -82,10 +82,7 @@ public class DocumentObjectHateoasController
 
     // Get all documentObject
     // GET [contextPath][api]/arkivstruktur/dokumentobjekt/
-    @ApiOperation(value = "Retrieves multiple DocumentObject entities limited by ownership rights", notes = "The field skip" +
-            "tells how many DocumentObject rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves multiple DocumentObject entities limited by ownership rights",
             response = DocumentObjectHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "DocumentObject list found",

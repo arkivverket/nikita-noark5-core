@@ -39,7 +39,7 @@ public interface IRegistryEntryService {
     // All find methods
     RegistryEntry findBySystemId(String systemId);
 
-    List<RegistryEntry> findRegistryEntryByOwnerPaginated(Integer top, Integer skip);
+    List<RegistryEntry> findAllRegistryEntry();
 
     ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryByCaseFile(
             CaseFile caseFile);
@@ -78,4 +78,5 @@ public interface IRegistryEntryService {
 
     SignOffHateoas generateDefaultSignOff
         (@NotNull final String registryEntrySystemId);
+
 }

@@ -31,10 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -296,24 +292,13 @@ public class FondsService
     /**
      * Retrieve a list of paginated Fonds objects associated from the database.
      *
-     * @param top  how many results you want to retrieve
-     * @param skip how many rows of results yo uwant to skip over
-     * @return the list of Fonds object wrapped as a FondsCreatorHateoas object
+     * @return the list of Fonds object wrapped as a FondsHateoas object
      */
     @Override
-    public FondsHateoas findFondsByOwnerPaginated(Integer top, Integer skip) {
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Fonds> criteriaQuery = criteriaBuilder.createQuery(Fonds.class);
-        Root<Fonds> from = criteriaQuery.from(Fonds.class);
-        CriteriaQuery<Fonds> select = criteriaQuery.select(from);
-
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
-        TypedQuery<Fonds> typedQuery = entityManager.createQuery(select);
-
+    public FondsHateoas findAllFonds() {
         FondsHateoas fondsHateoas = new
                 FondsHateoas((List<INoarkEntity>)
-                (List) typedQuery.getResultList());
+                (List) fondsRepository.findByOwnedBy(getUser()));
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
         return fondsHateoas;
     }

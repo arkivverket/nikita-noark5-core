@@ -307,10 +307,8 @@ public class CaseFileHateoasController
         return caseFileService.findAllRecordNoteToCaseFile(systemID);
     }
 
-    @ApiOperation(value = "Retrieves multiple CaseFile entities limited by ownership rights", notes = "The field skip" +
-            "tells how many CaseFile rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves multiple CaseFile entities limited by " +
+            "ownership rights",
             response = CaseFileHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CaseFile list found",
@@ -321,13 +319,10 @@ public class CaseFileHateoasController
     @Counted
     @GetMapping
     public ResponseEntity<CaseFileHateoas> findAllCaseFile(
-            HttpServletRequest request,
-            @RequestParam(name = "top", required = false) Integer top,
-            @RequestParam(name = "skip", required = false) Integer skip) {
-
+            HttpServletRequest request) {
         CaseFileHateoas caseFileHateoas = new
                 CaseFileHateoas((List<INoarkEntity>) (List)
-                caseFileService.findCaseFileByOwnerPaginated(top, skip));
+                caseFileService.findAllCaseFile());
 
         caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)

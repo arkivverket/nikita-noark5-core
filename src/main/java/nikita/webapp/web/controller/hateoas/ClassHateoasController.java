@@ -456,11 +456,7 @@ public class ClassHateoasController
 
     // Retrieve all Records associated with a Class (paginated)
     // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/registrering/
-    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/registrering/?top=5&skip=1
-    @ApiOperation(value = "Retrieves a lit of Records associated with a Class", notes = "The field skip" +
-            "tells how many Record rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves a lit of Records associated with a Class",
             response = RecordHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Record list found",
@@ -480,7 +476,6 @@ public class ClassHateoasController
 
     // Retrieve all Files associated with a Class (paginated)
     // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/mappe/
-    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/mappe/?top=5&skip=1
     @ApiOperation(value = "Retrieves a list of Files associated with a Class",
             response = FileHateoas.class)
     @ApiResponses(value = {

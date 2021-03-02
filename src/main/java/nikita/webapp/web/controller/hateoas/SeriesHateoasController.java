@@ -421,10 +421,7 @@ public class SeriesHateoasController
 
     // Retrieve all Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/klassifikasjonssystem/
-    @ApiOperation(value = "Retrieves multiple Series entities limited by ownership rights", notes = "The field skip" +
-            "tells how many Series rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves multiple Series entities limited by ownership rights",
             response = SeriesHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Series list found",
@@ -441,11 +438,7 @@ public class SeriesHateoasController
 
     // Retrieve all Records associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/registrering/
-    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/registrering/?top=5&skip=1
-    @ApiOperation(value = "Retrieves a lit of Records associated with a Series", notes = "The field skip" +
-            "tells how many Record rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves a lit of Records associated with a Series",
             response = RecordHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Record list found",
@@ -466,7 +459,6 @@ public class SeriesHateoasController
 
     // Retrieve all Files associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/mappe/
-    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/mappe/?top=5&skip=1
     @ApiOperation(value = "Retrieves a list of Files associated with a Series",
             response = FileHateoas.class)
     @ApiResponses(value = {
@@ -548,10 +540,7 @@ public class SeriesHateoasController
 
     // Retrieve all CaseFiles associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/saksmappe/
-    @ApiOperation(value = "Retrieves a list of CaseFiles associated with a Series", notes = "The field skip" +
-            "tells how many CaseFile rows of the result set to ignore (starting at 0), while  top tells how many rows" +
-            " after skip to return. Note if the value of top is greater than system value " +
-            " nikita-noark5-core.pagination.maxPageSize, then nikita-noark5-core.pagination.maxPageSize is used. ",
+    @ApiOperation(value = "Retrieves a list of CaseFiles associated with a Series",
             response = CaseFileHateoas.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "CaseFile list found",
