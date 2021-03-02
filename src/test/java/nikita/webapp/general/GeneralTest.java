@@ -33,6 +33,7 @@ import java.io.StringWriter;
 
 import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST_COUNT;
 import static nikita.common.config.Constants.NOARK5_V5_CONTENT_TYPE_JSON;
+import static nikita.common.config.HATEOASConstants.HREF;
 import static nikita.common.config.HATEOASConstants.SELF;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
@@ -227,15 +228,14 @@ public class GeneralTest {
      * https://github.com/arkivverket/noark5-tjenestegrensesnitt-standard/blob/master/kapitler/06-konsepter_og_prinsipper.rst
      * https://gitlab.com/OsloMet-ABI/nikita-noark5-core/-/issues/152
      *
-     * @throws Exception
+     * @throws Exception Needed for mockMvc.perform
      */
     @Test
     @Sql("/db-tests/bsm.sql")
     public void checkODataSearchHasCorrectResponse() throws Exception {
 
-        String url = "/noark5v5/api/arkivstruktur/arkiv" +
-                "/3318a63f-11a7-4ec9-8bf1-4144b7f281cf?$filter=tittel eq " +
-                "'Generate an empty list for this test'";
+        String url = "/noark5v5/odata/api/arkivstruktur/arkiv" +
+                "?$filter=tittel eq 'Generate an empty list for this test'";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
@@ -249,11 +249,11 @@ public class GeneralTest {
         System.out.println(response.getContentAsString());
 
         resultActions
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$." + ENTITY_ROOT_NAME_LIST_COUNT)
                         .value(0))
                 .andExpect(jsonPath(
-                        "$._links.['" + SELF + "']")
+                        "$._links.['" + SELF + "'].['" + HREF + "']")
                         .value(url));
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
