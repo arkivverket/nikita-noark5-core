@@ -30,7 +30,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.StringWriter;
 
+import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST_COUNT;
 import static nikita.common.config.Constants.NOARK5_V5_CONTENT_TYPE_JSON;
+import static nikita.common.config.HATEOASConstants.HREF;
+import static nikita.common.config.HATEOASConstants.SELF;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -197,4 +200,62 @@ public class GeneralTest {
                 preprocessResponse(prettyPrint())));
     }
 
+    /**
+     * nikita was returning the following JSON for en empty list:
+     * <p>
+     * {
+     * "entityType":"unknown",
+     * "selfLinks":[],
+     * "singleEntity":false,
+     * "list":[],
+     * "entityVersion":-1
+     * }
+     * <p>
+     * This is because there was a missing serialiser for empty list objets.
+     * The actual JSON response for an empty list should, as per the
+     * standard, be:
+     * <p>
+     * {
+     * "count": 0,
+     * "_links" : {
+     * "self": {
+     * "href": "https://n5.example.com/api/arkivstruktur/arkiv/"
+     * }
+     * }
+     * }
+     * <p>
+     * See also:
+     * https://github.com/arkivverket/noark5-tjenestegrensesnitt-standard/blob/master/kapitler/06-konsepter_og_prinsipper.rst
+     * https://gitlab.com/OsloMet-ABI/nikita-noark5-core/-/issues/152
+     *
+     * @throws Exception Needed for mockMvc.perform
+     */
+    @Test
+    @Sql("/db-tests/bsm.sql")
+    public void checkODataSearchHasCorrectResponse() throws Exception {
+
+        String url = "/noark5v5/odata/api/arkivstruktur/arkiv?$filter=" +
+                "tittel eq 'Generate an empty list for this test'";
+
+        String expectedUrl = "http://localhost:8092/noark5v5/odata/api" +
+                "/arkivstruktur/arkiv?$filter=tittel%20eq%20'Generate%20an" +
+                "%20empty%20list%20for%20this%20test'";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .with(user(nikitaUserDetailsService
+                        .loadUserByUsername("admin@example.com"))));
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + ENTITY_ROOT_NAME_LIST_COUNT)
+                        .value(0))
+                .andExpect(jsonPath(
+                        "$._links.['" + SELF + "'].['" + HREF + "']")
+                        .value(expectedUrl));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
 }

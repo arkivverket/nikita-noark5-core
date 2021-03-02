@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -130,7 +131,8 @@ public class HateoasHandler
             HttpServletRequest request =
                     ((ServletRequestAttributes) requestAttributes).getRequest();
             if (request != null) {
-                String servletPath = request.getServletPath();
+                String servletPath = new UrlPathHelper()
+                        .getPathWithinApplication(request);
                 String queryString = request.getQueryString();
 
                 if (null != queryString) {
