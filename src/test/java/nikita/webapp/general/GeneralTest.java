@@ -16,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -202,7 +201,7 @@ public class GeneralTest {
     }
 
     /**
-     * nikita is returning the following JSON for en empty list:
+     * nikita was returning the following JSON for en empty list:
      * <p>
      * {
      * "entityType":"unknown",
@@ -212,8 +211,9 @@ public class GeneralTest {
      * "entityVersion":-1
      * }
      * <p>
-     * This is because there is a missing serialiser somewhere. The actual
-     * JSON response for an empty list should, as per the standard, be:
+     * This is because there was a missing serialiser for empty list objets.
+     * The actual JSON response for an empty list should, as per the
+     * standard, be:
      * <p>
      * {
      * "count": 0,
@@ -234,8 +234,12 @@ public class GeneralTest {
     @Sql("/db-tests/bsm.sql")
     public void checkODataSearchHasCorrectResponse() throws Exception {
 
-        String url = "/noark5v5/odata/api/arkivstruktur/arkiv" +
-                "?$filter=tittel eq 'Generate an empty list for this test'";
+        String url = "/noark5v5/odata/api/arkivstruktur/arkiv?$filter=" +
+                "tittel eq 'Generate an empty list for this test'";
+
+        String expectedUrl = "http://localhost:8092/noark5v5/odata/api" +
+                "/arkivstruktur/arkiv?$filter=tittel%20eq%20'Generate%20an" +
+                "%20empty%20list%20for%20this%20test'";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
@@ -243,18 +247,13 @@ public class GeneralTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .with(user(nikitaUserDetailsService
                         .loadUserByUsername("admin@example.com"))));
-
-        MockHttpServletResponse response =
-                resultActions.andReturn().getResponse();
-        System.out.println(response.getContentAsString());
-
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$." + ENTITY_ROOT_NAME_LIST_COUNT)
                         .value(0))
                 .andExpect(jsonPath(
                         "$._links.['" + SELF + "'].['" + HREF + "']")
-                        .value(url));
+                        .value(expectedUrl));
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
