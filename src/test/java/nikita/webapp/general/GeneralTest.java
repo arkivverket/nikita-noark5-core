@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,7 +31,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.StringWriter;
 
+import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST_COUNT;
 import static nikita.common.config.Constants.NOARK5_V5_CONTENT_TYPE_JSON;
+import static nikita.common.config.HATEOASConstants.SELF;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -197,4 +200,63 @@ public class GeneralTest {
                 preprocessResponse(prettyPrint())));
     }
 
+    /**
+     * nikita is returning the following JSON for en empty list:
+     * <p>
+     * {
+     * "entityType":"unknown",
+     * "selfLinks":[],
+     * "singleEntity":false,
+     * "list":[],
+     * "entityVersion":-1
+     * }
+     * <p>
+     * This is because there is a missing serialiser somewhere. The actual
+     * JSON response for an empty list should, as per the standard, be:
+     * <p>
+     * {
+     * "count": 0,
+     * "_links" : {
+     * "self": {
+     * "href": "https://n5.example.com/api/arkivstruktur/arkiv/"
+     * }
+     * }
+     * }
+     * <p>
+     * See also:
+     * https://github.com/arkivverket/noark5-tjenestegrensesnitt-standard/blob/master/kapitler/06-konsepter_og_prinsipper.rst
+     * https://gitlab.com/OsloMet-ABI/nikita-noark5-core/-/issues/152
+     *
+     * @throws Exception
+     */
+    @Test
+    @Sql("/db-tests/bsm.sql")
+    public void checkODataSearchHasCorrectResponse() throws Exception {
+
+        String url = "/noark5v5/api/arkivstruktur/arkiv" +
+                "/3318a63f-11a7-4ec9-8bf1-4144b7f281cf?$filter=tittel eq " +
+                "'Generate an empty list for this test'";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .with(user(nikitaUserDetailsService
+                        .loadUserByUsername("admin@example.com"))));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + ENTITY_ROOT_NAME_LIST_COUNT)
+                        .value(0))
+                .andExpect(jsonPath(
+                        "$._links.['" + SELF + "']")
+                        .value(url));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
 }
