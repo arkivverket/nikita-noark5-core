@@ -30,8 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.StringWriter;
 
-import static nikita.common.config.Constants.ENTITY_ROOT_NAME_LIST_COUNT;
-import static nikita.common.config.Constants.NOARK5_V5_CONTENT_TYPE_JSON;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.HREF;
 import static nikita.common.config.HATEOASConstants.SELF;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -99,7 +98,6 @@ public class GeneralTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .with(user(nikitaUserDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
@@ -220,6 +218,9 @@ public class GeneralTest {
      * "_links" : {
      * "self": {
      * "href": "https://n5.example.com/api/arkivstruktur/arkiv/"
+     * },
+     * "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/": {
+     * "href": "https://n5.example.com/api/arkivstruktur/arkiv/$filter=tittel%20eq%20'Generate%20an%20empty%20list%20for%20this%20test'"
      * }
      * }
      * }
@@ -241,6 +242,8 @@ public class GeneralTest {
                 "/arkivstruktur/arkiv?$filter=tittel%20eq%20'Generate%20an" +
                 "%20empty%20list%20for%20this%20test'";
 
+        String expectedRel = NOARK_BASE_REL + "arkivstruktur/arkiv/";
+
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
                 .contextPath("/noark5v5")
@@ -253,7 +256,10 @@ public class GeneralTest {
                         .value(0))
                 .andExpect(jsonPath(
                         "$._links.['" + SELF + "'].['" + HREF + "']")
-                        .value(expectedUrl));
+                        .value(expectedUrl))
+                .andExpect(jsonPath(
+                        "$._links.['" + expectedRel +
+                                "'].['" + HREF + "']").value(expectedUrl));
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
