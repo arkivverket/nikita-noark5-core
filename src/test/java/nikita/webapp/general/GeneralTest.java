@@ -71,7 +71,52 @@ public class GeneralTest {
 
 
     /**
-     * There is a problem with MetadataService and the way metadata entities
+     * opprettetDato not being serialised to JSON
+     * <p>
+     * There was a problem where opprettetDato was not being serialised to
+     * JSON. This is described in:
+     * <p>
+     * See https://gitlab.com/OsloMet-ABI/nikita-noark5-core/-/issues/187
+     * <p>
+     * This was rectified in
+     * https://gitlab.com/OsloMet-ABI/nikita-noark5-core/-/commit/aa5c42fa6afe346bb8ac599210f779e664fae3d7
+     * <p>
+     * Not sure if the test really is required but leaving it in as it has
+     * been an undectected problem before
+     *
+     * @throws Exception Needed for mockMvc.perform
+     */
+    @Test
+    @Sql("/db-tests/bsm.sql")
+    public void checkJSONValuesSet() throws Exception {
+        String url = "/noark5v5/api/arkivstruktur/arkiv" +
+                "/3318a63f-11a7-4ec9-8bf1-4144b7f281cf";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .with(user(nikitaUserDetailsService
+                        .loadUserByUsername("admin@example.com"))));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath("$." + CREATED_DATE)
+                        .exists())
+                .andExpect(jsonPath("$." + CREATED_BY)
+                        .exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("test title alpha"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+    /**
+     * There was a problem with MetadataService and the way metadata entities
      * are implemented. An earlier commit tidied up in the metadata code in
      * an attempt to reduce duplicated code. All the metadata classes were
      * practically the same code. It made sense then to create a base class
@@ -81,26 +126,9 @@ public class GeneralTest {
      * Issue 184 (https://gitlab.com/OsloMet-ABI/nikita-noark5-core/-/issues/184)
      * reports that this approach is not working correctly as an exception is
      * thrown when there is an attempt to persist two metadata entities
-     * during a single session (HTTP or database - not sure). Upon inspection
-     * it seems that the call to:
-     * <p>
-     * (Metadata) metadataClass.getDeclaredConstructor().newInstance();
-     * <p>
-     * in the file MetadataService.java is problematic as it is only possible
-     * to retrieve a single instance of a metadata entity during a database
-     * session.
-     * <p>
-     * From what I can tell, when we retrieve the second metadataRepository
-     * it is using the metadataRepository from the previous metadata entity.
-     * This is the cause of the exception.
-     * <p>
-     * This test is used to fix the issue and catch the problem again if it
-     * comes back into the codebase at a later stage.
-     * <p>
-     * Additional note. The problem is there always, but the exception is only
-     * getting thrown when there are two code values with the same code e.g.
-     * 'B'. This is likely one of the reasons the problem has gone undetected.
-     * <p>
+     * during a single session.
+     * The problem was with the inheritance strategy. The test is being left
+     * in case it sneaks in again later.
      *
      * @throws Exception Serialising or validation exception
      */
@@ -168,4 +196,5 @@ public class GeneralTest {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
     }
+
 }
