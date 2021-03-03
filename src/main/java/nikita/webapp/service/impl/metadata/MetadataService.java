@@ -186,18 +186,15 @@ public class MetadataService
      * Check that the (code, codename) pair are correct. Given a particular
      * code, make sure that the associated codename is valid.
      * <p>
-     * Note: This method is deprecated and will be replaced by:
-     * IMetadataEntity findValidMetadataByEntityTypeOrThrow(
-     * String entityClass, IMetadataEntity metadataEntity)
-     * Avoid using this method in new code.
-     * NikitaMalformedInputDataException (400 Bad Request) is thrown if the
-     * code is null or the two codename values do not match.
+     * Note: This method is intended to be used when you are creating a
+     * template object or a default object (Fonds, FondsStatus = 'open') when
+     * persisting a primary object.
      * <p>
      *
      * @param entityType the type of Metadata object e.g. tilgangsrestriksjon
-     * @param code        The code value of the Metadata object e.g. B
-     * @param codename    The codename value of the Metadata object e.g.
-     *                    'Begrenset etter sikkerhetsinstruksen'
+     * @param code       The code value of the Metadata object e.g. B
+     * @param codename   The codename value of the Metadata object e.g.
+     *                   'Begrenset etter sikkerhetsinstruksen'
      * @return The Metadata object corresponding to the code
      */
     @Override
@@ -234,10 +231,10 @@ public class MetadataService
      */
     @Override
     public IMetadataEntity findValidMetadataByEntityTypeOrThrow(
-            @NotNull final String entityType,
             @NotNull final IMetadataEntity metadataEntity) {
-        return findValidMetadataByEntityTypeOrThrow(entityType,
-                metadataEntity.getCode(), metadataEntity.getCodeName());
+        return findValidMetadataByEntityTypeOrThrow(
+                metadataEntity.getBaseTypeName(), metadataEntity.getCode(),
+                metadataEntity.getCodeName());
     }
 
     /**

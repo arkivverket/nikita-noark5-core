@@ -19,23 +19,19 @@ import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.Constants.TEMPLATE_DOCUMENT_FLOW_FLOW_STATUS_CODE;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW_FLOW_FROM;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW_FLOW_TO;
-import static nikita.common.config.N5ResourceMappings.FLOW_STATUS;
 
 @Service
 @Transactional
@@ -285,7 +281,6 @@ public class DocumentFlowService
         FlowStatus flowStatus =
                 (FlowStatus) metadataService
                     .findValidMetadataByEntityTypeOrThrow(
-                            FLOW_STATUS,
                             incomingDocumentFlow.getFlowStatus());
         incomingDocumentFlow.setFlowStatus(flowStatus);
     }

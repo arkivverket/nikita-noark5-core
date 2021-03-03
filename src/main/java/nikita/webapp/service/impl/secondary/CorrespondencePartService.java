@@ -634,7 +634,6 @@ public class CorrespondencePartService
         CorrespondencePartType correspondencePartType =
                 (CorrespondencePartType) metadataService
                         .findValidMetadataByEntityTypeOrThrow(
-                                CORRESPONDENCE_PART_TYPE,
                                 correspondencePart.getCorrespondencePartType());
         correspondencePart.setCorrespondencePartType
                 (correspondencePartType);

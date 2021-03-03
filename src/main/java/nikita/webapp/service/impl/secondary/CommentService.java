@@ -25,7 +25,6 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.N5ResourceMappings.COMMENT_TYPE;
 
 @Service
 @Transactional
@@ -159,7 +158,7 @@ public class CommentService
     private void checkCommentType(Comment comment) {
         if (comment.getCommentType() != null) {
             CommentType commentType = (CommentType) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(COMMENT_TYPE,
+                    .findValidMetadataByEntityTypeOrThrow(
                             comment.getCommentType());
             comment.setCommentType(commentType);
         }

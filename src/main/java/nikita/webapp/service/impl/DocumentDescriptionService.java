@@ -447,7 +447,6 @@ public class DocumentDescriptionService
         // Assume value already set, as the deserialiser will enforce it.
         DocumentStatus documentStatus = (DocumentStatus)
                 metadataService.findValidMetadataByEntityTypeOrThrow(
-                                DOCUMENT_STATUS,
                                 documentDescription.getDocumentStatus());
         documentDescription.setDocumentStatus(documentStatus);
     }
@@ -455,7 +454,6 @@ public class DocumentDescriptionService
         // Assume value already set, as the deserialiser will enforce it.
         DocumentType documentType = (DocumentType)
                 metadataService.findValidMetadataByEntityTypeOrThrow(
-                                DOCUMENT_TYPE,
                                 documentDescription.getDocumentType());
         documentDescription.setDocumentType(documentType);
     }

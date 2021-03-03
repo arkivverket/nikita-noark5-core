@@ -41,13 +41,11 @@ public interface IMetadataService {
      * code is null or the two codename values do not match.
      * <p>
      *
-     * @param entityType     the type of Metadata object e.g. tilgangsrestriksjon
      * @param metadataEntity the Metadata object e.g. B
      *                       '('B', Begrenset etter sikkerhetsinstruksen')
      * @return The Metadata object corresponding to the code
      */
     IMetadataEntity findValidMetadataByEntityTypeOrThrow(
-            @NotNull final String entityType,
             @NotNull final IMetadataEntity metadataEntity);
 
     /**

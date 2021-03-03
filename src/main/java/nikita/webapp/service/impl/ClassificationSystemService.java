@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_TYPE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static org.springframework.http.HttpStatus.OK;
@@ -359,7 +358,6 @@ public class ClassificationSystemService
         if (null != classificationSystem.getClassificationType()) {
             ClassificationType classificationType = (ClassificationType)
                     metadataService.findValidMetadataByEntityTypeOrThrow(
-                                    CLASSIFICATION_TYPE,
                                     classificationSystem.
                                             getClassificationType());
             classificationSystem

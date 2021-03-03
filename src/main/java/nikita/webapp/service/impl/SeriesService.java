@@ -33,7 +33,6 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.N5ResourceMappings.SERIES_STATUS;
 import static nikita.common.config.N5ResourceMappings.SERIES_STATUS_CLOSED_CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
@@ -382,7 +381,6 @@ public class SeriesService
         if (series.getSeriesStatus() != null) {
             SeriesStatus seriesStatus = (SeriesStatus) metadataService
                     .findValidMetadataByEntityTypeOrThrow(
-                            SERIES_STATUS,
                             series.getSeriesStatus());
             series.setSeriesStatus(seriesStatus);
         }

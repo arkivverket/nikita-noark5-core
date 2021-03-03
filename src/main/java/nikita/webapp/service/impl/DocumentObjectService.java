@@ -63,7 +63,8 @@ import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DE
 import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
+import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 
@@ -1066,7 +1067,6 @@ public class DocumentObjectService
             Format format =
                     (Format) metadataService
                             .findValidMetadataByEntityTypeOrThrow(
-                                    FORMAT,
                                     documentObject.getFormat());
             documentObject.setFormat(format);
         }
@@ -1077,7 +1077,6 @@ public class DocumentObjectService
         VariantFormat variantFormat =
                 (VariantFormat) metadataService
                         .findValidMetadataByEntityTypeOrThrow(
-                                VARIANT_FORMAT,
                                 documentObject.getVariantFormat());
         documentObject.setVariantFormat(variantFormat);
     }

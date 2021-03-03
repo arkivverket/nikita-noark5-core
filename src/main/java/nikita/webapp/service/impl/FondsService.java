@@ -595,7 +595,6 @@ public class FondsService
         if (fonds.getFondsStatus() != null) {
             FondsStatus fondsStatus = (FondsStatus) metadataService
                     .findValidMetadataByEntityTypeOrThrow(
-                            FONDS_STATUS,
                             fonds.getFondsStatus());
             fonds.setFondsStatus(fondsStatus);
         }

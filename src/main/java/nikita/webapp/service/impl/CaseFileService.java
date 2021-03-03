@@ -508,7 +508,6 @@ public class CaseFileService
         if (null != caseFile.getCaseStatus()) {
             CaseStatus caseStatus = (CaseStatus) metadataService
                     .findValidMetadataByEntityTypeOrThrow(
-                            CASE_STATUS,
                             caseFile.getCaseStatus());
             caseFile.setCaseStatus(caseStatus);
         }
