@@ -703,29 +703,24 @@ public class RegistryEntryService
     private void validateRegistryEntryStatus(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
         RegistryEntryStatus registryEntryStatus = (RegistryEntryStatus)
-                metadataService.findValidMetadataByEntityTypeOrThrow(
-                                REGISTRY_ENTRY_STATUS,
-                                registryEntry.getRegistryEntryStatus());
+                metadataService.findValidMetadata(
+                        registryEntry.getRegistryEntryStatus());
         registryEntry.setRegistryEntryStatus(registryEntryStatus);
     }
 
     private void validateRegistryEntryType(RegistryEntry registryEntry) {
         // Assume value already set, as the deserialiser will enforce it.
         RegistryEntryType registryEntryType = (RegistryEntryType)
-                metadataService.findValidMetadataByEntityTypeOrThrow(
-                                REGISTRY_ENTRY_TYPE,
-                                registryEntry.getRegistryEntryType());
+                metadataService.findValidMetadata(
+                        registryEntry.getRegistryEntryType());
         registryEntry.setRegistryEntryType(registryEntryType);
     }
 
     private void validateSignOffMethod(SignOff incomingSignOff) {
         // Assume value already set, as the deserialiser will enforce it.
         SignOffMethod signOffMethod =
-                (SignOffMethod) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(
-                            SIGN_OFF_METHOD,
-                            incomingSignOff.getSignOffMethodCode(),
-                            incomingSignOff.getSignOffMethodCodeName());
+                (SignOffMethod) metadataService.findValidMetadata(
+                        incomingSignOff.getSignOffMethod());
         incomingSignOff.setSignOffMethodCodeName(signOffMethod.getCodeName());
     }
 }

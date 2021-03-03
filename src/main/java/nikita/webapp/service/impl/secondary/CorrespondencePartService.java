@@ -632,10 +632,8 @@ public class CorrespondencePartService
             CorrespondencePart correspondencePart) {
         // Assume value already set, as the deserialiser will enforce it.
         CorrespondencePartType correspondencePartType =
-                (CorrespondencePartType) metadataService
-                        .findValidMetadataByEntityTypeOrThrow(
-                                CORRESPONDENCE_PART_TYPE,
-                                correspondencePart.getCorrespondencePartType());
+                (CorrespondencePartType) metadataService.findValidMetadata(
+                        correspondencePart.getCorrespondencePartType());
         correspondencePart.setCorrespondencePartType
                 (correspondencePartType);
     }

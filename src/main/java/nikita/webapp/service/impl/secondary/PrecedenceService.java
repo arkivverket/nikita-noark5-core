@@ -6,7 +6,6 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.PrecedenceStatus;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.repository.n5v5.secondary.IPrecedenceRepository;
-import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -22,15 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.PRECEDENCE_APPROVED_BY;
-import static nikita.common.config.N5ResourceMappings.PRECEDENCE_STATUS;
-import static nikita.common.config.N5ResourceMappings.FINALISED_BY;
 
 @Service
 @Transactional
@@ -205,10 +201,8 @@ public class PrecedenceService
     private void validatePrecedenceStatus(Precedence incomingPrecedence) {
 	if (null != incomingPrecedence.getPrecedenceStatus()) {
             PrecedenceStatus PrecedenceStatus =
-                (PrecedenceStatus) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(
-                            PRECEDENCE_STATUS,
-                            incomingPrecedence.getPrecedenceStatus());
+                    (PrecedenceStatus) metadataService
+                            .findValidMetadata(incomingPrecedence.getPrecedenceStatus());
             incomingPrecedence.setPrecedenceStatus(PrecedenceStatus);
 	}
     }

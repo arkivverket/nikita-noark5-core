@@ -12,8 +12,6 @@ import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
-
 public final class NoarkUtils {
 
     // You shall not instantiate me!
@@ -34,9 +32,7 @@ public final class NoarkUtils {
                     IDocumentMedium entity) {
                 if (null != entity.getDocumentMedium()) {
                     DocumentMedium metadata = (DocumentMedium)
-                            service.findValidMetadataByEntityTypeOrThrow(
-                                    DOCUMENT_MEDIUM,
-                                    entity.getDocumentMedium());
+                            service.findValidMetadata(entity.getDocumentMedium());
                     entity.setDocumentMedium(metadata);
                 }
             }
