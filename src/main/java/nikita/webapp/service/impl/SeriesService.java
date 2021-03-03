@@ -380,8 +380,7 @@ public class SeriesService
     public void checkSeriesStatusUponCreation(Series series) {
         if (series.getSeriesStatus() != null) {
             SeriesStatus seriesStatus = (SeriesStatus) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(
-                            series.getSeriesStatus());
+                    .findValidMetadata(series.getSeriesStatus());
             series.setSeriesStatus(seriesStatus);
         }
     }

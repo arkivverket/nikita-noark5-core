@@ -45,7 +45,7 @@ public interface IMetadataService {
      *                       '('B', Begrenset etter sikkerhetsinstruksen')
      * @return The Metadata object corresponding to the code
      */
-    IMetadataEntity findValidMetadataByEntityTypeOrThrow(
+    IMetadataEntity findValidMetadata(
             @NotNull final IMetadataEntity metadataEntity);
 
     /**

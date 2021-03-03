@@ -224,13 +224,12 @@ public class MetadataService
      * code is null or the two codename values do not match.
      * <p>
      *
-     * @param entityType     the type of Metadata object e.g. tilgangsrestriksjon
      * @param metadataEntity the Metadata object e.g. B
      *                       '('B', Begrenset etter sikkerhetsinstruksen')
      * @return The Metadata object corresponding to the code
      */
     @Override
-    public IMetadataEntity findValidMetadataByEntityTypeOrThrow(
+    public IMetadataEntity findValidMetadata(
             @NotNull final IMetadataEntity metadataEntity) {
         return findValidMetadataByEntityTypeOrThrow(
                 metadataEntity.getBaseTypeName(), metadataEntity.getCode(),

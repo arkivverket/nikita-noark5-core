@@ -593,9 +593,8 @@ public class FondsService
      */
     private void checkFondsStatusUponCreation(Fonds fonds) {
         if (fonds.getFondsStatus() != null) {
-            FondsStatus fondsStatus = (FondsStatus) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(
-                            fonds.getFondsStatus());
+            FondsStatus fondsStatus = (FondsStatus)
+                    metadataService.findValidMetadata(fonds.getFondsStatus());
             fonds.setFondsStatus(fondsStatus);
         }
     }

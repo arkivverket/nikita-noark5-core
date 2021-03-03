@@ -157,9 +157,8 @@ public class CommentService
 
     private void checkCommentType(Comment comment) {
         if (comment.getCommentType() != null) {
-            CommentType commentType = (CommentType) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(
-                            comment.getCommentType());
+            CommentType commentType = (CommentType)
+                    metadataService.findValidMetadata(comment.getCommentType());
             comment.setCommentType(commentType);
         }
     }

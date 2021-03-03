@@ -507,8 +507,7 @@ public class CaseFileService
     private void validateCaseStatus(CaseFile caseFile) {
         if (null != caseFile.getCaseStatus()) {
             CaseStatus caseStatus = (CaseStatus) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(
-                            caseFile.getCaseStatus());
+                    .findValidMetadata(caseFile.getCaseStatus());
             caseFile.setCaseStatus(caseStatus);
         }
     }

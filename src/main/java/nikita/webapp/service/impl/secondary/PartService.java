@@ -610,9 +610,8 @@ public class PartService
 
     private void validatePartRole(Part part) {
         // Assume value already set, as the deserialiser will enforce it.
-        PartRole partRole = (PartRole) metadataService
-                .findValidMetadataByEntityTypeOrThrow(
-                        part.getPartRole());
+        PartRole partRole = (PartRole) metadataService.findValidMetadata(
+                part.getPartRole());
         part.setPartRole(partRole);
     }
 }

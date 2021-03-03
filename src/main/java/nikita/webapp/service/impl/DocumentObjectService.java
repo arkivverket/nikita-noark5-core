@@ -1064,10 +1064,8 @@ public class DocumentObjectService
 
     private void validateFormat(DocumentObject documentObject) {
         if (null != documentObject.getFormat()) {
-            Format format =
-                    (Format) metadataService
-                            .findValidMetadataByEntityTypeOrThrow(
-                                    documentObject.getFormat());
+            Format format = (Format) metadataService.findValidMetadata(
+                    documentObject.getFormat());
             documentObject.setFormat(format);
         }
     }
@@ -1075,9 +1073,8 @@ public class DocumentObjectService
     private void validateVariantFormat(DocumentObject documentObject) {
         // Assume value already set, as the deserialiser will enforce it.
         VariantFormat variantFormat =
-                (VariantFormat) metadataService
-                        .findValidMetadataByEntityTypeOrThrow(
-                                documentObject.getVariantFormat());
+                (VariantFormat) metadataService.findValidMetadata(
+                        documentObject.getVariantFormat());
         documentObject.setVariantFormat(variantFormat);
     }
 }

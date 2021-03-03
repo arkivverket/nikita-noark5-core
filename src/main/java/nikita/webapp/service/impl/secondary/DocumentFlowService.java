@@ -279,9 +279,8 @@ public class DocumentFlowService
     private void validateFlowStatus(DocumentFlow incomingDocumentFlow) {
         // Assume value already set, as the deserialiser will enforce it.
         FlowStatus flowStatus =
-                (FlowStatus) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(
-                            incomingDocumentFlow.getFlowStatus());
+                (FlowStatus) metadataService.findValidMetadata(
+                        incomingDocumentFlow.getFlowStatus());
         incomingDocumentFlow.setFlowStatus(flowStatus);
     }
 }

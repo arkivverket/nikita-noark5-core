@@ -201,9 +201,8 @@ public class PrecedenceService
     private void validatePrecedenceStatus(Precedence incomingPrecedence) {
 	if (null != incomingPrecedence.getPrecedenceStatus()) {
             PrecedenceStatus PrecedenceStatus =
-                (PrecedenceStatus) metadataService
-                    .findValidMetadataByEntityTypeOrThrow(
-                            incomingPrecedence.getPrecedenceStatus());
+                    (PrecedenceStatus) metadataService
+                            .findValidMetadata(incomingPrecedence.getPrecedenceStatus());
             incomingPrecedence.setPrecedenceStatus(PrecedenceStatus);
 	}
     }

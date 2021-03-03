@@ -32,8 +32,7 @@ public final class NoarkUtils {
                     IDocumentMedium entity) {
                 if (null != entity.getDocumentMedium()) {
                     DocumentMedium metadata = (DocumentMedium)
-                            service.findValidMetadataByEntityTypeOrThrow(
-                                    entity.getDocumentMedium());
+                            service.findValidMetadata(entity.getDocumentMedium());
                     entity.setDocumentMedium(metadata);
                 }
             }

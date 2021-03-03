@@ -357,9 +357,8 @@ public class ClassificationSystemService
             ClassificationSystem classificationSystem) {
         if (null != classificationSystem.getClassificationType()) {
             ClassificationType classificationType = (ClassificationType)
-                    metadataService.findValidMetadataByEntityTypeOrThrow(
-                                    classificationSystem.
-                                            getClassificationType());
+                    metadataService.findValidMetadata(
+                            classificationSystem.getClassificationType());
             classificationSystem
                     .setClassificationType(classificationType);
         }
