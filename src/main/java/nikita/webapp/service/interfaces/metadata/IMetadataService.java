@@ -29,7 +29,6 @@ public interface IMetadataService {
      *                   'Begrenset etter sikkerhetsinstruksen'
      * @return The Metadata object corresponding to the code
      */
-    @Deprecated
     IMetadataEntity findValidMetadataByEntityTypeOrThrow(
             @NotNull final String entityType, @NotNull final String code,
             @NotNull final String codename);

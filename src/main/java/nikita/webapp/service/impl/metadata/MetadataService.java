@@ -201,7 +201,6 @@ public class MetadataService
      * @return The Metadata object corresponding to the code
      */
     @Override
-    @Deprecated
     public IMetadataEntity findValidMetadataByEntityTypeOrThrow(
             @NotNull final String entityType, @NotNull final String code,
             @NotNull final String codename) {
