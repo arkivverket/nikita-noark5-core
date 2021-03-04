@@ -1,17 +1,13 @@
 package nikita.webapp.web.controller.hateoas;
 
-import com.codahale.metrics.annotation.Counted;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import nikita.common.model.noark5.v5.hateoas.ChangeLogHateoas;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import nikita.common.model.noark5.v5.ChangeLog;
+import nikita.common.model.noark5.v5.hateoas.ChangeLogHateoas;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.IChangeLogHateoasHandler;
 import nikita.webapp.service.interfaces.IChangeLogService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
@@ -29,37 +26,30 @@ import static org.springframework.http.HttpHeaders.ETAG;
 public class ChangeLogHateoasController
         extends NoarkController {
 
-    private IChangeLogHateoasHandler changeLogHateoasHandler;
-    private IChangeLogService changeLogService;
+    private final IChangeLogService changeLogService;
 
-    public ChangeLogHateoasController
-        (IChangeLogHateoasHandler changeLogHateoasHandler,
-         IChangeLogService changeLogService) {
-        this.changeLogHateoasHandler = changeLogHateoasHandler;
+    public ChangeLogHateoasController(IChangeLogService changeLogService) {
         this.changeLogService = changeLogService;
     }
 
     // GET [contextPath][api]/loggingogsporing/endringslogg/
-    @ApiOperation(
-            value = "Retrieves all ChangeLog entities limited by ownership  " +
-                    "rights",
-            response = ChangeLogHateoas.class)
+    @Operation(
+            summary = "Retrieves all ChangeLog entities limited by ownership " +
+                    " rights")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "ChangeLog found",
-                    response = ChangeLogHateoas.class),
+                    responseCode = OK_VAL,
+                    description = "ChangeLog found"),
             @ApiResponse(
-                    code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(
-                    code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(
-                    code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
-    @Counted
     @GetMapping(CHANGE_LOG)
     public ResponseEntity<ChangeLogHateoas> findAllChangeLog(
             HttpServletRequest request) {
@@ -71,28 +61,25 @@ public class ChangeLogHateoasController
     }
 
     // GET [contextPath][api]/loggingogsporing/endringslogg/{systemId}/
-    @ApiOperation(value = "Retrieves a single changeLog entity given a systemId",
-            response = ChangeLog.class)
+    @Operation(summary = "Retrieves a single changeLog entity given a systemId")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "ChangeLog returned",
-                    response = ChangeLog.class),
+                    responseCode = OK_VAL,
+                    description = "ChangeLog returned"),
             @ApiResponse(
-                    code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(
-                    code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(
-                    code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = CHANGE_LOG + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<ChangeLogHateoas> findOne(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of changeLog to retrieve.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of changeLog to retrieve.",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         ChangeLogHateoas changeLogHateoas =
@@ -104,47 +91,45 @@ public class ChangeLogHateoasController
     }
 
     // PUT [contextPath][api]/loggingogsporing/endringslogg/{systemId}/
-    @ApiOperation(
-            value = "Updates a ChangeLog object",
-            notes = "Returns the newly updated ChangeLog object after it is " +
-                    "persisted to the database",
-            response = ChangeLogHateoas.class)
+    @Operation(
+            summary = "Updates a ChangeLog object",
+            description = "Returns the newly updated ChangeLog object after " +
+                    "it is persisted to the database")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "ChangeLog " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = ChangeLogHateoas.class),
+                    responseCode = OK_VAL,
+                    description = "ChangeLog " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
             @ApiResponse(
-                    code = 201,
-                    message = "ChangeLog " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = ChangeLogHateoas.class),
+                    responseCode = CREATED_VAL,
+                    description = "ChangeLog " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
             @ApiResponse(
-                    code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(
-                    code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(
-                    code = 404,
-                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
                             " of type ChangeLog"),
             @ApiResponse(
-                    code = 409,
-                    message = API_MESSAGE_CONFLICT),
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
             @ApiResponse(
-                    code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PutMapping(value = CHANGE_LOG + SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ChangeLogHateoas> updateChangeLog(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of changeLog to update.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of changeLog to update.",
                     required = true)
             @PathVariable(SYSTEM_ID) String systemID,
-            @ApiParam(name = "changeLog",
-                    value = "Incoming changeLog object",
+            @Parameter(name = "changeLog",
+                    description = "Incoming changeLog object",
                     required = true)
             @RequestBody ChangeLog changeLog) throws NikitaException {
         ChangeLogHateoas changeLogHateoas =
@@ -158,28 +143,26 @@ public class ChangeLogHateoasController
     }
 
     // DELETE [contextPath][api]/loggingogsporing/endringslogg/{systemId}/
-    @ApiOperation(
-            value = "Deletes a single ChangeLog entity identified by systemID",
-            response = String.class)
+    @Operation(
+            summary = "Deletes a single ChangeLog entity identified by " +
+                    "systemID")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 204,
-                    message = "ok message",
-                    response = String.class),
+                    responseCode = NO_CONTENT_VAL,
+                    description = "ok message"),
             @ApiResponse(
-                    code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(
-                    code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(
-                    code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping(value = CHANGE_LOG + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteChangeLogBySystemId(
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the changeLog to delete",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the changeLog to delete",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         changeLogService.deleteEntity(systemID);

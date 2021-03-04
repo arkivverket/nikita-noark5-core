@@ -48,8 +48,10 @@ public class NikitaWebSecurityConfig
         httpSecurity
                 .authorizeRequests()
                 // GET [api]/metadata/**, public to read basic structure
-                    .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH)
-                        .permitAll()
+                .antMatchers(HttpMethod.GET, PATTERN_METADATA_PATH)
+                .permitAll()
+                .antMatchers(HttpMethod.GET, "/v3/**")
+                .permitAll()
                     .antMatchers(GET, "/**well-known/**").permitAll()
                 // POST GET [api]/arkivstruktur/ny-*, need role of record keeper
                     .antMatchers(HttpMethod.POST, PATTERN_NEW_FONDS_STRUCTURE_ALL)

@@ -98,6 +98,8 @@ public class OAuth2ResourceServerConfiguration
                 .authorizeRequests()
                 .antMatchers(GET, "/").permitAll()
                 .antMatchers(GET, "/**well-known/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/v3/**").permitAll()
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, LOGIN_OAUTH2_PATH).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, LOGOUT_PATH).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, CHECK_TOKEN_PATH).permitAll()

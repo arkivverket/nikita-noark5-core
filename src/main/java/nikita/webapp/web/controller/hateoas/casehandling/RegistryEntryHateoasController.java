@@ -1,10 +1,9 @@
 package nikita.webapp.web.controller.hateoas.casehandling;
 
-import com.codahale.metrics.annotation.Counted;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
@@ -25,10 +24,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
@@ -57,71 +56,102 @@ public class RegistryEntryHateoasController
 
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-dokumentflyt
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-dokumentflyt/
-    @ApiOperation(value = "Create a new DocumentFlow and associate it with " +
+    @Operation(summary = "Create a new DocumentFlow and associate it with " +
             "the given RegistryEntry systemId",
-            notes = "Returns the newly created DocumentFlow after it " +
-                    "was associated with a RegistryEntry and persisted to the " +
-                    "database.",
-            response = DocumentFlow.class) // DocumentFlowHateoas
+            description = "Returns the newly created DocumentFlow after it " +
+                    "was associated with a RegistryEntry and persisted to the" +
+                    " database.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DocumentFlow " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = DocumentFlow.class), // DocumentFlowHateoas
-            @ApiResponse(code = 201, message = "DocumentFlow " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = DocumentFlow.class), // DocumentFlowHateoas
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type DocumentFlow"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_FLOW,
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "DocumentFlow " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "DocumentFlow " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type DocumentFlow"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_DOCUMENT_FLOW,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentFlowHateoas>
     createDocumentFlowAssociatedWithRegistryEntry(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of registry entry to associate the document flow with.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of registry entry to associate " +
+                            "the document flow with.",
                     required = true)
             @PathVariable String systemID,
-            @ApiParam(name = "documentFlow",
-                    value = "Incoming documentFlow object",
+            @Parameter(name = "documentFlow",
+                    description = "Incoming documentFlow object",
                     required = true)
             @RequestBody DocumentFlow documentFlow)
             throws NikitaException {
         return ResponseEntity.status(CREATED)
-                .body(registryEntryService.associateDocumentFlowWithRegistryEntry
-                        (systemID, documentFlow));
+                .body(registryEntryService
+                        .associateDocumentFlowWithRegistryEntry(systemID,
+                                documentFlow));
     }
 
     // Create a new SignOff and associate it with the given journalpost
     // POST [contextPath][api]/casehandling/journalpost/{systemId}/ny-avskrivning
     //  https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-avskrivning/
-    @ApiOperation(value = "Persists a SignOff object associated with the given Record systemId",
-            notes = "Returns the newly created SignOff object after it " +
-                    "was associated with a Record object and persisted to the database",
-            response = SignOffHateoas.class)
+    @Operation(summary = "Persists a SignOff object associated with the given" +
+            " Record systemId",
+            description = "Returns the newly created SignOff object after it " +
+                    "was associated with a Record object and persisted to the" +
+                    " database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "SignOff " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = SignOffHateoas.class),
-            @ApiResponse(code = 201, message = "SignOff " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = SignOffHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type SignOff"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "SignOff " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "SignOff " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type SignOff"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SIGN_OFF,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SignOffHateoas>
     createSignOffAssociatedWithRecord(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of registry entry to associate the signOff with.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of registry entry to associate " +
+                            "the signOff with.",
                     required = true)
             @PathVariable(SYSTEM_ID) String systemID,
-            @ApiParam(name = "signOff",
-                    value = "Incoming signOff object",
+            @Parameter(name = "signOff",
+                    description = "Incoming signOff object",
                     required = true)
             @RequestBody SignOff signOff)
             throws NikitaException {
@@ -135,32 +165,48 @@ public class RegistryEntryHateoasController
 
     // POST [contextPath][api]/sakarkiv/journalpost/{systemId}/ny-presedens
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-presedens/
-    @ApiOperation(value = "Persists a Precedence object associated with the given Record systemId",
-            notes = "Returns the newly created Precedence object after " +
+    @Operation(summary = "Persists a Precedence object associated with the " +
+            "given Record systemId",
+            description = "Returns the newly created Precedence object after " +
                     "it was associated with a Record object and persisted to " +
-                    "the database",
-            response = PrecedenceHateoas.class)
+                    "the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Precedence " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = PrecedenceHateoas.class),
-            @ApiResponse(code = 201, message = "Precedence " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = PrecedenceHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type Precedence"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PRECEDENCE,
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Precedence " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "Precedence " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Precedence"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_PRECEDENCE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<PrecedenceHateoas> createPrecedenceAssociatedWithRecord(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of record to associate the Precedence with.",
+    public ResponseEntity<PrecedenceHateoas>
+    createPrecedenceAssociatedWithRecord(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of record to associate the " +
+                            "Precedence with.",
                     required = true)
             @PathVariable(SYSTEM_ID) String systemID,
-            @ApiParam(name = "Precedence",
-                    value = "Incoming Precedence object",
+            @Parameter(name = "Precedence",
+                    description = "Incoming Precedence object",
                     required = true)
             @RequestBody Precedence precedence)
             throws NikitaException {
@@ -172,20 +218,26 @@ public class RegistryEntryHateoasController
 
     // GET [contextPath][api]/arkivstruktur/journalpost/{systemId}/ny-dokumentflyt
     //  https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-dokumentflyt/
-    @ApiOperation(value = "Create a DocumentFlow with default values",
-            response = DocumentFlow.class)
+    @Operation(summary = "Create a DocumentFlow with default values")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DocumentFlow returned",
-                    response = DocumentFlow.class), // DocumentFlowHateoas
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_DOCUMENT_FLOW)
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "DocumentFlow returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_DOCUMENT_FLOW)
     public ResponseEntity<DocumentFlowHateoas> createDefaultDocumentFlow(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the registryEntry",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the registryEntry",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
@@ -195,34 +247,34 @@ public class RegistryEntryHateoasController
     }
 
     // GET [contextPath][api]/sakarkiv/journalpost/{systemID}/avskrivning/{subSystemID}
-    @ApiOperation(value = "Return a sign off related to the" +
-            "registryEntry identified by a systemId",
-            response = SignOffHateoas.class)
+    @Operation(summary = "Return a sign off related to the registryEntry " +
+            "identified by a systemId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "SignOff returned",
-                    response = SignOffHateoas.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF + SLASH + SUB_SYSTEM_ID_PARAMETER,
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "SignOff returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF +
+            SLASH + SUB_SYSTEM_ID_PARAMETER,
             produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SignOffHateoas>
     findAllSignOffAssociatedWithRegistryEntry(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the registryEntry",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the registryEntry",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID,
-            @ApiParam(name = "subSystemID",
-                    value = "systemID of the SignOff",
+            @Parameter(name = "subSystemID",
+                    description = "systemID of the SignOff",
                     required = true)
-            @PathVariable("subSystemID") final String subSystemID)
-            throws IOException {
+            @PathVariable("subSystemID") final String subSystemID) {
         return ResponseEntity.status(OK)
                 .body(registryEntryService
                         .findSignOffAssociatedWithRegistryEntry
@@ -231,20 +283,25 @@ public class RegistryEntryHateoasController
 
     // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/ny-avskrivning
     //  https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-avskrivning/
-    @ApiOperation(value = "Create a SignOff with default values",
-            response = SignOffHateoas.class)
+    @Operation(summary = "Create a SignOff with default values")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "SignOff returned",
-                    response = SignOffHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "SignOff returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SIGN_OFF)
     public ResponseEntity<SignOffHateoas> createDefaultSignOff(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of record to associate the SignOff with.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of record to associate the SignOff with.",
                     required = true)
             @PathVariable(SYSTEM_ID) String systemID) {
         return ResponseEntity.status(OK)
@@ -255,23 +312,26 @@ public class RegistryEntryHateoasController
 
     // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/ny-presedens
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-presedens/
-    @ApiOperation(value = "Create a Precedence with default values",
-            response = PrecedenceHateoas.class)
+    @Operation(summary = "Create a Precedence with default values")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Precedence returned",
-                    response = PrecedenceHateoas.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Precedence returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PRECEDENCE)
     public ResponseEntity<PrecedenceHateoas> createDefaultPrecedence(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of record to associate the Precedence with.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of record to associate the " +
+                            "Precedence with.",
                     required = true)
             @PathVariable(SYSTEM_ID) String systemID) {
         return ResponseEntity.status(OK)
@@ -282,19 +342,27 @@ public class RegistryEntryHateoasController
 
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/dokumentflyt
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/dokumentflyt/
-    @ApiOperation(value = "Retrieve all DocumentFlow associated with a RegistryEntry identified by systemId",
-            response = DocumentFlow.class)
+    @Operation(summary = "Retrieve all DocumentFlow associated with a " +
+            "RegistryEntry identified by systemId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "DocumentFlow returned", response = DocumentFlow.class), //DocumentFlowHateoas
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "DocumentFlow returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + DOCUMENT_FLOW)
-    public ResponseEntity<DocumentFlowHateoas> findAllDocumentFlowAssociatedWithRegistryEntry(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the file to retrieve associated RegistryEntry",
+    public ResponseEntity<DocumentFlowHateoas>
+    findAllDocumentFlowAssociatedWithRegistryEntry(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the file to retrieve " +
+                            "associated RegistryEntry",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity
@@ -304,24 +372,30 @@ public class RegistryEntryHateoasController
                                 systemID));
     }
 
-
     // Retrieve all SignOff associated with a RegistryEntry identified by systemId
     // GET [contextPath][api]/sakarkiv/journalpost/{systemId}/avskrivning
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/avskrivning/
-    @ApiOperation(value = "Retrieves a list of SignOffs associated with a RegistryEntry",
-            response = SignOff.class)
+    @Operation(summary = "Retrieves a list of SignOffs associated with a " +
+            "RegistryEntry")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "SignOff returned",
-                    response = SignOffHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "SignOff returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF)
     public ResponseEntity<SignOffHateoas> findAllSignOffAssociatedWithRecord(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the signoff to retrieve associated Record",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the signOff to retrieve " +
+                            "associated Record",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity.status(OK)
@@ -332,19 +406,26 @@ public class RegistryEntryHateoasController
 
     // GET [contextPath][api]/casehandling/journalpost/{systemId}/presedens
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/presedens/
-    @ApiOperation(value = "Retrieves a list of Precedences associated with a RegistryEntry",
-            response = Precedence.class)
+    @Operation(summary = "Retrieves a list of Precedences associated with a " +
+            "RegistryEntry")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Precedence returned", response = PrecedenceHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Precedence returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + PRECEDENCE)
     public ResponseEntity<PrecedenceHateoas> findAllPrecedenceForRecord(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the registryEntry to retrieve associated Precedence",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the registryEntry to retrieve " +
+                            "associated Precedence",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return ResponseEntity
@@ -355,25 +436,34 @@ public class RegistryEntryHateoasController
 
     // Retrieve a single registryEntry identified by systemId
     // GET [contextPath][api]/casehandling/journalpost/{systemID}
-    @ApiOperation(value = "Retrieves a single RegistryEntry entity given a systemId", response = RegistryEntry.class)
+    @Operation(summary = "Retrieves a single RegistryEntry entity given a " +
+            "systemId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "RegistryEntry returned", response = RegistryEntry.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "RegistryEntry returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<RegistryEntryHateoas> findOneRegistryEntrybySystemId(
+    public ResponseEntity<RegistryEntryHateoas> findOneRegistryEntryBySystemId(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the registryEntry to retrieve",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the registryEntry to retrieve",
                     required = true)
             @PathVariable(SYSTEM_ID) final String registryEntrySystemId) {
-        RegistryEntry registryEntry = registryEntryService.findBySystemId(registryEntrySystemId);
-
+        RegistryEntry registryEntry = registryEntryService
+                .findBySystemId(registryEntrySystemId);
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas(registryEntry);
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
+        registryEntryHateoasHandler.addLinks(
+                registryEntryHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(registryEntry.getVersion().toString())
@@ -383,22 +473,29 @@ public class RegistryEntryHateoasController
     // Get all registryEntry
     // GET [contextPath][api]/casehandling/journalpost/
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/journalpost/
-    @ApiOperation(value = "Retrieves multiple RegistryEntry entities limited by ownership rights",
-            response = RegistryEntryHateoas.class)
+    @Operation(summary = "Retrieves multiple RegistryEntry entities limited " +
+            "by ownership rights")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "RegistryEntry found",
-                    response = RegistryEntryHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "RegistryEntry found"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping
     public ResponseEntity<RegistryEntryHateoas> findAllRegistryEntry(
             HttpServletRequest request) {
         RegistryEntryHateoas registryEntryHateoas = new
                 RegistryEntryHateoas((List<INoarkEntity>) (List)
                 registryEntryService.findAllRegistryEntry());
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
+        registryEntryHateoasHandler.addLinks(registryEntryHateoas,
+                new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryHateoas);
@@ -406,24 +503,25 @@ public class RegistryEntryHateoasController
 
     // Delete a Record identified by systemID
     // DELETE [contextPath][api]/casehandling/journalpost/{systemId}/
-    @ApiOperation(value = "Deletes a single RegistryEntry entity identified " +
-            "by systemID", response = String.class)
+    @Operation(summary = "Deletes a single RegistryEntry entity identified " +
+            "by systemID")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Delete RegistryEntry object",
-                    response = String.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Delete RegistryEntry object"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteRecordBySystemId(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the record to delete",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the record to delete",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         registryEntryService.deleteEntity(systemID);
@@ -433,17 +531,20 @@ public class RegistryEntryHateoasController
 
     // Delete all RegistryEntry
     // DELETE [contextPath][api]/arkivstruktur/journalpost/
-    @ApiOperation(value = "Deletes all RegistryEntry", response = String.class)
+    @Operation(summary = "Deletes all RegistryEntry")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all RegistryEntry",
-                    response = String.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = NO_CONTENT_VAL,
+                    description = "Deleted all RegistryEntry"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping
     public ResponseEntity<String> deleteAllRegistryEntry() {
         registryEntryService.deleteAllByOwnedBy();
@@ -453,39 +554,60 @@ public class RegistryEntryHateoasController
 
     // Update a RegistryEntry with given values
     // PUT [contextPath][api]/casehandling/journalpost/{systemId}
-    @ApiOperation(value = "Updates a RegistryEntry identified by a given " +
-            "systemId", notes = "Returns the newly updated registryEntry",
-            response = RegistryEntryHateoas.class)
+    @Operation(summary = "Updates a RegistryEntry identified by a given " +
+            "systemId",
+            description = "Returns the newly updated registryEntry")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "RegistryEntry " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = RegistryEntryHateoas.class),
-            @ApiResponse(code = 201, message = "RegistryEntry " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = RegistryEntryHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type RegistryEntry"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "RegistryEntry " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "RegistryEntry " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type RegistryEntry"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
 
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RegistryEntryHateoas> updateRegistryEntry(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of registryEntry to update",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of registryEntry to update",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID,
-            @ApiParam(name = "RegistryEntry",
-                    value = "Incoming registryEntry object",
+            @Parameter(name = "RegistryEntry",
+                    description = "Incoming registryEntry object",
                     required = true)
-            @RequestBody RegistryEntry registryEntry) throws NikitaException {
+            @RequestBody RegistryEntry registryEntry)
+            throws NikitaException {
         validateForUpdate(registryEntry);
-
-        RegistryEntry updatedRegistryEntry = registryEntryService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), registryEntry);
-        RegistryEntryHateoas registryEntryHateoas = new RegistryEntryHateoas(updatedRegistryEntry);
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedRegistryEntry));
+        RegistryEntry updatedRegistryEntry =
+                registryEntryService
+                        .handleUpdate(systemID,
+                                parseETAG(request.getHeader(ETAG)),
+                                registryEntry);
+        RegistryEntryHateoas registryEntryHateoas =
+                new RegistryEntryHateoas(updatedRegistryEntry);
+        registryEntryHateoasHandler.addLinks(
+                registryEntryHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, updatedRegistryEntry));
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedRegistryEntry.getVersion().toString())
@@ -493,42 +615,43 @@ public class RegistryEntryHateoasController
     }
 
     // PUT [contextPath][api]/sakarkiv/journalpost/{systemID}/avskrivning/{subSystemID}
-    @ApiOperation(value = "Update a sign off related to the" +
-            "registryEntry identified by a systemId",
-            response = SignOffHateoas.class)
+    @Operation(summary = "Update a sign off related to the" +
+            "registryEntry identified by a systemId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "SignOff returned",
-                    response = SignOffHateoas.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF + SLASH + SUB_SYSTEM_ID_PARAMETER,
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "SignOff returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF +
+            SLASH + SUB_SYSTEM_ID_PARAMETER,
             produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SignOffHateoas>
     updateSignOffAssociatedWithRegistryEntry(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the registryEntry",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the registryEntry",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID,
-            @ApiParam(name = "subSystemID",
-                    value = "systemID of the SignOff",
+            @Parameter(name = "subSystemID",
+                    description = "systemID of the SignOff",
                     required = true)
             @PathVariable("subSystemID") final String subSystemID,
-            @ApiParam(name = "SignOff",
-                    value = "Incoming signOff object",
+            @Parameter(name = "SignOff",
+                    description = "Incoming signOff object",
                     required = true)
-            @RequestBody SignOff signOff)
-            throws IOException {
+            @RequestBody SignOff signOff) {
         SignOffHateoas signOffHateoas =
-                registryEntryService.handleUpdateSignOff
-                        (systemID, subSystemID, parseETAG(request.getHeader(ETAG)),
-                                signOff);
+                registryEntryService.handleUpdateSignOff(systemID,
+                        subSystemID, parseETAG(request.getHeader(ETAG)),
+                        signOff);
         return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(signOffHateoas.getEntityVersion().toString())
@@ -536,32 +659,32 @@ public class RegistryEntryHateoasController
     }
 
     // DELETE [contextPath][api]/sakarkiv/journalpost/{systemID}/avskrivning/{subSystemID}
-    @ApiOperation(value = "Delete a sign off related to the" +
-            "registryEntry identified by a systemId",
-            response = SignOffHateoas.class)
+    @Operation(summary = "Delete a sign off related to the" +
+            "registryEntry identified by a systemId")
     @ApiResponses(value = {
-            @ApiResponse(code = 204,
-                    message = "SignOff object deleted",
-                    response = String.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = NO_CONTENT_VAL,
+                    description = "SignOff object deleted"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SIGN_OFF +
             SLASH + SUB_SYSTEM_ID_PARAMETER,
             produces = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String>
-    deleteeSignOffAssociatedWithRegistryEntry(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the registryEntry",
+    deleteSignOffAssociatedWithRegistryEntry(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the registryEntry",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID,
-            @ApiParam(name = "subSystemID",
-                    value = "systemID of the SignOff",
+            @Parameter(name = "subSystemID",
+                    description = "systemID of the SignOff",
                     required = true)
             @PathVariable("subSystemID") final String subSystemID) {
         registryEntryService.deleteSignOff(systemID, subSystemID);

@@ -54,11 +54,11 @@
     <spring-security-oauth2.version>2.3.5.RELEASE</spring-security-oauth2.version>
     <spring-security-jwt.version>1.0.10.RELEASE</spring-security-jwt.version>
     <commons-lang3.version>3.4</commons-lang3.version>
-    <springfox-swagger2.version>2.7.0</springfox-swagger2.version>
-    <springfox-swagger-ui.version>2.7.0</springfox-swagger-ui.version>
+    <springdoc-openapi.version>1.5.5</springdoc-openapi.version>
+    <reflections.version>0.9.12</reflections.version>
     <antlr.version>4.7.2</antlr.version>
     <antlr-maven-plugin.version>4.7.2</antlr-maven-plugin.version>
-      <maven-surefire-plugin.version>3.0.0-M1</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M1</maven-surefire-plugin.version>
     <tika-parsers.version>1.18</tika-parsers.version>
 
     <!-- JS / GUI -->
@@ -82,10 +82,16 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
-    <!-- required for metrics support -->
     <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-core</artifactId>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-webmvc-core</artifactId>
+      <version>${springdoc-openapi.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>${springdoc-openapi.version}</version>
     </dependency>
 
     <!-- Security etc ..-->
@@ -201,19 +207,6 @@
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
 
-    <!-- swagger dependency -->
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger-ui</artifactId>
-      <version>${springfox-swagger-ui.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-      <version>${springfox-swagger2.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>com.ryantenney.metrics</groupId>
       <artifactId>metrics-spring</artifactId>
@@ -275,16 +268,10 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Introduced to handle reflection to retrieve a list of entities. There is
-     a dependency from org.reflections.Reflections to this jar
-     Caused by: java.lang.NoSuchMethodError:
-     'com.google.common.collect.UnmodifiableIterator com.google.common.collect.Sets$SetView.iterator()'
-
-     If this dependency falls away, then this jar can be removed. -->
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>28.2-jre</version>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>${reflections.version}</version>
     </dependency>
 
     <!-- WebJar dependencies to download js stuff for GUI -->

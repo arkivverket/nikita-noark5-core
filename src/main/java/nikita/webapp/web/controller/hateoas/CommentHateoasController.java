@@ -1,27 +1,24 @@
 package nikita.webapp.web.controller.hateoas;
 
-import com.codahale.metrics.annotation.Counted;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
-import nikita.webapp.web.controller.hateoas.NoarkController;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -29,130 +26,117 @@ import static org.springframework.http.HttpHeaders.ETAG;
 public class CommentHateoasController
         extends NoarkController {
 
-    private ICommentHateoasHandler commentHateoasHandler;
-    private ICommentService commentService;
+    private final ICommentService commentService;
 
-    public CommentHateoasController
-        (ICommentHateoasHandler commentHateoasHandler,
-         ICommentService commentService) {
-        this.commentHateoasHandler = commentHateoasHandler;
+    public CommentHateoasController(ICommentService commentService) {
         this.commentService = commentService;
     }
 
     // GET [contextPath][api]/arkivstruktur/merknad/{systemId}/
-    @ApiOperation(value = "Retrieves a single comment entity given a systemId",
-            response = Comment.class)
+    @Operation(summary = "Retrieves a single comment entity given a systemId")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "Comment returned",
-                    response = Comment.class),
+                    responseCode = OK_VAL,
+                    description = "Comment returned"),
             @ApiResponse(
-                    code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(
-                    code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(
-                    code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = COMMENT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CommentHateoas> findOne(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of comment to retrieve.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of comment to retrieve.",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         CommentHateoas commentHateoas =
 	    commentService.findSingleComment(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(commentHateoas.getEntityVersion().toString())
                 .body(commentHateoas);
     }
 
     // PUT [contextPath][api]/arkivstruktur/merknad/{systemId}/
-    @ApiOperation(
-            value = "Updates a Comment object",
-            notes = "Returns the newly updated Comment object after it is " +
-                    "persisted to the database",
-            response = CommentHateoas.class)
+    @Operation(
+            summary = "Updates a Comment object",
+            description = "Returns the newly updated Comment object after it " +
+                    "is persisted to the database")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 200,
-                    message = "Comment " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CommentHateoas.class),
+                    responseCode = OK_VAL,
+                    description =
+                            "Comment " + API_MESSAGE_OBJECT_ALREADY_PERSISTED),
             @ApiResponse(
-                    code = 201,
-                    message = "Comment " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = CommentHateoas.class),
+                    responseCode = CREATED_VAL,
+                    description = "Comment " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
             @ApiResponse(
-                    code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(
-                    code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(
-                    code = 404,
-                    message = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
                             " of type Comment"),
             @ApiResponse(
-                    code = 409,
-                    message = API_MESSAGE_CONFLICT),
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
             @ApiResponse(
-                    code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PutMapping(value = COMMENT + SLASH + SYSTEM_ID_PARAMETER,
                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CommentHateoas> updateComment(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of comment to update.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of comment to update.",
                     required = true)
             @PathVariable(SYSTEM_ID) String systemID,
-            @ApiParam(name = "comment",
-                    value = "Incoming comment object",
+            @Parameter(name = "comment",
+                    description = "Incoming comment object",
                     required = true)
             @RequestBody Comment comment) throws NikitaException {
         CommentHateoas commentHateoas =
                 commentService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), comment);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(CREATED)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(commentHateoas.getEntityVersion().toString())
                 .body(commentHateoas);
     }
 
     // DELETE [contextPath][api]/arkivstruktur/merknad/{systemId}/
-    @ApiOperation(
-            value = "Deletes a single Comment entity identified by systemID",
-            response = String.class)
+    @Operation(
+            summary = "Deletes a single Comment entity identified by systemID")
     @ApiResponses(value = {
             @ApiResponse(
-                    code = 204,
-                    message = "ok message",
-                    response = String.class),
+                    responseCode = NO_CONTENT_VAL,
+                    description = "ok message"),
             @ApiResponse(
-                    code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(
-                    code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(
-                    code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping(value = COMMENT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteCommentBySystemId(
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the comment to delete",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the comment to delete",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         commentService.deleteEntity(systemID);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
     }
 }

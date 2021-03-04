@@ -8,7 +8,7 @@
 #
 # To get the database working right, be administrator in mysql and
 #
-#    GRANT ALL ON nikita_noark5_prod.* to  'INSERT-USERNAME-HERE'@'%' identified by 'INSERT-PASSWORD-HERE';
+#    GRANT ALL ON nikita_noark5_prod.* to  'USERNAME-HERE'@'%' identified by 'PASSWORD-HERE';
 #    flush privileges;
 #    create database nikita_noark5_prod;
 #

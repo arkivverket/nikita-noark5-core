@@ -1,17 +1,14 @@
 package nikita.webapp.web.controller.hateoas.admin;
 
-import com.codahale.metrics.annotation.Counted;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.IUserService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,16 +16,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.google.common.net.HttpHeaders.ETAG;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_ADMIN + SLASH,
-                produces = NOARK5_V5_CONTENT_TYPE_JSON)
+        produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class UserController
         extends NoarkController {
 
-    private IUserService userService;
+    private final IUserService userService;
 
     public UserController(IUserService userService) {
         this.userService = userService;
@@ -37,40 +36,41 @@ public class UserController
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new bruker
     // POST [contextPath][api]/admin/ny-bruker
-    @ApiOperation(value = "Persists a new User object",
-            notes = "Returns the newly created User object after it is " +
-                    "persisted to the database",
-            response = User.class)
+    @Operation(summary = "Persists a new User object",
+            description = "Returns the newly created User object after it is " +
+                    "persisted to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = User.class),
-            @ApiResponse(code = 201,
-                    message = "User " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = User.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404,
-                    message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR),
-            @ApiResponse(code = 501,
-                    message = API_MESSAGE_NOT_IMPLEMENTED)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "User " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "User " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = NEW_USER)
     public ResponseEntity<UserHateoas> createUser(
             HttpServletRequest request,
             @RequestBody User user)
             throws NikitaException {
         UserHateoas userHateoas = userService.createNewUser(user);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(user.getVersion().toString())
                 .body(userHateoas);
     }
@@ -78,56 +78,61 @@ public class UserController
     // API - All GET Requests (CRUD - READ)
     // Retrieves all user
     // GET [contextPath][api]/admin/bruker/
-    @ApiOperation(value = "Retrieves all Users ", response = User.class)
+    @Operation(summary = "Retrieves all Users")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "User found",
-                    response = User.class),
-            @ApiResponse(code = 404,
-                    message = "No User found"),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "User found"),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = "No User found"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = USER)
     public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
         UserHateoas userHateoas = userService.findAll();
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(userHateoas);
     }
 
     // Retrieves a given user identified by a systemId
     // GET [contextPath][api]/admin/bruker/{systemID}/
-    @ApiOperation(value = "Gets user identified by its systemID",
-            notes = "Returns the requested user object", response = User.class)
+    @Operation(summary = "Gets user identified by its systemID",
+            description = "Returns the requested user object")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User found",
-                    response = User.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404,
-                    message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)
+            @ApiResponse(
+                    responseCode = OK_VAL, description = "User found"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
-    @Counted
     @GetMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
     findBySystemId(HttpServletRequest request,
-		   @ApiParam(name = SYSTEM_ID,
-			     value = "systemID of the user to retrieve",
-			     required = true)
-		   @PathVariable(SYSTEM_ID) final String systemID) {
+                   @Parameter(name = SYSTEM_ID,
+                           description = "systemID of the user to retrieve",
+                           required = true)
+                   @PathVariable(SYSTEM_ID) final String systemID) {
         UserHateoas userHateoas = userService.findBySystemID(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
+        return ResponseEntity.status(OK)
+                .allow(
                         getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(userHateoas.getEntityVersion().toString())
                 .body(userHateoas);
@@ -136,20 +141,23 @@ public class UserController
     // Create a suggested user(like a template) with default values
     // (nothing persisted)
     // GET [contextPath][api]/admin/ny-bruker
-    @ApiOperation(value = "Creates a suggested User", response = User.class)
+    @Operation(summary = "Creates a suggested User")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "User codes found",
-                    response = User.class),
-            @ApiResponse(code = 404,
-                    message = "No User found"),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "User codes found"),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = "No User found"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = NEW_USER)
     public ResponseEntity<UserHateoas>
     getUserTemplate(HttpServletRequest request) {
@@ -158,67 +166,74 @@ public class UserController
         user.setFirstname("Hans");
         user.setLastname("Hansen");
         UserHateoas userHateoas = new UserHateoas(user);
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(userHateoas);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a bruker
     // PUT [contextPath][api]/admin/bruker/{systemID}
-    @ApiOperation(value = "Updates a User object", notes = "Returns the newly" +
-            " updated User object after it is persisted to the database",
-            response = User.class)
+    @Operation(summary = "Updates a User object",
+            description = "Returns the newly updated User object after it is " +
+                    "persisted to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User " +
-                    API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = User.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404,
-                    message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 409,
-                    message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL, description = "User " +
+                    API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PutMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
     updateUser(HttpServletRequest request,
-               @ApiParam(name = SYSTEM_ID,
-                       value = "systemID of documentDescription to update.",
+               @Parameter(name = SYSTEM_ID,
+                       description = "systemID of documentDescription to " +
+                               "update.",
                        required = true)
                @PathVariable(SYSTEM_ID) String systemID,
-               @ApiParam(name = "user",
-                       value = "Incoming user object",
+               @Parameter(name = "user",
+                       description = "Incoming user object",
                        required = true)
                @RequestBody User user)
             throws NikitaException {
         UserHateoas userHateoas = userService.handleUpdate(systemID,
                 parseETAG(request.getHeader(ETAG)), user);
-        return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.
-                        getMethodsForRequestOrThrow(request.getServletPath()))
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(userHateoas.getEntityVersion().toString())
                 .body(userHateoas);
     }
 
     // Delete all User
     // DELETE [contextPath][api]/admin/bruker/
-    @ApiOperation(value = "Deletes all User", response = String.class)
+    @Operation(summary = "Deletes all User"
+    )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all User",
-                    response = String.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = NO_CONTENT_VAL,
+                    description = "Deleted all User"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping(value = USER)
     public ResponseEntity<String> deleteAllUser() {
         userService.deleteAll();
@@ -227,18 +242,21 @@ public class UserController
     }
 
     // DELETE [contextPath][api]/admin/bruker/{systemId}/
-    @ApiOperation(value = "Deletes a User object", response = String.class)
+    @Operation(summary = "Deletes a User object")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted User object",
-                    response = String.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-    @DeleteMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
+            @ApiResponse(
+                    responseCode = NO_CONTENT_VAL,
+                    description = "Deleted User object"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @DeleteMapping(value = USER + SLASH + "{username}")
     public ResponseEntity<String> deleteSingleUser(
             @PathVariable("username") final String username) {
         userService.deleteByUsername(username);

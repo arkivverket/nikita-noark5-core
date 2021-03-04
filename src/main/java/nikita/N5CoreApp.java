@@ -1,12 +1,17 @@
 package nikita;
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -72,5 +77,16 @@ public class N5CoreApp {
                     env.getProperty("spring.h2.console.path")
             );
         }
+    }
+
+    @Bean
+    public OpenAPI customOpenAPI(@Value("0.5") String appVersion) {
+        return new OpenAPI()
+                .components(new Components())
+                .info(new Info().title("Nikita Noark 5 tjenestegrensesnitt")
+                        .version(appVersion)
+                        .license(new License()
+                                .name("GNU Affero General Public License v3+")
+                                .url("https://gitlab.com/OsloMet-ABI/nikita-noark5-core")));
     }
 }

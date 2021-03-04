@@ -1,8 +1,8 @@
 package nikita.webapp.web.controller.hateoas.admin;
 
-import nikita.common.config.Constants;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static nikita.common.config.Constants.*;
 
@@ -23,20 +23,20 @@ public class RightsController extends NoarkController {
     // API - All POST Requests (CRUD - CREATE)
     // Creates a new administrativtenhet
     // POST [contextPath][api]/admin/ny-administrativtenhet
-    @ApiOperation(value = "Persists a new User object", notes = "Returns the newly" +
+    @Operation(summary = "Persists a new User object", description = "Returns the newly" +
             " created User object after it is persisted to the database",
             response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+            @ApiResponse(responseCode = OK_VAL, description = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
                     response = User.class),
-            @ApiResponse(code = 201, message = "User " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+            @ApiResponse(responseCode = CREATED_VAL, description = "User " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
                     response = User.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
-            @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
+            @ApiResponse(responseCode = UNAUTHORIZED_VAL, description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(responseCode = FORBIDDEN_VAL, description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(responseCode = NOT_FOUND_VAL, description = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(responseCode = CONFLICT_VAL, description = API_MESSAGE_CONFLICT),
+            @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR),
+            @ApiResponse(responseCode = 501, description = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
     @PostMapping(value = NEW_ADMINISTRATIVE_UNIT)
@@ -56,14 +56,14 @@ public class RightsController extends NoarkController {
     // API - All GET Requests (CRUD - READ)
     // Retrieves all administrativeUnit
     // GET [contextPath][api]/admin/administrativtenhet/
-    @ApiOperation(value = "Retrieves all User ", response = User.class)
+    @Operation(summary = "Retrieves all User ", response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User found",
+            @ApiResponse(responseCode = OK_VAL, description = "User found",
                     response = User.class),
-            @ApiResponse(code = 404, message = "No User found"),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(responseCode = NOT_FOUND_VAL, description = "No User found"),
+            @ApiResponse(responseCode = UNAUTHORIZED_VAL, description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(responseCode = FORBIDDEN_VAL, description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
     @GetMapping(value = ADMINISTRATIVE_UNIT)
@@ -79,19 +79,19 @@ public class RightsController extends NoarkController {
 
     // Retrieves a given administrativeUnit identified by a systemId
     // GET [contextPath][api]/admin/administrativtenhet/{systemId}/
-    @ApiOperation(value = "Gets administrativeUnit identified by its systemId", notes = "Returns the requested " +
+    @Operation(summary = "Gets administrativeUnit identified by its systemId", description = "Returns the requested " +
             " administrativeUnit object", response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+            @ApiResponse(responseCode = OK_VAL, description = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
                     response = User.class),
-            @ApiResponse(code = 201, message = "User " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
+            @ApiResponse(responseCode = CREATED_VAL, description = "User " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
                     response = User.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR),
-            @ApiResponse(code = 501, message = API_MESSAGE_NOT_IMPLEMENTED)})
+            @ApiResponse(responseCode = UNAUTHORIZED_VAL, description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(responseCode = FORBIDDEN_VAL, description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(responseCode = NOT_FOUND_VAL, description = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(responseCode = CONFLICT_VAL, description = API_MESSAGE_CONFLICT),
+            @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR),
+            @ApiResponse(responseCode = 501, description = API_MESSAGE_NOT_IMPLEMENTED)})
     @Counted
 
     @GetMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH)
@@ -108,14 +108,14 @@ public class RightsController extends NoarkController {
 
     // Create a suggested administrativeUnit(like a template) with default values (nothing persisted)
     // GET [contextPath][api]/admin/ny-administrativtenhet
-    @ApiOperation(value = "Creates a suggested User", response = User.class)
+    @Operation(summary = "Creates a suggested User", response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User codes found",
+            @ApiResponse(responseCode = OK_VAL, description = "User codes found",
                     response = User.class),
-            @ApiResponse(code = 404, message = "No User found"),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(responseCode = NOT_FOUND_VAL, description = "No User found"),
+            @ApiResponse(responseCode = UNAUTHORIZED_VAL, description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(responseCode = FORBIDDEN_VAL, description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
     @GetMapping(value = NEW_ADMINISTRATIVE_UNIT)
@@ -132,27 +132,27 @@ public class RightsController extends NoarkController {
     // API - All PUT Requests (CRUD - UPDATE)
     // Update a administrativtenhet
     // PUT [contextPath][api]/metadata/administrativtenhet/{systemID}
-    @ApiOperation(value = "Updates a User object", notes = "Returns the newly" +
+    @Operation(summary = "Updates a User object", description = "Returns the newly" +
             " updated User object after it is persisted to the database",
             response = User.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
+            @ApiResponse(responseCode = OK_VAL, description = "User " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
                     response = User.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_MALFORMED_PAYLOAD),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+            @ApiResponse(responseCode = UNAUTHORIZED_VAL, description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(responseCode = FORBIDDEN_VAL, description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(responseCode = NOT_FOUND_VAL, description = API_MESSAGE_MALFORMED_PAYLOAD),
+            @ApiResponse(responseCode = CONFLICT_VAL, description = API_MESSAGE_CONFLICT),
+            @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @Counted
 
     @PutMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas> updateUser(HttpServletRequest request,
-                                                                              @ApiParam(name = SYSTEM_ID,
-                                                                                      value = "systemID of documentDescription to update.",
+                                                                              @Parameter(name = SYSTEM_ID,
+                                                                                      description = "systemID of documentDescription to update.",
                                                                                       required = true)
                                                                               @PathVariable(SYSTEM_ID) String systemID,
-                                                                              @ApiParam(name = "administrativeUnit",
-                                                                                      value = "Incoming administrativeUnit object",
+                                                                              @Parameter(name = "administrativeUnit",
+                                                                                      description = "Incoming administrativeUnit object",
                                                                                       required = true)
                                                                               @RequestBody User administrativeUnit)
             throws NikitaException {
