@@ -89,3 +89,17 @@ code_quality:
   artifacts:
     expose_as: 'Code Quality Report'
     paths: [ gl-code-quality-report.json ]
+
+
+docker-build-master:
+  image: docker:latest
+  stage: use
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$DOCKER_HUB_USER" -p "$DOCKER_HUB_PASSWORD" $DOCKER
+  script:
+    - docker build --pull -t "$DOCKER_HUB_IMAGE" .
+    - docker push "$DOCKER_HUB_IMAGE"
+  #only:
+#    - master
