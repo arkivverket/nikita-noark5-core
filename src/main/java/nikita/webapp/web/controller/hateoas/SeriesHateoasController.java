@@ -1,7 +1,10 @@
 package nikita.webapp.web.controller.hateoas;
 
-import com.codahale.metrics.annotation.Counted;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
@@ -31,34 +35,37 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_SERIES,
-                produces = NOARK5_V5_CONTENT_TYPE_JSON)
-@Api(value = "SeriesController", description = "Contains CRUD operations for Series. Create operations are only for " +
-        "entities that can be associated with a series e.g. File / ClassificationSystem. Update and delete operations" +
-        " are on individual series entities identified by systemId. Read operations are either on individual series" +
-        "entities or pageable iterable sets of series")
+        produces = NOARK5_V5_CONTENT_TYPE_JSON)
+@Tag(name = "SeriesController",
+        description = "Contains CRUD operations for " +
+                "Series. Create operations are only for entities that can be " +
+                "associated with a series e.g. File / ClassificationSystem. Update " +
+                "and delete operations are on individual series entities identified " +
+                "by systemId. Read operations are either on individual series" +
+                "entities or pageable iterable sets of series")
 public class SeriesHateoasController
         extends NoarkController {
 
-    private IClassificationSystemService classificationSystemService;
-    private ISeriesService seriesService;
-    private ICaseFileService caseFileService;
-    private IFileService fileService;
-    private IRecordService recordService;
-    private ISeriesHateoasHandler seriesHateoasHandler;
-    private ICaseFileHateoasHandler caseFileHateoasHandler;
-    private IFileHateoasHandler fileHateoasHandler;
-    private ApplicationEventPublisher applicationEventPublisher;
+    private final IClassificationSystemService classificationSystemService;
+    private final ISeriesService seriesService;
+    private final ICaseFileService caseFileService;
+    private final IFileService fileService;
+    private final IRecordService recordService;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
+    private final ICaseFileHateoasHandler caseFileHateoasHandler;
+    private final IFileHateoasHandler fileHateoasHandler;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public SeriesHateoasController(IClassificationSystemService classificationSystemService,
-                                   ISeriesService seriesService,
-                                   ICaseFileService caseFileService,
-                                   ISeriesHateoasHandler seriesHateoasHandler,
-                                   ICaseFileHateoasHandler caseFileHateoasHandler,
-                                   IFileHateoasHandler fileHateoasHandler,
-                                   IFileService fileService,
-                                   IRecordService recordService,
-                                   ApplicationEventPublisher applicationEventPublisher) {
-
+    public SeriesHateoasController(
+            IClassificationSystemService classificationSystemService,
+            ISeriesService seriesService,
+            ICaseFileService caseFileService,
+            ISeriesHateoasHandler seriesHateoasHandler,
+            ICaseFileHateoasHandler caseFileHateoasHandler,
+            IFileHateoasHandler fileHateoasHandler,
+            IFileService fileService,
+            IRecordService recordService,
+            ApplicationEventPublisher applicationEventPublisher) {
         this.classificationSystemService = classificationSystemService;
         this.seriesService = seriesService;
         this.caseFileService = caseFileService;
@@ -71,37 +78,50 @@ public class SeriesHateoasController
     }
 
     // API - All POST Requests (CRUD - CREATE)
-
-
     // Create a new file
     // POST [contextPath][api]/arkivstruktur/arkivdel/ny-klassifikasjonsystem/
-    @ApiOperation(value = "Persists a File object associated with the given Series systemId", notes = "Returns the " +
-            "newly created file object after it was associated with a Series object and persisted to the database",
-            response = FileHateoas.class)
+    @Operation(summary = "Persists a File object associated with the given " +
+            "Series systemId",
+            description = "Returns the newly created file object after it was" +
+                    " associated with a Series object and persisted to the " +
+                    "database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "File " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201, message = "File " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type File"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "File " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "File " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type File"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystemAssociatedWithSeries(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of series to associate the " +
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of series to associate the " +
                             "ClassificationSystem with",
                     required = true)
             @PathVariable String systemID,
-            @ApiParam(name = "ClassificationSystem",
-                    value = "Incoming ClassificationSystem object",
+            @Parameter(name = "ClassificationSystem",
+                    description = "Incoming ClassificationSystem object",
                     required = true)
             @RequestBody ClassificationSystem classificationSystem)
             throws NikitaException {
@@ -115,34 +135,45 @@ public class SeriesHateoasController
                 .body(classificationSystemHateoas);
     }
 
-
     // Create a new file
     // POST [contextPath][api]/arkivstruktur/arkivdel/ny-mappe/
-    @ApiOperation(value = "Persists a File object associated with the given Series systemId", notes = "Returns the " +
-            "newly created file object after it was associated with a Series object and persisted to the database",
-            response = FileHateoas.class)
+    @Operation(summary = "Persists a File object associated with the given Series systemId",
+            description = "Returns the " +
+                    "newly created file object after it was associated with a Series object and persisted to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "File " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 201, message = "File " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = FileHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type File"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "File " + API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "File " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type File"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FileHateoas> createFileAssociatedWithSeries(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of series to associate the caseFile with",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of series to associate the caseFile with",
                     required = true)
             @PathVariable String systemID,
-            @ApiParam(name = "File",
-                    value = "Incoming file object",
+            @Parameter(name = "File",
+                    description = "Incoming file object",
                     required = true)
             @RequestBody File file) throws NikitaException {
         validateForCreate(file);
@@ -159,31 +190,46 @@ public class SeriesHateoasController
     // Create a new casefile
     // POST [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-saksmappe/
     // This currently is not supported in the standard, but probably will be later
-    @ApiOperation(value = "Persists a CaseFile object associated with the given Series systemId", notes = "Returns " +
-            "the newly created caseFile object after it was associated with a Series object and persisted to " +
-            "the database", response = CaseFileHateoas.class)
+    @Operation(summary = "Persists a CaseFile object associated with the given Series systemId",
+            description = "Returns " +
+                    "the newly created caseFile object after it was associated with a Series object and persisted to " +
+                    "the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "File " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = CaseFileHateoas.class),
-            @ApiResponse(code = 201, message = "File " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = CaseFileHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type CaseFile"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "File " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "File " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type CaseFile"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas> createCaseFileAssociatedWithSeries(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of series to associate the caseFile with",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of series to associate the " +
+                            "caseFile with",
                     required = true)
             @PathVariable String systemID,
-            @ApiParam(name = "caseFile",
-                    value = "Incoming caseFile object",
+            @Parameter(name = "caseFile",
+                    description = "Incoming caseFile object",
                     required = true)
             @RequestBody CaseFile caseFile) throws NikitaException {
         validateForCreate(caseFile);
@@ -199,112 +245,135 @@ public class SeriesHateoasController
 
     // Create a new record
     // POST [contextPath][api]/arkivstruktur/arkivdel/ny-registrering/
-    @ApiOperation(value = "Persists a Record object associated with the given Series systemId", notes = "Returns the " +
-            "newly created record object after it was associated with a Series object and persisted to the database",
-            response = RecordHateoas.class)
+    @Operation(summary = "Persists a Record object associated with the given Series systemId",
+            description = "Returns the " +
+                    "newly created record object after it was associated with a Series object and persisted to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Record " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 201, message = "Record " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type Record"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Record " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "Record " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Record"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD,
-                 consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> createRecordAssociatedWithSeries(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of series to associate the record with",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of series to associate the record" +
+                            " with",
                     required = true)
             @PathVariable String systemID,
-            @ApiParam(name = "Record",
-                    value = "Incoming record object",
+            @Parameter(name = "Record",
+                    description = "Incoming record object",
                     required = true)
             @RequestBody Record record) throws NikitaException {
-        //  validateForCreate(record);
-        //RecordHateoas recordHateoas = new RecordHateoas(seriesService.createRecordAssociatedWithSeries(systemID, record));
-        //recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        // applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, ));
-        //  return ResponseEntity.status(CREATED)
-        //.eTag(createdRecord.getVersion().toString())
-        //.body(recordHateoas);
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
-
     // Associate ClassificationSystem to identified Series
     // PUT [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-klassifikasjonssystem/
-    @ApiOperation(value = "Associates a ClassificationSystem with a Series", notes = "Association can only occur if "
-            + "nothing (record, file) has been associated with the Series", response = ClassificationSystemHateoas.class)
+    @Operation(summary = "Associates a ClassificationSystem with a Series",
+            description = "Association can only occur if "
+                    + "nothing (record, file) has been associated with the Series")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "ClassificationSystem " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = ClassificationSystemHateoas.class),
-            @ApiResponse(code = 201, message = "ClassificationSystem " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = ClassificationSystemHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type ClassificationSystem"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ClassificationSystem " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "ClassificationSystem " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type ClassificationSystem"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASSIFICATION_SYSTEM,
-                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<String> associateSeriesWithClassificationSystem(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "The systemId of the Series",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the Series",
                     required = true)
             @PathVariable String classificationSystemSuccessorSystemId,
-            @ApiParam(name = "id",
-                    value = "Address of the ClassificationSystem to associate",
+            @Parameter(name = "id",
+                    description = "Address of the ClassificationSystem to associate",
                     required = true)
             @RequestParam StringBuffer id) throws NikitaException {
-        //String classificationSystemPrecursorSystemId =
-        //      handleResolutionOfIncomingURLInternalGetSystemId(id);
-//        ClassificationSystemHateoas classificationSystemHateoas = new
-//                ClassificationSystemHateoas(classificationSystemService.associateClassificationSystemWithClassificationSystemSuccessor(classificationSystemSystemId, caseFile));
-//        classificationSystemHateoasHandler.addLinks(classificationSystemHateoas, new Authorisation());
-//        applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, ));
-//   return ResponseEntity.status(CREATED)
-//                .eTag(classificationSystem.getVersion().toString())
-//                .body(classificationSystemHateoas);
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, NOT_IMPLEMENTED);
     }
 
 
     // Update an identified Series
     // PUT [contextPath][api]/arkivstruktur/arkivdel/{systemId}
-    @ApiOperation(value = "Updates a Series object", notes = "Returns the newly" +
-            " update Series object after it is persisted to the database", response = SeriesHateoas.class)
+    @Operation(summary = "Updates a Series object",
+            description = "Returns the newly update Series object after it is" +
+                    " persisted to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Series " + API_MESSAGE_OBJECT_ALREADY_PERSISTED,
-                    response = SeriesHateoas.class),
-            @ApiResponse(code = 201, message = "Series " + API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED,
-                    response = SeriesHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 404, message = API_MESSAGE_PARENT_DOES_NOT_EXIST + " of type ClassificationSystem"),
-            @ApiResponse(code = 409, message = API_MESSAGE_CONFLICT),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Series " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "Series " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type ClassificationSystem"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER,
-                consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SeriesHateoas> updateSeries(
             HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemId of fonds to update.",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of fonds to update.",
                     required = true)
             @PathVariable(SYSTEM_ID) String systemID,
-            @ApiParam(name = "series",
-                    value = "Incoming series object",
+            @Parameter(name = "series",
+                    description = "Incoming series object",
                     required = true)
             @RequestBody Series series) throws NikitaException {
         validateForUpdate(series);
@@ -321,24 +390,25 @@ public class SeriesHateoasController
 
     // Retrieve a Series given a systemId
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/
-    @ApiOperation(value = "Retrieves a single Series entity identified " +
-            "by the given a systemId", response = SeriesHateoas.class)
+    @Operation(summary = "Retrieves a single Series entity identified " +
+            "by the given a systemId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Series returned",
-                    response = SeriesHateoas.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Series returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<SeriesHateoas> findOneSeriesBySystemId(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the series to retrieve",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series to retrieve",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findBySystemId(systemID);
@@ -346,13 +416,20 @@ public class SeriesHateoasController
 
     // Create a ClassificationSystem object with default values
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-klassifikasjonssystem/
-    @ApiOperation(value = "Create a ClassificationSystem with default values", response = ClassificationSystem.class)
+    @Operation(summary = "Create a ClassificationSystem with default values")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "ClassificationSystem returned", response = File.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ClassificationSystem returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM)
     public ResponseEntity<ClassificationSystemHateoas> createClassificationSystem(
             HttpServletRequest request) {
@@ -363,14 +440,20 @@ public class SeriesHateoasController
 
     // Create a File object with default values
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-mappe/
-    @ApiOperation(value = "Create a File with default values", response = File.class)
+    @Operation(summary = "Create a File with default values")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "File returned", response = File.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "File returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE)
     public ResponseEntity<FileHateoas> createDefaultFile(
             HttpServletRequest request) {
@@ -381,14 +464,20 @@ public class SeriesHateoasController
 
     // Create a CaseFile object with default values
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-saksmappe/
-    @ApiOperation(value = "Create a CaseFile with default values", response = CaseFile.class)
+    @Operation(summary = "Create a CaseFile with default values")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CaseFile returned", response = CaseFile.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CaseFile returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE)
     public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
             HttpServletRequest request) {
@@ -404,13 +493,20 @@ public class SeriesHateoasController
 
     // Create a Record with default values
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-registrering
-    @ApiOperation(value = "Create a Record with default values", response = Record.class)
+    @Operation(summary = "Create a Record with default values")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Record returned", response = Record.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Record returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
     public ResponseEntity<RecordHateoas> createDefaultRecord(
             HttpServletRequest request) {
@@ -421,16 +517,20 @@ public class SeriesHateoasController
 
     // Retrieve all Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/klassifikasjonssystem/
-    @ApiOperation(value = "Retrieves multiple Series entities limited by ownership rights",
-            response = SeriesHateoas.class)
+    @Operation(summary = "Retrieves multiple Series entities limited by ownership rights")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Series list found",
-                    response = SeriesHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Series list found"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping
     public ResponseEntity<SeriesHateoas> findAllSeries() {
         return seriesService.findAll();
@@ -438,20 +538,24 @@ public class SeriesHateoasController
 
     // Retrieve all Records associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/registrering/
-    @ApiOperation(value = "Retrieves a lit of Records associated with a Series",
-            response = RecordHateoas.class)
+    @Operation(summary = "Retrieves a lit of Records associated with a Series")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Record list found",
-                    response = RecordHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Record list found"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + RECORD)
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the series to find associated records",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series to find associated records",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findAllRecordAssociatedWithSeries(systemID);
@@ -459,23 +563,23 @@ public class SeriesHateoasController
 
     // Retrieve all Files associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/mappe/
-    @ApiOperation(value = "Retrieves a list of Files associated with a Series",
-            response = FileHateoas.class)
+    @Operation(summary = "Retrieves a list of Files associated with a Series")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "File list found",
-                    response = FileHateoas.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code =
-                    500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "File list found"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE)
     public ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the series to retrieve",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series to retrieve",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findAllFileAssociatedWithSeries(systemID);
@@ -485,25 +589,26 @@ public class SeriesHateoasController
     // systemId
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/klassifikasjonsystem
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/klassifikasjonsystem/
-    @ApiOperation(value = "Retrieves a single ClassificationSystem that is " +
-            "the parent of the Series entity identified by systemId",
-            response = ClassificationSystemHateoas.class)
+    @Operation(summary = "Retrieves a single ClassificationSystem that is " +
+            "the parent of the Series entity identified by systemId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "ClassificationSystem returned",
-                    response = ClassificationSystemHateoas.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ClassificationSystem returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CLASSIFICATION_SYSTEM)
     public ResponseEntity<ClassificationSystemHateoas>
     findParentClassificationSystemByFileSystemId(
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the Series ",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the Series ",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findClassificationSystemAssociatedWithSeries(
@@ -514,24 +619,25 @@ public class SeriesHateoasController
     // systemId
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/arkiv
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/
-    @ApiOperation(value = "Retrieves a single Fonds that is " +
-            "the parent of the Series entity identified by systemId",
-            response = FondsHateoas.class)
+    @Operation(summary = "Retrieves a single Fonds that is " +
+            "the parent of the Series entity identified by systemId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200,
-                    message = "Fonds returned",
-                    response = FondsHateoas.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Fonds returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FONDS)
     public ResponseEntity<FondsHateoas> findParentFondsAssociatedWithSeries(
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the Series ",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the Series ",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findFondsAssociatedWithSeries(systemID);
@@ -540,21 +646,24 @@ public class SeriesHateoasController
 
     // Retrieve all CaseFiles associated with a Series (paginated)
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/saksmappe/
-    @ApiOperation(value = "Retrieves a list of CaseFiles associated with a Series",
-            response = CaseFileHateoas.class)
+    @Operation(summary = "Retrieves a list of CaseFiles associated with a Series")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "CaseFile list found",
-                    response = CaseFileHateoas.class),
-            @ApiResponse(code = 401, message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500, message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CaseFile list found"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CASE_FILE)
     public ResponseEntity<CaseFileHateoas> findAllCaseFileAssociatedWithCaseFile(
-            HttpServletRequest request,
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the series to retrieve",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series to retrieve",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         return seriesService.findCaseFilesBySeries(systemID);
@@ -564,22 +673,25 @@ public class SeriesHateoasController
 
     // Delete a Series identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/arkivdel/{systemId}/
-    @ApiOperation(value = "Deletes a single Series entity identified by " +
-            SYSTEM_ID, response = String.class)
+    @Operation(summary = "Deletes a single Series entity identified by " +
+            SYSTEM_ID)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted Series",
-                    response = String.class),
-            @ApiResponse(code = 401, message =
-                    API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403, message =
-                    API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = NO_CONTENT_VAL,
+                    description = "Deleted Series"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteSeriesBySystemId(
-            @ApiParam(name = SYSTEM_ID,
-                    value = "systemID of the series to delete",
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series to delete",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         seriesService.deleteEntity(systemID);
@@ -589,17 +701,20 @@ public class SeriesHateoasController
 
     // Delete all Series
     // DELETE [contextPath][api]/arkivstruktur/arkivdel/
-    @ApiOperation(value = "Deletes all Series", response = String.class)
+    @Operation(summary = "Deletes all Series")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted all Series",
-                    response = String.class),
-            @ApiResponse(code = 401,
-                    message = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(code = 403,
-                    message = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(code = 500,
-                    message = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
+            @ApiResponse(
+                    responseCode = NO_CONTENT_VAL,
+                    description = "Deleted all Series"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping
     public ResponseEntity<String> deleteAllSeries() {
         seriesService.deleteAllByOwnedBy();
