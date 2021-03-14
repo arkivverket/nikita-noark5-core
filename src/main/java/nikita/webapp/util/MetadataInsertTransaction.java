@@ -15,19 +15,13 @@ import java.util.Optional;
 import static nikita.common.config.Constants.SYSTEM;
 import static nikita.common.config.DatabaseConstants.METADATA_ENTITY_PACKAGE;
 
-/**
- * Created by tsodring
- * <p>
- */
 @Service
 @Transactional
 public class MetadataInsertTransaction {
 
-    private WebApplicationContext appContext;
-    private Repositories repositories;
+    private final Repositories repositories;
 
     public MetadataInsertTransaction(WebApplicationContext appContext) {
-        this.appContext = appContext;
         repositories = new Repositories(appContext);
     }
 
@@ -75,5 +69,4 @@ public class MetadataInsertTransaction {
                 metadata.getConstructor();
         return (Metadata) constructor.newInstance();
     }
-
 }
