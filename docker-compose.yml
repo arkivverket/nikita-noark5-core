@@ -1,17 +1,22 @@
 version: '2'
 services:
-  elasticsearch:
-    image: "elasticsearch:2.4.4"
-    ports:
-     - "9200:9200"
+# Using this file it is possible to run:
+  #    docker-compose up
+  # I guess it assumes that the nikita image already
+  # exists.
+  # Leaving this commented out as we will use it again soon
+  #  elasticsearch:
+  #    image: "elasticsearch:2.4.4"
+  #    ports:
+  #     - "9200:9200"
   nikita-noark5-core:
-    image: "hioaabi/nikita-noark5-core"
+    image: "oslometabi/nikita-noark5-core"
     container_name: nikita-noark5
     ports:
-     - "8092:8092"
-     - "8082:8082"
-    networks:
-     - n5
-networks:
-  n5:
-    external: true
+      - "8092:8092"
+      - "8082:8082"
+#    networks:
+#      - n5
+#networks:
+#  n5:
+#    external: true
