@@ -264,8 +264,15 @@ public class File
     }
 
     @Override
-    public void addReferenceKeyword(Keyword keyword) {
+    public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
+        keyword.getReferenceFile().add(this);
+    }
+
+    @Override
+    public void removeKeyword(Keyword keyword) {
+        this.referenceKeyword.remove(keyword);
+        keyword.getReferenceFile().remove(this);
     }
 
     public File getReferenceParentFile() {
@@ -306,6 +313,16 @@ public class File
 
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+    public void addRecord(Record record) {
+        referenceRecord.add(record);
+        record.setReferenceFile(this);
+    }
+
+    public void removeRecord(Record record) {
+        referenceRecord.remove(record);
+        record.setReferenceFile(null);
     }
 
     public List<Comment> getReferenceComment() {
@@ -401,8 +418,15 @@ public class File
     }
 
     public void addNationalIdentifier(
-            NationalIdentifier referenceNationalIdentifier) {
-        this.referenceNationalIdentifier.add(referenceNationalIdentifier);
+            NationalIdentifier nationalIdentifier) {
+        referenceNationalIdentifier.add(nationalIdentifier);
+        nationalIdentifier.setReferenceFile(this);
+    }
+
+    public void removeNationalIdentifier(
+            NationalIdentifier nationalIdentifier) {
+        referenceNationalIdentifier.remove(nationalIdentifier);
+        nationalIdentifier.setReferenceFile(null);
     }
 
     public List<BSMBase> getReferenceBSMBase() {

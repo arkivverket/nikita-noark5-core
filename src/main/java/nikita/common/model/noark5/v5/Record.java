@@ -391,8 +391,15 @@ public class Record
     }
 
     @Override
-    public void addReferenceKeyword(Keyword keyword) {
+    public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
+        keyword.getReferenceRecord().add(this);
+    }
+
+    @Override
+    public void removeKeyword(Keyword keyword) {
+        this.referenceKeyword.remove(keyword);
+        keyword.getReferenceRecord().remove(this);
     }
 
     @Override

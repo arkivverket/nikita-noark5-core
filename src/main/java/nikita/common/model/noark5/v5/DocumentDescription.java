@@ -527,6 +527,11 @@ public class DocumentDescription
         part.addDocumentDescription(this);
     }
 
+    public void removePart(Part part) {
+        referencePart.remove(part);
+        part.removeDocumentDescription(this);
+    }
+
     @Override
     public String toString() {
         return "DocumentDescription{" + super.toString() +

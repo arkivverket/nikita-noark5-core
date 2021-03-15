@@ -124,8 +124,15 @@ public class Class
     }
 
     @Override
-    public void addReferenceKeyword(Keyword keyword) {
+    public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
+        keyword.getReferenceClass().add(this);
+    }
+
+    @Override
+    public void removeKeyword(Keyword keyword) {
+        this.referenceKeyword.remove(keyword);
+        keyword.getReferenceClass().remove(this);
     }
 
     @Override

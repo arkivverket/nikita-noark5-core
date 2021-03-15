@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -64,6 +66,10 @@ public class Keyword
 
     public void setReferenceClass(List<Class> referenceClass) {
         this.referenceClass = referenceClass;
+    }
+
+    public void addClass(Class klass) {
+        referenceClass.add(klass);
     }
 
     public List<File> getReferenceFile() {

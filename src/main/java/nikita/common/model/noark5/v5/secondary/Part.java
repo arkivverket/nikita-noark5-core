@@ -75,6 +75,14 @@ public class Part
         this.referenceFile = referenceFile;
     }
 
+    public void addFile(File file) {
+        referenceFile.add(file);
+    }
+
+    public void removeFile(File file) {
+        referenceFile.remove(file);
+    }
+
     public PartRole getPartRole() {
         if (null == partRoleCode)
             return null;
@@ -82,8 +90,8 @@ public class Part
     }
 
     public void setPartRole(PartRole partRole) {
-	if (null != partRole) {
-	    this.partRoleCode = partRole.getCode();
+        if (null != partRole) {
+            this.partRoleCode = partRole.getCode();
 	    this.partRoleCodeName = partRole.getCodeName();
 	} else {
 	    this.partRoleCode = null;
@@ -125,7 +133,11 @@ public class Part
     public void addDocumentDescription(
             DocumentDescription documentDescription) {
         referenceDocumentDescription.add(documentDescription);
-        // TODO: FIXdocumentDescription.set
+    }
+
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        referenceDocumentDescription.remove(documentDescription);
     }
 
 

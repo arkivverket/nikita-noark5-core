@@ -56,4 +56,13 @@ public class Authority
     public void setUsers(List<User> users) {
         this.users = users;
     }
+
+    public void addUser(User user) {
+        users.add(user);
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+
 }
