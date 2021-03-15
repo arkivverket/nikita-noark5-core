@@ -29,4 +29,9 @@ public class BSM
     public void addBSMBase(BSMBase bSMBase) {
         this.bsm.add(bSMBase);
     }
+
+    @Override
+    public void removeBSMBase(BSMBase bSMBase) {
+        this.bsm.remove(bSMBase);
+    }
 }

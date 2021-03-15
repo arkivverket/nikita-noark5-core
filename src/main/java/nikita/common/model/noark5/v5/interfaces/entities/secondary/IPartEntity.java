@@ -7,12 +7,8 @@ import nikita.common.model.noark5.v5.metadata.PartRole;
 
 import java.util.List;
 
-/**
- * Created by tsodring on 11/07/19.
- */
 public interface IPartEntity
         extends ISystemId, IBSM {
-
     PartRole getPartRole();
 
     void setPartRole(PartRole partRole);
@@ -21,5 +17,7 @@ public interface IPartEntity
 
     void setReferenceRecord(List<Record> referenceRecord);
 
-    void addReferenceRecord(Record record);
+    void addRecord(Record record);
+
+    void removeRecord(Record record);
 }

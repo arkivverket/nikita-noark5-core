@@ -91,9 +91,16 @@ public class CorrespondencePart
         }
     }
 
+    @Override
     public void addBSMBase(BSMBase bsmBase) {
         this.referenceBSMBase.add(bsmBase);
         bsmBase.setReferenceCorrespondencePart(this);
+    }
+
+    @Override
+    public void removeBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.remove(bsmBase);
+        bsmBase.setReferenceCorrespondencePart(null);
     }
 
     public Record getReferenceRecord() {

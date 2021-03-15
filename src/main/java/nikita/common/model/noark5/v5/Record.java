@@ -329,7 +329,7 @@ public class Record
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
-    public void addReferenceDocumentDescription(
+    public void addDocumentDescription(
             DocumentDescription referenceDocumentDescription) {
         this.referenceDocumentDescription.add(referenceDocumentDescription);
     }
@@ -406,8 +406,15 @@ public class Record
     }
 
     @Override
-    public void addReferenceAuthor(Author author) {
-        this.referenceAuthor.add(author);
+    public void addAuthor(Author author) {
+        referenceAuthor.add(author);
+        author.setReferenceRecord(this);
+    }
+
+    @Override
+    public void removeAuthor(Author author) {
+        referenceAuthor.remove(author);
+        author.setReferenceRecord(null);
     }
 
     public List<Comment> getReferenceComment() {
@@ -440,8 +447,15 @@ public class Record
     }
 
     @Override
-    public void addReferenceCrossReference(CrossReference crossReference) {
-        this.referenceCrossReference.add(crossReference);
+    public void addCrossReference(CrossReference crossReference) {
+        referenceCrossReference.add(crossReference);
+        crossReference.setReferenceRecord(this);
+    }
+
+    @Override
+    public void removeCrossReference(CrossReference crossReference) {
+        referenceCrossReference.remove(crossReference);
+        crossReference.setReferenceRecord(null);
     }
 
     @Override
@@ -456,7 +470,14 @@ public class Record
 
     @Override
     public void addPart(Part part) {
-        this.referencePart.add(part);
+        referencePart.add(part);
+        part.getReferenceRecord().add(this);
+    }
+
+    @Override
+    public void removePart(Part part) {
+        referencePart.remove(part);
+        part.getReferenceRecord().remove(this);
     }
 
 
@@ -474,6 +495,13 @@ public class Record
     @Override
     public void addCorrespondencePart(CorrespondencePart part) {
         this.referenceCorrespondencePart.add(part);
+        part.setReferenceRecord(this);
+    }
+
+    @Override
+    public void removeCorrespondencePart(CorrespondencePart part) {
+        this.referenceCorrespondencePart.remove(part);
+        part.setReferenceRecord(null);
     }
 
     public List<NationalIdentifier> getReferenceNationalIdentifier() {
@@ -485,9 +513,15 @@ public class Record
         this.referenceNationalIdentifier = referenceNationalIdentifier;
     }
 
-    public void addNationalIdentifier(
-            NationalIdentifier referenceNationalIdentifier) {
-        this.referenceNationalIdentifier.add(referenceNationalIdentifier);
+    public void addNationalIdentifier(NationalIdentifier nationalIdentifier) {
+        this.referenceNationalIdentifier.add(nationalIdentifier);
+        nationalIdentifier.setReferenceRecord(this);
+    }
+
+    public void removeNationalIdentifier(
+            NationalIdentifier nationalIdentifier) {
+        this.referenceNationalIdentifier.remove(nationalIdentifier);
+        nationalIdentifier.setReferenceRecord(null);
     }
 
     public List<BSMBase> getReferenceBSMBase() {
@@ -508,9 +542,16 @@ public class Record
         }
     }
 
+    @Override
     public void addBSMBase(BSMBase bsmBase) {
         this.referenceBSMBase.add(bsmBase);
         bsmBase.setReferenceRecord(this);
+    }
+
+    @Override
+    public void removeBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.remove(bsmBase);
+        bsmBase.setReferenceRecord(null);
     }
 
     @Override

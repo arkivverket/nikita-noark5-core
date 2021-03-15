@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -48,7 +47,7 @@ public class AuthorService
         (Author author, DocumentDescription documentDescription) {
         author.setReferenceDocumentDescription(documentDescription);
         author = authorRepository.save(author);
-        documentDescription.addReferenceAuthor(author);
+        documentDescription.addAuthor(author);
         AuthorHateoas authorHateoas = new AuthorHateoas(author);
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
         setOutgoingRequestHeader(authorHateoas);
@@ -60,7 +59,7 @@ public class AuthorService
         (Author author, Record record) {
         author.setReferenceRecord(record);
         author = authorRepository.save(author);
-        record.addReferenceAuthor(author);
+        record.addAuthor(author);
         AuthorHateoas authorHateoas = new AuthorHateoas(author);
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
         setOutgoingRequestHeader(authorHateoas);

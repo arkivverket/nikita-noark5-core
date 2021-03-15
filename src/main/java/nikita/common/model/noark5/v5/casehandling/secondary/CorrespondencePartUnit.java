@@ -14,9 +14,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
 import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_UNIT;
 
 @Entity

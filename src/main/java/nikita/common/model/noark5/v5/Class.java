@@ -4,10 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IClassEntity;
-import nikita.common.model.noark5.v5.interfaces.IClassified;
-import nikita.common.model.noark5.v5.interfaces.ICrossReference;
-import nikita.common.model.noark5.v5.interfaces.IDisposal;
-import nikita.common.model.noark5.v5.interfaces.IScreening;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.ClassDeserializer;
 import nikita.webapp.hateoas.ClassHateoasHandler;
@@ -225,8 +221,15 @@ public class Class
     }
 
     @Override
-    public void addReferenceCrossReference(CrossReference crossReference) {
+    public void addCrossReference(CrossReference crossReference) {
         this.referenceCrossReference.add(crossReference);
+        crossReference.setReferenceClass(this);
+    }
+
+    @Override
+    public void removeCrossReference(CrossReference crossReference) {
+        this.referenceCrossReference.remove(crossReference);
+        crossReference.setReferenceClass(null);
     }
 
     @Override

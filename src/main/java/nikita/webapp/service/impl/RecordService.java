@@ -169,8 +169,8 @@ public class RecordService
                 documentDescriptionRepository.
                         countByReferenceRecord(record) + 1;
         documentDescription.setDocumentNumber((int) documentNumber);
-        record.addReferenceDocumentDescription(documentDescription);
-        documentDescription.addReferenceRecord(record);
+        record.addDocumentDescription(documentDescription);
+        documentDescription.addRecord(record);
         documentDescription.setDocumentNumber((int) documentNumber);
 
         DocumentDescriptionHateoas documentDescriptionHateoas =

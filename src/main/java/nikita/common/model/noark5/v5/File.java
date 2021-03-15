@@ -348,12 +348,25 @@ public class File
     }
 
     public void addPart(Part part) {
-        this.referencePart.add(part);
+        referencePart.add(part);
+        part.getReferenceFile().add(this);
+    }
+
+    public void removePart(Part part) {
+        referencePart.remove(part);
+        part.getReferenceFile().remove(this);
     }
 
     @Override
-    public void addReferenceCrossReference(CrossReference crossReference) {
-        this.referenceCrossReference.add(crossReference);
+    public void addCrossReference(CrossReference crossReference) {
+        referenceCrossReference.add(crossReference);
+        crossReference.setReferenceFile(this);
+    }
+
+    @Override
+    public void removeCrossReference(CrossReference crossReference) {
+        referenceCrossReference.remove(crossReference);
+        crossReference.setReferenceFile(null);
     }
 
     public void createReference(@NotNull ISystemId entity,
@@ -374,7 +387,7 @@ public class File
             crossReference.setReferenceFile(this);
             referenceCrossReference.add(crossReference);
             ((ICrossReference) entity).
-                    addReferenceCrossReference(crossReference);
+                    addCrossReference(crossReference);
         }
     }
 
@@ -410,9 +423,16 @@ public class File
         }
     }
 
+    @Override
     public void addBSMBase(BSMBase bsmBase) {
         this.referenceBSMBase.add(bsmBase);
         bsmBase.setReferenceFile(this);
+    }
+
+    @Override
+    public void removeBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.remove(bsmBase);
+        bsmBase.setReferenceFile(null);
     }
 
     @Override

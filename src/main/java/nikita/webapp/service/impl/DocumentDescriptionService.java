@@ -221,7 +221,7 @@ public class DocumentDescriptionService
     /*
      * Note:
      * <p>
-     * Assumes documentDescription.addReferenceRecord() has already been called.
+     * Assumes documentDescription.addRecord() has already been called.
      *
      */
     @Override

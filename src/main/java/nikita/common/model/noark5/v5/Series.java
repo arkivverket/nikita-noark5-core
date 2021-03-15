@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
@@ -14,8 +14,8 @@ import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.envers.Audited;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -339,7 +339,7 @@ public class Series
         this.referenceRecord = referenceRecord;
     }
 
-    public void addReferenceRecord(Record record) {
+    public void addRecord(Record record) {
         this.referenceRecord.add(record);
     }
 

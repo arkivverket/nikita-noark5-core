@@ -103,8 +103,14 @@ public class Part
         this.referenceRecord = referenceRecord;
     }
 
-    public void addReferenceRecord(Record record) {
-        this.referenceRecord.add(record);
+    @Override
+    public void addRecord(Record record) {
+        referenceRecord.add(record);
+    }
+
+    @Override
+    public void removeRecord(Record record) {
+        referenceRecord.remove(record);
     }
 
     public List<DocumentDescription> getReferenceDocumentDescription() {
@@ -116,10 +122,10 @@ public class Part
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
-    public void addReferenceDocumentDescription(
+    public void addDocumentDescription(
             DocumentDescription documentDescription) {
         referenceDocumentDescription.add(documentDescription);
-        //documentDescription.add(this);
+        // TODO: FIXdocumentDescription.set
     }
 
 

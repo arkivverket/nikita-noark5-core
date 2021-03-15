@@ -198,7 +198,7 @@ public class PartService
 
         validatePartRole(part);
         createPerson(part);
-        part.addReferenceRecord(record);
+        part.addRecord(record);
         part = partRepository.save(part);
         record.addPart(part);
 
@@ -230,7 +230,7 @@ public class PartService
         createUnit(part);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
-        part.addReferenceRecord(record);
+        part.addRecord(record);
         part = partRepository.save(part);
         record.addPart(part);
 
@@ -267,7 +267,7 @@ public class PartService
         createUnit(partUnit);
         // bidirectional relationship @ManyToMany, set both sides of
         // relationship
-        partUnit.addReferenceDocumentDescription(documentDescription);
+        partUnit.addDocumentDescription(documentDescription);
         partUnit = partRepository.save(partUnit);
         documentDescription.addPart(partUnit);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
@@ -283,7 +283,7 @@ public class PartService
             @NotNull DocumentDescription documentDescription) {
         validatePartRole(partPerson);
         createPerson(partPerson);
-        partPerson.addReferenceDocumentDescription(documentDescription);
+        partPerson.addDocumentDescription(documentDescription);
         partPerson = partRepository.save(partPerson);
         documentDescription.addPart(partPerson);
         PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);

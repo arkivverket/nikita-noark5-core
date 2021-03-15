@@ -369,14 +369,14 @@ public class DocumentDescription
         this.referenceRecord = referenceRecord;
     }
 
-    public void addReferenceRecord(Record record) {
+    public void addRecord(Record record) {
         this.referenceRecord.add(record);
-        record.addReferenceDocumentDescription(this);
+        record.addDocumentDescription(this);
     }
 
     public void removeReferenceRecord(Record record) {
         this.referenceRecord.remove(record);
-        record.addReferenceDocumentDescription(null);
+        record.addDocumentDescription(null);
     }
 
     public List<DocumentObject> getReferenceDocumentObject() {
@@ -440,9 +440,16 @@ public class DocumentDescription
         this.referenceAuthor = referenceAuthor;
     }
 
-    public void addReferenceAuthor(Author author) {
+    @Override
+    public void addAuthor(Author author) {
         referenceAuthor.add(author);
         author.setReferenceDocumentDescription(this);
+    }
+
+    @Override
+    public void removeAuthor(Author author) {
+        referenceAuthor.remove(author);
+        author.setReferenceDocumentDescription(null);
     }
 
     @Override
@@ -517,7 +524,7 @@ public class DocumentDescription
 
     public void addPart(Part part) {
         referencePart.add(part);
-        part.addReferenceDocumentDescription(this);
+        part.addDocumentDescription(this);
     }
 
     @Override
