@@ -418,8 +418,14 @@ public class Record
         this.referenceComment = referenceComment;
     }
 
-    public void addReferenceComment(Comment comment) {
-        this.referenceComment.add(comment);
+    public void addComment(Comment comment) {
+        referenceComment.add(comment);
+        comment.setReferenceRecord(this);
+    }
+
+    public void removeComment(Comment comment) {
+        referenceComment.remove(comment);
+        comment.setReferenceRecord(null);
     }
 
     @Override

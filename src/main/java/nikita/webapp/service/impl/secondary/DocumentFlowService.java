@@ -67,7 +67,7 @@ public class DocumentFlowService
         createUserReferences(documentFlow);
         documentFlow.setReferenceRegistryEntry(registryEntry);
         documentFlow = documentFlowRepository.save(documentFlow);
-        registryEntry.addReferenceDocumentFlow(documentFlow);
+        registryEntry.addDocumentFlow(documentFlow);
         DocumentFlowHateoas documentFlowHateoas =
             new DocumentFlowHateoas(documentFlow);
         documentFlowHateoasHandler.addLinks(documentFlowHateoas,
@@ -84,7 +84,7 @@ public class DocumentFlowService
         createUserReferences(documentFlow);
         documentFlow.setReferenceRecordNote(recordNote);
         documentFlow = documentFlowRepository.save(documentFlow);
-        recordNote.addReferenceDocumentFlow(documentFlow);
+        recordNote.addDocumentFlow(documentFlow);
         DocumentFlowHateoas documentFlowHateoas =
             new DocumentFlowHateoas(documentFlow);
         documentFlowHateoasHandler.addLinks(documentFlowHateoas,

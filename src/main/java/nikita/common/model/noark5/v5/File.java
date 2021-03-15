@@ -317,6 +317,18 @@ public class File
     }
 
     @Override
+    public void addComment(Comment comment) {
+        referenceComment.add(comment);
+        comment.setReferenceFile(this);
+    }
+
+    @Override
+    public void removeComment(Comment comment) {
+        referenceComment.remove(comment);
+        comment.setReferenceFile(null);
+    }
+
+    @Override
     public List<CrossReference> getReferenceCrossReference() {
         return referenceCrossReference;
     }
@@ -325,11 +337,6 @@ public class File
     public void setReferenceCrossReference(
             List<CrossReference> referenceCrossReference) {
         this.referenceCrossReference = referenceCrossReference;
-    }
-
-    @Override
-    public void addReferenceComment(Comment comment) {
-        this.referenceComment.add(comment);
     }
 
     public List<Part> getReferencePart() {

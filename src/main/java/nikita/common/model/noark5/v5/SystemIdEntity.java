@@ -22,6 +22,7 @@ import java.util.UUID;
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 /**
@@ -48,7 +49,7 @@ public class SystemIdEntity
             parameters = {@Parameter(
                     name = "uuid_gen_strategy_class",
                     value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
-    @Column(name = "system_id", updatable = false, nullable = false)
+    @Column(name = SYSTEM_ID_ENG, updatable = false, nullable = false)
     @Type(type = "uuid-char")
     private UUID systemId;
 
@@ -100,6 +101,12 @@ public class SystemIdEntity
 
     public void addChangeLog(ChangeLog eventLog) {
         this.referenceChangeLog.add(eventLog);
+        eventLog.setReferenceArchiveUnit(this);
+    }
+
+    public void removeChangeLog(ChangeLog eventLog) {
+        referenceChangeLog.remove(eventLog);
+        eventLog.setReferenceArchiveUnit(null);
     }
 
     // Most entities belong to arkivstruktur. These entities pick the value

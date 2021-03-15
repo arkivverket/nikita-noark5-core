@@ -69,7 +69,7 @@ public class CommentService
             comment.setCommentDate(OffsetDateTime.now());
         comment.setReferenceFile(file);
         comment = commentRepository.save(comment);
-        file.addReferenceComment(comment);
+        file.addComment(comment);
         CommentHateoas commentHateoas = new CommentHateoas(comment);
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
@@ -82,7 +82,7 @@ public class CommentService
             comment.setCommentDate(OffsetDateTime.now());
         comment.setReferenceRecord(record);
         comment = commentRepository.save(comment);
-        record.addReferenceComment(comment);
+        record.addComment(comment);
         CommentHateoas commentHateoas = new CommentHateoas(comment);
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
@@ -96,7 +96,7 @@ public class CommentService
             comment.setCommentDate(OffsetDateTime.now());
         comment.setReferenceDocumentDescription(documentDescription);
         comment = commentRepository.save(comment);
-        documentDescription.addReferenceComment(comment);
+        documentDescription.addComment(comment);
         CommentHateoas commentHateoas = new CommentHateoas(comment);
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;

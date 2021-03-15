@@ -641,20 +641,38 @@ public final class N5ResourceMappings {
     public static final String REFERENCE_METADATA_ENG = "reference_metadata";
     public static final String REFERENCE_CASE_HANDLER_ENG = "referanseSaksbehandler";
     public static final String REFERENCE_SERIES_ENG = "referanseArkivdel";
-    public static final String REGISTRY_ENTRY_DATE_ENG = "journaldato";
-    public static final String REGISTRY_ENTRY_DOCUMENT_DATE_ENG = "dokumentetsDato";
-    public static final String REGISTRY_ENTRY_DUE_DATE_ENG = "forfallsdato";
+    public static final String REGISTRY_ENTRY_DATE_ENG = "record_date";
+    public static final String REGISTRY_ENTRY_DOCUMENT_DATE_ENG = "document_date";
+    public static final String REGISTRY_ENTRY_DUE_DATE_ENG = "due_date";
     public static final String REGISTRY_ENTRY_ENG = "registryEntry";
-    public static final String REGISTRY_ENTRY_NUMBER_ENG = "journalpostnummer";
-    public static final String REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS_ENG = "antallVedlegg";
-    public static final String REGISTRY_ENTRY_RECEIVED_DATE_ENG = "mottattDato";
-    public static final String REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE_ENG = "offentlighetsvurdertDato";
-    public static final String REGISTRY_ENTRY_SENT_DATE_ENG = "sendtDato";
-    public static final String REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG = "journalsekvensnummer";
+    public static final String REGISTRY_ENTRY_NUMBER_ENG = "registry_entry_number";
+    public static final String REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS_ENG = "number_of_attachments";
+    public static final String REGISTRY_ENTRY_RECEIVED_DATE_ENG = "received_date";
+    public static final String REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE_ENG = "freedom_assessment_date";
+    public static final String REGISTRY_ENTRY_SENT_DATE_ENG = "sent_date";
+    public static final String REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG = "record_sequence_number";
     public static final String REGISTRY_ENTRY_STATUS_ENG =
             "registry_entry_status";
     public static final String REGISTRY_ENTRY_TYPE_ENG = "registry_entry_type";
-    public static final String REGISTRY_ENTRY_YEAR_ENG = "journalaar";
+    public static final String REGISTRY_ENTRY_YEAR_ENG = "record_year";
+    public static final String REGISTRY_ENTRY_TYPE_CODE_ENG =
+            "registry_entry_type_code";
+    public static final String REGISTRY_ENTRY_TYPE_CODE_NAME_ENG =
+            "registry_entry_type_code_name";
+    public static final String REGISTRY_ENTRY_TYPE_CODE =
+            "journalposttypekode";
+    public static final String REGISTRY_ENTRY_TYPE_CODE_NAME =
+            "journalposttypekodenavn";
+    public static final String REGISTRY_ENTRY_STATUS_CODE_ENG =
+            "registry_entry_status_code";
+    public static final String REGISTRY_ENTRY_STATUS_CODE_NAME_ENG =
+            "registry_entry_status_code_name";
+    public static final String REGISTRY_ENTRY_STATUS_CODE =
+            "journalpoststatuskode";
+    public static final String REGISTRY_ENTRY_STATUS_CODE_NAME =
+            "journalpoststatuskodenavn";
+
+
     public static final String RESIDING_ADDRESS_ENG = "bostedsadresse";
     public static final String RIGHT_ENG = "rettighet";
     public static final String SCREENING_ACCESS_RESTRICTION_ENG = "tilgangsrestriksjon";
@@ -684,7 +702,7 @@ public final class N5ResourceMappings {
     public static final String SUB_CLASS_ENG = "underklasse";
     public static final String SUB_FONDS_ENG = "underarkiv";
     public static final String SUB_HOLDING_NUMBER_ENG = "sub_holding_number";
-    public static final String SYSTEM_ID_ENG = "systemID";
+    public static final String SYSTEM_ID_ENG = "system_id";
     public static final String TELEPHONE_NUMBER_ENG = "telefonnummer";
     public static final String TITLE_ENG = "title";
     public static final String USER_ENG = "user";

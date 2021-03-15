@@ -118,7 +118,8 @@ public class Part
 
     public void addReferenceDocumentDescription(
             DocumentDescription documentDescription) {
-        this.referenceDocumentDescription.add(documentDescription);
+        referenceDocumentDescription.add(documentDescription);
+        //documentDescription.add(this);
     }
 
 
@@ -133,15 +134,14 @@ public class Part
         }
     }
 
-    public void addReferenceBSMBase(List<BSMBase> referenceBSMBase) {
-        this.referenceBSMBase.addAll(referenceBSMBase);
-        for (BSMBase base : referenceBSMBase) {
-            base.setReferencePart(this);
-        }
+    public void addBSMBase(BSMBase bsmBase) {
+        referenceBSMBase.add(bsmBase);
+        bsmBase.setReferencePart(this);
     }
 
-    public void addBSMBase(BSMBase bsmBase) {
-        this.referenceBSMBase.add(bsmBase);
+    public void removeBSMBase(BSMBase bsmBase) {
+        referenceBSMBase.remove(bsmBase);
+        bsmBase.setReferencePart(null);
     }
 
     @Override

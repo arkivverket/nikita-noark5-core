@@ -9,10 +9,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +44,7 @@ public class DisposalUndertaken
     private List<Series> referenceSeries = new ArrayList<>();
 
     // Links to DocumentDescription
-    @ManyToMany(mappedBy = "referenceDisposalUndertaken")
+    @OneToMany(mappedBy = "referenceDisposalUndertaken")
     private List<DocumentDescription>
             referenceDocumentDescription = new ArrayList<>();
 
@@ -92,6 +89,18 @@ public class DisposalUndertaken
     public void setReferenceDocumentDescription(
             List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
+    }
+
+    public void addDocumentDescription(
+            DocumentDescription documentDescription) {
+        referenceDocumentDescription.add(documentDescription);
+        documentDescription.setReferenceDisposalUndertaken(this);
+    }
+
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        referenceDocumentDescription.remove(documentDescription);
+        documentDescription.setReferenceDisposalUndertaken(null);
     }
 
     @Override

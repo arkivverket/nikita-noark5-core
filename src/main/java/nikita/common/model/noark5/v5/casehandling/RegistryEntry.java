@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
 import nikita.common.model.noark5.v5.Record;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -45,134 +46,149 @@ public class RegistryEntry
     /**
      * M013 - journalaar (xs:integer)
      */
-    @Column(name = "record_year", nullable = false)
+    @Column(name = REGISTRY_ENTRY_YEAR_ENG, nullable = false)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_YEAR)
     private Integer recordYear;
 
     /**
      * M014 - journalsekvensnummer (xs:integer)
      */
-    @Column(name = "record_sequence_number", nullable = false)
+    @Column(name = REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG, nullable = false)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_SEQUENCE_NUMBER)
     private Integer recordSequenceNumber;
 
     /**
      * M015 - journalpostnummer (xs:integer)
      */
-    @Column(name = "registry_entry_number", nullable = false)
+    @Column(name = REGISTRY_ENTRY_NUMBER_ENG, nullable = false)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_NUMBER)
     private Integer registryEntryNumber;
 
     /**
      * M?? - journalposttype code (xs:string)
      */
     @NotNull
-    @Column(name = "registry_entry_type_code", nullable = false)
+    @Column(name = REGISTRY_ENTRY_TYPE_CODE_ENG, nullable = false)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_TYPE_CODE)
     private String registryEntryTypeCode;
 
     /**
      * M082 - journalposttype code name (xs:string)
      */
     @NotNull
-    @Column(name = "registry_entry_type_code_name", nullable = false)
+    @Column(name = REGISTRY_ENTRY_TYPE_CODE_NAME_ENG, nullable = false)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_TYPE_CODE_NAME)
     private String registryEntryTypeCodeName;
 
     /**
-     * M??? - journalstatus code (xs:string, nullable = false)
+     * M??? - journalstatus code (xs:string)
      */
     @NotNull
-    @Column(name = "record_status_code", nullable = false)
+    @Column(name = REGISTRY_ENTRY_STATUS_CODE_ENG)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_STATUS_CODE)
     private String registryEntryStatusCode;
 
     /**
      * M053 - journalstatus code name (xs:string, nullable = false)
      */
     @NotNull
-    @Column(name = "record_status_code_name", nullable = false)
+    @Column(name = REGISTRY_ENTRY_STATUS_CODE_NAME_ENG, nullable = false)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_STATUS_CODE_NAME)
     private String registryEntryStatusCodeName;
 
     /**
      * M101 - journaldato (xs:date)
      */
     @NotNull
-    @Column(name = "record_date", nullable = false)
+    @Column(name = REGISTRY_ENTRY_DATE_ENG, nullable = false)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_DATE)
     private OffsetDateTime recordDate;
 
     /**
      * M103 - dokumentetsDato (xs:date)
      */
-    @Column(name = "document_date")
+    @Column(name = REGISTRY_ENTRY_DOCUMENT_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_DOCUMENT_DATE)
     private OffsetDateTime documentDate;
 
     /**
      * M104 - mottattDato (xs:dateTime)
      */
-    @Column(name = "received_date")
+    @Column(name = REGISTRY_ENTRY_RECEIVED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_RECEIVED_DATE)
     private OffsetDateTime receivedDate;
 
     /**
      * M105 - sendtDato (xs:dateTime)
      */
-    @Column(name = "sent_date")
+    @Column(name = REGISTRY_ENTRY_SENT_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_SENT_DATE)
     private OffsetDateTime sentDate;
 
     /**
      * M109 - forfallsdato (xs:date)
      */
-    @Column(name = "due_date")
+    @Column(name = REGISTRY_ENTRY_DUE_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_DUE_DATE)
     private OffsetDateTime dueDate;
 
     /**
      * M110 - offentlighetsvurdertDato (xs:date)
      */
-    @Column(name = "freedom_assessment_date")
+    @Column(name = REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE)
     private OffsetDateTime freedomAssessmentDate;
 
     /**
      * M304 - antallVedlegg (xs:integer)
      */
-    @Column(name = "number_of_attachments")
+    @Column(name = REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS_ENG)
     @Audited
-
+    @JsonProperty(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS)
     private Integer numberOfAttachments;
 
     /**
      * M106 - utlaantDato (xs:date)
      */
-    @Column(name = "loaned_date")
+    @Column(name = CASE_LOANED_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
+    @JsonProperty(CASE_LOANED_DATE)
     private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
      */
-    @Column(name = "loaned_to")
+    @Column(name = CASE_LOANED_TO_ENG)
     @Audited
+    @JsonProperty(CASE_LOANED_TO)
     private String loanedTo;
 
     /**
      * M308 - journalenhet (xs:string)
      */
-    @Column(name = "records_management_unit")
+    @Column(name = CASE_RECORDS_MANAGEMENT_UNIT_ENG)
     @Audited
-
+    @JsonProperty(CASE_RECORDS_MANAGEMENT_UNIT)
     private String recordsManagementUnit;
 
     // Links to DocumentFlow
@@ -371,8 +387,15 @@ public class RegistryEntry
     }
 
     @Override
-    public void addReferenceDocumentFlow(DocumentFlow referenceDocumentFlow) {
-        this.referenceDocumentFlow.add(referenceDocumentFlow);
+    public void addDocumentFlow(DocumentFlow documentFlow) {
+        this.referenceDocumentFlow.add(documentFlow);
+        documentFlow.setReferenceRegistryEntry(this);
+    }
+
+    @Override
+    public void removeDocumentFlow(DocumentFlow documentFlow) {
+        referenceDocumentFlow.remove(documentFlow);
+        documentFlow.setReferenceRegistryEntry(null);
     }
 
     public List<SignOff> getReferenceSignOff() {
