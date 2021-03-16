@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IDisposalUndertakenEntity;
@@ -9,7 +8,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public class DisposalUndertaken
     private OffsetDateTime disposalDate;
 
     // Links to Series
-    @ManyToMany(mappedBy = "referenceDisposalUndertaken")
+    @OneToMany(mappedBy = "referenceDisposalUndertaken")
     private List<Series> referenceSeries = new ArrayList<>();
 
     // Links to DocumentDescription
@@ -94,13 +96,13 @@ public class DisposalUndertaken
     public void addDocumentDescription(
             DocumentDescription documentDescription) {
         referenceDocumentDescription.add(documentDescription);
-        documentDescription.setReferenceDisposalUndertaken(this);
+        documentDescription.setDisposalUndertaken(this);
     }
 
     public void removeDocumentDescription(
             DocumentDescription documentDescription) {
         referenceDocumentDescription.remove(documentDescription);
-        documentDescription.setReferenceDisposalUndertaken(null);
+        documentDescription.removeDisposalUndertaken();
     }
 
     @Override

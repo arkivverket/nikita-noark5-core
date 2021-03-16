@@ -327,8 +327,14 @@ public class Series
         this.referenceFile = referenceFile;
     }
 
-    public void addReferenceFile(File file) {
+    public void addFile(File file) {
         this.referenceFile.add(file);
+        file.setReferenceSeries(this);
+    }
+
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.setReferenceSeries(null);
     }
 
     public List<Record> getReferenceRecord() {
@@ -341,6 +347,12 @@ public class Series
 
     public void addRecord(Record record) {
         this.referenceRecord.add(record);
+        record.setReferenceSeries(this);
+    }
+
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.setReferenceSeries(null);
     }
 
     @Override
@@ -369,7 +381,11 @@ public class Series
     }
 
     @Override
-    public void setReferenceDisposalUndertaken(
+    public void removeDisposalUndertaken() {
+        this.referenceDisposalUndertaken = null;
+    }
+
+    public void setDisposalUndertaken(
             DisposalUndertaken referenceDisposalUndertaken) {
         this.referenceDisposalUndertaken = referenceDisposalUndertaken;
     }

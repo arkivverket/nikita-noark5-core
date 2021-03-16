@@ -947,7 +947,8 @@ public final class CommonUtils {
                 disposalEntity.setDisposalDate(deserializeDate(DISPOSAL_DATE, objectNode, errors));
             }
 
-            public static DisposalUndertaken deserialiseDisposalUndertaken(ObjectNode objectNode, StringBuilder errors) {
+            public static DisposalUndertaken deserialiseDisposalUndertaken(
+                    ObjectNode objectNode, StringBuilder errors) {
                 DisposalUndertaken disposalUndertaken = null;
                 JsonNode disposalUndertakenNode = objectNode.get(DISPOSAL_UNDERTAKEN);
                 if (disposalUndertakenNode != null) {

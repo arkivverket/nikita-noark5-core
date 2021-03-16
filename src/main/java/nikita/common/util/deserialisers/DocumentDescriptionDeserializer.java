@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
@@ -126,9 +125,8 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
             documentDescription.setExternalReference(currentNode.textValue());
             objectNode.remove(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE);
         }
-        documentDescription.setReferenceDisposalUndertaken(
+        documentDescription.setDisposalUndertaken(
                 deserialiseDisposalUndertaken(objectNode, errors));
-
         documentDescription.setReferenceDisposal(
                 deserialiseDisposal(objectNode, errors));
         documentDescription.setReferenceDeletion(

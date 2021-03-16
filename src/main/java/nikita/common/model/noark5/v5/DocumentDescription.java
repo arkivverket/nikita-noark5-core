@@ -478,9 +478,12 @@ public class DocumentDescription
     }
 
     @Override
-    public void setReferenceDisposalUndertaken(
-            DisposalUndertaken referenceDisposalUndertaken) {
-        this.referenceDisposalUndertaken = referenceDisposalUndertaken;
+    public void setDisposalUndertaken(DisposalUndertaken disposalUndertaken) {
+        this.referenceDisposalUndertaken = disposalUndertaken;
+    }
+
+    public void removeDisposalUndertaken() {
+        this.referenceDisposalUndertaken = null;
     }
 
     @Override

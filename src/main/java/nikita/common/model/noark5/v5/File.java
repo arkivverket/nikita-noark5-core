@@ -291,6 +291,16 @@ public class File
         this.referenceChildFile = referenceChildFile;
     }
 
+    public void addFile(File file) {
+        this.referenceChildFile.add(file);
+        file.setReferenceParentFile(file);
+    }
+
+    public void removeFile(File file) {
+        this.referenceChildFile.remove(file);
+        file.setReferenceParentFile(null);
+    }
+
     public Series getReferenceSeries() {
         return referenceSeries;
     }
