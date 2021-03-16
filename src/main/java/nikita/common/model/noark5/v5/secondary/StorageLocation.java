@@ -8,7 +8,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,15 +41,14 @@ public class StorageLocation
     @ManyToMany(mappedBy = "referenceStorageLocation")
     private List<Series> referenceSeries = new ArrayList<>();
 
-    // Links to Files
-    @OneToMany(mappedBy = "referenceStorageLocation")
+    // Links to File
+    @ManyToMany(mappedBy = "referenceStorageLocation")
     private List<File> referenceFile = new ArrayList<>();
 
-    // Links to Records
+    // Links to Record
     @ManyToMany(mappedBy = "referenceStorageLocation")
     @JsonIgnore
     private List<Record> referenceRecord = new ArrayList<>();
-
 
     public String getStorageLocation() {
         return storageLocation;
@@ -64,14 +66,14 @@ public class StorageLocation
         this.referenceFonds = referenceFonds;
     }
 
-    @Override
-    public String getBaseTypeName() {
-        return STORAGE_LOCATION;
+    public void addFonds(Fonds fonds) {
+        this.referenceFonds.add(fonds);
+        fonds.getReferenceStorageLocation().add(this);
     }
 
-    @Override
-    public String getBaseRel() {
-        return REL_FONDS_STRUCTURE_STORAGE_LOCATION;
+    public void removeFonds(Fonds fonds) {
+        this.referenceFonds.remove(fonds);
+        fonds.getReferenceStorageLocation().remove(this);
     }
 
     public List<Series> getReferenceSeries() {
@@ -82,6 +84,16 @@ public class StorageLocation
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.getReferenceStorageLocation().add(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.getReferenceStorageLocation().remove(this);
+    }
+
     public List<File> getReferenceFile() {
         return referenceFile;
     }
@@ -90,12 +102,42 @@ public class StorageLocation
         this.referenceFile = referenceFile;
     }
 
+    public void addFile(File file) {
+        this.referenceFile.add(file);
+        file.getReferenceStorageLocation().add(this);
+    }
+
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.getReferenceStorageLocation().remove(this);
+    }
+
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
+        record.getReferenceStorageLocation().add(this);
+    }
+
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.getReferenceStorageLocation().remove(this);
+    }
+
+    @Override
+    public String getBaseTypeName() {
+        return STORAGE_LOCATION;
+    }
+
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_STORAGE_LOCATION;
     }
 
     @Override

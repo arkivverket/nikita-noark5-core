@@ -84,6 +84,16 @@ public class DisposalUndertaken
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.setDisposalUndertaken(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.setDisposalUndertaken(null);
+    }
+
     public List<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }

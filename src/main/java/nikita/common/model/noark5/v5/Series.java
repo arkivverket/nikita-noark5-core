@@ -25,8 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -135,7 +134,7 @@ public class Series
     private Series referenceSuccessor;
 
     // Link to ClassificationSystem
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_SERIES_CLASSIFICATION_SYSTEM,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_SERIES_PK,
@@ -310,13 +309,20 @@ public class Series
     }
 
     public void setReferenceClassificationSystem(
-            List <ClassificationSystem> referenceClassificationSystem) {
+            List<ClassificationSystem> referenceClassificationSystem) {
         this.referenceClassificationSystem = referenceClassificationSystem;
     }
 
     public void addClassificationSystem(
             ClassificationSystem classificationSystem) {
         this.referenceClassificationSystem.add(classificationSystem);
+        classificationSystem.getReferenceSeries().add(this);
+    }
+
+    public void removeClassificationSystem(
+            ClassificationSystem classificationSystem) {
+        this.referenceClassificationSystem.remove(classificationSystem);
+        classificationSystem.getReferenceSeries().remove(this);
     }
 
     public List<File> getReferenceFile() {

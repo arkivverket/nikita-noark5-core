@@ -93,6 +93,16 @@ public class ClassificationSystem
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.getReferenceClassificationSystem().add(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.getReferenceClassificationSystem().remove(this);
+    }
+
     @Override
     public List<Class> getReferenceClass() {
         return referenceClass;
@@ -101,6 +111,16 @@ public class ClassificationSystem
     @Override
     public void setReferenceClass(List<Class> referenceClass) {
         this.referenceClass = referenceClass;
+    }
+
+    public void addClass(Class klass) {
+        this.referenceClass.add(klass);
+        klass.setReferenceClassificationSystem(this);
+    }
+
+    public void removeClass(Class klass) {
+        this.referenceClass.remove(klass);
+        klass.setReferenceClassificationSystem(null);
     }
 
     @Override

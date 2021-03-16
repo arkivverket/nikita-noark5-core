@@ -166,6 +166,16 @@ public class Class
         this.referenceChildClass = referenceChildClass;
     }
 
+    public void addClass(Class klass) {
+        this.referenceChildClass.add(klass);
+        klass.setReferenceParentClass(this);
+    }
+
+    public void removeClass(Class klass) {
+        this.referenceChildClass.remove(klass);
+        klass.setReferenceParentClass(null);
+    }
+
     @Override
     public List<File> getReferenceFile() {
         return referenceFile;
@@ -176,6 +186,16 @@ public class Class
         this.referenceFile = referenceFile;
     }
 
+    public void addFile(File file) {
+        this.referenceFile.add(file);
+        file.setReferenceClass(this);
+    }
+
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.setReferenceClass(null);
+    }
+
     @Override
     public List<Record> getReferenceRecord() {
         return referenceRecord;
@@ -184,6 +204,16 @@ public class Class
     @Override
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
+        record.setReferenceClass(this);
+    }
+
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.setReferenceClass(null);
     }
 
     @Override

@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IDeletionEntity;
@@ -124,6 +123,16 @@ public class Deletion
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.setReferenceDeletion(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.setReferenceDeletion(null);
+    }
+
     public List<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
@@ -131,6 +140,18 @@ public class Deletion
     public void setReferenceDocumentDescription(
             List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
+    }
+
+    public void addDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.add(documentDescription);
+        documentDescription.setReferenceDeletion(this);
+    }
+
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.remove(documentDescription);
+        documentDescription.setReferenceDeletion(null);
     }
 
     @Override

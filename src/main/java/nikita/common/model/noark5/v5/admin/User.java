@@ -213,6 +213,13 @@ public class User
 
     public void addAdministrativeUnit(AdministrativeUnit administrativeUnit) {
         this.administrativeUnits.add(administrativeUnit);
+        administrativeUnit.getUsers().add(this);
+    }
+
+    public void removeAdministrativeUnit(
+            AdministrativeUnit administrativeUnit) {
+        this.administrativeUnits.remove(administrativeUnit);
+        administrativeUnit.getUsers().remove(this);
     }
 
     public OffsetDateTime getLastPasswordResetDate() {

@@ -28,7 +28,6 @@ import static nikita.common.config.Constants.TABLE_SIGN_OFF;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
-
 @Entity
 @Table(name = TABLE_SIGN_OFF)
 @JsonDeserialize(using = SignOffDeserializer.class)
@@ -228,8 +227,14 @@ public class SignOff
     }
 
     @Override
-    public void addRecord(RegistryEntry record) {
-        this.referenceRecord.add(record);
+    public void addRecord(RegistryEntry registryEntry) {
+        this.referenceRecord.add(registryEntry);
+        registryEntry.getReferenceSignOff().add(this);
+    }
+
+    public void removeRecord(RegistryEntry registryEntry) {
+        this.referenceRecord.remove(registryEntry);
+        registryEntry.getReferenceSignOff().remove(this);
     }
 
     @Override

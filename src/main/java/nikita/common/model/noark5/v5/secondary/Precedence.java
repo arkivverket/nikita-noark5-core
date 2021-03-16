@@ -114,7 +114,6 @@ public class Precedence
     @ManyToMany(mappedBy = "referencePrecedence")
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
 
-
     @Override
     public OffsetDateTime getPrecedenceDate() {
         return precedenceDate;
@@ -233,6 +232,16 @@ public class Precedence
         this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
+    public void addRegistryEntry(RegistryEntry registryEntry) {
+        this.referenceRegistryEntry.add(registryEntry);
+        registryEntry.getReferencePrecedence().add(this);
+    }
+
+    public void removeRegistryEntry(RegistryEntry registryEntry) {
+        this.referenceRegistryEntry.remove(registryEntry);
+        registryEntry.getReferencePrecedence().remove(this);
+    }
+
     @Override
     public List<CaseFile> getReferenceCaseFile() {
         return referenceCaseFile;
@@ -241,6 +250,16 @@ public class Precedence
     @Override
     public void setReferenceCaseFile(List<CaseFile> referenceCaseFile) {
         this.referenceCaseFile = referenceCaseFile;
+    }
+
+    public void addCaseFile(CaseFile caseFile) {
+        this.referenceCaseFile.add(caseFile);
+        caseFile.getReferencePrecedence().add(this);
+    }
+
+    public void removeCaseFile(CaseFile caseFile) {
+        this.referenceCaseFile.remove(caseFile);
+        caseFile.getReferencePrecedence().remove(this);
     }
 
     @Override

@@ -261,8 +261,14 @@ public class DocumentObject
         this.referenceConversion = referenceConversion;
     }
 
-    public void addReferenceConversion(Conversion referenceConversion) {
-        this.referenceConversion.add(referenceConversion);
+    public void addReferenceConversion(Conversion conversion) {
+        this.referenceConversion.add(conversion);
+        conversion.setReferenceDocumentObject(this);
+    }
+
+    public void removeReferenceConversion(Conversion conversion) {
+        this.referenceConversion.remove(conversion);
+        conversion.setReferenceDocumentObject(null);
     }
 
     public ElectronicSignature getReferenceElectronicSignature() {

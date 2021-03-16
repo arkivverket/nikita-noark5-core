@@ -128,12 +128,32 @@ public class Disposal
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.setReferenceDisposal(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.setReferenceDisposal(null);
+    }
+
     public List<Class> getReferenceClass() {
         return referenceClass;
     }
 
     public void setReferenceClass(List<Class> referenceClass) {
         this.referenceClass = referenceClass;
+    }
+
+    public void addClass(Class klass) {
+        this.referenceClass.add(klass);
+        klass.setReferenceDisposal(this);
+    }
+
+    public void removeClass(Class klass) {
+        this.referenceClass.remove(klass);
+        klass.setReferenceDisposal(null);
     }
 
     public List<File> getReferenceFile() {
@@ -144,12 +164,33 @@ public class Disposal
         this.referenceFile = referenceFile;
     }
 
+    public void addFile(File file) {
+        this.referenceFile.add(file);
+        file.setReferenceDisposal(this);
+    }
+
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.setReferenceDisposal(null);
+    }
+
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
+        record.setReferenceDisposal(this);
+    }
+
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.setReferenceDisposal(null);
     }
 
     public List<DocumentDescription> getReferenceDocumentDescription() {
@@ -159,6 +200,19 @@ public class Disposal
     public void setReferenceDocumentDescription(
             List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
+    }
+
+
+    public void addDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.add(documentDescription);
+        documentDescription.setReferenceDisposal(this);
+    }
+
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.remove(documentDescription);
+        documentDescription.setReferenceDisposal(null);
     }
 
     @Override

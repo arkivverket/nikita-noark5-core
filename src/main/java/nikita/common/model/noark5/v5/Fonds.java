@@ -152,6 +152,16 @@ public class Fonds
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.setReferenceFonds(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.setReferenceFonds(null);
+    }
+
     public Fonds getReferenceParentFonds() {
         return referenceParentFonds;
     }
@@ -170,6 +180,12 @@ public class Fonds
 
     public void addReferenceChildFonds(Fonds childFonds) {
         this.referenceChildFonds.add(childFonds);
+        childFonds.setReferenceParentFonds(this);
+    }
+
+    public void removeReferenceChildFonds(Fonds childFonds) {
+        this.referenceChildFonds.remove(childFonds);
+        childFonds.setReferenceParentFonds(null);
     }
 
     @Override
@@ -197,6 +213,16 @@ public class Fonds
     public void setReferenceFondsCreator(
             List<FondsCreator> referenceFondsCreator) {
         this.referenceFondsCreator = referenceFondsCreator;
+    }
+
+    public void addFondsCreator(FondsCreator fondsCreator) {
+        this.referenceFondsCreator.add(fondsCreator);
+        fondsCreator.getReferenceFonds().add(this);
+    }
+
+    public void removeFondsCreator(FondsCreator fondsCreator) {
+        this.referenceFondsCreator.remove(fondsCreator);
+        fondsCreator.getReferenceFonds().remove(this);
     }
 
     @Override
