@@ -2,11 +2,14 @@ package nikita.common.model.noark5.v5.interfaces;
 
 import nikita.common.model.noark5.v5.secondary.Comment;
 
-import java.util.List;
+import java.util.Set;
 
 public interface IComment {
-    List<Comment> getReferenceComment();
-    void setReferenceComment(List<Comment> comments);
+    Set<Comment> getReferenceComment();
+
+    void setReferenceComment(Set<Comment> comments);
+
     void addComment(Comment comment);
+
     void removeComment(Comment comment);
 }

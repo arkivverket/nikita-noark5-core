@@ -306,9 +306,9 @@ public class DocumentDescriptionService
     @Override
     public CommentHateoas getCommentAssociatedWithDocumentDescription(
             @NotNull final String systemID) {
-        CommentHateoas commentHateoas =
-            new CommentHateoas((List<INoarkEntity>) (List)
-                getDocumentDescriptionOrThrow(systemID).getReferenceComment());
+        CommentHateoas commentHateoas = new CommentHateoas(
+                List.copyOf(getDocumentDescriptionOrThrow(systemID)
+                        .getReferenceComment()));
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }

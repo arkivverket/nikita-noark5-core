@@ -23,7 +23,9 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
@@ -114,13 +116,13 @@ public class File
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Comments
-    @ManyToMany(cascade = PERSIST)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FILE_COMMENT,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Comment> referenceComment = new ArrayList<>();
+    private Set<Comment> referenceComment = new HashSet<>();
 
     // Links to Classified
     @ManyToOne(fetch = LAZY, cascade = PERSIST)
@@ -335,11 +337,11 @@ public class File
         record.setReferenceFile(null);
     }
 
-    public List<Comment> getReferenceComment() {
+    public Set<Comment> getReferenceComment() {
         return referenceComment;
     }
 
-    public void setReferenceComment(List<Comment> referenceComment) {
+    public void setReferenceComment(Set<Comment> referenceComment) {
         this.referenceComment = referenceComment;
     }
 

@@ -301,8 +301,8 @@ public class RecordService
     public CommentHateoas getCommentAssociatedWithRecord(
             @NotNull final String systemID) {
         CommentHateoas commentHateoas =
-            new CommentHateoas((List<INoarkEntity>) (List)
-                getRecordOrThrow(systemID).getReferenceComment());
+                new CommentHateoas(List.copyOf(
+                        getRecordOrThrow(systemID).getReferenceComment()));
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }

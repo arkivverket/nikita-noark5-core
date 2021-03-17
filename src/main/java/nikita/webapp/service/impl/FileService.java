@@ -276,8 +276,7 @@ public class FileService
     public CommentHateoas getCommentAssociatedWithFile(
             @NotNull final String systemID) {
         CommentHateoas commentHateoas = new CommentHateoas(
-                (List<INoarkEntity>) (List) getFileOrThrow(systemID).
-                        getReferenceComment());
+                List.copyOf(getFileOrThrow(systemID).getReferenceComment()));
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }

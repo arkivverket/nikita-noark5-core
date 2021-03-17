@@ -24,7 +24,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
@@ -168,7 +170,7 @@ public class Record
     private List<Author> referenceAuthor = new ArrayList<>();
 
     // Links to Comments
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_COMMENT,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_RECORD_PK,
@@ -177,7 +179,7 @@ public class Record
             @JoinColumn(
                     name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Comment> referenceComment = new ArrayList<>();
+    private Set<Comment> referenceComment = new HashSet<>();
 
     // Links to DocumentDescriptions
     @ManyToMany
@@ -419,11 +421,11 @@ public class Record
         author.setReferenceRecord(null);
     }
 
-    public List<Comment> getReferenceComment() {
+    public Set<Comment> getReferenceComment() {
         return referenceComment;
     }
 
-    public void setReferenceComment(List<Comment> referenceComment) {
+    public void setReferenceComment(Set<Comment> referenceComment) {
         this.referenceComment = referenceComment;
     }
 

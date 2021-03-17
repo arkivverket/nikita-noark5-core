@@ -24,8 +24,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
@@ -175,7 +178,7 @@ public class DocumentDescription
     private List<DocumentObject> referenceDocumentObject = new ArrayList<>();
 
     // Links to Comments
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_COMMENT,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
@@ -183,7 +186,7 @@ public class DocumentDescription
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Comment> referenceComment = new ArrayList<>();
+    private Set<Comment> referenceComment = new HashSet<>();
 
     // Links to Authors
     @OneToMany(mappedBy = "referenceDocumentDescription")
@@ -407,12 +410,12 @@ public class DocumentDescription
     }
 
     @Override
-    public List<Comment> getReferenceComment() {
+    public Set<Comment> getReferenceComment() {
         return referenceComment;
     }
 
     @Override
-    public void setReferenceComment(List<Comment> referenceComment) {
+    public void setReferenceComment(Set<Comment> referenceComment) {
         this.referenceComment = referenceComment;
     }
 
