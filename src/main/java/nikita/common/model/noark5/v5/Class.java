@@ -15,9 +15,11 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -40,7 +42,7 @@ public class Class
     private String classId;
 
     // Links to Keywords
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_CLASS_KEYWORD,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_CLASS_PK,
@@ -48,7 +50,7 @@ public class Class
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_KEYWORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Keyword> referenceKeyword = new ArrayList<>();
+    private Set<Keyword> referenceKeyword = new HashSet<>();
 
     // Link to ClassificationSystem
     @ManyToOne(fetch = LAZY)
@@ -114,25 +116,14 @@ public class Class
     }
 
     @Override
-    public List<Keyword> getReferenceKeyword() {
+    public Set<Keyword> getReferenceKeyword() {
         return referenceKeyword;
-    }
-
-    @Override
-    public void setReferenceKeyword(List<Keyword> referenceKeyword) {
-        this.referenceKeyword = referenceKeyword;
     }
 
     @Override
     public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
         keyword.getReferenceClass().add(this);
-    }
-
-    @Override
-    public void removeKeyword(Keyword keyword) {
-        this.referenceKeyword.remove(keyword);
-        keyword.getReferenceClass().remove(this);
     }
 
     @Override

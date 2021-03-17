@@ -2,14 +2,10 @@ package nikita.common.model.noark5.v5.interfaces;
 
 import nikita.common.model.noark5.v5.secondary.Keyword;
 
-import java.util.List;
+import java.util.Set;
 
 public interface IKeyword {
-    List<Keyword> getReferenceKeyword();
-
-    void setReferenceKeyword(List<Keyword> keywords);
+    Set<Keyword> getReferenceKeyword();
 
     void addKeyword(Keyword keyword);
-
-    void removeKeyword(Keyword keyword);
 }

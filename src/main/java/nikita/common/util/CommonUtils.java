@@ -680,8 +680,8 @@ public final class CommonUtils {
                             Keyword keyword = new Keyword();
                             keyword.setKeyword(keywordText);
                             keywords.add(keyword);
+                            keywordEntity.addKeyword(keyword);
                         }
-                        keywordEntity.setReferenceKeyword(keywords);
                     }
                     objectNode.remove(KEYWORD);
                 }
@@ -2476,7 +2476,7 @@ public final class CommonUtils {
 
             public static void printKeyword(JsonGenerator jgen, IKeyword keywordEntity)
                     throws IOException {
-                List<Keyword> keywords = keywordEntity.getReferenceKeyword();
+                Set<Keyword> keywords = keywordEntity.getReferenceKeyword();
                 if (keywords != null && keywords.size() > 0) {
                     jgen.writeArrayFieldStart(KEYWORD);
                     for (Keyword keyword : keywords) {

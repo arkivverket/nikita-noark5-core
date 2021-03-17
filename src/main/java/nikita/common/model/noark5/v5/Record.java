@@ -156,13 +156,13 @@ public class Record
     private Class referenceClass;
 
     // Links to Keywords
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_KEYWORD,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Keyword> referenceKeyword = new ArrayList<>();
+    private Set<Keyword> referenceKeyword = new HashSet<>();
 
     // Links to Authors
     @OneToMany(mappedBy = "referenceRecord",
@@ -379,25 +379,15 @@ public class Record
     }
 
     @Override
-    public List<Keyword> getReferenceKeyword() {
+    public Set<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }
 
-    @Override
-    public void setReferenceKeyword(List<Keyword> referenceKeyword) {
-        this.referenceKeyword = referenceKeyword;
-    }
 
     @Override
     public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
         keyword.getReferenceRecord().add(this);
-    }
-
-    @Override
-    public void removeKeyword(Keyword keyword) {
-        this.referenceKeyword.remove(keyword);
-        keyword.getReferenceRecord().remove(this);
     }
 
     @Override

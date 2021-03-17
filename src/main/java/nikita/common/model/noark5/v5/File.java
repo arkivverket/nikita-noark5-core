@@ -83,13 +83,13 @@ public class File
     private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
 
     // Links to Keywords
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FILE_KEYWORD, joinColumns =
     @JoinColumn(name = FOREIGN_KEY_FILE_PK,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Keyword> referenceKeyword = new ArrayList<>();
+    private Set<Keyword> referenceKeyword = new HashSet<>();
 
     // Link to parent File
     @ManyToOne(fetch = LAZY)
@@ -256,25 +256,14 @@ public class File
     }
 
     @Override
-    public List<Keyword> getReferenceKeyword() {
+    public Set<Keyword> getReferenceKeyword() {
         return referenceKeyword;
-    }
-
-    @Override
-    public void setReferenceKeyword(List<Keyword> referenceKeyword) {
-        this.referenceKeyword = referenceKeyword;
     }
 
     @Override
     public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
         keyword.getReferenceFile().add(this);
-    }
-
-    @Override
-    public void removeKeyword(Keyword keyword) {
-        this.referenceKeyword.remove(keyword);
-        keyword.getReferenceFile().remove(this);
     }
 
     public File getReferenceParentFile() {
