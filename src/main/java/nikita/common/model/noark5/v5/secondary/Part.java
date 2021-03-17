@@ -14,7 +14,9 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
@@ -60,8 +62,8 @@ public class Part
 
     // Links to DocumentDescriptions
     @ManyToMany(mappedBy = "referencePart")
-    private List<DocumentDescription> referenceDocumentDescription =
-            new ArrayList<>();
+    private Set<DocumentDescription> referenceDocumentDescription =
+            new HashSet<>();
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
     @OneToMany(mappedBy = "referencePart", cascade = {PERSIST, MERGE})
@@ -121,12 +123,12 @@ public class Part
         referenceRecord.remove(record);
     }
 
-    public List<DocumentDescription> getReferenceDocumentDescription() {
+    public Set<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
 
     public void setReferenceDocumentDescription(
-            List<DocumentDescription> referenceDocumentDescription) {
+            Set<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
     }
 

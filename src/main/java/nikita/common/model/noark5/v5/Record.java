@@ -182,7 +182,7 @@ public class Record
     private Set<Comment> referenceComment = new HashSet<>();
 
     // Links to DocumentDescriptions
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_DOCUMENT_DESCRIPTION,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_RECORD_PK,
@@ -190,8 +190,8 @@ public class Record
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<DocumentDescription> referenceDocumentDescription =
-            new ArrayList<>();
+    private Set<DocumentDescription> referenceDocumentDescription =
+            new HashSet<>();
 
     // Links to CrossReference
     @OneToMany(mappedBy = "referenceRecord")
@@ -322,18 +322,14 @@ public class Record
         this.referenceClass = referenceClass;
     }
 
-    public List<DocumentDescription> getReferenceDocumentDescription() {
+    public Set<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
-    }
-
-    public void setReferenceDocumentDescription(
-            List<DocumentDescription> referenceDocumentDescription) {
-        this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
     public void addDocumentDescription(
             DocumentDescription referenceDocumentDescription) {
         this.referenceDocumentDescription.add(referenceDocumentDescription);
+        referenceDocumentDescription.getReferenceRecord().add(this);
     }
 
     @Override

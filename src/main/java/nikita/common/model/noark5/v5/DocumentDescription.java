@@ -139,7 +139,7 @@ public class DocumentDescription
      * M620 - tilknyttetDato (xs:date)
      */
     @NotNull
-    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG, nullable = false)
+    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_DATE)
@@ -364,10 +364,6 @@ public class DocumentDescription
 
     public List<Record> getReferenceRecord() {
         return referenceRecord;
-    }
-
-    public void setReferenceRecord(List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
     }
 
     public void addRecord(Record record) {
