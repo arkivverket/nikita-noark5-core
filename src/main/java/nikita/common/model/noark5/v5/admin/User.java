@@ -88,7 +88,7 @@ public class User
     @DateTimeFormat(iso = DATE_TIME)
     private OffsetDateTime lastPasswordResetDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = TABLE_USER_AUTHORITY,
             joinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
