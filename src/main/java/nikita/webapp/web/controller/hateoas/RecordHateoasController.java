@@ -76,8 +76,8 @@ public class RecordHateoasController
     // API - All POST Requests (CRUD - CREATE)
 
     // Create a new DocumentDescription and associate it with the given Record
-    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-dokumentobjekt
-    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-dokumentobjekt/
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-dokumentbeskrivelse
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-dokumentbeskrivelse/
     @Operation(summary = "Persists a DocumentDescription object associated " +
             "with the given Record systemId",
             description = "Returns the newly created DocumentDescription " +
@@ -1530,8 +1530,8 @@ public class RecordHateoasController
             @PathVariable(SYSTEM_ID) final String systemID) {
         Record record = recordService.findBySystemId(systemID);
         DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas((List<INoarkEntity>)
-                (List) record.getReferenceDocumentDescription());
+                DocumentDescriptionHateoas(List.copyOf(
+                record.getReferenceDocumentDescription()));
         documentDescriptionHateoasHandler.addLinks(
                 documentDescriptionHateoas, new Authorisation());
         return ResponseEntity.status(OK)
