@@ -40,7 +40,7 @@ noark5tester-inoutin:
   allow_failure: false
   before_script:
     - apt update
-    - apt install -y git maven curl python3 pytz python-lxml jq python-dateutil python-stdnum
+    - apt install -y git maven curl python3 python3-tz  python3-lxml jq python3-dateutil python3-stdnum
     - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
     - nikitastarted=false
