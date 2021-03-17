@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IContactInformationEntity;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
@@ -47,16 +46,16 @@ public class ContactInformation
     @Audited
     private String telephoneNumber;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     private CorrespondencePartPerson correspondencePartPerson;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     private CorrespondencePartUnit correspondencePartUnit;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     private PartPerson partPerson;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     private PartUnit partUnit;
 
     public String getEmailAddress() {

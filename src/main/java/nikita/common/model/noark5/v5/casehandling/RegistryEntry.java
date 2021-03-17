@@ -27,6 +27,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -218,8 +219,7 @@ public class RegistryEntry
     private List<Precedence> referencePrecedence = new ArrayList<>();
 
     // Link to ElectronicSignature
-    @OneToOne
-    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
+    @OneToOne(fetch = LAZY)
     private ElectronicSignature referenceElectronicSignature;
 
     public Integer getRecordYear() {

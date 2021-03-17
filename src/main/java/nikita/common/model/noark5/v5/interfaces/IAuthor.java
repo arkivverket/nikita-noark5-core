@@ -6,10 +6,6 @@ import java.util.List;
 
 public interface IAuthor {
     List<Author> getReferenceAuthor();
-
-    void setReferenceAuthor(List<Author> authors);
-
     void addAuthor(Author author);
-
     void removeAuthor(Author author);
 }

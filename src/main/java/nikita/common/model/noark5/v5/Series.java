@@ -156,35 +156,35 @@ public class Series
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Screening referenceScreening;
 
     // Link to DisposalUndertaken
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_DISPOSAL_UNDERTAKEN_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private DisposalUndertaken referenceDisposalUndertaken;
 
     // Link to Deletion
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_DELETION_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore

@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
 import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -68,19 +69,19 @@ public class ElectronicSignature
     private String verifiedBy;
 
     // Link to RegistryEntry
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     @MapsId
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private RegistryEntry referenceRegistryEntry;
 
     // Link to DocumentObject
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @MapsId
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentObject referenceDocumentObject;
 
     // Link to DocumentDescription
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentDescription referenceDocumentDescription;
 

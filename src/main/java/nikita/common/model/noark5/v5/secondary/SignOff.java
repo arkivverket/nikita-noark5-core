@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.REL_CASE_HANDLING_SIGN_OFF;
 import static nikita.common.config.Constants.TABLE_SIGN_OFF;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -87,12 +88,12 @@ public class SignOff
     private UUID referenceSignedOffCorrespondencePartSystemID;
 
     // Link to reference registry entry if present
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "fk_record_id")
     private RegistryEntry referenceSignedOffRecord;
 
     // Link to reference correspondence part if present
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "pk_correspondence_part_id")
     private CorrespondencePart referenceSignedOffCorrespondencePart;
 

@@ -15,7 +15,7 @@ webjars:
 	mvn validate
 # This target should be run after spinning up elasticsearch and the application.
 # The tester might have more dependencies but you should at least have installed
-# python-mechanize.
+# python3.
 tt:
 	if ! test -d $(repo_tester_dir); then \
 	  git clone $(repo_tester) $(repo_tester_dir); \

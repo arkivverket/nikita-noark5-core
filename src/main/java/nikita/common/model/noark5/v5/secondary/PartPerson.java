@@ -16,13 +16,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
 import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
@@ -60,17 +57,17 @@ public class PartPerson
     @JsonProperty(CORRESPONDENCE_PART_NAME)
     private String name;
 
-    @OneToOne(mappedBy = "partPerson", cascade = ALL)
+    @OneToOne(mappedBy = "partPerson", fetch = LAZY, cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private PostalAddress postalAddress;
 
-    @OneToOne(mappedBy = "partPerson", cascade = ALL)
+    @OneToOne(mappedBy = "partPerson", fetch = LAZY, cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ResidingAddress residingAddress;
 
-    @OneToOne(mappedBy = "partPerson", cascade = ALL)
+    @OneToOne(mappedBy = "partPerson", fetch = LAZY, cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;

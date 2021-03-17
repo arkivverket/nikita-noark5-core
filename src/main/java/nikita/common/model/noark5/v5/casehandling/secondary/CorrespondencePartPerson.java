@@ -50,17 +50,17 @@ public class CorrespondencePartPerson
     @Column(name = "name")
     private String name;
 
-    @OneToOne(mappedBy = "correspondencePartPerson", cascade = ALL)
+    @OneToOne(mappedBy = "correspondencePartPerson", fetch = LAZY, cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private PostalAddress postalAddress;
 
-    @OneToOne(mappedBy = "correspondencePartPerson", cascade = ALL)
+    @OneToOne(mappedBy = "correspondencePartPerson", fetch = LAZY, cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ResidingAddress residingAddress;
 
-    @OneToOne(mappedBy = "correspondencePartPerson", cascade = ALL)
+    @OneToOne(mappedBy = "correspondencePartPerson", fetch = LAZY, cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;

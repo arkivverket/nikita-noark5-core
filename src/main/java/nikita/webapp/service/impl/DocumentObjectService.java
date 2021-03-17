@@ -929,7 +929,6 @@ public class DocumentObjectService
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
         return documentObjectHateoas;
-
     }
 
     /**

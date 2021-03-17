@@ -20,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.COMMENT;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -72,17 +73,17 @@ public class Comment
     private String commentRegisteredBy;
 
     // Link to File
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_FILE_PK)
     private File referenceFile;
 
     // Links to Record
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
     private Record referenceRecord;
 
     // Link to DocumentDescription
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK)
     private DocumentDescription referenceDocumentDescription;
 

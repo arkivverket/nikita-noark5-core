@@ -26,8 +26,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -186,43 +186,41 @@ public class DocumentDescription
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Authors
-    @OneToMany(mappedBy = "referenceDocumentDescription",
-            cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "referenceDocumentDescription")
     private List<Author> referenceAuthor = new ArrayList<>();
 
     // Link to Classified
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to DisposalUndertaken
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_DISPOSAL_UNDERTAKEN_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DisposalUndertaken referenceDisposalUndertaken;
 
     // Link to Deletion
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_DELETION_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Deletion referenceDeletion;
 
     // Link to Screening
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
     // Link to ElectronicSignature
-    @OneToOne
-    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
+    @OneToOne(fetch = LAZY)
     private ElectronicSignature referenceElectronicSignature;
 
     // Links to Part
@@ -433,11 +431,6 @@ public class DocumentDescription
     @Override
     public List<Author> getReferenceAuthor() {
         return referenceAuthor;
-    }
-
-    @Override
-    public void setReferenceAuthor(List<Author> referenceAuthor) {
-        this.referenceAuthor = referenceAuthor;
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.AUTHOR;
 
@@ -28,11 +29,11 @@ public class Author
         extends SystemIdEntity
         implements IAuthorEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
     private Record referenceRecord;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK)
     private DocumentDescription referenceDocumentDescription;
 

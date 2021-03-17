@@ -196,19 +196,19 @@ public class Record
     private List<CrossReference> referenceCrossReference = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = RECORD_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = RECORD_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "record_screening_id",
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
@@ -405,11 +405,6 @@ public class Record
     @Override
     public List<Author> getReferenceAuthor() {
         return referenceAuthor;
-    }
-
-    @Override
-    public void setReferenceAuthor(List<Author> referenceAuthor) {
-        this.referenceAuthor = referenceAuthor;
     }
 
     @Override

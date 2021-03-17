@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.casehandling;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
@@ -24,6 +24,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -128,7 +129,7 @@ public class CaseFile
     private List<Precedence> referencePrecedence = new ArrayList<>();
 
     // Link to AdministrativeUnit
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = CASE_FILE_ADMINISTRATIVE_UNIT_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore

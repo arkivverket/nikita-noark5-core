@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.ChangeLogHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IChangeLogEntity;
@@ -12,15 +11,14 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_CHANGE_LOG)
@@ -75,7 +73,7 @@ public class ChangeLog
     private String newValue;
 
     // Link to Archive Unit (aka SystemIdEntity)
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = SYSTEM_ID_ENTITY_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private SystemIdEntity referenceSystemIdEntity;

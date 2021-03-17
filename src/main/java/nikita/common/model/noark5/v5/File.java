@@ -123,20 +123,20 @@ public class File
     private List<Comment> referenceComment = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = FILE_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = FILE_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = FILE_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;

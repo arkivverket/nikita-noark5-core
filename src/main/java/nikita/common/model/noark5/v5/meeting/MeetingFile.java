@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.TABLE_MEETING_FILE;
 import static nikita.common.config.N5ResourceMappings.MEETING_FILE;
@@ -52,7 +53,7 @@ public class MeetingFile
      * M221 - referanseForrigeMoete (xs:string)
      **/
     // Link to next Meeting
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private MeetingFile referenceNextMeeting;
 
     /**
@@ -61,7 +62,7 @@ public class MeetingFile
 
     // Link to previous Meeting
     // TODO: This links to id, not systemId. Fix!
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private MeetingFile referencePreviousMeeting;
 
     // Links to MeetingParticipant

@@ -3,7 +3,6 @@ package nikita.common.model.noark5.v5.secondary;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IConversionEntity;
@@ -19,6 +18,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
@@ -94,7 +94,7 @@ public class Conversion
     private String conversionComment;
 
     // Link to DocumentObject
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = CONVERSION_DOCUMENT_OBJECT_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DocumentObject referenceDocumentObject;

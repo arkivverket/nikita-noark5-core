@@ -73,19 +73,19 @@ public class Class
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = CLASS_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = CLASS_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = CLASS_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;

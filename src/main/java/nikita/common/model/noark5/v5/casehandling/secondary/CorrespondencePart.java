@@ -16,6 +16,7 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 
@@ -44,7 +45,7 @@ public class CorrespondencePart
     private String correspondencePartTypeCodeName;
 
     // Link to Record
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
     private Record referenceRecord;
 
