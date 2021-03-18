@@ -227,7 +227,7 @@ public class DocumentDescription
     private ElectronicSignature referenceElectronicSignature;
 
     // Links to Part
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_PARTY,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
@@ -235,7 +235,7 @@ public class DocumentDescription
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Part> referencePart = new ArrayList<>();
+    private Set<Part> referencePart = new HashSet<>();
 
     public DocumentType getDocumentType() {
         if (null == documentTypeCode)
@@ -509,22 +509,13 @@ public class DocumentDescription
         this.referenceElectronicSignature = referenceElectronicSignature;
     }
 
-    public List<Part> getReferencePart() {
+    public Set<Part> getReferencePart() {
         return referencePart;
     }
 
-    public void setReferencePart(List<Part> referencePart) {
-        this.referencePart = referencePart;
-    }
-
     public void addPart(Part part) {
-        referencePart.add(part);
-        part.addDocumentDescription(this);
-    }
-
-    public void removePart(Part part) {
-        referencePart.remove(part);
-        part.removeDocumentDescription(this);
+        this.referencePart.add(part);
+        part.getReferenceDocumentDescription().add(this);
     }
 
     @Override

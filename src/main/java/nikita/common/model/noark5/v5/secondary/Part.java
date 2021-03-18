@@ -54,11 +54,11 @@ public class Part
 
     // Links to Files
     @ManyToMany(mappedBy = "referencePart")
-    private List<File> referenceFile = new ArrayList<>();
+    private Set<File> referenceFile = new HashSet<>();
 
     // Links to Record
     @ManyToMany(mappedBy = "referencePart")
-    private List<Record> referenceRecord = new ArrayList<>();
+    private Set<Record> referenceRecord = new HashSet<>();
 
     // Links to DocumentDescriptions
     @ManyToMany(mappedBy = "referencePart")
@@ -69,20 +69,13 @@ public class Part
     @OneToMany(mappedBy = "referencePart", cascade = {PERSIST, MERGE})
     private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
-    public List<File> getReferenceFile() {
+    public Set<File> getReferenceFile() {
         return referenceFile;
     }
 
-    public void setReferenceFile(List<File> referenceFile) {
-        this.referenceFile = referenceFile;
-    }
-
     public void addFile(File file) {
-        referenceFile.add(file);
-    }
-
-    public void removeFile(File file) {
-        referenceFile.remove(file);
+        this.referenceFile.add(file);
+        file.getReferencePart().add(this);
     }
 
     public PartRole getPartRole() {
@@ -94,54 +87,33 @@ public class Part
     public void setPartRole(PartRole partRole) {
         if (null != partRole) {
             this.partRoleCode = partRole.getCode();
-	    this.partRoleCodeName = partRole.getCodeName();
-	} else {
-	    this.partRoleCode = null;
-	    this.partRoleCodeName = null;
-	}
+            this.partRoleCodeName = partRole.getCodeName();
+        } else {
+            this.partRoleCode = null;
+            this.partRoleCodeName = null;
+        }
     }
 
-    public void addReferenceFile(File file) {
-        this.referenceFile.add(file);
-    }
-
-    public List<Record> getReferenceRecord() {
+    @Override
+    public Set<Record> getReferenceRecord() {
         return referenceRecord;
-    }
-
-    public void setReferenceRecord(List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
     }
 
     @Override
     public void addRecord(Record record) {
-        referenceRecord.add(record);
-    }
-
-    @Override
-    public void removeRecord(Record record) {
-        referenceRecord.remove(record);
+        this.referenceRecord.add(record);
+        record.getReferencePart().add(this);
     }
 
     public Set<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(
-            Set<DocumentDescription> referenceDocumentDescription) {
-        this.referenceDocumentDescription = referenceDocumentDescription;
-    }
-
     public void addDocumentDescription(
             DocumentDescription documentDescription) {
         referenceDocumentDescription.add(documentDescription);
+        documentDescription.getReferencePart().add(this);
     }
-
-    public void removeDocumentDescription(
-            DocumentDescription documentDescription) {
-        referenceDocumentDescription.remove(documentDescription);
-    }
-
 
     public List<BSMBase> getReferenceBSMBase() {
         return referenceBSMBase;

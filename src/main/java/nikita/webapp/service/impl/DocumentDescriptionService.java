@@ -318,9 +318,8 @@ public class DocumentDescriptionService
     public PartHateoas getPartAssociatedWithDocumentDescription(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
-                (List<INoarkEntity>) (List)
-                        getDocumentDescriptionOrThrow(systemID).
-                                getReferencePart());
+                List.copyOf(getDocumentDescriptionOrThrow(systemID)
+                        .getReferencePart()));
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;
     }

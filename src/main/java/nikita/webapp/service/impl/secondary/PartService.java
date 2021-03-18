@@ -214,9 +214,8 @@ public class PartService
             @NotNull PartPerson part, @NotNull File file) {
         validatePartRole(part);
         createPerson(part);
-        part.addReferenceFile(file);
-        part = partRepository.save(part);
         file.addPart(part);
+        part = partRepository.save(part);
         PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
         partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -247,11 +246,8 @@ public class PartService
             @NotNull PartUnit part, @NotNull File file) {
         validatePartRole(part);
         createUnit(part);
-        // bidirectional relationship @ManyToMany, set both sides of
-        // relationship
-        part.addReferenceFile(file);
-        part = partRepository.save(part);
         file.addPart(part);
+        part = partRepository.save(part);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
         partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
