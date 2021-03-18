@@ -504,7 +504,7 @@ public final class N5ResourceMappings {
     public static final String CODE_NAME_ENG = "code_name";
     public static final String CODE_INACTIVE_ENG = "inactive";
     public static final String COMMENT_DATE_ENG = "merknadsdato";
-    public static final String COMMENT_ENG = "merknad";
+    public static final String COMMENT_ENG = "comment";
     public static final String COMMENT_REGISTERED_BY_ENG = "merknadRegistrertAv";
     public static final String COMMENT_TEXT_ENG = "comment_text";
     public static final String COMMENT_TYPE_ENG = "comment_type";
@@ -767,7 +767,7 @@ public final class N5ResourceMappings {
     public static final String CODE_NAME_ENG_OBJECT = "codeName";
     public static final String CODE_INACTIVE_ENG_OBJECT = "inactive";
     public static final String COMMENT_DATE_ENG_OBJECT = "merknadsdato";
-    public static final String COMMENT_ENG_OBJECT = "merknad";
+    public static final String COMMENT_ENG_OBJECT = "Comment";
     public static final String COMMENT_REGISTERED_BY_ENG_OBJECT = "merknadRegistrertAv";
     public static final String COMMENT_TEXT_ENG_OBJECT = "CommentText";
     public static final String COMMENT_TYPE_ENG_OBJECT = "CommentType";
