@@ -56,15 +56,14 @@ public class CommentHateoasHandler
     @Override
     // This is an OData query that should give a list of File objects that
     // have an association to this comment
-    // noark5v5/arkivstruktur/mappe?$filter=contains(merknad/system_id, 'SYSTEMID')
+    // noark5v5/arkivstruktur/mappe?$filtermerknad/system_id eq 'SYSTEMID'
     public void addFile(ICommentEntity comment,
                         IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(comment,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
                         "?" + urlEncode(DOLLAR_FILTER) + "=" +
-                        "contains" + urlEncode("(") +
                         COMMENT + SLASH + SYSTEM_ID +
-                        urlEncode(", '" + comment.getSystemId() + "')"),
+                        urlEncode(" eq '" + comment.getSystemId() + "'"),
                         REL_FONDS_STRUCTURE_FILE));
     }
 
@@ -77,9 +76,8 @@ public class CommentHateoasHandler
         hateoasNoarkObject.addLink(comment,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
                         "?" + urlEncode(DOLLAR_FILTER) + "=" +
-                        "contains" + urlEncode("(") +
                         COMMENT + SLASH + SYSTEM_ID +
-                        urlEncode(", '" + comment.getSystemId() + "')"),
+                        urlEncode(" eq '" + comment.getSystemId() + "'"),
                         REL_FONDS_STRUCTURE_RECORD));
     }
 
@@ -93,9 +91,8 @@ public class CommentHateoasHandler
                 new Link(getOutgoingAddress() +
                         HREF_BASE_DOCUMENT_DESCRIPTION +
                         "?" + urlEncode(DOLLAR_FILTER) + "=" +
-                        "contains" + urlEncode("(") +
                         COMMENT + SLASH + SYSTEM_ID +
-                        urlEncode(", '" + comment.getSystemId() + "')"),
+                        urlEncode(" eq '" + comment.getSystemId() + "'"),
                         REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION));
     }
 
