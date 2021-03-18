@@ -61,7 +61,7 @@ public class CommentHateoasHandler
                         IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(comment,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
-                        SLASH + "?" + urlEncode(DOLLAR_FILTER) + "=" +
+                        "?" + urlEncode(DOLLAR_FILTER) + "=" +
                         "contains" + urlEncode("(") +
                         COMMENT + SLASH + SYSTEM_ID +
                         urlEncode(", '" + comment.getSystemId() + "')"),
@@ -76,7 +76,7 @@ public class CommentHateoasHandler
                           IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(comment,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
-                        SLASH + "?" + urlEncode(DOLLAR_FILTER) + "=" +
+                        "?" + urlEncode(DOLLAR_FILTER) + "=" +
                         "contains" + urlEncode("(") +
                         COMMENT + SLASH + SYSTEM_ID +
                         urlEncode(", '" + comment.getSystemId() + "')"),
@@ -92,7 +92,7 @@ public class CommentHateoasHandler
         hateoasNoarkObject.addLink(comment,
                 new Link(getOutgoingAddress() +
                         HREF_BASE_DOCUMENT_DESCRIPTION +
-                        SLASH + "?" + urlEncode(DOLLAR_FILTER) + "=" +
+                        "?" + urlEncode(DOLLAR_FILTER) + "=" +
                         "contains" + urlEncode("(") +
                         COMMENT + SLASH + SYSTEM_ID +
                         urlEncode(", '" + comment.getSystemId() + "')"),
