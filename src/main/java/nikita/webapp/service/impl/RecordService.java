@@ -319,11 +319,9 @@ public class RecordService
 
     @Override
     public PartHateoas
-    getPartAssociatedWithRecord(
-            final String systemID) {
-        PartHateoas partHateoas = new PartHateoas(
-                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
-                        getReferencePart());
+    getPartAssociatedWithRecord(final String systemID) {
+        PartHateoas partHateoas = new PartHateoas(List.copyOf(
+                getRecordOrThrow(systemID).getReferencePart()));
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;
     }

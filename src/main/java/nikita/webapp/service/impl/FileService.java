@@ -286,8 +286,7 @@ public class FileService
     public PartHateoas getPartAssociatedWithFile(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
-                (List<INoarkEntity>) (List) getFileOrThrow(systemID).
-                        getReferencePart());
+                List.copyOf(getFileOrThrow(systemID).getReferencePart()));
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;
     }
