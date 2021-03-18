@@ -131,10 +131,14 @@ public class HateoasHandler
             HttpServletRequest request =
                     ((ServletRequestAttributes) requestAttributes).getRequest();
             if (request != null) {
-                String servletPath = new UrlPathHelper()
-                        .getPathWithinApplication(request);
+                String servletPath = request.getServletPath();
+                // In test profile, we are missing a servlet path, however the
+                // path is retrievable UrlPathHelper
+                if (null == servletPath || servletPath.isEmpty()) {
+                    servletPath = new UrlPathHelper()
+                            .getPathWithinApplication(request);
+                }
                 String queryString = request.getQueryString();
-
                 if (null != queryString) {
                     path = servletPath + "?" + queryString;
                 } else {
