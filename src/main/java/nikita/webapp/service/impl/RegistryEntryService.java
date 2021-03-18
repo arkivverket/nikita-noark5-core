@@ -314,11 +314,10 @@ public class RegistryEntryService
     public PrecedenceHateoas findAllPrecedenceForRegistryEntry(
             @NotNull final String systemID) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas((List<INoarkEntity>)
-                        (List) registryEntry.getReferencePrecedence());
+        PrecedenceHateoas precedenceHateoas = new PrecedenceHateoas(
+                List.copyOf(registryEntry.getReferencePrecedence()));
         precedenceHateoasHandler.addLinks(precedenceHateoas,
-                                          new Authorisation());
+                new Authorisation());
         setOutgoingRequestHeader(precedenceHateoas);
         return precedenceHateoas;
     }

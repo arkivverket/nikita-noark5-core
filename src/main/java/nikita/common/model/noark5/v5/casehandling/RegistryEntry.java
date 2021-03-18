@@ -212,7 +212,7 @@ public class RegistryEntry
     private Set<SignOff> referenceSignOff = new HashSet<>();
 
     // Links to Precedence
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_REGISTRY_ENTRY_PRECEDENCE,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_RECORD_PK,
@@ -220,7 +220,7 @@ public class RegistryEntry
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_PRECEDENCE_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Precedence> referencePrecedence = new ArrayList<>();
+    private Set<Precedence> referencePrecedence = new HashSet<>();
 
     // Link to ElectronicSignature
     @OneToOne(fetch = LAZY)
@@ -413,12 +413,15 @@ public class RegistryEntry
         signOff.getReferenceRecord().add(this);
     }
 
-    public List<Precedence> getReferencePrecedence() {
+    @Override
+    public Set<Precedence> getReferencePrecedence() {
         return referencePrecedence;
     }
 
-    public void setReferencePrecedence(List<Precedence> referencePrecedence) {
-        this.referencePrecedence = referencePrecedence;
+    @Override
+    public void addPrecedence(Precedence precedence) {
+        this.referencePrecedence.add(precedence);
+        precedence.getReferenceRegistryEntry().add(this);
     }
 
     public ElectronicSignature getReferenceElectronicSignature() {

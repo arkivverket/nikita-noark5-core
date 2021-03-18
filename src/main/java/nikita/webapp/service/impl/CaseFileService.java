@@ -148,11 +148,10 @@ public class CaseFileService
     public PrecedenceHateoas findAllPrecedenceForCaseFile(
             @NotNull final String systemID) {
         CaseFile caseFile = getCaseFileOrThrow(systemID);
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas((List<INoarkEntity>)
-                        (List) caseFile.getReferencePrecedence());
+        PrecedenceHateoas precedenceHateoas = new PrecedenceHateoas(
+                List.copyOf(caseFile.getReferencePrecedence()));
         precedenceHateoasHandler
-            .addLinks(precedenceHateoas, new Authorisation());
+                .addLinks(precedenceHateoas, new Authorisation());
         setOutgoingRequestHeader(precedenceHateoas);
         return precedenceHateoas;
     }
