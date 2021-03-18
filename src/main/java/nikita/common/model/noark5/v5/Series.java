@@ -141,8 +141,8 @@ public class Series
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_CLASSIFICATION_SYSTEM_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<ClassificationSystem> referenceClassificationSystem =
-            new ArrayList<>();
+    private Set<ClassificationSystem> referenceClassificationSystem =
+            new HashSet<>();
 
     // Links to Files
     @JsonIgnore
@@ -298,25 +298,14 @@ public class Series
         this.referenceSuccessor = referenceSuccessor;
     }
 
-    public List<ClassificationSystem> getReferenceClassificationSystem() {
+    public Set<ClassificationSystem> getReferenceClassificationSystem() {
         return referenceClassificationSystem;
-    }
-
-    public void setReferenceClassificationSystem(
-            List<ClassificationSystem> referenceClassificationSystem) {
-        this.referenceClassificationSystem = referenceClassificationSystem;
     }
 
     public void addClassificationSystem(
             ClassificationSystem classificationSystem) {
         this.referenceClassificationSystem.add(classificationSystem);
         classificationSystem.getReferenceSeries().add(this);
-    }
-
-    public void removeClassificationSystem(
-            ClassificationSystem classificationSystem) {
-        this.referenceClassificationSystem.remove(classificationSystem);
-        classificationSystem.getReferenceSeries().remove(this);
     }
 
     public List<File> getReferenceFile() {
