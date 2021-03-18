@@ -17,11 +17,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-import static javax.persistence.FetchType.LAZY;
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_COMMENT;
+import static nikita.common.config.Constants.TABLE_COMMENT;
 import static nikita.common.config.N5ResourceMappings.COMMENT;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -73,43 +78,17 @@ public class Comment
     private String commentRegisteredBy;
 
     // Link to File
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = FOREIGN_KEY_FILE_PK)
-    private File referenceFile;
+    @ManyToMany
+    private Set<File> referenceFile = new HashSet<>();
 
     // Links to Record
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
-    private Record referenceRecord;
+    @ManyToMany
+    private Set<Record> referenceRecord = new HashSet<>();
 
     // Link to DocumentDescription
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK)
-    private DocumentDescription referenceDocumentDescription;
-
-    /**
-     * Used to identify if the current comment is associated  with a file
-     * This can be used to save a potential lookup in the database.
-     */
-    @Column(name = "is_for_file")
-    @Audited
-    private Boolean isForFile = false;
-
-    /**
-     * Used to identify if the current comment is associated  with a record
-     * This can be used to save a potential lookup in the database.
-     */
-    @Column(name = "is_for_record")
-    @Audited
-    private Boolean isForRecord = false;
-
-    /**
-     * Used to identify if the current comment is associated  with a document
-     * description. This can be used to save a potential lookup in the database.
-     */
-    @Column(name = "is_for_document_description")
-    @Audited
-    private Boolean isForDocumentDescription = false;
+    @ManyToMany
+    private Set<DocumentDescription> referenceDocumentDescription =
+            new HashSet<>();
 
     public String getCommentText() {
         return commentText;
@@ -122,7 +101,7 @@ public class Comment
     public CommentType getCommentType() {
         if (null == commentTypeCode)
             return null;
-        return new CommentType(commentTypeCode,commentTypeCodeName);
+        return new CommentType(commentTypeCode, commentTypeCodeName);
     }
 
     public void setCommentType(CommentType commentType) {
@@ -161,44 +140,29 @@ public class Comment
         return REL_FONDS_STRUCTURE_COMMENT;
     }
 
-    public File getReferenceFile() {
+    public Set<File> getReferenceFile() {
         return referenceFile;
     }
 
-    public void setReferenceFile(File referenceFile) {
-        this.referenceFile = referenceFile;
-        isForFile = true;
+    public void addFile(File file) {
+        this.referenceFile.add(file);
     }
 
-    public Record getReferenceRecord() {
+    public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(Record referenceRecord) {
-        this.referenceRecord = referenceRecord;
-        isForRecord = true;
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
     }
 
-    public DocumentDescription getReferenceDocumentDescription() {
+    public Set<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription
-        (DocumentDescription referenceDocumentDescription) {
-        this.referenceDocumentDescription = referenceDocumentDescription;
-        isForDocumentDescription = true;
-    }
-
-    public Boolean getForFile() {
-        return isForFile;
-    }
-
-    public Boolean getForRecord() {
-        return isForRecord;
-    }
-
-    public Boolean getForDocumentDescription() {
-        return isForDocumentDescription;
+    public void addDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.add(documentDescription);
     }
 
     @Override

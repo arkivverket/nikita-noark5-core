@@ -1095,6 +1095,73 @@ public class TestOData {
     }
 
     /**
+     * See : https://gitlab.com/OsloMet-ABI/nikita-noark5-core/-/issues/191
+     * Check that it is possible to undertake a nested contains
+     * Entity: mappe, merknad
+     * Attribute: merknad.systemID
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=contains(merknad/systemID, '2a146779-77ef-41a8-b958-0a4bddeac2d7')
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN file_1.referenceComment AS comment_1
+     * WHERE
+     * comment_1.systemId = :parameter_0
+     * Additionally the parameter_0 parameter value should be:
+     * 2a146779-77ef-41a8-b958-0a4bddeac2d7
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLJoinQueryWithContainsSecondaryEntity() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            String joinQuery = "mappe?$filter=contains(" +
+                    "merknad/systemID, '2a146779-77ef-41a8-b958-0a4bddeac2d7')";
+            Query query = oDataService.convertODataToHQL(joinQuery, "");
+            String hqlJoin = "SELECT file_1 FROM File AS file_1" +
+                    " JOIN" +
+                    " file_1.referenceComment AS comment_1" +
+                    " WHERE" +
+                    " comment_1.systemId like :parameter_0";
+            String parameter = (String) query.getParameterValue(
+                    "parameter_0");
+            Assertions.assertEquals(parameter,
+                    "2a146779-77ef-41a8-b958-0a4bddeac2d7");
+            Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        });
+    }
+
+    /**
+     * Check that it is possible to undertake a nested contains
+     * Entity: mappe, merknad
+     * Attribute: merknad.systemID
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=merknad/systemID eq '2a146779-77ef-41a8-b958-0a4bddeac2d7'
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN file_1.referenceComment AS comment_1
+     * WHERE
+     * comment_1.systemId = :parameter_0
+     * Additionally the parameter_0 parameter value should be:
+     * 2a146779-77ef-41a8-b958-0a4bddeac2d7
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLJoinQueryWithEqSecondaryEntity() {
+        String joinQuery = "mappe?$filter=" +
+                "merknad/systemID eq '2a146779-77ef-41a8-b958-0a4bddeac2d7'";
+        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        String hqlJoin = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referenceComment AS comment_1" +
+                " WHERE" +
+                " comment_1.systemId = :parameter_0";
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                fromString("2a146779-77ef-41a8-b958-0a4bddeac2d7"));
+        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+    }
+
+    /**
      * Check that it is possible to search for registryentry associated with a
      * given signoff. This is required when creating hateaos links for signoff
      * _links. Make sure that we can point to all "parent" registryentry

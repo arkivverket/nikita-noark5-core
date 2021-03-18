@@ -401,22 +401,15 @@ public class Record
         author.setReferenceRecord(null);
     }
 
+    @Override
     public Set<Comment> getReferenceComment() {
         return referenceComment;
     }
 
-    public void setReferenceComment(Set<Comment> referenceComment) {
-        this.referenceComment = referenceComment;
-    }
-
+    @Override
     public void addComment(Comment comment) {
         referenceComment.add(comment);
-        comment.setReferenceRecord(this);
-    }
-
-    public void removeComment(Comment comment) {
-        referenceComment.remove(comment);
-        comment.setReferenceRecord(null);
+        comment.getReferenceRecord().add(this);
     }
 
     @Override

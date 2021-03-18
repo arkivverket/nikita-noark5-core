@@ -7,14 +7,11 @@ import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.CommentType;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 
-/**
- * Created by tsodring on 1/16/17.
- */
-// TODO check if this inheritence is ok.
+// TODO check if this inheritance is ok.
 public interface ICommentEntity
         extends ISystemId {
-
     String getCommentText();
 
     void setCommentText(String commentText);
@@ -31,16 +28,16 @@ public interface ICommentEntity
 
     void setCommentRegisteredBy(String commentRegisteredBy);
 
-    File getReferenceFile();
+    Set<File> getReferenceFile();
 
-    void setReferenceFile(File referenceFile);
+    void addFile(File referenceFile);
 
-    Record getReferenceRecord();
+    Set<Record> getReferenceRecord();
 
-    void setReferenceRecord(Record referenceRecord);
+    void addRecord(Record referenceRecord);
 
-    DocumentDescription getReferenceDocumentDescription();
+    Set<DocumentDescription> getReferenceDocumentDescription();
 
-    void setReferenceDocumentDescription
-        (DocumentDescription referenceDocumentDescription);
+    void addDocumentDescription(
+            DocumentDescription referenceDocumentDescription);
 }

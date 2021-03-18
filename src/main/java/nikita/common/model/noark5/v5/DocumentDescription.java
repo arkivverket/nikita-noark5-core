@@ -411,20 +411,9 @@ public class DocumentDescription
     }
 
     @Override
-    public void setReferenceComment(Set<Comment> referenceComment) {
-        this.referenceComment = referenceComment;
-    }
-
-    @Override
     public void addComment(Comment comment) {
         this.referenceComment.add(comment);
-        comment.setReferenceDocumentDescription(this);
-    }
-
-    @Override
-    public void removeComment(Comment comment) {
-        this.referenceComment.remove(comment);
-        comment.setReferenceDocumentDescription(null);
+        comment.getReferenceDocumentDescription().add(this);
     }
 
     @Override

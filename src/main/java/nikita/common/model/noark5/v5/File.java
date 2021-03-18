@@ -332,13 +332,7 @@ public class File
     @Override
     public void addComment(Comment comment) {
         referenceComment.add(comment);
-        comment.setReferenceFile(this);
-    }
-
-    @Override
-    public void removeComment(Comment comment) {
-        referenceComment.remove(comment);
-        comment.setReferenceFile(null);
+        comment.getReferenceFile().add(this);
     }
 
     @Override
