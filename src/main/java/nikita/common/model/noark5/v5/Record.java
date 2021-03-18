@@ -133,15 +133,15 @@ public class Record
             referenceCorrespondencePart = new ArrayList<>();
 
     // Link to StorageLocation
-    @ManyToMany(cascade = PERSIST)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_STORAGE_LOCATION,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<StorageLocation> referenceStorageLocation =
-            new ArrayList<>();
+    private Set<StorageLocation> referenceStorageLocation =
+            new HashSet<>();
 
     // Link to Series
     @ManyToOne(fetch = LAZY)
@@ -363,19 +363,14 @@ public class Record
     }
 
     @Override
-    public List<StorageLocation> getReferenceStorageLocation() {
+    public Set<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
-    }
-
-    @Override
-    public void setReferenceStorageLocation(
-            List<StorageLocation> referenceStorageLocation) {
-        this.referenceStorageLocation = referenceStorageLocation;
     }
 
     @Override
     public void addReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
+        storageLocation.getReferenceRecord().add(this);
     }
 
     @Override

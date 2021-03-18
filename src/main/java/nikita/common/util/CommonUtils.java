@@ -723,22 +723,26 @@ public final class CommonUtils {
                         .setClassificationType(classificationType);
             }
 
-            public static void deserialiseStorageLocation(IStorageLocation storageLocationEntity,
-                                                          ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseStorageLocation(
+                    IStorageLocation storageLocationEntity,
+                    ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize storageLocation
                 JsonNode currentNode = objectNode.get(STORAGE_LOCATION);
 
                 if (null != currentNode) {
-                    ArrayList<StorageLocation> storageLocations = new ArrayList<>();
+                    ArrayList<StorageLocation> storageLocations =
+                            new ArrayList<>();
                     if (currentNode.isArray()) {
                         currentNode.iterator();
                         for (JsonNode node : currentNode) {
                             String location = node.textValue();
-                            StorageLocation storageLocation = new StorageLocation();
+                            StorageLocation storageLocation =
+                                    new StorageLocation();
                             storageLocation.setStorageLocation(location);
                             storageLocations.add(storageLocation);
+                            storageLocationEntity.addReferenceStorageLocation(
+                                    storageLocation);
                         }
-                        storageLocationEntity.setReferenceStorageLocation(storageLocations);
                     }
                     objectNode.remove(STORAGE_LOCATION);
                 }
@@ -2236,9 +2240,11 @@ public final class CommonUtils {
             }
             */
 
-            public static void printStorageLocation(JsonGenerator jgen, IStorageLocation storageLocationEntity)
+            public static void printStorageLocation(
+                    JsonGenerator jgen, IStorageLocation storageLocationEntity)
                     throws IOException {
-                List<StorageLocation> storageLocation = storageLocationEntity.getReferenceStorageLocation();
+                Set<StorageLocation> storageLocation = storageLocationEntity
+                        .getReferenceStorageLocation();
                 if (storageLocation != null && storageLocation.size() > 0) {
                     jgen.writeArrayFieldStart(STORAGE_LOCATION);
                     for (StorageLocation location : storageLocation) {

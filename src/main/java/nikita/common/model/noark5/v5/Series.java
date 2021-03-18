@@ -21,11 +21,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-import static javax.persistence.CascadeType.*;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -92,7 +91,7 @@ public class Series
     private String documentMediumCodeName;
 
     // Links to StorageLocations
-    @ManyToMany(cascade = ALL)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_SERIES_STORAGE_LOCATION,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_SERIES_PK,
@@ -100,7 +99,7 @@ public class Series
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
+    private Set<StorageLocation> referenceStorageLocation = new HashSet<>();
 
     // Link to Fonds
     @ManyToOne(fetch = LAZY)
@@ -249,19 +248,14 @@ public class Series
     }
 
     @Override
-    public List<StorageLocation> getReferenceStorageLocation() {
+    public Set<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
-    }
-
-    @Override
-    public void setReferenceStorageLocation(
-            List<StorageLocation> referenceStorageLocation) {
-        this.referenceStorageLocation = referenceStorageLocation;
     }
 
     @Override
     public void addReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
+        storageLocation.getReferenceSeries().add(this);
     }
 
     public Fonds getReferenceFonds() {

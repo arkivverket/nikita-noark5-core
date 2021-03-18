@@ -19,8 +19,11 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
@@ -79,7 +82,7 @@ public class Fonds
     private List<Fonds> referenceChildFonds = new ArrayList<>();
 
     // Links to StorageLocations
-    @ManyToMany(cascade = PERSIST)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FONDS_STORAGE_LOCATION,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_FONDS_PK,
@@ -88,7 +91,7 @@ public class Fonds
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     )
-    private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
+    private Set<StorageLocation> referenceStorageLocation = new HashSet<>();
 
     // Links to FondsCreators
     @ManyToMany
@@ -189,20 +192,14 @@ public class Fonds
     }
 
     @Override
-    public List<StorageLocation> getReferenceStorageLocation() {
+    public Set<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
     }
 
     @Override
-    public void setReferenceStorageLocation(
-            List<StorageLocation> referenceStorageLocation) {
-        this.referenceStorageLocation = referenceStorageLocation;
-    }
-
-    @Override
-    public void addReferenceStorageLocation(
-            StorageLocation storageLocation) {
+    public void addReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
+        storageLocation.getReferenceFonds().add(this);
     }
 
     @Override
