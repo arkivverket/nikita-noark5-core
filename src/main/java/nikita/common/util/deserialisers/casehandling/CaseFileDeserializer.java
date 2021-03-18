@@ -20,18 +20,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 1/6/17.
- * <p>
  * Deserialise an incoming CaseFile JSON object.
- * <p>
- * Having a own deserialiser is done to have more fine grained control over
- * the input.
- * <p>
- * Note. Currently we do not include 'id' or 'deleted' properties. 'id' is a
- * primary key and it is assumed this is taken care of by the DBMS and
- * 'deleted' is a field internal to the core to handle soft delete. Importing
- * soft deleted objects is something we do not consider necessary.
- * <p>
  * Note:
  * - Unknown property values in the JSON will trigger an exception
  * - Missing obligatory property values in the JSON will trigger an exception
@@ -56,7 +45,6 @@ public class CaseFileDeserializer
         deserialiseNoarkGeneralEntity(caseFile, objectNode, errors);
         deserialiseDocumentMedium(caseFile, objectNode, errors);
         deserialiseStorageLocation(caseFile, objectNode, errors);
-        deserialiseKeyword(caseFile, objectNode, errors);
 
         // Deserialize fileId
         JsonNode currentNode = objectNode.get(FILE_ID);
@@ -71,14 +59,6 @@ public class CaseFileDeserializer
             caseFile.setPublicTitle(currentNode.textValue());
             objectNode.remove(FILE_PUBLIC_TITLE);
         }
-        caseFile.setReferenceCrossReference(
-                deserialiseCrossReferences(caseFile, objectNode, errors));
-        caseFile.setReferenceDisposal(
-                deserialiseDisposal(objectNode, errors));
-        caseFile.setReferenceScreening(
-                deserialiseScreening(objectNode, errors));
-        caseFile.setReferenceClassified(
-                deserialiseClassified(objectNode, errors));
 
         // Deserialise general properties for CaseFile
         // Deserialize caseYear
@@ -143,14 +123,12 @@ public class CaseFileDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The saksmappe object you tried to create is " +
-                          "malformed. The following fields are not recognised "+
-                          "as saksmappe fields " +
-                          "[" + checkNodeObjectEmpty(objectNode) + "].");
+            errors.append("The saksmappe object you tried to create is ");
+            errors.append("malformed. The following fields are not ");
+            errors.append("recognised as saksmappe fields [");
+            errors.append(checkNodeObjectEmpty(objectNode));
+            errors.append("].");
         }
-
-        caseFile.setReferencePart(
-                deserialiseCaseParties(objectNode, errors));
 
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());
