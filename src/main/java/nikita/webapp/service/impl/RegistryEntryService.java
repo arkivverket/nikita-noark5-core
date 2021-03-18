@@ -213,9 +213,8 @@ public class RegistryEntryService
             throw new NikitaMalformedInputDataException(info);
         }
 
-        signOff.addRecord(registryEntry);
+        registryEntry.addSignOff(signOff);
         signOff = signOffRepository.save(signOff);
-        registryEntry.addReferenceSignOff(signOff);
         SignOffHateoas signOffHateoas = new SignOffHateoas(signOff);
         signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         return signOffHateoas;
@@ -327,11 +326,10 @@ public class RegistryEntryService
     @Override
     public SignOffHateoas
     findAllSignOffAssociatedWithRegistryEntry(String systemId) {
-        SignOffHateoas signOffHateoas =
-            new SignOffHateoas((List<INoarkEntity>) (List)
-            getRegistryEntryOrThrow(systemId).getReferenceSignOff());
-        signOffHateoasHandler.addLinks(signOffHateoas,
-                                       new Authorisation());
+        SignOffHateoas signOffHateoas = new SignOffHateoas(
+                List.copyOf(getRegistryEntryOrThrow(systemId)
+                        .getReferenceSignOff()));
+        signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         return signOffHateoas;
     }
 

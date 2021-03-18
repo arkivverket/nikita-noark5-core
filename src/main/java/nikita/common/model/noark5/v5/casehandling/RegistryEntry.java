@@ -25,8 +25,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
@@ -197,7 +201,7 @@ public class RegistryEntry
     private List<DocumentFlow> referenceDocumentFlow = new ArrayList<>();
 
     // Links to SignOff
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_REGISTRY_ENTRY_SIGN_OFF,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_RECORD_PK,
@@ -205,7 +209,7 @@ public class RegistryEntry
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_SIGN_OFF_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<SignOff> referenceSignOff = new ArrayList<>();
+    private Set<SignOff> referenceSignOff = new HashSet<>();
 
     // Links to Precedence
     @ManyToMany
@@ -398,16 +402,15 @@ public class RegistryEntry
         documentFlow.setReferenceRegistryEntry(null);
     }
 
-    public List<SignOff> getReferenceSignOff() {
+    @Override
+    public Set<SignOff> getReferenceSignOff() {
         return referenceSignOff;
     }
 
-    public void setReferenceSignOff(List<SignOff> referenceSignOff) {
-        this.referenceSignOff = referenceSignOff;
-    }
-
-    public void addReferenceSignOff(SignOff signOff) {
+    @Override
+    public void addSignOff(SignOff signOff) {
         this.referenceSignOff.add(signOff);
+        signOff.getReferenceRecord().add(this);
     }
 
     public List<Precedence> getReferencePrecedence() {
