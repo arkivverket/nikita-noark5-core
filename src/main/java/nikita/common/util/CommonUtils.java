@@ -1015,18 +1015,6 @@ public final class CommonUtils {
                 deletionEntity.setDeletionDate(deserializeDateTime(DELETION_DATE, objectNode, errors));
             }
 
-            public static List<Part> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
-                ArrayList<Part> caseParties = new ArrayList<>();
-                //JsonNode jsonPart = objectNode.get(PART);
-                // TODO: I seem tobe missing my body of code ...
-/*                for (CorrespondencePart correspondencePart: caseParties) {
-                    deserialiseCorrespondencePart(correspondencePart, objectNode);
-                    objectNode.remove(CORRESPONDENCE_PART);
-                }
-*/
-                return caseParties;
-            }
-
             public static void deserialiseAdministrativeUnitEntity(IAdministrativeUnitEntity administrativeUnit,
                                                                    ObjectNode objectNode, StringBuilder errors) {
                 if (null != administrativeUnit) {

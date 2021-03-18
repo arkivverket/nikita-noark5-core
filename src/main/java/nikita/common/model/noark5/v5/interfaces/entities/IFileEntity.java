@@ -2,14 +2,10 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 import nikita.common.model.noark5.v5.interfaces.*;
 
-/**
- * Created by tsodring
- */
 public interface IFileEntity
         extends INoarkGeneralEntity, IDocumentMedium, IStorageLocation,
         IKeyword, IClassified, IDisposal, IScreening, IComment,
-        ICrossReference, IBSM {
-
+        ICrossReference, IPart, IBSM {
     String getFileId();
 
     void setFileId(String fileId);

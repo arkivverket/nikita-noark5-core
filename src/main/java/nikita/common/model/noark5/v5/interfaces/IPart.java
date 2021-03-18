@@ -2,12 +2,10 @@ package nikita.common.model.noark5.v5.interfaces;
 
 import nikita.common.model.noark5.v5.secondary.Part;
 
-import java.util.List;
+import java.util.Set;
 
 public interface IPart {
-    List<Part> getReferencePart();
-    void setReferencePart(List<Part> part);
-    void addPart(Part part);
+    Set<Part> getReferencePart();
 
-    void removePart(Part part);
+    void addPart(Part part);
 }

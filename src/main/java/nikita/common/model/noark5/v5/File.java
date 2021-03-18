@@ -147,13 +147,13 @@ public class File
     private List<CrossReference> referenceCrossReference = new ArrayList<>();
 
     // Links to Part
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FILE_PARTY,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Part> referencePart = new ArrayList<>();
+    private Set<Part> referencePart = new HashSet<>();
 
     // Links to NationalIdentifiers
     @OneToMany(mappedBy = "referenceFile")
@@ -357,14 +357,12 @@ public class File
         this.referenceCrossReference = referenceCrossReference;
     }
 
-    public List<Part> getReferencePart() {
+    @Override
+    public Set<Part> getReferencePart() {
         return referencePart;
     }
 
-    public void setReferencePart(List<Part> referencePart) {
-        this.referencePart = referencePart;
-    }
-
+    @Override
     public void addPart(Part part) {
         referencePart.add(part);
         part.getReferenceFile().add(this);

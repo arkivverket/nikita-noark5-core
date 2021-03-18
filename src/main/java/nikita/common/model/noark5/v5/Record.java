@@ -116,7 +116,7 @@ public class Record
     private File referenceFile;
 
     // Links to Part
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_PART,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_RECORD_PK,
@@ -124,7 +124,7 @@ public class Record
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Part> referencePart = new ArrayList<>();
+    private Set<Part> referencePart = new HashSet<>();
 
     // Links to CorrespondencePart
     @OneToMany(mappedBy = "referenceRecord",
@@ -383,7 +383,6 @@ public class Record
         return referenceKeyword;
     }
 
-
     @Override
     public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
@@ -449,13 +448,8 @@ public class Record
     }
 
     @Override
-    public List<Part> getReferencePart() {
+    public Set<Part> getReferencePart() {
         return referencePart;
-    }
-
-    @Override
-    public void setReferencePart(List<Part> referencePart) {
-        this.referencePart = referencePart;
     }
 
     @Override
@@ -463,13 +457,6 @@ public class Record
         referencePart.add(part);
         part.getReferenceRecord().add(this);
     }
-
-    @Override
-    public void removePart(Part part) {
-        referencePart.remove(part);
-        part.getReferenceRecord().remove(this);
-    }
-
 
     @Override
     public List<CorrespondencePart> getReferenceCorrespondencePart() {
