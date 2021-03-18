@@ -2256,10 +2256,11 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printFondsCreators(JsonGenerator jgen, IFondsCreator fondsCreatorObject)
+            public static void printFondsCreators(
+                    JsonGenerator jgen, IFondsCreator fondsCreatorObject)
                     throws IOException {
-
-                List<FondsCreator> fondsCreators = fondsCreatorObject.getReferenceFondsCreator();
+                Set<FondsCreator> fondsCreators =
+                        fondsCreatorObject.getReferenceFondsCreator();
                 if (fondsCreators != null) {
                     for (FondsCreator fondsCreator : fondsCreators) {
                         if (fondsCreator != null) {

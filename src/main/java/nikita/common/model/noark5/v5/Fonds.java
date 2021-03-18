@@ -94,7 +94,7 @@ public class Fonds
     private Set<StorageLocation> referenceStorageLocation = new HashSet<>();
 
     // Links to FondsCreators
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FONDS_FONDS_CREATOR,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_FONDS_PK,
@@ -103,7 +103,7 @@ public class Fonds
                     name = FOREIGN_KEY_FONDS_CREATOR_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     )
-    private List<FondsCreator> referenceFondsCreator = new ArrayList<>();
+    private Set<FondsCreator> referenceFondsCreator = new HashSet<>();
 
     public FondsStatus getFondsStatus() {
         if (null == fondsStatusCode)
@@ -203,23 +203,13 @@ public class Fonds
     }
 
     @Override
-    public List<FondsCreator> getReferenceFondsCreator() {
+    public Set<FondsCreator> getReferenceFondsCreator() {
         return referenceFondsCreator;
-    }
-
-    public void setReferenceFondsCreator(
-            List<FondsCreator> referenceFondsCreator) {
-        this.referenceFondsCreator = referenceFondsCreator;
     }
 
     public void addFondsCreator(FondsCreator fondsCreator) {
         this.referenceFondsCreator.add(fondsCreator);
         fondsCreator.getReferenceFonds().add(this);
-    }
-
-    public void removeFondsCreator(FondsCreator fondsCreator) {
-        this.referenceFondsCreator.remove(fondsCreator);
-        fondsCreator.getReferenceFonds().remove(this);
     }
 
     @Override

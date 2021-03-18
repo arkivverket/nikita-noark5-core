@@ -17,8 +17,8 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -60,7 +60,7 @@ public class FondsCreator
 
     // Links to Fonds
     @ManyToMany(mappedBy = "referenceFondsCreator")
-    private List<Fonds> referenceFonds = new ArrayList<>();
+    private Set<Fonds> referenceFonds = new HashSet<>();
 
     public String getFondsCreatorId() {
         return fondsCreatorId;
@@ -96,16 +96,13 @@ public class FondsCreator
         return REL_FONDS_STRUCTURE_FONDS_CREATOR;
     }
 
-    public List<Fonds> getReferenceFonds() {
+    public Set<Fonds> getReferenceFonds() {
         return referenceFonds;
     }
 
-    public void setReferenceFonds(List<Fonds> referenceFonds) {
-        this.referenceFonds = referenceFonds;
-    }
-
     public void addFonds(Fonds fonds) {
-        referenceFonds.add(fonds);
+        this.referenceFonds.add(fonds);
+        fonds.getReferenceFondsCreator().add(this);
     }
 
     @Override
