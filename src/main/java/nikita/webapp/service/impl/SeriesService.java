@@ -183,9 +183,8 @@ public class SeriesService
             @NotNull final String systemId) {
         ClassificationSystemHateoas classificationSystemHateoas =
                 new ClassificationSystemHateoas(
-                        (List<INoarkEntity>) (List)
-                                getSeriesOrThrow(systemId).
-                                        getReferenceClassificationSystem());
+                        List.copyOf(getSeriesOrThrow(systemId)
+                                .getReferenceClassificationSystem()));
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         return ResponseEntity.status(OK)
