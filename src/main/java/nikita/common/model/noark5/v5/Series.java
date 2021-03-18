@@ -321,11 +321,6 @@ public class Series
         file.setReferenceSeries(this);
     }
 
-    public void removeFile(File file) {
-        this.referenceFile.remove(file);
-        file.setReferenceSeries(null);
-    }
-
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
@@ -337,11 +332,6 @@ public class Series
     public void addRecord(Record record) {
         this.referenceRecord.add(record);
         record.setReferenceSeries(this);
-    }
-
-    public void removeRecord(Record record) {
-        this.referenceRecord.remove(record);
-        record.setReferenceSeries(null);
     }
 
     @Override
