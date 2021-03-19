@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -86,12 +87,11 @@ public class AdministrativeUnit
     // Links to SequenceNumberGenerator
     @OneToMany(mappedBy = "referenceAdministrativeUnit",
             cascade = ALL, orphanRemoval = true)
-    private Set <SequenceNumberGenerator>
+    private Set<SequenceNumberGenerator>
             referenceSequenceNumberGenerator = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = TABLE_ADMINISTRATIVE_UNIT_USER,
+    @ManyToMany(cascade = {PERSIST, MERGE})
+    @JoinTable(name = TABLE_ADMINISTRATIVE_UNIT_USER,
             joinColumns = {
                     @JoinColumn(
                             name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
@@ -102,6 +102,7 @@ public class AdministrativeUnit
     private Set<User> users = new HashSet<>();
 
     // Links to CaseFile
+    // TODO: Do we really need the relationship to be bidirectional?
     @OneToMany(mappedBy = "referenceAdministrativeUnit", cascade = ALL)
     @JsonIgnore
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
@@ -110,12 +111,11 @@ public class AdministrativeUnit
      * M585 referanseOverordnetEnhet (xs:string)
      */
     // Link to parent AdministrativeUnit
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     private AdministrativeUnit referenceParentAdministrativeUnit;
 
     // Links to child AdministrativeUnit
-    @OneToMany(mappedBy = "referenceParentAdministrativeUnit",
-            fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "referenceParentAdministrativeUnit", fetch = LAZY)
     private List<AdministrativeUnit> referenceChildAdministrativeUnit =
             new ArrayList<>();
 

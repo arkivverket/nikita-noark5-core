@@ -1,8 +1,8 @@
 package nikita.webapp.run;
 
-import nikita.webapp.util.DemoData;
 import nikita.webapp.util.InternalNameTranslator;
 import nikita.webapp.util.MetadataInsert;
+import nikita.webapp.util.UserStartupImport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static java.lang.System.out;
 import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.FileConstants.*;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
@@ -43,7 +42,7 @@ public class AfterApplicationStartup {
 
     private ApplicationContext applicationContext;
     private InternalNameTranslator internalNameTranslator;
-    private DemoData demoData;
+    private UserStartupImport userStartupImport;
     private MetadataInsert metadataInsert;
 
 
@@ -61,12 +60,12 @@ public class AfterApplicationStartup {
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,
-                                   DemoData demoData,
+                                   UserStartupImport userStartupImport,
                                    MetadataInsert metadataInsert,
                                    ApplicationContext applicationContext,
                                    InternalNameTranslator internalNameTranslator) {
         this.handlerMapping = handlerMapping;
-        this.demoData = demoData;
+        this.userStartupImport = userStartupImport;
         this.metadataInsert = metadataInsert;
         this.applicationContext = applicationContext;
         this.internalNameTranslator = internalNameTranslator;
@@ -91,10 +90,10 @@ public class AfterApplicationStartup {
         }
 
         if (createUsers) {
-            demoData.addAdminUnit();
-            demoData.addAuthorities();
-            demoData.addUserAdmin();
-            demoData.addUserRecordKeeper();
+            userStartupImport.addAuthorities();
+            userStartupImport.addAdminUnit();
+            userStartupImport.addUserAdmin();
+            userStartupImport.addUserRecordKeeper();
         }
     }
 
@@ -221,7 +220,7 @@ public class AfterApplicationStartup {
                                 httpMethods.add(TRACE);
                             }
                         }
-                        out.println("Adding " + servletPath + " methods " + httpMethods);
+                        logger.info("Adding " + servletPath + " methods " + httpMethods);
                         addRequestToMethodMap(servletPath, httpMethods);
                     } else {
                         logger.warn("Missing HTTP Methods for the following servletPath [" + servletPath + "]");

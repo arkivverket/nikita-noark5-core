@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -33,7 +33,6 @@ import static nikita.common.config.Constants.SYSTEM;
 
 
 @Service
-@Transactional
 public class UserService
         extends NoarkService
         implements IUserService {
@@ -64,13 +63,9 @@ public class UserService
     }
 
     @Override
+    @Transactional
     public UserHateoas createNewUser(final User user)
             throws UsernameExistsException {
-        if (userExists(user.getUsername())) {
-            throw new UsernameExistsException("There is an account with that " +
-                    "username: " + user.getUsername());
-        }
-        // Encrypt the password. Should be bcrypt!
         user.setPassword(encoder.encode(user.getPassword()));
         user.setEnabled(true);
         user.setCreatedBy(SYSTEM);
@@ -100,6 +95,7 @@ public class UserService
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserHateoas findBySystemID(String systemID) {
         User user = getUserOrThrow(systemID);
         UserHateoas userHateoas = new UserHateoas(user);
@@ -120,6 +116,7 @@ public class UserService
     }
 
     @Override
+    @Transactional
     public UserHateoas handleUpdate(@NotNull String userSystemId,
                                     @NotNull Long version,
                                     @NotNull User incomingUser) {
@@ -156,6 +153,7 @@ public class UserService
      * @return true if the username is registered, false otherwise
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean userExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
@@ -168,6 +166,7 @@ public class UserService
      * @return User if the username is registered, null otherwise
      */
     @Override
+    @Transactional(readOnly = true)
     public User userGetByUsername(String username) {
 	Optional<User> userOptional = userRepository.findByUsername(username);
 	if (userOptional.isPresent()) {
@@ -180,10 +179,11 @@ public class UserService
      * Look up systemID/UUID and return the equivalent User instance
      * if it exist, or null if not.
      *
-     * @param systemID UUID for the username to check
+     * @param systemId UUID for the username to check
      * @return User if the UUID is registered, null otherwise
      */
     @Override
+    @Transactional(readOnly = true)
     public User userGetBySystemId(UUID systemId) {
 	Optional<User> userOptional = userRepository.findBySystemId(systemId);
 	if (userOptional.isPresent()) {
@@ -200,6 +200,7 @@ public class UserService
      * @return true if the authority exists, false otherwise
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean authorityExists(AuthorityName authority) {
         return authorityRepository.findByAuthorityName(authority) != null;
     }
@@ -212,6 +213,7 @@ public class UserService
      * @param systemId systemId of the user to delete
      */
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String systemId) {
         deleteEntity(getUserOrThrow(systemId));
     }
@@ -232,11 +234,13 @@ public class UserService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteByUsername(String username) {
         return userRepository.deleteByUsername(username);
     }
 
     @Override
+    @Transactional
     public User validateUserReference
         (String type, User user, String username, UUID systemID) {
         if (null == user && null != systemID) {

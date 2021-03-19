@@ -1,18 +1,15 @@
 package nikita.common.model.noark5.v5.interfaces.entities.admin;
 
 import nikita.common.model.noark5.v5.admin.Authority;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
 import nikita.common.model.noark5.v5.interfaces.entities.IFinalise;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Set;
 
-/**
- * Created by tsodring on 5/23/17.
- */
-public interface IUserEntity extends INoarkEntity, ICreate, IFinalise {
-
+public interface IUserEntity
+        extends INoarkEntity, ICreate, IFinalise {
     String getUsername();
 
     void setUsername(String username);
@@ -32,24 +29,16 @@ public interface IUserEntity extends INoarkEntity, ICreate, IFinalise {
     Boolean getEnabled();
 
     void setEnabled(Boolean enabled);
-
     boolean isAccountNonExpired();
-
     void setAccountNonExpired(boolean accountNonExpired);
-
     boolean isCredentialsNonExpired();
-
     void setCredentialsNonExpired(boolean credentialsNonExpired);
-
     boolean isAccountNonLocked();
 
     void setAccountNonLocked(boolean accountNonLocked);
 
-    List<Authority> getAuthorities();
-
-    void setAuthorities(List<Authority> authorities);
+    Set<Authority> getAuthorities();
 
     OffsetDateTime getLastPasswordResetDate();
-
     void setLastPasswordResetDate(OffsetDateTime lastPasswordResetDate);
 }

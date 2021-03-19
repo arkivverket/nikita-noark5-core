@@ -8,11 +8,10 @@ import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
 import nikita.webapp.service.impl.admin.UserService;
-import nikita.webapp.service.interfaces.ICaseFileService;
-import nikita.webapp.service.interfaces.IFondsService;
-import nikita.webapp.service.interfaces.IRecordService;
-import nikita.webapp.service.interfaces.ISeriesService;
-import org.springframework.stereotype.Service;
+import nikita.webapp.util.exceptions.UsernameExistsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -21,62 +20,36 @@ import static nikita.common.config.Constants.TEST_ADMINISTRATIVE_UNIT;
 import static nikita.common.model.noark5.v5.admin.AuthorityName.*;
 
 /**
- * Created by tsodring
- * <p>
- * nikita implements the Noark 5 data model with english attributes e.g. 'title'
- * instead of 'tittel'. This is because we hope that others may find nikita
- * useful for their language and can build out an approach for their language.
- * <p>
- * Most of the time there wasn't an issue, but when
- * serialising/deserialising we simply put in the correct attribute name, but
- * when it came to handling OData requests and developing a OData parser, we
- * ended a better approach. While this approach still is suboptimal (it can't
- * handle multiple languages), it is what we landed on. Further it was taken
- * out to an own component in order to have a more SOLID approach to classes, as
- * opposed to singular gigantic classes that do too much.
- * <p>
- * Note: Not all attributes are mapped yet.
+ * Create built in users.
+ * TODO: Replace with data in JSON files so that it can be handled in the same
+ * way metadata is imported
  */
-@Service
+@Component
 @Transactional
-public class DemoData {
+public class UserStartupImport {
 
-    private UserService userService;
-    private AuthorityRepository authorityRepository;
-    private AdministrativeUnitService administrativeUnitService;
-    private IFondsService fondsService;
-    private ISeriesService seriesService;
-    private ICaseFileService caseFileService;
-    private IRecordService recordService;
+    private final UserService userService;
+    private final AuthorityRepository authorityRepository;
+    private final AdministrativeUnitService administrativeUnitService;
 
-    public DemoData(UserService userService,
-                    AuthorityRepository authorityRepository,
-                    AdministrativeUnitService administrativeUnitService,
-                    IFondsService fondsService,
-                    ISeriesService seriesService,
-                    ICaseFileService caseFileService,
-                    IRecordService recordService) {
+    private final Logger logger =
+            LoggerFactory.getLogger(UserStartupImport.class);
+
+    public UserStartupImport(
+            UserService userService,
+            AuthorityRepository authorityRepository,
+            AdministrativeUnitService administrativeUnitService) {
         this.userService = userService;
         this.authorityRepository = authorityRepository;
         this.administrativeUnitService = administrativeUnitService;
-        this.fondsService = fondsService;
-        this.seriesService = seriesService;
-        this.caseFileService = caseFileService;
-        this.recordService = recordService;
     }
 
-    /**
-     * Create a mapping of Norwegian names to english names for the Noark
-     * domain model.
-     */
     public void addAdminUnit() {
         // Create an administrative unit
         AdministrativeUnit administrativeUnit = new AdministrativeUnit();
-
         administrativeUnit.setAdministrativeUnitName(TEST_ADMINISTRATIVE_UNIT);
         administrativeUnit.setShortName("test");
         administrativeUnit.setDefaultAdministrativeUnit(true);
-
         administrativeUnitService.
                 createNewAdministrativeUnitBySystemNoDuplicate(
                         administrativeUnit);
@@ -91,28 +64,26 @@ public class DemoData {
     }
 
     public void addUserAdmin() {
-
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User admin = new User();
-
-        if (!userService.userExists("admin@example.com")) {
-            admin.setPassword("password");
-            admin.setFirstname("Frank");
-            admin.setLastname("Grimes");
-            admin.setUsername("admin@example.com");
-            admin.addAuthority(authorityRepository.
-                    findByAuthorityName(RECORDS_MANAGER));
-            administrativeUnit.addUser(admin);
-            admin.addAdministrativeUnit(administrativeUnit);
+        admin.setPassword("password");
+        admin.setFirstname("Frank");
+        admin.setLastname("Grimes");
+        admin.setUsername("admin@example.com");
+        admin.addAuthority(authorityRepository
+                .findByAuthorityName(RECORDS_MANAGER));
+        admin.addAdministrativeUnit(administrativeUnit);
+        try {
             userService.createNewUser(admin);
+        } catch (UsernameExistsException e) {
+            logger.info("During startup, user " + admin.getUsername() +
+                    "is already registered in the database");
         }
     }
 
     public void addUserRecordKeeper() {
-
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User recordKeeper = new User();
-
         if (!userService.userExists("recordkeeper@example.com")) {
             recordKeeper.setPassword("password");
             recordKeeper.setFirstname("Moe");
@@ -126,12 +97,9 @@ public class DemoData {
         }
     }
 
-
     public void addUserCaseHandler() {
-
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User caseHandler = new User();
-
         if (!userService.userExists("casehandler@example.com")) {
             caseHandler.setPassword("password");
             caseHandler.setFirstname("Rainier");
@@ -148,7 +116,6 @@ public class DemoData {
     public void addUserLeader() {
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User leader = new User();
-
         if (!userService.userExists("leader@example.com")) {
             leader.setPassword("password");
             leader.setFirstname("Johnny");
@@ -163,10 +130,8 @@ public class DemoData {
     }
 
     public void addUserGuest() {
-
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User guest = new User();
-
         if (!userService.userExists("cletus@example.com")) {
             guest.setPassword("password");
             guest.setFirstname("Cletus");

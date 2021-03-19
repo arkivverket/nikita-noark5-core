@@ -18,9 +18,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -88,18 +90,16 @@ public class User
     @DateTimeFormat(iso = DATE_TIME)
     private OffsetDateTime lastPasswordResetDate;
 
-    @ManyToMany
-    @JoinTable(
-            name = TABLE_USER_AUTHORITY,
+    @ManyToMany(cascade = {PERSIST, MERGE})
+    @JoinTable(name = TABLE_USER_AUTHORITY,
             joinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)},
             inverseJoinColumns = {@JoinColumn(name = "authority_id",
                     referencedColumnName = "id")})
-    private List<Authority> authorities = new ArrayList<>();
-
+    private Set<Authority> authorities = new HashSet<>();
 
     @ManyToMany(mappedBy = "users")
-    private List<AdministrativeUnit> administrativeUnits = new ArrayList<>();
+    private Set<AdministrativeUnit> administrativeUnits = new HashSet<>();
 
     @Override
     public OffsetDateTime getFinalisedDate() {
@@ -185,12 +185,8 @@ public class User
         this.accountNonLocked = accountNonLocked;
     }
 
-    public List<Authority> getAuthorities() {
+    public Set<Authority> getAuthorities() {
         return authorities;
-    }
-
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
     }
 
     public void addAuthority(Authority authority) {
@@ -198,23 +194,13 @@ public class User
         authority.getUsers().add(this);
     }
 
-    public List<AdministrativeUnit> getAdministrativeUnits() {
+    public Set<AdministrativeUnit> getAdministrativeUnits() {
         return administrativeUnits;
-    }
-
-    public void setAdministrativeUnits(List<AdministrativeUnit> administrativeUnits) {
-        this.administrativeUnits = administrativeUnits;
     }
 
     public void addAdministrativeUnit(AdministrativeUnit administrativeUnit) {
         this.administrativeUnits.add(administrativeUnit);
         administrativeUnit.getUsers().add(this);
-    }
-
-    public void removeAdministrativeUnit(
-            AdministrativeUnit administrativeUnit) {
-        this.administrativeUnits.remove(administrativeUnit);
-        administrativeUnit.getUsers().remove(this);
     }
 
     public OffsetDateTime getLastPasswordResetDate() {
