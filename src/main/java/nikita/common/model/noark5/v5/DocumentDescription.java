@@ -171,11 +171,12 @@ public class DocumentDescription
 
     // Links to Records
     @ManyToMany(mappedBy = "referenceDocumentDescription")
-    private List<Record> referenceRecord = new ArrayList<>();
+    private final Set<Record> referenceRecord = new HashSet<>();
 
     // Links to DocumentObjects
     @OneToMany(mappedBy = "referenceDocumentDescription")
-    private List<DocumentObject> referenceDocumentObject = new ArrayList<>();
+    private final List<DocumentObject> referenceDocumentObject =
+            new ArrayList<>();
 
     // Links to Comments
     @ManyToMany(cascade = {PERSIST, MERGE})
@@ -186,11 +187,11 @@ public class DocumentDescription
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Comment> referenceComment = new HashSet<>();
+    private final Set<Comment> referenceComment = new HashSet<>();
 
     // Links to Authors
     @OneToMany(mappedBy = "referenceDocumentDescription")
-    private List<Author> referenceAuthor = new ArrayList<>();
+    private final List<Author> referenceAuthor = new ArrayList<>();
 
     // Link to Classified
     @ManyToOne(fetch = LAZY, cascade = PERSIST)
@@ -235,7 +236,7 @@ public class DocumentDescription
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Part> referencePart = new HashSet<>();
+    private final Set<Part> referencePart = new HashSet<>();
 
     public DocumentType getDocumentType() {
         if (null == documentTypeCode)
@@ -362,7 +363,7 @@ public class DocumentDescription
         this.externalReference = externalReference;
     }
 
-    public List<Record> getReferenceRecord() {
+    public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
@@ -371,28 +372,13 @@ public class DocumentDescription
         record.addDocumentDescription(this);
     }
 
-    public void removeReferenceRecord(Record record) {
-        this.referenceRecord.remove(record);
-        record.addDocumentDescription(null);
-    }
-
     public List<DocumentObject> getReferenceDocumentObject() {
         return referenceDocumentObject;
-    }
-
-    public void setReferenceDocumentObject(
-            List<DocumentObject> referenceDocumentObject) {
-        this.referenceDocumentObject = referenceDocumentObject;
     }
 
     public void addReferenceDocumentObject(DocumentObject documentObject) {
         referenceDocumentObject.add(documentObject);
         documentObject.setReferenceDocumentDescription(this);
-    }
-
-    public void removeReferenceDocumentObject(DocumentObject documentObject) {
-        referenceDocumentObject.remove(documentObject);
-        documentObject.setReferenceDocumentDescription(null);
     }
 
     @Override
