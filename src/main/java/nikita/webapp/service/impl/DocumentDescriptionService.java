@@ -294,10 +294,9 @@ public class DocumentDescriptionService
     @SuppressWarnings("unchecked")
     public RecordHateoas
     findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId) {
-        RecordHateoas recordHateoas = new
-                RecordHateoas((List<INoarkEntity>)
-                (List) getDocumentDescriptionOrThrow(systemId)
-                        .getReferenceRecord());
+        RecordHateoas recordHateoas = new RecordHateoas(
+                List.copyOf(getDocumentDescriptionOrThrow(systemId)
+                        .getReferenceRecord()));
         recordHateoasHandler.addLinks(recordHateoas,
                 new Authorisation());
         return recordHateoas;
