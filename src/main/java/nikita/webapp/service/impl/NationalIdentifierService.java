@@ -2,22 +2,9 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.metadata.CoordinateSystem;
-import nikita.common.model.noark5.v5.nationalidentifier.Building;
-import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
-import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Plan;
-import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
-import nikita.common.model.noark5.v5.nationalidentifier.Position;
-import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Unit;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.repository.n5v5.INationalIdentifierRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
@@ -175,10 +162,7 @@ public class NationalIdentifierService
     @Override
     public PositionHateoas createNewPosition
             (@NotNull Position position, @NotNull Record record) {
-        // bidirectional relationship @ManyToMany, set both sides of
-        // relationship
         record.addNationalIdentifier(position);
-        position.setReferenceRecord(record);
         nationalIdentifierRepository.save(position);
         PositionHateoas positionHateoas = new PositionHateoas(position);
         positionHateoasHandler.addLinks(positionHateoas, new Authorisation());
@@ -188,10 +172,7 @@ public class NationalIdentifierService
     @Override
     public PositionHateoas createNewPosition
             (@NotNull Position position, @NotNull File file) {
-        // bidirectional relationship @ManyToMany, set both sides of
-        // relationship
         file.addNationalIdentifier(position);
-        position.setReferenceFile(file);
         nationalIdentifierRepository.save(position);
         PositionHateoas positionHateoas = new PositionHateoas(position);
         positionHateoasHandler.addLinks(positionHateoas, new Authorisation());
@@ -227,10 +208,7 @@ public class NationalIdentifierService
     @Override
     public UnitHateoas createNewUnit
             (@NotNull Unit unit, @NotNull Record record) {
-        // bidirectional relationship @ManyToMany, set both sides of
-        // relationship
         record.addNationalIdentifier(unit);
-        unit.setReferenceRecord(record);
         nationalIdentifierRepository.save(unit);
         UnitHateoas unitHateoas = new UnitHateoas(unit);
         nationalIdentifierHateoasHandler
@@ -241,10 +219,7 @@ public class NationalIdentifierService
     @Override
     public UnitHateoas createNewUnit
             (@NotNull Unit unit, @NotNull File file) {
-        // bidirectional relationship @ManyToMany, set both sides of
-        // relationship
         file.addNationalIdentifier(unit);
-        unit.setReferenceFile(file);
         nationalIdentifierRepository.save(unit);
         UnitHateoas unitHateoas = new UnitHateoas(unit);
         nationalIdentifierHateoasHandler
