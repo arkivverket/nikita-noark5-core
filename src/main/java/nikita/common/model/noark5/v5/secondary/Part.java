@@ -25,10 +25,6 @@ import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.Constants.TABLE_PART;
 import static nikita.common.config.N5ResourceMappings.PART;
 
-/**
- * Created by tsodring on 4/10/16.
- */
-
 @Entity
 @Table(name = TABLE_PART)
 @Inheritance(strategy = JOINED)
@@ -78,6 +74,11 @@ public class Part
         file.getReferencePart().add(this);
     }
 
+    public void removeFile(File file) {
+        referenceFile.remove(file);
+        file.getReferencePart().remove(this);
+    }
+
     public PartRole getPartRole() {
         if (null == partRoleCode)
             return null;
@@ -105,6 +106,12 @@ public class Part
         record.getReferencePart().add(this);
     }
 
+    public void removeRecord(
+            Record Record) {
+        referenceRecord.remove(Record);
+        Record.getReferencePart().remove(this);
+    }
+
     public Set<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
@@ -113,6 +120,12 @@ public class Part
             DocumentDescription documentDescription) {
         referenceDocumentDescription.add(documentDescription);
         documentDescription.getReferencePart().add(this);
+    }
+
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        referenceDocumentDescription.remove(documentDescription);
+        documentDescription.getReferencePart().remove(this);
     }
 
     public List<BSMBase> getReferenceBSMBase() {
