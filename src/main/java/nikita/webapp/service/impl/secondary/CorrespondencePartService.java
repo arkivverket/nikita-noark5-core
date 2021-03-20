@@ -244,8 +244,6 @@ public class CorrespondencePartService
         }
 
         record.addCorrespondencePart(correspondencePart);
-        correspondencePart.setReferenceRecord(record);
-
         CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
                 new CorrespondencePartPersonHateoas(
                         correspondencePartRepository.save(correspondencePart));
@@ -287,10 +285,7 @@ public class CorrespondencePartService
             correspondencePart.setBusinessAddress(businessAddress);
             businessAddress.setCorrespondencePartUnit(correspondencePart);
         }
-        // bidirectional relationship @ManyToOne, set both sides of
-        // relationship
         record.addCorrespondencePart(correspondencePart);
-        correspondencePart.setReferenceRecord(record);
         correspondencePartRepository.save(correspondencePart);
         CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
                 new CorrespondencePartUnitHateoas(correspondencePart);
