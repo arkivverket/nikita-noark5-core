@@ -381,6 +381,11 @@ public class DocumentDescription
         documentObject.setReferenceDocumentDescription(this);
     }
 
+    public void removeReferenceDocumentObject(DocumentObject documentObject) {
+        referenceDocumentObject.remove(documentObject);
+        documentObject.setReferenceDocumentDescription(null);
+    }
+
     @Override
     public String getStorageLocation() {
         return storageLocation;
