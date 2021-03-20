@@ -16,7 +16,11 @@ public interface IClassificationSystemEntity
 
     void addSeries(Series series);
 
+    void removeSeries(Series series);
+
     Set<Class> getReferenceClass();
 
     void addClass(Class klass);
+
+    void removeClass(Class klass);
 }

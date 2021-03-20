@@ -95,6 +95,12 @@ public class ClassificationSystem
     }
 
     @Override
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.getReferenceClassificationSystem().remove(this);
+    }
+
+    @Override
     public Set<Class> getReferenceClass() {
         return referenceClass;
     }
@@ -102,6 +108,12 @@ public class ClassificationSystem
     @Override
     public void addClass(Class klass) {
         this.referenceClass.add(klass);
+        klass.setReferenceClassificationSystem(this);
+    }
+
+    @Override
+    public void removeClass(Class klass) {
+        this.referenceClass.remove(klass);
         klass.setReferenceClassificationSystem(this);
     }
 
