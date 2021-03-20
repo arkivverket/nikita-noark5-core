@@ -48,7 +48,11 @@ public interface IPrecedenceEntity
 
     void addRegistryEntry(RegistryEntry registryEntry);
 
+    void removeRegistryEntry(RegistryEntry registryEntry);
+
     Set<CaseFile> getReferenceCaseFile();
 
     void addCaseFile(CaseFile caseFile);
+
+    void removeCaseFile(CaseFile caseFile);
 }

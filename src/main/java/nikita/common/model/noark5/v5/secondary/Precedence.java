@@ -232,6 +232,11 @@ public class Precedence
         registryEntry.getReferencePrecedence().add(this);
     }
 
+    public void removeRegistryEntry(RegistryEntry registryEntry) {
+        this.referenceRegistryEntry.remove(registryEntry);
+        registryEntry.getReferencePrecedence().remove(this);
+    }
+
     @Override
     public Set<CaseFile> getReferenceCaseFile() {
         return referenceCaseFile;
