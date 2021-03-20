@@ -1436,14 +1436,6 @@ public final class CommonUtils {
                     }
                 }
 
-                // Deserialize kontaktperson
-                currentNode = objectNode.get(CONTACT_PERSON);
-                if (null != currentNode) {
-                    correspondencePartUnit.setContactPerson(
-                            currentNode.textValue());
-                    objectNode.remove(CONTACT_PERSON);
-                }
-
                 // Deserialize postadresse
                 currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
