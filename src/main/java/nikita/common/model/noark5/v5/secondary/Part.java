@@ -106,10 +106,9 @@ public class Part
         record.getReferencePart().add(this);
     }
 
-    public void removeRecord(
-            Record Record) {
-        referenceRecord.remove(Record);
-        Record.getReferencePart().remove(this);
+    public void removeRecord(Record record) {
+        referenceRecord.remove(record);
+        record.getReferencePart().remove(this);
     }
 
     public Set<DocumentDescription> getReferenceDocumentDescription() {
