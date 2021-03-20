@@ -1,13 +1,23 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.*;
 import nikita.common.util.serializers.noark5v5.StorageLocationSerializer;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.envers.Audited;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_STORAGE_LOCATION;
 import static nikita.common.config.Constants.TABLE_STORAGE_LOCATION;
+import static nikita.common.config.N5ResourceMappings.STORAGE_LOCATION;
 
 @Entity
 @Table(name = TABLE_STORAGE_LOCATION)
@@ -16,138 +26,138 @@ public class StorageLocation
         extends SystemIdEntity {
 
     /**
-     * m301 - oppbevaringssted (xs:string)
+     * M301 - oppbevaringssted (xs:string)
      */
-    @column(name = "storage_location")
-    @audited
-    private string storagelocation;
+    @Column(name = "storage_location")
+    @Audited
+    private String storageLocation;
 
-    // links to fonds
-    @manytomany(mappedby = "referencestoragelocation")
-    @jsonignore
-    private set<fonds> referencefonds = new hashset<>();
+    // Links to Fonds
+    @ManyToMany(mappedBy = "referenceStorageLocation")
+    @JsonIgnore
+    private Set<Fonds> referenceFonds = new HashSet<>();
 
-    // links to series
-    @manytomany(mappedby = "referencestoragelocation")
-    private set<series> referenceseries = new hashset<>();
+    // Links to Series
+    @ManyToMany(mappedBy = "referenceStorageLocation")
+    private Set<Series> referenceSeries = new HashSet<>();
 
-    // links to file
-    @manytomany(mappedby = "referencestoragelocation")
-    private set<file> referencefile = new hashset<>();
+    // Links to File
+    @ManyToMany(mappedBy = "referenceStorageLocation")
+    private Set<File> referenceFile = new HashSet<>();
 
-    // links to record
-    @manytomany(mappedby = "referencestoragelocation")
-    @jsonignore
-    private set<record> referencerecord = new hashset<>();
+    // Links to Record
+    @ManyToMany(mappedBy = "referenceStorageLocation")
+    @JsonIgnore
+    private Set<Record> referenceRecord = new HashSet<>();
 
-    public string getstoragelocation() {
-        return storagelocation;
+    public String getStorageLocation() {
+        return storageLocation;
     }
 
-    public void setstoragelocation(string storagelocation) {
-        this.storagelocation = storagelocation;
+    public void setStorageLocation(String storageLocation) {
+        this.storageLocation = storageLocation;
     }
 
-    public set<fonds> getreferencefonds() {
-        return referencefonds;
+    public Set<Fonds> getReferenceFonds() {
+        return referenceFonds;
     }
 
-    public void addfonds(fonds fonds) {
-        this.referencefonds.add(fonds);
-        fonds.getreferencestoragelocation().add(this);
+    public void addFonds(Fonds fonds) {
+        this.referenceFonds.add(fonds);
+        fonds.getReferenceStorageLocation().add(this);
     }
 
-    public void removefonds(fonds fonds) {
-        this.referencefonds.remove(fonds);
-        fonds.getreferencestoragelocation().remove(this);
+    public void removeFonds(Fonds fonds) {
+        this.referenceFonds.remove(fonds);
+        fonds.getReferenceStorageLocation().remove(this);
     }
 
-    public set<series> getreferenceseries() {
-        return referenceseries;
+    public Set<Series> getReferenceSeries() {
+        return referenceSeries;
     }
 
-    public void addseries(series series) {
-        this.referenceseries.add(series);
-        series.getreferencestoragelocation().add(this);
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.getReferenceStorageLocation().add(this);
     }
 
-    public void removeseries(series series) {
-        this.referenceseries.remove(series);
-        series.getreferencestoragelocation().remove(this);
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.getReferenceStorageLocation().remove(this);
     }
 
-    public set<file> getreferencefile() {
-        return referencefile;
+    public Set<File> getReferenceFile() {
+        return referenceFile;
     }
 
-    public void addfile(file file) {
-        this.referencefile.add(file);
-        file.getreferencestoragelocation().add(this);
+    public void addFile(File file) {
+        this.referenceFile.add(file);
+        file.getReferenceStorageLocation().add(this);
     }
 
-    public void removefile(file file) {
-        this.referencefile.remove(file);
-        file.getreferencestoragelocation().remove(this);
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.getReferenceStorageLocation().remove(this);
     }
 
-    public set<record> getreferencerecord() {
-        return referencerecord;
+    public Set<Record> getReferenceRecord() {
+        return referenceRecord;
     }
 
-    public void setreferencerecord(set<record> referencerecord) {
-        this.referencerecord = referencerecord;
+    public void setReferenceRecord(Set<Record> referenceRecord) {
+        this.referenceRecord = referenceRecord;
     }
 
-    public void addrecord(record record) {
-        this.referencerecord.add(record);
-        record.getreferencestoragelocation().add(this);
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
+        record.getReferenceStorageLocation().add(this);
     }
 
-    public void removerecord(record record) {
-        this.referencerecord.remove(record);
-        record.getreferencestoragelocation().remove(this);
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.getReferenceStorageLocation().remove(this);
     }
 
-    @override
-    public string getbasetypename() {
-        return storage_location;
+    @Override
+    public String getBaseTypeName() {
+        return STORAGE_LOCATION;
     }
 
-    @override
-    public string getbaserel() {
-        return rel_fonds_structure_storage_location;
+    @Override
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_STORAGE_LOCATION;
     }
 
-    @override
-    public string tostring() {
-        return "storagelocation{" + super.tostring() +
-                ", storagelocation='" + storagelocation + '\'' +
+    @Override
+    public String toString() {
+        return "StorageLocation{" + super.toString() +
+                ", storageLocation='" + storageLocation + '\'' +
                 '}';
     }
 
-    @override
-    public boolean equals(object other) {
+    @Override
+    public boolean equals(Object other) {
         if (other == null) {
             return false;
         }
         if (other == this) {
             return true;
         }
-        if (other.getclass() != getclass()) {
+        if (other.getClass() != getClass()) {
             return false;
         }
-        storagelocation rhs = (storagelocation) other;
-        return new equalsbuilder()
-                .appendsuper(super.equals(other))
-                .append(storagelocation, rhs.storagelocation)
-                .isequals();
+        StorageLocation rhs = (StorageLocation) other;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(other))
+                .append(storageLocation, rhs.storageLocation)
+                .isEquals();
     }
 
-    @override
-    public int hashcode() {
-        return new hashcodebuilder()
-                .appendsuper(super.hashcode())
-                .append(storagelocation)
-                .tohashcode();
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .appendSuper(super.hashCode())
+                .append(storageLocation)
+                .toHashCode();
     }
 }
