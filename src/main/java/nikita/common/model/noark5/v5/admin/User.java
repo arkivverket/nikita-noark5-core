@@ -194,6 +194,11 @@ public class User
         authority.getUsers().add(this);
     }
 
+    public void removeAuthority(Authority authority) {
+        authorities.remove(authority);
+        authority.getUsers().remove(this);
+    }
+
     public Set<AdministrativeUnit> getAdministrativeUnits() {
         return administrativeUnits;
     }
