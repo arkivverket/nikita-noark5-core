@@ -105,6 +105,11 @@ public class FondsCreator
         fonds.getReferenceFondsCreator().add(this);
     }
 
+    public void removeFonds(Fonds fonds) {
+        this.referenceFonds.remove(fonds);
+        fonds.getReferenceFondsCreator().remove(this);
+    }
+
     @Override
     public String toString() {
         return "FondsCreator{" + super.toString() +
