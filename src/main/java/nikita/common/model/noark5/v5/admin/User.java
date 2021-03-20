@@ -208,6 +208,12 @@ public class User
         administrativeUnit.getUsers().add(this);
     }
 
+    public void removeAdministrativeUnit(
+            AdministrativeUnit administrativeUnit) {
+        this.administrativeUnits.remove(administrativeUnit);
+        administrativeUnit.getUsers().remove(this);
+    }
+
     public OffsetDateTime getLastPasswordResetDate() {
         return lastPasswordResetDate;
     }
