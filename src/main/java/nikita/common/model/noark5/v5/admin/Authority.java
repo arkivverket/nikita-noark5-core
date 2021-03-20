@@ -54,8 +54,8 @@ public class Authority
         return users;
     }
 
-    public void addUser(User user) {
-        this.users.add(user);
-        user.getAuthorities().add(this);
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getAuthorities().remove(this);
     }
 }
