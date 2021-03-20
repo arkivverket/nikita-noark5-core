@@ -498,7 +498,7 @@ public class DocumentObjectService
             // Tie the new document object and document description together
             archiveDocumentObject.setReferenceDocumentDescription
                     (documentDescription);
-            documentDescription.addReferenceDocumentObject(archiveDocumentObject);
+            documentDescription.addDocumentObject(archiveDocumentObject);
 
             archiveDocumentObject.setChecksum(
                     new DigestUtils(defaultChecksumAlgorithm).

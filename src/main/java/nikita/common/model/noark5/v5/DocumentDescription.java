@@ -372,16 +372,21 @@ public class DocumentDescription
         record.addDocumentDescription(this);
     }
 
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.addDocumentDescription(this);
+    }
+
     public List<DocumentObject> getReferenceDocumentObject() {
         return referenceDocumentObject;
     }
 
-    public void addReferenceDocumentObject(DocumentObject documentObject) {
+    public void addDocumentObject(DocumentObject documentObject) {
         referenceDocumentObject.add(documentObject);
         documentObject.setReferenceDocumentDescription(this);
     }
 
-    public void removeReferenceDocumentObject(DocumentObject documentObject) {
+    public void removeDocumentObject(DocumentObject documentObject) {
         referenceDocumentObject.remove(documentObject);
         documentObject.setReferenceDocumentDescription(null);
     }
