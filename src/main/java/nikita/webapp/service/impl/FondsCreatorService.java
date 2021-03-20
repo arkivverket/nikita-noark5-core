@@ -115,7 +115,6 @@ public class FondsCreatorService
      * @return A FondsHateoas list packed as a ResponseEntity
      */
     @Override
-    @SuppressWarnings("unchecked")
     public ResponseEntity<FondsHateoas> findFondsAssociatedWithFondsCreator(
             @NotNull final String systemId) {
         FondsHateoas fondsHateoas = new FondsHateoas(

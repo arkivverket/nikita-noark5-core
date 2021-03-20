@@ -206,7 +206,6 @@ public class ClassificationSystemService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ClassHateoas findAllClassAssociatedWithClassificationSystem(
             @NotNull String classificationSystemSystemId) {
         ClassificationSystem classificationSystem =
@@ -218,7 +217,6 @@ public class ClassificationSystemService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithClassificationSystem(
             @NotNull final String systemId) {

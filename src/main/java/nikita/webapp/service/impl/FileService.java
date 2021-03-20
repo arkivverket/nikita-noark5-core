@@ -282,7 +282,6 @@ public class FileService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public PartHateoas getPartAssociatedWithFile(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(

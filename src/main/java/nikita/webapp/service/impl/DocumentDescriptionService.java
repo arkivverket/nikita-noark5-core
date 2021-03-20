@@ -291,7 +291,6 @@ public class DocumentDescriptionService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public RecordHateoas
     findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId) {
         RecordHateoas recordHateoas = new RecordHateoas(
@@ -313,7 +312,6 @@ public class DocumentDescriptionService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public PartHateoas getPartAssociatedWithDocumentDescription(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
