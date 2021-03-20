@@ -7,12 +7,9 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.model.noark5.v5.metadata.PrecedenceStatus;
 
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-/**
- * Created by tsodring on 1/16/17.
- */
 public interface IPrecedenceEntity
     extends  INoarkGeneralEntity {
     OffsetDateTime getPrecedenceDate();
@@ -47,11 +44,11 @@ public interface IPrecedenceEntity
 
     void setPrecedenceStatus(PrecedenceStatus precedenceStatus);
 
-    List<RegistryEntry> getReferenceRegistryEntry();
+    Set<RegistryEntry> getReferenceRegistryEntry();
 
-    void setReferenceRegistryEntry(List<RegistryEntry> referenceRegistryEntry);
+    void addRegistryEntry(RegistryEntry registryEntry);
 
-    List<CaseFile> getReferenceCaseFile();
+    Set<CaseFile> getReferenceCaseFile();
 
-    void setReferenceCaseFile(List<CaseFile> referenceCaseFile);
+    void addCaseFile(CaseFile caseFile);
 }

@@ -362,12 +362,9 @@ public class RegistryEntryService
     @Override
     public PrecedenceHateoas createPrecedenceAssociatedWithRecord(
             String registryEntrySystemID, Precedence precedence) {
-
         RegistryEntry registryEntry = getRegistryEntryOrThrow(
                 registryEntrySystemID);
-        // bidirectional relationship @ManyToMany, set both sides of relationship
-        registryEntry.getReferencePrecedence().add(precedence);
-        precedence.getReferenceRegistryEntry().add(registryEntry);
+        registryEntry.addPrecedence(precedence);
         return precedenceService.createNewPrecedence(precedence);
 
     }

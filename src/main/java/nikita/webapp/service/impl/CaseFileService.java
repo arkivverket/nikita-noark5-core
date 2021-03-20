@@ -173,11 +173,8 @@ public class CaseFileService
     @Override
     public PrecedenceHateoas createPrecedenceAssociatedWithFile(
             String caseFileSystemID, Precedence precedence) {
-
         CaseFile caseFile = getCaseFileOrThrow(caseFileSystemID);
-        // bidirectional relationship @ManyToMany, set both sides of relationship
-        caseFile.getReferencePrecedence().add(precedence);
-        precedence.getReferenceCaseFile().add(caseFile);
+        caseFile.addPrecedence(precedence);
         return precedenceService.createNewPrecedence(precedence);
     }
 

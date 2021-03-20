@@ -12,8 +12,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static nikita.common.config.Constants.TABLE_KEYWORD;
 import static nikita.common.config.N5ResourceMappings.KEYWORD;
@@ -32,15 +32,15 @@ public class Keyword
 
     // Links to Class
     @ManyToMany(mappedBy = "referenceKeyword")
-    private List<Class> referenceClass = new ArrayList<>();
+    private Set<Class> referenceClass = new HashSet<>();
 
     // Links to File
     @ManyToMany(mappedBy = "referenceKeyword")
-    private List<File> referenceFile = new ArrayList<>();
+    private Set<File> referenceFile = new HashSet<>();
 
     // Links to Record
     @ManyToMany(mappedBy = "referenceKeyword")
-    private List<Record> referenceRecord = new ArrayList<>();
+    private Set<Record> referenceRecord = new HashSet<>();
 
     public String getKeyword() {
         return keyword;
@@ -60,32 +60,31 @@ public class Keyword
         return KEYWORD; // TODO, should it have a relation key?
     }
 
-    public List<Class> getReferenceClass() {
+    public Set<Class> getReferenceClass() {
         return referenceClass;
-    }
-
-    public void setReferenceClass(List<Class> referenceClass) {
-        this.referenceClass = referenceClass;
     }
 
     public void addClass(Class klass) {
         referenceClass.add(klass);
+        klass.getReferenceKeyword().add(this);
     }
 
-    public List<File> getReferenceFile() {
+    public Set<File> getReferenceFile() {
         return referenceFile;
     }
 
-    public void setReferenceFile(List<File> referenceFile) {
-        this.referenceFile = referenceFile;
+    public void addFile(File file) {
+        referenceFile.add(file);
+        file.getReferenceKeyword().add(this);
     }
 
-    public List<Record> getReferenceRecord() {
+    public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void addRecord(Record record) {
+        referenceRecord.add(record);
+        record.getReferenceKeyword().add(this);
     }
 
     @Override

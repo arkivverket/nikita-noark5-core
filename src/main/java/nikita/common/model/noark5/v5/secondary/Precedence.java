@@ -20,8 +20,8 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
@@ -108,11 +108,11 @@ public class Precedence
 
     // Links to RegistryEntry
     @ManyToMany(mappedBy = "referencePrecedence")
-    private List<RegistryEntry> referenceRegistryEntry = new ArrayList<>();
+    private Set<RegistryEntry> referenceRegistryEntry = new HashSet<>();
 
     // Links to CaseFiles
     @ManyToMany(mappedBy = "referencePrecedence")
-    private List<CaseFile> referenceCaseFile = new ArrayList<>();
+    private Set<CaseFile> referenceCaseFile = new HashSet<>();
 
     @Override
     public OffsetDateTime getPrecedenceDate() {
@@ -222,36 +222,22 @@ public class Precedence
     }
 
     @Override
-    public List<RegistryEntry> getReferenceRegistryEntry() {
+    public Set<RegistryEntry> getReferenceRegistryEntry() {
         return referenceRegistryEntry;
     }
 
     @Override
-    public void setReferenceRegistryEntry(
-            List<RegistryEntry> referenceRegistryEntry) {
-        this.referenceRegistryEntry = referenceRegistryEntry;
-    }
-
     public void addRegistryEntry(RegistryEntry registryEntry) {
         this.referenceRegistryEntry.add(registryEntry);
         registryEntry.getReferencePrecedence().add(this);
     }
 
-    public void removeRegistryEntry(RegistryEntry registryEntry) {
-        this.referenceRegistryEntry.remove(registryEntry);
-        registryEntry.getReferencePrecedence().remove(this);
-    }
-
     @Override
-    public List<CaseFile> getReferenceCaseFile() {
+    public Set<CaseFile> getReferenceCaseFile() {
         return referenceCaseFile;
     }
 
     @Override
-    public void setReferenceCaseFile(List<CaseFile> referenceCaseFile) {
-        this.referenceCaseFile = referenceCaseFile;
-    }
-
     public void addCaseFile(CaseFile caseFile) {
         this.referenceCaseFile.add(caseFile);
         caseFile.getReferencePrecedence().add(this);

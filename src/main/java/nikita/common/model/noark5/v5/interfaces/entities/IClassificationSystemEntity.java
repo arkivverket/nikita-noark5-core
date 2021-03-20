@@ -2,28 +2,21 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.Series;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkGeneralEntity;
 import nikita.common.model.noark5.v5.metadata.ClassificationType;
 
-import java.util.List;
+import java.util.Set;
 
-/**
- * Created by tsodring
- */
 public interface IClassificationSystemEntity
-        extends INoarkGeneralEntity
-{
-
+        extends INoarkGeneralEntity {
     ClassificationType getClassificationType();
 
     void setClassificationType(ClassificationType classificationType);
 
-    List<Series> getReferenceSeries();
+    Set<Series> getReferenceSeries();
 
-    void setReferenceSeries(List<Series> referenceSeries);
+    void addSeries(Series series);
 
-    List<Class> getReferenceClass();
+    Set<Class> getReferenceClass();
 
-    void setReferenceClass(List<Class> referenceClass);
-
+    void addClass(Class klass);
 }

@@ -211,9 +211,8 @@ public class ClassificationSystemService
             @NotNull String classificationSystemSystemId) {
         ClassificationSystem classificationSystem =
                 getClassificationSystemOrThrow(classificationSystemSystemId);
-        ClassHateoas classHateoas = new
-                ClassHateoas((List<INoarkEntity>)
-                (List) classificationSystem.getReferenceClass());
+        ClassHateoas classHateoas = new ClassHateoas(
+                List.copyOf(classificationSystem.getReferenceClass()));
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
     }
@@ -221,11 +220,11 @@ public class ClassificationSystemService
     @Override
     @SuppressWarnings("unchecked")
     public ResponseEntity<SeriesHateoas>
-    findSeriesAssociatedWithClassificationSystem(@NotNull final String systemId) {
-        SeriesHateoas seriesHateoas = new
-                SeriesHateoas((List<INoarkEntity>)
-                (List) getClassificationSystemOrThrow(systemId).
-                        getReferenceSeries());
+    findSeriesAssociatedWithClassificationSystem(
+            @NotNull final String systemId) {
+        SeriesHateoas seriesHateoas = new SeriesHateoas(
+                List.copyOf(getClassificationSystemOrThrow(systemId)
+                        .getReferenceSeries()));
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
