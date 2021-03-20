@@ -69,6 +69,11 @@ public class Keyword
         klass.getReferenceKeyword().add(this);
     }
 
+    public void removeClass(Class klass) {
+        referenceClass.remove(klass);
+        klass.getReferenceKeyword().remove(this);
+    }
+
     public Set<File> getReferenceFile() {
         return referenceFile;
     }
@@ -78,6 +83,11 @@ public class Keyword
         file.getReferenceKeyword().add(this);
     }
 
+    public void removeFile(File file) {
+        referenceFile.remove(file);
+        file.getReferenceKeyword().remove(this);
+    }
+
     public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
@@ -85,6 +95,11 @@ public class Keyword
     public void addRecord(Record record) {
         referenceRecord.add(record);
         record.getReferenceKeyword().add(this);
+    }
+
+    public void removeRecord(Record record) {
+        referenceRecord.remove(record);
+        record.getReferenceKeyword().remove(this);
     }
 
     @Override
