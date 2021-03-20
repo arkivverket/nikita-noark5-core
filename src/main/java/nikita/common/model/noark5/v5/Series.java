@@ -308,6 +308,12 @@ public class Series
         classificationSystem.getReferenceSeries().add(this);
     }
 
+    public void removeClassificationSystem(
+            ClassificationSystem classificationSystem) {
+        this.referenceClassificationSystem.remove(classificationSystem);
+        classificationSystem.getReferenceSeries().remove(this);
+    }
+
     public List<File> getReferenceFile() {
         return referenceFile;
     }
@@ -321,6 +327,11 @@ public class Series
         file.setReferenceSeries(this);
     }
 
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.setReferenceSeries(this);
+    }
+
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
@@ -331,6 +342,11 @@ public class Series
 
     public void addRecord(Record record) {
         this.referenceRecord.add(record);
+        record.setReferenceSeries(this);
+    }
+
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
         record.setReferenceSeries(this);
     }
 
