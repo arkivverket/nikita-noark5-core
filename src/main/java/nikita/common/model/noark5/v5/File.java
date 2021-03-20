@@ -244,7 +244,7 @@ public class File
     }
 
     @Override
-    public void addReferenceStorageLocation(
+    public void addStorageLocation(
             StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
         storageLocation.getReferenceFile().add(this);

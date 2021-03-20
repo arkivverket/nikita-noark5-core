@@ -197,7 +197,7 @@ public class Fonds
     }
 
     @Override
-    public void addReferenceStorageLocation(StorageLocation storageLocation) {
+    public void addStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
         storageLocation.getReferenceFonds().add(this);
     }

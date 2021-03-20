@@ -253,7 +253,7 @@ public class Series
     }
 
     @Override
-    public void addReferenceStorageLocation(StorageLocation storageLocation) {
+    public void addStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
         storageLocation.getReferenceSeries().add(this);
     }

@@ -740,7 +740,7 @@ public final class CommonUtils {
                                     new StorageLocation();
                             storageLocation.setStorageLocation(location);
                             storageLocations.add(storageLocation);
-                            storageLocationEntity.addReferenceStorageLocation(
+                            storageLocationEntity.addStorageLocation(
                                     storageLocation);
                         }
                     }
