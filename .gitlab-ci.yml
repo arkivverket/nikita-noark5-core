@@ -60,7 +60,7 @@ noark5tester-inoutin:
     - find uttrekk-*
     - depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
     - echo "Trying to load data from $depotdir"
-    - ./import-uttrekk  --baseurl $baseurl "$depotdir"
+    - ./import-uttrekk --baseurl $baseurl "$depotdir" --verbose
   artifacts:
     paths:
       - nikita-run.log
