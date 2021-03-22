@@ -24,7 +24,8 @@ public class Parent
             parameters = {@Parameter(
                     name = "uuid_gen_strategy_class",
                     value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
-    @Column(name = SYSTEM_ID_ENG, updatable = false, nullable = false)
+    @Column(name = SYSTEM_ID_ENG, unique = true, updatable = false, nullable =
+            false)
     @Type(type = "uuid-char")
     private UUID code;
 
