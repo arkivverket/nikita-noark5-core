@@ -1,27 +1,33 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_POSTAL_ADDRESS;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 
-/**
- * Created by tsodring on 5/14/17.
- */
 @Entity
 @Table(name = TABLE_POSTAL_ADDRESS)
 public class PostalAddress
-        extends SystemIdEntity
-        implements ISimpleAddress {
+        extends NoarkEntity
+        implements ISystemId, ISimpleAddress {
+
+    /**
+     * M001 - systemID (xs:string)
+     */
+    @Id
+    @Type(type = "uuid-char")
+    @Column(name = SYSTEM_ID_ENG, insertable = false, updatable = false,
+            nullable = false)
+    private UUID systemId;
 
     @Embedded
     private SimpleAddress simpleAddress;
@@ -37,6 +43,29 @@ public class PostalAddress
 
     @OneToOne(fetch = LAZY)
     private PartUnit partUnit;
+
+    @Override
+    public String getSystemId() {
+        if (null != systemId)
+            return systemId.toString();
+        else
+            return null;
+    }
+
+    @Override
+    public void setSystemId(UUID systemId) {
+        this.systemId = systemId;
+    }
+
+    @Override
+    public UUID getId() {
+        return systemId;
+    }
+
+    @Override
+    public void setId(UUID systemId) {
+        this.systemId = systemId;
+    }
 
     public SimpleAddress getSimpleAddress() {
         return simpleAddress;

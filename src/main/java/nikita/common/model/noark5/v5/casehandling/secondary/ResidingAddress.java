@@ -1,16 +1,16 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.NoarkEntity;
-import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_RESIDING_ADDRESS;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 
 /**
  * Created by tsodring on 5/14/17.
@@ -18,7 +18,17 @@ import static nikita.common.config.Constants.TABLE_RESIDING_ADDRESS;
 @Entity
 @Table(name = TABLE_RESIDING_ADDRESS)
 public class ResidingAddress
-        extends SystemIdEntity {
+        extends NoarkEntity
+        implements ISystemId {
+
+    /**
+     * M001 - systemID (xs:string)
+     */
+    @Id
+    @Type(type = "uuid-char")
+    @Column(name = SYSTEM_ID_ENG, insertable = false, updatable = false,
+            nullable = false)
+    private UUID systemId;
 
     @Embedded
     SimpleAddress simpleAddress;
@@ -28,6 +38,35 @@ public class ResidingAddress
 
     @OneToOne(fetch = LAZY)
     private PartPerson partPerson;
+
+
+    @Override
+    public String getSystemId() {
+        if (null != systemId)
+            return systemId.toString();
+        else
+            return null;
+    }
+
+    @Override
+    public void setSystemId(UUID systemId) {
+        this.systemId = systemId;
+    }
+
+    @Override
+    public UUID getId() {
+        return systemId;
+    }
+
+    @Override
+    public void setId(UUID systemId) {
+        this.systemId = systemId;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return getSystemId();
+    }
 
     public SimpleAddress getSimpleAddress() {
         return simpleAddress;

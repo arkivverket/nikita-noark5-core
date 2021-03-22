@@ -1,11 +1,11 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.MappedSystemIdEntity;
+import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
@@ -24,11 +24,8 @@ import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 @Entity
 @Table(name = TABLE_BUSINESS_ADDRESS)
 public class BusinessAddress
-        extends MappedSystemIdEntity
-        implements ISimpleAddress {
-//        extends NoarkEntity
-//        implements ISystemId, Comparable<MappedSystemIdEntity>,
-//        ISimpleAddress {
+        extends NoarkEntity
+        implements ISystemId, ISimpleAddress {
 
     /**
      * M001 - systemID (xs:string)
@@ -38,7 +35,6 @@ public class BusinessAddress
     @Column(name = SYSTEM_ID_ENG, insertable = false, updatable = false,
             nullable = false)
     private UUID systemId;
-
 
     @Embedded
     private SimpleAddress simpleAddress;
@@ -140,17 +136,6 @@ public class BusinessAddress
     }
 
     @Override
-    public int compareTo(MappedSystemIdEntity otherEntity) {
-        if (null == otherEntity) {
-            return -1;
-        }
-        return new CompareToBuilder()
-                .append(this.systemId,
-                        fromString(otherEntity.getSystemId()))
-                .toComparison();
-    }
-
-    @Override
     public boolean equals(Object other) {
         if (other == null) {
             return false;
@@ -161,7 +146,7 @@ public class BusinessAddress
         if (other.getClass() != getClass()) {
             return false;
         }
-        MappedSystemIdEntity rhs = (MappedSystemIdEntity) other;
+        BusinessAddress rhs = (BusinessAddress) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(systemId, fromString(rhs.getSystemId()))

@@ -1,29 +1,64 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.NoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IContactInformationEntity;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_CONTACT_INFORMATION;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 
-/**
- * Created by tsodring on 5/14/17.
- */
 @Entity
 @Table(name = TABLE_CONTACT_INFORMATION)
 public class ContactInformation
-        extends SystemIdEntity
-        implements IContactInformationEntity {
+        extends NoarkEntity
+        implements ISystemId, IContactInformationEntity {
+
+    /**
+     * M001 - systemID (xs:string)
+     */
+    @Id
+    @Type(type = "uuid-char")
+    @Column(name = SYSTEM_ID_ENG, insertable = false, updatable = false,
+            nullable = false)
+    private UUID systemId;
+
+    @Override
+    public String getSystemId() {
+        if (null != systemId)
+            return systemId.toString();
+        else
+            return null;
+    }
+
+    @Override
+    public void setSystemId(UUID systemId) {
+        this.systemId = systemId;
+    }
+
+    @Override
+    public UUID getId() {
+        return systemId;
+    }
+
+    @Override
+    public void setId(UUID systemId) {
+        this.systemId = systemId;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return getSystemId();
+    }
 
     /**
      * M410 - epostadresse (xs:string)

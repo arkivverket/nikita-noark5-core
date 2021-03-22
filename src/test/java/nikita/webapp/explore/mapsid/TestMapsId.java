@@ -72,6 +72,7 @@ public class TestMapsId {
      * A test that allows us to explore various configurations until we get
      * it to work.
      *
+     * See commit history to checkout various approaches if it is of interest
      */
     public void testCreateCorrespondBusiness() {
         CorrespondencePartUnit correspondencePartUnit =
