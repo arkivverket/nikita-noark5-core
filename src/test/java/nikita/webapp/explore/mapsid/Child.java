@@ -1,12 +1,14 @@
 package nikita.webapp.explore.mapsid;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Child {
+public class Child
+        implements Serializable {
 
     @Id
-    @Column(name = "code")
+    @Column(name = "code", insertable = false, updatable = false)
     String code;
 
     @OneToOne
@@ -28,5 +30,12 @@ public class Child {
 
     public void setParent(Parent parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public String toString() {
+        return "Child{" +
+                "code='" + code + '\'' +
+                '}';
     }
 }

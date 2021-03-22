@@ -37,22 +37,14 @@ public class TestMapsId {
         Parent parent = new Parent();
         parent.setCode("12345");
         Child child = new Child();
-        child.setCode("54321");
         parent.setChild(child);
         parentRepo.save(parent);
-        logger.info(entityManager.find(Parent.class, "12345").toString());
-        //logger.info(entityManager.find(Child.class, "54321").toString());
-    }
 
-    @Test
-    public void testCreateParentChildEM() {
-        Parent parent = new Parent();
-        parent.setCode("12345");
-        Child child = new Child();
-        child.setCode("54321");
-        parent.setChild(child);
-        entityManager.persist(parent);
-        logger.info(entityManager.find(Parent.class, "12345").toString());
-//        logger.info(entityManager.find(Child.class, "54321").toString());
+        Parent persistedParent = entityManager
+                .find(Parent.class, "12345");
+        logger.info("Parent object is " + persistedParent.toString());
+        Child persistedChild = entityManager
+                .find(Child.class, "12345");
+        logger.info("Child object is " + persistedChild.toString());
     }
 }
