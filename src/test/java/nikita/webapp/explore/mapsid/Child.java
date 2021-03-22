@@ -1,35 +1,22 @@
 package nikita.webapp.explore.mapsid;
 
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import java.io.Serializable;
-import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
 public class Child
+        extends MappedClassForChild
         implements Serializable {
-
-    @Id
-    @Type(type = "uuid-char")
-    @Column(name = "code", insertable = false, updatable = false,
-            nullable = false)
-    private UUID code;
 
     @OneToOne(fetch = LAZY)
     @MapsId
     @JoinColumn(name = "code")
     private Parent parent;
-
-    public UUID getCode() {
-        return code;
-    }
-
-    public void setCode(UUID code) {
-        this.code = code;
-    }
 
     public Parent getParent() {
         return parent;
@@ -37,12 +24,5 @@ public class Child
 
     public void setParent(Parent parent) {
         this.parent = parent;
-    }
-
-    @Override
-    public String toString() {
-        return "Child{" +
-                "code='" + code + '\'' +
-                '}';
     }
 }

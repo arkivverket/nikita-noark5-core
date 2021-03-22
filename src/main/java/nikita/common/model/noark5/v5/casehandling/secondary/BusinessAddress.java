@@ -1,9 +1,7 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import nikita.common.model.noark5.v5.MappedSystemIdEntity;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -26,11 +24,11 @@ import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 @Entity
 @Table(name = TABLE_BUSINESS_ADDRESS)
 public class BusinessAddress
-//        extends MappedSystemIdEntity
-//        implements ISimpleAddress {
-        extends NoarkEntity
-        implements ISystemId, Comparable<MappedSystemIdEntity>,
-        ISimpleAddress {
+        extends MappedSystemIdEntity
+        implements ISimpleAddress {
+//        extends NoarkEntity
+//        implements ISystemId, Comparable<MappedSystemIdEntity>,
+//        ISimpleAddress {
 
     /**
      * M001 - systemID (xs:string)

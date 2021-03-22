@@ -47,11 +47,15 @@ public class TestMapsId {
     ICorrespondencePartRepository correspondencePartRepository;
 
     @Test
+    /**
+     * Make a working example that shows how the approach should work
+     */
     public void testCreateParentChildSpring() {
         Parent parent = new Parent();
         Child child = new Child();
         parent.setChild(child);
         parentRepo.save(parent);
+
         UUID primaryKey = parent.getCode();
         Parent persistedParent = entityManager
                 .find(Parent.class, primaryKey);
@@ -62,8 +66,13 @@ public class TestMapsId {
         logger.info("Child object is " + persistedChild.toString());
     }
 
-
     @Test
+    /**
+     *
+     * A test that allows us to explore various configurations until we get
+     * it to work.
+     *
+     */
     public void testCreateCorrespondBusiness() {
         CorrespondencePartUnit correspondencePartUnit =
                 new CorrespondencePartUnit();

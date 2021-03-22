@@ -7,24 +7,19 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
-import org.hibernate.envers.Audited;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
+import static java.util.UUID.fromString;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-@Audited(targetAuditMode = NOT_AUDITED)
 public class MappedSystemIdEntity
         extends NoarkEntity
         implements ISystemId, Comparable<MappedSystemIdEntity> {
@@ -122,7 +117,7 @@ public class MappedSystemIdEntity
         MappedSystemIdEntity rhs = (MappedSystemIdEntity) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(systemId, rhs.getSystemId())
+                .append(systemId, fromString(rhs.getSystemId()))
                 .isEquals();
     }
 
