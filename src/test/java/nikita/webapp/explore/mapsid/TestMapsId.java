@@ -41,7 +41,7 @@ public class TestMapsId {
         parent.setChild(child);
         parentRepo.save(parent);
         logger.info(entityManager.find(Parent.class, "12345").toString());
-        logger.info(entityManager.find(Child.class, "54321").toString());
+        //logger.info(entityManager.find(Child.class, "54321").toString());
     }
 
     @Test
@@ -51,7 +51,8 @@ public class TestMapsId {
         Child child = new Child();
         child.setCode("54321");
         parent.setChild(child);
+        entityManager.persist(parent);
         logger.info(entityManager.find(Parent.class, "12345").toString());
-        logger.info(entityManager.find(Child.class, "54321").toString());
+//        logger.info(entityManager.find(Child.class, "54321").toString());
     }
 }
