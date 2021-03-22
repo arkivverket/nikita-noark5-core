@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChildRepo
-        extends CrudRepository<Parent, String> {
+        extends CrudRepository<Child, String> {
 }
