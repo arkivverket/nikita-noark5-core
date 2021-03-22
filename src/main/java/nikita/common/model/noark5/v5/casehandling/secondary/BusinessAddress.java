@@ -1,30 +1,27 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.MappedSystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_BUSINESS_ADDRESS;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 
-/**
- * Created by tsodring on 5/14/17.
- */
 @Entity
 @Table(name = TABLE_BUSINESS_ADDRESS)
 public class BusinessAddress
-        extends SystemIdEntity
+        extends MappedSystemIdEntity
         implements ISimpleAddress {
 
     @Embedded
     private SimpleAddress simpleAddress;
 
     @OneToOne(fetch = LAZY)
+    @JoinColumn(name = SYSTEM_ID_ENG)
+    @MapsId
     private CorrespondencePartUnit correspondencePartUnit;
 
     @OneToOne(fetch = LAZY)
@@ -45,6 +42,7 @@ public class BusinessAddress
     public void setCorrespondencePartUnit(CorrespondencePartUnit
                                                   correspondencePartUnit) {
         this.correspondencePartUnit = correspondencePartUnit;
+        correspondencePartUnit.setBusinessAddress(this);
     }
 
     public PartUnit getPartUnit() {

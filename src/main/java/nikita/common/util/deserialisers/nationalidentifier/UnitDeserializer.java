@@ -41,7 +41,7 @@ public class UnitDeserializer
         // Deserialize organisasjonsnummer
         JsonNode currentNode = objectNode.get(ORGANISATION_NUMBER);
         if (null != currentNode) {
-            Unit.setOrganisationNumber(currentNode.textValue());
+            Unit.setUnitIdentifier(currentNode.textValue());
             objectNode.remove(ORGANISATION_NUMBER);
         }
 

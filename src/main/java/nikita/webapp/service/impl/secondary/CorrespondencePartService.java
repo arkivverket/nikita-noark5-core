@@ -179,8 +179,8 @@ public class CorrespondencePartService
         // First the values
         existingCorrespondencePart.setName(
                 incomingCorrespondencePart.getName());
-        existingCorrespondencePart.setOrganisationNumber(
-                incomingCorrespondencePart.getOrganisationNumber());
+        existingCorrespondencePart.setUnitIdentifier(
+                incomingCorrespondencePart.getUnitIdentifier());
         existingCorrespondencePart.setContactPerson(
                 incomingCorrespondencePart.getContactPerson());
 
@@ -282,7 +282,7 @@ public class CorrespondencePartService
                 correspondencePart.getBusinessAddress();
         if (null != businessAddress) {
             businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
-            correspondencePart.setBusinessAddress(businessAddress);
+            //correspondencePart.setBusinessAddress(businessAddress);
             businessAddress.setCorrespondencePartUnit(correspondencePart);
         }
         record.addCorrespondencePart(correspondencePart);

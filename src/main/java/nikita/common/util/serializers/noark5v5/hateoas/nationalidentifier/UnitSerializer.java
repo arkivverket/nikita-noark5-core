@@ -26,7 +26,7 @@ public class UnitSerializer
         Unit unit = (Unit) noarkSystemIdEntity;
         jgen.writeStartObject();
         printSystemIdEntity(jgen, unit);
-        printNullable(jgen, ORGANISATION_NUMBER, unit.getOrganisationNumber());
+        printNullable(jgen, ORGANISATION_NUMBER, unit.getUnitIdentifier());
         printHateoasLinks(jgen, unitHateoas.getLinks(unit));
         jgen.writeEndObject();
     }

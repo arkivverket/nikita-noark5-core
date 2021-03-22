@@ -70,11 +70,11 @@ public class PartUnit
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
-    public String getOrganisationNumber() {
+    public String getUnitIdentifier() {
         return organisationNumber;
     }
 
-    public void setOrganisationNumber(String organisationNumber) {
+    public void setUnitIdentifier(String organisationNumber) {
         this.organisationNumber = organisationNumber;
     }
 

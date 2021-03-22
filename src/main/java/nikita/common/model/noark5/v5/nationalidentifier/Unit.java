@@ -44,12 +44,12 @@ public class Unit
     private String organisationNumber;
 
     @Override
-    public String getOrganisationNumber() {
+    public String getUnitIdentifier() {
         return organisationNumber;
     }
 
     @Override
-    public void setOrganisationNumber(String organisationNumber) {
+    public void setUnitIdentifier(String organisationNumber) {
         this.organisationNumber = organisationNumber;
     }
 

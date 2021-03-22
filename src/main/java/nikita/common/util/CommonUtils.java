@@ -1278,7 +1278,7 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     JsonNode node = currentNode.get(ORGANISATION_NUMBER);
                     if (null != node) {
-                        partUnit.setOrganisationNumber(node.textValue());
+                        partUnit.setUnitIdentifier(node.textValue());
 
                         // This remove() call is placed inside block
                         // to report error if no organisasjonsnummer
@@ -1360,15 +1360,19 @@ public final class CommonUtils {
             }
 
 
-            public static void deserialiseCorrespondencePartInternalEntity(ICorrespondencePartInternalEntity
-                                                                                   correspondencePartInternal,
-                                                                           ObjectNode objectNode, StringBuilder errors) {
-                deserialiseCorrespondencePartType(correspondencePartInternal, objectNode, errors);
+            public static void deserialiseCorrespondencePartInternalEntity(
+                    ICorrespondencePartInternalEntity
+                            correspondencePartInternal,
+                    ObjectNode objectNode, StringBuilder errors) {
+                deserialiseCorrespondencePartType(
+                        correspondencePartInternal, objectNode, errors);
 
                 // Deserialize administrativEnhet
-                JsonNode currentNode = objectNode.get(ADMINISTRATIVE_UNIT_FIELD);
+                JsonNode currentNode =
+                        objectNode.get(ADMINISTRATIVE_UNIT_FIELD);
                 if (null != currentNode) {
-                    correspondencePartInternal.setAdministrativeUnit(currentNode.textValue());
+                    correspondencePartInternal.setAdministrativeUnit(
+                            currentNode.textValue());
                     objectNode.remove(ADMINISTRATIVE_UNIT_FIELD);
                 }
                 // Deserialize saksbehandler
@@ -1406,8 +1410,16 @@ public final class CommonUtils {
                 deserialiseCorrespondencePartType(correspondencePartUnit,
                         objectNode, errors);
 
+                // Deserialize enhetsidentifikator
+                JsonNode currentNode = objectNode.get(UNIT_IDENTIFIER);
+                if (null != currentNode) {
+                    correspondencePartUnit.setUnitIdentifier(
+                            currentNode.textValue());
+                    objectNode.remove(UNIT_IDENTIFIER);
+                }
+
                 // Deserialize kontaktperson
-                JsonNode currentNode = objectNode.get(CONTACT_PERSON);
+                currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
                     correspondencePartUnit.setContactPerson(
                             currentNode.textValue());
@@ -1419,21 +1431,6 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     correspondencePartUnit.setName(currentNode.textValue());
                     objectNode.remove(NAME);
-                }
-
-                // Deserialize organisasjonsnummer
-                currentNode = objectNode.get(UNIT_IDENTIFIER);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(ORGANISATION_NUMBER);
-                    if (null != node) {
-                        correspondencePartUnit.setOrganisationNumber(
-                                node.textValue());
-
-                        // This remove() call is placed inside block
-                        // to report error if no organisasjonsnummer
-                        // was found.
-                        objectNode.remove(UNIT_IDENTIFIER);
-                    }
                 }
 
                 // Deserialize postadresse
@@ -2126,10 +2123,10 @@ public final class CommonUtils {
                     IGenericUnitEntity unit)
                     throws IOException {
                 if (null != unit) {
-                    if (null != unit.getOrganisationNumber()) {
+                    if (null != unit.getUnitIdentifier()) {
                         jgen.writeObjectFieldStart(UNIT_IDENTIFIER);
                         jgen.writeStringField(ORGANISATION_NUMBER,
-                                unit.getOrganisationNumber());
+                                unit.getUnitIdentifier());
                         jgen.writeEndObject();
                     }
                     printNullable(jgen, NAME, unit.getName());

@@ -4,7 +4,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 public interface IUnitEntity
         extends ISystemId {
-    String getOrganisationNumber();
+    String getUnitIdentifier();
 
-    void setOrganisationNumber(String organisationNumber);
+    void setUnitIdentifier(String organisationNumber);
 }

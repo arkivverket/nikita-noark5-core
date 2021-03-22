@@ -28,11 +28,11 @@ public class CorrespondencePartUnit
         implements ICorrespondencePartUnitEntity {
 
     /**
-     * M??? - organisasjonsnummer (xs:string)
+     * M??? - enhetsidentifikator (xs:string)
      */
-    @Column(name = "organisation_number")
+    @Column(name = "unit_identifier")
     @Audited
-    private String organisationNumber;
+    private String unitIdentifier;
 
     /**
      * M??? - navn (xs:string)
@@ -52,8 +52,6 @@ public class CorrespondencePartUnit
     private PostalAddress postalAddress;
 
     @OneToOne(mappedBy = "correspondencePartUnit", fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
-            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private BusinessAddress businessAddress;
 
     @OneToOne(mappedBy = "correspondencePartUnit", fetch = LAZY, cascade = ALL)
@@ -61,12 +59,12 @@ public class CorrespondencePartUnit
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
-    public String getOrganisationNumber() {
-        return organisationNumber;
+    public String getUnitIdentifier() {
+        return unitIdentifier;
     }
 
-    public void setOrganisationNumber(String organisationNumber) {
-        this.organisationNumber = organisationNumber;
+    public void setUnitIdentifier(String unitIdentifier) {
+        this.unitIdentifier = unitIdentifier;
     }
 
     public String getName() {
@@ -122,7 +120,7 @@ public class CorrespondencePartUnit
     @Override
     public String toString() {
         return super.toString() +
-                ", organisationNumber='" + organisationNumber + '\'' +
+                ", unitIdentifier='" + unitIdentifier + '\'' +
                 ", name='" + name + '\'' +
                 ", contactPerson='" + contactPerson + '\'' +
                 '}';
@@ -142,7 +140,7 @@ public class CorrespondencePartUnit
         CorrespondencePartUnit rhs = (CorrespondencePartUnit) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(organisationNumber, rhs.organisationNumber)
+                .append(unitIdentifier, rhs.unitIdentifier)
                 .append(name, rhs.name)
                 .append(contactPerson, rhs.contactPerson)
                 .isEquals();
@@ -152,7 +150,7 @@ public class CorrespondencePartUnit
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(organisationNumber)
+                .append(unitIdentifier)
                 .append(name)
                 .append(contactPerson)
                 .toHashCode();

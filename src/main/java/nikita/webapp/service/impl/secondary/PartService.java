@@ -139,8 +139,8 @@ public class PartService
         // First the values
         existingPart.setName(
                 incomingPart.getName());
-        existingPart.setOrganisationNumber(
-                incomingPart.getOrganisationNumber());
+        existingPart.setUnitIdentifier(
+                incomingPart.getUnitIdentifier());
         existingPart.setContactPerson(
                 incomingPart.getContactPerson());
         // Only copy if changed, in case it has an historical value

@@ -376,7 +376,7 @@ public class NationalIdentifierService
         // Copy all the values you are allowed to copy ....
         // First the values
         existingUnit
-            .setOrganisationNumber(incomingUnit.getOrganisationNumber());
+                .setUnitIdentifier(incomingUnit.getUnitIdentifier());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG

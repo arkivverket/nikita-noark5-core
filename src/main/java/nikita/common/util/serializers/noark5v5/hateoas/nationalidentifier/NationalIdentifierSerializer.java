@@ -3,21 +3,8 @@ package nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IBuildingEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ICadastralUnitEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IDNumberEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPlanEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IPositionEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ISocialSecurityNumberEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IUnitEntity;
-import nikita.common.model.noark5.v5.nationalidentifier.Building;
-import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
-import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
-import nikita.common.model.noark5.v5.nationalidentifier.Plan;
-import nikita.common.model.noark5.v5.nationalidentifier.Position;
-import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Unit;
+import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.*;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 import org.slf4j.Logger;
@@ -26,7 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.printSystemIdEntity;
 
 /**
  * Serialise an outgoing NationalIdentifier object as JSON.
@@ -148,7 +136,7 @@ public class NationalIdentifierSerializer
         throws IOException {
         jgen.writeStartObject();
         printSystemIdEntity(jgen, unit);
-        printNullable(jgen, ORGANISATION_NUMBER, unit.getOrganisationNumber());
+        printNullable(jgen, ORGANISATION_NUMBER, unit.getUnitIdentifier());
         printHateoasLinks(jgen, unitHateoas.getLinks(unit));
         jgen.writeEndObject();
     }
