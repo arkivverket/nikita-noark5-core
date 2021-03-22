@@ -78,15 +78,15 @@ public class Comment
     private String commentRegisteredBy;
 
     // Link to File
-    @ManyToMany
+    @ManyToMany(mappedBy = "referenceComment")
     private Set<File> referenceFile = new HashSet<>();
 
     // Links to Record
-    @ManyToMany
+    @ManyToMany(mappedBy = "referenceComment")
     private Set<Record> referenceRecord = new HashSet<>();
 
     // Link to DocumentDescription
-    @ManyToMany
+    @ManyToMany(mappedBy = "referenceComment")
     private Set<DocumentDescription> referenceDocumentDescription =
             new HashSet<>();
 
