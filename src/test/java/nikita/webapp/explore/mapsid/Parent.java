@@ -1,30 +1,41 @@
 package nikita.webapp.explore.mapsid;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 
 @Entity
 public class Parent
         implements Serializable {
 
     @Id
-    @Column(name = "code")
-    String code;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator",
+            parameters = {@Parameter(
+                    name = "uuid_gen_strategy_class",
+                    value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
+    @Column(name = SYSTEM_ID_ENG, updatable = false, nullable = false)
+    @Type(type = "uuid-char")
+    private UUID code;
 
     @OneToOne(mappedBy = "parent", fetch = LAZY, cascade = ALL)
     Child child;
 
-    public String getCode() {
+    public UUID getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(UUID code) {
         this.code = code;
     }
 

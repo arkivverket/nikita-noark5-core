@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
+import java.util.UUID;
 
 /**
  * When working on the domain model, we are experiencing problems tidying
@@ -35,16 +36,16 @@ public class TestMapsId {
     @Test
     public void testCreateParentChildSpring() {
         Parent parent = new Parent();
-        parent.setCode("12345");
         Child child = new Child();
         parent.setChild(child);
         parentRepo.save(parent);
-
+        UUID primaryKey = parent.getCode();
         Parent persistedParent = entityManager
-                .find(Parent.class, "12345");
+                .find(Parent.class, primaryKey);
         logger.info("Parent object is " + persistedParent.toString());
+
         Child persistedChild = entityManager
-                .find(Child.class, "12345");
+                .find(Child.class, primaryKey);
         logger.info("Child object is " + persistedChild.toString());
     }
 }
