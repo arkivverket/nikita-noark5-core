@@ -89,6 +89,7 @@ public class CorrespondencePartUnit
 
     public void setBusinessAddress(BusinessAddress businessAddress) {
         this.businessAddress = businessAddress;
+        this.businessAddress.setCorrespondencePartUnit(this);
     }
 
     public PostalAddress getPostalAddress() {
