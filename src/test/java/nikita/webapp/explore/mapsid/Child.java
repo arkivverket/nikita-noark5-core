@@ -14,13 +14,14 @@ public class Child
 
     @Id
     @Type(type = "uuid-char")
-    @Column(name = "code", insertable = false, updatable = false)
-    UUID code;
+    @Column(name = "code", insertable = false, updatable = false,
+            nullable = false)
+    private UUID code;
 
     @OneToOne(fetch = LAZY)
     @MapsId
     @JoinColumn(name = "code")
-    Parent parent;
+    private Parent parent;
 
     public UUID getCode() {
         return code;

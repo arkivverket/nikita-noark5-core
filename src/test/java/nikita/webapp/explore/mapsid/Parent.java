@@ -29,7 +29,7 @@ public class Parent
     private UUID code;
 
     @OneToOne(mappedBy = "parent", fetch = LAZY, cascade = ALL)
-    Child child;
+    private Child child;
 
     public UUID getCode() {
         return code;

@@ -35,10 +35,9 @@ public class MappedSystemIdEntity
      * M001 - systemID (xs:string)
      */
     @Id
-    //@GeneratedValue(generator = "UUID")
+    @Type(type = "uuid-char")
     @Column(name = SYSTEM_ID_ENG, insertable = false, updatable = false,
             nullable = false)
-    @Type(type = "uuid-char")
     private UUID systemId;
 
     @Override
