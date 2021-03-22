@@ -6,19 +6,18 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 public class Child
         implements Serializable {
 
     @Id
-    //@GeneratedValue(generator = "UUID")
-    //@Column(name = SYSTEM_ID_ENG, insertable = false, updatable = false,
-    //        nullable = false)
     @Type(type = "uuid-char")
     @Column(name = "code", insertable = false, updatable = false)
     UUID code;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @MapsId
     @JoinColumn(name = "code")
     Parent parent;
